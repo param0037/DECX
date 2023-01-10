@@ -1,0 +1,302 @@
+/**
+*   ---------------------------------------------------------------------
+*   Author : Wayne Anderson
+*   Date   : 2021.04.16
+*   ---------------------------------------------------------------------
+*   This is a part of the open source program named "DECX", copyright c Wayne,
+*   2021.04.16, all right reserved.
+*   More information please visit https://github.com/param0037/backup_1
+*/
+
+#include "TensorArray.h"
+
+
+
+void decx::_TensorArray::_attribute_assign(const int _type, const uint _width, const uint _height, const uint _depth, const uint _tensor_num, const int store_type)
+{
+    this->type = _type;
+    this->_single_element_size = decx::core::_size_mapping(_type);
+
+    this->width = _width;
+    this->height = _height;
+    this->depth = _depth;
+    this->tensor_num = _tensor_num;
+
+    this->TensArr.ptr = NULL;           this->TensArr.block = NULL;
+    this->TensptrArr.ptr = NULL;        this->TensptrArr.block = NULL;
+
+    this->_store_type = store_type;
+    this->wpitch = decx::utils::ceil<uint>(_width, 4) * 4;
+
+    uint _alignment = 0;
+    switch (this->_single_element_size)
+    {
+    case 4:
+        _alignment = _TENSOR_ALIGN_4B_;     break;
+    case 8:
+        _alignment = _TENSOR_ALIGN_8B_;     break;
+    case 2:
+        _alignment = _TENSOR_ALIGN_2B_;     break;
+    case 1:
+        _alignment = _TENSOR_ALIGN_1B_;     break;
+    default:
+        break;
+    }
+
+    this->dpitch = decx::utils::ceil<uint>(_depth, _alignment) * _alignment;
+    
+    this->dp_x_wp = static_cast<size_t>(this->dpitch) * static_cast<size_t>(this->wpitch);
+
+    this->plane[0] = static_cast<size_t>(this->height) * static_cast<size_t>(this->width);
+    this->plane[1] = static_cast<size_t>(this->depth) * static_cast<size_t>(this->width);
+    this->plane[2] = static_cast<size_t>(this->height) * static_cast<size_t>(this->depth);
+
+    this->_gap = this->dp_x_wp * static_cast<size_t>(this->height);
+
+    this->element_num = static_cast<size_t>(this->depth) * this->plane[0] * static_cast<size_t>(this->tensor_num);
+    this->_element_num = static_cast<size_t>(this->tensor_num) * this->_gap;
+    this->total_bytes = this->_element_num * this->_single_element_size;
+}
+
+
+
+void decx::_TensorArray::alloc_data_space()
+{
+    switch (this->_store_type)
+    {
+    case decx::DATA_STORE_TYPE::Page_Locked:
+        if (decx::alloc::_host_fixed_page_malloc<void>(&this->TensArr, this->total_bytes)) {
+            Print_Error_Message(4, "Fail to allocate memory for TensorArray on host\n");
+            exit(-1);
+        }
+        break;
+
+    case decx::DATA_STORE_TYPE::Page_Default:
+        if (decx::alloc::_host_virtual_page_malloc<void>(&this->TensArr, this->total_bytes)) {
+            Print_Error_Message(4, "Fail to allocate memory for TensorArray on host\n");
+            exit(-1);
+        }
+        break;
+
+    default:
+        break;
+    }
+
+    memset(this->TensArr.ptr, 0, this->total_bytes);
+
+    if (decx::alloc::_host_virtual_page_malloc<void*>(&this->TensptrArr, this->tensor_num * sizeof(void*))) {
+        Print_Error_Message(4, "Fail to allocate memory for TensorArray on host\n");
+        return;
+    }
+    this->TensptrArr.ptr[0] = this->TensArr.ptr;
+    for (uint i = 1; i < this->tensor_num; ++i) {
+        this->TensptrArr.ptr[i] = (void*)((uchar*)this->TensptrArr.ptr[i - 1] + this->_gap * this->_single_element_size);
+    }
+}
+
+
+
+void decx::_TensorArray::re_alloc_data_space()
+{
+    switch (this->_store_type)
+    {
+    case decx::DATA_STORE_TYPE::Page_Locked:
+        if (decx::alloc::_host_fixed_page_realloc<void>(&this->TensArr, this->total_bytes)) {
+            Print_Error_Message(4, "Fail to allocate memory for TensorArray on host\n");
+            exit(-1);
+        }
+        break;
+
+    case decx::DATA_STORE_TYPE::Page_Default:
+        if (decx::alloc::_host_virtual_page_realloc<void>(&this->TensArr, this->total_bytes)) {
+            Print_Error_Message(4, "Fail to allocate memory for TensorArray on host\n");
+            exit(-1);
+        }
+        break;
+
+    default:
+        break;
+    }
+
+    memset(this->TensArr.ptr, 0, this->total_bytes);
+
+    if (decx::alloc::_host_virtual_page_realloc<void*>(&this->TensptrArr, this->tensor_num * sizeof(void*))) {
+        Print_Error_Message(4, "Fail to allocate memory for TensorArray on host\n");
+        return;
+    }
+    this->TensptrArr.ptr[0] = this->TensArr.ptr;
+    for (uint i = 1; i < this->tensor_num; ++i) {
+        this->TensptrArr.ptr[i] = (void*)((uchar*)this->TensptrArr.ptr[i - 1] + this->_gap * this->_single_element_size);
+    }
+}
+
+
+
+
+void decx::_TensorArray::construct(const int _type, const uint _width, const uint _height, const uint _depth, const uint _tensor_num, const int store_type)
+{
+    this->_attribute_assign(_type, _width, _height, _depth, _tensor_num, store_type);
+
+    this->alloc_data_space();
+}
+
+
+
+
+void decx::_TensorArray::re_construct(const int _type, const uint _width, const uint _height, const uint _depth, const uint _tensor_num, const int store_type)
+{
+    if (this->type != _type || this->width != _width || this->height != _height || this->depth != _depth || 
+        this->tensor_num != _tensor_num || this->_store_type != store_type) 
+    {
+        decx::alloc::_host_virtual_page_dealloc(&this->TensptrArr);
+        if (this->_store_type != store_type) {
+            switch (this->_store_type)
+            {
+            case decx::DATA_STORE_TYPE::Page_Default:
+                decx::alloc::_host_virtual_page_dealloc(&this->TensArr);
+                break;
+
+            case decx::DATA_STORE_TYPE::Page_Locked:
+                decx::alloc::_host_fixed_page_dealloc(&this->TensArr);
+                break;
+            default:
+                break;
+            }
+
+            this->_attribute_assign(_type, _width, _height, _depth, _tensor_num, store_type);
+            this->alloc_data_space();
+        }
+        else {
+            this->_attribute_assign(_type, _width, _height, _depth, _tensor_num, store_type);
+            this->re_alloc_data_space();
+        }
+    }
+}
+
+
+
+decx::_TensorArray::_TensorArray()
+{
+    this->_attribute_assign(decx::_DATA_TYPES_FLAGS_::_VOID_, 0, 0, 0, 0, 0);
+}
+
+
+
+
+decx::_TensorArray::_TensorArray(const int _type, const uint _width, const uint _height, const uint _depth, const uint _tensor_num, const int store_type)
+{
+    this->_attribute_assign(_type, _width, _height, _depth, _tensor_num, store_type);
+
+    this->alloc_data_space();
+}
+
+
+namespace de
+{
+    de::TensorArray& CreateTensorArrayRef();
+
+
+    de::TensorArray* CreateTensorArrayPtr();
+
+
+    de::TensorArray& CreateTensorArrayRef(const int _type, const uint width, const uint height, const uint depth, const uint tensor_num, const int store_type);
+
+
+    de::TensorArray* CreateTensorArrayPtr(const int _type, const uint width, const uint height, const uint depth, const uint tensor_num, const int store_type);
+}
+
+
+
+de::TensorArray& de::CreateTensorArrayRef()
+{
+    return *(new decx::_TensorArray());
+}
+
+
+
+
+de::TensorArray* de::CreateTensorArrayPtr()
+{
+    return new decx::_TensorArray();
+}
+
+
+
+
+de::TensorArray& de::CreateTensorArrayRef(const int _type, const uint width, const uint height, const uint depth, const uint tensor_num, const int store_type)
+{
+    return *(new decx::_TensorArray(_type, width, height, depth, tensor_num, store_type));
+}
+
+
+
+
+de::TensorArray* de::CreateTensorArrayPtr(const int _type, const uint width, const uint height, const uint depth, const uint tensor_num, const int store_type)
+{
+    return new decx::_TensorArray(_type, width, height, depth, tensor_num, store_type);
+}
+
+
+
+void* decx::_TensorArray::index(const int x, const int y, const int z, const int tensor_id)
+{
+    return (void*)((uchar*)this->TensptrArr.ptr[tensor_id] + 
+        ((size_t)x * this->dp_x_wp + (size_t)y * (size_t)this->dpitch + (size_t)z) * this->_single_element_size);
+}
+
+
+
+de::TensorArray& decx::_TensorArray::SoftCopy(de::TensorArray& src)
+{
+    decx::_TensorArray& ref_src = dynamic_cast<decx::_TensorArray&>(src);
+
+    this->_attribute_assign(ref_src.type, ref_src.width, ref_src.height, ref_src.depth, ref_src.tensor_num, ref_src._store_type);
+
+    switch (ref_src._store_type)
+    {
+    
+
+#ifdef _DECX_CUDA_CODES_
+    case decx::DATA_STORE_TYPE::Page_Locked:
+        decx::alloc::_host_fixed_page_malloc_same_place(&this->TensArr);
+        break;
+#endif
+
+    case decx::DATA_STORE_TYPE::Page_Default:
+        decx::alloc::_host_virtual_page_malloc_same_place(&this->TensArr);
+        break;
+
+    default:
+        break;
+    }
+
+    return *this;
+}
+
+
+int decx::_TensorArray::Type() 
+{
+    return this->type;
+}
+
+
+void decx::_TensorArray::release()
+{
+    switch (this->_store_type)
+    {
+    case decx::DATA_STORE_TYPE::Page_Default:
+        decx::alloc::_host_virtual_page_dealloc(&this->TensArr);
+        break;
+
+#ifdef _DECX_CUDA_CODES_
+    case decx::DATA_STORE_TYPE::Page_Locked:
+        decx::alloc::_host_fixed_page_dealloc(&this->TensArr);
+        break;
+#endif
+
+    default:
+        break;
+    }
+
+    decx::alloc::_host_virtual_page_dealloc(&this->TensptrArr);
+}
