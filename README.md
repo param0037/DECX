@@ -12,3 +12,6 @@ A fast linear algebra, computer vision and mathematic library, based on CUDA and
 # To developers and viewers
 You can download and modify my source to compile your own project if you want. And you can also tell me what functionality you want me to integrate. If you have 
 better ideas, please contact me via enloquecer0037@gmail.com. I hope my library can help you with your research or coursework.
+`
+# How to compile
+## 1. Windows
