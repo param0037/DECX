@@ -20,11 +20,11 @@ Please notice, all the third libraries(except for CUDA) are ready in the folder 
 1. Install CUDA SDK and make sure nvcc(Nvidia compiler) is correctly configured. 
 2. Install MSVC compiler (Visual Studio 2019 or above is recommended)
 3. Open cmd.exe or powershell, and enter the project directory.
-4. Enter config, hit "enter" key. If configurations are successful, then you can move to next step.
-5. Enter build, hit "enter" key. After successfully built, you can see the binary files(five .dll files and five .lib files) under "${project_directory}/bin"
+4. Enter "config", hit "enter" key. If configurations are successful, then you can move to next step.
+5. Enter "build", hit "enter" key. After successfully built, you can see the binary files(five .dll files and five .lib files) under "${project_directory}/bin"
 ## 2. Linux
 1. Install CUDA SDK and make sure nvcc(Nvidia compiler) is correctly configured. 
 2. Install Mingw.
 3. Open the terminal, and enter the project directory.
-4. Enter ./config.sh, hit "enter" key. If configurations are successful, then you can move to next step.
-5. Enter ./build.sh, hit "enter" key. After successfully built, you can see the binary files(five .so files) under "${project_directory}/bin"
+4. Enter "./config.sh", hit "enter" key. If configurations are successful, then you can move to next step.
+5. Enter "./build.sh", hit "enter" key. After successfully built, you can see the binary files(five .so files) under "${project_directory}/bin"
