@@ -14,7 +14,7 @@
 
 #include"class_utils.h"
 
-namespace de
+namespace decx
 {
     enum _DATA_TYPES_FLAGS_ {
         _VOID_ = 0,
@@ -25,7 +25,9 @@ namespace de
         _COMPLEX_F32_ = 5,
         _UINT8_ = 6,
         _UCHAR3_ = 7,
-        _UCHAR4_ = 8
+        _UCHAR4_ = 8,
+        _VECTOR3F_ = 9,
+        _VECTOR4F_ = 10
     };
 }
 
