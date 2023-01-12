@@ -16,16 +16,18 @@ better ideas, please contact me via enloquecer0037@gmail.com. I hope my library 
 # How to compile
 1. Please notice for the CUDA-based part of this project is not supported by MacOS! 
 2. On Windows or Linux, you should first download CMake and make sure its version index at least 3.00 and not exceed 3.40. Since the CMakeLists.txt in this project might not suitable for the latest version of CMake.
-3. Please notice, all the third libraries(except for CUDA) are ready in the folder called "3rdparty". Even in Linux, you are not required to install them.
+3. Please notice, all the dependencies(except for CUDA) are ready in the folder called "3rdparty". Even in Linux, you are not required to install them.
 ## 1. Windows
 1. Install CUDA SDK and make sure nvcc(Nvidia compiler) is correctly configured. 
 2. Install MSVC compiler (Visual Studio 2019 or above is recommended)
-3. Open cmd.exe or powershell, and enter the project directory.
-4. Enter "config", hit "enter" key. If configurations are successful, then you can move to next step.
-5. Enter "build", hit "enter" key. After successfully built, you can see the binary files(five .dll files and five .lib files) under "${project_directory}/bin"
+3. Install CMake and make sure its version matches the requirements.
+4. Open cmd.exe or powershell, and enter the project directory.
+5. Enter "config", hit "enter" key. If configurations are successful, then you can move to next step.
+6. Enter "build", hit "enter" key. After successfully built, you can see the binary files(five .dll files and five .lib files) under "${project_directory}/bin"
 ## 2. Linux
 1. Install CUDA SDK and make sure nvcc(Nvidia compiler) is correctly configured. 
-2. Install Mingw.
-3. Open the terminal, and enter the project directory.
-4. Enter "./config.sh", hit "enter" key. If configurations are successful, then you can move to next step.
-5. Enter "./build.sh", hit "enter" key. After successfully built, you can see the binary files(five .so files) under "${project_directory}/bin"
+2. Install Mingw that support c++14 or above.
+3. Install CMake and make sure its version matches the requirements.
+4. Open the terminal, and enter the project directory.
+5. Enter "./config.sh", hit "enter" key. If configurations are successful, then you can move to next step.
+6. Enter "./build.sh", hit "enter" key. After successfully built, you can see the binary files(five .so files) under "${project_directory}/bin"
