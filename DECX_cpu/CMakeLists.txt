@@ -21,6 +21,7 @@ file(GLOB_RECURSE DOT_PRODUCT "${DECX_WORLD_ABS_DIR}/srcs/modules/Dot product/CP
 file(GLOB_RECURSE GEMM "${DECX_WORLD_ABS_DIR}/srcs/modules/GEMM/*.cxx")
 file(GLOB_RECURSE REGIONAL "${DECX_WORLD_ABS_DIR}/srcs/modules/regional/regional_comparision/*.cxx")
 file(GLOB_RECURSE SIGNAL "${DECX_WORLD_ABS_DIR}/srcs/modules/signal/*.cxx")
+file(GLOB_RECURSE VECOTRIAL "${DECX_WORLD_ABS_DIR}/srcs/modules/Vectorial/*.cxx")
 
 #set(CXX_FLAGS -mFMA -mAVX2 -mAVX)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native")
@@ -55,7 +56,8 @@ add_library(DECX_cpu SHARED ${GLOBAL_VARS} ${CONFIGS} ${THREADING} ${UTILS}
                             ${DOT_PRODUCT}
                             ${GEMM}
                             ${REGIONAL}
-                            ${SIGNAL})
+                            ${SIGNAL}
+                            ${VECOTRIAL})
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     message(STATUS "Building on Windows")
