@@ -14,8 +14,9 @@ You can download and modify my source to compile your own project if you want. A
 better ideas, please contact me via enloquecer0037@gmail.com. I hope my library can help you with your research or coursework.
 `
 # How to compile
-Please notice MacOS is not supported! On Windows or Linux, you should first download CMake and make sure its version index at least 3.00 and not exceed 3.40. Since the CMakeLists.txt in this project might not suitable for the latest version of CMake.
-Please notice, all the third libraries(except for CUDA) are ready in the folder called "3rdparty". Even in Linux, you are not required to install them.
+1. Please notice for the CUDA-based part of this project is not supported by MacOS! 
+2. On Windows or Linux, you should first download CMake and make sure its version index at least 3.00 and not exceed 3.40. Since the CMakeLists.txt in this project might not suitable for the latest version of CMake.
+3. Please notice, all the third libraries(except for CUDA) are ready in the folder called "3rdparty". Even in Linux, you are not required to install them.
 ## 1. Windows
 1. Install CUDA SDK and make sure nvcc(Nvidia compiler) is correctly configured. 
 2. Install MSVC compiler (Visual Studio 2019 or above is recommended)
