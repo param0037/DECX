@@ -9,10 +9,6 @@
 */
 
 
-// 不存在height不能被vec4整除的现象，因为我会开一个小缓存区间，which height是4的倍数，在
-// 处理之前先将src->Mat.ptr的内容拷贝上去，而dev_tmp0 and dev_tmp1 的height都是4的倍数
-
-
 #ifndef _FFT3D_RADIX_4_KERNEL_H_
 #define _FFT3D_RADIX_4_KERNEL_H_
 
