@@ -502,7 +502,7 @@ decx::vis::CPUK::Edge_Detector_Post_processing(const float* __restrict      G_in
             decx::vis::_gradient_info _center;
             _center.gradient = _neigbour_3[1]._vec_sp[1];
             _center.direction_rad = dir_info_map[dex_src];
-            float abs_dir = _center.direction_rad < 0 ? (2 * 3.1415926 + _center.direction_rad) : _center.direction_rad;
+            float abs_dir = _center.direction_rad < 0 ? (3.1415926 + _center.direction_rad) : _center.direction_rad;
             
             if ((abs_dir <= _67_5DEG_RAD && abs_dir > _22_5DEG_RAD)) {
                 is_max = (_center.gradient > _neigbour_3[0]._vec_sp[0]) && (_center.gradient > _neigbour_3[2]._vec_sp[2]);
