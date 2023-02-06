@@ -32,6 +32,7 @@ void decx::_GPU_Vector::_attribute_assign(const int _type, size_t length)
         break;
     }
     this->length = length;
+    this->_init = true;
     this->_length = decx::utils::ceil<size_t>(length, (size_t)_alignment) * (size_t)_alignment;
     this->total_bytes = this->_length * this->_single_element_size;
 }
@@ -44,11 +45,8 @@ int decx::_GPU_Vector::Type()
 }
 
 
-
-decx::_GPU_Vector::_GPU_Vector(const int _type, size_t length)
+void decx::_GPU_Vector::alloc_data_space()
 {
-    this->_attribute_assign(_type, length);
-
     if (decx::alloc::_device_malloc<void>(&this->Vec, this->total_bytes)) {
         SetConsoleColor(4);
         printf("Vector on GPU malloc failed! Please check if there is enough space in your device.");
@@ -58,10 +56,39 @@ decx::_GPU_Vector::_GPU_Vector(const int _type, size_t length)
 }
 
 
+void decx::_GPU_Vector::construct(const int _type, size_t length)
+{
+    this->_attribute_assign(_type, length);
+
+    this->alloc_data_space();
+}
+
+
+void decx::_GPU_Vector::re_construct(const int _type, size_t length)
+{
+    if (this->type != _type || this->length != _length) {
+        const size_t pre_size = this->total_bytes;
+
+        this->_attribute_assign(_type, length);
+
+        if (this->total_bytes > pre_size) {
+            this->alloc_data_space();
+        }
+    }
+}
+
+
+decx::_GPU_Vector::_GPU_Vector(const int _type, size_t length)
+{
+    this->construct(_type, length);
+}
+
+
 
 decx::_GPU_Vector::_GPU_Vector()
 {
     this->_attribute_assign(decx::_DATA_TYPES_FLAGS_::_VOID_, 0);
+    this->_init = false;
 }
 
 
