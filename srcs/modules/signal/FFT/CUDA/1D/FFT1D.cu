@@ -14,6 +14,23 @@
 #include "../../../../core/configs/config.h"
 #include "FFT1D_sub_functions.h"
 #include "IFFT1D_sub_functions.h"
+#include "../../fft_utils.h"
+
+
+namespace decx {
+    namespace signal {
+        void FFT1D_R2C(decx::_Vector* src, decx::_Vector* dst, de::DH* handle);
+
+
+        void FFT1D_C2C(decx::_Vector* src, decx::_Vector* dst, de::DH* handle);
+
+
+        void IFFT1D_C2C(decx::_Vector* src, decx::_Vector* dst, de::DH* handle);
+
+
+        void IFFT1D_C2R(decx::_Vector* src, decx::_Vector* dst, de::DH* handle);
+    }
+}
 
 
 namespace de
@@ -21,16 +38,10 @@ namespace de
     namespace signal
     {
         namespace cuda {
-            _DECX_API_ de::DH FFT1D_R2C(de::Vector& src, de::Vector& dst);
+            _DECX_API_ de::DH FFT1D(de::Vector& src, de::Vector& dst, const int FFT_flag);
 
 
-            _DECX_API_ de::DH FFT1D_C2C(de::Vector& src, de::Vector& dst);
-
-        
-            _DECX_API_ de::DH IFFT1D_C2C(de::Vector& src, de::Vector& dst);
-
-
-            _DECX_API_ de::DH IFFT1D_C2R(de::Vector& src, de::Vector& dst);
+            _DECX_API_ de::DH IFFT1D(de::Vector& src, de::Vector& dst, const int FFT_flag);
         }
     }
 }
@@ -38,154 +49,178 @@ namespace de
 
 
 
-de::DH de::signal::cuda::FFT1D_R2C(de::Vector& src, de::Vector& dst)
+void decx::signal::FFT1D_R2C(decx::_Vector* src, decx::_Vector* dst, de::DH* handle)
 {
-    de::DH handle;
-
-    decx::_Vector* _src = dynamic_cast<decx::_Vector*>(&src);
-    decx::_Vector* _dst = dynamic_cast<decx::_Vector*>(&dst);
-
-    if (decx::cuP.is_init == false) {
-        decx::Not_init(&handle);
-        return handle;
-    }
-
-    const int src_len = _src->length;
+    const int src_len = src->length;
 
     if (!decx::signal::check_apart(src_len)) {
-        decx::err::FFT_Error_length(&handle);
+        decx::err::FFT_Error_length(handle);
         Print_Error_Message(4, FFT_ERROR_LENGTH);
-        return handle;
+        return;
     }
 
     decx::cuda_stream* S = NULL;
     S = decx::CStream.stream_accessor_ptr(cudaStreamNonBlocking);
     if (S == NULL) {
         Print_Error_Message(4, CUDA_STREAM_ACCESS_FAIL);
-        decx::err::CUDA_Stream_access_fail(&handle);
-        return handle;
+        decx::err::CUDA_Stream_access_fail(handle);
+        return;
     }
 
     decx::signal::CUDA_FFT_Configs config;
-    config.FFT1D_config_gen(src_len, &handle);
+    config.FFT1D_config_gen(src_len, handle);
 
-    decx::signal::GPU_FFT1D_R2C_fp32_organizer(_src, _dst, &config, &handle, S);
+    dst->re_construct(decx::_COMPLEX_F32_, src->length, decx::DATA_STORE_TYPE::Page_Locked);
+
+    decx::signal::GPU_FFT1D_R2C_fp32_organizer(src, dst, &config, handle, S);
     S->detach();
+}
 
+
+
+void decx::signal::FFT1D_C2C(decx::_Vector* src, decx::_Vector* dst, de::DH *handle)
+{
+    const int src_len = src->length;
+
+    if (!decx::signal::check_apart(src_len)) {
+        decx::err::FFT_Error_length(handle);
+        Print_Error_Message(4, FFT_ERROR_LENGTH);
+        return;
+    }
+
+    decx::cuda_stream* S = NULL;
+    S = decx::CStream.stream_accessor_ptr(cudaStreamNonBlocking);
+    if (S == NULL) {
+        Print_Error_Message(4, CUDA_STREAM_ACCESS_FAIL);
+        decx::err::CUDA_Stream_access_fail(handle);
+        return;
+    }
+
+    decx::signal::CUDA_FFT_Configs config;
+    config.FFT1D_config_gen(src_len, handle);
+
+    dst->re_construct(decx::_COMPLEX_F32_, src->length, decx::DATA_STORE_TYPE::Page_Locked);
+
+    decx::signal::GPU_FFT1D_R2C_fp32_organizer(src, dst, &config, handle, S);
+    S->detach();
+}
+
+
+
+void decx::signal::IFFT1D_C2C(decx::_Vector* src, decx::_Vector* dst, de::DH* handle)
+{
+    const int src_len = src->length;
+
+    if (!decx::signal::check_apart(src_len)) {
+        decx::err::FFT_Error_length(handle);
+        Print_Error_Message(4, FFT_ERROR_LENGTH);
+        return;
+    }
+
+    decx::cuda_stream* S = NULL;
+    S = decx::CStream.stream_accessor_ptr(cudaStreamNonBlocking);
+    if (S == NULL) {
+        Print_Error_Message(4, CUDA_STREAM_ACCESS_FAIL);
+        decx::err::CUDA_Stream_access_fail(handle);
+        return;
+    }
+
+    decx::signal::CUDA_FFT_Configs config;
+    config.FFT1D_config_gen(src_len, handle);
+
+    dst->re_construct(decx::_COMPLEX_F32_, src->length, decx::DATA_STORE_TYPE::Page_Locked);
+
+    decx::signal::GPU_IFFT1D_C2C_fp32_organizer(src, dst, &config, handle, S);
+    S->detach();
+}
+
+
+
+void decx::signal::IFFT1D_C2R(decx::_Vector* src, decx::_Vector* dst, de::DH *handle)
+{
+    const int src_len = src->length;
+
+    if (!decx::signal::check_apart(src_len)) {
+        decx::err::FFT_Error_length(handle);
+        Print_Error_Message(4, FFT_ERROR_LENGTH);
+        return;
+    }
+
+    decx::cuda_stream* S = NULL;
+    S = decx::CStream.stream_accessor_ptr(cudaStreamNonBlocking);
+    if (S == NULL) {
+        Print_Error_Message(4, CUDA_STREAM_ACCESS_FAIL);
+        decx::err::CUDA_Stream_access_fail(handle);
+        return;
+    }
+
+    decx::signal::CUDA_FFT_Configs config;
+    config.FFT1D_config_gen(src_len, handle);
+
+    dst->re_construct(decx::_FP32_, src->length, decx::DATA_STORE_TYPE::Page_Locked);
+
+    decx::signal::GPU_IFFT1D_C2R_fp32_organizer(src, dst, &config, handle, S);
+    S->detach();
+}
+
+
+
+_DECX_API_ de::DH de::signal::cuda::FFT1D(de::Vector& src, de::Vector& dst, const int FFT_flag)
+{
+    de::DH handle;
+
+    if (decx::cuP.is_init == false) {
+        decx::Not_init(&handle);
+        return handle;
+    }
+
+    decx::_Vector* _src = dynamic_cast<decx::_Vector*>(&src);
+    decx::_Vector* _dst = dynamic_cast<decx::_Vector*>(&dst);
+
+    switch (FFT_flag)
+    {
+    case de::signal::FFT_flags::FFT_R2C:
+        decx::signal::FFT1D_R2C(_src, _dst, &handle);
+        break;
+
+    case de::signal::FFT_flags::FFT_C2C:
+        decx::signal::FFT1D_R2C(_src, _dst, &handle);
+        break;
+    default:
+        break;
+    }
+
+    decx::err::Success(&handle);
     return handle;
 }
 
 
 
-de::DH de::signal::cuda::FFT1D_C2C(de::Vector& src, de::Vector& dst)
+_DECX_API_ de::DH de::signal::cuda::IFFT1D(de::Vector& src, de::Vector& dst, const int FFT_flag)
 {
     de::DH handle;
-
-    decx::_Vector* _src = dynamic_cast<decx::_Vector*>(&src);
-    decx::_Vector* _dst = dynamic_cast<decx::_Vector*>(&dst);
 
     if (decx::cuP.is_init == false) {
         decx::Not_init(&handle);
         return handle;
     }
 
-    const int src_len = _src->length;
-
-    if (!decx::signal::check_apart(src_len)) {
-        decx::err::FFT_Error_length(&handle);
-        Print_Error_Message(4, FFT_ERROR_LENGTH);
-        return handle;
-    }
-
-    decx::cuda_stream* S = NULL;
-    S = decx::CStream.stream_accessor_ptr(cudaStreamNonBlocking);
-    if (S == NULL) {
-        Print_Error_Message(4, CUDA_STREAM_ACCESS_FAIL);
-        decx::err::CUDA_Stream_access_fail(&handle);
-        return handle;
-    }
-
-    decx::signal::CUDA_FFT_Configs config;
-    config.FFT1D_config_gen(src_len, &handle);
-
-    decx::signal::GPU_FFT1D_R2C_fp32_organizer(_src, _dst, &config, &handle, S);
-    S->detach();
-
-    return handle;
-}
-
-
-
-de::DH de::signal::cuda::IFFT1D_C2C(de::Vector& src, de::Vector& dst)
-{
-    de::DH handle;
-
     decx::_Vector* _src = dynamic_cast<decx::_Vector*>(&src);
     decx::_Vector* _dst = dynamic_cast<decx::_Vector*>(&dst);
 
-    if (decx::cuP.is_init == false) {
-        decx::Not_init(&handle);
-        return handle;
+    switch (FFT_flag)
+    {
+    case de::signal::FFT_flags::IFFT_C2R:
+        decx::signal::IFFT1D_C2R(_src, _dst, &handle);
+        break;
+
+    case de::signal::FFT_flags::IFFT_C2C:
+        decx::signal::FFT1D_C2C(_src, _dst, &handle);
+        break;
+    default:
+        break;
     }
 
-    const int src_len = _src->length;
-
-    if (!decx::signal::check_apart(src_len)) {
-        decx::err::FFT_Error_length(&handle);
-        Print_Error_Message(4, FFT_ERROR_LENGTH);
-        return handle;
-    }
-
-    decx::cuda_stream* S = NULL;
-    S = decx::CStream.stream_accessor_ptr(cudaStreamNonBlocking);
-    if (S == NULL) {
-        Print_Error_Message(4, CUDA_STREAM_ACCESS_FAIL);
-        decx::err::CUDA_Stream_access_fail(&handle);
-        return handle;
-    }
-
-    decx::signal::CUDA_FFT_Configs config;
-    config.FFT1D_config_gen(src_len, &handle);
-
-    decx::signal::GPU_IFFT1D_C2C_fp32_organizer(_src, _dst, &config, &handle, S);
-    S->detach();
-    return handle;
-}
-
-
-
-de::DH de::signal::cuda::IFFT1D_C2R(de::Vector& src, de::Vector& dst)
-{
-    de::DH handle;
-
-    decx::_Vector* _src = dynamic_cast<decx::_Vector*>(&src);
-    decx::_Vector* _dst = dynamic_cast<decx::_Vector*>(&dst);
-
-    if (decx::cuP.is_init == false) {
-        decx::Not_init(&handle);
-        return handle;
-    }
-
-    const int src_len = _src->length;
-
-    if (!decx::signal::check_apart(src_len)) {
-        decx::err::FFT_Error_length(&handle);
-        Print_Error_Message(4, FFT_ERROR_LENGTH);
-        return handle;
-    }
-
-    decx::cuda_stream* S = NULL;
-    S = decx::CStream.stream_accessor_ptr(cudaStreamNonBlocking);
-    if (S == NULL) {
-        Print_Error_Message(4, CUDA_STREAM_ACCESS_FAIL);
-        decx::err::CUDA_Stream_access_fail(&handle);
-        return handle;
-    }
-
-    decx::signal::CUDA_FFT_Configs config;
-    config.FFT1D_config_gen(src_len, &handle);
-
-    decx::signal::GPU_IFFT1D_C2R_fp32_organizer(_src, _dst, &config, &handle, S);
-    S->detach();
+    decx::err::Success(&handle);
     return handle;
 }
