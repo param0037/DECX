@@ -95,26 +95,31 @@ void decx::_Matrix::re_construct(const int type, uint _width, uint _height, cons
     // If all the parameters are the same, it is meaningless to re-construt the data
     if (this->type != type || this->width != _width || this->height != _height || this->Store_Type != flag)
     {
-        // deallocate according to the current memory pool first
-        if (this->Store_Type != flag && this->Mat.block == NULL) {
-            switch (this->Store_Type)
-            {
-            case decx::DATA_STORE_TYPE::Page_Default:
-                decx::alloc::_host_virtual_page_dealloc(&this->Mat);
-                break;
+        const size_t pre_size = this->_total_bytes;
+        const int pre_store_type = this->Store_Type;
 
-            case decx::DATA_STORE_TYPE::Page_Locked:
-                decx::alloc::_host_fixed_page_dealloc(&this->Mat);
-                break;
-            default:
-                break;
+        this->_attribute_assign(type, _width, _height, flag);
+        
+        if (this->_total_bytes > pre_size || pre_store_type != flag) {
+            // deallocate according to the current memory pool first
+            if (pre_store_type != flag && this->Mat.ptr == NULL) {
+                switch (pre_store_type)
+                {
+                case decx::DATA_STORE_TYPE::Page_Default:
+                    decx::alloc::_host_virtual_page_dealloc(&this->Mat);
+                    break;
+
+                case decx::DATA_STORE_TYPE::Page_Locked:
+                    decx::alloc::_host_fixed_page_dealloc(&this->Mat);
+                    break;
+                default:
+                    break;
+                }
+                this->alloc_data_space();
             }
-            this->_attribute_assign(type, _width, _height, flag);
-            this->alloc_data_space();
-        }
-        else {
-            this->_attribute_assign(type, _width, _height, flag);
-            this->re_alloc_data_space();
+            else {
+                this->re_alloc_data_space();
+            }
         }
     }
 }
@@ -150,10 +155,10 @@ void decx::_Matrix::_attribute_assign(const int _type, const uint _width, const 
             break;
         }
         this->pitch = decx::utils::ceil<uint>(_width, _alignment) * _alignment;
+        this->_init = true;
 
         this->element_num = static_cast<size_t>(_width) * static_cast<size_t>(_height);
-        this->total_bytes = (this->element_num) * this->_single_element_size;
-
+        
         this->_element_num = static_cast<size_t>(this->pitch) * static_cast<size_t>(_height);
         this->_total_bytes = (this->_element_num) * this->_single_element_size;
     }
@@ -185,6 +190,7 @@ void decx::_Matrix::release()
 decx::_Matrix::_Matrix()
 {
     this->_attribute_assign(decx::_DATA_TYPES_FLAGS_::_VOID_, 0, 0, 0);
+    this->_init = false;
 }
 
 
@@ -195,6 +201,16 @@ decx::_Matrix::_Matrix(const int type, const uint _width, const uint _height, co
 }
 
 
+uint decx::_Matrix::Width()
+{
+    return this->width;
+}
+
+
+uint decx::_Matrix::Height()
+{
+    return this->height;
+}
 
 
 float* decx::_Matrix::ptr_fp32(const int row, const int col)
