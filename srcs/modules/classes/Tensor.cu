@@ -15,6 +15,7 @@
 decx::_Tensor::_Tensor()
 {
     this->_attribute_assign(decx::_DATA_TYPES_FLAGS_::_VOID_, 0, 0, 0, 0);
+    this->_init = false;
 }
 
 
@@ -37,17 +38,20 @@ void decx::_Tensor::_attribute_assign(const int _type, const uint _width, const 
     switch (this->_single_element_size)
     {
     case 4:
-        _alignment = _TENSOR_ALIGN_4B_;     break;
+        _alignment = _TENSOR_ALIGN_DEPTH_4B_;     break;
     case 8:
-        _alignment = _TENSOR_ALIGN_8B_;     break;
+        _alignment = _TENSOR_ALIGN_DEPTH_8B_;     break;
     case 2:
-        _alignment = _TENSOR_ALIGN_2B_;     break;
+        _alignment = _TENSOR_ALIGN_DEPTH_2B_;     break;
     case 1:
-        _alignment = _TENSOR_ALIGN_1B_;     break;
+        _alignment = _TENSOR_ALIGN_DEPTH_1B_;     break;
+    case 16:
+        _alignment = _TENSOR_ALIGN_DEPTH_16B_;    break;
     default:
         break;
     }
     this->dpitch = decx::utils::ceil<uint>(_depth, _alignment) * _alignment;
+    this->_init = true;
 
     this->dp_x_wp = static_cast<size_t>(this->dpitch) * static_cast<size_t>(this->wpitch);
 
@@ -121,9 +125,44 @@ void decx::_Tensor::construct(const int _type, const uint _width, const uint _he
 
 void decx::_Tensor::re_construct(const int _type, const uint _width, const uint _height, const uint _depth, const int store_type)
 {
+    /*const size_t pre_size = this->total_bytes;
+    const int pre_store_type = this->_store_type;
     this->_attribute_assign(_type, _width, _height, _depth, store_type);
 
-    this->re_alloc_data_space();
+    if (this->total_bytes > pre_size || store_type != pre_store_type) {
+        this->re_alloc_data_space();
+    }*/
+
+    // If all the parameters are the same, it is meaningless to re-construt the data
+    if (this->type != _type || this->width != _width || this->height != _height || this->_store_type != store_type)
+    {
+        const size_t pre_size = this->total_bytes;
+        const int pre_store_type = this->_store_type;
+
+        this->_attribute_assign(_type, _width, _height, _depth, store_type);
+
+        if (this->total_bytes > pre_size || pre_store_type != store_type) {
+            // deallocate according to the current memory pool first
+            if (pre_store_type != store_type && this->Tens.ptr == NULL) {
+                switch (pre_store_type)
+                {
+                case decx::DATA_STORE_TYPE::Page_Default:
+                    decx::alloc::_host_virtual_page_dealloc(&this->Tens);
+                    break;
+
+                case decx::DATA_STORE_TYPE::Page_Locked:
+                    decx::alloc::_host_fixed_page_dealloc(&this->Tens);
+                    break;
+                default:
+                    break;
+                }
+                this->alloc_data_space();
+            }
+            else {
+                this->re_alloc_data_space();
+            }
+        }
+    }
 }
 
 
@@ -170,7 +209,7 @@ float* decx::_Tensor::ptr_fp32(const int x, const int y, const int z)
 {
     float* ptr = reinterpret_cast<float*>(this->Tens.ptr);
     return ptr +
-        ((size_t)x * this->dp_x_wp + (size_t)y * (size_t)this->dpitch + (size_t)z) * this->_single_element_size;
+        ((size_t)x * this->dp_x_wp + (size_t)y * (size_t)this->dpitch + (size_t)z);
 }
 
 
@@ -178,7 +217,7 @@ int* decx::_Tensor::ptr_int32(const int x, const int y, const int z)
 {
     int* ptr = reinterpret_cast<int*>(this->Tens.ptr);
     return ptr +
-        ((size_t)x * this->dp_x_wp + (size_t)y * (size_t)this->dpitch + (size_t)z) * this->_single_element_size;
+        ((size_t)x * this->dp_x_wp + (size_t)y * (size_t)this->dpitch + (size_t)z);
 }
 
 
@@ -186,7 +225,7 @@ uint8_t* decx::_Tensor::ptr_uint8(const int x, const int y, const int z)
 {
     uint8_t* ptr = reinterpret_cast<uint8_t*>(this->Tens.ptr);
     return ptr +
-        ((size_t)x * this->dp_x_wp + (size_t)y * (size_t)this->dpitch + (size_t)z) * this->_single_element_size;
+        ((size_t)x * this->dp_x_wp + (size_t)y * (size_t)this->dpitch + (size_t)z);
 }
 
 
@@ -194,7 +233,7 @@ de::CPf* decx::_Tensor::ptr_cpl32(const int x, const int y, const int z)
 {
     de::CPf* ptr = reinterpret_cast<de::CPf*>(this->Tens.ptr);
     return ptr +
-        ((size_t)x * this->dp_x_wp + (size_t)y * (size_t)this->dpitch + (size_t)z) * this->_single_element_size;
+        ((size_t)x * this->dp_x_wp + (size_t)y * (size_t)this->dpitch + (size_t)z);
 }
 
 
@@ -202,7 +241,7 @@ double* decx::_Tensor::ptr_fp64(const int x, const int y, const int z)
 {
     double* ptr = reinterpret_cast<double*>(this->Tens.ptr);
     return ptr +
-        ((size_t)x * this->dp_x_wp + (size_t)y * (size_t)this->dpitch + (size_t)z) * this->_single_element_size;
+        ((size_t)x * this->dp_x_wp + (size_t)y * (size_t)this->dpitch + (size_t)z);
 }
 
 
@@ -210,7 +249,7 @@ de::Half* decx::_Tensor::ptr_fp16(const int x, const int y, const int z)
 {
     de::Half* ptr = reinterpret_cast<de::Half*>(this->Tens.ptr);
     return ptr +
-        ((size_t)x * this->dp_x_wp + (size_t)y * (size_t)this->dpitch + (size_t)z) * this->_single_element_size;
+        ((size_t)x * this->dp_x_wp + (size_t)y * (size_t)this->dpitch + (size_t)z);
 }
 
 
@@ -218,35 +257,35 @@ de::Vector4f* decx::_Tensor::ptr_vec4f(const int x, const int y, const int z)
 {
     de::Vector4f* ptr = reinterpret_cast<de::Vector4f*>(this->Tens.ptr);
     return ptr +
-        ((size_t)x * this->dp_x_wp + (size_t)y * (size_t)this->dpitch + (size_t)z) * this->_single_element_size;
+        ((size_t)x * this->dp_x_wp + (size_t)y * (size_t)this->dpitch + (size_t)z);
 }
 
 
 
 namespace de
 {
-    de::Tensor* CreateTensorPtr();
+    _DECX_API_ de::Tensor* CreateTensorPtr();
 
 
-    de::Tensor& CreateTensorRef();
+    _DECX_API_ de::Tensor& CreateTensorRef();
 
 
-    de::Tensor* CreateTensorPtr(const int _type, const uint _width, const uint _height, const uint _depth, const int flag);
+    _DECX_API_ de::Tensor* CreateTensorPtr(const int _type, const uint _width, const uint _height, const uint _depth, const int flag);
 
 
-    de::Tensor& CreateTensorRef(const int _type, const uint _width, const uint _height, const uint _depth, const int flag);
+    _DECX_API_ de::Tensor& CreateTensorRef(const int _type, const uint _width, const uint _height, const uint _depth, const int flag);
 }
 
 
 
-de::Tensor& de::CreateTensorRef()
+_DECX_API_ de::Tensor& de::CreateTensorRef()
 {
     return *(new decx::_Tensor());
 }
 
 
 
-de::Tensor* de::CreateTensorPtr()
+_DECX_API_ de::Tensor* de::CreateTensorPtr()
 {
     return new decx::_Tensor();
 }
@@ -255,14 +294,14 @@ de::Tensor* de::CreateTensorPtr()
 
 
 
-de::Tensor& de::CreateTensorRef(const int _type, const uint _width, const uint _height, const uint _depth, const int flag)
+_DECX_API_ de::Tensor& de::CreateTensorRef(const int _type, const uint _width, const uint _height, const uint _depth, const int flag)
 {
     return *(new decx::_Tensor(_type, _width, _height, _depth, flag));
 }
 
 
 
-de::Tensor* de::CreateTensorPtr(const int _type, const uint _width, const uint _height, const uint _depth, const int flag)
+_DECX_API_ de::Tensor* de::CreateTensorPtr(const int _type, const uint _width, const uint _height, const uint _depth, const int flag)
 {
     return new decx::_Tensor(_type, _width, _height, _depth, flag);
 }
