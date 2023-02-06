@@ -67,4 +67,17 @@ bool decx::signal::check_apart(int __x)
 }
 
 
+namespace de
+{
+    namespace signal {
+        enum FFT_flags {
+            FFT_R2C = 0,
+            FFT_C2C = 1,
+            IFFT_C2C = 2,
+            IFFT_C2R = 3
+        };
+    }
+}
+
+
 #endif
