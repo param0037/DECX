@@ -32,13 +32,13 @@ void decx::_TensorArray::_attribute_assign(const int _type, const uint _width, c
     switch (this->_single_element_size)
     {
     case 4:
-        _alignment = _TENSOR_ALIGN_4B_;     break;
+        _alignment = _TENSOR_ALIGN_DEPTH_4B_;     break;
     case 8:
-        _alignment = _TENSOR_ALIGN_8B_;     break;
+        _alignment = _TENSOR_ALIGN_DEPTH_8B_;     break;
     case 2:
-        _alignment = _TENSOR_ALIGN_2B_;     break;
+        _alignment = _TENSOR_ALIGN_DEPTH_2B_;     break;
     case 1:
-        _alignment = _TENSOR_ALIGN_1B_;     break;
+        _alignment = _TENSOR_ALIGN_DEPTH_1B_;     break;
     default:
         break;
     }
@@ -148,27 +148,32 @@ void decx::_TensorArray::re_construct(const int _type, const uint _width, const 
     if (this->type != _type || this->width != _width || this->height != _height || this->depth != _depth || 
         this->tensor_num != _tensor_num || this->_store_type != store_type) 
     {
+        const size_t pre_size = this->total_bytes;
+        const int pre_store_type = this->_store_type;
+
         decx::alloc::_host_virtual_page_dealloc(&this->TensptrArr);
-        if (this->_store_type != store_type) {
-            switch (this->_store_type)
-            {
-            case decx::DATA_STORE_TYPE::Page_Default:
-                decx::alloc::_host_virtual_page_dealloc(&this->TensArr);
-                break;
+        this->_attribute_assign(_type, _width, _height, _depth, _tensor_num, store_type);
 
-            case decx::DATA_STORE_TYPE::Page_Locked:
-                decx::alloc::_host_fixed_page_dealloc(&this->TensArr);
-                break;
-            default:
-                break;
+        if (this->total_bytes > pre_size || pre_store_type != store_type) {
+            if (pre_store_type != store_type && this->TensArr.ptr != NULL) {
+                switch (pre_store_type)
+                {
+                case decx::DATA_STORE_TYPE::Page_Default:
+                    decx::alloc::_host_virtual_page_dealloc(&this->TensArr);
+                    break;
+
+                case decx::DATA_STORE_TYPE::Page_Locked:
+                    decx::alloc::_host_fixed_page_dealloc(&this->TensArr);
+                    break;
+                default:
+                    break;
+                }
+                
+                this->alloc_data_space();
             }
-
-            this->_attribute_assign(_type, _width, _height, _depth, _tensor_num, store_type);
-            this->alloc_data_space();
-        }
-        else {
-            this->_attribute_assign(_type, _width, _height, _depth, _tensor_num, store_type);
-            this->re_alloc_data_space();
+            else {
+                this->re_alloc_data_space();
+            }
         }
     }
 }
@@ -193,16 +198,16 @@ decx::_TensorArray::_TensorArray(const int _type, const uint _width, const uint 
 
 namespace de
 {
-    de::TensorArray& CreateTensorArrayRef();
+    _DECX_API_ de::TensorArray& CreateTensorArrayRef();
 
 
-    de::TensorArray* CreateTensorArrayPtr();
+    _DECX_API_ de::TensorArray* CreateTensorArrayPtr();
 
 
-    de::TensorArray& CreateTensorArrayRef(const int _type, const uint width, const uint height, const uint depth, const uint tensor_num, const int store_type);
+    _DECX_API_ de::TensorArray& CreateTensorArrayRef(const int _type, const uint width, const uint height, const uint depth, const uint tensor_num, const int store_type);
 
 
-    de::TensorArray* CreateTensorArrayPtr(const int _type, const uint width, const uint height, const uint depth, const uint tensor_num, const int store_type);
+    _DECX_API_ de::TensorArray* CreateTensorArrayPtr(const int _type, const uint width, const uint height, const uint depth, const uint tensor_num, const int store_type);
 }
 
 
@@ -238,10 +243,47 @@ de::TensorArray* de::CreateTensorArrayPtr(const int _type, const uint width, con
 
 
 
-void* decx::_TensorArray::index(const int x, const int y, const int z, const int tensor_id)
+
+float* decx::_TensorArray::ptr_fp32(const int x, const int y, const int z, const int tensor_id)
 {
-    return (void*)((uchar*)this->TensptrArr.ptr[tensor_id] + 
-        ((size_t)x * this->dp_x_wp + (size_t)y * (size_t)this->dpitch + (size_t)z) * this->_single_element_size);
+    float* _ptr = reinterpret_cast<float*>(this->TensptrArr.ptr[tensor_id]);
+    return (_ptr +
+        ((size_t)x * this->dp_x_wp + (size_t)y * (size_t)this->dpitch + (size_t)z));
+}
+
+
+int* decx::_TensorArray::ptr_int32(const int x, const int y, const int z, const int tensor_id)
+{
+    int* _ptr = reinterpret_cast<int*>(this->TensptrArr.ptr[tensor_id]);
+    return (_ptr +
+        ((size_t)x * this->dp_x_wp + (size_t)y * (size_t)this->dpitch + (size_t)z));
+}
+
+
+
+de::Half* decx::_TensorArray::ptr_fp16(const int x, const int y, const int z, const int tensor_id)
+{
+    de::Half* _ptr = reinterpret_cast<de::Half*>(this->TensptrArr.ptr[tensor_id]);
+    return (_ptr +
+        ((size_t)x * this->dp_x_wp + (size_t)y * (size_t)this->dpitch + (size_t)z));
+}
+
+
+
+double* decx::_TensorArray::ptr_fp64(const int x, const int y, const int z, const int tensor_id)
+{
+    double* _ptr = reinterpret_cast<double*>(this->TensptrArr.ptr[tensor_id]);
+    return (_ptr +
+        ((size_t)x * this->dp_x_wp + (size_t)y * (size_t)this->dpitch + (size_t)z));
+}
+
+
+
+uint8_t* decx::_TensorArray::ptr_uint8(const int x, const int y, const int z, const int tensor_id)
+{
+    uint8_t* _ptr = reinterpret_cast<uint8_t*>(this->TensptrArr.ptr[tensor_id]);
+    return (_ptr +
+        ((size_t)x * this->dp_x_wp + (size_t)y * (size_t)this->dpitch + (size_t)z));
 }
 
 
