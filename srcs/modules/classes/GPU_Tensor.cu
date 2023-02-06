@@ -27,18 +27,19 @@ void decx::_GPU_Tensor::_attribute_assign(const int _type, const uint _width, co
     switch (this->_single_element_size)
     {
     case 4:
-        _alignment = _TENSOR_ALIGN_4B_;     break;
+        _alignment = _TENSOR_ALIGN_DEPTH_4B_;     break;
     case 8:
-        _alignment = _TENSOR_ALIGN_8B_;     break;
+        _alignment = _TENSOR_ALIGN_DEPTH_8B_;     break;
     case 2:
-        _alignment = _TENSOR_ALIGN_2B_;     break;
+        _alignment = _TENSOR_ALIGN_DEPTH_2B_;     break;
     case 1:
-        _alignment = _TENSOR_ALIGN_1B_;     break;
+        _alignment = _TENSOR_ALIGN_DEPTH_1B_;     break;
     default:
         break;
     }
     this->dpitch = decx::utils::ceil<uint>(_depth, _alignment) * _alignment;
 
+    this->_init = true;
     this->dp_x_wp = static_cast<size_t>(this->dpitch) * static_cast<size_t>(this->wpitch);
 
     this->plane[0] = static_cast<size_t>(this->height) * static_cast<size_t>(this->width);
@@ -59,7 +60,7 @@ void decx::_GPU_Tensor::alloc_data_space()
         Print_Error_Message(4, "Tensor malloc failed! Please check if there is enough space in your device.");
         exit(-1);
     }
-    checkCudaErrors(cudaMemset(this->Tens.ptr, 0, this->total_bytes));
+    //checkCudaErrors(cudaMemset(this->Tens.ptr, 0, this->total_bytes));
 }
 
 
@@ -71,7 +72,7 @@ void decx::_GPU_Tensor::re_alloc_data_space()
         Print_Error_Message(4, "Tensor malloc failed! Please check if there is enough space in your device.");
         exit(-1);
     }
-    checkCudaErrors(cudaMemset(this->Tens.ptr, 0, this->total_bytes));
+    //checkCudaErrors(cudaMemset(this->Tens.ptr, 0, this->total_bytes));
 }
 
 
@@ -88,9 +89,14 @@ void decx::_GPU_Tensor::construct(const int _type, const uint _width, const uint
 
 void decx::_GPU_Tensor::re_construct(const int _type, const uint _width, const uint _height, const uint _depth)
 {
-    this->_attribute_assign(_type, _width, _height, _depth);
+    if (this->type != _type || this->width != _width || this->height != _height || this->depth != _depth) {
+        const size_t pre_size = this->total_bytes;
+        this->_attribute_assign(_type, _width, _height, _depth);
 
-    this->re_alloc_data_space();
+        if (this->total_bytes > pre_size) {
+            this->re_alloc_data_space();
+        }
+    }
 }
 
 
@@ -109,6 +115,7 @@ decx::_GPU_Tensor::_GPU_Tensor(const int _type, const uint _width, const uint _h
 decx::_GPU_Tensor::_GPU_Tensor()
 {
     this->_attribute_assign(decx::_DATA_TYPES_FLAGS_::_VOID_, 0, 0, 0);
+    this->_init = false;
 }
 
 
@@ -166,43 +173,43 @@ void decx::_GPU_Tensor::release()
 
 namespace de
 {
-    de::GPU_Tensor* CreateGPUTensorPtr();
+    _DECX_API_ de::GPU_Tensor* CreateGPUTensorPtr();
 
 
-    de::GPU_Tensor& CreateGPUTensorRef();
+    _DECX_API_ de::GPU_Tensor& CreateGPUTensorRef();
 
 
-    de::GPU_Tensor* CreateGPUTensorPtr(const int _type, const uint _width, const uint _height, const uint _depth);
+    _DECX_API_ de::GPU_Tensor* CreateGPUTensorPtr(const int _type, const uint _width, const uint _height, const uint _depth);
 
 
-    de::GPU_Tensor& CreateGPUTensorRef(const int _type, const uint _width, const uint _height, const uint _depth);
+    _DECX_API_ de::GPU_Tensor& CreateGPUTensorRef(const int _type, const uint _width, const uint _height, const uint _depth);
 }
 
 
 
 
-de::GPU_Tensor& de::CreateGPUTensorRef()
+_DECX_API_ de::GPU_Tensor& de::CreateGPUTensorRef()
 {
     return *(new decx::_GPU_Tensor());
 }
 
 
 
-de::GPU_Tensor* de::CreateGPUTensorPtr()
+_DECX_API_ de::GPU_Tensor* de::CreateGPUTensorPtr()
 {
     return new decx::_GPU_Tensor();
 }
 
 
 
-de::GPU_Tensor& de::CreateGPUTensorRef(const int _type, const uint _width, const uint _height, const uint _depth)
+_DECX_API_ de::GPU_Tensor& de::CreateGPUTensorRef(const int _type, const uint _width, const uint _height, const uint _depth)
 {
     return *(new decx::_GPU_Tensor(_type, _width, _height, _depth));
 }
 
 
 
-de::GPU_Tensor* de::CreateGPUTensorPtr(const int _type, const uint _width, const uint _height, const uint _depth)
+_DECX_API_ de::GPU_Tensor* de::CreateGPUTensorPtr(const int _type, const uint _width, const uint _height, const uint _depth)
 {
     return new decx::_GPU_Tensor(_type, _width, _height, _depth);
 }
