@@ -37,6 +37,7 @@ void decx::_Vector::_attribute_assign(const int _type, size_t len, const int fla
     }
     
     this->length = len;
+    this->_init = true;
     this->_length = decx::utils::ceil<size_t>(len, _alignment) * _alignment;
     this->total_bytes = this->_length * this->_single_element_size;
     this->_store_type = flag;
@@ -108,10 +109,35 @@ void decx::_Vector::construct(const int _type, size_t length, const int flag)
 
 void decx::_Vector::re_construct(const int _type, size_t length, const int flag)
 {
-    if (this->length != length || this->_store_type != flag) {
+    // If all the parameters are the same, it is meaningless to re-construt the data
+    if (this->type != type || this->length != _length || this->_store_type != flag)
+    {
+        const size_t pre_size = this->total_bytes;
+        const int pre_store_type = this->_store_type;
+
         this->_attribute_assign(_type, length, flag);
 
-        this->re_alloc_data_space();
+        if (this->total_bytes > pre_size || pre_store_type != flag) {
+            // deallocate according to the current memory pool first
+            if (pre_store_type != flag && this->Vec.ptr == NULL) {
+                switch (pre_store_type)
+                {
+                case decx::DATA_STORE_TYPE::Page_Default:
+                    decx::alloc::_host_virtual_page_dealloc(&this->Vec);
+                    break;
+
+                case decx::DATA_STORE_TYPE::Page_Locked:
+                    decx::alloc::_host_fixed_page_dealloc(&this->Vec);
+                    break;
+                default:
+                    break;
+                }
+                this->alloc_data_space();
+            }
+            else {
+                this->re_alloc_data_space();
+            }
+        }
     }
 }
 
@@ -121,6 +147,7 @@ void decx::_Vector::re_construct(const int _type, size_t length, const int flag)
 decx::_Vector::_Vector()
 {
     this->_attribute_assign(_VOID_, 0, 0);
+    this->_init = false;
 }
 
 
