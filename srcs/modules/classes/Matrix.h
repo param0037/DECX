@@ -1,11 +1,11 @@
-﻿/**
+/**
 *   ---------------------------------------------------------------------
 *   Author : Wayne Anderson
 *   Date   : 2021.04.16
 *   ---------------------------------------------------------------------
 *   This is a part of the open source program named "DECX", copyright c Wayne,
 *   2021.04.16, all right reserved.
-*   More information please visit https://github.com/param0037/backup_1
+*   More information please visit https://github.com/param0037/DECX
 */
 
 
@@ -43,8 +43,6 @@ namespace de {
 
         virtual uint Height() = 0;
 
-
-        virtual size_t TotalBytes() = 0;
 
 
         /* return the reference of the element in the matrix, which locates on specific row and colume
@@ -106,9 +104,11 @@ namespace decx
     public:
         uint width, height;
 
+        bool _init;
+
         unsigned short Store_Type;
 
-        size_t element_num, total_bytes;
+        size_t element_num;
         uint pitch;            // the true width (NOT IN BYTES), it is aligned with 8
 
         decx::PtrInfo<void> Mat;
@@ -131,13 +131,11 @@ namespace decx
         _Matrix(const int type, const uint _width, const uint _height, const int store_type);
 
 
-        virtual uint Width() { return this->width; }
+        virtual uint Width();
 
 
-        virtual uint Height() { return this->height; }
+        virtual uint Height();
 
-
-        virtual size_t TotalBytes() { return this->total_bytes; }
 
 
         virtual float*      ptr_fp32(const int row, const int col);
