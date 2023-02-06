@@ -100,26 +100,32 @@ void decx::_MatrixArray::re_construct(const int _type, uint _width, uint _height
     if (this->type != type || this->width != _width || this->height != _height || 
         this->ArrayNumber != _MatrixNum || this->_store_type != _flag)
     {
-        decx::alloc::_host_virtual_page_dealloc(&this->MatptrArr);
-        if (this->_store_type != _flag) {
-            switch (this->_store_type)
-            {
-            case decx::DATA_STORE_TYPE::Page_Default:
-                decx::alloc::_host_virtual_page_dealloc(&this->MatArr);
-                break;
+        const size_t pre_size = this->total_bytes;
+        const int pre_store_type = this->_store_type;
 
-            case decx::DATA_STORE_TYPE::Page_Locked:
-                decx::alloc::_host_fixed_page_dealloc(&this->MatArr);
-                break;
-            default:
-                break;
+        decx::alloc::_host_virtual_page_dealloc(&this->MatptrArr);
+        this->_attribute_assign(_type, _width, _height, _MatrixNum, _flag);
+
+        if (this->total_bytes > pre_size || pre_store_type != _flag) {
+            if (pre_store_type != _flag && this->MatArr.ptr == NULL) {
+                switch (pre_store_type)
+                {
+                case decx::DATA_STORE_TYPE::Page_Default:
+                    decx::alloc::_host_virtual_page_dealloc(&this->MatArr);
+                    break;
+
+                case decx::DATA_STORE_TYPE::Page_Locked:
+                    decx::alloc::_host_fixed_page_dealloc(&this->MatArr);
+                    break;
+                default:
+                    break;
+                }
+                
+                this->alloc_data_space();
             }
-            this->_attribute_assign(_type, _width, _height, _MatrixNum, _flag);
-            this->alloc_data_space();
-        }
-        else {
-            this->_attribute_assign(_type, _width, _height, _MatrixNum, _flag);
-            this->re_alloc_data_space();
+            else {
+                this->re_alloc_data_space();
+            }
         }
     }
 }
