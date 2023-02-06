@@ -22,17 +22,18 @@ namespace de
 {
 	namespace signal
 	{
+		enum FFT_flags {
+			FFT_R2C = 0,
+			FFT_C2C = 1,
+			IFFT_C2C = 2,
+			IFFT_C2R = 3
+		};
+
 		namespace cuda {
-			_DECX_API_ de::DH FFT1D_R2C(de::Vector& src, de::Vector& dst);
+			_DECX_API_ de::DH FFT1D(de::Vector& src, de::Vector& dst, const int FFT_flag);
 
 
-			_DECX_API_ de::DH FFT1D_C2C(de::Vector& src, de::Vector& dst);
-
-
-			_DECX_API_ de::DH IFFT1D_C2R(de::Vector& src, de::Vector& dst);
-
-
-			_DECX_API_ de::DH IFFT1D_C2C(de::Vector& src, de::Vector& dst);
+			_DECX_API_ de::DH IFFT1D(de::Vector& src, de::Vector& dst, const int FFT_flag);
 		}
 
 		namespace cpu
