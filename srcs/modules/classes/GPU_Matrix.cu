@@ -53,9 +53,12 @@ void decx::_GPU_Matrix::re_construct(const int _type, uint _width, uint _height)
     // If all the parameters are the same, it is meaningless to re-construt the data
     if (this->width != _width || this->height != _height)
     {
+        const size_t pre_size = this->_total_bytes;
         this->_attribute_assign(_type, _width, _height);
 
-        this->re_alloc_data_space();
+        if (this->total_bytes > pre_size) {
+            this->re_alloc_data_space();
+        }
     }
 }
 
@@ -83,6 +86,7 @@ void decx::_GPU_Matrix::_attribute_assign(const int _type, const uint _width, co
     }
     this->pitch = decx::utils::ceil<int>(_width, _alignment) * _alignment;
 
+    this->_init = true;
     this->element_num = static_cast<size_t>(_width) * static_cast<size_t>(_height);
     this->total_bytes = (this->element_num) * this->_single_element_size;
 
@@ -105,6 +109,7 @@ decx::_GPU_Matrix::_GPU_Matrix(const int _type, const uint _width, const uint _h
 decx::_GPU_Matrix::_GPU_Matrix()
 {
     this->_attribute_assign(decx::_DATA_TYPES_FLAGS_::_VOID_, 0, 0);
+    this->_init = false;
 }
 
 
