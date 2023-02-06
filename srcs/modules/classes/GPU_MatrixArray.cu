@@ -104,9 +104,12 @@ void decx::_GPU_MatrixArray::construct(const int _type, uint _width, uint _heigh
 void decx::_GPU_MatrixArray::re_construct(const int _type, uint _width, uint _height, uint MatrixNum)
 {
     if (_width != this->width || _height != this->height || MatrixNum != this->ArrayNumber) {
+        const size_t pre_size = this->total_bytes;
         this->_attribute_assign(_type, _width, _height, MatrixNum);
 
-        this->re_alloc_data_space();
+        if (this->total_bytes > pre_size) {
+            this->re_alloc_data_space();
+        }
     }
 }
 
