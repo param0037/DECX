@@ -13,15 +13,7 @@
 
 
 __global__
-/**
-* config -> <<<dim3(h / 128, w / 128, 1), int(16 * 16), 0, S>>>
-* __same should be 16-times and dstDims should be both 128-times
-* @param pitch_A : considered float4, is the true width on device memory (>= ~.width)
-* @param pitch_B : considered float4, is the true width on device memory (>= ~.width)
-* @param pitch_dst : considered float4
-* @param __iter : __linear(in float) / 16
-*/
-void cu_GEMM_fp16_spec_accu(float4 *                A,
+void decx::gemm::GPUK::cu_GEMM_fp16_spec_accu(float4 *                A,
                             float4 *                B,
                             float4 *                dst,
                             const uint              pitch_A,
@@ -94,18 +86,9 @@ void cu_GEMM_fp16_spec_accu(float4 *                A,
 }
 
 
-// last storage (16, 16)
-// ¼ÆËã / ·Ã´æ ±È is the crucial, reduce memory assess by vectorization
+
 __global__
-/**
-* config -> <<<dim3(h / 128, w / 128, 1), int(16 * 16), 0, S>>>
-* __same should be 16-times and dstDims should be both 128-times
-* @param pitch_A : considered float4, is the true width on device memory (>= ~.width)
-* @param pitch_B : considered float4, is the true width on device memory (>= ~.width)
-* @param pitch_dst : considered float4
-* @param __iter : __linear(in float) / 16
-*/
-void cu_GEMM_fp16_ABC_spec_accu(float4 *                A,
+void decx::gemm::GPUK::cu_GEMM_fp16_ABC_spec_accu(float4 *                A,
                                 float4 *                B,
                                 float4 *                C,
                                 float4 *                dst,
@@ -180,15 +163,7 @@ void cu_GEMM_fp16_ABC_spec_accu(float4 *                A,
 
 
 __global__
-/**
-* config -> <<<dim3(h / 128, w / 128, 1), int(16 * 16), 0, S>>>
-* __same should be 16-times and dstDims should be both 128-times
-* @param pitch_A : considered float4, is the true width on device memory (>= ~.width)
-* @param pitch_B : considered float4, is the true width on device memory (>= ~.width)
-* @param pitch_dst : considered float4
-* @param __iter : __linear(in float) / 16
-*/
-void cu_GEMM_fp16_anyWH_anyL_accu(float4 *                A,
+void decx::gemm::GPUK::cu_GEMM_fp16_anyWH_anyL_accu(float4 *                A,
                                   float4 *                B,
                                   float4 *                dst,
                                   const uint              pitch_A,
@@ -283,15 +258,7 @@ void cu_GEMM_fp16_anyWH_anyL_accu(float4 *                A,
 
 
 __global__
-/**
-* config -> <<<dim3(h / 128, w / 128, 1), int(16 * 16), 0, S>>>
-* __same should be 16-times and dstDims should be both 128-times
-* @param pitch_A : considered float4, is the true width on device memory (>= ~.width)
-* @param pitch_B : considered float4, is the true width on device memory (>= ~.width)
-* @param pitch_dst : considered float4
-* @param __iter : __linear(in float) / 16
-*/
-void cu_GEMM_fp16_ABC_anyWH_anyL_accu(float4 *                A,
+void decx::gemm::GPUK::cu_GEMM_fp16_ABC_anyWH_anyL_accu(float4 *                A,
                                       float4 *                B,
                                       float4 *                C,
                                       float4 *                dst,
@@ -397,15 +364,7 @@ void cu_GEMM_fp16_ABC_anyWH_anyL_accu(float4 *                A,
 
 
 __global__
-/**
-* config -> <<<dim3(h / 128, w / 128, 1), int(16 * 16), 0, S>>>
-* __same should be 16-times and dstDims should be both 128-times
-* @param pitch_A : considered float4, is the true width on device memory (>= ~.width)
-* @param pitch_B : considered float4, is the true width on device memory (>= ~.width)
-* @param pitch_dst : considered float4
-* @param __iter : __linear(in float) / 16
-*/
-void cu_GEMM_fp16_specWH_anyL_accu(float4 *                A,
+void decx::gemm::GPUK::cu_GEMM_fp16_specWH_anyL_accu(float4 *                A,
                                    float4 *                B,
                                    float4 *                dst,
                                    const uint              pitch_A,
@@ -491,15 +450,7 @@ void cu_GEMM_fp16_specWH_anyL_accu(float4 *                A,
 
 
 __global__
-/**
-* config -> <<<dim3(h / 128, w / 128, 1), int(16 * 16), 0, S>>>
-* __same should be 16-times and dstDims should be both 128-times
-* @param pitch_A : considered float4, is the true width on device memory (>= ~.width)
-* @param pitch_B : considered float4, is the true width on device memory (>= ~.width)
-* @param pitch_dst : considered float4
-* @param __iter : __linear(in float) / 16
-*/
-void cu_GEMM_fp16_ABC_specWH_anyL_accu(float4 *                A,
+void decx::gemm::GPUK::cu_GEMM_fp16_ABC_specWH_anyL_accu(float4 *                A,
                                        float4 *                B,
                                        float4 *                C,
                                        float4 *                dst,
@@ -586,15 +537,7 @@ void cu_GEMM_fp16_ABC_specWH_anyL_accu(float4 *                A,
 
 
 __global__
-/**
-* config -> <<<dim3(h / 128, w / 128, 1), int(16 * 16), 0, S>>>
-* __same should be 16-times and dstDims should be both 128-times
-* @param pitch_A : considered float4, is the true width on device memory (>= ~.width)
-* @param pitch_B : considered float4, is the true width on device memory (>= ~.width)
-* @param pitch_dst : considered float4
-* @param __iter : __linear(in float) / 16
-*/
-void cu_GEMM_fp16_anyWH_specL_accu(float4 *                A,
+void decx::gemm::GPUK::cu_GEMM_fp16_anyWH_specL_accu(float4 *                A,
                                    float4 *                B,
                                    float4 *                dst,
                                    const uint              pitch_A,
@@ -688,15 +631,7 @@ void cu_GEMM_fp16_anyWH_specL_accu(float4 *                A,
 
 
 __global__
-/**
-* config -> <<<dim3(h / 128, w / 128, 1), int(16 * 16), 0, S>>>
-* __same should be 16-times and dstDims should be both 128-times
-* @param pitch_A : considered float4, is the true width on device memory (>= ~.width)
-* @param pitch_B : considered float4, is the true width on device memory (>= ~.width)
-* @param pitch_dst : considered float4
-* @param __iter : __linear(in float) / 16
-*/
-void cu_GEMM_fp16_ABC_anyWH_specL_accu(float4 *                A,
+void decx::gemm::GPUK::cu_GEMM_fp16_ABC_anyWH_specL_accu(float4 *                A,
                                        float4 *                B,
                                        float4 *                C,
                                        float4 *                dst,
