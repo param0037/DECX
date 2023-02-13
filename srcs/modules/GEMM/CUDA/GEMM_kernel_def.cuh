@@ -11,14 +11,16 @@
 #define _GEMM_KERNEL_DEF_CUH_
 
 #include "../../core/basic.h"
+#include "../../signal/cuda_cpf32.cuh"
+
 
 /**
-* block(16, 16), Ã¿¸öÏß³Ì´¦Àí 8x8=64 ¸ö½á¹û(float)£¬
-* ¼´Ò»¸öblock´¦Àí(128, 128)¸öfloat½á¹û, Òò´ËĞèÒªÃ¿¸öÏß³Ì·ÖÅä64¸ö32-bit¼Ä´æÆ÷À´´æ´¢½á¹û
+* block(16, 16), æ¯ä¸ªçº¿ç¨‹å¤„ç† 8x8=64 ä¸ªç»“æœ(float)ï¼Œ
+* å³ä¸€ä¸ªblockå¤„ç†(128, 128)ä¸ªfloatç»“æœ, å› æ­¤éœ€è¦æ¯ä¸ªçº¿ç¨‹åˆ†é…64ä¸ª32-bitå¯„å­˜å™¨æ¥å­˜å‚¨ç»“æœ
 * shmemA -> float4[16][128 / 4]        shmemB -> float4[16][128 / 8]
-* Ò»¸ÄÇ°Ãæ£¬ÓÃ¾­µä¾ØÕó³Ë£¬¼´¾ØÕóBµÄ __linear ÊÇÔÚÁĞ·½Ïò, Ã¿Ò»¸öÏß³ÌloadÁ½¸öfloat4, ¼´8¸öfloat
+* ä¸€æ”¹å‰é¢ï¼Œç”¨ç»å…¸çŸ©é˜µä¹˜ï¼Œå³çŸ©é˜µBçš„ __linear æ˜¯åœ¨åˆ—æ–¹å‘, æ¯ä¸€ä¸ªçº¿ç¨‹loadä¸¤ä¸ªfloat4, å³8ä¸ªfloat
 * 
-* shared memory µÄ·Ö²¼Í¼
+* shared memory çš„åˆ†å¸ƒå›¾
 *   16
 * -------                    128
 * |     |            -------------------
@@ -55,6 +57,22 @@
 }    \
 
 
+#define cpl32fma_1x2(name, group_dex, row) {    \
+    sum[row]._vf = decx::signal::cuda::dev::_complex_2fma1(tmp_B._vf, *((de::CPf*)&tmp_A[group_dex]._vd.name), sum[row]._vf);  \
+}
+
+
+#define cpl32fma_8x8 {        \
+    cpl32fma_1x2(x, 0, 0)    \
+    cpl32fma_1x2(y, 0, 1)    \
+    cpl32fma_1x2(x, 1, 2)    \
+    cpl32fma_1x2(y, 1, 3)    \
+\
+    cpl32fma_1x2(x, 2, 4)    \
+    cpl32fma_1x2(y, 2, 5)    \
+    cpl32fma_1x2(x, 3, 6)    \
+    cpl32fma_1x2(y, 3, 7)    \
+}    \
 
 
 #define s_store_one_line(dex, _dex_name){    \
@@ -66,7 +84,7 @@
 
 
 
-#define s_store(dex_name)  {            \
+#define s_store(dex_name)  {             \
     s_store_one_line(0, dex_name)        \
     s_store_one_line(1, dex_name)        \
     s_store_one_line(2, dex_name)        \
@@ -79,11 +97,54 @@
 
 
 
+#define cpl32_store_one_line(dex, _dex_name){    \
+    dst[_dex_name] = sum[dex]._vf;         \
+    _dex_name += pitch_B;                  \
+}    \
+
+
+
+#define cpl32_store(dex_name)  {             \
+    cpl32_store_one_line(0, dex_name)        \
+    cpl32_store_one_line(1, dex_name)        \
+    cpl32_store_one_line(2, dex_name)        \
+    cpl32_store_one_line(3, dex_name)        \
+    cpl32_store_one_line(4, dex_name)        \
+    cpl32_store_one_line(5, dex_name)        \
+    cpl32_store_one_line(6, dex_name)        \
+    cpl32_store_one_line(7, dex_name)        \
+}    \
+
+
+
 #define _Init_Sum(row){    \
     sum[row][0] = make_float4(0.f, 0.f, 0.f, 0.f);    \
     sum[row][1] = make_float4(0.f, 0.f, 0.f, 0.f);    \
 }    \
 
+
+#define Init_Sum_Union {   \
+    sum[0]._vf = make_float4(0.f, 0.f, 0.f, 0.f);   \
+    sum[1]._vf = make_float4(0.f, 0.f, 0.f, 0.f);   \
+    sum[2]._vf = make_float4(0.f, 0.f, 0.f, 0.f);   \
+    sum[3]._vf = make_float4(0.f, 0.f, 0.f, 0.f);   \
+    sum[4]._vf = make_float4(0.f, 0.f, 0.f, 0.f);   \
+    sum[5]._vf = make_float4(0.f, 0.f, 0.f, 0.f);   \
+    sum[6]._vf = make_float4(0.f, 0.f, 0.f, 0.f);   \
+    sum[7]._vf = make_float4(0.f, 0.f, 0.f, 0.f);   \
+}
+
+
+#define set_Sum_Union {   \
+    sum[0]._vf = make_float4(37.f, 37.f, 37.f, 37.f);   \
+    sum[1]._vf = make_float4(37.f, 37.f, 37.f, 37.f);   \
+    sum[2]._vf = make_float4(37.f, 37.f, 37.f, 37.f);   \
+    sum[3]._vf = make_float4(37.f, 37.f, 37.f, 37.f);   \
+    sum[4]._vf = make_float4(37.f, 37.f, 37.f, 37.f);   \
+    sum[5]._vf = make_float4(37.f, 37.f, 37.f, 37.f);   \
+    sum[6]._vf = make_float4(37.f, 37.f, 37.f, 37.f);   \
+    sum[7]._vf = make_float4(37.f, 37.f, 37.f, 37.f);   \
+}
 
 
 #define Init_Sum {    \
@@ -161,6 +222,20 @@
     s_loadC_line(6, dex_name)        \
     s_loadC_line(7, dex_name)        \
 }    \
+
+
+
+#define cpl32_loadC(dex_name) { \
+    sum[0]._vf = C[dex_name];       dex_name += pitch_B;    \
+    sum[1]._vf = C[dex_name];       dex_name += pitch_B;    \
+    sum[2]._vf = C[dex_name];       dex_name += pitch_B;    \
+    sum[3]._vf = C[dex_name];       dex_name += pitch_B;    \
+    sum[4]._vf = C[dex_name];       dex_name += pitch_B;    \
+    sum[5]._vf = C[dex_name];       dex_name += pitch_B;    \
+    sum[6]._vf = C[dex_name];       dex_name += pitch_B;    \
+    sum[7]._vf = C[dex_name];           \
+}
+
 
 
 #if __ABOVE_SM_53
