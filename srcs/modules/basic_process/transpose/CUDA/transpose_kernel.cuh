@@ -14,6 +14,7 @@
 
 
 #include "../../../core/basic.h"
+#include "../../../core/utils/decx_utils_device_functions.cuh"
 
 
 #define _CUDA_TRANSPOSE_4X4_D_BLOCK_SIZE_ 16
