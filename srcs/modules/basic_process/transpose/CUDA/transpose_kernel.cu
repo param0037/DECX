@@ -49,7 +49,10 @@ void decx::bp::GPUK::cu_transpose_vec4x4d(double2* src,
     size_t dex_src = tidy * 4 * pitchsrc + tidx * 2, 
             dex_dst = tidx * 4 * pitchdst + tidy * 2;
 
-    double2 recv[4][2];
+    double2 recv[4][2] = { {decx::utils::vec2_set1_fp64(0), decx::utils::vec2_set1_fp64(0)},
+                           {decx::utils::vec2_set1_fp64(0), decx::utils::vec2_set1_fp64(0)},
+                           {decx::utils::vec2_set1_fp64(0), decx::utils::vec2_set1_fp64(0)},
+                           {decx::utils::vec2_set1_fp64(0), decx::utils::vec2_set1_fp64(0)} };
     double tmp;
 
     if (tidy * 4 < proc_dim_dst.x && tidx < pitchsrc / 2) {
@@ -177,7 +180,8 @@ void decx::bp::GPUK::cu_transpose_vec4x4(const float4* src, float4* dst, const u
     int tidx = threadIdx.x + blockIdx.x * blockDim.x;
     int tidy = threadIdx.y + blockIdx.y * blockDim.y;
 
-    float4 _loc_transp[4];
+    float4 _loc_transp[4] = { decx::utils::vec4_set1_fp32(0), decx::utils::vec4_set1_fp32(0),
+        decx::utils::vec4_set1_fp32(0), decx::utils::vec4_set1_fp32(0) };
     float tmp;
     size_t dex = 4 * (size_t)tidx * (size_t)Wsrc + (size_t)tidy;
 
@@ -211,7 +215,8 @@ void decx::bp::GPUK::cu_transpose_vec8x8(const float4* src, float4* dst, const u
     int tidx = threadIdx.x + blockIdx.x * blockDim.x;
     int tidy = threadIdx.y + blockIdx.y * blockDim.y;
 
-    float4 _loc_transp[8];
+    float4 _loc_transp[8] = { decx::utils::vec4_set1_fp32(0), decx::utils::vec4_set1_fp32(0),
+        decx::utils::vec4_set1_fp32(0), decx::utils::vec4_set1_fp32(0) };
     // If I delete the volatile declaration, the entire register buffer will be set to zero by compiler
     volatile __half tmp;
     size_t dex = 8 * (size_t)tidx * (size_t)Wsrc + (size_t)tidy;
@@ -296,7 +301,7 @@ void decx::bp::GPUK::cu_transpose_vec2x2(const double2* src, double2* dst, const
     int tidx = threadIdx.x + blockIdx.x * blockDim.x;
     int tidy = threadIdx.y + blockIdx.y * blockDim.y;
 
-    double2 _loc_transp[2];
+    double2 _loc_transp[2] = { decx::utils::vec2_set1_fp64(0), decx::utils::vec2_set1_fp64(0) };
     double tmp;
     size_t dex = 2 * (size_t)tidx * (size_t)width + (size_t)tidy;
 
