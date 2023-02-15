@@ -5,7 +5,7 @@
 *   ---------------------------------------------------------------------
 *   This is a part of the open source program named "DECX", copyright c Wayne,
 *   2021.04.16, all right reserved.
-*   More information please visit https://github.com/param0037/backup_1
+*   More information please visit https://github.com/param0037/DECX
 */
 
 #ifndef _GPU_FFT2D_UTILS_KERNEL_H_
