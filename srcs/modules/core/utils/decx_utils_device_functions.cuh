@@ -9,8 +9,8 @@
 */
 
 
-#ifndef _DECX_UTILS_DEVICE_FUNCTIONS_CUH_
-#define _DECX_UTILS_DEVICE_FUNCTIONS_CUH_
+#ifndef _DECX_CUDA_VECTYPES_OPS_CUH_
+#define _DECX_CUDA_VECTYPES_OPS_CUH_
 
 
 #include "../basic.h"
@@ -45,6 +45,20 @@ decx::utils::vec4_set1_fp32(const float __x)
     return make_float4(__x, __x, __x, __x);
 }
 
+
+
+namespace decx
+{
+    namespace utils {
+        union __align__(16) _cuda_vec128
+        {
+            float4      _vf;
+            double2     _vd;
+            int4        _vi;
+            uchar4      _vu8[4];
+        };
+    }
+}
 
 
 #endif
