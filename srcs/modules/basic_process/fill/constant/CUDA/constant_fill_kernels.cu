@@ -13,7 +13,7 @@
 
 
 __global__ void
-decx::bp::GPUK::cu_fill1D_constant_v128_b32(float4* src, const float4 val, const size_t len)
+decx::bp::GPUK::cu_fill1D_constant_v128_b32(float4* __restrict src, const float4 val, const size_t len)
 {
     size_t tid = threadIdx.x + blockIdx.x * blockDim.x;
 
@@ -25,7 +25,7 @@ decx::bp::GPUK::cu_fill1D_constant_v128_b32(float4* src, const float4 val, const
 
 
 __global__ void
-decx::bp::GPUK::cu_fill1D_constant_v128_b32_end(float4* src, const float4 val, const float4 _end_val, const size_t len)
+decx::bp::GPUK::cu_fill1D_constant_v128_b32_end(float4* __restrict src, const float4 val, const float4 _end_val, const size_t len)
 {
     size_t tid = threadIdx.x + blockIdx.x * blockDim.x;
 
@@ -55,5 +55,121 @@ void decx::bp::cu_fill1D_constant_v128_b32_caller(float* src, const float val, c
         decx::bp::GPUK::cu_fill1D_constant_v128_b32 << <decx::utils::ceil<size_t>(fill_len_vec4, decx::cuP.prop.maxThreadsPerBlock),
             decx::cuP.prop.maxThreadsPerBlock, 0, S->get_raw_stream_ref() >> > (
             (float4*)src, decx::utils::vec4_set1_fp32(val), fill_len_vec4);
+    }
+}
+
+
+
+void decx::bp::cu_fill1D_constant_v128_b64_caller(double* src, const double val, const size_t fill_len, decx::cuda_stream* S)
+{
+    float4 value_v4;
+    *((double2*)&value_v4) = decx::utils::vec2_set1_fp64(val);
+
+    if (fill_len % 2) {
+        float4 _end_val = decx::utils::vec4_set1_fp32(0);
+        for (int i = 0; i < (fill_len % 2); ++i) {
+            ((double*)&_end_val)[i] = val;
+        }
+
+        const size_t fill_len_vec4 = decx::utils::ceil<size_t>(fill_len, 2);
+
+        decx::bp::GPUK::cu_fill1D_constant_v128_b32_end << <decx::utils::ceil<size_t>(fill_len_vec4, decx::cuP.prop.maxThreadsPerBlock),
+            decx::cuP.prop.maxThreadsPerBlock, 0, S->get_raw_stream_ref() >> > (
+                (float4*)src, value_v4, _end_val, fill_len_vec4);
+    }
+    else {
+        const size_t fill_len_vec4 = fill_len / 2;
+
+        decx::bp::GPUK::cu_fill1D_constant_v128_b32 << <decx::utils::ceil<size_t>(fill_len_vec4, decx::cuP.prop.maxThreadsPerBlock),
+            decx::cuP.prop.maxThreadsPerBlock, 0, S->get_raw_stream_ref() >> > (
+                (float4*)src, value_v4, fill_len_vec4);
+    }
+}
+
+
+
+// --------------------------------------------------------- 2D ----------------------------------------------------------
+
+__global__ void
+decx::bp::GPUK::cu_fill2D_constant_v128_b32(float4* src, const float4 val, const uint2 proc_dims, const uint Wsrc)
+{
+    uint tidx = threadIdx.x + blockDim.x * blockIdx.x;
+    uint tidy = threadIdx.y + blockDim.y * blockIdx.y;
+
+    size_t dex = tidx * Wsrc + tidy;
+    if (tidx < proc_dims.y && tidy < proc_dims.x) {
+        src[dex] = val;
+    }
+}
+
+
+
+__global__ void
+decx::bp::GPUK::cu_fill2D_constant_v128_b32_LF(float4* src, const float4 val, const float4 _end_val, const uint2 proc_dims, const uint Wsrc)
+{
+    uint tidx = threadIdx.x + blockDim.x * blockIdx.x;
+    uint tidy = threadIdx.y + blockDim.y * blockIdx.y;
+
+    size_t dex = tidx * Wsrc + tidy;
+    if (tidx < proc_dims.y && tidy < proc_dims.x) {
+        src[dex] = tidy == (proc_dims.x - 1) ? _end_val : val;
+    }
+}
+
+
+
+void decx::bp::cu_fill2D_constant_v128_b32_caller(float* src, const float val, const uint2 proc_dims, const uint Wsrc, decx::cuda_stream* S)
+{
+    if (proc_dims.x % 4) {
+        float4 _end_val = decx::utils::vec4_set1_fp32(0);
+        for (int i = 0; i < (proc_dims.x % 4); ++i) {
+            ((float*)&_end_val)[i] = val;
+        }
+
+        const uint vec4_pWsrc = decx::utils::ceil<uint>(proc_dims.x, 4);
+        dim3 grid(decx::utils::ceil<uint>(proc_dims.y, 16), decx::utils::ceil<uint>(vec4_pWsrc, 16));
+        dim3 block(16, 16);
+
+        decx::bp::GPUK::cu_fill2D_constant_v128_b32_LF << <grid, block, 0, S->get_raw_stream_ref() >> > (
+                (float4*)src, decx::utils::vec4_set1_fp32(val), _end_val, make_uint2(vec4_pWsrc, proc_dims.y), Wsrc / 4);
+    }
+    else {
+        const uint vec4_pWsrc = proc_dims.x / 4;
+        dim3 grid(decx::utils::ceil<uint>(proc_dims.y, 16), decx::utils::ceil<uint>(vec4_pWsrc, 16));
+        dim3 block(16, 16);
+
+        decx::bp::GPUK::cu_fill2D_constant_v128_b32 << <grid, block, 0, S->get_raw_stream_ref() >> > (
+                (float4*)src, decx::utils::vec4_set1_fp32(val), make_uint2(vec4_pWsrc, proc_dims.y), Wsrc / 4);
+    }
+}
+
+
+
+
+void decx::bp::cu_fill2D_constant_v128_b64_caller(double* src, const double val, const uint2 proc_dims, const uint Wsrc, decx::cuda_stream* S)
+{
+    float4 value_vec4;
+    *((double2*)&value_vec4) = decx::utils::vec2_set1_fp64(val);
+
+    if (proc_dims.x % 2) {
+        float4 _end_val = decx::utils::vec4_set1_fp32(0);
+        for (int i = 0; i < (proc_dims.x % 2); ++i) {
+            ((double*)&_end_val)[i] = val;
+        }
+
+        const uint vec4_pWsrc = decx::utils::ceil<uint>(proc_dims.x, 2);
+        dim3 grid(decx::utils::ceil<uint>(proc_dims.y, 16), decx::utils::ceil<uint>(vec4_pWsrc, 16));
+        dim3 block(16, 16);
+
+        decx::bp::GPUK::cu_fill2D_constant_v128_b32_LF << <grid, block, 0, S->get_raw_stream_ref() >> > (
+            (float4*)src, value_vec4, _end_val, make_uint2(vec4_pWsrc, proc_dims.y), Wsrc / 2);
+    }
+    else {
+        const uint vec4_pWsrc = proc_dims.x / 2;
+        dim3 grid(decx::utils::ceil<uint>(proc_dims.y, 16), decx::utils::ceil<uint>(vec4_pWsrc, 16));
+        dim3 block(16, 16);
+
+        decx::bp::GPUK::cu_fill2D_constant_v128_b32 << <grid, block, 0, S->get_raw_stream_ref() >> > (
+            (float4*)src, value_vec4, make_uint2(vec4_pWsrc, proc_dims.y), Wsrc / 2);
     }
 }
