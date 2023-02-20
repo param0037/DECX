@@ -20,6 +20,12 @@ namespace de
 {
     namespace cuda {
         _DECX_API_ de::DH Constant_fp32(GPU_Vector& src, const float value);
+
+
+        _DECX_API_ de::DH Constant_int32(GPU_Vector& src, const int value);
+
+
+        _DECX_API_ de::DH Constant_fp64(GPU_Vector& src, const double value);
     }
 }
 
