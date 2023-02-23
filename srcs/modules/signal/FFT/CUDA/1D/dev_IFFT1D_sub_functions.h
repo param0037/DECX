@@ -5,7 +5,7 @@
 *   ---------------------------------------------------------------------
 *   This is a part of the open source program named "DECX", copyright c Wayne,
 *   2021.04.16, all right reserved.
-*   More information please visit https://github.com/param0037/backup_1
+*   More information please visit https://github.com/param0037/DECX
 */
 
 #ifndef _dev_GPU_IFFT1D_SUB_FUNCTION_H_
@@ -25,32 +25,27 @@ namespace decx
     namespace signal
     {
         static void dev_GPU_IFFT1D_C2C_fp32_organizer(decx::_GPU_Vector* src, decx::_GPU_Vector* dst, 
-            decx::signal::CUDA_FFT_Configs* _conf, de::DH* handle, decx::cuda_stream* S);
+            decx::signal::CUDA_FFT_Configs* _conf, de::DH* handle, decx::cuda_stream* S, decx::cuda_event* E);
 
 
         static void dev_GPU_IFFT1D_C2R_fp32_organizer(decx::_GPU_Vector* src, decx::_GPU_Vector* dst,
-            decx::signal::CUDA_FFT_Configs* _conf, de::DH* handle, decx::cuda_stream* S);
+            decx::signal::CUDA_FFT_Configs* _conf, de::DH* handle, decx::cuda_stream* S, decx::cuda_event* E);
     }
 }
 
 
 static void decx::signal::dev_GPU_IFFT1D_C2C_fp32_organizer(decx::_GPU_Vector* src, decx::_GPU_Vector* dst,
-    decx::signal::CUDA_FFT_Configs* _conf, de::DH* handle, decx::cuda_stream* S)
+    decx::signal::CUDA_FFT_Configs* _conf, de::DH* handle, decx::cuda_stream* S, decx::cuda_event* E)
 {
     decx::PtrInfo<de::CPf> dev_tmp0, dev_tmp1;
     if (decx::alloc::_device_malloc(&dev_tmp0, dst->_length * sizeof(de::CPf), true, S)) {
-        Print_Error_Message(4, ALLOC_FAIL);
         decx::err::AllocateFailure(handle);
         return;
     }
     if (decx::alloc::_device_malloc(&dev_tmp1, dst->_length * sizeof(de::CPf), true, S)) {
-        Print_Error_Message(4, ALLOC_FAIL);
         decx::err::AllocateFailure(handle);
         return;
     }
-
-    /*checkCudaErrors(cudaMemcpyAsync(
-        dev_tmp0.ptr, src->Vec.ptr, src->length * sizeof(de::CPf), cudaMemcpyHostToDevice, S->get_raw_stream_ref()));*/
 
     decx::alloc::MIF<de::CPf> MIF_0, MIF_1;
     MIF_0.mem = dev_tmp0.ptr;
@@ -121,7 +116,8 @@ static void decx::signal::dev_GPU_IFFT1D_C2C_fp32_organizer(decx::_GPU_Vector* s
         ++count;
     }
 
-    checkCudaErrors(cudaDeviceSynchronize());
+    E->event_record(S);
+    E->synchronize();
 
     decx::alloc::_device_dealloc(&dev_tmp0);
     decx::alloc::_device_dealloc(&dev_tmp1);
@@ -131,17 +127,15 @@ static void decx::signal::dev_GPU_IFFT1D_C2C_fp32_organizer(decx::_GPU_Vector* s
 
 
 static void decx::signal::dev_GPU_IFFT1D_C2R_fp32_organizer(decx::_GPU_Vector* src, decx::_GPU_Vector* dst,
-    decx::signal::CUDA_FFT_Configs* _conf, de::DH* handle, decx::cuda_stream* S)
+    decx::signal::CUDA_FFT_Configs* _conf, de::DH* handle, decx::cuda_stream* S, decx::cuda_event* E)
 {
     decx::PtrInfo<de::CPf> dev_tmp0, dev_tmp1;
 
     if (decx::alloc::_device_malloc(&dev_tmp0, dst->_length * sizeof(de::CPf), true, S)) {
-        Print_Error_Message(4, DEV_ALLOC_FAIL);
         decx::err::AllocateFailure(handle);
         return;
     }
     if (decx::alloc::_device_malloc(&dev_tmp1, dst->_length * sizeof(de::CPf), true, S)) {
-        Print_Error_Message(4, DEV_ALLOC_FAIL);
         decx::err::AllocateFailure(handle);
         return;
     }
@@ -231,7 +225,8 @@ static void decx::signal::dev_GPU_IFFT1D_C2R_fp32_organizer(decx::_GPU_Vector* s
         }
     }
 
-    checkCudaErrors(cudaDeviceSynchronize());
+    E->event_record(S);
+    E->synchronize();
 
     decx::alloc::_device_dealloc(&dev_tmp0);
     decx::alloc::_device_dealloc(&dev_tmp1);
