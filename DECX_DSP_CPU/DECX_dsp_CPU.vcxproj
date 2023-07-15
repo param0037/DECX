@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\srcs\modules\basic_calculations\operators\cp_ops_exec.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\complex\cpl32_extract.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\complex\cpl32_extract_exec.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\complex\rotate_fp32.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\convolution\conv_utils.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\convolution\CPU\sliding_window\Filter2.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\convolution\CPU\sliding_window\fp32\conv2_fp32_BC_MK_exec.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\convolution\CPU\sliding_window\fp32\conv2_fp32_BC_SK_exec.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\convolution\CPU\sliding_window\fp32\conv2_fp32_exec.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\convolution\CPU\sliding_window\fp32\conv2_fp32_NB_MK_exec.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\convolution\CPU\sliding_window\fp32\conv2_fp32_NB_SK_exec.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\convolution\CPU\sliding_window\fp64\conv2_fp64_BC_MK_exec.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\convolution\CPU\sliding_window\fp64\conv2_fp64_BC_SK_exec.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\convolution\CPU\sliding_window\fp64\conv2_fp64_exec.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\convolution\CPU\sliding_window\fp64\conv2_fp64_NB_MK_exec.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\convolution\CPU\sliding_window\fp64\conv2_fp64_NB_SK_exec.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\convolution\CPU\sliding_window\uint8\conv2_uint8_BC_SK_exec.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\convolution\CPU\sliding_window\uint8\conv2_uint8_exec.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\FFT1D.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\FFT1D_radix_2_kernel.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\FFT1D_radix_3_kernel.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\FFT1D_radix_4_kernel.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\FFT1D_radix_5_kernel.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\2D\FFT2D.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\2D\FFT2D_Radix_2_kernel.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\2D\FFT2D_Radix_3_kernel.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\2D\FFT2D_Radix_4_kernel.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\2D\FFT2D_Radix_5_kernel.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\CPU_FFT_configs.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\FFT_utils_kernel.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\filters\CPU\low_pass.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\filters\CPU\windows.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\generators\CPU\distributions_exec.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\generators\CPU\random.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\generators\CPU\zeros.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\regional\regional_comparision\CPU\fp32\rcp2_CCOEFF_fp32_exec.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\regional\regional_comparision\CPU\fp32\rcp2_SQDIFF_fp32_exec.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\regional\regional_comparision\CPU\rcp2.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\regional\regional_comparision\CPU\uint8\rcp2_CCOEFF_uint8_exec.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\regional\regional_comparision\CPU\uint8\rcp2_SQDIFF_uint8_exec.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\regional\regional_comparision\CPU\utils\template_configurations.cxx" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{caa83398-b1ba-4f44-906e-fbbf8b823d67}</ProjectGuid>
+    <RootNamespace>DECXdspCPU</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>DECX_DSP_CPU</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>..\bin\x64</OutDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;DECXDSPCPU_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;DECXDSPCPU_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;DECXDSPCPU_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;DECXDSPCPU_EXPORTS;_WINDOWS;_USRDLL;_DECX_DSP_CPU_;_DECX_CPU_PARTS_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>
+      </PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+      <AdditionalLibraryDirectories>../bin/$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>DECX_core_CPU.lib;DECX_BLAS_CPU.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

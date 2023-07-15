@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="头文件\Async Engine">
+      <UniqueIdentifier>{f89e4726-3f73-45ab-a863-605eb672e57d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\Async Engine\DecxStream">
+      <UniqueIdentifier>{ed75373a-3177-4639-a852-7e8d1c24f59c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Async Engine">
+      <UniqueIdentifier>{099f3792-94f9-4080-8b32-fc38329e7745}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Async Engine\DecxStream">
+      <UniqueIdentifier>{4f186cdc-e81c-4a07-a581-b04510b9d496}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Async Engine\Async_task_threadpool">
+      <UniqueIdentifier>{dc34b0ad-14fe-4467-8ce6-27e1f85af380}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Async_API_Call">
+      <UniqueIdentifier>{23368ec3-ed8d-4c5a-9e20-c65657d4fc23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\Async Engine\Async_task_threadpool">
+      <UniqueIdentifier>{f0fa795c-e4df-4583-ae11-6aeb172bf8a8}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\srcs\Async Engine\DecxStream\DecxStream.h">
+      <Filter>头文件\Async Engine\DecxStream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\Async Engine\Async_task_threadpool\async_task_executor.h">
+      <Filter>头文件\Async Engine\Async_task_threadpool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\Async Engine\Async_task_threadpool\Async_Engine.h">
+      <Filter>头文件\Async Engine\Async_task_threadpool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\modules\core\utils\Dynamic_Array.h">
+      <Filter>头文件\Async Engine\Async_task_threadpool</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\srcs\Async Engine\DecxStream\DecxStream.cxx">
+      <Filter>源文件\Async Engine\DecxStream</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\core\global_vars.cxx">
+      <Filter>源文件\Async Engine\Async_task_threadpool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\Async Engine\Async_task_threadpool\Async_Engine.cxx">
+      <Filter>源文件\Async Engine\Async_task_threadpool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\Async Engine\Async_task_threadpool\async_task_executor.cxx">
+      <Filter>源文件\Async Engine\Async_task_threadpool</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

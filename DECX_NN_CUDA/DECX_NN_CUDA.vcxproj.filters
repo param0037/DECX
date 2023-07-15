@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="源文件\convolution">
+      <UniqueIdentifier>{11fa6784-d91b-4f9b-bf40-541993ea42ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\convolution\fp16">
+      <UniqueIdentifier>{5bfc67c0-d30e-4f77-90ae-af0049619584}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\convolution\fp32">
+      <UniqueIdentifier>{297cf22d-6b77-46cd-be7d-5df7632e2691}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\DECX_core_CUDA\for_properties.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CudaCompile Include="..\srcs\modules\NN\convolution\CUDA\fp16\conv2_BC_im2col_fp16.cu">
+      <Filter>源文件\convolution\fp16</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\NN\convolution\CUDA\fp16\conv2_NB_im2col_fp16.cu">
+      <Filter>源文件\convolution\fp16</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\NN\convolution\CUDA\fp16\eq_GEMM_fp16.cu">
+      <Filter>源文件\convolution\fp16</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\NN\convolution\CUDA\fp32\conv2_BC_im2col_fp32.cu">
+      <Filter>源文件\convolution\fp32</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\NN\convolution\CUDA\fp32\conv2_NB_im2col_fp32.cu">
+      <Filter>源文件\convolution\fp32</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\NN\convolution\CUDA\fp32\eq_GEMM_fp32.cu">
+      <Filter>源文件\convolution\fp32</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\NN\convolution\CUDA\conv2_im2row.cu">
+      <Filter>源文件\convolution</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\NN\convolution\CUDA\im2col.cu">
+      <Filter>源文件\convolution</Filter>
+    </CudaCompile>
+  </ItemGroup>
+</Project>

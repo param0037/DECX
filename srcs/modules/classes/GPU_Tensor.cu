@@ -1,0 +1,230 @@
+/**
+*   ---------------------------------------------------------------------
+*   Author : Wayne Anderson
+*   Date   : 2021.04.16
+*   ---------------------------------------------------------------------
+*   This is a part of the open source program named "DECX", copyright c Wayne,
+*   2021.04.16, all right reserved.
+*   More information please visit https://github.com/param0037/DECX
+*/
+
+
+#include "GPU_Tensor.h"
+
+
+
+void decx::_tensor_layout::_attribute_assign(const int _type, const uint _width,
+    const uint _height, const uint _depth)
+{
+    this->_single_element_size = decx::core::_size_mapping(_type);
+
+    this->width = _width;
+    this->height = _height;
+    this->depth = _depth;
+
+    if (this->_single_element_size == 2) {
+        this->wpitch = decx::utils::ceil<uint>(_width, 8) * 8;
+    }
+    else {
+        this->wpitch = decx::utils::ceil<uint>(_width, 4) * 4;
+    }
+
+    uint _alignment = 0;
+    switch (this->_single_element_size)
+    {
+    case 4:
+        _alignment = _TENSOR_ALIGN_DEPTH_4B_;     break;
+    case 8:
+        _alignment = _TENSOR_ALIGN_DEPTH_8B_;     break;
+    case 2:
+        _alignment = _TENSOR_ALIGN_DEPTH_2B_;     break;
+    case 1:
+        _alignment = _TENSOR_ALIGN_DEPTH_1B_;     break;
+    case 16:
+        _alignment = _TENSOR_ALIGN_DEPTH_16B_;    break;
+    default:
+        break;
+    }
+    this->dpitch = decx::utils::ceil<uint>(_depth, _alignment) * _alignment;
+
+    this->dp_x_wp = static_cast<size_t>(this->dpitch) * static_cast<size_t>(this->wpitch);
+
+    this->plane[0] = static_cast<size_t>(this->height) * static_cast<size_t>(this->width);
+    this->plane[1] = static_cast<size_t>(this->depth) * static_cast<size_t>(this->width);
+    this->plane[2] = static_cast<size_t>(this->height) * static_cast<size_t>(this->depth);
+}
+
+
+
+uint decx::_GPU_Tensor::Width() { return this->_layout.width; }
+uint decx::_GPU_Tensor::Height() { return this->_layout.height; }
+uint decx::_GPU_Tensor::Depth() { return this->_layout.depth; }
+
+
+
+void decx::_GPU_Tensor::_attribute_assign(const int _type, const uint _width, const uint _height, const uint _depth)
+{
+    this->type = _type;
+
+    this->_init = true;
+
+    this->_layout._attribute_assign(_type, _width, _height, _depth);
+
+    this->element_num = static_cast<size_t>(this->_layout.depth) * this->_layout.plane[0];
+    this->_element_num = static_cast<size_t>(this->_layout.height) * this->_layout.dp_x_wp;
+    this->total_bytes = this->_element_num * sizeof(float);
+}
+
+
+
+
+void decx::_GPU_Tensor::alloc_data_space()
+{
+    if (decx::alloc::_device_malloc(&this->Tens, this->total_bytes)) {
+        Print_Error_Message(4, "Tensor malloc failed! Please check if there is enough space in your device.");
+        exit(-1);
+    }
+    checkCudaErrors(cudaMemset(this->Tens.ptr, 0, this->total_bytes));
+}
+
+
+
+
+void decx::_GPU_Tensor::re_alloc_data_space()
+{
+    if (decx::alloc::_device_realloc(&this->Tens, this->total_bytes)) {
+        Print_Error_Message(4, "Tensor malloc failed! Please check if there is enough space in your device.");
+        exit(-1);
+    }
+    checkCudaErrors(cudaMemset(this->Tens.ptr, 0, this->total_bytes));
+}
+
+
+
+void decx::_GPU_Tensor::construct(const int _type, const uint _width, const uint _height, const uint _depth)
+{
+    this->_attribute_assign(_type, _width, _height, _depth);
+
+    this->alloc_data_space();
+}
+
+
+
+
+void decx::_GPU_Tensor::re_construct(const int _type, const uint _width, const uint _height, const uint _depth)
+{
+    if (this->type != _type || this->_layout.width != _width || this->_layout.height != _height || this->_layout.depth != _depth) {
+        const size_t pre_size = this->total_bytes;
+        this->_attribute_assign(_type, _width, _height, _depth);
+
+        if (this->total_bytes > pre_size) {
+            this->re_alloc_data_space();
+        }
+    }
+}
+
+
+
+
+decx::_GPU_Tensor::_GPU_Tensor(const int _type, const uint _width, const uint _height, const uint _depth)
+{
+    this->_attribute_assign(_type, _width, _height, _depth);
+
+    this->alloc_data_space();
+}
+
+
+
+
+decx::_GPU_Tensor::_GPU_Tensor()
+{
+    this->_attribute_assign(decx::_DATA_TYPES_FLAGS_::_VOID_, 0, 0, 0);
+    this->_init = false;
+}
+
+
+
+
+de::GPU_Tensor& decx::_GPU_Tensor::SoftCopy(de::GPU_Tensor& src)
+{
+    decx::_GPU_Tensor& ref_src = dynamic_cast<decx::_GPU_Tensor &>(src);
+
+    this->Tens.block = ref_src.Tens.block;
+
+    this->_attribute_assign(ref_src.type, ref_src._layout.width, ref_src._layout.height, ref_src._layout.depth);
+
+    decx::alloc::_device_malloc_same_place(&this->Tens);
+
+    return *this;
+}
+
+
+
+
+void decx::_GPU_Tensor::release()
+{
+    decx::alloc::_device_dealloc(&this->Tens);
+}
+
+
+namespace de
+{
+    _DECX_API_ de::GPU_Tensor* CreateGPUTensorPtr();
+
+
+    _DECX_API_ de::GPU_Tensor& CreateGPUTensorRef();
+
+
+    _DECX_API_ de::GPU_Tensor* CreateGPUTensorPtr(const int _type, const uint _width, const uint _height, const uint _depth);
+
+
+    _DECX_API_ de::GPU_Tensor& CreateGPUTensorRef(const int _type, const uint _width, const uint _height, const uint _depth);
+}
+
+
+
+
+_DECX_API_ de::GPU_Tensor& de::CreateGPUTensorRef()
+{
+    return *(new decx::_GPU_Tensor());
+}
+
+
+
+_DECX_API_ de::GPU_Tensor* de::CreateGPUTensorPtr()
+{
+    return new decx::_GPU_Tensor();
+}
+
+
+
+_DECX_API_ de::GPU_Tensor& de::CreateGPUTensorRef(const int _type, const uint _width, const uint _height, const uint _depth)
+{
+    return *(new decx::_GPU_Tensor(_type, _width, _height, _depth));
+}
+
+
+
+_DECX_API_ de::GPU_Tensor* de::CreateGPUTensorPtr(const int _type, const uint _width, const uint _height, const uint _depth)
+{
+    return new decx::_GPU_Tensor(_type, _width, _height, _depth);
+}
+
+
+int decx::_GPU_Tensor::Type()
+{
+    return this->type;
+}
+
+
+
+const decx::_tensor_layout& decx::_GPU_Tensor::get_layout()
+{
+    return this->_layout;
+}
+
+
+bool decx::_GPU_Tensor::is_init()
+{
+    return this->_init;
+}

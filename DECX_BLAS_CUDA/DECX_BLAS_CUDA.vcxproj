@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{41ba56aa-0e91-4815-9c00-5294fc60dfc6}</ProjectGuid>
+    <RootNamespace>DECXBLASCUDA</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\CUDA 10.2.props" />
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>../bin/$(Platform)</OutDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;_DECX_CUDA_PARTS_;_DECX_BLAS_CUDA_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <AdditionalDependencies>cudart_static.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;DECX_core_CUDA.lib;DECX_core_CPU.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../bin/$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ProgramDatabaseFile />
+    </Link>
+    <CudaCompile>
+      <GenerateRelocatableDeviceCode>true</GenerateRelocatableDeviceCode>
+      <CodeGeneration>compute_75,sm_75</CodeGeneration>
+      <Defines>_DECX_CUDA_PARTS_;_DECX_BLAS_CUDA_;%(Defines)</Defines>
+    </CudaCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\DECX_DSP_CUDA\for_properties.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\srcs\modules\basic_calculations\operators\Add_kernel.cuh" />
+    <ClInclude Include="..\srcs\modules\basic_calculations\operators\cp_add_kernel.cuh" />
+    <ClInclude Include="..\srcs\modules\basic_calculations\operators\Div_kernel.cuh" />
+    <ClInclude Include="..\srcs\modules\basic_calculations\operators\Fma_kernel.cuh" />
+    <ClInclude Include="..\srcs\modules\basic_calculations\operators\Fms_kernel.cuh" />
+    <ClInclude Include="..\srcs\modules\basic_calculations\operators\Matrix\Matrix_integral.h" />
+    <ClInclude Include="..\srcs\modules\basic_calculations\operators\Mul_kernel.cuh" />
+    <ClInclude Include="..\srcs\modules\basic_calculations\operators\Sub_kernel.cuh" />
+    <ClInclude Include="..\srcs\modules\convolution\CUDA\sliding_window\conv2_SW_configs.h" />
+    <ClInclude Include="..\srcs\modules\convolution\CUDA\sliding_window\fp16\conv2_border_const_MC_fp16.h" />
+    <ClInclude Include="..\srcs\modules\convolution\CUDA\sliding_window\fp16\conv2_border_ignored_MC_fp16.h" />
+    <ClInclude Include="..\srcs\modules\convolution\CUDA\sliding_window\fp16\dev_conv2_border_const_MC_fp16.h" />
+    <ClInclude Include="..\srcs\modules\convolution\CUDA\sliding_window\fp16\dev_conv2_border_ignored_MC_fp16.h" />
+    <ClInclude Include="..\srcs\modules\convolution\CUDA\sliding_window\fp32\conv2_border_const_fp32.h" />
+    <ClInclude Include="..\srcs\modules\convolution\CUDA\sliding_window\fp32\conv2_border_const_MC_fp32.h" />
+    <ClInclude Include="..\srcs\modules\convolution\CUDA\sliding_window\fp32\conv2_border_ignored_fp32.h" />
+    <ClInclude Include="..\srcs\modules\convolution\CUDA\sliding_window\fp32\conv2_border_ignored_MC_fp32.h" />
+    <ClInclude Include="..\srcs\modules\convolution\CUDA\sliding_window\fp32\Conv2_fp32_kernels.cuh" />
+    <ClInclude Include="..\srcs\modules\convolution\CUDA\sliding_window\fp32\dev_conv2_border_const_fp32.h" />
+    <ClInclude Include="..\srcs\modules\convolution\CUDA\sliding_window\fp32\dev_conv2_border_const_MC_fp32.h" />
+    <ClInclude Include="..\srcs\modules\convolution\CUDA\sliding_window\fp32\dev_conv2_border_ignored_fp32.h" />
+    <ClInclude Include="..\srcs\modules\convolution\CUDA\sliding_window\fp32\dev_conv2_border_ignored_MC_fp32.h" />
+    <ClInclude Include="..\srcs\modules\convolution\CUDA\sliding_window\fp32\sconv2_kernel_callers.h" />
+    <ClInclude Include="..\srcs\modules\convolution\CUDA\sliding_window\uint8\conv2_border_const_MC_uint8.h" />
+    <ClInclude Include="..\srcs\modules\convolution\CUDA\sliding_window\uint8\conv2_border_const_uint8.h" />
+    <ClInclude Include="..\srcs\modules\convolution\CUDA\sliding_window\uint8\conv2_border_ignored_MC_uint8.h" />
+    <ClInclude Include="..\srcs\modules\convolution\CUDA\sliding_window\uint8\conv2_border_ignored_uint8.h" />
+    <ClInclude Include="..\srcs\modules\convolution\CUDA\sliding_window\uint8\Conv2_uint8_kernels.cuh" />
+    <ClInclude Include="..\srcs\modules\convolution\CUDA\sliding_window\uint8\conv2_uint8_kernel_callers.h" />
+    <ClInclude Include="..\srcs\modules\convolution\CUDA\sliding_window\uint8\dev_conv2_border_const_MC_uint8.h" />
+    <ClInclude Include="..\srcs\modules\convolution\CUDA\sliding_window\uint8\dev_conv2_border_const_uint8.h" />
+    <ClInclude Include="..\srcs\modules\convolution\CUDA\sliding_window\uint8\dev_conv2_border_ignored_MC_uint8.h" />
+    <ClInclude Include="..\srcs\modules\convolution\CUDA\sliding_window\uint8\dev_conv2_border_ignored_uint8.h" />
+    <ClInclude Include="..\srcs\modules\GEMM\CUDA\GEMM_kernel_def.cuh" />
+    <ClInclude Include="..\srcs\modules\GEMM\CUDA\large_squares\cpl32\GEMM_cpl32_caller.h" />
+    <ClInclude Include="..\srcs\modules\GEMM\CUDA\large_squares\fp16\GEMM_fp16.cuh" />
+    <ClInclude Include="..\srcs\modules\GEMM\CUDA\large_squares\fp16\GEMM_fp16_accurate.cuh" />
+    <ClInclude Include="..\srcs\modules\GEMM\CUDA\large_squares\fp16\GEMM_fp16_caller.h" />
+    <ClInclude Include="..\srcs\modules\GEMM\CUDA\large_squares\fp16\GEMM_fp16_kernel_callers.h" />
+    <ClInclude Include="..\srcs\modules\GEMM\CUDA\large_squares\fp32\GEMM_fp32.cuh" />
+    <ClInclude Include="..\srcs\modules\GEMM\CUDA\large_squares\fp32\GEMM_fp32_caller.h" />
+    <ClInclude Include="..\srcs\modules\GEMM\CUDA\large_squares\fp32\GEMM_fp32_kernel_callers.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <CudaCompile Include="..\srcs\modules\basic_calculations\operators\Add_kernel.cu" />
+    <CudaCompile Include="..\srcs\modules\basic_calculations\operators\Div_kernel.cu" />
+    <CudaCompile Include="..\srcs\modules\basic_calculations\operators\Fma_kernel.cu" />
+    <CudaCompile Include="..\srcs\modules\basic_calculations\operators\Fms_kernel.cu" />
+    <CudaCompile Include="..\srcs\modules\basic_calculations\operators\Matrix\Matrix_add.cu" />
+    <CudaCompile Include="..\srcs\modules\basic_calculations\operators\Matrix\Matrix_divide.cu" />
+    <CudaCompile Include="..\srcs\modules\basic_calculations\operators\Matrix\Matrix_fma.cu" />
+    <CudaCompile Include="..\srcs\modules\basic_calculations\operators\Matrix\Matrix_fms.cu" />
+    <CudaCompile Include="..\srcs\modules\basic_calculations\operators\Matrix\Matrix_integral.cu" />
+    <CudaCompile Include="..\srcs\modules\basic_calculations\operators\Matrix\Matrix_multiply.cu" />
+    <CudaCompile Include="..\srcs\modules\basic_calculations\operators\Matrix\Matrix_subtract.cu" />
+    <CudaCompile Include="..\srcs\modules\basic_calculations\operators\Mul_kernel.cu" />
+    <CudaCompile Include="..\srcs\modules\basic_calculations\operators\Sub_kernel.cu" />
+    <CudaCompile Include="..\srcs\modules\basic_calculations\operators\Vector\Vector_integral.cu" />
+    <CudaCompile Include="..\srcs\modules\basic_calculations\operators\Vector\Vector_add.cu" />
+    <CudaCompile Include="..\srcs\modules\basic_calculations\operators\Vector\Vector_divide.cu" />
+    <CudaCompile Include="..\srcs\modules\basic_calculations\operators\Vector\Vector_fma.cu" />
+    <CudaCompile Include="..\srcs\modules\basic_calculations\operators\Vector\Vector_fms.cu" />
+    <CudaCompile Include="..\srcs\modules\basic_calculations\operators\Vector\Vector_multiply.cu" />
+    <CudaCompile Include="..\srcs\modules\basic_calculations\operators\Vector\Vector_subtract.cu" />
+    <CudaCompile Include="..\srcs\modules\basic_calculations\scan\CUDA\scan1D.cu" />
+    <CudaCompile Include="..\srcs\modules\basic_calculations\scan\CUDA\scan1D_fp16_kernel.cu" />
+    <CudaCompile Include="..\srcs\modules\basic_calculations\scan\CUDA\scan1D_fp32_kernel.cu" />
+    <CudaCompile Include="..\srcs\modules\basic_calculations\scan\CUDA\scan1D_uint8_kernel.cu" />
+    <CudaCompile Include="..\srcs\modules\basic_calculations\scan\CUDA\scan2D.cu" />
+    <CudaCompile Include="..\srcs\modules\basic_calculations\scan\CUDA\scan2D_fp16_kernel.cu" />
+    <CudaCompile Include="..\srcs\modules\basic_calculations\scan\CUDA\scan2D_fp32_kernel.cu" />
+    <CudaCompile Include="..\srcs\modules\basic_calculations\scan\CUDA\scan2D_uint8_kernel.cu" />
+    <CudaCompile Include="..\srcs\modules\BLAS\basic_process\fill\constant\CUDA\constant_fill_kernels.cu" />
+    <CudaCompile Include="..\srcs\modules\BLAS\basic_process\fill\constant\CUDA\GPU_Matrix_fill.cu" />
+    <CudaCompile Include="..\srcs\modules\BLAS\basic_process\fill\constant\CUDA\GPU_Vector_fill.cu" />
+    <CudaCompile Include="..\srcs\modules\BLAS\basic_process\float_half_convert.cu" />
+    <CudaCompile Include="..\srcs\modules\BLAS\basic_process\transpose\CUDA\transpose.cu" />
+    <CudaCompile Include="..\srcs\modules\BLAS\basic_process\transpose\CUDA\transpose_kernel.cu" />
+    <CudaCompile Include="..\srcs\modules\BLAS\basic_process\type_cast\CUDA\GPU_Matrix_type_cast.cu" />
+    <CudaCompile Include="..\srcs\modules\BLAS\basic_process\type_cast\CUDA\GPU_Vector_type_cast.cu" />
+    <CudaCompile Include="..\srcs\modules\BLAS\basic_process\type_cast\CUDA\_mm128_fp32_fp64.cu" />
+    <CudaCompile Include="..\srcs\modules\BLAS\basic_process\type_cast\CUDA\_mm128_fp32_int32.cu" />
+    <CudaCompile Include="..\srcs\modules\BLAS\basic_process\type_statistics\CUDA\cuda_summing.cu" />
+    <CudaCompile Include="..\srcs\modules\BLAS\basic_process\type_statistics\CUDA\reduction_sum.cu" />
+    <CudaCompile Include="..\srcs\modules\BLAS\Dot product\CUDA\fp16\dot_fp16.cu" />
+    <CudaCompile Include="..\srcs\modules\BLAS\Dot product\CUDA\fp16\dot_kernel_fp16.cu" />
+    <CudaCompile Include="..\srcs\modules\BLAS\Dot product\CUDA\fp32\dot_fp32.cu" />
+    <CudaCompile Include="..\srcs\modules\BLAS\Dot product\CUDA\fp32\dot_kernel_fp32.cu" />
+    <CudaCompile Include="..\srcs\modules\BLAS\GEMM\CUDA\large_squares\cpl32\GEMM_cpl32.cu" />
+    <CudaCompile Include="..\srcs\modules\BLAS\GEMM\CUDA\large_squares\fp16\GEMM_fp16.cu" />
+    <CudaCompile Include="..\srcs\modules\BLAS\GEMM\CUDA\large_squares\fp16\GEMM_fp16_accurate.cu" />
+    <CudaCompile Include="..\srcs\modules\BLAS\GEMM\CUDA\large_squares\fp32\GEMM_fp32.cu" />
+    <CudaCompile Include="..\srcs\modules\BLAS\GEMM\CUDA\large_squares\GEMM.cu" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\CUDA 10.2.targets" />
+  </ImportGroup>
+</Project>
