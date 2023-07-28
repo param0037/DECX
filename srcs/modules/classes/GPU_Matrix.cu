@@ -43,20 +43,58 @@ void decx::_matrix_layout::_attribute_assign(const int type, const uint _width, 
 
 void decx::_GPU_Matrix::alloc_data_space()
 {
-    if (decx::alloc::_device_malloc(&this->Mat, this->total_bytes)) {
+    decx::cuda_stream* S = NULL;
+    S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
+    if (S == NULL) {
+        SetConsoleColor(4);
+        printf("Internal error.\n");
+        ResetConsoleColor;
+        return;
+    }
+    decx::cuda_event* E = NULL;
+    E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
+    if (E == NULL) {
+        SetConsoleColor(4);
+        printf("Internal error.\n");
+        ResetConsoleColor;
+        return;
+    }
+
+    if (decx::alloc::_device_malloc(&this->Mat, this->total_bytes, true, S)) {
         SetConsoleColor(4);
         printf("Matrix malloc failed! Please check if there is enough space in your device.\n");
         ResetConsoleColor;
         return;
     }
 
-    cudaMemset(this->Mat.ptr, 0, this->total_bytes);
+    E->event_record(S);
+    E->synchronize();
+
+    S->detach();
+    E->detach();
 }
 
 
 
 void decx::_GPU_Matrix::re_alloc_data_space()
 {
+    decx::cuda_stream* S = NULL;
+    S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
+    if (S == NULL) {
+        SetConsoleColor(4);
+        printf("Internal error.\n");
+        ResetConsoleColor;
+        return;
+    }
+    decx::cuda_event* E = NULL;
+    E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
+    if (E == NULL) {
+        SetConsoleColor(4);
+        printf("Internal error.\n");
+        ResetConsoleColor;
+        return;
+    }
+
     if (decx::alloc::_device_realloc(&this->Mat, this->total_bytes)) {
         SetConsoleColor(4);
         printf("Matrix malloc failed! Please check if there is enough space in your device.\n");
@@ -64,7 +102,11 @@ void decx::_GPU_Matrix::re_alloc_data_space()
         return;
     }
 
-    cudaMemset(this->Mat.ptr, 0, this->total_bytes);
+    E->event_record(S);
+    E->synchronize();
+
+    S->detach();
+    E->detach();
 }
 
 

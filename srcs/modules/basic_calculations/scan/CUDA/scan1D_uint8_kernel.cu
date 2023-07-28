@@ -14,7 +14,7 @@
 
 
 __global__ void
-decx::scan::GPUK::cu_warp_inclusive_scan_u8_u16_1D(const float2* __restrict   src,
+decx::scan::GPUK::cu_block_inclusive_scan_u8_u16_1D(const float2* __restrict   src,
                                                  float4* __restrict         _block_status,
                                                  int4* __restrict           dst,
                                                  const uint64_t             proc_len_v8)
@@ -96,7 +96,7 @@ decx::scan::GPUK::cu_warp_inclusive_scan_u8_u16_1D(const float2* __restrict   sr
 
 
 __global__ void
-decx::scan::GPUK::cu_warp_exclusive_scan_u8_fp16_1D(const float2* __restrict   src,
+decx::scan::GPUK::cu_block_exclusive_scan_u8_fp16_1D(const float2* __restrict   src,
                                                  float4* __restrict         _block_status,
                                                  int4* __restrict           dst,
                                                  const uint64_t             proc_len_v8)
@@ -182,7 +182,7 @@ decx::scan::GPUK::cu_warp_exclusive_scan_u8_fp16_1D(const float2* __restrict   s
 
 template <bool _is_exclusive>
 __global__ void
-decx::scan::GPUK::cu_scan_DLB_u16_i32_1D_v8(const float4* __restrict src,
+decx::scan::GPUK::cu_block_DLB_u16_i32_1D_v8(const float4* __restrict src,
                                         float4* __restrict      _block_status, 
                                         int4* __restrict        dst,
                                         const uint64_t          proc_len_v8)
@@ -300,5 +300,5 @@ decx::scan::GPUK::cu_scan_DLB_u16_i32_1D_v8(const float4* __restrict src,
 
 
 
-template __global__ void decx::scan::GPUK::cu_scan_DLB_u16_i32_1D_v8<true>(const float4* __restrict src, float4* _status, int4* dst, const uint64_t proc_len_v8);
-template __global__ void decx::scan::GPUK::cu_scan_DLB_u16_i32_1D_v8<false>(const float4* __restrict src, float4* _status, int4* dst, const uint64_t proc_len_v8);
+template __global__ void decx::scan::GPUK::cu_block_DLB_u16_i32_1D_v8<true>(const float4* __restrict src, float4* _status, int4* dst, const uint64_t proc_len_v8);
+template __global__ void decx::scan::GPUK::cu_block_DLB_u16_i32_1D_v8<false>(const float4* __restrict src, float4* _status, int4* dst, const uint64_t proc_len_v8);

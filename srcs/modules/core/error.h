@@ -323,6 +323,7 @@ namespace decx
             decx::utils::decx_strcpy<100>(handle->error_string, MEMCPY_DIFFERENT_DATA_TYPE);
             handle->error_type = decx::DECX_error_types::MEMCPY_DIFFERENT_TYPES;
         }
+
     }
 }
 

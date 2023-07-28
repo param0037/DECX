@@ -222,13 +222,13 @@ decx::_MatrixArray::_MatrixArray(const int _type, uint W, uint H, uint MatrixNum
 }
 
 
-uint32_t decx::_MatrixArray::Width() { return this->_layout.width; }
+uint32_t decx::_MatrixArray::Width() const { return this->_layout.width; }
 
 
-uint32_t decx::_MatrixArray::Height() { return this->_layout.height; }
+uint32_t decx::_MatrixArray::Height() const { return this->_layout.height; }
 
 
-uint32_t decx::_MatrixArray::MatrixNumber() { return this->ArrayNumber; }
+uint32_t decx::_MatrixArray::MatrixNumber() const { return this->ArrayNumber; }
 
 
 float* decx::_MatrixArray::ptr_fp32(const uint row, const uint col, const uint _seq)
@@ -341,7 +341,7 @@ void decx::_MatrixArray::release()
 
 
 
-int decx::_MatrixArray::Type()
+int decx::_MatrixArray::Type() const
 {
     return this->type;
 }
@@ -377,33 +377,39 @@ de::MatrixArray& decx::_MatrixArray::SoftCopy(de::MatrixArray& src)
 
 
 
-uint32_t decx::_MatrixArray::Pitch()
+uint32_t decx::_MatrixArray::Pitch() const
 {
     return this->_layout.pitch;
 }
 
 
-uint32_t decx::_MatrixArray::Array_num()
+uint32_t decx::_MatrixArray::Array_num() const
 {
     return this->ArrayNumber;
 }
 
 
-const decx::_matrix_layout& decx::_MatrixArray::get_layout()
+const decx::_matrix_layout& decx::_MatrixArray::get_layout() const
 {
     return this->_layout;
 }
 
 
 
-int32_t decx::_MatrixArray::get_store_type()
+int32_t decx::_MatrixArray::get_store_type() const
 {
     return this->_store_type;
 }
 
 
 
-bool decx::_MatrixArray::is_init()
+bool decx::_MatrixArray::is_init() const
 {
     return this->_init;
+}
+
+
+uint64_t decx::_MatrixArray::get_total_bytes() const
+{
+    return this->total_bytes;
 }

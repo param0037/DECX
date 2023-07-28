@@ -29,7 +29,9 @@ namespace decx
             __half2 _arrh2[4];
             __half _arrh[8];
 
-            ushort _arrs[8];
+            uchar4 _arru8_4[4];
+
+            uint16_t _arrs[8];
 
             float _arrf[4];
             double _arrd[2];
@@ -229,6 +231,8 @@ decx::utils::vec4_set1_int32(const int __x)
 {
     return make_int4(__x, __x, __x, __x);
 }
+
+
 
 
 __host__ __device__ __inline__ double2

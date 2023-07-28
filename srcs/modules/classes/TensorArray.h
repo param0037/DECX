@@ -28,16 +28,16 @@ namespace de
         TensorArray() {}
 
 
-        virtual uint Width() = 0;
+        virtual uint Width() const = 0;
 
 
-        virtual uint Height() = 0;
+        virtual uint Height() const = 0;
 
 
-        virtual uint Depth() = 0;
+        virtual uint Depth() const = 0;
 
 
-        virtual uint TensorNum() = 0;
+        virtual uint TensorNum() const = 0;
 
 
         virtual float* ptr_fp32(const int x, const int y, const int z, const int tensor_id) = 0;
@@ -50,7 +50,7 @@ namespace de
         virtual de::TensorArray& SoftCopy(de::TensorArray& src) = 0;
 
 
-        virtual int Type() = 0;
+        virtual int Type() const = 0;
 
 
         virtual void release() = 0;
@@ -153,16 +153,16 @@ namespace decx
         void re_construct(const int _type, const uint _width, const uint _height, const uint _depth, const uint _tensor_num, const int flag);
 
 
-        virtual uint Width();
+        virtual uint Width() const;
 
 
-        virtual uint Height();
+        virtual uint Height() const;
 
 
-        virtual uint Depth();
+        virtual uint Depth() const;
 
 
-        virtual uint TensorNum();
+        virtual uint TensorNum() const;
 
 
         virtual float* ptr_fp32(const int x, const int y, const int z, const int tensor_id);
@@ -175,19 +175,22 @@ namespace decx
         virtual de::TensorArray& SoftCopy(de::TensorArray& src);
 
 
-        virtual int Type();
+        virtual int Type() const;
 
 
         virtual void release();
 
 
-        int get_store_type();
+        int get_store_type() const;
 
 
-        const decx::_tensor_layout& get_layout();
+        const decx::_tensor_layout& get_layout() const;
 
 
-        bool is_init();
+        bool is_init() const;
+
+
+        uint64_t get_total_bytes() const;
     };
 }
 

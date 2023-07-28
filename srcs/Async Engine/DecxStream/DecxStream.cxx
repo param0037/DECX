@@ -32,9 +32,11 @@ uint decx::_decx_stream::Get_ID()
 void decx::_decx_stream::execute()
 {
     decx::async::_ATE* _current_ATE_ptr = this->_async_caller;
-    _current_ATE_ptr->_all_done = false;
+    if (_current_ATE_ptr->_task_num > 0) {
+        _current_ATE_ptr->_all_done = false;
 
-    _current_ATE_ptr->_cv.notify_one();
+        _current_ATE_ptr->_cv.notify_one();
+    }
 }
 
 
@@ -46,7 +48,7 @@ void decx::_decx_stream::synchronize()
 
     _current_ATE_ptr->_cv.notify_one();
     std::unique_lock<std::mutex> lock(decx::async::async_engine._mtx_main_thread);
-    if (!_current_ATE_ptr->_all_done) {
+    while (!_current_ATE_ptr->_all_done) {
         decx::async::async_engine._cv_main_thread.wait(lock);
     }
 }
@@ -81,11 +83,16 @@ _DECX_API_ void de::DestroyDecxStream(de::DecxStream& stream)
 
 _DECX_API_ void de::Execute_All_Streams()
 {
-    for (int i = 0; i < decx::async::async_engine.get_current_stream_num(); ++i) {
+    const uint32_t stream_num = decx::async::async_engine.get_current_stream_num();
+    for (int i = 0; i < stream_num; ++i) 
+    {
         decx::async::_ATE* _current_ATE_ptr = decx::async::async_engine[i];
-        _current_ATE_ptr->_all_done = false;
+        if (_current_ATE_ptr->_task_num > 0) 
+        {
+            _current_ATE_ptr->_all_done = false;
 
-        _current_ATE_ptr->_cv.notify_one();
+            _current_ATE_ptr->_cv.notify_one();
+        }
     }
 }
 
@@ -93,10 +100,15 @@ _DECX_API_ void de::Execute_All_Streams()
 
 _DECX_API_ void de::Global_Synchronize()
 {
-    for (int i = 0; i < decx::async::async_engine.get_current_stream_num(); ++i) {
+    const uint32_t stream_num = decx::async::async_engine.get_current_stream_num();
+
+    std::unique_lock<std::mutex> lock(decx::async::async_engine._mtx_main_thread);
+
+    for (int i = 0; i < stream_num; ++i) 
+    {
         decx::async::_ATE* _current_ATE_ptr = decx::async::async_engine[i];
-        if (!_current_ATE_ptr->_all_done) {
-            std::unique_lock<std::mutex> lock(decx::async::async_engine._mtx_main_thread);
+
+        while (!_current_ATE_ptr->_all_done) {
             decx::async::async_engine._cv_main_thread.wait(lock);
         }
     }

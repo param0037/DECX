@@ -56,9 +56,9 @@ void decx::_tensor_layout::_attribute_assign(const int _type, const uint _width,
 
 
 
-uint decx::_GPU_Tensor::Width() { return this->_layout.width; }
-uint decx::_GPU_Tensor::Height() { return this->_layout.height; }
-uint decx::_GPU_Tensor::Depth() { return this->_layout.depth; }
+uint decx::_GPU_Tensor::Width() const { return this->_layout.width; }
+uint decx::_GPU_Tensor::Height() const { return this->_layout.height; }
+uint decx::_GPU_Tensor::Depth() const { return this->_layout.depth; }
 
 
 
@@ -211,20 +211,26 @@ _DECX_API_ de::GPU_Tensor* de::CreateGPUTensorPtr(const int _type, const uint _w
 }
 
 
-int decx::_GPU_Tensor::Type()
+int decx::_GPU_Tensor::Type() const
 {
     return this->type;
 }
 
 
 
-const decx::_tensor_layout& decx::_GPU_Tensor::get_layout()
+const decx::_tensor_layout& decx::_GPU_Tensor::get_layout() const
 {
     return this->_layout;
 }
 
 
-bool decx::_GPU_Tensor::is_init()
+bool decx::_GPU_Tensor::is_init() const
 {
     return this->_init;
+}
+
+
+uint64_t decx::_GPU_Tensor::get_total_bytes() const
+{
+    return this->total_bytes;
 }

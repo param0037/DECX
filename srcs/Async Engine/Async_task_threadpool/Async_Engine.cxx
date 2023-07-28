@@ -96,6 +96,7 @@ uint decx::async::Async_Engine::add_stream()
         this->_task_schd[this->current_stream_num].start();
 
         uint _res_id = this->current_stream_num;
+        this->_task_schd[this->current_stream_num]._ID = this->current_stream_num;
         ++this->current_stream_num;
         return _res_id;
     }

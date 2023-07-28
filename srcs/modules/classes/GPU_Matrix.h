@@ -32,7 +32,6 @@ namespace de
         virtual uint Height() = 0;
 
         
-
         virtual void release() = 0;
 
 

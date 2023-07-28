@@ -24,13 +24,13 @@ namespace de
         GPU_Tensor() {}
 
 
-        virtual uint Width() = 0;
+        virtual uint Width() const = 0;
 
 
-        virtual uint Height() = 0;
+        virtual uint Height() const = 0;
 
 
-        virtual uint Depth() = 0;
+        virtual uint Depth() const = 0;
 
 
         virtual de::GPU_Tensor& SoftCopy(de::GPU_Tensor& src) = 0;
@@ -40,7 +40,7 @@ namespace de
         virtual void release() = 0;
 
 
-        virtual int Type() = 0;
+        virtual int Type() const = 0;
     };
 }
 
@@ -113,13 +113,13 @@ namespace decx
 
 
 
-        virtual uint Width();
+        virtual uint Width() const;
 
 
-        virtual uint Height();
+        virtual uint Height() const;
 
 
-        virtual uint Depth();
+        virtual uint Depth() const;
 
 
         virtual de::GPU_Tensor& SoftCopy(de::GPU_Tensor& src);
@@ -129,13 +129,16 @@ namespace decx
         virtual void release();
 
 
-        virtual int Type();
+        virtual int Type() const;
 
 
-        const decx::_tensor_layout& get_layout();
+        const decx::_tensor_layout& get_layout() const;
 
 
-        bool is_init();
+        bool is_init() const;
+
+
+        uint64_t get_total_bytes() const;
     };
 }
 

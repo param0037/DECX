@@ -160,7 +160,7 @@ decx::_Vector::_Vector(const int _type, size_t length, const int flag)
 
 
 
-size_t decx::_Vector::Len()
+size_t decx::_Vector::Len() const
 {
     return this->length;
 }
@@ -308,13 +308,25 @@ decx::_Vector::~_Vector()
 }
 
 
-int decx::_Vector::Type()
+int decx::_Vector::Type() const
 {
     return this->type;
 }
 
 
-bool decx::_Vector::is_init()
+bool decx::_Vector::is_init() const
 {
     return this->_init;
+}
+
+
+uint64_t decx::_Vector::_Length() const
+{
+    return this->_length;
+}
+
+
+uint64_t decx::_Vector::get_total_bytes() const
+{
+    return this->total_bytes;
 }

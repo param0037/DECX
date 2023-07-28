@@ -52,6 +52,16 @@ bool decx::_GPU_Vector::is_init() const
 }
 
 
+uint64_t decx::_GPU_Vector::_Length() const
+{
+    return this->_length;
+}
+
+uint64_t decx::_GPU_Vector::get_total_bytes() const
+{
+    return this->total_bytes;
+}
+
 
 decx::_GPU_Vector::~_GPU_Vector()
 {

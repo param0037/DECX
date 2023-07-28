@@ -42,6 +42,17 @@ struct decx::PtrInfo
         this->block = NULL;
         this->ptr = NULL;
     }
+
+    template <typename _Type_dst>
+    decx::PtrInfo<_Type_dst> _type_cast()
+    {
+        decx::PtrInfo<_Type_dst> _dst;
+        _dst.block = this->block;
+        _dst.ptr = reinterpret_cast<_Type_dst*>(this->ptr);
+        _dst._mem_type = this->_mem_type;
+
+        return _dst;
+    }
 };
 
 
@@ -53,6 +64,12 @@ struct decx::Ptr2D_Info
 
     Ptr2D_Info() {
         this->_dims = make_uint2(0, 0);
+    }
+
+    Ptr2D_Info(decx::PtrInfo<_Ty> _ptr_info, const uint2 dims)
+    {
+        this->_dims = dims;
+        this->_ptr = _ptr_info;
     }
 };
 

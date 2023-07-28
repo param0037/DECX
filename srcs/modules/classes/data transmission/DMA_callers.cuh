@@ -18,24 +18,23 @@
 #include "../../core/cudaStream_management/cudaStream_queue.h"
 #include "../../classes/Tensor.h"
 #include "../../classes/Matrix.h"
+#include "../../../Async Engine/DecxStream/DecxStream.h"
 
 
 namespace decx
 {
-    namespace bp {
-        template <bool _print>
-        void _DMA_memcpy1D(const void* src, void* dst, const size_t cpy_size,
-            cudaMemcpyKind flag, de::DH* handle);
+    namespace bp 
+    {
+        void _DMA_memcpy1D_sync(const void* src, void* dst, const size_t cpy_size,
+            cudaMemcpyKind flag);
 
 
-        template <bool _print>
-        void _DMA_memcpy2D(const void* src, void* dst, const size_t pitchsrc, const size_t pitchdst,
-            const size_t cpy_width, const size_t height, cudaMemcpyKind flag, de::DH* handle);
+        void _DMA_memcpy2D_sync(const void* src, void* dst, const size_t pitchsrc, const size_t pitchdst,
+            const size_t cpy_width, const size_t height, cudaMemcpyKind flag);
 
 
-        template <bool _print>
-        void _DMA_memcpy3D(const void* src, void* dst, const size_t pitchsrc, const size_t pitchdst,
-            const size_t _plane_size_src, const size_t _plane_size_dst, const size_t cpy_width, const size_t height, const size_t times, cudaMemcpyKind flag, de::DH* handle);
+        void _DMA_memcpy3D_sync(const void* src, void* dst, const size_t pitchsrc, const size_t pitchdst,
+            const size_t _plane_size_src, const size_t _plane_size_dst, const size_t cpy_width, const size_t height, const size_t times, cudaMemcpyKind flag);
     }
 }
 
@@ -102,8 +101,8 @@ public:
 
 
 
-    template <bool _print>
-    void execute_DMA(const cudaMemcpyKind memcpykind, de::DH *handle);
+    template <bool _async_call>
+    void execute_DMA(const cudaMemcpyKind memcpykind, de::DH *handle, const uint32_t _stream_id = 0);
 };
 
 
@@ -140,8 +139,8 @@ public:
     void memcpy3D_optimizer(const uint3 actual_dims_src, const uint3 start, const uint3 cpy_sizes);
 
 
-    template <bool _print>
-    void execute_DMA(const cudaMemcpyKind memcpykind, de::DH* handle);
+    template <bool _async_call>
+    void execute_DMA(const cudaMemcpyKind memcpykind, de::DH* handle, const uint32_t _stream_id = 0);
 };
 
 

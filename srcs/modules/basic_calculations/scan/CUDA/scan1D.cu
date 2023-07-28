@@ -58,6 +58,53 @@ template void decx::scan::cuda_scan1D_config::generate_scan_config<true, 8, uint
 template void decx::scan::cuda_scan1D_config::generate_scan_config<false, 8, uint8_t, int>(const uint64_t _proc_length, decx::cuda_stream* S, de::DH* handle, const int scan_mode);
 
 
+template <bool _print, uint32_t _align, typename _type_in, typename _type_out>
+void decx::scan::cuda_scan1D_config::generate_scan_config(decx::PtrInfo<void> dev_src, 
+                                                          decx::PtrInfo<void> dev_dst, 
+                                                          const uint64_t _proc_length,
+                                                          decx::cuda_stream* S, 
+                                                          de::DH* handle, 
+                                                          const int scan_mode)
+{
+    this->_scan_mode = scan_mode;
+
+    this->_length = decx::utils::ceil<uint64_t>(_proc_length, _align) * _align;
+
+    this->_block_num = decx::utils::ceil<uint64_t>(this->_length / _align, _WARP_SCAN_BLOCK_SIZE_);
+
+    this->_dev_dst = dev_dst;
+    this->_dev_src = dev_src;
+    if (std::is_same<_type_in, uint8_t>::value) {
+        if (decx::alloc::_device_malloc(&this->_dev_tmp, this->_length * sizeof(de::Half), true, S)) {
+            decx::err::device_AllocateFailure<_print>(handle);
+            return;
+        }
+    }
+
+    if (decx::alloc::_device_malloc(&this->_dev_status, this->_block_num * sizeof(float4), true, S))
+    {
+        decx::err::device_AllocateFailure<_print>(handle);
+        return;
+    }
+}
+
+template void decx::scan::cuda_scan1D_config::generate_scan_config<true, 8, de::Half, float>(decx::PtrInfo<void> dev_src, decx::PtrInfo<void> dev_dst, const uint64_t _proc_length,
+    decx::cuda_stream* S, de::DH* handle, const int scan_mode);
+template void decx::scan::cuda_scan1D_config::generate_scan_config<false, 8, de::Half, float>(decx::PtrInfo<void> dev_src, decx::PtrInfo<void> dev_dst, const uint64_t _proc_length,
+    decx::cuda_stream* S, de::DH* handle, const int scan_mode);
+
+template void decx::scan::cuda_scan1D_config::generate_scan_config<true, 4, float, float>(decx::PtrInfo<void> dev_src, decx::PtrInfo<void> dev_dst, const uint64_t _proc_length,
+    decx::cuda_stream* S, de::DH* handle, const int scan_mode);
+template void decx::scan::cuda_scan1D_config::generate_scan_config<true, 4, float, float>(decx::PtrInfo<void> dev_src, decx::PtrInfo<void> dev_dst, const uint64_t _proc_length,
+    decx::cuda_stream* S, de::DH* handle, const int scan_mode);
+
+template void decx::scan::cuda_scan1D_config::generate_scan_config<true, 8, uint8_t, int>(decx::PtrInfo<void> dev_src, decx::PtrInfo<void> dev_dst, const uint64_t _proc_length,
+    decx::cuda_stream* S, de::DH* handle, const int scan_mode);
+template void decx::scan::cuda_scan1D_config::generate_scan_config<true, 8, uint8_t, int>(decx::PtrInfo<void> dev_src, decx::PtrInfo<void> dev_dst, const uint64_t _proc_length,
+    decx::cuda_stream* S, de::DH* handle, const int scan_mode);
+
+
+
 uint64_t decx::scan::cuda_scan1D_config::get_proc_length() const
 {
     return this->_length;
@@ -92,13 +139,21 @@ void* decx::scan::cuda_scan1D_config::get_raw_dev_ptr_tmp() const {
 
 
 
-
-void decx::scan::cuda_scan1D_config::release_buffer()
+template <typename _src_type>
+void decx::scan::cuda_scan1D_config::release_buffer(const bool _have_dev_classes)
 {
-    decx::alloc::_device_dealloc(&this->_dev_src);
-    decx::alloc::_device_dealloc(&this->_dev_status);
-    decx::alloc::_device_dealloc(&this->_dev_dst);
+    if (_have_dev_classes) {
+        decx::alloc::_device_dealloc(&this->_dev_src);
+        decx::alloc::_device_dealloc(&this->_dev_dst);
+    }
+    if (std::is_same<_src_type, uint8_t>::value) {
+        decx::alloc::_device_dealloc(&this->_dev_status);
+    }
 }
+
+template void decx::scan::cuda_scan1D_config::release_buffer<float>(const bool _have_dev_classes);
+template void decx::scan::cuda_scan1D_config::release_buffer<de::Half>(const bool _have_dev_classes);
+template void decx::scan::cuda_scan1D_config::release_buffer<uint8_t>(const bool _have_dev_classes);
 
 
 void decx::scan::cuda_scan1D_fp32_caller_Async(const decx::scan::cuda_scan1D_config* _config, decx::cuda_stream* S)
@@ -108,7 +163,7 @@ void decx::scan::cuda_scan1D_fp32_caller_Async(const decx::scan::cuda_scan1D_con
     switch (_config->get_scan_mode())
     {
     case decx::scan::SCAN_MODE::SCAN_MODE_EXCLUSIVE:
-        decx::scan::GPUK::cu_warp_exclusive_scan_fp32_1D << <_config->get_block_num(), _WARP_SCAN_BLOCK_SIZE_,
+        decx::scan::GPUK::cu_block_exclusive_scan_fp32_1D << <_config->get_block_num(), _WARP_SCAN_BLOCK_SIZE_,
             0, S->get_raw_stream_ref() >> > ((float4*)_config->get_raw_dev_ptr_src(),
                 (float4*)_config->get_raw_dev_ptr_status(),
                 (float4*)_config->get_raw_dev_ptr_dst(),
@@ -121,7 +176,7 @@ void decx::scan::cuda_scan1D_fp32_caller_Async(const decx::scan::cuda_scan1D_con
         break;
 
     case decx::scan::SCAN_MODE::SCAN_MODE_INCLUSIVE:
-        decx::scan::GPUK::cu_warp_inclusive_scan_fp32_1D << <_config->get_block_num(), _WARP_SCAN_BLOCK_SIZE_,
+        decx::scan::GPUK::cu_block_inclusive_scan_fp32_1D << <_config->get_block_num(), _WARP_SCAN_BLOCK_SIZE_,
             0, S->get_raw_stream_ref() >> > ((float4*)_config->get_raw_dev_ptr_src(),
                 (float4*)_config->get_raw_dev_ptr_status(),
                 (float4*)_config->get_raw_dev_ptr_dst(),
@@ -145,13 +200,13 @@ void decx::scan::cuda_scan1D_u8_i32_caller_Async(const decx::scan::cuda_scan1D_c
     switch (_config->get_scan_mode())
     {
     case decx::scan::SCAN_MODE::SCAN_MODE_EXCLUSIVE:
-        decx::scan::GPUK::cu_warp_exclusive_scan_u8_fp16_1D << <_config->get_block_num(), _WARP_SCAN_BLOCK_SIZE_,
+        decx::scan::GPUK::cu_block_exclusive_scan_u8_fp16_1D << <_config->get_block_num(), _WARP_SCAN_BLOCK_SIZE_,
             0, S->get_raw_stream_ref() >> > ((float2*)_config->get_raw_dev_ptr_src(),
                                              (float4*)_config->get_raw_dev_ptr_status(),
                                              (int4*)_config->get_raw_dev_ptr_tmp(),
                                              length_v8);
 
-        decx::scan::GPUK::cu_scan_DLB_u16_i32_1D_v8<true> << <_config->get_block_num(), _WARP_SCAN_BLOCK_SIZE_,
+        decx::scan::GPUK::cu_block_DLB_u16_i32_1D_v8<true> << <_config->get_block_num(), _WARP_SCAN_BLOCK_SIZE_,
             0, S->get_raw_stream_ref() >> > ((float4*)_config->get_raw_dev_ptr_tmp(),
                                              (float4*)_config->get_raw_dev_ptr_status(),
                                              (int4*)_config->get_raw_dev_ptr_dst(),
@@ -159,13 +214,13 @@ void decx::scan::cuda_scan1D_u8_i32_caller_Async(const decx::scan::cuda_scan1D_c
         break;
 
     case decx::scan::SCAN_MODE::SCAN_MODE_INCLUSIVE:
-        decx::scan::GPUK::cu_warp_inclusive_scan_u8_u16_1D << <_config->get_block_num(), _WARP_SCAN_BLOCK_SIZE_,
+        decx::scan::GPUK::cu_block_inclusive_scan_u8_u16_1D << <_config->get_block_num(), _WARP_SCAN_BLOCK_SIZE_,
             0, S->get_raw_stream_ref() >> > ((float2*)_config->get_raw_dev_ptr_src(),
                                              (float4*)_config->get_raw_dev_ptr_status(),
                                              (int4*)_config->get_raw_dev_ptr_tmp(),
                                              length_v8);
 
-        decx::scan::GPUK::cu_scan_DLB_u16_i32_1D_v8<false> << <_config->get_block_num(), _WARP_SCAN_BLOCK_SIZE_,
+        decx::scan::GPUK::cu_block_DLB_u16_i32_1D_v8<false> << <_config->get_block_num(), _WARP_SCAN_BLOCK_SIZE_,
             0, S->get_raw_stream_ref() >> > ((float4*)_config->get_raw_dev_ptr_tmp(),
                                              (float4*)_config->get_raw_dev_ptr_status(),
                                              (int4*)_config->get_raw_dev_ptr_dst(),
@@ -185,7 +240,7 @@ void decx::scan::cuda_scan1D_fp16_caller_Async(const decx::scan::cuda_scan1D_con
     switch (_config->get_scan_mode())
     {
     case decx::scan::SCAN_MODE::SCAN_MODE_EXCLUSIVE:
-        decx::scan::GPUK::cu_warp_exclusive_scan_fp16_1D << <_config->get_block_num(), _WARP_SCAN_BLOCK_SIZE_,
+        decx::scan::GPUK::cu_block_exclusive_scan_fp16_1D << <_config->get_block_num(), _WARP_SCAN_BLOCK_SIZE_,
             0, S->get_raw_stream_ref() >> > ((float4*)_config->get_raw_dev_ptr_src(),
                 (float4*)_config->get_raw_dev_ptr_status(),
                 (float4*)_config->get_raw_dev_ptr_dst(),
@@ -198,7 +253,7 @@ void decx::scan::cuda_scan1D_fp16_caller_Async(const decx::scan::cuda_scan1D_con
         break;
 
     case decx::scan::SCAN_MODE::SCAN_MODE_INCLUSIVE:
-        decx::scan::GPUK::cu_warp_inclusive_scan_fp16_1D << <_config->get_block_num(), _WARP_SCAN_BLOCK_SIZE_,
+        decx::scan::GPUK::cu_block_inclusive_scan_fp16_1D << <_config->get_block_num(), _WARP_SCAN_BLOCK_SIZE_,
             0, S->get_raw_stream_ref() >> > ((float4*)_config->get_raw_dev_ptr_src(),
                 (float4*)_config->get_raw_dev_ptr_status(),
                 (float4*)_config->get_raw_dev_ptr_dst(),

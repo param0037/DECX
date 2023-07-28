@@ -130,7 +130,7 @@ namespace scan {
         }
 
         // _res -> int[8]
-        __device__ __inline__ void _inclusive_scan_u8_4way(const decx::utils::_cuda_vec128& _in, int* _res)
+        __device__ __inline__ void _inclusive_scan_u8_u16_4way(const decx::utils::_cuda_vec128& _in, int* _res)
         {
             int2 _tmp;
             _tmp.x = __byte_perm(_in._vi.x, 0, 0x5140);         _tmp.y = __byte_perm(_in._vi.x, 0, 0x5342);
@@ -143,6 +143,21 @@ namespace scan {
             _res[4] = __vadd2(_tmp.x, _res[2]);                 _res[5] = __vadd2(_tmp.y, _res[3]);
 
             _tmp.x = __byte_perm(_in._vi.w, 0, 0x5140);         _tmp.y = __byte_perm(_in._vi.w, 0, 0x5342);
+            _res[6] = __vadd2(_tmp.x, _res[4]);                 _res[7] = __vadd2(_tmp.y, _res[5]);
+        }
+
+        // _res -> int[8]
+        __device__ __inline__ void _exclusive_scan_u8_u16_4way(const decx::utils::_cuda_vec128& _in, int* _res)
+        {
+            int2 _tmp;
+            *((int2*)&_res[0]) = make_int2(0, 0);
+            _tmp.x = __byte_perm(_in._vi.x, 0, 0x5140);         _tmp.y = __byte_perm(_in._vi.x, 0, 0x5342);
+            *((int2*)&_res[2]) = _tmp;
+
+            _tmp.x = __byte_perm(_in._vi.y, 0, 0x5140);         _tmp.y = __byte_perm(_in._vi.y, 0, 0x5342);
+            _res[4] = __vadd2(_tmp.x, _res[2]);                 _res[5] = __vadd2(_tmp.y, _res[3]);
+
+            _tmp.x = __byte_perm(_in._vi.z, 0, 0x5140);         _tmp.y = __byte_perm(_in._vi.z, 0, 0x5342);
             _res[6] = __vadd2(_tmp.x, _res[4]);                 _res[7] = __vadd2(_tmp.y, _res[5]);
         }
 
@@ -222,6 +237,8 @@ namespace scan {
 }
 }
 
+
+// warp-level scan (__device__ functions)
 
 namespace decx
 {

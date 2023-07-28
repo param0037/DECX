@@ -37,13 +37,13 @@ namespace de
         Tensor() {}
 
 
-        virtual uint Width() = 0;
+        virtual uint Width() const = 0;
 
 
-        virtual uint Height() = 0;
+        virtual uint Height() const = 0;
 
 
-        virtual uint Depth() = 0;
+        virtual uint Depth() const = 0;
 
 
         virtual float*              ptr_fp32(const int x, const int y, const int z)  = 0;
@@ -61,7 +61,7 @@ namespace de
         virtual void release() = 0;
 
 
-        virtual int Type() = 0;
+        virtual int Type() const = 0;
     };
 }
 
@@ -193,13 +193,13 @@ namespace decx
         virtual de::Vector4f*       ptr_vec4f(const int x, const int y, const int z);
 
 
-        virtual uint Width();
+        virtual uint Width() const;
 
 
-        virtual uint Height();
+        virtual uint Height() const;
 
 
-        virtual uint Depth();
+        virtual uint Depth() const;
 
 
         virtual de::Tensor& SoftCopy(de::Tensor& src);
@@ -208,16 +208,19 @@ namespace decx
         virtual void release();
 
 
-        virtual int Type();
+        virtual int Type() const;
 
 
-        int get_store_type();
+        int get_store_type() const;
 
 
-        const decx::_tensor_layout& get_layout();
+        const decx::_tensor_layout& get_layout() const;
 
 
-        bool is_init();
+        bool is_init() const;
+
+
+        uint64_t get_total_bytes() const;
     };
 }
 

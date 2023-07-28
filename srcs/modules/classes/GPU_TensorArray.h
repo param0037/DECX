@@ -27,19 +27,19 @@ namespace de
         GPU_TensorArray() {}
 
 
-        virtual uint Width() = 0;
+        virtual uint Width() const = 0;
 
 
-        virtual uint Height() = 0;
+        virtual uint Height() const = 0;
 
 
-        virtual uint Depth() = 0;
+        virtual uint Depth() const = 0;
 
 
-        virtual uint TensorNum() = 0;
+        virtual uint TensorNum() const = 0;
 
 
-        virtual int Type() = 0;
+        virtual int Type() const = 0;
 
 
         virtual de::GPU_TensorArray& SoftCopy(const de::GPU_TensorArray& src) = 0;
@@ -138,22 +138,22 @@ namespace decx
         _GPU_TensorArray(const int _type, const uint _width, const uint _height, const uint _depth, const uint _tensor_num);
 
 
-        const decx::_tensor_layout& get_layout();
+        const decx::_tensor_layout& get_layout() const;
 
 
-        virtual uint Width();
+        virtual uint Width() const;
 
 
-        virtual uint Height();
+        virtual uint Height() const;
 
 
-        virtual uint Depth();
+        virtual uint Depth() const;
 
 
-        virtual uint TensorNum();
+        virtual uint TensorNum() const;
 
 
-        virtual int Type();
+        virtual int Type() const;
 
 
         virtual de::GPU_TensorArray& SoftCopy(const de::GPU_TensorArray& src);
@@ -162,7 +162,10 @@ namespace decx
         virtual void release();
 
 
-        bool is_init();
+        bool is_init() const;
+
+
+        uint64_t get_total_bytes() const;
     };
 }
 

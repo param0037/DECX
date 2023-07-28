@@ -32,13 +32,13 @@ namespace de
         uint ArrayNumber;        
 
 
-        virtual uint Width() = 0;
+        virtual uint Width() const = 0;
 
 
-        virtual uint Height() = 0;
+        virtual uint Height() const = 0;
 
 
-        virtual uint MatrixNumber() = 0;
+        virtual uint MatrixNumber() const = 0;
 
 
         virtual float*      ptr_fp32(const uint row, const uint col, const uint _seq) = 0;
@@ -55,7 +55,7 @@ namespace de
         virtual void release() = 0;
 
 
-        virtual int Type() = 0;
+        virtual int Type() const = 0;
     };
 }
 
@@ -128,13 +128,13 @@ namespace decx
         _MatrixArray(const int _type, uint width, uint height, uint MatrixNum, const int flag);
 
 
-        virtual uint32_t Width();
+        virtual uint32_t Width() const;
 
 
-        virtual uint32_t Height();
+        virtual uint32_t Height() const;
 
 
-        virtual uint32_t MatrixNumber();
+        virtual uint32_t MatrixNumber() const;
 
 
         virtual float*      ptr_fp32(const uint row, const uint col, const uint _seq);
@@ -151,22 +151,25 @@ namespace decx
         virtual void release();
 
 
-        virtual int Type();
+        virtual int Type() const;
         
 
-        uint32_t Pitch();
+        uint32_t Pitch() const;
 
 
-        uint32_t Array_num();
+        uint32_t Array_num() const;
 
 
-        const decx::_matrix_layout& get_layout();
+        const decx::_matrix_layout& get_layout() const;
 
 
-        int32_t get_store_type();
+        int32_t get_store_type() const;
 
 
-        bool is_init();
+        bool is_init() const;
+
+
+        uint64_t get_total_bytes() const;
     };
 
 }

@@ -12,7 +12,7 @@
 
 
 __global__ void 
-decx::scan::GPUK::cu_h_warp_inclusive_scan_fp32_2D(const float4* __restrict     src, 
+decx::scan::GPUK::cu_h_block_inclusive_scan_fp32_2D(const float4* __restrict     src, 
                                                    float4* __restrict           warp_status, 
                                                    float4* __restrict           dst,
                                                    const uint32_t               Wmat_v4,
@@ -65,7 +65,7 @@ decx::scan::GPUK::cu_h_warp_inclusive_scan_fp32_2D(const float4* __restrict     
 
 
 __global__ void 
-decx::scan::GPUK::cu_h_warp_exclusive_scan_fp32_2D(const float4* __restrict     src, 
+decx::scan::GPUK::cu_h_block_exclusive_scan_fp32_2D(const float4* __restrict     src, 
                                                    float4* __restrict           warp_status, 
                                                    float4* __restrict           dst,
                                                    const uint32_t               Wmat_v4,
@@ -122,7 +122,7 @@ decx::scan::GPUK::cu_h_warp_exclusive_scan_fp32_2D(const float4* __restrict     
 
 template <bool _is_inplace>
 __global__ void 
-decx::scan::GPUK::cu_v_warp_inclusive_scan_fp32_2D(const float* __restrict      src,
+decx::scan::GPUK::cu_v_block_inclusive_scan_fp32_2D(const float* __restrict      src,
                                                    float4* __restrict           warp_status, 
                                                    float* __restrict            dst,
                                                    const uint32_t               Wmat,
@@ -210,9 +210,9 @@ decx::scan::GPUK::cu_v_warp_inclusive_scan_fp32_2D(const float* __restrict      
     }
 }
 
-template __global__ void decx::scan::GPUK::cu_v_warp_inclusive_scan_fp32_2D<true>(const float* __restrict src, float4* __restrict _status, float* __restrict dst,
+template __global__ void decx::scan::GPUK::cu_v_block_inclusive_scan_fp32_2D<true>(const float* __restrict src, float4* __restrict _status, float* __restrict dst,
     const uint32_t Wmat, const uint32_t Wstatus, const uint2 proc_dim);
-template __global__ void decx::scan::GPUK::cu_v_warp_inclusive_scan_fp32_2D<false>(const float* __restrict src, float4* __restrict _status, float* __restrict dst,
+template __global__ void decx::scan::GPUK::cu_v_block_inclusive_scan_fp32_2D<false>(const float* __restrict src, float4* __restrict _status, float* __restrict dst,
     const uint32_t Wmat, const uint32_t Wstatus, const uint2 proc_dim);
 
 
@@ -220,7 +220,7 @@ template __global__ void decx::scan::GPUK::cu_v_warp_inclusive_scan_fp32_2D<fals
 
 template <bool _is_inplace>
 __global__ void 
-decx::scan::GPUK::cu_v_warp_exclusive_scan_fp32_2D(const float* __restrict      src,
+decx::scan::GPUK::cu_v_block_exclusive_scan_fp32_2D(const float* __restrict      src,
                                                    float4* __restrict           warp_status, 
                                                    float* __restrict            dst,
                                                    const uint32_t               Wmat,
@@ -310,9 +310,9 @@ decx::scan::GPUK::cu_v_warp_exclusive_scan_fp32_2D(const float* __restrict      
     }
 }
 
-template __global__ void decx::scan::GPUK::cu_v_warp_exclusive_scan_fp32_2D<true>(const float* __restrict src, float4* __restrict _status, float* __restrict dst,
+template __global__ void decx::scan::GPUK::cu_v_block_exclusive_scan_fp32_2D<true>(const float* __restrict src, float4* __restrict _status, float* __restrict dst,
     const uint32_t Wmat, const uint32_t Wstatus, const uint2 proc_dim);
-template __global__ void decx::scan::GPUK::cu_v_warp_exclusive_scan_fp32_2D<false>(const float* __restrict src, float4* __restrict _status, float* __restrict dst,
+template __global__ void decx::scan::GPUK::cu_v_block_exclusive_scan_fp32_2D<false>(const float* __restrict src, float4* __restrict _status, float* __restrict dst,
     const uint32_t Wmat, const uint32_t Wstatus, const uint2 proc_dim);
 
 

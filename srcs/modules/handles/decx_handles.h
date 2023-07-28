@@ -140,7 +140,7 @@ namespace decx
 
 
 
-        DECX_FAIL_UNSUPPORTED_TYPE      = 0x13
+        DECX_FAIL_UNSUPPORTED_TYPE      = 0x13,
     };
 }
 
@@ -177,8 +177,6 @@ namespace decx
 #define MULTIPLE_REFERENCES                         "warning: This space is refered by multiple simbols\n"
 #define CPU_HYPER_THREADING                         "warning: Threading number exceeds the hardware concurrency, which may reduce performance\n"
 #define MEMCPY_DIFFERENT_DATA_TYPE                  "warning: The data types of the two objects are different, which reinterprets the data\n"
-
-
 
 
 

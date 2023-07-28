@@ -31,38 +31,38 @@ void decx::_GPU_TensorArray::_attribute_assign(const int _type, const uint _widt
 }
 
 
-uint decx::_GPU_TensorArray::Width()
+uint decx::_GPU_TensorArray::Width() const
 {
     return this->_layout.width;
 }
 
 
-uint decx::_GPU_TensorArray::Height()
+uint decx::_GPU_TensorArray::Height() const
 {
     return this->_layout.height;
 }
 
 
-uint decx::_GPU_TensorArray::Depth()
+uint decx::_GPU_TensorArray::Depth() const
 {
     return this->_layout.depth;
 }
 
 
-uint decx::_GPU_TensorArray::TensorNum()
+uint decx::_GPU_TensorArray::TensorNum() const
 {
     return this->tensor_num;
 }
 
 
-int decx::_GPU_TensorArray::Type()
+int decx::_GPU_TensorArray::Type() const
 {
     return this->type;
 }
 
 
 
-const decx::_tensor_layout& decx::_GPU_TensorArray::get_layout()
+const decx::_tensor_layout& decx::_GPU_TensorArray::get_layout() const
 {
     return this->_layout;
 }
@@ -194,11 +194,16 @@ void decx::_GPU_TensorArray::release()
 
 
 
-bool decx::_GPU_TensorArray::is_init()
+bool decx::_GPU_TensorArray::is_init() const
 {
     return this->_init;
 }
 
+
+uint64_t decx::_GPU_TensorArray::get_total_bytes() const
+{
+    return this->total_bytes;
+}
 
 
 

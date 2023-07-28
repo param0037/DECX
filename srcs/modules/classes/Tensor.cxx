@@ -210,7 +210,7 @@ void decx::_Tensor::release()
 
 
 
-int decx::_Tensor::Type()
+int decx::_Tensor::Type() const
 {
     return this->type;
 }
@@ -274,41 +274,28 @@ de::Vector4f* decx::_Tensor::ptr_vec4f(const int x, const int y, const int z)
 }
 
 
-//
-//uint32_t decx::_Tensor::Dpitch()
-//{
-//    return this->_layout.dpitch;
-//}
-//
-//
-//uint32_t decx::_Tensor::Wpitch()
-//{
-//    return this->_layout.wpitch;
-//}
-//
-//
-//
-//uint64_t decx::_Tensor::Dp_x_wp()
-//{
-//    return this->_layout.dp_x_wp;
-//}
 
-
-int decx::_Tensor::get_store_type()
+int decx::_Tensor::get_store_type() const
 {
     return this->_store_type;
 }
 
 
-const decx::_tensor_layout& decx::_Tensor::get_layout()
+const decx::_tensor_layout& decx::_Tensor::get_layout() const
 {
     return this->_layout;
 }
 
 
-bool decx::_Tensor::is_init()
+bool decx::_Tensor::is_init() const
 {
     return this->_init;
+}
+
+
+uint64_t decx::_Tensor::get_total_bytes() const
+{
+    return this->total_bytes;
 }
 
 
@@ -359,9 +346,9 @@ _DECX_API_ de::Tensor* de::CreateTensorPtr(const int _type, const uint _width, c
 
 
 
-uint decx::_Tensor::Width() { return this->_layout.width; }
-uint decx::_Tensor::Height() { return this->_layout.height; }
-uint decx::_Tensor::Depth() { return this->_layout.depth; }
+uint decx::_Tensor::Width() const { return this->_layout.width; }
+uint decx::_Tensor::Height() const { return this->_layout.height; }
+uint decx::_Tensor::Depth() const { return this->_layout.depth; }
 
 
 de::Tensor& decx::_Tensor::SoftCopy(de::Tensor& src)

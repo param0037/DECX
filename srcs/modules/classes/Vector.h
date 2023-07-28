@@ -38,7 +38,7 @@ namespace de
         Vector() {}
 
 
-        virtual size_t Len() = 0;
+        virtual size_t Len() const = 0;
 
 
         virtual float*              ptr_fp32(size_t index)  = 0;
@@ -54,6 +54,8 @@ namespace de
 
 
         virtual de::Vector& SoftCopy(de::Vector& src) = 0;
+
+        virtual int Type() const = 0;
 
 
         ~Vector() {}
@@ -111,7 +113,7 @@ namespace decx
         _Vector(const int _type, size_t length, const int flag);
 
 
-        virtual size_t Len();
+        virtual size_t Len() const;
 
 
         virtual float*           ptr_fp32(size_t index);
@@ -130,13 +132,19 @@ namespace decx
         virtual de::Vector& SoftCopy(de::Vector &src);
 
 
-        virtual ~_Vector();
+        virtual int Type() const;
 
 
-        int Type();
+        bool is_init() const;
 
 
-        bool is_init();
+        uint64_t _Length() const;
+
+
+        uint64_t get_total_bytes() const;
+
+
+        ~_Vector();
     };
 }
 

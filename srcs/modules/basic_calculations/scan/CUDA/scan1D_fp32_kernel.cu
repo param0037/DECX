@@ -12,7 +12,7 @@
 
 
 __global__ void
-decx::scan::GPUK::cu_warp_inclusive_scan_fp32_1D(const float4* __restrict   src,
+decx::scan::GPUK::cu_block_inclusive_scan_fp32_1D(const float4* __restrict   src,
                                                  float4* __restrict         _block_status,
                                                  float4* __restrict         dst,
                                                  const uint64_t             proc_len_v4)
@@ -92,7 +92,7 @@ decx::scan::GPUK::cu_warp_inclusive_scan_fp32_1D(const float4* __restrict   src,
 
 
 __global__ void
-decx::scan::GPUK::cu_warp_exclusive_scan_fp32_1D(const float4* __restrict   src,
+decx::scan::GPUK::cu_block_exclusive_scan_fp32_1D(const float4* __restrict   src,
                                                  float4* __restrict         _block_status,
                                                  float4* __restrict         dst,
                                                  const uint64_t             proc_len_v4)

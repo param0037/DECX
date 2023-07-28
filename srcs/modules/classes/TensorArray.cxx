@@ -82,25 +82,25 @@ void decx::_TensorArray::_attribute_assign(const int _type, const uint _width, c
 
 
 
-uint decx::_TensorArray::Width()
+uint decx::_TensorArray::Width() const
 {
     return this->_layout.width;
 }
 
 
-uint decx::_TensorArray::Height()
+uint decx::_TensorArray::Height() const
 {
     return this->_layout.height;
 }
 
 
-uint decx::_TensorArray::Depth()
+uint decx::_TensorArray::Depth() const
 {
     return this->_layout.depth;
 }
 
 
-uint decx::_TensorArray::TensorNum()
+uint decx::_TensorArray::TensorNum() const
 {
     return this->tensor_num;
 }
@@ -370,7 +370,7 @@ de::TensorArray& decx::_TensorArray::SoftCopy(de::TensorArray& src)
 }
 
 
-int decx::_TensorArray::Type() 
+int decx::_TensorArray::Type() const
 {
     return this->type;
 }
@@ -398,40 +398,25 @@ void decx::_TensorArray::release()
 }
 
 
-
-
-//uint32_t decx::_TensorArray::Dpitch()
-//{
-//    return this->_layout.dpitch;
-//}
-//
-//
-//uint32_t decx::_TensorArray::Wpitch()
-//{
-//    return this->_layout.wpitch;
-//}
-//
-//
-//
-//uint64_t decx::_TensorArray::Dp_x_wp()
-//{
-//    return this->_layout.dp_x_wp;
-//}
-
-
-int decx::_TensorArray::get_store_type()
+int decx::_TensorArray::get_store_type() const
 {
     return this->_store_type;
 }
 
 
-const decx::_tensor_layout& decx::_TensorArray::get_layout()
+const decx::_tensor_layout& decx::_TensorArray::get_layout() const
 {
     return this->_layout;
 }
 
 
-bool decx::_TensorArray::is_init()
+bool decx::_TensorArray::is_init() const
 {
     return this->_init;
+}
+
+
+uint64_t decx::_TensorArray::get_total_bytes() const
+{
+    return this->total_bytes;
 }

@@ -94,6 +94,12 @@ namespace decx
         bool is_init() const;
 
 
+        uint64_t _Length() const;
+
+
+        uint64_t get_total_bytes() const;
+
+
         ~_GPU_Vector();
     };
 }

@@ -157,10 +157,6 @@ de::DH de::cuda::Filter2D(de::GPU_Matrix& src, de::GPU_Matrix& kernel, de::GPU_M
 }
 
 
-//#include "../../../../../Async Engine/Async_task_threadpool/Async_Engine.h"
-
-
-
 
  
 void decx::cuda::dev_Filter2D_Raw_API(decx::_GPU_Matrix* _src, decx::_GPU_Matrix* _kernel, decx::_GPU_Matrix* _dst,

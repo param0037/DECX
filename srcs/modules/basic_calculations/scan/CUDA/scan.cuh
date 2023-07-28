@@ -77,32 +77,32 @@ namespace decx
 namespace scan
 {
     namespace GPUK {
-        __global__ void cu_warp_inclusive_scan_fp32_1D(const float4* src, float4* _status, float4* dst,
+        __global__ void cu_block_inclusive_scan_fp32_1D(const float4* src, float4* _status, float4* dst,
             const uint64_t proc_len_v4);
 
 
-        __global__ void cu_warp_exclusive_scan_fp32_1D(const float4* src, float4* _status, float4* dst,
+        __global__ void cu_block_exclusive_scan_fp32_1D(const float4* src, float4* _status, float4* dst,
             const uint64_t proc_len_v4);
 
 
-        __global__ void cu_warp_inclusive_scan_u8_u16_1D(const float2* src, float4* _status, int4* dst,
+        __global__ void cu_block_inclusive_scan_u8_u16_1D(const float2* src, float4* _status, int4* dst,
             const uint64_t proc_len_v8);
 
 
-        __global__ void cu_warp_exclusive_scan_u8_fp16_1D(const float2* src, float4* _status, int4* dst,
+        __global__ void cu_block_exclusive_scan_u8_fp16_1D(const float2* src, float4* _status, int4* dst,
             const uint64_t proc_len_v8);
 
 
         template <bool _is_exclusive>
-        __global__ void cu_scan_DLB_u16_i32_1D_v8(const float4* __restrict src, float4* __restrict _status, int4* __restrict dst,
+        __global__ void cu_block_DLB_u16_i32_1D_v8(const float4* __restrict src, float4* __restrict _status, int4* __restrict dst,
             const uint64_t proc_len_v4);
 
 
-        __global__ void cu_warp_inclusive_scan_fp16_1D(const float4* src, float4* _status, float4* dst,
+        __global__ void cu_block_inclusive_scan_fp16_1D(const float4* src, float4* _status, float4* dst,
             const uint64_t proc_len_v4);
 
 
-        __global__ void cu_warp_exclusive_scan_fp16_1D(const float4* src, float4* _status, float4* dst,
+        __global__ void cu_block_exclusive_scan_fp16_1D(const float4* src, float4* _status, float4* dst,
             const uint64_t proc_len_v4);
 
         // DLB
@@ -124,20 +124,20 @@ namespace decx
         {
 // ------------------------------------------------- fp32 ------------------------------------------------------------
             // [32, 8] ([warp_size, 8])
-            __global__ void cu_h_warp_inclusive_scan_fp32_2D(const float4* src, float4* _status, float4* dst,
+            __global__ void cu_h_block_inclusive_scan_fp32_2D(const float4* src, float4* _status, float4* dst,
                 const uint32_t Wmat_v4, const uint32_t Wstatus, const uint2 proc_dim_v4);
 
-            __global__ void cu_h_warp_exclusive_scan_fp32_2D(const float4* src, float4* _status, float4* dst,
+            __global__ void cu_h_block_exclusive_scan_fp32_2D(const float4* src, float4* _status, float4* dst,
                 const uint32_t Wmat_v4, const uint32_t Wstatus, const uint2 proc_dim_v4);
 
             template <bool _is_inplace>
             // [32, 8] ([warp_size, 8])
-            __global__ void cu_v_warp_inclusive_scan_fp32_2D(const float* __restrict src, float4* __restrict _status, float* __restrict dst,
+            __global__ void cu_v_block_inclusive_scan_fp32_2D(const float* __restrict src, float4* __restrict _status, float* __restrict dst,
                 const uint32_t Wmat, const uint32_t Wstatus, const uint2 proc_dim);
 
             template <bool _is_inplace>
             // [32, 8] ([warp_size, 8])
-            __global__ void cu_v_warp_exclusive_scan_fp32_2D(const float* __restrict src, float4* __restrict _status, float* __restrict dst,
+            __global__ void cu_v_block_exclusive_scan_fp32_2D(const float* __restrict src, float4* __restrict _status, float* __restrict dst,
                 const uint32_t Wmat, const uint32_t Wstatus, const uint2 proc_dim);
 
 
@@ -154,19 +154,19 @@ namespace decx
 
 // ------------------------------------------------- fp16 ------------------------------------------------------------
 
-            __global__ void cu_h_warp_inclusive_scan_fp16_2D(const float4* src, float4* _status, float4* dst,
+            __global__ void cu_h_block_inclusive_scan_fp16_2D(const float4* src, float4* _status, float4* dst,
                 const uint32_t Wsrc_v8, const uint32_t Wdst_v4, const uint32_t Wstatus, const uint2 proc_dim_v4);
 
 
-            __global__ void cu_h_warp_exclusive_scan_fp16_2D(const float4* src, float4* _status, float4* dst,
+            __global__ void cu_h_block_exclusive_scan_fp16_2D(const float4* src, float4* _status, float4* dst,
                 const uint32_t Wsrc_v8, const uint32_t Wdst_v4, const uint32_t Wstatus, const uint2 proc_dim_v4);
 
 
-            __global__ void cu_v_warp_inclusive_scan_fp16_2D_v2(const float* src, float4* _status, float2* dst,
+            __global__ void cu_v_block_inclusive_scan_fp16_2D_v2(const float* src, float4* _status, float2* dst,
                 const uint32_t Wsrc_v2, const uint32_t Wdst_v2, const uint32_t Wstatus, const uint2 proc_dim_v2);
 
 
-            __global__ void cu_v_warp_exclusive_scan_fp16_2D_v2(const float* src, float4* _status, float2* dst,
+            __global__ void cu_v_block_exclusive_scan_fp16_2D_v2(const float* src, float4* _status, float2* dst,
                 const uint32_t Wsrc_v2, const uint32_t Wdst_v2, const uint32_t Wstatus, const uint2 proc_dim_v2);
 
 
@@ -191,17 +191,17 @@ namespace decx
             *                         ~.y -> Wsrc_v16, measured in scale of 16 elements
             *                         ~.z -> Wdst_v8_fp16, measured in scale of 8 elements, (taking fp16 as referance)
             */
-            __global__ void cu_h_warp_inclusive_scan_u8_u16_2D(const float2* src, float4* _status, float4* dst,
+            __global__ void cu_h_block_inclusive_scan_u8_u16_2D(const float2* src, float4* _status, float4* dst,
                 const uint32_t Wsrc_v16, const uint32_t Wdst_v8_fp16, const uint32_t Wstatus, const uint3 LDG_STG_bounds);
 
 
-            __global__ void cu_h_warp_exclusive_scan_u8_u16_2D(const float2* src, float4* _status, float4* dst,
+            __global__ void cu_h_block_exclusive_scan_u8_u16_2D(const float2* src, float4* _status, float4* dst,
                 const uint32_t Wsrc_v16, const uint32_t Wdst_v8_fp16, const uint32_t Wstatus, const uint3 LDG_STG_bounds);
 
 
             // [32, 8] ([warp_size, 8])
             template <bool _is_exclusive>
-            __global__ void cu_h_scan_DLB_fp16_i32_2D_v8(const float4* __restrict src, float4* __restrict _status, int4* __restrict dst, const uint Wmat_v4_i32,
+            __global__ void cu_h_block_DLB_fp16_i32_2D_v8(const float4* __restrict src, float4* __restrict _status, int4* __restrict dst, const uint Wmat_v4_i32,
                 const uint Wmat_v8_fp16, const uint Wstatus, const uint2 proc_dim_v4);
 
 
@@ -212,15 +212,18 @@ namespace decx
 
 
             // [32, 8] ([warp_size, 8])
-            __global__ void cu_v_warp_inclusive_scan_int32_2D(float4* _status, int* dst,
+            __global__ void cu_v_block_inclusive_scan_int32_2D(float4* _status, int* dst,
                 const uint32_t Wmat, const uint32_t Wstatus, const uint2 proc_dim);
 
 
-            __global__ void cu_v_warp_exclusive_scan_int32_2D(float4* _status, int* dst,
+            __global__ void cu_v_block_exclusive_scan_int32_2D(float4* _status, int* dst,
                 const uint32_t Wmat, const uint32_t Wstatus, const uint2 proc_dim);
 
 
-            __global__ void cu_v_warp_inclusive_scan_u8_u16_2D_v4(const float* src, float4* _status, double* dst,
+            __global__ void cu_v_block_inclusive_scan_u8_u16_2D_v4(const float* src, float4* _status, double* dst,
+                const uint32_t Wsrc_v2, const uint32_t Wdst_v2, const uint32_t Wstatus, const uint2 proc_dim_v2);
+
+            __global__ void cu_v_block_exclusive_scan_u8_u16_2D_v4(const float* src, float4* _status, double* dst,
                 const uint32_t Wsrc_v2, const uint32_t Wdst_v2, const uint32_t Wstatus, const uint2 proc_dim_v2);
 
             // [32, 32] ([warp_size, 32])

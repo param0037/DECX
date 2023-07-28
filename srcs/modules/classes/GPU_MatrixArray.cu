@@ -13,13 +13,13 @@
 
 
 
-uint32_t decx::_GPU_MatrixArray::Width() { return this->_layout.width; }
+uint32_t decx::_GPU_MatrixArray::Width() const { return this->_layout.width; }
 
 
-uint32_t decx::_GPU_MatrixArray::Height() { return this->_layout.height; }
+uint32_t decx::_GPU_MatrixArray::Height() const { return this->_layout.height; }
 
 
-uint32_t decx::_GPU_MatrixArray::MatrixNumber() { return this->ArrayNumber; }
+uint32_t decx::_GPU_MatrixArray::MatrixNumber() const { return this->ArrayNumber; }
 
 
 
@@ -261,26 +261,32 @@ de::GPU_MatrixArray& decx::_GPU_MatrixArray::SoftCopy(de::GPU_MatrixArray& src)
 }
 
 
-int decx::_GPU_MatrixArray::Type()
+int decx::_GPU_MatrixArray::Type() const
 {
     return this->type;
 }
 
 
 
-uint32_t decx::_GPU_MatrixArray::Pitch()
+uint32_t decx::_GPU_MatrixArray::Pitch() const
 {
     return this->_layout.pitch;
 }
 
 
-const decx::_matrix_layout& decx::_GPU_MatrixArray::get_layout()
+const decx::_matrix_layout& decx::_GPU_MatrixArray::get_layout() const
 {
     return this->_layout;
 }
 
 
-bool decx::_GPU_MatrixArray::is_init()
+bool decx::_GPU_MatrixArray::is_init() const
 {
     return this->_init;
+}
+
+
+uint64_t decx::_GPU_MatrixArray::get_total_bytes() const
+{
+    return this->total_bytes;
 }

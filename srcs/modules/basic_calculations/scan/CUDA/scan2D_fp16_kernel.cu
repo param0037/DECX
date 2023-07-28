@@ -12,7 +12,7 @@
 
 
 __global__ void 
-decx::scan::GPUK::cu_h_warp_inclusive_scan_fp16_2D(const float4* __restrict     src, 
+decx::scan::GPUK::cu_h_block_inclusive_scan_fp16_2D(const float4* __restrict     src, 
                                                    float4* __restrict           warp_status, 
                                                    float4* __restrict           dst,
                                                    const uint32_t               Wsrc_v8,
@@ -80,7 +80,7 @@ decx::scan::GPUK::cu_h_warp_inclusive_scan_fp16_2D(const float4* __restrict     
 
 
 __global__ void 
-decx::scan::GPUK::cu_h_warp_exclusive_scan_fp16_2D(const float4* __restrict     src, 
+decx::scan::GPUK::cu_h_block_exclusive_scan_fp16_2D(const float4* __restrict     src, 
                                                    float4* __restrict           warp_status, 
                                                    float4* __restrict           dst,
                                                    const uint32_t               Wsrc_v8,
@@ -153,7 +153,7 @@ decx::scan::GPUK::cu_h_warp_exclusive_scan_fp16_2D(const float4* __restrict     
 
 
 __global__ void 
-decx::scan::GPUK::cu_v_warp_inclusive_scan_fp16_2D_v2(const float* __restrict      src,
+decx::scan::GPUK::cu_v_block_inclusive_scan_fp16_2D_v2(const float* __restrict      src,
                                                       float4* __restrict           warp_status, 
                                                       float2* __restrict           dst,
                                                       const uint32_t               Wsrc_v2,
@@ -253,7 +253,7 @@ decx::scan::GPUK::cu_v_warp_inclusive_scan_fp16_2D_v2(const float* __restrict   
 
 
 __global__ void 
-decx::scan::GPUK::cu_v_warp_exclusive_scan_fp16_2D_v2(const float* __restrict      src,
+decx::scan::GPUK::cu_v_block_exclusive_scan_fp16_2D_v2(const float* __restrict      src,
                                                       float4* __restrict           warp_status, 
                                                       float2* __restrict           dst,
                                                       const uint32_t               Wsrc_v2,

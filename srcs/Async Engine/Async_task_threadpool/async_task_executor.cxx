@@ -30,7 +30,7 @@ void decx::async::async_task_executor::_thread_main_loop()
 {
     while (!this->_shutdown) {
         std::unique_lock<std::mutex> lock(this->_mtx);
-        if (this->_all_done) {
+        while (this->_all_done) {
             this->_cv.wait(lock);
         }
         for (int i = 0; i < this->_task_num; ++i) {

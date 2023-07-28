@@ -12,7 +12,7 @@
 
 
 __global__ void 
-decx::scan::GPUK::cu_h_warp_inclusive_scan_u8_u16_2D(const float2* __restrict     src, 
+decx::scan::GPUK::cu_h_block_inclusive_scan_u8_u16_2D(const float2* __restrict     src, 
                                                    float4* __restrict           warp_status, 
                                                    float4* __restrict             dst,
                                                    const uint32_t               Wsrc_v8,
@@ -66,7 +66,7 @@ decx::scan::GPUK::cu_h_warp_inclusive_scan_u8_u16_2D(const float2* __restrict   
 
 
 __global__ void 
-decx::scan::GPUK::cu_h_warp_exclusive_scan_u8_u16_2D(const float2* __restrict     src, 
+decx::scan::GPUK::cu_h_block_exclusive_scan_u8_u16_2D(const float2* __restrict     src, 
                                                    float4* __restrict           warp_status, 
                                                    float4* __restrict             dst,
                                                    const uint32_t               Wsrc_v8,
@@ -122,7 +122,7 @@ decx::scan::GPUK::cu_h_warp_exclusive_scan_u8_u16_2D(const float2* __restrict   
 
 
 __global__ void 
-decx::scan::GPUK::cu_v_warp_inclusive_scan_u8_u16_2D_v4(const float* __restrict      src,
+decx::scan::GPUK::cu_v_block_inclusive_scan_u8_u16_2D_v4(const float* __restrict      src,
                                                       float4* __restrict           warp_status, 
                                                       double* __restrict           dst,
                                                       const uint32_t               Wsrc_v4,
@@ -151,7 +151,7 @@ decx::scan::GPUK::cu_v_warp_inclusive_scan_u8_u16_2D_v4(const float* __restrict 
         if (tidy * 4 + 2 < proc_dim_v4.y)  _recv._vf.z = src[LDG_dex + Wsrc_v4 * 2];
         if (tidy * 4 + 3 < proc_dim_v4.y)  _recv._vf.w = src[LDG_dex + Wsrc_v4 * 3];
 
-        decx::scan::GPUK::_inclusive_scan_u8_4way(_recv, (int*)&_thread_scan_res);
+        decx::scan::GPUK::_inclusive_scan_u8_u16_4way(_recv, (int*)&_thread_scan_res);
 
         _work_space[threadIdx.y][threadIdx.x] = _thread_scan_res.w;        // The last ushort4
     }
@@ -187,24 +187,133 @@ decx::scan::GPUK::cu_v_warp_inclusive_scan_u8_u16_2D_v4(const float* __restrict 
         tmp2.x = __vadd2(tmp1.x, ((int2*)&_thread_scan_res.w)->x);
         tmp2.y = __vadd2(tmp1.y, ((int2*)&_thread_scan_res.w)->y);
         if (blockIdx.y == 0) {
-            _status._prefix_sum = ((ushort2*)&tmp2.x)->x;
             _status._warp_status = decx::scan::_scan_warp_status::PREFIX_AVAILABLE;
-            warp_status[STG_status_dex] = *((float4*)&_status);
 
-#pragma unroll 3
-            for (int i = 1; i < 4; ++i) {
+#pragma unroll 4
+            for (int i = 0; i < 4; ++i) {
                 _status._prefix_sum = ((ushort*)&tmp2)[i];
                 warp_status[STG_status_dex + Wstatus_TP * i] = *((float4*)&_status);
             }
         }
         else {
-            _status._warp_aggregate = ((ushort2*)&tmp2.x)->x;
             _status._warp_status = decx::scan::_scan_warp_status::AGGREGATE_AVAILABLE;
-            warp_status[STG_status_dex] = *((float4*)&_status);
+
+#pragma unroll 4
+            for (int i = 0; i < 4; ++i) {
+                _status._warp_aggregate = ((ushort*)&tmp2)[i];
+                warp_status[STG_status_dex + Wstatus_TP * i] = *((float4*)&_status);
+            }
+        }
+    }
+
+    if (tidx < proc_dim_v4.x) 
+    {
+        _thread_scan_res = decx::utils::add_scalar_vec4(_thread_scan_res, tmp1);
+
+        if (tidy * 4 < proc_dim_v4.y) {
+            dst[STG_dex] = _thread_scan_res.x;
+        }
+        if (tidy * 4 + 1 < proc_dim_v4.y) { 
+            dst[STG_dex + Wdst_v4] = _thread_scan_res.y;
+        }
+        if (tidy * 4 + 2 < proc_dim_v4.y) { 
+            dst[STG_dex + Wdst_v4 * 2] = _thread_scan_res.z;
+        }
+        if (tidy * 4 + 3 < proc_dim_v4.y) {
+            dst[STG_dex + Wdst_v4 * 3] = _thread_scan_res.w;
+        }
+    }
+}
+
+
+
+__global__ void 
+decx::scan::GPUK::cu_v_block_exclusive_scan_u8_u16_2D_v4(const float* __restrict      src,
+                                                      float4* __restrict           warp_status, 
+                                                      double* __restrict           dst,
+                                                      const uint32_t               Wsrc_v4,
+                                                      const uint32_t               Wdst_v4,
+                                                      const uint32_t               Wstatus_TP,
+                                                      const uint2                  proc_dim_v4)
+{
+    // in-block (local) warp_id = threadIdx.y
+    uint32_t tidx = threadIdx.x + blockIdx.x * blockDim.x;      // H
+    uint32_t tidy = threadIdx.y + blockIdx.y * blockDim.y;      // V
+
+    uint64_t LDG_dex = (uint64_t)tidx + (uint64_t)tidy * 4 * (uint64_t)Wsrc_v4;
+    uint64_t STG_dex = (uint64_t)tidx + (uint64_t)tidy * 4 * (uint64_t)Wdst_v4;
+    uint64_t STG_status_dex = tidx * 4 * Wstatus_TP + blockIdx.y;
+
+    decx::utils::_cuda_vec128 _recv;
+    double4 _thread_scan_res;
+    int2 tmp1, tmp2, _end_values_v4 = make_int2(0, 0);
+    decx::scan::scan_warp_pred_int32 _status;
+    
+    __shared__ double _work_space[8][32 + 1];
+
+    if (tidx < proc_dim_v4.x) {
+        if (tidy * 4 < proc_dim_v4.y)  _recv._vf.x = src[LDG_dex];
+        if (tidy * 4 + 1 < proc_dim_v4.y)  _recv._vf.y = src[LDG_dex + Wsrc_v4];
+        if (tidy * 4 + 2 < proc_dim_v4.y)  _recv._vf.z = src[LDG_dex + Wsrc_v4 * 2];
+        if (tidy * 4 + 3 < proc_dim_v4.y)  _recv._vf.w = src[LDG_dex + Wsrc_v4 * 3];
+
+        _end_values_v4.x = __byte_perm(_recv._vi.w, 0, 0x5140);         _end_values_v4.y = __byte_perm(_recv._vi.w, 0, 0x5342);
+
+        decx::scan::GPUK::_exclusive_scan_u8_u16_4way(_recv, (int*)&_thread_scan_res);
+
+        tmp1.x = __vadd2(((int2*)&_thread_scan_res.w)->x, _end_values_v4.x);
+        tmp1.y = __vadd2(((int2*)&_thread_scan_res.w)->y, _end_values_v4.y);
+        _work_space[threadIdx.y][threadIdx.x] = *((double*)&tmp1);        // The last ushort4
+    }
+
+    __syncthreads();
 
 #pragma unroll 3
-            for (int i = 1; i < 4; ++i) {
+    for (int i = 0; i < 3; ++i) 
+    {
+        *((double*)&tmp1) = _work_space[threadIdx.y][threadIdx.x];
+
+        if (threadIdx.y > (1 << i) - 1) {
+            *((double*)&tmp2) = _work_space[threadIdx.y - (1 << i)][threadIdx.x];
+            tmp1.x = __vadd2(tmp1.x, tmp2.x);
+            tmp1.y = __vadd2(tmp1.y, tmp2.y);
+        }
+        __syncthreads();
+        if (i < 2) {
+            _work_space[threadIdx.y][threadIdx.x] = *((double*)&tmp1);
+        }
+        else {
+            *((int2*)&_work_space[threadIdx.y][threadIdx.x]) = 
+                make_int2(__vsub2(tmp1.x, __vadd2(((int2*)&_thread_scan_res.w)->x, _end_values_v4.x)),
+                          __vsub2(tmp1.y, __vadd2(((int2*)&_thread_scan_res.w)->y, _end_values_v4.y)));
+        }
+        __syncthreads();
+    }
+
+    // get aggregate for each float4
+    *((double*)&tmp1) = _work_space[threadIdx.y][threadIdx.x];
+
+    if (threadIdx.y == blockDim.y - 1)
+    {
+        tmp2.x = __vadd2(tmp1.x, __vadd2(((int2*)&_thread_scan_res.w)->x, _end_values_v4.x));
+        tmp2.y = __vadd2(tmp1.y, __vadd2(((int2*)&_thread_scan_res.w)->y, _end_values_v4.y));
+        if (blockIdx.y == 0) {
+            _status._warp_status = decx::scan::_scan_warp_status::PREFIX_AVAILABLE;
+
+#pragma unroll 4
+            for (int i = 0; i < 4; ++i) {
+                _status._prefix_sum = ((ushort*)&tmp2)[i];
+                _status._end_value = ((ushort*)&_end_values_v4)[i];
+                warp_status[STG_status_dex + Wstatus_TP * i] = *((float4*)&_status);
+            }
+        }
+        else {
+            _status._warp_status = decx::scan::_scan_warp_status::AGGREGATE_AVAILABLE;
+
+#pragma unroll 4
+            for (int i = 0; i < 4; ++i) {
                 _status._warp_aggregate = ((ushort*)&tmp2)[i];
+                _status._end_value = ((ushort*)&_end_values_v4)[i];
                 warp_status[STG_status_dex + Wstatus_TP * i] = *((float4*)&_status);
             }
         }
@@ -233,7 +342,7 @@ decx::scan::GPUK::cu_v_warp_inclusive_scan_u8_u16_2D_v4(const float* __restrict 
 // u16_i32
 template <bool _is_exclusive>
 __global__ void 
-decx::scan::GPUK::cu_h_scan_DLB_fp16_i32_2D_v8(const float4* __restrict src,
+decx::scan::GPUK::cu_h_block_DLB_fp16_i32_2D_v8(const float4* __restrict src,
                                                float4* __restrict     block_status, 
                                                int4* __restrict       dst, 
                                                const uint             Wmat_v4_i32,
@@ -354,15 +463,15 @@ decx::scan::GPUK::cu_h_scan_DLB_fp16_i32_2D_v8(const float4* __restrict src,
 }
 
 
-template __global__ void decx::scan::GPUK::cu_h_scan_DLB_fp16_i32_2D_v8<true>(const float4* __restrict src, float4* __restrict _status, int4* __restrict dst, const uint Wmat_v4_i32,
+template __global__ void decx::scan::GPUK::cu_h_block_DLB_fp16_i32_2D_v8<true>(const float4* __restrict src, float4* __restrict _status, int4* __restrict dst, const uint Wmat_v4_i32,
     const uint Wmat_v8_fp16, const uint Wstatus, const uint2 proc_dim_v4);
 
-template __global__ void decx::scan::GPUK::cu_h_scan_DLB_fp16_i32_2D_v8<false>(const float4* __restrict src, float4* __restrict _status, int4* __restrict dst, const uint Wmat_v4_i32,
+template __global__ void decx::scan::GPUK::cu_h_block_DLB_fp16_i32_2D_v8<false>(const float4* __restrict src, float4* __restrict _status, int4* __restrict dst, const uint Wmat_v4_i32,
     const uint Wmat_v8_fp16, const uint Wstatus, const uint2 proc_dim_v4);
 
 
 __global__ void 
-decx::scan::GPUK::cu_v_warp_inclusive_scan_int32_2D(float4* __restrict           warp_status, 
+decx::scan::GPUK::cu_v_block_inclusive_scan_int32_2D(float4* __restrict           warp_status, 
                                                    int* __restrict              dst,
                                                    const uint32_t               Wmat,
                                                    const uint32_t               Wstatus_TP,
@@ -444,7 +553,7 @@ decx::scan::GPUK::cu_v_warp_inclusive_scan_int32_2D(float4* __restrict          
 
 
 __global__ void 
-decx::scan::GPUK::cu_v_warp_exclusive_scan_int32_2D(float4* __restrict           warp_status, 
+decx::scan::GPUK::cu_v_block_exclusive_scan_int32_2D(float4* __restrict           warp_status, 
                                                    int* __restrict              dst,
                                                    const uint32_t               Wmat,
                                                    const uint32_t               Wstatus_TP,
@@ -742,7 +851,7 @@ decx::scan::GPUK::cu_v_scan_DLB_u16_i32_2D(const ushort* __restrict src,
     }
 
     if (tidx < proc_dim.x && tidy < proc_dim.y) {
-        dst[STG_dex] = tmp;
+        dst[STG_dex] = tmp;       // tmp
     }
 }
 

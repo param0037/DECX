@@ -35,7 +35,6 @@ de::complex_f::complex_f()
 
 
 
-
 __host__ __device__
 de::complex_h::complex_h(const ushort Freal, const ushort Fimage) {
     this->real = Freal;

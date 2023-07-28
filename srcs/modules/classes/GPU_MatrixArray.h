@@ -23,17 +23,13 @@ namespace de
     class _DECX_API_ GPU_MatrixArray
     {
     public:
-        uint ArrayNumber();
+        virtual uint Width() const = 0;
 
 
-        virtual uint Width() = 0;
+        virtual uint Height() const = 0;
 
 
-        virtual uint Height() = 0;
-
-
-        virtual uint MatrixNumber() = 0;
-        
+        virtual uint MatrixNumber() const = 0;
 
 
         virtual de::GPU_MatrixArray& SoftCopy(de::GPU_MatrixArray& src) = 0;
@@ -42,7 +38,7 @@ namespace de
         virtual void release() = 0;
 
 
-        virtual int Type() = 0;
+        virtual int Type() const = 0;
     };
 }
 
@@ -100,13 +96,13 @@ namespace decx
         void re_construct(const int _type, uint width, uint height, uint MatrixNum);
 
 
-        virtual uint32_t Width();
+        virtual uint32_t Width() const;
 
 
-        virtual uint32_t Height();
+        virtual uint32_t Height() const;
 
 
-        virtual uint32_t MatrixNumber();
+        virtual uint32_t MatrixNumber() const;
 
 
         virtual de::GPU_MatrixArray& SoftCopy(de::GPU_MatrixArray& src);
@@ -115,16 +111,19 @@ namespace decx
         virtual void release();
 
 
-        virtual int Type();
+        virtual int Type() const;
 
 
-        uint32_t Pitch();
+        uint32_t Pitch() const;
 
 
-        const decx::_matrix_layout& get_layout();
+        const decx::_matrix_layout& get_layout() const;
 
 
-        bool is_init();
+        bool is_init() const;
+
+
+        uint64_t get_total_bytes() const;
     };
 }
 

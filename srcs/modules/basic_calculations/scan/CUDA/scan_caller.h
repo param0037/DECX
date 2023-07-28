@@ -88,6 +88,11 @@ public:
     void generate_scan_config(const uint64_t _proc_length, decx::cuda_stream* S, de::DH* handle, const int scan_mode);
 
 
+    template <bool _print, uint32_t _align, typename _type_in, typename _type_out = _type_in>
+    void generate_scan_config(decx::PtrInfo<void> dev_src, decx::PtrInfo<void> dev_dst, const uint64_t _proc_length, 
+        decx::cuda_stream* S, de::DH* handle, const int scan_mode);
+
+
     uint64_t get_proc_length() const;
     uint64_t get_block_num() const;
     int get_scan_mode() const;
@@ -101,8 +106,8 @@ public:
 
     void* get_raw_dev_ptr_tmp() const;
 
-
-    void release_buffer();
+    template <typename _src_type>
+    void release_buffer(const bool _have_dev_classes);
 };
 
 
@@ -180,12 +185,13 @@ public:
     *                    ~.y -> height of the processing area, meausred in scale of 1 element
     * 
     */
-    /*template <bool _print>
-    void generate_scan_config(const uint2 _proc_dims, decx::cuda_stream* S, de::DH* handle, const int scan_mode,
-        decx::_DATA_TYPES_FLAGS_ _type_in, decx::_DATA_TYPES_FLAGS_ type_out = decx::_DATA_TYPES_FLAGS_::_VOID_);*/
+    template <bool _print, typename _type_in, typename _type_out = _type_in>
+    void generate_scan_config(const uint2 _proc_dims, decx::cuda_stream* S, de::DH* handle, const int scan_mode, 
+        const bool _is_full_scan);
 
     template <bool _print, typename _type_in, typename _type_out = _type_in>
-    void generate_scan_config(const uint2 _proc_dims, decx::cuda_stream* S, de::DH* handle, const int scan_mode, const bool _is_full_scan);
+    void generate_scan_config(decx::Ptr2D_Info<void> dev_src, decx::Ptr2D_Info<void> dev_dst, const uint2 _proc_dims, 
+        decx::cuda_stream* S, de::DH* handle, const int scan_mode, const bool _is_full_scan);
 
 
     int get_scan_mode() const;
@@ -203,6 +209,6 @@ public:
 
     dim3 get_scan_v_grid() const;
 
-
-    void release_buffer();
+    template <typename _Type_src>
+    void release_buffer(const bool _have_dev_classes);
 };

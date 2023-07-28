@@ -81,7 +81,7 @@ void decx::scan::cuda_scan2D_key_param_configs::_generate_configs<de::Half, floa
     }
     else {
         this->proc_VL_H = 2;
-        this->_auxiliary_proc_V = 1;
+        this->_auxiliary_proc_V = 4; //1
     }
 
     this->_align_src = _CUDA_SCAN2D_ALIGN_2B_;
@@ -127,9 +127,11 @@ void decx::scan::cuda_scan2D_config::generate_scan_config(const uint2 _proc_dims
         return;
     }
 
-    if (decx::alloc::_device_malloc(&this->_dev_tmp._ptr, this->_dev_tmp._dims.x * this->_dev_tmp._dims.y * sizeof(de::Half), true, S)) {
-        decx::err::device_AllocateFailure<_print>(handle);
-        return;
+    if (std::is_same<_type_in, uint8_t>::value) {
+        if (decx::alloc::_device_malloc(&this->_dev_tmp._ptr, this->_dev_tmp._dims.x * this->_dev_tmp._dims.y * sizeof(de::Half), true, S)) {
+            decx::err::device_AllocateFailure<_print>(handle);
+            return;
+        }
     }
 
     const uint64_t _larger_status_size = max(this->_scan_h_grid.x * this->_scan_h_grid.y,
@@ -156,6 +158,79 @@ template void decx::scan::cuda_scan2D_config::generate_scan_config<true, de::Hal
     const int scan_mode, const bool _is_full_scan);
 template void decx::scan::cuda_scan2D_config::generate_scan_config<false, de::Half, float>(const uint2 _proc_dims, decx::cuda_stream* S, de::DH* handle,
     const int scan_mode, const bool _is_full_scan);
+
+
+
+template <bool _print, typename _type_in, typename _type_out>
+void decx::scan::cuda_scan2D_config::generate_scan_config(decx::Ptr2D_Info<void> dev_src, decx::Ptr2D_Info<void> dev_dst, const uint2 _proc_dims,
+    decx::cuda_stream* S, de::DH* handle, const int scan_mode, const bool _is_full_scan)
+{
+    this->_scan_mode = scan_mode;
+
+    this->_dev_src = dev_src;
+    this->_dev_dst = dev_dst;
+
+    decx::scan::cuda_scan2D_key_param_configs _kp_configs;
+    _kp_configs._generate_configs<_type_in, _type_out>(_is_full_scan);
+
+    this->_scan_h_grid.x = decx::utils::ceil<uint32_t>(_proc_dims.x, 32 * _kp_configs.proc_VL_H);
+    this->_scan_h_grid.z = 1;
+
+    if (_is_full_scan) {
+        this->_scan_h_grid.y = decx::utils::ceil<uint32_t>(_proc_dims.y, 8);
+    }
+    else {
+        this->_scan_h_grid.y = decx::utils::ceil<uint32_t>(_proc_dims.y, 8 * _kp_configs._auxiliary_proc_V);
+    }
+
+    /*this->_scan_h_grid.x = decx::utils::ceil<uint32_t>(this->_dev_dst._dims.x, 32 * _kp_configs.proc_VL_H);
+    this->_scan_h_grid.z = 1;
+
+    if (_is_full_scan) {
+        this->_scan_h_grid.y = decx::utils::ceil<uint32_t>(this->_dev_dst._dims.y, 8);
+    }
+    else {
+        this->_scan_h_grid.y = decx::utils::ceil<uint32_t>(this->_dev_dst._dims.y, 8 * _kp_configs._auxiliary_proc_V);
+    }*/
+
+    this->_scan_v_grid = dim3(decx::utils::ceil<uint32_t>(this->_dev_dst._dims.x, 32 * _kp_configs.proc_VL_V),
+        decx::utils::ceil<uint32_t>(this->_dev_dst._dims.y, 32));
+    // fuck
+    if (std::is_same<_type_in, uint8_t>::value) 
+    {
+        this->_dev_tmp._dims = _dev_dst._dims;
+
+        if (std::is_same<_type_in, uint8_t>::value) { 
+            if (decx::alloc::_device_malloc(&this->_dev_tmp._ptr, this->_dev_tmp._dims.x * this->_dev_tmp._dims.y * sizeof(ushort), true, S)) {
+                decx::err::device_AllocateFailure<_print>(handle);
+                return;
+            }
+        }
+    }
+
+    const uint64_t _larger_status_size = max(this->_scan_h_grid.x * this->_scan_h_grid.y,
+        this->_scan_v_grid.x * this->_scan_v_grid.y);
+
+    if (decx::alloc::_device_malloc(&this->_dev_status, _larger_status_size * sizeof(float4), true, S)) {
+        decx::err::device_AllocateFailure<_print>(handle);
+        return;
+    }
+}
+
+template void decx::scan::cuda_scan2D_config::generate_scan_config<true, float, float>(decx::Ptr2D_Info<void> dev_src, decx::Ptr2D_Info<void> dev_dst, const uint2 _proc_dims,
+    decx::cuda_stream* S, de::DH* handle, const int scan_mode, const bool _is_full_scan);
+template void decx::scan::cuda_scan2D_config::generate_scan_config<false, float, float>(decx::Ptr2D_Info<void> dev_src, decx::Ptr2D_Info<void> dev_dst, const uint2 _proc_dims,
+    decx::cuda_stream* S, de::DH* handle, const int scan_mode, const bool _is_full_scan);
+
+template void decx::scan::cuda_scan2D_config::generate_scan_config<true, de::Half, float>(decx::Ptr2D_Info<void> dev_src, decx::Ptr2D_Info<void> dev_dst, const uint2 _proc_dims,
+    decx::cuda_stream* S, de::DH* handle, const int scan_mode, const bool _is_full_scan);
+template void decx::scan::cuda_scan2D_config::generate_scan_config<false, de::Half, float>(decx::Ptr2D_Info<void> dev_src, decx::Ptr2D_Info<void> dev_dst, const uint2 _proc_dims,
+    decx::cuda_stream* S, de::DH* handle, const int scan_mode, const bool _is_full_scan);
+
+template void decx::scan::cuda_scan2D_config::generate_scan_config<true, uint8_t, int>(decx::Ptr2D_Info<void> dev_src, decx::Ptr2D_Info<void> dev_dst, const uint2 _proc_dims,
+    decx::cuda_stream* S, de::DH* handle, const int scan_mode, const bool _is_full_scan);
+template void decx::scan::cuda_scan2D_config::generate_scan_config<false, uint8_t, int>(decx::Ptr2D_Info<void> dev_src, decx::Ptr2D_Info<void> dev_dst, const uint2 _proc_dims,
+    decx::cuda_stream* S, de::DH* handle, const int scan_mode, const bool _is_full_scan);
 
 
 
@@ -192,14 +267,22 @@ dim3 decx::scan::cuda_scan2D_config::get_scan_v_grid() const
 }
 
 
-void decx::scan::cuda_scan2D_config::release_buffer()
+template <typename _Type_src>
+void decx::scan::cuda_scan2D_config::release_buffer(const bool _have_dev_classes)
 {
-    decx::alloc::_device_dealloc(&this->_dev_src._ptr);
-    decx::alloc::_device_dealloc(&this->_dev_dst._ptr);
+    if (_have_dev_classes) {
+        decx::alloc::_device_dealloc(&this->_dev_src._ptr);
+        decx::alloc::_device_dealloc(&this->_dev_dst._ptr);
+    }
     decx::alloc::_device_dealloc(&this->_dev_status);
-    decx::alloc::_device_dealloc(&this->_dev_tmp._ptr);
+    if (std::is_same<_Type_src, uint8_t>::value) {
+        decx::alloc::_device_dealloc(&this->_dev_tmp._ptr);
+    }
 }
 
+template void decx::scan::cuda_scan2D_config::release_buffer<float>(const bool _have_dev_classes);
+template void decx::scan::cuda_scan2D_config::release_buffer<de::Half>(const bool _have_dev_classes);
+template void decx::scan::cuda_scan2D_config::release_buffer<uint8_t>(const bool _have_dev_classes);
 
 
 template <bool _only_scan_h>
@@ -216,7 +299,7 @@ void decx::scan::cuda_scan2D_fp32_caller_Async(const decx::scan::cuda_scan2D_con
     {
     case decx::scan::SCAN_MODE::SCAN_MODE_EXCLUSIVE:
         // horizontally scan
-        decx::scan::GPUK::cu_h_warp_exclusive_scan_fp32_2D << <scan_h_grid, dim3(32, 8),
+        decx::scan::GPUK::cu_h_block_exclusive_scan_fp32_2D << <scan_h_grid, dim3(32, 8),
             0, S->get_raw_stream_ref() >> > ((float4*)src_ptr2D_info._ptr.ptr,
                                              (float4*)status_ptr2D_info.ptr,
                                              (float4*)dst_ptr2D_info._ptr.ptr,
@@ -233,7 +316,7 @@ void decx::scan::cuda_scan2D_fp32_caller_Async(const decx::scan::cuda_scan2D_con
 
         if (!_only_scan_h){
         // vertically scan
-        decx::scan::GPUK::cu_v_warp_exclusive_scan_fp32_2D<true> << < scan_v_grid, dim3(32, 8),
+        decx::scan::GPUK::cu_v_block_exclusive_scan_fp32_2D<true> << < scan_v_grid, dim3(32, 8),
             0, S->get_raw_stream_ref() >> > (NULL,
                                              (float4*)status_ptr2D_info.ptr, 
                                              (float*)dst_ptr2D_info._ptr.ptr, 
@@ -252,7 +335,7 @@ void decx::scan::cuda_scan2D_fp32_caller_Async(const decx::scan::cuda_scan2D_con
 
     case decx::scan::SCAN_MODE::SCAN_MODE_INCLUSIVE:
         // horizontally scan
-        decx::scan::GPUK::cu_h_warp_inclusive_scan_fp32_2D << <scan_h_grid, dim3(32, 8),
+        decx::scan::GPUK::cu_h_block_inclusive_scan_fp32_2D << <scan_h_grid, dim3(32, 8),
             0, S->get_raw_stream_ref() >> > ((float4*)src_ptr2D_info._ptr.ptr,
                                              (float4*)status_ptr2D_info.ptr,
                                              (float4*)dst_ptr2D_info._ptr.ptr,
@@ -269,7 +352,7 @@ void decx::scan::cuda_scan2D_fp32_caller_Async(const decx::scan::cuda_scan2D_con
 
         if (!_only_scan_h) {
         // vertically scan
-        decx::scan::GPUK::cu_v_warp_inclusive_scan_fp32_2D<true> << < scan_v_grid, dim3(32, 8),
+        decx::scan::GPUK::cu_v_block_inclusive_scan_fp32_2D<true> << < scan_v_grid, dim3(32, 8),
             0, S->get_raw_stream_ref() >> > (NULL,
                                              (float4*)status_ptr2D_info.ptr, 
                                              (float*)dst_ptr2D_info._ptr.ptr, 
@@ -305,9 +388,8 @@ void decx::scan::cuda_scan2D_v_fp32_caller_Async(const decx::scan::cuda_scan2D_c
     switch (_config->get_scan_mode())
     {
     case decx::scan::SCAN_MODE::SCAN_MODE_EXCLUSIVE:
-        // horizontally scan
         // vertically scan
-        decx::scan::GPUK::cu_v_warp_exclusive_scan_fp32_2D<false> << < scan_v_grid, dim3(32, 8),
+        decx::scan::GPUK::cu_v_block_exclusive_scan_fp32_2D<false> << < scan_v_grid, dim3(32, 8),
             0, S->get_raw_stream_ref() >> > ((float*)src_ptr2D_info._ptr.ptr,
                                              (float4*)status_ptr2D_info.ptr, 
                                              (float*)dst_ptr2D_info._ptr.ptr, 
@@ -325,7 +407,7 @@ void decx::scan::cuda_scan2D_v_fp32_caller_Async(const decx::scan::cuda_scan2D_c
 
     case decx::scan::SCAN_MODE::SCAN_MODE_INCLUSIVE:
         // vertically scan
-        decx::scan::GPUK::cu_v_warp_inclusive_scan_fp32_2D<false> << < scan_v_grid, dim3(32, 8),
+        decx::scan::GPUK::cu_v_block_inclusive_scan_fp32_2D<false> << < scan_v_grid, dim3(32, 8),
             0, S->get_raw_stream_ref() >> > ((float*)src_ptr2D_info._ptr.ptr,
                                              (float4*)status_ptr2D_info.ptr, 
                                              (float*)dst_ptr2D_info._ptr.ptr, 
@@ -359,9 +441,8 @@ void decx::scan::cuda_scan2D_u8_i32_caller_Async(const decx::scan::cuda_scan2D_c
     switch (_config->get_scan_mode())
     {
     case decx::scan::SCAN_MODE::SCAN_MODE_EXCLUSIVE:
-
         // horizontally scan
-        decx::scan::GPUK::cu_h_warp_exclusive_scan_u8_u16_2D << <scan_h_grid, dim3(32, 8),
+        decx::scan::GPUK::cu_h_block_exclusive_scan_u8_u16_2D << <scan_h_grid, dim3(32, 8),
             0, S->get_raw_stream_ref() >> > ((float2*)src_ptr2D_info._ptr.ptr,
                                              (float4*)_config->get_raw_dev_ptr_status().ptr, 
                                              (float4*)tmp_ptr2D_info._ptr.ptr,
@@ -373,7 +454,7 @@ void decx::scan::cuda_scan2D_u8_i32_caller_Async(const decx::scan::cuda_scan2D_c
                                                         dst_ptr2D_info._dims.x / 8));
 
         // horizontally decoupled lookback
-        decx::scan::GPUK::cu_h_scan_DLB_fp16_i32_2D_v8<true> << <scan_h_grid, dim3(32, 8),
+        decx::scan::GPUK::cu_h_block_DLB_fp16_i32_2D_v8<true> << <scan_h_grid, dim3(32, 8),
             0, S->get_raw_stream_ref() >> > ((float4*)tmp_ptr2D_info._ptr.ptr,
                                              (float4*)_config->get_raw_dev_ptr_status().ptr,
                                              (int4*)dst_ptr2D_info._ptr.ptr,
@@ -383,7 +464,7 @@ void decx::scan::cuda_scan2D_u8_i32_caller_Async(const decx::scan::cuda_scan2D_c
                                              make_uint2(dst_ptr2D_info._dims.x / 8, dst_ptr2D_info._dims.y));
         if (!_only_scan_h) {
         // vertically scan
-        decx::scan::GPUK::cu_v_warp_exclusive_scan_int32_2D << < scan_v_grid, dim3(32, 8),
+        decx::scan::GPUK::cu_v_block_exclusive_scan_int32_2D << < scan_v_grid, dim3(32, 8),
             0, S->get_raw_stream_ref() >> > ((float4*)_config->get_raw_dev_ptr_status().ptr, 
                                              (int*)dst_ptr2D_info._ptr.ptr, 
                                              dst_ptr2D_info._dims.x,
@@ -403,7 +484,7 @@ void decx::scan::cuda_scan2D_u8_i32_caller_Async(const decx::scan::cuda_scan2D_c
     case decx::scan::SCAN_MODE::SCAN_MODE_INCLUSIVE:
 
         // horizontally scan
-        decx::scan::GPUK::cu_h_warp_inclusive_scan_u8_u16_2D << <scan_h_grid, dim3(32, 8),
+        decx::scan::GPUK::cu_h_block_inclusive_scan_u8_u16_2D << <scan_h_grid, dim3(32, 8),
             0, S->get_raw_stream_ref() >> > ((float2*)src_ptr2D_info._ptr.ptr,
                                              (float4*)_config->get_raw_dev_ptr_status().ptr, 
                                              (float4*)tmp_ptr2D_info._ptr.ptr,
@@ -415,7 +496,7 @@ void decx::scan::cuda_scan2D_u8_i32_caller_Async(const decx::scan::cuda_scan2D_c
                                                         dst_ptr2D_info._dims.x / 8));
 
         // horizontally decoupled lookback
-        decx::scan::GPUK::cu_h_scan_DLB_fp16_i32_2D_v8<false> << <scan_h_grid, dim3(32, 8),
+        decx::scan::GPUK::cu_h_block_DLB_fp16_i32_2D_v8<false> << <scan_h_grid, dim3(32, 8),
             0, S->get_raw_stream_ref() >> > ((float4*)tmp_ptr2D_info._ptr.ptr,
                                              (float4*)_config->get_raw_dev_ptr_status().ptr,
                                              (int4*)dst_ptr2D_info._ptr.ptr,
@@ -426,7 +507,7 @@ void decx::scan::cuda_scan2D_u8_i32_caller_Async(const decx::scan::cuda_scan2D_c
 
         if (!_only_scan_h) {
         // vertically scan
-        decx::scan::GPUK::cu_v_warp_inclusive_scan_int32_2D << < scan_v_grid, dim3(32, 8),
+        decx::scan::GPUK::cu_v_block_inclusive_scan_int32_2D << < scan_v_grid, dim3(32, 8),
             0, S->get_raw_stream_ref() >> > ((float4*)_config->get_raw_dev_ptr_status().ptr, 
                                              (int*)dst_ptr2D_info._ptr.ptr, 
                                              dst_ptr2D_info._dims.x,
@@ -466,7 +547,7 @@ void decx::scan::cuda_scan2D_fp16_fp32_caller_Async(const decx::scan::cuda_scan2
     {
     case decx::scan::SCAN_MODE::SCAN_MODE_EXCLUSIVE:
         // horizontally scan
-        decx::scan::GPUK::cu_h_warp_exclusive_scan_fp16_2D << <scan_h_grid, dim3(32, 8),
+        decx::scan::GPUK::cu_h_block_exclusive_scan_fp16_2D << <scan_h_grid, dim3(32, 8),
             0, S->get_raw_stream_ref() >> > ((float4*)src_ptr2D_info._ptr.ptr, 
                                              (float4*)status_ptr2D_info.ptr, 
                                              (float4*)dst_ptr2D_info._ptr.ptr, 
@@ -484,7 +565,7 @@ void decx::scan::cuda_scan2D_fp16_fp32_caller_Async(const decx::scan::cuda_scan2
 
         if (!_only_scan_h) {
         // vertically scan
-        decx::scan::GPUK::cu_v_warp_exclusive_scan_fp32_2D<true> << < scan_v_grid, dim3(32, 8),
+        decx::scan::GPUK::cu_v_block_exclusive_scan_fp32_2D<true> << < scan_v_grid, dim3(32, 8),
             0, S->get_raw_stream_ref() >> > (NULL,
                                              (float4*)status_ptr2D_info.ptr, 
                                              (float*)dst_ptr2D_info._ptr.ptr, 
@@ -503,7 +584,7 @@ void decx::scan::cuda_scan2D_fp16_fp32_caller_Async(const decx::scan::cuda_scan2
 
     case decx::scan::SCAN_MODE::SCAN_MODE_INCLUSIVE:
         // horizontally scan
-        decx::scan::GPUK::cu_h_warp_inclusive_scan_fp16_2D << <scan_h_grid, dim3(32, 8),
+        decx::scan::GPUK::cu_h_block_inclusive_scan_fp16_2D << <scan_h_grid, dim3(32, 8),
             0, S->get_raw_stream_ref() >> > ((float4*)src_ptr2D_info._ptr.ptr, 
                                              (float4*)status_ptr2D_info.ptr, 
                                              (float4*)dst_ptr2D_info._ptr.ptr, 
@@ -521,7 +602,7 @@ void decx::scan::cuda_scan2D_fp16_fp32_caller_Async(const decx::scan::cuda_scan2
 
         if (!_only_scan_h) {
         // vertically scan
-        decx::scan::GPUK::cu_v_warp_inclusive_scan_fp32_2D<true> << < scan_v_grid, dim3(32, 8),
+        decx::scan::GPUK::cu_v_block_inclusive_scan_fp32_2D<true> << < scan_v_grid, dim3(32, 8),
             0, S->get_raw_stream_ref() >> > (NULL,
                                              (float4*)status_ptr2D_info.ptr, 
                                              (float*)dst_ptr2D_info._ptr.ptr, 
@@ -560,7 +641,7 @@ void decx::scan::cuda_scan2D_v_fp16_fp32_caller_Async(const decx::scan::cuda_sca
     {
     case decx::scan::SCAN_MODE::SCAN_MODE_EXCLUSIVE:
         // horizontally scan
-        decx::scan::GPUK::cu_v_warp_exclusive_scan_fp16_2D_v2 << < scan_v_grid, dim3(32, 8),
+        decx::scan::GPUK::cu_v_block_exclusive_scan_fp16_2D_v2 << < scan_v_grid, dim3(32, 8),
             0, S->get_raw_stream_ref() >> > ((float*)src_ptr2D_info._ptr.ptr, 
                                              (float4*)status_ptr2D_info.ptr, 
                                              (float2*)dst_ptr2D_info._ptr.ptr, 
@@ -579,7 +660,7 @@ void decx::scan::cuda_scan2D_v_fp16_fp32_caller_Async(const decx::scan::cuda_sca
 
     case decx::scan::SCAN_MODE::SCAN_MODE_INCLUSIVE:
         // vertically scan
-        decx::scan::GPUK::cu_v_warp_inclusive_scan_fp16_2D_v2 << < scan_v_grid, dim3(32, 8),
+        decx::scan::GPUK::cu_v_block_inclusive_scan_fp16_2D_v2 << < scan_v_grid, dim3(32, 8),
             0, S->get_raw_stream_ref() >> > ((float*)src_ptr2D_info._ptr.ptr, 
                                              (float4*)status_ptr2D_info.ptr, 
                                              (float2*)dst_ptr2D_info._ptr.ptr, 
@@ -616,7 +697,7 @@ void decx::scan::cuda_scan2D_v_u8_i32_caller_Async(const decx::scan::cuda_scan2D
     switch (_config->get_scan_mode())
     {
     case decx::scan::SCAN_MODE::SCAN_MODE_INCLUSIVE:
-        decx::scan::GPUK::cu_v_warp_inclusive_scan_u8_u16_2D_v4 << <scan_v_grid, dim3(32, 8), 
+        decx::scan::GPUK::cu_v_block_inclusive_scan_u8_u16_2D_v4 << <scan_v_grid, dim3(32, 8), 
             0, S->get_raw_stream_ref() >> > ((float*)src_ptr2D_info._ptr.ptr,
                                              (float4*)status_ptr2D_info.ptr,
                                              (double*)tmp_ptr2D_info._ptr.ptr,
@@ -626,6 +707,26 @@ void decx::scan::cuda_scan2D_v_u8_i32_caller_Async(const decx::scan::cuda_scan2D
                                              make_uint2(dst_ptr2D_info._dims.x / 4, dst_ptr2D_info._dims.y));
 
         decx::scan::GPUK::cu_v_scan_DLB_u16_i32_2D<false><< <DLB_v_grid, dim3(32, 32), 
+            0, S->get_raw_stream_ref() >> > ((ushort*)tmp_ptr2D_info._ptr.ptr,
+                                             (float4*)status_ptr2D_info.ptr,
+                                             (int*)dst_ptr2D_info._ptr.ptr,
+                                             tmp_ptr2D_info._dims.x,
+                                             dst_ptr2D_info._dims.x,
+                                             scan_v_grid.y,
+                                             make_uint2(dst_ptr2D_info._dims.x, dst_ptr2D_info._dims.y));
+        break;
+
+    case decx::scan::SCAN_MODE::SCAN_MODE_EXCLUSIVE:
+        decx::scan::GPUK::cu_v_block_exclusive_scan_u8_u16_2D_v4 << <scan_v_grid, dim3(32, 8),
+            0, S->get_raw_stream_ref() >> > ((float*)src_ptr2D_info._ptr.ptr,
+                                             (float4*)status_ptr2D_info.ptr,
+                                             (double*)tmp_ptr2D_info._ptr.ptr,
+                                             src_ptr2D_info._dims.x / 4,
+                                             tmp_ptr2D_info._dims.x / 4,
+                                             scan_v_grid.y,
+                                             make_uint2(dst_ptr2D_info._dims.x / 4, dst_ptr2D_info._dims.y));
+
+        decx::scan::GPUK::cu_v_scan_DLB_u16_i32_2D<true> << <DLB_v_grid, dim3(32, 32),
             0, S->get_raw_stream_ref() >> > ((ushort*)tmp_ptr2D_info._ptr.ptr,
                                              (float4*)status_ptr2D_info.ptr,
                                              (int*)dst_ptr2D_info._ptr.ptr,
