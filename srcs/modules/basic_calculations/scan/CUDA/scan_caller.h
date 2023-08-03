@@ -84,13 +84,13 @@ public:
     * construct cuda_scan1D_config by just indicating the input & output types. Device memory is
     * allocated during the construction
     */
-    template <bool _print, uint32_t _align, typename _type_in, typename _type_out = _type_in>
-    void generate_scan_config(const uint64_t _proc_length, decx::cuda_stream* S, de::DH* handle, const int scan_mode);
+    template <uint32_t _align, typename _type_in, typename _type_out = _type_in>
+    void generate_scan_config(const uint64_t _proc_length, decx::cuda_stream* S, const int scan_mode);
 
 
-    template <bool _print, uint32_t _align, typename _type_in, typename _type_out = _type_in>
+    template <uint32_t _align, typename _type_in, typename _type_out = _type_in>
     void generate_scan_config(decx::PtrInfo<void> dev_src, decx::PtrInfo<void> dev_dst, const uint64_t _proc_length, 
-        decx::cuda_stream* S, de::DH* handle, const int scan_mode);
+        decx::cuda_stream* S, const int scan_mode);
 
 
     uint64_t get_proc_length() const;
@@ -185,13 +185,13 @@ public:
     *                    ~.y -> height of the processing area, meausred in scale of 1 element
     * 
     */
-    template <bool _print, typename _type_in, typename _type_out = _type_in>
-    void generate_scan_config(const uint2 _proc_dims, decx::cuda_stream* S, de::DH* handle, const int scan_mode, 
+    template <typename _type_in, typename _type_out = _type_in>
+    void generate_scan_config(const uint2 _proc_dims, decx::cuda_stream* S, const int scan_mode, 
         const bool _is_full_scan);
 
-    template <bool _print, typename _type_in, typename _type_out = _type_in>
+    template <typename _type_in, typename _type_out = _type_in>
     void generate_scan_config(decx::Ptr2D_Info<void> dev_src, decx::Ptr2D_Info<void> dev_dst, const uint2 _proc_dims, 
-        decx::cuda_stream* S, de::DH* handle, const int scan_mode, const bool _is_full_scan);
+        decx::cuda_stream* S, const int scan_mode, const bool _is_full_scan);
 
 
     int get_scan_mode() const;
@@ -210,5 +210,8 @@ public:
     dim3 get_scan_v_grid() const;
 
     template <typename _Type_src>
-    void release_buffer(const bool _have_dev_classes);
+    /*
+    * @param : _refer_dev_classes : Do dev_src and dev_dst refer to exsiting classes (from users)
+    */
+    void release_buffer(const bool _refer_dev_classes);
 };

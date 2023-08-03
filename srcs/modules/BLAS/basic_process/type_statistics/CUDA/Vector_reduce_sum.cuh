@@ -9,6 +9,9 @@
 */
 
 
+#ifndef _VECTOR_REDUCE_SUM_CUH_
+#define _VECTOR_REDUCE_SUM_CUH_
+
 #include "../../../../basic_calculations/reduce/CUDA/reduce_callers.cuh"
 #include "../../../../classes/Vector.h"
 #include "../../../../classes/GPU_Vector.h"
@@ -21,55 +24,48 @@ namespace decx
 {
     namespace reduce
     {
-        template <bool _print>
-        static void vector_reduce_sum_fp32(decx::_Vector* src, float* res, de::DH* handle);
+        static void vector_reduce_sum_fp32(decx::_Vector* src, float* res);
 
 
-        template <bool _print>
-        static void vector_reduce_sum_u8_i32(decx::_Vector* src, int32_t* res, de::DH* handle);
+        static void vector_reduce_sum_u8_i32(decx::_Vector* src, int32_t* res);
 
 
-        template <bool _print>
-        static void vector_reduce_sum_fp16_fp32(decx::_Vector* src, float* res, de::DH* handle);
+        static void vector_reduce_sum_fp16_fp32(decx::_Vector* src, float* res);
 
 
-        template <bool _print>
-        static void dev_vector_reduce_sum_fp32(decx::_GPU_Vector* src, float* res, de::DH* handle);
+        static void dev_vector_reduce_sum_fp32(decx::_GPU_Vector* src, float* res);
 
 
-        template <bool _print>
-        static void dev_vector_reduce_sum_u8_i32(decx::_GPU_Vector* src, int32_t* res, de::DH* handle);
+        static void dev_vector_reduce_sum_u8_i32(decx::_GPU_Vector* src, int32_t* res);
 
 
-        template <bool _print>
-        static void dev_vector_reduce_sum_fp16_fp32(decx::_GPU_Vector* src, float* res, de::DH* handle);
+        static void dev_vector_reduce_sum_fp16_fp32(decx::_GPU_Vector* src, float* res);
     }
 }
 
 
-template <bool _print>
-static void decx::reduce::vector_reduce_sum_fp32(decx::_Vector* src, float* res, de::DH* handle)
+static void decx::reduce::vector_reduce_sum_fp32(decx::_Vector* src, float* res)
 {
     decx::cuda_stream* S = NULL;
     S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
     if (S == NULL) {
-        decx::err::CUDA_Stream_access_fail<_print>(handle);
+        Print_Error_Message(4, CUDA_STREAM_ACCESS_FAIL);
         return;
     }
     decx::cuda_event* E = NULL;
     E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
     if (E == NULL) {
-        decx::err::CUDA_Event_access_fail<_print>(handle);
+        Print_Error_Message(4, CUDA_EVENT_ACCESS_FAIL);
         return;
     }
 
     decx::reduce::cuda_reduce1D_configs<float> _kp_configs;
-    _kp_configs.generate_configs<_print>(src->Len(), S, handle);
+    _kp_configs.generate_configs(src->Len(), S);
 
     checkCudaErrors(cudaMemcpyAsync(_kp_configs.get_dev_tmp1().ptr, src->Vec.ptr, src->Len() * sizeof(float), cudaMemcpyHostToDevice,
         S->get_raw_stream_ref()));
 
-    decx::reduce::cuda_reduce1D_fp32_caller_Async<float, false>(&_kp_configs, S);
+    decx::reduce::cuda_reduce1D_sum_fp32_caller_Async<false>(&_kp_configs, S);
 
     checkCudaErrors(cudaMemcpyAsync(res, _kp_configs.get_leading_MIF().mem, 1 * sizeof(float), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
 
@@ -78,29 +74,28 @@ static void decx::reduce::vector_reduce_sum_fp32(decx::_Vector* src, float* res,
 }
 
 
-template <bool _print>
-static void decx::reduce::vector_reduce_sum_u8_i32(decx::_Vector* src, int32_t* res, de::DH* handle)
+static void decx::reduce::vector_reduce_sum_u8_i32(decx::_Vector* src, int32_t* res)
 {
     decx::cuda_stream* S = NULL;
     S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
     if (S == NULL) {
-        decx::err::CUDA_Stream_access_fail<_print>(handle);
+        Print_Error_Message(4, CUDA_STREAM_ACCESS_FAIL);
         return;
     }
     decx::cuda_event* E = NULL;
     E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
     if (E == NULL) {
-        decx::err::CUDA_Event_access_fail<_print>(handle);
+        Print_Error_Message(4, CUDA_EVENT_ACCESS_FAIL);
         return;
     }
 
     decx::reduce::cuda_reduce1D_configs<uint8_t> _kp_configs;
-    _kp_configs.generate_configs<_print>(src->Len(), S, handle);
+    _kp_configs.generate_configs(src->Len(), S);
 
     checkCudaErrors(cudaMemcpyAsync(_kp_configs.get_dev_tmp1().ptr, src->Vec.ptr, src->Len() * sizeof(uint8_t), cudaMemcpyHostToDevice,
         S->get_raw_stream_ref()));
 
-    decx::reduce::cuda_reduce1D_u8_i32_caller_Async<uint8_t, false>(&_kp_configs, S);
+    decx::reduce::cuda_reduce1D_sum_u8_i32_caller_Async<false>(&_kp_configs, S);
 
     checkCudaErrors(cudaMemcpyAsync(res, _kp_configs.get_leading_MIF().mem, 1 * sizeof(int32_t), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
 
@@ -109,29 +104,28 @@ static void decx::reduce::vector_reduce_sum_u8_i32(decx::_Vector* src, int32_t* 
 }
 
 
-template <bool _print>
-static void decx::reduce::vector_reduce_sum_fp16_fp32(decx::_Vector* src, float* res, de::DH* handle)
+static void decx::reduce::vector_reduce_sum_fp16_fp32(decx::_Vector* src, float* res)
 {
     decx::cuda_stream* S = NULL;
     S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
     if (S == NULL) {
-        decx::err::CUDA_Stream_access_fail<_print>(handle);
+        Print_Error_Message(4, CUDA_STREAM_ACCESS_FAIL);
         return;
     }
     decx::cuda_event* E = NULL;
     E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
     if (E == NULL) {
-        decx::err::CUDA_Event_access_fail<_print>(handle);
+        Print_Error_Message(4, CUDA_EVENT_ACCESS_FAIL);
         return;
     }
 
     decx::reduce::cuda_reduce1D_configs<de::Half> _kp_configs;
-    _kp_configs.generate_configs<_print>(src->Len(), S, handle);
+    _kp_configs.generate_configs(src->Len(), S);
 
     checkCudaErrors(cudaMemcpyAsync(_kp_configs.get_dev_tmp1().ptr, src->Vec.ptr, src->Len() * sizeof(de::Half), cudaMemcpyHostToDevice,
         S->get_raw_stream_ref()));
 
-    decx::reduce::cuda_reduce1D_fp16_fp32_caller_Async<de::Half, false>(&_kp_configs, S);
+    decx::reduce::cuda_reduce1D_sum_fp16_fp32_caller_Async<false>(&_kp_configs, S);
 
     checkCudaErrors(cudaMemcpyAsync(res, _kp_configs.get_leading_MIF().mem, 1 * sizeof(float), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
 
@@ -140,8 +134,7 @@ static void decx::reduce::vector_reduce_sum_fp16_fp32(decx::_Vector* src, float*
 }
 
 
-template <bool _print>
-static void decx::reduce::dev_vector_reduce_sum_fp32(decx::_GPU_Vector* src, float* res, de::DH* handle)
+static void decx::reduce::dev_vector_reduce_sum_fp32(decx::_GPU_Vector* src, float* res)
 {
     uint64_t proc_len_v4 = src->_Length() / 4;
     uint64_t proc_len_v1 = src->Len();
@@ -149,20 +142,20 @@ static void decx::reduce::dev_vector_reduce_sum_fp32(decx::_GPU_Vector* src, flo
     decx::cuda_stream* S = NULL;
     S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
     if (S == NULL) {
-        decx::err::CUDA_Stream_access_fail<_print>(handle);
+        Print_Error_Message(4, CUDA_STREAM_ACCESS_FAIL);
         return;
     }
     decx::cuda_event* E = NULL;
     E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
     if (E == NULL) {
-        decx::err::CUDA_Event_access_fail<_print>(handle);
+        Print_Error_Message(4, CUDA_EVENT_ACCESS_FAIL);
         return;
     }
 
     decx::reduce::cuda_reduce1D_configs<float> _kp_configs;
-    _kp_configs.generate_configs<_print>(src->Vec, src->Len(), S, handle);
+    _kp_configs.generate_configs(src->Vec, src->Len(), S);
 
-    decx::reduce::cuda_reduce1D_fp32_caller_Async<float, true>(&_kp_configs, S);
+    decx::reduce::cuda_reduce1D_sum_fp32_caller_Async<true>(&_kp_configs, S);
 
     checkCudaErrors(cudaMemcpyAsync(res, _kp_configs.get_leading_MIF().mem, 1 * sizeof(float), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
 
@@ -171,28 +164,25 @@ static void decx::reduce::dev_vector_reduce_sum_fp32(decx::_GPU_Vector* src, flo
 }
 
 
-
-
-template <bool _print>
-static void decx::reduce::dev_vector_reduce_sum_u8_i32(decx::_GPU_Vector* src, int32_t* res, de::DH* handle)
+static void decx::reduce::dev_vector_reduce_sum_u8_i32(decx::_GPU_Vector* src, int32_t* res)
 {
     decx::cuda_stream* S = NULL;
     S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
     if (S == NULL) {
-        decx::err::CUDA_Stream_access_fail<_print>(handle);
+        Print_Error_Message(4, CUDA_STREAM_ACCESS_FAIL);
         return;
     }
     decx::cuda_event* E = NULL;
     E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
     if (E == NULL) {
-        decx::err::CUDA_Event_access_fail<_print>(handle);
+        Print_Error_Message(4, CUDA_EVENT_ACCESS_FAIL);
         return;
     }
 
     decx::reduce::cuda_reduce1D_configs<uint8_t> _kp_configs;
-    _kp_configs.generate_configs<_print>(src->Vec, src->Len(), S, handle);
+    _kp_configs.generate_configs(src->Vec, src->Len(), S);
 
-    decx::reduce::cuda_reduce1D_u8_i32_caller_Async<uint8_t, true>(&_kp_configs, S);
+    decx::reduce::cuda_reduce1D_sum_u8_i32_caller_Async<true>(&_kp_configs, S);
 
     checkCudaErrors(cudaMemcpyAsync(res, _kp_configs.get_leading_MIF().mem, 1 * sizeof(int32_t), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
 
@@ -201,27 +191,25 @@ static void decx::reduce::dev_vector_reduce_sum_u8_i32(decx::_GPU_Vector* src, i
 }
 
 
-
-template <bool _print>
-static void decx::reduce::dev_vector_reduce_sum_fp16_fp32(decx::_GPU_Vector* src, float* res, de::DH* handle)
+static void decx::reduce::dev_vector_reduce_sum_fp16_fp32(decx::_GPU_Vector* src, float* res)
 {
     decx::cuda_stream* S = NULL;
     S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
     if (S == NULL) {
-        decx::err::CUDA_Stream_access_fail<_print>(handle);
+        Print_Error_Message(4, CUDA_STREAM_ACCESS_FAIL);
         return;
     }
     decx::cuda_event* E = NULL;
     E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
     if (E == NULL) {
-        decx::err::CUDA_Event_access_fail<_print>(handle);
+        Print_Error_Message(4, CUDA_EVENT_ACCESS_FAIL);
         return;
     }
 
     decx::reduce::cuda_reduce1D_configs<de::Half> _kp_configs;
-    _kp_configs.generate_configs<_print>(src->Vec, src->Len(), S, handle);
+    _kp_configs.generate_configs(src->Vec, src->Len(), S);
 
-    decx::reduce::cuda_reduce1D_fp16_fp32_caller_Async<de::Half, true>(&_kp_configs, S);
+    decx::reduce::cuda_reduce1D_sum_fp16_fp32_caller_Async<true>(&_kp_configs, S);
 
     checkCudaErrors(cudaMemcpyAsync(res, _kp_configs.get_leading_MIF().mem, 1 * sizeof(float), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
 
@@ -229,21 +217,6 @@ static void decx::reduce::dev_vector_reduce_sum_fp16_fp32(decx::_GPU_Vector* src
     E->synchronize();
 }
 
-
-
-namespace de
-{
-    namespace cuda
-    {
-        _DECX_API_ de::DH Sum(de::Vector& src, double* res);
-
-
-        _DECX_API_ de::DH Max(de::Vector& src, double* res);
-
-
-        _DECX_API_ de::DH Sum(de::GPU_Vector& src, double* res);
-    }
-}
 
 
 #endif

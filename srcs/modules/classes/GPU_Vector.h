@@ -76,6 +76,9 @@ namespace decx
         void alloc_data_space();
 
 
+        void re_alloc_data_space();
+
+
         _GPU_Vector(const int _type, size_t length);
 
 

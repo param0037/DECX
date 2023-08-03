@@ -25,12 +25,29 @@ uint32_t decx::_GPU_MatrixArray::MatrixNumber() const { return this->ArrayNumber
 
 void decx::_GPU_MatrixArray::re_alloc_data_space()
 {
+    decx::cuda_stream* S = NULL;
+    S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
+    if (S == NULL) {
+        SetConsoleColor(4);
+        printf("Internal error.\n");
+        ResetConsoleColor;
+        return;
+    }
+    decx::cuda_event* E = NULL;
+    E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
+    if (E == NULL) {
+        SetConsoleColor(4);
+        printf("Internal error.\n");
+        ResetConsoleColor;
+        return;
+    }
+
     if (decx::alloc::_device_realloc(&this->MatArr, this->total_bytes)) {
         Print_Error_Message(4, "de::GPU_MatrixArray<T>:: Fail to allocate memory\n");
         exit(-1);
     }
 
-    cudaMemset(this->MatArr.ptr, 0, this->total_bytes);
+    checkCudaErrors(cudaMemsetAsync(this->MatArr.ptr, 0, this->total_bytes, S->get_raw_stream_ref()));
 
     if (decx::alloc::_host_virtual_page_realloc<void*>(&this->MatptrArr, this->ArrayNumber * sizeof(void*))) {
         Print_Error_Message(4, "Fail to allocate memory for pointer array on host\n");
@@ -40,18 +57,39 @@ void decx::_GPU_MatrixArray::re_alloc_data_space()
     for (int i = 1; i < this->ArrayNumber; ++i) {
         this->MatptrArr.ptr[i] = (void*)((uchar*)this->MatptrArr.ptr[i - 1] + this->_plane * this->_layout._single_element_size);
     }
+
+    E->event_record(S);
+    E->synchronize();
+
+    S->detach();
+    E->detach();
 }
 
 
 
 void decx::_GPU_MatrixArray::alloc_data_space()
 {
-    if (decx::alloc::_device_malloc(&this->MatArr, this->total_bytes)) {
+    decx::cuda_stream* S = NULL;
+    S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
+    if (S == NULL) {
+        SetConsoleColor(4);
+        printf("Internal error.\n");
+        ResetConsoleColor;
+        return;
+    }
+    decx::cuda_event* E = NULL;
+    E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
+    if (E == NULL) {
+        SetConsoleColor(4);
+        printf("Internal error.\n");
+        ResetConsoleColor;
+        return;
+    }
+
+    if (decx::alloc::_device_malloc(&this->MatArr, this->total_bytes, true, S)) {
         Print_Error_Message(4, "de::GPU_MatrixArray<T>:: Fail to allocate memory\n");
         exit(-1);
     }
-
-    cudaMemset(this->MatArr.ptr, 0, this->total_bytes);
 
     if (decx::alloc::_host_virtual_page_malloc<void*>(&this->MatptrArr, this->ArrayNumber * sizeof(void*))) {
         Print_Error_Message(4, "Fail to allocate memory for pointer array on host\n");
@@ -61,6 +99,12 @@ void decx::_GPU_MatrixArray::alloc_data_space()
     for (int i = 1; i < this->ArrayNumber; ++i) {
         this->MatptrArr.ptr[i] = (void*)((uchar*)this->MatptrArr.ptr[i - 1] + this->_plane * this->_layout._single_element_size);
     }
+
+    E->event_record(S);
+    E->synchronize();
+
+    S->detach();
+    E->detach();
 }
 
 
@@ -68,53 +112,15 @@ void decx::_GPU_MatrixArray::alloc_data_space()
 
 void decx::_GPU_MatrixArray::_attribute_assign(const int _type, uint _width, uint _height, uint MatrixNum)
 {
-    /*this->type = _type;
-    this->_single_element_size = decx::core::_size_mapping(_type);
-
-    this->width = _width;
-    this->height = _height;
-    this->ArrayNumber = MatrixNum;
-
-    uint _alignment = 0;
-    switch (this->_single_element_size)
-    {
-    case 4:
-        _alignment = _MATRIX_ALIGN_4B_;     break;
-    case 8:
-        _alignment = _MATRIX_ALIGN_8B_;     break;
-    case 2:
-        _alignment = _MATRIX_ALIGN_2B_;     break;
-    case 1:
-        _alignment = _MATRIX_ALIGN_1B_;     break;
-    default:
-        break;
-    }
-
-    this->pitch = decx::utils::ceil<size_t>(_width, _alignment) * _alignment;
-
-    this->plane = static_cast<size_t>(_width) * static_cast<size_t>(_height);
-    this->_plane = static_cast<size_t>(this->pitch) * static_cast<size_t>(this->height);
-
-    this->element_num = this->plane * MatrixNum;
-    this->_element_num = this->_plane * MatrixNum;
-
-    this->total_bytes = this->_element_num * this->_single_element_size;*/
-
     this->type = _type;
 
     this->_layout._attribute_assign(_type, _width, _height);
     this->ArrayNumber = MatrixNum;
 
-    //this->_layout._single_element_size = this->_layout._single_element_size;
-
     this->_init = true;
-
-    //this->width = this->_layout.width;
-    //this->height = this->_layout.height;
 
     if (_type != decx::_DATA_TYPES_FLAGS_::_VOID_)
     {
-        //this->pitch = this->_layout.pitch;
         this->_init = true;
 
         this->plane = static_cast<size_t>(_width) * static_cast<size_t>(_height);

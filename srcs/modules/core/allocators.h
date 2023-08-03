@@ -135,7 +135,6 @@ template<typename T>
 static void decx::alloc::_host_virtual_page_malloc_same_place(decx::PtrInfo<T>* ptr_info)
 {
     decx::alloc::_alloc_Hv_same_place(&ptr_info->block);
-    //ptr_info->_sync_type();
     ptr_info->ptr = reinterpret_cast<T*>(ptr_info->block->_ptr);
 }
 
@@ -147,7 +146,6 @@ static int decx::alloc::_host_fixed_page_malloc(decx::PtrInfo<T>* ptr_info, size
     int ans = decx::alloc::_alloc_Hf(&ptr_info->block, size);
     ptr_info->ptr = reinterpret_cast<T*>(ptr_info->block->_ptr);
     ptr_info->_mem_type = decx::DATA_STORE_TYPE::Page_Locked;
-    //ptr_info->_sync_type();
     if (set_zero) {
         memset(ptr_info->ptr, 0, size);
     }
@@ -160,7 +158,6 @@ template<typename T>
 static void decx::alloc::_host_fixed_page_malloc_same_place(decx::PtrInfo<T>* ptr_info)
 {
     decx::alloc::_alloc_Hf_same_place(&ptr_info->block);
-    //ptr_info->_sync_type();
     ptr_info->ptr = reinterpret_cast<T*>(ptr_info->block->_ptr);
 }
 
@@ -191,7 +188,6 @@ template<typename T>
 static void decx::alloc::_device_malloc_same_place(decx::PtrInfo<T>* ptr_info)
 {
     decx::alloc::_alloc_D_same_place(&ptr_info->block);
-    //ptr_info->_sync_type();
     ptr_info->ptr = reinterpret_cast<T*>(ptr_info->block->_ptr);
 }
 #endif
@@ -208,7 +204,6 @@ int decx::alloc::_host_fixed_page_realloc(decx::PtrInfo<T>* ptr_info, size_t siz
     
     // reallocate new memory of new size
     int ans = decx::alloc::_alloc_Hf(&ptr_info->block, size);
-    //ptr_info->_sync_type();
     ptr_info->ptr = reinterpret_cast<T*>(ptr_info->block->_ptr);
 
     return ans;
@@ -225,7 +220,6 @@ int decx::alloc::_host_virtual_page_realloc(decx::PtrInfo<T>* ptr_info, size_t s
     }
     // reallocate new memory of new size
     int ans = decx::alloc::_alloc_Hv(&ptr_info->block, size);
-    //ptr_info->_sync_type();
     ptr_info->ptr = reinterpret_cast<T*>(ptr_info->block->_ptr);
 
     return ans;
@@ -243,7 +237,6 @@ int decx::alloc::_device_realloc(decx::PtrInfo<T>* ptr_info, size_t size)
     }
     // reallocate new memory of new size
     int ans = decx::alloc::_alloc_D(&ptr_info->block, size);
-    //ptr_info->_sync_type();
     ptr_info->ptr = reinterpret_cast<T*>(ptr_info->block->_ptr);
 
     return ans;

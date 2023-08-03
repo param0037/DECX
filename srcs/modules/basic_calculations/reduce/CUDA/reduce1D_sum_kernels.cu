@@ -43,7 +43,7 @@ decx::reduce::GPUK::cu_block_reduce_sum1D_fp32(const float4* __restrict     src,
         }
     }
 
-    tmp1 = decx::reduce::GPUK::float4_reduce_sum(_recv._vf);
+    tmp1 = decx::reduce::GPUK::float4_sum(_recv._vf);
     // warp reducing
     decx::reduce::GPUK::cu_warp_reduce_fp32<float(float, float), 32>(__fadd_rn, &tmp1, &tmp2);
 
@@ -63,6 +63,66 @@ decx::reduce::GPUK::cu_block_reduce_sum1D_fp32(const float4* __restrict     src,
 
         if (warp_lane_id == 0) {
             dst[blockIdx.x] = tmp2;
+        }
+    }
+}
+
+
+
+__global__ void 
+decx::reduce::GPUK::cu_warp_reduce_sum2D_1D_fp32(const float4 * __restrict   src, 
+                                                   float* __restrict           dst,
+                                                   const uint32_t              Wsrc_v4, 
+                                                   const uint2                 proc_dims)
+{
+    uint32_t tidx = threadIdx.x + blockDim.x * blockIdx.x;
+    uint32_t tidy = threadIdx.y + blockDim.y * blockIdx.y;
+
+    uint64_t LDG_dex = Wsrc_v4 * tidy + tidx;
+    uint64_t STG_dex = blockIdx.y * gridDim.x + blockIdx.x;
+
+    uint32_t proc_W_v4 = decx::utils::ceil<uint32_t>(proc_dims.x, 4);
+
+    /*
+    * Shared memory for the reduced results of 8 warps in a block
+    * Extended to 32 for warp-level loading
+    * No need to set the remaining values to zero since for the warp reducing
+    * all the redundancy will not invovled with correct parameters set
+    */
+    __shared__ float _sh_warp_reduce_res[32];
+
+    decx::utils::_cuda_vec128 _recv;
+    _recv._vf = decx::utils::vec4_set1_fp32(0);
+
+    float _thread_sum = 0, _warp_reduce_res = 0;
+
+    if (tidx < proc_W_v4 && tidy < proc_dims.y) {
+        _recv._vf = src[LDG_dex];
+        if (tidx == proc_W_v4 - 1) {
+            for (int i = 4 - (proc_W_v4 * 4 - proc_dims.x); i < 4; ++i) {
+                _recv._arrf[i] = 0.f;
+            }
+        }
+    }
+
+    _thread_sum = decx::reduce::GPUK::float4_sum(_recv._vf);
+
+    decx::reduce::GPUK::cu_warp_reduce_fp32<float(float, float), 32>(__fadd_rn, &_thread_sum, &_warp_reduce_res);
+
+    if (threadIdx.x == 0) {
+        _sh_warp_reduce_res[threadIdx.y] = _warp_reduce_res;
+    }
+
+    __syncthreads();
+
+    if (threadIdx.y == 0) {
+        _thread_sum = _sh_warp_reduce_res[threadIdx.x];
+        __syncwarp(0xffffffff);
+
+        decx::reduce::GPUK::cu_warp_reduce_fp32<float(float, float), 8>(__fadd_rn, &_thread_sum, &_warp_reduce_res);
+
+        if (threadIdx.x == 0) {
+            dst[STG_dex] = _warp_reduce_res;
         }
     }
 }
@@ -158,7 +218,7 @@ decx::reduce::GPUK::cu_block_reduce_sum1D_int32(const int4* __restrict     src,
         }
     }
 
-    tmp1 = decx::reduce::GPUK::int4_reduce_sum(_recv._vi);
+    tmp1 = decx::reduce::GPUK::int4_sum(_recv._vi);
     // warp reducing
     decx::reduce::GPUK::cu_warp_reduce_int32<int32_t(int32_t, int32_t), 32>(decx::utils::cuda::__i32_add, &tmp1, &tmp2);
 
@@ -228,7 +288,7 @@ decx::reduce::GPUK::cu_block_reduce_sum1D_u8_i32(const int4* __restrict     src,
         }
     }
 
-    tmp1 = decx::reduce::GPUK::uchar16_reduce_sum(_recv._vi);
+    tmp1 = decx::reduce::GPUK::uchar16_sum(_recv._vi);
     decx::reduce::GPUK::cu_warp_reduce_int32<int32_t(int32_t, int32_t), 32>(decx::utils::cuda::__i32_add, &tmp1, &tmp2);
 
     if (warp_lane_id == 0) {

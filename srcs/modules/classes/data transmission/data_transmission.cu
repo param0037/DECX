@@ -123,29 +123,29 @@ decx::bp::Memcpy_Mat(decx::_Matrix* _host_mat, decx::_GPU_Matrix* _device_mat, c
 
 
 
-template <bool _print> _DECX_API_ void
-decx::bp::Memcpy_Raw_API(decx::_Tensor* _host_tensor, decx::_GPU_Tensor* _device_tensor, const de::Point3D start, const de::Point3D cpy_size,
-    const int _memcpy_flag, de::DH* handle)
+template <bool _async_call> void
+decx::bp::Memcpy_Tens(decx::_Tensor* _host_tensor, decx::_GPU_Tensor* _device_tensor, const de::Point3D start, const de::Point3D cpy_size,
+    const int _memcpy_flag, de::DH* handle, const uint32_t _stream_id = 0)
 {
     if (!decx::cuda::_is_CUDA_init()) {
-        decx::err::CUDA_Not_init<_print>(handle);
+        decx::err::CUDA_Not_init<true>(handle);
         return;
     }
 
     if (start.x + cpy_size.x > _host_tensor->Width() ||
         start.y + cpy_size.y > _host_tensor->Height() ||
         start.z + cpy_size.z > _host_tensor->Depth()) {
-        decx::err::InvalidParam<_print>(handle);
+        decx::err::InvalidParam<true>(handle);
         return;
     }
 
     if (_host_tensor->Type() != _device_tensor->Type()) {
         if (_host_tensor->_layout._single_element_size != _device_tensor->_layout._single_element_size) {
-            decx::err::TypeError_NotMatch<_print>(handle);
+            decx::err::TypeError_NotMatch<true>(handle);
             return;
         }
         else {
-            decx::warn::Memcpy_different_types<_print>(handle);
+            decx::warn::Memcpy_different_types<true>(handle);
         }
     }
 
@@ -158,7 +158,7 @@ decx::bp::Memcpy_Raw_API(decx::_Tensor* _host_tensor, decx::_GPU_Tensor* _device
             make_uint3(_host_tensor->Depth(), _host_tensor->Width(), _host_tensor->Height()),
             make_uint3(start.z, start.x, start.y),
             make_uint3(cpy_size.z, cpy_size.x, cpy_size.y));
-        _opt.execute_DMA<_print>(cudaMemcpyHostToDevice, handle);
+        _opt.execute_DMA<_async_call>(cudaMemcpyHostToDevice, handle, _stream_id);
     }
     else if (_memcpy_flag == de::DECX_Memcpy_Flags::DECX_MEMCPY_D2H)
     {
@@ -169,14 +169,14 @@ decx::bp::Memcpy_Raw_API(decx::_Tensor* _host_tensor, decx::_GPU_Tensor* _device
             make_uint3(_device_tensor->Depth(), _device_tensor->Width(), _device_tensor->Height()),
             make_uint3(start.z, start.x, start.y),
             make_uint3(cpy_size.z, cpy_size.x, cpy_size.y));
-        _opt.execute_DMA<_print>(cudaMemcpyDeviceToHost, handle);
+        _opt.execute_DMA<_async_call>(cudaMemcpyDeviceToHost, handle, _stream_id);
     }
     else {
-        decx::err::MeaningLessFlag<_print>(handle);
+        decx::err::MeaningLessFlag<true>(handle);
     }
 
     if (handle->error_type == decx::DECX_error_types::DECX_SUCCESS) {
-        decx::err::Success<_print>(handle);
+        decx::err::Success<true>(handle);
     }
 }
 
@@ -263,7 +263,22 @@ de::Memcpy(de::Tensor& __host, de::GPU_Tensor& __device, const de::Point3D start
     decx::_Tensor* _host_tensor = dynamic_cast<decx::_Tensor*>(&__host);
     decx::_GPU_Tensor* _device_tensor = dynamic_cast<decx::_GPU_Tensor*>(&__device);
 
-    decx::bp::Memcpy_Raw_API<true>(_host_tensor, _device_tensor, start, cpy_size, _memcpy_flag, &handle);
+    decx::bp::Memcpy_Tens<false>(_host_tensor, _device_tensor, start, cpy_size, _memcpy_flag, &handle);
+
+    return handle;
+}
+
+
+_DECX_API_ de::DH
+de::Memcpy_Async(de::Tensor& __host, de::GPU_Tensor& __device, const de::Point3D start, const de::Point3D cpy_size,
+    const int _memcpy_flag, de::DecxStream& S)
+{
+    de::DH handle;
+
+    decx::_Tensor* _host_tensor = dynamic_cast<decx::_Tensor*>(&__host);
+    decx::_GPU_Tensor* _device_tensor = dynamic_cast<decx::_GPU_Tensor*>(&__device);
+
+    decx::bp::Memcpy_Tens<true>(_host_tensor, _device_tensor, start, cpy_size, _memcpy_flag, &handle, S.Get_ID());
 
     return handle;
 }
@@ -428,24 +443,65 @@ de::MemcpyLinear_Async(de::TensorArray& __host, de::GPU_TensorArray& __device, c
 }
 
 
+template <bool _is_async> void
+decx::bp::MemcpyLinear_caller(void* __host, void* __device, const uint64_t _host_size, const uint64_t _device_size,
+    const int _memcpy_flag, de::DH* handle, const uint32_t stream_id)
+{
+    if (!decx::cuda::_is_CUDA_init()) {
+        decx::err::CUDA_Not_init<true>(handle);
+        return;
+    }
+
+    const void* src_ptr = NULL;
+    void* dst_ptr = NULL;
+    cudaMemcpyKind translated_cpy_flag;
+    uint64_t src_size = 0, dst_size = 0;
+
+    if (_memcpy_flag == de::DECX_MEMCPY_H2D) {
+        src_ptr = __host;
+        dst_ptr = __device;
+        translated_cpy_flag = cudaMemcpyHostToDevice;
+        src_size = _host_size;
+        dst_size = _device_size;
+    }
+    else {
+        src_ptr = __device;
+        dst_ptr = __host;
+        translated_cpy_flag = cudaMemcpyDeviceToHost;
+        src_size = _device_size;
+        dst_size = _host_size;
+    }
+
+    if (src_size > dst_size) {
+        decx::err::Memcpy_overranged<true>(handle);
+        return;
+    }
+
+    const uint64_t cpy_size = min(src_size, dst_size);
+
+    if (_is_async) {
+        decx::async::register_async_task(stream_id, decx::bp::_DMA_memcpy1D_sync, src_ptr, dst_ptr,
+            cpy_size, translated_cpy_flag);
+    }
+    else {
+        decx::bp::_DMA_memcpy1D_sync(src_ptr, dst_ptr, cpy_size, translated_cpy_flag);
+    }
+
+    if (handle->error_type == decx::DECX_error_types::DECX_SUCCESS) {
+        decx::err::Success<true>(handle);
+    }
+}
 
 
-template _DECX_API_ void decx::bp::Memcpy_Vec<true>(decx::_Vector*, decx::_GPU_Vector*, const size_t, const size_t, const int, de::DH*, const uint32_t);
-template _DECX_API_ void decx::bp::Memcpy_Vec<false>(decx::_Vector*, decx::_GPU_Vector*, const size_t, const size_t, const int, de::DH*, const uint32_t);
+template void decx::bp::Memcpy_Vec<true>(decx::_Vector*, decx::_GPU_Vector*, const size_t, const size_t, const int, de::DH*, const uint32_t);
+template void decx::bp::Memcpy_Vec<false>(decx::_Vector*, decx::_GPU_Vector*, const size_t, const size_t, const int, de::DH*, const uint32_t);
 
-template _DECX_API_ void decx::bp::Memcpy_Mat<true>(decx::_Matrix* _host_mat, decx::_GPU_Matrix* _device_mat, const de::Point2D start, 
-    const de::Point2D cpy_size, const int _memcpy_flag, de::DH* handle, const uint32_t _stream_id);
-template _DECX_API_ void decx::bp::Memcpy_Mat<false>(decx::_Matrix* _host_mat, decx::_GPU_Matrix* _device_mat, const de::Point2D start,
-    const de::Point2D cpy_size, const int _memcpy_flag, de::DH* handle, const uint32_t _stream_id);
+template void decx::bp::Memcpy_Mat<true>(decx::_Matrix*, decx::_GPU_Matrix*, const de::Point2D, const de::Point2D, const int, de::DH*, const uint32_t);
+template void decx::bp::Memcpy_Mat<false>(decx::_Matrix*, decx::_GPU_Matrix*, const de::Point2D,const de::Point2D, const int, de::DH*, const uint32_t);
 
-template _DECX_API_ void decx::bp::Memcpy_Raw_API<true>(decx::_Tensor* _host_tensor, decx::_GPU_Tensor* _device_tensor, const de::Point3D start, 
-    const de::Point3D cpy_size, const int _memcpy_flag, de::DH* handle);
-template _DECX_API_ void decx::bp::Memcpy_Raw_API<false>(decx::_Tensor* _host_tensor, decx::_GPU_Tensor* _device_tensor, const de::Point3D start,
-    const de::Point3D cpy_size, const int _memcpy_flag, de::DH* handle);
-//
-//
-//template _DECX_API_ void decx::bp::MemcpyLinear_Raw_API<true>(decx::_Vector* _host_tensor, decx::_GPU_Vector* _device_tensor, const int _memcpy_flag, de::DH* handle);
-////template _DECX_API_ void decx::bp::MemcpyLinear_Raw_API<false>(decx::_Matrix* _host_tensor, decx::_GPU_Matrix* _device_tensor, const int _memcpy_flag, de::DH* handle);
-//template _DECX_API_ void decx::bp::MemcpyLinear_Raw_API<false>(decx::_Tensor* _host_tensor, decx::_GPU_Tensor* _device_tensor, const int _memcpy_flag, de::DH* handle);
-//template _DECX_API_ void decx::bp::MemcpyLinear_Raw_API<true>(decx::_TensorArray* _host_tensor, decx::_GPU_TensorArray* _device_tensor, const int _memcpy_flag, de::DH* handle);
-//template _DECX_API_ void decx::bp::MemcpyLinear_Raw_API<false>(decx::_TensorArray* _host_tensor, decx::_GPU_TensorArray* _device_tensor, const int _memcpy_flag, de::DH* handle);
+template void decx::bp::Memcpy_Tens<true>(decx::_Tensor*, decx::_GPU_Tensor*, const de::Point3D, const de::Point3D, const int, de::DH*, const uint32_t);
+template void decx::bp::Memcpy_Tens<false>(decx::_Tensor*, decx::_GPU_Tensor*, const de::Point3D, const de::Point3D, const int, de::DH*, const uint32_t);
+
+
+template void decx::bp::MemcpyLinear_caller<true>(void*, void*, const uint64_t, const uint64_t, const int, de::DH*, const uint32_t);
+template void decx::bp::MemcpyLinear_caller<false>(void*, void*, const uint64_t, const uint64_t, const int, de::DH*, const uint32_t);

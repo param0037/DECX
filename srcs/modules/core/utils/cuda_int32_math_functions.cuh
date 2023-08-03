@@ -27,6 +27,36 @@ namespace decx
             }
 
 
+            __device__ __inline__ double
+                __float2_add(const double a, const double b)
+            {
+                float2 res;
+                res.x = __fadd_rn(((float2*)&a)->x, ((float2*)&b)->x);
+                res.y = __fadd_rn(((float2*)&a)->y, ((float2*)&b)->y);
+                return *((double*)&res);
+            }
+
+
+            __device__ __inline__ double
+                __float2_max(const double a, const double b)
+            {
+                float2 res;
+                res.x = max(((float2*)&a)->x, ((float2*)&b)->x);
+                res.y = max(((float2*)&a)->y, ((float2*)&b)->y);
+                return *((double*)&res);
+            }
+
+
+            __device__ __inline__ double
+                __float2_min(const double a, const double b)
+            {
+                float2 res;
+                res.x = min(((float2*)&a)->x, ((float2*)&b)->x);
+                res.y = min(((float2*)&a)->y, ((float2*)&b)->y);
+                return *((double*)&res);
+            }
+
+
             __device__ __inline__ uint16_t
                 __u16_add(const uint16_t a, const uint16_t b)
             {
@@ -45,6 +75,18 @@ namespace decx
                 __fp32_max(const float a, const float b)
             {
                 return max(a, b);
+            }
+
+            __device__ __inline__ double
+                __fp64_max(const double a, const double b)
+            {
+                return max(a, b);
+            }
+
+            __device__ __inline__ double
+                __fp64_min(const double a, const double b)
+            {
+                return min(a, b);
             }
 
 

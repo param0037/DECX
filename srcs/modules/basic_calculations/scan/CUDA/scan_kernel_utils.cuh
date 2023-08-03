@@ -299,7 +299,7 @@ namespace scan
         }
 
 
-        template <typename TypeOP, uint32_t scan_length>
+        /*template <typename TypeOP, uint32_t scan_length>
         __device__ __inline__ static void cu_warp_exclusive_scan_fp32(TypeOP& _op,
             const float* _src, float* _dst, const uint32_t lane_id)
         {
@@ -326,6 +326,44 @@ namespace scan
                 tmp = __shfl_up_sync(0xffffffff, _accu, i, warpSize);
 
                 _accu = lane_id > (i - 1) ? (_op(_accu, tmp)) : _accu;
+            }
+            *_dst = _accu;
+        }*/
+
+
+        template <typename TypeOP, uint32_t reduce_length, uint32_t _parallel_lane = 1>
+        __device__ __inline__ static void cu_warp_exclusive_scan_fp32(TypeOP& _op,
+            const float* _src, float* _dst, const uint16_t lane_id)
+        {
+            float _accu = *_src, tmp;
+            constexpr uint32_t _lane_reduce_len = reduce_length / _parallel_lane;
+            uint16_t _sub_lane_id = lane_id % _lane_reduce_len;
+
+#pragma unroll
+            for (int i = 1; i < _lane_reduce_len; i *= 2) {
+                tmp = __shfl_up_sync(0xffffffff, _accu, i, _lane_reduce_len);
+
+                _accu = _sub_lane_id > (i - 1) ? (_op(_accu, tmp)) : _accu;
+            }
+            tmp = __shfl_up_sync(0xffffffff, _accu, 1, _lane_reduce_len);
+            tmp = (_sub_lane_id == 0) ? 0 : tmp;
+            *_dst = tmp;
+        }
+
+
+        template <typename TypeOP, uint32_t reduce_length, uint32_t _parallel_lane = 1>
+        __device__ __inline__ static void cu_warp_inclusive_scan_fp32(TypeOP& _op,
+            const float* _src, float* _dst, const uint32_t lane_id)
+        {
+            float _accu = *_src, tmp;
+            constexpr uint32_t _lane_reduce_len = reduce_length / _parallel_lane;
+            uint16_t _sub_lane_id = lane_id % _lane_reduce_len;
+
+#pragma unroll
+            for (int i = 1; i < _lane_reduce_len; i *= 2) {
+                tmp = __shfl_up_sync(0xffffffff, _accu, i, _lane_reduce_len);
+
+                _accu = _sub_lane_id > (i - 1) ? (_op(_accu, tmp)) : _accu;
             }
             *_dst = _accu;
         }

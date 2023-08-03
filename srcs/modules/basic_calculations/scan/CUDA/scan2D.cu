@@ -90,8 +90,8 @@ void decx::scan::cuda_scan2D_key_param_configs::_generate_configs<de::Half, floa
 
 
 
-template <bool _print, typename _type_in, typename _type_out>
-void decx::scan::cuda_scan2D_config::generate_scan_config(const uint2 _proc_dims, decx::cuda_stream* S, de::DH* handle, const int scan_mode,
+template <typename _type_in, typename _type_out>
+void decx::scan::cuda_scan2D_config::generate_scan_config(const uint2 _proc_dims, decx::cuda_stream* S, const int scan_mode,
     const bool _is_full_scan)
 {
     this->_scan_mode = scan_mode;
@@ -119,17 +119,17 @@ void decx::scan::cuda_scan2D_config::generate_scan_config(const uint2 _proc_dims
     this->_dev_tmp._dims = _dev_dst._dims;
 
     if (decx::alloc::_device_malloc(&this->_dev_src._ptr, this->_dev_src._dims.x * this->_dev_src._dims.y * sizeof(_type_in), true, S)) {
-        decx::err::device_AllocateFailure<_print>(handle);
+        Print_Error_Message(4, DEV_ALLOC_FAIL);
         return;
     }
     if (decx::alloc::_device_malloc(&this->_dev_dst._ptr, this->_dev_dst._dims.x * this->_dev_dst._dims.y * sizeof(_type_out), true, S)) {
-        decx::err::device_AllocateFailure<_print>(handle);
+        Print_Error_Message(4, DEV_ALLOC_FAIL);
         return;
     }
 
     if (std::is_same<_type_in, uint8_t>::value) {
         if (decx::alloc::_device_malloc(&this->_dev_tmp._ptr, this->_dev_tmp._dims.x * this->_dev_tmp._dims.y * sizeof(de::Half), true, S)) {
-            decx::err::device_AllocateFailure<_print>(handle);
+            Print_Error_Message(4, DEV_ALLOC_FAIL);
             return;
         }
     }
@@ -138,32 +138,21 @@ void decx::scan::cuda_scan2D_config::generate_scan_config(const uint2 _proc_dims
         this->_scan_v_grid.x * this->_scan_v_grid.y);
 
     if (decx::alloc::_device_malloc(&this->_dev_status, _larger_status_size * sizeof(float4), true, S)) {
-        decx::err::device_AllocateFailure<_print>(handle);
+        Print_Error_Message(4, DEV_ALLOC_FAIL);
         return;
     }
 }
 
 
-template void decx::scan::cuda_scan2D_config::generate_scan_config<true, uint8_t, int>(const uint2 _proc_dims, decx::cuda_stream* S, de::DH* handle, 
-    const int scan_mode, const bool _is_full_scan);
-template void decx::scan::cuda_scan2D_config::generate_scan_config<false, uint8_t, int>(const uint2 _proc_dims, decx::cuda_stream* S, de::DH* handle,
-    const int scan_mode, const bool _is_full_scan);
-
-template void decx::scan::cuda_scan2D_config::generate_scan_config<true, float, float>(const uint2 _proc_dims, decx::cuda_stream* S, de::DH* handle,
-    const int scan_mode, const bool _is_full_scan);
-template void decx::scan::cuda_scan2D_config::generate_scan_config<false, float, float>(const uint2 _proc_dims, decx::cuda_stream* S, de::DH* handle,
-    const int scan_mode, const bool _is_full_scan);
-
-template void decx::scan::cuda_scan2D_config::generate_scan_config<true, de::Half, float>(const uint2 _proc_dims, decx::cuda_stream* S, de::DH* handle,
-    const int scan_mode, const bool _is_full_scan);
-template void decx::scan::cuda_scan2D_config::generate_scan_config<false, de::Half, float>(const uint2 _proc_dims, decx::cuda_stream* S, de::DH* handle,
-    const int scan_mode, const bool _is_full_scan);
+template void decx::scan::cuda_scan2D_config::generate_scan_config<uint8_t, int>(const uint2, decx::cuda_stream*, const int, const bool);
+template void decx::scan::cuda_scan2D_config::generate_scan_config<float, float>(const uint2, decx::cuda_stream*, const int, const bool);
+template void decx::scan::cuda_scan2D_config::generate_scan_config<de::Half, float>(const uint2, decx::cuda_stream*, const int, const bool);
 
 
 
-template <bool _print, typename _type_in, typename _type_out>
+template <typename _type_in, typename _type_out>
 void decx::scan::cuda_scan2D_config::generate_scan_config(decx::Ptr2D_Info<void> dev_src, decx::Ptr2D_Info<void> dev_dst, const uint2 _proc_dims,
-    decx::cuda_stream* S, de::DH* handle, const int scan_mode, const bool _is_full_scan)
+    decx::cuda_stream* S, const int scan_mode, const bool _is_full_scan)
 {
     this->_scan_mode = scan_mode;
 
@@ -183,16 +172,6 @@ void decx::scan::cuda_scan2D_config::generate_scan_config(decx::Ptr2D_Info<void>
         this->_scan_h_grid.y = decx::utils::ceil<uint32_t>(_proc_dims.y, 8 * _kp_configs._auxiliary_proc_V);
     }
 
-    /*this->_scan_h_grid.x = decx::utils::ceil<uint32_t>(this->_dev_dst._dims.x, 32 * _kp_configs.proc_VL_H);
-    this->_scan_h_grid.z = 1;
-
-    if (_is_full_scan) {
-        this->_scan_h_grid.y = decx::utils::ceil<uint32_t>(this->_dev_dst._dims.y, 8);
-    }
-    else {
-        this->_scan_h_grid.y = decx::utils::ceil<uint32_t>(this->_dev_dst._dims.y, 8 * _kp_configs._auxiliary_proc_V);
-    }*/
-
     this->_scan_v_grid = dim3(decx::utils::ceil<uint32_t>(this->_dev_dst._dims.x, 32 * _kp_configs.proc_VL_V),
         decx::utils::ceil<uint32_t>(this->_dev_dst._dims.y, 32));
     // fuck
@@ -202,7 +181,7 @@ void decx::scan::cuda_scan2D_config::generate_scan_config(decx::Ptr2D_Info<void>
 
         if (std::is_same<_type_in, uint8_t>::value) { 
             if (decx::alloc::_device_malloc(&this->_dev_tmp._ptr, this->_dev_tmp._dims.x * this->_dev_tmp._dims.y * sizeof(ushort), true, S)) {
-                decx::err::device_AllocateFailure<_print>(handle);
+                Print_Error_Message(4, DEV_ALLOC_FAIL);
                 return;
             }
         }
@@ -212,26 +191,14 @@ void decx::scan::cuda_scan2D_config::generate_scan_config(decx::Ptr2D_Info<void>
         this->_scan_v_grid.x * this->_scan_v_grid.y);
 
     if (decx::alloc::_device_malloc(&this->_dev_status, _larger_status_size * sizeof(float4), true, S)) {
-        decx::err::device_AllocateFailure<_print>(handle);
+        Print_Error_Message(4, DEV_ALLOC_FAIL);
         return;
     }
 }
 
-template void decx::scan::cuda_scan2D_config::generate_scan_config<true, float, float>(decx::Ptr2D_Info<void> dev_src, decx::Ptr2D_Info<void> dev_dst, const uint2 _proc_dims,
-    decx::cuda_stream* S, de::DH* handle, const int scan_mode, const bool _is_full_scan);
-template void decx::scan::cuda_scan2D_config::generate_scan_config<false, float, float>(decx::Ptr2D_Info<void> dev_src, decx::Ptr2D_Info<void> dev_dst, const uint2 _proc_dims,
-    decx::cuda_stream* S, de::DH* handle, const int scan_mode, const bool _is_full_scan);
-
-template void decx::scan::cuda_scan2D_config::generate_scan_config<true, de::Half, float>(decx::Ptr2D_Info<void> dev_src, decx::Ptr2D_Info<void> dev_dst, const uint2 _proc_dims,
-    decx::cuda_stream* S, de::DH* handle, const int scan_mode, const bool _is_full_scan);
-template void decx::scan::cuda_scan2D_config::generate_scan_config<false, de::Half, float>(decx::Ptr2D_Info<void> dev_src, decx::Ptr2D_Info<void> dev_dst, const uint2 _proc_dims,
-    decx::cuda_stream* S, de::DH* handle, const int scan_mode, const bool _is_full_scan);
-
-template void decx::scan::cuda_scan2D_config::generate_scan_config<true, uint8_t, int>(decx::Ptr2D_Info<void> dev_src, decx::Ptr2D_Info<void> dev_dst, const uint2 _proc_dims,
-    decx::cuda_stream* S, de::DH* handle, const int scan_mode, const bool _is_full_scan);
-template void decx::scan::cuda_scan2D_config::generate_scan_config<false, uint8_t, int>(decx::Ptr2D_Info<void> dev_src, decx::Ptr2D_Info<void> dev_dst, const uint2 _proc_dims,
-    decx::cuda_stream* S, de::DH* handle, const int scan_mode, const bool _is_full_scan);
-
+template void decx::scan::cuda_scan2D_config::generate_scan_config<float, float>(decx::Ptr2D_Info<void>, decx::Ptr2D_Info<void>, const uint2, decx::cuda_stream*, const int, const bool);
+template void decx::scan::cuda_scan2D_config::generate_scan_config<de::Half, float>(decx::Ptr2D_Info<void>, decx::Ptr2D_Info<void>, const uint2, decx::cuda_stream*, const int, const bool);
+template void decx::scan::cuda_scan2D_config::generate_scan_config<uint8_t, int>(decx::Ptr2D_Info<void>, decx::Ptr2D_Info<void>, const uint2, decx::cuda_stream*, const int, const bool);
 
 
 int decx::scan::cuda_scan2D_config::get_scan_mode() const
@@ -268,9 +235,9 @@ dim3 decx::scan::cuda_scan2D_config::get_scan_v_grid() const
 
 
 template <typename _Type_src>
-void decx::scan::cuda_scan2D_config::release_buffer(const bool _have_dev_classes)
+void decx::scan::cuda_scan2D_config::release_buffer(const bool _refer_dev_classes)
 {
-    if (_have_dev_classes) {
+    if (!_refer_dev_classes) {
         decx::alloc::_device_dealloc(&this->_dev_src._ptr);
         decx::alloc::_device_dealloc(&this->_dev_dst._ptr);
     }

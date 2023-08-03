@@ -55,7 +55,7 @@ namespace decx
         * @return return (__deno % __numer) != 0 ? __deno / __numer + 1 : __deno / __numer;
         */
         template <typename _Ty>
-#ifdef _DECX_CUDA_CODES_
+#ifdef _DECX_CUDA_PARTS_
 __host__ __device__
 #endif
         constexpr
@@ -63,13 +63,13 @@ __host__ __device__
 
 
 
-#ifdef _DECX_CUDA_CODES_
-        template <typename _Ty>
-        __device__
-        _Ty cu_ceil(_Ty __deno, _Ty __numer) {
-            return (__deno / __numer) + (int)((bool)(__deno % __numer));
-        }
-#endif
+//#ifdef _DECX_CUDA_PARTS_
+//        template <typename _Ty>
+//        __device__
+//        _Ty cu_ceil(_Ty __deno, _Ty __numer) {
+//            return (__deno / __numer) + (int)((bool)(__deno % __numer));
+//        }
+//#endif
 
 
         constexpr inline static int Iabs(int n) noexcept {
@@ -153,13 +153,12 @@ constexpr static _Ty decx::utils::clamp_max(_Ty __x, _Ty _boundary) noexcept {
 
 
 template <typename _Ty>
-#ifdef _DECX_CUDA_CODES_
+#ifdef _DECX_CUDA_PARTS_
 __host__ __device__
 #endif
 constexpr
 inline static _Ty decx::utils::ceil(_Ty __deno, _Ty __numer) noexcept
 {
-    //return (__deno % __numer) != 0 ? __deno / __numer + 1 : __deno / __numer;
     return (__deno / __numer) + (_Ty)((bool)(__deno % __numer));
 }
 

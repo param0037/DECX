@@ -57,6 +57,8 @@ bool decx::MemPool_Hf::search_for_idle(size_t req_size, int begin_dex, decx::Mem
 
 void decx::MemPool_Hf::allocate(size_t req_size, decx::MemBlock** _ptr)
 {
+    this->_mtx.lock();
+
     int begin_dex = decx::utils::_GetHighest_abd(
         decx::utils::clamp_min<size_t>(req_size, Min_Alloc_Bytes)) - dex_to_pow_bias;
 
@@ -80,6 +82,8 @@ void decx::MemPool_Hf::allocate(size_t req_size, decx::MemBlock** _ptr)
     else {
         _MBPtr->_ref_times = 1;
     }
+
+    this->_mtx.unlock();
 }
 
 

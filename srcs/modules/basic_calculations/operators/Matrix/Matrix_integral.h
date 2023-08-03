@@ -16,6 +16,8 @@
 #include "../../../classes/GPU_Matrix.h"
 #include "../../scan/CUDA/scan.cuh"
 #include "../../scan/CUDA/scan_caller.h"
+#include "../../../../Async Engine/DecxStream/DecxStream.h"
+#include "../../../../Async Engine/Async_task_threadpool/Async_Engine.h"
 
 
 namespace decx
@@ -23,79 +25,74 @@ namespace decx
     namespace calc
     {
         // full scan
-        template <bool _print, bool _only_scan_h>
-        static void cuda_matrix_integral_fp32(decx::_Matrix* src, decx::_Matrix* dst, const int scan_mode, de::DH* handle);
+        template <bool _only_scan_h>
+        static void cuda_matrix_integral_fp32(decx::_Matrix* src, decx::_Matrix* dst, const int scan_mode);
 
 
-        template <bool _print>
-        static void cuda_matrix_integral_v_fp32(decx::_Matrix* src, decx::_Matrix* dst, const int scan_mode, de::DH* handle);
+        static void cuda_matrix_integral_v_fp32(decx::_Matrix* src, decx::_Matrix* dst, const int scan_mode);
 
 
-        template <bool _print, bool _only_scan_h>
-        static void cuda_matrix_integral_fp16(decx::_Matrix* src, decx::_Matrix* dst, const int scan_mode, de::DH* handle);
+        template < bool _only_scan_h>
+        static void cuda_matrix_integral_fp16(decx::_Matrix* src, decx::_Matrix* dst, const int scan_mode);
 
         // vertically scan
-        template <bool _print>
-        static void cuda_matrix_integral_v_fp16(decx::_Matrix* src, decx::_Matrix* dst, const int scan_mode, de::DH* handle);
+        static void cuda_matrix_integral_v_fp16(decx::_Matrix* src, decx::_Matrix* dst, const int scan_mode);
 
 
-        template <bool _print, bool _only_scan_h>
-        static void cuda_matrix_integral_uint8_i32(decx::_Matrix* src, decx::_Matrix* dst, const int scan_mode, de::DH* handle);
+        template <bool _only_scan_h>
+        static void cuda_matrix_integral_uint8_i32(decx::_Matrix* src, decx::_Matrix* dst, const int scan_mode);
 
 
-        template <bool _print>
-        static void cuda_matrix_integral_v_uint8_i32(decx::_Matrix* src, decx::_Matrix* dst, const int scan_mode, de::DH* handle);
+        static void cuda_matrix_integral_v_uint8_i32(decx::_Matrix* src, decx::_Matrix* dst, const int scan_mode);
     }
 
     namespace calc
     {
-        template <bool _print, bool _only_scan_h>
-        static void cuda_matrix_dev_integral_fp32(decx::_GPU_Matrix* src, decx::_GPU_Matrix* dst, const int scan_mode, de::DH* handle);
+        template <bool _only_scan_h>
+        static void cuda_matrix_dev_integral_fp32(decx::_GPU_Matrix* src, decx::_GPU_Matrix* dst, const int scan_mode);
 
 
-        template <bool _print>
-        static void cuda_matrix_dev_integral_v_fp32(decx::_GPU_Matrix* src, decx::_GPU_Matrix* dst, const int scan_mode, de::DH* handle);
+        static void cuda_matrix_dev_integral_v_fp32(decx::_GPU_Matrix* src, decx::_GPU_Matrix* dst, const int scan_mode);
 
 
-        template <bool _print, bool _only_scan_h>
-        static void cuda_matrix_dev_integral_fp16(decx::_GPU_Matrix* src, decx::_GPU_Matrix* dst, const int scan_mode, de::DH* handle);
+        template <bool _only_scan_h>
+        static void cuda_matrix_dev_integral_fp16(decx::_GPU_Matrix* src, decx::_GPU_Matrix* dst, const int scan_mode);
 
 
-        template <bool _print>
-        static void cuda_matrix_dev_integral_v_fp16(decx::_GPU_Matrix* src, decx::_GPU_Matrix* dst, const int scan_mode, de::DH* handle);
+        static void cuda_matrix_dev_integral_v_fp16(decx::_GPU_Matrix* src, decx::_GPU_Matrix* dst, const int scan_mode);
 
 
-        template <bool _print, bool _only_scan_h>
-        static void cuda_matrix_dev_integral_uint8_i32(decx::_GPU_Matrix* src, decx::_GPU_Matrix* dst, const int scan_mode, de::DH* handle);
+        template <bool _only_scan_h>
+        static void cuda_matrix_dev_integral_uint8_i32(decx::_GPU_Matrix* src, decx::_GPU_Matrix* dst, const int scan_mode);
 
 
-        template <bool _print>
-        static void cuda_matrix_dev_integral_v_uint8_i32(decx::_GPU_Matrix* src, decx::_GPU_Matrix* dst, const int scan_mode, de::DH* handle);
+        static void cuda_matrix_dev_integral_v_uint8_i32(decx::_GPU_Matrix* src, decx::_GPU_Matrix* dst, const int scan_mode);
     }
 }
 
 
-template <bool _print, bool _only_scan_h>
-static void decx::calc::cuda_matrix_integral_fp32(decx::_Matrix* src, decx::_Matrix* dst, const int scan_mode, de::DH* handle)
+template <bool _only_scan_h>
+static void decx::calc::cuda_matrix_integral_fp32(decx::_Matrix* src, decx::_Matrix* dst, const int scan_mode)
 {
     const uint2 proc_dims = make_uint2(src->Pitch(), src->Height());
     const uint32_t pitch_v4 = src->get_layout().pitch / 4;
 
     decx::cuda_stream* S = NULL;
-    decx::cuda_event* E = NULL;
     S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
     if (S == NULL) {
-        decx::err::CUDA_Stream_access_fail<_print>(handle);
+        Print_Error_Message(4, CUDA_STREAM_ACCESS_FAIL);
         return;
     }
+    decx::cuda_event* E = NULL;
     E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
     if (E == NULL) {
-        decx::err::CUDA_Event_access_fail<_print>(handle);
+        Print_Error_Message(4, CUDA_EVENT_ACCESS_FAIL);
         return;
     }
+
     decx::scan::cuda_scan2D_config config;
 
-    config.generate_scan_config<_print, float, float>(make_uint2(src->Width(), src->Height()), S, handle, scan_mode, true);
+    config.generate_scan_config<float, float>(make_uint2(src->Width(), src->Height()), S, scan_mode, true);
 
     decx::Ptr2D_Info<void> src_ptr2D_info = config.get_raw_dev_ptr_src();
     decx::Ptr2D_Info<void> dst_Ptr2D_info = config.get_raw_dev_ptr_dst();
@@ -117,29 +114,31 @@ static void decx::calc::cuda_matrix_integral_fp32(decx::_Matrix* src, decx::_Mat
 
     S->detach();
     E->detach();
+
+    config.release_buffer<float>(false);
 }
 
 
 
-template <bool _print, bool _only_scan_h>
-static void decx::calc::cuda_matrix_integral_fp16(decx::_Matrix* src, decx::_Matrix* dst, const int scan_mode, de::DH* handle)
+template <bool _only_scan_h>
+static void decx::calc::cuda_matrix_integral_fp16(decx::_Matrix* src, decx::_Matrix* dst, const int scan_mode)
 {
     decx::cuda_stream* S = NULL;
-    decx::cuda_event* E = NULL;
     S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
     if (S == NULL) {
-        decx::err::CUDA_Stream_access_fail<_print>(handle);
+        Print_Error_Message(4, CUDA_STREAM_ACCESS_FAIL);
         return;
     }
+    decx::cuda_event* E = NULL;
     E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
     if (E == NULL) {
-        decx::err::CUDA_Event_access_fail<_print>(handle);
+        Print_Error_Message(4, CUDA_EVENT_ACCESS_FAIL);
         return;
     }
 
     decx::scan::cuda_scan2D_config config;
 
-    config.generate_scan_config<_print, de::Half, float>(make_uint2(src->Width(), src->Height()), S, handle, scan_mode, true);
+    config.generate_scan_config<de::Half, float>(make_uint2(src->Width(), src->Height()), S, scan_mode, true);
 
     decx::Ptr2D_Info<void> src_ptr2D_info = config.get_raw_dev_ptr_src();
     decx::Ptr2D_Info<void> dst_Ptr2D_info = config.get_raw_dev_ptr_dst();
@@ -161,29 +160,31 @@ static void decx::calc::cuda_matrix_integral_fp16(decx::_Matrix* src, decx::_Mat
 
     S->detach();
     E->detach();
+
+    config.release_buffer<de::Half>(false);
 }
 
 
 
-template <bool _print, bool _only_scan_h>
-static void decx::calc::cuda_matrix_integral_uint8_i32(decx::_Matrix* src, decx::_Matrix* dst, const int scan_mode, de::DH* handle)
+template <bool _only_scan_h>
+static void decx::calc::cuda_matrix_integral_uint8_i32(decx::_Matrix* src, decx::_Matrix* dst, const int scan_mode)
 {
     decx::cuda_stream* S = NULL;
-    decx::cuda_event* E = NULL;
     S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
     if (S == NULL) {
-        decx::err::CUDA_Stream_access_fail<_print>(handle);
+        Print_Error_Message(4, CUDA_STREAM_ACCESS_FAIL);
         return;
     }
+    decx::cuda_event* E = NULL;
     E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
     if (E == NULL) {
-        decx::err::CUDA_Event_access_fail<_print>(handle);
+        Print_Error_Message(4, CUDA_EVENT_ACCESS_FAIL);
         return;
     }
 
     decx::scan::cuda_scan2D_config config;
 
-    config.generate_scan_config<_print, uint8_t, int>(make_uint2(src->Width(), src->Height()), S, handle, scan_mode, true);
+    config.generate_scan_config<uint8_t, int>(make_uint2(src->Width(), src->Height()), S, scan_mode, true);
 
     decx::Ptr2D_Info<void> src_ptr2D_info = config.get_raw_dev_ptr_src();
     decx::Ptr2D_Info<void> dst_Ptr2D_info = config.get_raw_dev_ptr_dst();
@@ -205,6 +206,8 @@ static void decx::calc::cuda_matrix_integral_uint8_i32(decx::_Matrix* src, decx:
 
     S->detach();
     E->detach();
+
+    config.release_buffer<uint8_t>(false);
 }
 
 
@@ -212,27 +215,27 @@ static void decx::calc::cuda_matrix_integral_uint8_i32(decx::_Matrix* src, decx:
 // -------------------------------------------------- vertically scan ----------------------------------------------------------
 
 
-template <bool _print>
-static void decx::calc::cuda_matrix_integral_v_fp32(decx::_Matrix* src, decx::_Matrix* dst, const int scan_mode, de::DH* handle)
+static void decx::calc::cuda_matrix_integral_v_fp32(decx::_Matrix* src, decx::_Matrix* dst, const int scan_mode)
 {
     const uint2 proc_dims = make_uint2(src->Pitch(), src->Height());
     const uint32_t pitch_v4 = src->get_layout().pitch / 4;
 
     decx::cuda_stream* S = NULL;
-    decx::cuda_event* E = NULL;
     S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
     if (S == NULL) {
-        decx::err::CUDA_Stream_access_fail<_print>(handle);
+        Print_Error_Message(4, CUDA_STREAM_ACCESS_FAIL);
         return;
     }
+    decx::cuda_event* E = NULL;
     E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
     if (E == NULL) {
-        decx::err::CUDA_Event_access_fail<_print>(handle);
+        Print_Error_Message(4, CUDA_EVENT_ACCESS_FAIL);
         return;
     }
+
     decx::scan::cuda_scan2D_config config;
 
-    config.generate_scan_config<_print, float, float>(make_uint2(src->Width(), src->Height()), S, handle, scan_mode, false);
+    config.generate_scan_config<float, float>(make_uint2(src->Width(), src->Height()), S, scan_mode, false);
 
     decx::Ptr2D_Info<void> src_ptr2D_info = config.get_raw_dev_ptr_src();
     decx::Ptr2D_Info<void> dst_Ptr2D_info = config.get_raw_dev_ptr_dst();
@@ -254,29 +257,30 @@ static void decx::calc::cuda_matrix_integral_v_fp32(decx::_Matrix* src, decx::_M
 
     S->detach();
     E->detach();
+
+    config.release_buffer<float>(false);
 }
 
 
 
-template <bool _print>
-static void decx::calc::cuda_matrix_integral_v_fp16(decx::_Matrix* src, decx::_Matrix* dst, const int scan_mode, de::DH* handle)
+static void decx::calc::cuda_matrix_integral_v_fp16(decx::_Matrix* src, decx::_Matrix* dst, const int scan_mode)
 {
     decx::cuda_stream* S = NULL;
-    decx::cuda_event* E = NULL;
     S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
     if (S == NULL) {
-        decx::err::CUDA_Stream_access_fail<_print>(handle);
+        Print_Error_Message(4, CUDA_STREAM_ACCESS_FAIL);
         return;
     }
+    decx::cuda_event* E = NULL;
     E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
     if (E == NULL) {
-        decx::err::CUDA_Event_access_fail<_print>(handle);
+        Print_Error_Message(4, CUDA_EVENT_ACCESS_FAIL);
         return;
     }
 
     decx::scan::cuda_scan2D_config config;
 
-    config.generate_scan_config<_print, de::Half, float>(make_uint2(src->Width(), src->Height()), S, handle, scan_mode, false);
+    config.generate_scan_config<de::Half, float>(make_uint2(src->Width(), src->Height()), S, scan_mode, false);
 
     decx::Ptr2D_Info<void> src_ptr2D_info = config.get_raw_dev_ptr_src();
     decx::Ptr2D_Info<void> dst_Ptr2D_info = config.get_raw_dev_ptr_dst();
@@ -298,29 +302,30 @@ static void decx::calc::cuda_matrix_integral_v_fp16(decx::_Matrix* src, decx::_M
 
     S->detach();
     E->detach();
+
+    config.release_buffer<de::Half>(false);
 }
 
 
 
-template <bool _print>
-static void decx::calc::cuda_matrix_integral_v_uint8_i32(decx::_Matrix* src, decx::_Matrix* dst, const int scan_mode, de::DH* handle)
+static void decx::calc::cuda_matrix_integral_v_uint8_i32(decx::_Matrix* src, decx::_Matrix* dst, const int scan_mode)
 {
     decx::cuda_stream* S = NULL;
-    decx::cuda_event* E = NULL;
     S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
     if (S == NULL) {
-        decx::err::CUDA_Stream_access_fail<_print>(handle);
+        Print_Error_Message(4, CUDA_STREAM_ACCESS_FAIL);
         return;
     }
+    decx::cuda_event* E = NULL;
     E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
     if (E == NULL) {
-        decx::err::CUDA_Event_access_fail<_print>(handle);
+        Print_Error_Message(4, CUDA_EVENT_ACCESS_FAIL);
         return;
     }
 
     decx::scan::cuda_scan2D_config config;
 
-    config.generate_scan_config<_print, uint8_t, int>(make_uint2(src->Width(), src->Height()), S, handle, scan_mode, false);
+    config.generate_scan_config<uint8_t, int>(make_uint2(src->Width(), src->Height()), S, scan_mode, false);
 
     decx::Ptr2D_Info<void> src_ptr2D_info = config.get_raw_dev_ptr_src();
     decx::Ptr2D_Info<void> dst_Ptr2D_info = config.get_raw_dev_ptr_dst();
@@ -342,34 +347,37 @@ static void decx::calc::cuda_matrix_integral_v_uint8_i32(decx::_Matrix* src, dec
 
     S->detach();
     E->detach();
+
+    config.release_buffer<uint8_t>(false);
 }
 
 
 
 
-template <bool _print, bool _only_scan_h>
-static void decx::calc::cuda_matrix_dev_integral_fp32(decx::_GPU_Matrix* src, decx::_GPU_Matrix* dst, const int scan_mode, de::DH* handle)
+template <bool _only_scan_h>
+static void decx::calc::cuda_matrix_dev_integral_fp32(decx::_GPU_Matrix* src, decx::_GPU_Matrix* dst, const int scan_mode)
 {
     const uint2 proc_dims = make_uint2(src->Pitch(), src->Height());
     const uint32_t pitch_v4 = src->get_layout().pitch / 4;
 
     decx::cuda_stream* S = NULL;
-    decx::cuda_event* E = NULL;
     S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
     if (S == NULL) {
-        decx::err::CUDA_Stream_access_fail<_print>(handle);
+        Print_Error_Message(4, CUDA_STREAM_ACCESS_FAIL);
         return;
     }
+    decx::cuda_event* E = NULL;
     E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
     if (E == NULL) {
-        decx::err::CUDA_Event_access_fail<_print>(handle);
+        Print_Error_Message(4, CUDA_EVENT_ACCESS_FAIL);
         return;
     }
+
     decx::scan::cuda_scan2D_config config;
 
-    config.generate_scan_config<_print, float, float>(decx::Ptr2D_Info<void>(src->Mat, make_uint2(src->Pitch(), src->Height())),
+    config.generate_scan_config<float, float>(decx::Ptr2D_Info<void>(src->Mat, make_uint2(src->Pitch(), src->Height())),
         decx::Ptr2D_Info<void>(dst->Mat, make_uint2(dst->Pitch(), dst->Height())),
-        make_uint2(src->Width(), src->Height()), S, handle, scan_mode, true);
+        make_uint2(src->Width(), src->Height()), S, scan_mode, true);
 
     decx::scan::cuda_scan2D_fp32_caller_Async<_only_scan_h>(&config, S);
 
@@ -378,33 +386,34 @@ static void decx::calc::cuda_matrix_dev_integral_fp32(decx::_GPU_Matrix* src, de
 
     S->detach();
     E->detach();
+
+    config.release_buffer<float>(true);
 }
 
 
-
-template <bool _print>
-static void decx::calc::cuda_matrix_dev_integral_v_fp32(decx::_GPU_Matrix* src, decx::_GPU_Matrix* dst, const int scan_mode, de::DH* handle)
+static void decx::calc::cuda_matrix_dev_integral_v_fp32(decx::_GPU_Matrix* src, decx::_GPU_Matrix* dst, const int scan_mode)
 {
     const uint2 proc_dims = make_uint2(src->Pitch(), src->Height());
     const uint32_t pitch_v4 = src->get_layout().pitch / 4;
 
     decx::cuda_stream* S = NULL;
-    decx::cuda_event* E = NULL;
     S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
     if (S == NULL) {
-        decx::err::CUDA_Stream_access_fail<_print>(handle);
+        Print_Error_Message(4, CUDA_STREAM_ACCESS_FAIL);
         return;
     }
+    decx::cuda_event* E = NULL;
     E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
     if (E == NULL) {
-        decx::err::CUDA_Event_access_fail<_print>(handle);
+        Print_Error_Message(4, CUDA_EVENT_ACCESS_FAIL);
         return;
     }
+
     decx::scan::cuda_scan2D_config config;
 
-    config.generate_scan_config<_print, float, float>(decx::Ptr2D_Info<void>(src->Mat, make_uint2(src->Pitch(), src->Height())),
+    config.generate_scan_config<float, float>(decx::Ptr2D_Info<void>(src->Mat, make_uint2(src->Pitch(), src->Height())),
         decx::Ptr2D_Info<void>(dst->Mat, make_uint2(dst->Pitch(), dst->Height())),
-        make_uint2(src->Width(), src->Height()), S, handle, scan_mode, false);
+        make_uint2(src->Width(), src->Height()), S, scan_mode, false);
 
     decx::scan::cuda_scan2D_v_fp32_caller_Async(&config, S);
 
@@ -413,31 +422,33 @@ static void decx::calc::cuda_matrix_dev_integral_v_fp32(decx::_GPU_Matrix* src, 
 
     S->detach();
     E->detach();
+
+    config.release_buffer<de::Half>(true);
 }
 
 
 
-template <bool _print, bool _only_scan_h>
-static void decx::calc::cuda_matrix_dev_integral_fp16(decx::_GPU_Matrix* src, decx::_GPU_Matrix* dst, const int scan_mode, de::DH* handle)
+template <bool _only_scan_h>
+static void decx::calc::cuda_matrix_dev_integral_fp16(decx::_GPU_Matrix* src, decx::_GPU_Matrix* dst, const int scan_mode)
 {
     decx::cuda_stream* S = NULL;
-    decx::cuda_event* E = NULL;
     S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
     if (S == NULL) {
-        decx::err::CUDA_Stream_access_fail<_print>(handle);
+        Print_Error_Message(4, CUDA_STREAM_ACCESS_FAIL);
         return;
     }
+    decx::cuda_event* E = NULL;
     E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
     if (E == NULL) {
-        decx::err::CUDA_Event_access_fail<_print>(handle);
+        Print_Error_Message(4, CUDA_EVENT_ACCESS_FAIL);
         return;
     }
 
     decx::scan::cuda_scan2D_config config;
 
-    config.generate_scan_config<_print, de::Half, float>(decx::Ptr2D_Info<void>(src->Mat, make_uint2(src->Pitch(), src->Height())),
+    config.generate_scan_config<de::Half, float>(decx::Ptr2D_Info<void>(src->Mat, make_uint2(src->Pitch(), src->Height())),
         decx::Ptr2D_Info<void>(dst->Mat, make_uint2(dst->Pitch(), dst->Height())),
-        make_uint2(src->Width(), src->Height()), S, handle, scan_mode, true);
+        make_uint2(src->Width(), src->Height()), S, scan_mode, true);
 
     decx::scan::cuda_scan2D_fp16_fp32_caller_Async<_only_scan_h>(&config, S);
 
@@ -446,31 +457,31 @@ static void decx::calc::cuda_matrix_dev_integral_fp16(decx::_GPU_Matrix* src, de
 
     S->detach();
     E->detach();
+
+    config.release_buffer<de::Half>(true);
 }
 
 
-
-template <bool _print>
-static void decx::calc::cuda_matrix_dev_integral_v_fp16(decx::_GPU_Matrix* src, decx::_GPU_Matrix* dst, const int scan_mode, de::DH* handle)
+static void decx::calc::cuda_matrix_dev_integral_v_fp16(decx::_GPU_Matrix* src, decx::_GPU_Matrix* dst, const int scan_mode)
 {
     decx::cuda_stream* S = NULL;
-    decx::cuda_event* E = NULL;
     S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
     if (S == NULL) {
-        decx::err::CUDA_Stream_access_fail<_print>(handle);
+        Print_Error_Message(4, CUDA_STREAM_ACCESS_FAIL);
         return;
     }
+    decx::cuda_event* E = NULL;
     E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
     if (E == NULL) {
-        decx::err::CUDA_Event_access_fail<_print>(handle);
+        Print_Error_Message(4, CUDA_EVENT_ACCESS_FAIL);
         return;
     }
 
     decx::scan::cuda_scan2D_config config;
 
-    config.generate_scan_config<_print, de::Half, float>(decx::Ptr2D_Info<void>(src->Mat, make_uint2(src->Pitch(), src->Height())),
+    config.generate_scan_config<de::Half, float>(decx::Ptr2D_Info<void>(src->Mat, make_uint2(src->Pitch(), src->Height())),
         decx::Ptr2D_Info<void>(dst->Mat, make_uint2(dst->Pitch(), dst->Height())),
-        make_uint2(src->Width(), src->Height()), S, handle, scan_mode, false);
+        make_uint2(src->Width(), src->Height()), S, scan_mode, false);
 
     decx::scan::cuda_scan2D_v_fp16_fp32_caller_Async(&config, S);
 
@@ -479,31 +490,33 @@ static void decx::calc::cuda_matrix_dev_integral_v_fp16(decx::_GPU_Matrix* src, 
 
     S->detach();
     E->detach();
+
+    config.release_buffer<de::Half>(true);
 }
 
 
 
-template <bool _print, bool _only_scan_h>
-static void decx::calc::cuda_matrix_dev_integral_uint8_i32(decx::_GPU_Matrix* src, decx::_GPU_Matrix* dst, const int scan_mode, de::DH* handle)
+template <bool _only_scan_h>
+static void decx::calc::cuda_matrix_dev_integral_uint8_i32(decx::_GPU_Matrix* src, decx::_GPU_Matrix* dst, const int scan_mode)
 {
     decx::cuda_stream* S = NULL;
-    decx::cuda_event* E = NULL;
     S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
     if (S == NULL) {
-        decx::err::CUDA_Stream_access_fail<_print>(handle);
+        Print_Error_Message(4, CUDA_STREAM_ACCESS_FAIL);
         return;
     }
+    decx::cuda_event* E = NULL;
     E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
     if (E == NULL) {
-        decx::err::CUDA_Event_access_fail<_print>(handle);
+        Print_Error_Message(4, CUDA_EVENT_ACCESS_FAIL);
         return;
     }
 
     decx::scan::cuda_scan2D_config config;
 
-    config.generate_scan_config<_print, uint8_t, int>(decx::Ptr2D_Info<void>(src->Mat, make_uint2(src->Pitch(), src->Height())),
+    config.generate_scan_config<uint8_t, int>(decx::Ptr2D_Info<void>(src->Mat, make_uint2(src->Pitch(), src->Height())),
         decx::Ptr2D_Info<void>(dst->Mat, make_uint2(dst->Pitch(), dst->Height())),
-        make_uint2(src->Width(), src->Height()), S, handle, scan_mode, true);
+        make_uint2(src->Width(), src->Height()), S, scan_mode, true);
 
     decx::scan::cuda_scan2D_u8_i32_caller_Async<_only_scan_h>(&config, S);
 
@@ -512,31 +525,31 @@ static void decx::calc::cuda_matrix_dev_integral_uint8_i32(decx::_GPU_Matrix* sr
 
     S->detach();
     E->detach();
+
+    config.release_buffer<uint8_t>(true);
 }
 
 
-
-template <bool _print>
-static void decx::calc::cuda_matrix_dev_integral_v_uint8_i32(decx::_GPU_Matrix* src, decx::_GPU_Matrix* dst, const int scan_mode, de::DH* handle)
+static void decx::calc::cuda_matrix_dev_integral_v_uint8_i32(decx::_GPU_Matrix* src, decx::_GPU_Matrix* dst, const int scan_mode)
 {
     decx::cuda_stream* S = NULL;
-    decx::cuda_event* E = NULL;
     S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
     if (S == NULL) {
-        decx::err::CUDA_Stream_access_fail<_print>(handle);
+        Print_Error_Message(4, CUDA_STREAM_ACCESS_FAIL);
         return;
     }
+    decx::cuda_event* E = NULL;
     E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
     if (E == NULL) {
-        decx::err::CUDA_Event_access_fail<_print>(handle);
+        Print_Error_Message(4, CUDA_EVENT_ACCESS_FAIL);
         return;
     }
 
     decx::scan::cuda_scan2D_config config;
 
-    config.generate_scan_config<_print, uint8_t, int>(decx::Ptr2D_Info<void>(src->Mat, make_uint2(src->Pitch(), src->Height())),
+    config.generate_scan_config<uint8_t, int>(decx::Ptr2D_Info<void>(src->Mat, make_uint2(src->Pitch(), src->Height())),
         decx::Ptr2D_Info<void>(dst->Mat, make_uint2(dst->Pitch(), dst->Height())),
-        make_uint2(src->Width(), src->Height()), S, handle, scan_mode, false);
+        make_uint2(src->Width(), src->Height()), S, scan_mode, false);
 
     decx::scan::cuda_scan2D_v_u8_i32_caller_Async(&config, S);
 
@@ -545,6 +558,8 @@ static void decx::calc::cuda_matrix_dev_integral_v_uint8_i32(decx::_GPU_Matrix* 
 
     S->detach();
     E->detach();
+
+    config.release_buffer<uint8_t>(true);
 }
 
 
@@ -552,11 +567,14 @@ static void decx::calc::cuda_matrix_dev_integral_v_uint8_i32(decx::_GPU_Matrix* 
 
 namespace decx
 {
-    namespace scan {
-        void Integral2D(decx::_Matrix* src, decx::_Matrix* dst, const int scan2D_mode, const int scan_calc_mode, de::DH* handle);
+    namespace scan 
+    {
+        template <bool _async_call>
+        void Integral2D(decx::_Matrix* src, decx::_Matrix* dst, const int scan2D_mode, const int scan_calc_mode, de::DH* handle, const uint32_t _stream_id = 0);
 
 
-        void dev_Integral2D(decx::_GPU_Matrix* src, decx::_GPU_Matrix* dst, const int scan2D_mode, const int scan_calc_mode, de::DH* handle);
+        template <bool _async_call>
+        void dev_Integral2D(decx::_GPU_Matrix* src, decx::_GPU_Matrix* dst, const int scan2D_mode, const int scan_calc_mode, de::DH* handle, const uint32_t _stream_id = 0);
     }
 }
 
@@ -564,10 +582,16 @@ namespace decx
 namespace de
 {
     namespace cuda {
-        _DECX_API_ void Integral(de::Matrix& src, de::Matrix& dst, const int scan2D_mode, const int scan_calc_mode);
+        _DECX_API_ de::DH Integral(de::Matrix& src, de::Matrix& dst, const int scan2D_mode, const int scan_calc_mode);
 
 
-        _DECX_API_ void Integral(de::GPU_Matrix& src, de::GPU_Matrix& dst, const int scan2D_mode, const int scan_calc_mode);
+        _DECX_API_ de::DH Integral(de::GPU_Matrix& src, de::GPU_Matrix& dst, const int scan2D_mode, const int scan_calc_mode);
+
+
+        _DECX_API_ de::DH Integral_Async(de::Matrix& src, de::Matrix& dst, const int scan2D_mode, const int scan_calc_mode, de::DecxStream& S);
+
+
+        _DECX_API_ de::DH Integral_Async(de::GPU_Matrix& src, de::GPU_Matrix& dst, const int scan2D_mode, const int scan_calc_mode, de::DecxStream& S);
     }
 }
 

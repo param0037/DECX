@@ -47,10 +47,10 @@ decx::reduce::GPUK::cu_block_reduce_cmp1D_fp32(const float4* __restrict     src,
     }
 
     if (_is_max) {
-        tmp1 = decx::reduce::GPUK::float4_reduce_max(_recv._vf);
+        tmp1 = decx::reduce::GPUK::float4_max(_recv._vf);
     }
     else {
-        tmp1 = decx::reduce::GPUK::float4_reduce_min(_recv._vf);
+        tmp1 = decx::reduce::GPUK::float4_min(_recv._vf);
     }
 
     // warp reducing
@@ -86,17 +86,92 @@ decx::reduce::GPUK::cu_block_reduce_cmp1D_fp32(const float4* __restrict     src,
     }
 }
 
-template __global__ void decx::reduce::GPUK::cu_block_reduce_cmp1D_fp32<true>(const float4* __restrict src, float* __restrict dst,
-    const uint64_t proc_len_v4, const uint64_t proc_len_v1, const float _fill_val);
-template __global__ void decx::reduce::GPUK::cu_block_reduce_cmp1D_fp32<false>(const float4* __restrict src, float* __restrict dst,
-    const uint64_t proc_len_v4, const uint64_t proc_len_v1, const float _fill_val);
+template __global__ void decx::reduce::GPUK::cu_block_reduce_cmp1D_fp32<true>(const float4* __restrict, float* __restrict, const uint64_t, const uint64_t, const float);
+template __global__ void decx::reduce::GPUK::cu_block_reduce_cmp1D_fp32<false>(const float4* __restrict, float* __restrict, const uint64_t, const uint64_t, const float);
+
+
+
+template <bool _is_max>
+__global__ void
+decx::reduce::GPUK::cu_block_reduce_cmp1D_fp64(const double2* __restrict     src, 
+                                               double* __restrict            dst, 
+                                               const uint64_t               proc_len_v2,
+                                               const uint64_t               proc_len_v1,
+                                               const double                  _fill_val)
+{
+    uint64_t LDG_dex = (uint64_t)threadIdx.x + (uint64_t)blockIdx.x * (uint64_t)blockDim.x;
+    uint16_t warp_lane_id = threadIdx.x & 0x1f;
+    uint16_t local_warp_id = threadIdx.x / 32;
+
+    // 8 effective values but extended to 32 for warp-level loading
+    /*
+    * Don't need to initialize the shared memory to all zero because the rest of the
+      array (with length of 32 - 8 = 24) is not invovled in the computation if the template
+      variable of the warp-level reduce fuction is set to 8
+    */  
+    __shared__ double warp_reduce_results[32];
+
+    decx::utils::_cuda_vec128 _recv;
+    _recv._vd = decx::utils::vec2_set1_fp64(_fill_val);
+    double tmp1, tmp2;
+
+    if (LDG_dex < proc_len_v2) 
+    {
+        _recv._vd = src[LDG_dex];
+        if (LDG_dex == proc_len_v2 - 1 && proc_len_v1 % 2 == 1) {
+            _recv._arrd[1] = _fill_val;
+        }
+    }
+
+    if (_is_max) {
+        tmp1 = decx::utils::cuda::__fp64_max(_recv._vd.x, _recv._vd.y);
+    }
+    else {
+        tmp1 = decx::utils::cuda::__fp64_min(_recv._vd.x, _recv._vd.y);
+    }
+
+    // warp reducing
+    if (_is_max) {
+        decx::reduce::GPUK::cu_warp_reduce_fp64<double(double, double), 32>(decx::utils::cuda::__fp64_max, &tmp1, &tmp2);
+    }
+    else {
+        decx::reduce::GPUK::cu_warp_reduce_fp64<double(double, double), 32>(decx::utils::cuda::__fp64_min, &tmp1, &tmp2);
+    }
+
+    if (warp_lane_id == 0) {
+        warp_reduce_results[local_warp_id] = tmp2;
+    }
+
+    __syncthreads();
+
+    // let the 0th warp execute the warp-reducing process
+    if (local_warp_id == 0) {
+        tmp1 = warp_reduce_results[warp_lane_id];
+        // synchronize this warp
+        __syncwarp(0xffffffff);
+
+        if (_is_max) {
+            decx::reduce::GPUK::cu_warp_reduce_fp64<double(double, double), 8>(decx::utils::cuda::__fp64_max, &tmp1, &tmp2);
+        }
+        else {
+            decx::reduce::GPUK::cu_warp_reduce_fp64<double(double, double), 8>(decx::utils::cuda::__fp64_min, &tmp1, &tmp2);
+        }
+
+        if (warp_lane_id == 0) {
+            dst[blockIdx.x] = tmp2;
+        }
+    }
+}
+
+template __global__ void decx::reduce::GPUK::cu_block_reduce_cmp1D_fp64<true>(const double2* __restrict, double* __restrict, const uint64_t, const uint64_t, const double);
+template __global__ void decx::reduce::GPUK::cu_block_reduce_cmp1D_fp64<false>(const double2* __restrict, double* __restrict, const uint64_t, const uint64_t, const double);
 
 
 
 template <bool _is_max>
 __global__ void
 decx::reduce::GPUK::cu_block_reduce_cmp1D_u8(const float4* __restrict     src, 
-                                             uint8_t* __restrict            dst, 
+                                             uint8_t* __restrict          dst, 
                                              const uint64_t               proc_len_v16,
                                              const uint64_t               proc_len_v1,
                                              const uint8_t                _fill_val)
@@ -263,3 +338,78 @@ template __global__ void decx::reduce::GPUK::cu_block_reduce_cmp1D_fp16<true>(co
     const uint64_t proc_len_v4, const uint64_t proc_len_v1, const __half _fill_val);
 template __global__ void decx::reduce::GPUK::cu_block_reduce_cmp1D_fp16<false>(const float4* __restrict src, __half* __restrict dst,
     const uint64_t proc_len_v4, const uint64_t proc_len_v1, const __half _fill_val);
+
+
+
+template <bool _is_max> __global__ void 
+decx::reduce::GPUK::cu_warp_reduce_cmp2D_1D_fp32(const float4 * __restrict   src, 
+                                                 float* __restrict           dst,
+                                                 const uint32_t              Wsrc_v4, 
+                                                 const uint2                 proc_dims,
+                                                 const float                 _fill_val)
+{
+    uint32_t tidx = threadIdx.x + blockDim.x * blockIdx.x;
+    uint32_t tidy = threadIdx.y + blockDim.y * blockIdx.y;
+
+    uint64_t LDG_dex = Wsrc_v4 * tidy + tidx;
+    uint64_t STG_dex = blockIdx.y * gridDim.x + blockIdx.x;
+
+    uint32_t proc_W_v4 = decx::utils::ceil<uint32_t>(proc_dims.x, 4);
+
+    /**
+    * Shared memory for the reduced results of 8 warps in a block
+    * Extended to 32 for warp-level loading
+    * No need to set the remaining values to zero since for the warp reducing
+    * all the redundancy will not invovled with correct parameters set
+    */
+    __shared__ float _sh_warp_reduce_res[32];
+
+    decx::utils::_cuda_vec128 _recv;
+    _recv._vf = decx::utils::vec4_set1_fp32(_fill_val);
+
+    float _thread_sum = 0, _warp_reduce_res = 0;
+
+    if (tidx < proc_W_v4 && tidy < proc_dims.y) {
+        _recv._vf = src[LDG_dex];
+        if (tidx == proc_W_v4 - 1) {
+            for (int i = 4 - (proc_W_v4 * 4 - proc_dims.x); i < 4; ++i) {
+                _recv._arrf[i] = _fill_val;
+            }
+        }
+    }
+
+    if (_is_max) {
+        _thread_sum = decx::reduce::GPUK::float4_max(_recv._vf);
+        decx::reduce::GPUK::cu_warp_reduce_fp32<float(float, float), 32>(decx::utils::cuda::__fp32_max, &_thread_sum, &_warp_reduce_res);
+    }
+    else {
+        _thread_sum = decx::reduce::GPUK::float4_min(_recv._vf);
+        decx::reduce::GPUK::cu_warp_reduce_fp32<float(float, float), 32>(decx::utils::cuda::__fp32_min, &_thread_sum, &_warp_reduce_res);
+    }
+
+    if (threadIdx.x == 0) {
+        _sh_warp_reduce_res[threadIdx.y] = _warp_reduce_res;
+    }
+
+    __syncthreads();
+
+    if (threadIdx.y == 0) {
+        _thread_sum = _sh_warp_reduce_res[threadIdx.x];
+        __syncwarp(0xffffffff);
+
+        if (_is_max) {
+            decx::reduce::GPUK::cu_warp_reduce_fp32<float(float, float), 8>(decx::utils::cuda::__fp32_max, &_thread_sum, &_warp_reduce_res);
+        }
+        else {
+            decx::reduce::GPUK::cu_warp_reduce_fp32<float(float, float), 8>(decx::utils::cuda::__fp32_min, &_thread_sum, &_warp_reduce_res);
+        }
+
+        if (threadIdx.x == 0) {
+            dst[STG_dex] = _warp_reduce_res;
+        }
+    }
+}
+
+
+template __global__ void decx::reduce::GPUK::cu_warp_reduce_cmp2D_1D_fp32<true>(const float4* __restrict, float* __restrict, const uint32_t, const uint2, const float); 
+template __global__ void decx::reduce::GPUK::cu_warp_reduce_cmp2D_1D_fp32<false>(const float4* __restrict, float* __restrict, const uint32_t, const uint2, const float);

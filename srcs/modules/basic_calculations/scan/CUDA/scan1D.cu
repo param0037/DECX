@@ -14,8 +14,8 @@
 
 
 
-template <bool _print, uint32_t _align, typename _type_in, typename _type_out>
-void decx::scan::cuda_scan1D_config::generate_scan_config(const uint64_t _proc_length, decx::cuda_stream* S, de::DH* handle, const int scan_mode)
+template <uint32_t _align, typename _type_in, typename _type_out>
+void decx::scan::cuda_scan1D_config::generate_scan_config(const uint64_t _proc_length, decx::cuda_stream* S, const int scan_mode)
 {
     this->_scan_mode = scan_mode;
 
@@ -24,47 +24,39 @@ void decx::scan::cuda_scan1D_config::generate_scan_config(const uint64_t _proc_l
     this->_block_num = decx::utils::ceil<uint64_t>(this->_length / _align, _WARP_SCAN_BLOCK_SIZE_);
 
     if (decx::alloc::_device_malloc(&this->_dev_dst, this->_length * sizeof(_type_out), true, S)) {
-        decx::err::device_AllocateFailure<_print>(handle);
+        Print_Error_Message(4, DEV_ALLOC_FAIL);
         return;
     }
-
 
     if (decx::alloc::_device_malloc(&this->_dev_tmp, this->_length * sizeof(de::Half), true, S)) {
-        decx::err::device_AllocateFailure<_print>(handle);
+        Print_Error_Message(4, DEV_ALLOC_FAIL);
         return;
     }
 
 
-    if (decx::alloc::_device_malloc(&this->_dev_status, this->_block_num * sizeof(float4), true, S))
-    {
-        decx::err::device_AllocateFailure<_print>(handle);
+    if (decx::alloc::_device_malloc(&this->_dev_status, this->_block_num * sizeof(float4), true, S)) {
+        Print_Error_Message(4, DEV_ALLOC_FAIL);
         return;
     }
 
     if (decx::alloc::_device_malloc(&this->_dev_src, this->_length * sizeof(_type_in), true, S)) {
-        decx::err::device_AllocateFailure<_print>(handle);
+        Print_Error_Message(4, DEV_ALLOC_FAIL);
         return;
     }
 }
 
 
-template void decx::scan::cuda_scan1D_config::generate_scan_config<true, 8, de::Half, float>(const uint64_t _proc_length, decx::cuda_stream* S, de::DH* handle, const int scan_mode);
-template void decx::scan::cuda_scan1D_config::generate_scan_config<false, 8, de::Half, float>(const uint64_t _proc_length, decx::cuda_stream* S, de::DH* handle, const int scan_mode);
-
-template void decx::scan::cuda_scan1D_config::generate_scan_config<true, 4, float>(const uint64_t _proc_length, decx::cuda_stream* S, de::DH* handle, const int scan_mode);
-template void decx::scan::cuda_scan1D_config::generate_scan_config<false, 4, float>(const uint64_t _proc_length, decx::cuda_stream* S, de::DH* handle, const int scan_mode);
-
-template void decx::scan::cuda_scan1D_config::generate_scan_config<true, 8, uint8_t, int>(const uint64_t _proc_length, decx::cuda_stream* S, de::DH* handle, const int scan_mode);
-template void decx::scan::cuda_scan1D_config::generate_scan_config<false, 8, uint8_t, int>(const uint64_t _proc_length, decx::cuda_stream* S, de::DH* handle, const int scan_mode);
+template void decx::scan::cuda_scan1D_config::generate_scan_config<8, de::Half, float>(const uint64_t, decx::cuda_stream*, const int);
+template void decx::scan::cuda_scan1D_config::generate_scan_config<4, float>(const uint64_t, decx::cuda_stream*, const int);
+template void decx::scan::cuda_scan1D_config::generate_scan_config<8, uint8_t, int>(const uint64_t, decx::cuda_stream*, const int);
 
 
-template <bool _print, uint32_t _align, typename _type_in, typename _type_out>
-void decx::scan::cuda_scan1D_config::generate_scan_config(decx::PtrInfo<void> dev_src, 
-                                                          decx::PtrInfo<void> dev_dst, 
-                                                          const uint64_t _proc_length,
-                                                          decx::cuda_stream* S, 
-                                                          de::DH* handle, 
-                                                          const int scan_mode)
+template <uint32_t _align, typename _type_in, typename _type_out>
+void decx::scan::cuda_scan1D_config::generate_scan_config(decx::PtrInfo<void>   dev_src, 
+                                                          decx::PtrInfo<void>   dev_dst, 
+                                                          const uint64_t        _proc_length,
+                                                          decx::cuda_stream*    S, 
+                                                          const int             scan_mode)
 {
     this->_scan_mode = scan_mode;
 
@@ -76,32 +68,20 @@ void decx::scan::cuda_scan1D_config::generate_scan_config(decx::PtrInfo<void> de
     this->_dev_src = dev_src;
     if (std::is_same<_type_in, uint8_t>::value) {
         if (decx::alloc::_device_malloc(&this->_dev_tmp, this->_length * sizeof(de::Half), true, S)) {
-            decx::err::device_AllocateFailure<_print>(handle);
+            Print_Error_Message(4, DEV_ALLOC_FAIL);
             return;
         }
     }
 
-    if (decx::alloc::_device_malloc(&this->_dev_status, this->_block_num * sizeof(float4), true, S))
-    {
-        decx::err::device_AllocateFailure<_print>(handle);
+    if (decx::alloc::_device_malloc(&this->_dev_status, this->_block_num * sizeof(float4), true, S)) {
+        Print_Error_Message(4, DEV_ALLOC_FAIL);
         return;
     }
 }
 
-template void decx::scan::cuda_scan1D_config::generate_scan_config<true, 8, de::Half, float>(decx::PtrInfo<void> dev_src, decx::PtrInfo<void> dev_dst, const uint64_t _proc_length,
-    decx::cuda_stream* S, de::DH* handle, const int scan_mode);
-template void decx::scan::cuda_scan1D_config::generate_scan_config<false, 8, de::Half, float>(decx::PtrInfo<void> dev_src, decx::PtrInfo<void> dev_dst, const uint64_t _proc_length,
-    decx::cuda_stream* S, de::DH* handle, const int scan_mode);
-
-template void decx::scan::cuda_scan1D_config::generate_scan_config<true, 4, float, float>(decx::PtrInfo<void> dev_src, decx::PtrInfo<void> dev_dst, const uint64_t _proc_length,
-    decx::cuda_stream* S, de::DH* handle, const int scan_mode);
-template void decx::scan::cuda_scan1D_config::generate_scan_config<true, 4, float, float>(decx::PtrInfo<void> dev_src, decx::PtrInfo<void> dev_dst, const uint64_t _proc_length,
-    decx::cuda_stream* S, de::DH* handle, const int scan_mode);
-
-template void decx::scan::cuda_scan1D_config::generate_scan_config<true, 8, uint8_t, int>(decx::PtrInfo<void> dev_src, decx::PtrInfo<void> dev_dst, const uint64_t _proc_length,
-    decx::cuda_stream* S, de::DH* handle, const int scan_mode);
-template void decx::scan::cuda_scan1D_config::generate_scan_config<true, 8, uint8_t, int>(decx::PtrInfo<void> dev_src, decx::PtrInfo<void> dev_dst, const uint64_t _proc_length,
-    decx::cuda_stream* S, de::DH* handle, const int scan_mode);
+template void decx::scan::cuda_scan1D_config::generate_scan_config<8, de::Half, float>(decx::PtrInfo<void>, decx::PtrInfo<void>, const uint64_t, decx::cuda_stream*, const int);
+template void decx::scan::cuda_scan1D_config::generate_scan_config<4, float, float>(decx::PtrInfo<void>, decx::PtrInfo<void>, const uint64_t, decx::cuda_stream*, const int);
+template void decx::scan::cuda_scan1D_config::generate_scan_config<8, uint8_t, int>(decx::PtrInfo<void>, decx::PtrInfo<void>, const uint64_t, decx::cuda_stream*, const int);
 
 
 

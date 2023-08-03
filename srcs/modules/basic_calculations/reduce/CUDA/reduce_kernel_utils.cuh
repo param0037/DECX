@@ -18,6 +18,8 @@
 
 
 #define _REDUCE1D_BLOCK_DIM_ 32 * 8
+#define _REDUCE2D_BLOCK_DIM_X_ 32
+#define _REDUCE2D_BLOCK_DIM_Y_ 8
 
 namespace decx
 {
@@ -25,15 +27,32 @@ namespace reduce
 {
     namespace GPUK 
     {
-        template <typename TypeOP, uint32_t engaged_thread>
-        //the result is stored under the 0th thread
+        template <typename TypeOP, uint32_t reduce_length, uint32_t _parallel_lane = 1>
+        //the result is stored under the 0th thread of a warp
         __device__ __inline__ void cu_warp_reduce_fp32(TypeOP& _op, const float* _src, float* _dst)
         {
             float tmp;
             float accu = *_src;
+            constexpr uint32_t _lane_reduce_len = reduce_length / _parallel_lane;
 #pragma unroll 
-            for (int32_t i = engaged_thread / 2; i > 0; i >>= 1) {
-                tmp = __shfl_down_sync(0xffffffff, accu, i, 32);
+            for (int32_t i = _lane_reduce_len / 2; i > 0; i >>= 1) {
+                tmp = __shfl_down_sync(0xffffffff, accu, i, _lane_reduce_len);
+                accu = _op(tmp, accu);
+            }
+            *_dst = accu;
+        }
+
+
+        template <typename TypeOP, uint32_t reduce_length, uint32_t _parallel_lane = 1>
+        //the result is stored under the 0th thread of a warp
+        __device__ __inline__ void cu_warp_reduce_fp64(TypeOP& _op, const double* _src, double* _dst)
+        {
+            double tmp;
+            double accu = *_src;
+            constexpr uint32_t _lane_reduce_len = reduce_length / _parallel_lane;
+#pragma unroll 
+            for (int32_t i = _lane_reduce_len / 2; i > 0; i >>= 1) {
+                tmp = __shfl_down_sync(0xffffffff, accu, i, _lane_reduce_len);
                 accu = _op(tmp, accu);
             }
             *_dst = accu;
@@ -70,7 +89,7 @@ namespace reduce
         }
 
 
-        __device__ __inline__ float float4_reduce_max(const float4 _in)
+        __device__ __inline__ float float4_max(const float4 _in)
         {
             float res = _in.x;
 
@@ -110,7 +129,7 @@ namespace reduce
         }
 
 
-        __device__ __inline__ float float4_reduce_min(const float4 _in)
+        __device__ __inline__ float float4_min(const float4 _in)
         {
             float res = _in.x;
 
@@ -122,7 +141,7 @@ namespace reduce
         }
 
 
-        __device__ __inline__ float float4_reduce_sum(const float4 _in)
+        __device__ __inline__ float float4_sum(const float4 _in)
         {
             float res = _in.x;
             res = __fadd_rn(_in.y, res);
@@ -144,7 +163,7 @@ namespace reduce
         }
 
 
-        __device__ __inline__ int32_t int4_reduce_sum(const int4 _in)
+        __device__ __inline__ int32_t int4_sum(const int4 _in)
         {
             int32_t res = _in.x;
             res = _in.y + res;
@@ -155,7 +174,7 @@ namespace reduce
         }
 
 
-        __device__ __inline__ int32_t uchar16_reduce_sum(const int4 _in)
+        __device__ __inline__ int32_t uchar16_sum(const int4 _in)
         {
             int32_t _accu = __vsadu4(_in.x, 0);
             _accu = _accu + __vsadu4(_in.y, 0);

@@ -70,7 +70,24 @@ const decx::_tensor_layout& decx::_GPU_TensorArray::get_layout() const
 
 void decx::_GPU_TensorArray::alloc_data_space()
 {
-    if (decx::alloc::_device_malloc(&this->TensArr, this->total_bytes)) {
+    decx::cuda_stream* S = NULL;
+    S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
+    if (S == NULL) {
+        SetConsoleColor(4);
+        printf("Internal error.\n");
+        ResetConsoleColor;
+        return;
+    }
+    decx::cuda_event* E = NULL;
+    E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
+    if (E == NULL) {
+        SetConsoleColor(4);
+        printf("Internal error.\n");
+        ResetConsoleColor;
+        return;
+    }
+
+    if (decx::alloc::_device_malloc(&this->TensArr, this->total_bytes, true, S)) {
         Print_Error_Message(4, "Fail to allocate memory for GPU_TensorArray on device\n");
         exit(-1);
     }
@@ -84,16 +101,41 @@ void decx::_GPU_TensorArray::alloc_data_space()
     for (uint i = 1; i < this->tensor_num; ++i) {
         this->TensptrArr.ptr[i] = (uint8_t*)this->TensptrArr.ptr[i - 1] + this->_gap * this->_layout._single_element_size;
     }
+
+    E->event_record(S);
+    E->synchronize();
+
+    S->detach();
+    E->detach();
 }
 
 
 
 void decx::_GPU_TensorArray::re_alloc_data_space()
 {
+    decx::cuda_stream* S = NULL;
+    S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
+    if (S == NULL) {
+        SetConsoleColor(4);
+        printf("Internal error.\n");
+        ResetConsoleColor;
+        return;
+    }
+    decx::cuda_event* E = NULL;
+    E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
+    if (E == NULL) {
+        SetConsoleColor(4);
+        printf("Internal error.\n");
+        ResetConsoleColor;
+        return;
+    }
+
     if (decx::alloc::_device_realloc(&this->TensArr, this->total_bytes)) {
         Print_Error_Message(4, "Fail to re-allocate memory for GPU_TensorArray on device\n");
         exit(-1);
     }
+
+    checkCudaErrors(cudaMemsetAsync(this->TensArr.ptr, 0, this->total_bytes, S->get_raw_stream_ref()));
 
     if (decx::alloc::_host_virtual_page_realloc<void*>(&this->TensptrArr, this->tensor_num * sizeof(void*))) {
         Print_Error_Message(4, "Fail to re-allocate memory for TensorArray on host\n");
@@ -103,6 +145,12 @@ void decx::_GPU_TensorArray::re_alloc_data_space()
     for (uint i = 1; i < this->tensor_num; ++i) {
         this->TensptrArr.ptr[i] = (uint8_t*)this->TensptrArr.ptr[i - 1] + this->_gap * this->_layout._single_element_size;
     }
+
+    E->event_record(S);
+    E->synchronize();
+
+    S->detach();
+    E->detach();
 }
 
 

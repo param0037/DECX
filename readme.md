@@ -5,17 +5,31 @@ A fast linear algebra, computer vision, and mathematic library, based on CUDA an
 1. Linear Algebra (Including matrix multiplication, transposing, scanning(i.e. prefix sum), dot product, and so on)
 2. Digital signal processing (Including fast Fourier transformation applied on 1D and 2D array, frequency domain filters, and so on)
 3. Computer vision (Including Edge detectors, color space transformation, filters, and so on)
-4. Neural Network components (Including convolution on multi-channel array, executing functions including sigmoid(developing))
+4. Neural Network components (Including convolution on the multi-channel array, executing functions including sigmoid(developing))
 
-# Update 16/7/2023
-1. Divide the project according into components according to their functionalities.
-2. Add CUDA scan algorithm based on decoupled lookback method [1], which gives perfect performance.
+# Changelog
+## Update 16/7/2023
+1. Divide the project according to components according to their functionalities.
+2. Add CUDA scan algorithms based on decoupled lookback method [1], which gives perfect performance.
+
+## Update 28/7/2023
+1. Add reduction algorithms that will be further integrated in summation, min/max, dot product, etc.
+2. Add asynchronous part of memory copying (between host and device)
+
+# Upcoming optimizations
+1. Summation and global comparisons on vector and matrix (full matrix, horizontal and vertical)
+2. Adapt titling technique to make maximum utilization of L1 and L2 cache, to speed up memory access in CPU-based FFT.
+3. Add warp-level primitives to CUDA-based FFT kernels to speed up short-length FFT transforms.
+4. More asynchronous APIs are under development.
+5. CmakeLists for building on Linux.
 
 # How to build
 ## 1. Windows
-   Open cmd or powershell right in the folder where the project is located. Input "config" first and hit enter, waiting for the process
-   to complete. Then input "build" if there is no error occurs in the configuration, waiting until the project is fully built, which may
+   Open Cmd or PowerShell right in the folder where the project is located. Input "config" first and hit enter, waiting for the process
+   to complete. Then input "build" if there is no error in the configuration, waiting until the project is fully built may
    take some time.
+## 2. Linux
+   Coming soon.
 
 # References
 [1] Duane Merrill, Michael Garland "Single-pass Parallel Prefix Scan with Decoupled Look-back" Tuesday, March 1, 2016

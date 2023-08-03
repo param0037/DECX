@@ -71,12 +71,63 @@ decx::_GPU_Vector::~_GPU_Vector()
 
 void decx::_GPU_Vector::alloc_data_space()
 {
-    if (decx::alloc::_device_malloc<void>(&this->Vec, this->total_bytes)) {
+    decx::cuda_stream* S = NULL;
+    S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
+    if (S == NULL) {
+        Print_Error_Message(4, CUDA_STREAM_ACCESS_FAIL);
+        return;
+    }
+    decx::cuda_event* E = NULL;
+    E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
+    if (E == NULL) {
+        Print_Error_Message(4, CUDA_EVENT_ACCESS_FAIL);
+        return;
+    }
+
+    if (decx::alloc::_device_malloc<void>(&this->Vec, this->total_bytes, true, S)) {
         SetConsoleColor(4);
         printf("Vector on GPU malloc failed! Please check if there is enough space in your device.");
         ResetConsoleColor;
         return;
     }
+
+    E->event_record(S);
+    E->synchronize();
+
+    S->detach();
+    E->detach();
+}
+
+
+void decx::_GPU_Vector::re_alloc_data_space()
+{
+    decx::cuda_stream* S = NULL;
+    S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
+    if (S == NULL) {
+        Print_Error_Message(4, CUDA_STREAM_ACCESS_FAIL);
+        return;
+    }
+    decx::cuda_event* E = NULL;
+    E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
+    if (E == NULL) {
+        Print_Error_Message(4, CUDA_EVENT_ACCESS_FAIL);
+        return;
+    }
+
+    if (decx::alloc::_device_realloc<void>(&this->Vec, this->total_bytes)) {
+        SetConsoleColor(4);
+        printf("Vector on GPU malloc failed! Please check if there is enough space in your device.");
+        ResetConsoleColor;
+        return;
+    }
+
+    checkCudaErrors(cudaMemsetAsync(this->Vec.ptr, 0, this->total_bytes, S->get_raw_stream_ref()));
+
+    E->event_record(S);
+    E->synchronize();
+
+    S->detach();
+    E->detach();
 }
 
 
@@ -166,7 +217,6 @@ de::GPU_Vector& de::CreateGPUVectorRef() {
 de::GPU_Vector* de::CreateGPUVectorPtr() {
     return new decx::_GPU_Vector();
 }
-
 
 
 

@@ -80,11 +80,32 @@ void decx::_GPU_Tensor::_attribute_assign(const int _type, const uint _width, co
 
 void decx::_GPU_Tensor::alloc_data_space()
 {
-    if (decx::alloc::_device_malloc(&this->Tens, this->total_bytes)) {
+    decx::cuda_stream* S = NULL;
+    S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
+    if (S == NULL) {
+        SetConsoleColor(4);
+        printf("Internal error.\n");
+        ResetConsoleColor;
+        return;
+    }
+    decx::cuda_event* E = NULL;
+    E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
+    if (E == NULL) {
+        SetConsoleColor(4);
+        printf("Internal error.\n");
+        ResetConsoleColor;
+        return;
+    }
+    if (decx::alloc::_device_malloc(&this->Tens, this->total_bytes, true, S)) {
         Print_Error_Message(4, "Tensor malloc failed! Please check if there is enough space in your device.");
         exit(-1);
     }
-    checkCudaErrors(cudaMemset(this->Tens.ptr, 0, this->total_bytes));
+
+    E->event_record(S);
+    E->synchronize();
+
+    S->detach();
+    E->detach();
 }
 
 
@@ -92,11 +113,35 @@ void decx::_GPU_Tensor::alloc_data_space()
 
 void decx::_GPU_Tensor::re_alloc_data_space()
 {
+    decx::cuda_stream* S = NULL;
+    S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
+    if (S == NULL) {
+        SetConsoleColor(4);
+        printf("Internal error.\n");
+        ResetConsoleColor;
+        return;
+    }
+    decx::cuda_event* E = NULL;
+    E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
+    if (E == NULL) {
+        SetConsoleColor(4);
+        printf("Internal error.\n");
+        ResetConsoleColor;
+        return;
+    }
+
     if (decx::alloc::_device_realloc(&this->Tens, this->total_bytes)) {
         Print_Error_Message(4, "Tensor malloc failed! Please check if there is enough space in your device.");
         exit(-1);
     }
-    checkCudaErrors(cudaMemset(this->Tens.ptr, 0, this->total_bytes));
+
+    checkCudaErrors(cudaMemsetAsync(this->Tens.ptr, 0, this->total_bytes, S->get_raw_stream_ref()));
+
+    E->event_record(S);
+    E->synchronize();
+
+    S->detach();
+    E->detach();
 }
 
 

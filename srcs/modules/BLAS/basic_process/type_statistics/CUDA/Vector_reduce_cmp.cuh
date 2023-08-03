@@ -1,0 +1,356 @@
+/**
+*   ---------------------------------------------------------------------
+*   Author : Wayne Anderson
+*   Date   : 2021.04.16
+*   ---------------------------------------------------------------------
+*   This is a part of the open source program named "DECX", copyright c Wayne,
+*   2021.04.16, all right reserved.
+*   More information please visit https://github.com/param0037/DECX
+*/
+
+
+#ifndef _VECTOR_REDUCE_CMP_CUH_
+#define _VECTOR_REDUCE_CMP_CUH_
+
+
+#include "../../../../basic_calculations/reduce/CUDA/reduce_callers.cuh"
+#include "../../../../classes/Vector.h"
+#include "../../../../classes/GPU_Vector.h"
+#include "../../../../core/configs/config.h"
+#include "../../../../core/cudaStream_management/cudaEvent_queue.h"
+#include "../../../../classes/classes_util.h"
+
+
+namespace decx
+{
+    namespace reduce
+    {
+        template <bool _is_max>
+        static void vector_reduce_cmp_fp64(decx::_Vector* src, double* res);
+
+
+        template <bool _is_max>
+        static void vector_reduce_cmp_fp32(decx::_Vector* src, float* res);
+
+
+        template <bool _is_max>
+        static void vector_reduce_cmp_fp16(decx::_Vector* src, de::Half* res);
+
+
+        template <bool _is_max>
+        static void vector_reduce_cmp_u8(decx::_Vector* src, uint8_t* res);
+
+
+        template <bool _is_max>
+        static void dev_vector_reduce_cmp_fp64(decx::_GPU_Vector* src, double* res);
+
+
+        template <bool _is_max>
+        static void dev_vector_reduce_cmp_fp32(decx::_GPU_Vector* src, float* res);
+
+
+        template <bool _is_max>
+        static void dev_vector_reduce_cmp_fp16(decx::_GPU_Vector* src, de::Half* res);
+
+
+        template <bool _is_max>
+        static void dev_vector_reduce_cmp_u8(decx::_GPU_Vector* src, uint8_t* res);
+    }
+}
+
+
+template <bool _is_max>
+static void decx::reduce::vector_reduce_cmp_fp32(decx::_Vector* src, float* res)
+{
+    decx::cuda_stream* S = NULL;
+    S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
+    if (S == NULL) {
+        Print_Error_Message(4, CUDA_STREAM_ACCESS_FAIL);
+        return;
+    }
+    decx::cuda_event* E = NULL;
+    E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
+    if (E == NULL) {
+        Print_Error_Message(4, CUDA_EVENT_ACCESS_FAIL);
+        return;
+    }
+
+    decx::reduce::cuda_reduce1D_configs<float> _kp_configs;
+    _kp_configs.generate_configs(src->Len(), S);
+
+    _kp_configs.set_fill_val(((float*)src->Vec.ptr)[0]);
+
+    checkCudaErrors(cudaMemcpyAsync(_kp_configs.get_dev_tmp1().ptr, src->Vec.ptr, src->Len() * sizeof(float), cudaMemcpyHostToDevice,
+        S->get_raw_stream_ref()));
+
+    decx::reduce::cuda_reduce1D_cmp_fp32_caller_Async<false, _is_max>(&_kp_configs, S);
+
+    checkCudaErrors(cudaMemcpyAsync(res, _kp_configs.get_leading_MIF().mem, 1 * sizeof(float), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
+
+    E->event_record(S);
+    E->synchronize();
+
+    _kp_configs.release_buffer();
+}
+
+
+
+template <bool _is_max>
+static void decx::reduce::vector_reduce_cmp_fp64(decx::_Vector* src, double* res)
+{
+    decx::cuda_stream* S = NULL;
+    S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
+    if (S == NULL) {
+        Print_Error_Message(4, CUDA_STREAM_ACCESS_FAIL);
+        return;
+    }
+    decx::cuda_event* E = NULL;
+    E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
+    if (E == NULL) {
+        Print_Error_Message(4, CUDA_EVENT_ACCESS_FAIL);
+        return;
+    }
+
+    decx::reduce::cuda_reduce1D_configs<double> _kp_configs;
+    _kp_configs.generate_configs(src->Len(), S);
+
+    _kp_configs.set_fill_val(((double*)src->Vec.ptr)[0]);
+
+    checkCudaErrors(cudaMemcpyAsync(_kp_configs.get_dev_tmp1().ptr, src->Vec.ptr, src->Len() * sizeof(double), cudaMemcpyHostToDevice,
+        S->get_raw_stream_ref()));
+
+    decx::reduce::cuda_reduce1D_cmp_fp64_caller_Async<false, _is_max>(&_kp_configs, S);
+    
+    checkCudaErrors(cudaMemcpyAsync(res, _kp_configs.get_leading_MIF().mem, 1 * sizeof(double), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
+
+    E->event_record(S);
+    E->synchronize();
+
+    _kp_configs.release_buffer();
+}
+
+
+
+
+template <bool _is_max>
+static void decx::reduce::vector_reduce_cmp_fp16(decx::_Vector* src, de::Half* res)
+{
+    decx::cuda_stream* S = NULL;
+    S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
+    if (S == NULL) {
+        Print_Error_Message(4, CUDA_STREAM_ACCESS_FAIL);
+        return;
+    }
+    decx::cuda_event* E = NULL;
+    E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
+    if (E == NULL) {
+        Print_Error_Message(4, CUDA_EVENT_ACCESS_FAIL);
+        return;
+    }
+
+    decx::reduce::cuda_reduce1D_configs<de::Half> _kp_configs;
+    _kp_configs.generate_configs(src->Len(), S);
+
+    _kp_configs.set_fill_val(((de::Half*)src->Vec.ptr)[0]);
+
+    checkCudaErrors(cudaMemcpyAsync(_kp_configs.get_dev_tmp1().ptr, src->Vec.ptr, src->Len() * sizeof(de::Half), cudaMemcpyHostToDevice,
+        S->get_raw_stream_ref()));
+
+    decx::reduce::cuda_reduce1D_cmp_fp16_caller_Async<false, _is_max>(&_kp_configs, S);
+
+    checkCudaErrors(cudaMemcpyAsync(res, _kp_configs.get_leading_MIF().mem, 1 * sizeof(de::Half), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
+
+    E->event_record(S);
+    E->synchronize();
+
+    _kp_configs.release_buffer();
+}
+
+
+
+template <bool _is_max>
+static void decx::reduce::vector_reduce_cmp_u8(decx::_Vector* src, uint8_t* res)
+{
+    decx::cuda_stream* S = NULL;
+    S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
+    if (S == NULL) {
+        Print_Error_Message(4, CUDA_STREAM_ACCESS_FAIL);
+        return;
+    }
+    decx::cuda_event* E = NULL;
+    E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
+    if (E == NULL) {
+        Print_Error_Message(4, CUDA_EVENT_ACCESS_FAIL);
+        return;
+    }
+
+    decx::reduce::cuda_reduce1D_configs<uint8_t> _kp_configs;
+    _kp_configs.generate_configs(src->Len(), S);
+
+    _kp_configs.set_fill_val(((uint8_t*)src->Vec.ptr)[0]);
+
+    checkCudaErrors(cudaMemcpyAsync(_kp_configs.get_dev_tmp1().ptr, src->Vec.ptr, src->Len() * sizeof(uint8_t), cudaMemcpyHostToDevice,
+        S->get_raw_stream_ref()));
+
+    decx::reduce::cuda_reduce1D_cmp_u8_caller_Async<false, _is_max>(&_kp_configs, S);
+
+    checkCudaErrors(cudaMemcpyAsync(res, _kp_configs.get_leading_MIF().mem, 1 * sizeof(uint8_t), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
+
+    E->event_record(S);
+    E->synchronize();
+
+    _kp_configs.release_buffer();
+}
+
+
+// ------------------------------------------- on GPU -------------------------------------------
+
+
+
+template <bool _is_max>
+static void decx::reduce::dev_vector_reduce_cmp_fp64(decx::_GPU_Vector* src, double* res)
+{
+    decx::cuda_stream* S = NULL;
+    S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
+    if (S == NULL) {
+        Print_Error_Message(4, CUDA_STREAM_ACCESS_FAIL);
+        return;
+    }
+    decx::cuda_event* E = NULL;
+    E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
+    if (E == NULL) {
+        Print_Error_Message(4, CUDA_EVENT_ACCESS_FAIL);
+        return;
+    }
+
+    decx::reduce::cuda_reduce1D_configs<double> _kp_configs;
+    _kp_configs.generate_configs(src->Vec, src->Len(), S);
+
+    double _fill_val = 0;
+    checkCudaErrors(cudaMemcpyAsync(src->Vec.ptr, &_fill_val, 1 * sizeof(double), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
+
+    _kp_configs.set_fill_val(_fill_val);
+
+    decx::reduce::cuda_reduce1D_cmp_fp64_caller_Async<true, _is_max>(&_kp_configs, S);
+
+    checkCudaErrors(cudaMemcpyAsync(res, _kp_configs.get_leading_MIF().mem, 1 * sizeof(double), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
+
+    E->event_record(S);
+    E->synchronize();
+
+    _kp_configs.release_buffer();
+}
+
+
+
+
+template <bool _is_max>
+static void decx::reduce::dev_vector_reduce_cmp_fp32(decx::_GPU_Vector* src, float* res)
+{
+    decx::cuda_stream* S = NULL;
+    S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
+    if (S == NULL) {
+        Print_Error_Message(4, CUDA_STREAM_ACCESS_FAIL);
+        return;
+    }
+    decx::cuda_event* E = NULL;
+    E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
+    if (E == NULL) {
+        Print_Error_Message(4, CUDA_EVENT_ACCESS_FAIL);
+        return;
+    }
+
+    decx::reduce::cuda_reduce1D_configs<float> _kp_configs;
+    _kp_configs.generate_configs(src->Vec, src->Len(), S);
+
+    float _fill_val = 0;
+    checkCudaErrors(cudaMemcpyAsync(&_fill_val, src->Vec.ptr, 1 * sizeof(float), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
+
+    _kp_configs.set_fill_val(_fill_val);
+
+    decx::reduce::cuda_reduce1D_cmp_fp32_caller_Async<true, _is_max>(&_kp_configs, S);
+
+    checkCudaErrors(cudaMemcpyAsync(res, _kp_configs.get_leading_MIF().mem, 1 * sizeof(float), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
+
+    E->event_record(S);
+    E->synchronize();
+
+    _kp_configs.release_buffer();
+}
+
+
+
+template <bool _is_max>
+static void decx::reduce::dev_vector_reduce_cmp_fp16(decx::_GPU_Vector* src, de::Half* res)
+{
+    decx::cuda_stream* S = NULL;
+    S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
+    if (S == NULL) {
+        Print_Error_Message(4, CUDA_STREAM_ACCESS_FAIL);
+        return;
+    }
+    decx::cuda_event* E = NULL;
+    E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
+    if (E == NULL) {
+        Print_Error_Message(4, CUDA_EVENT_ACCESS_FAIL);
+        return;
+    }
+
+    decx::reduce::cuda_reduce1D_configs<de::Half> _kp_configs;
+    _kp_configs.generate_configs(src->Vec, src->Len(), S);
+
+    de::Half _fill_val;
+    _fill_val.val = 0;
+    checkCudaErrors(cudaMemcpyAsync(&_fill_val, src->Vec.ptr, 1 * sizeof(de::Half), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
+
+    _kp_configs.set_fill_val(_fill_val);
+
+    decx::reduce::cuda_reduce1D_cmp_fp16_caller_Async<true, _is_max>(&_kp_configs, S);
+
+    checkCudaErrors(cudaMemcpyAsync(res, _kp_configs.get_leading_MIF().mem, 1 * sizeof(de::Half), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
+
+    E->event_record(S);
+    E->synchronize();
+
+    _kp_configs.release_buffer();
+}
+
+
+
+template <bool _is_max>
+static void decx::reduce::dev_vector_reduce_cmp_u8(decx::_GPU_Vector* src, uint8_t* res)
+{
+    decx::cuda_stream* S = NULL;
+    S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
+    if (S == NULL) {
+        Print_Error_Message(4, CUDA_STREAM_ACCESS_FAIL);
+        return;
+    }
+    decx::cuda_event* E = NULL;
+    E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
+    if (E == NULL) {
+        Print_Error_Message(4, CUDA_EVENT_ACCESS_FAIL);
+        return;
+    }
+
+    decx::reduce::cuda_reduce1D_configs<uint8_t> _kp_configs;
+    _kp_configs.generate_configs(src->Vec, src->Len(), S);
+
+    uint8_t _fill_val = 0;
+    checkCudaErrors(cudaMemcpyAsync(&_fill_val, src->Vec.ptr, 1 * sizeof(uint8_t), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
+
+    _kp_configs.set_fill_val(_fill_val);
+
+    decx::reduce::cuda_reduce1D_cmp_u8_caller_Async<true, _is_max>(&_kp_configs, S);
+
+    checkCudaErrors(cudaMemcpyAsync(res, _kp_configs.get_leading_MIF().mem, 1 * sizeof(uint8_t), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
+
+    E->event_record(S);
+    E->synchronize();
+
+    _kp_configs.release_buffer();
+}
+
+
+
+#endif
