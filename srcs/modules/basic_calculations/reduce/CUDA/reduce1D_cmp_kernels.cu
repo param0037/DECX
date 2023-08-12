@@ -55,10 +55,12 @@ decx::reduce::GPUK::cu_block_reduce_cmp1D_fp32(const float4* __restrict     src,
 
     // warp reducing
     if (_is_max) {
-        decx::reduce::GPUK::cu_warp_reduce_fp32<float(float, float), 32>(decx::utils::cuda::__fp32_max, &tmp1, &tmp2);
+        //decx::reduce::GPUK::cu_warp_reduce_fp32<float(float, float), 32>(decx::utils::cuda::__fp32_max, &tmp1, &tmp2);
+        decx::reduce::GPUK::cu_warp_reduce<float, 32>(decx::utils::cuda::__fp32_max, &tmp1, &tmp2);
     }
     else {
-        decx::reduce::GPUK::cu_warp_reduce_fp32<float(float, float), 32>(decx::utils::cuda::__fp32_min, &tmp1, &tmp2);
+        //decx::reduce::GPUK::cu_warp_reduce_fp32<float(float, float), 32>(decx::utils::cuda::__fp32_min, &tmp1, &tmp2);
+        decx::reduce::GPUK::cu_warp_reduce<float, 32>(decx::utils::cuda::__fp32_min, &tmp1, &tmp2);
     }
 
     if (warp_lane_id == 0) {
@@ -74,10 +76,12 @@ decx::reduce::GPUK::cu_block_reduce_cmp1D_fp32(const float4* __restrict     src,
         __syncwarp(0xffffffff);
 
         if (_is_max) {
-            decx::reduce::GPUK::cu_warp_reduce_fp32<float(float, float), 8>(decx::utils::cuda::__fp32_max, &tmp1, &tmp2);
+            //decx::reduce::GPUK::cu_warp_reduce_fp32<float(float, float), 8>(decx::utils::cuda::__fp32_max, &tmp1, &tmp2);
+            decx::reduce::GPUK::cu_warp_reduce<float, 8>(decx::utils::cuda::__fp32_max, &tmp1, &tmp2);
         }
         else {
-            decx::reduce::GPUK::cu_warp_reduce_fp32<float(float, float), 8>(decx::utils::cuda::__fp32_min, &tmp1, &tmp2);
+            //decx::reduce::GPUK::cu_warp_reduce_fp32<float(float, float), 8>(decx::utils::cuda::__fp32_min, &tmp1, &tmp2);
+            decx::reduce::GPUK::cu_warp_reduce<float, 8>(decx::utils::cuda::__fp32_min, &tmp1, &tmp2);
         }
 
         if (warp_lane_id == 0) {
@@ -132,10 +136,12 @@ decx::reduce::GPUK::cu_block_reduce_cmp1D_fp64(const double2* __restrict     src
 
     // warp reducing
     if (_is_max) {
-        decx::reduce::GPUK::cu_warp_reduce_fp64<double(double, double), 32>(decx::utils::cuda::__fp64_max, &tmp1, &tmp2);
+        //decx::reduce::GPUK::cu_warp_reduce_fp64<double(double, double), 32>(decx::utils::cuda::__fp64_max, &tmp1, &tmp2);
+        decx::reduce::GPUK::cu_warp_reduce<double, 32>(decx::utils::cuda::__fp64_max, &tmp1, &tmp2);
     }
     else {
-        decx::reduce::GPUK::cu_warp_reduce_fp64<double(double, double), 32>(decx::utils::cuda::__fp64_min, &tmp1, &tmp2);
+        //decx::reduce::GPUK::cu_warp_reduce_fp64<double(double, double), 32>(decx::utils::cuda::__fp64_min, &tmp1, &tmp2);
+        decx::reduce::GPUK::cu_warp_reduce<double, 32>(decx::utils::cuda::__fp64_min, &tmp1, &tmp2);
     }
 
     if (warp_lane_id == 0) {
@@ -151,10 +157,12 @@ decx::reduce::GPUK::cu_block_reduce_cmp1D_fp64(const double2* __restrict     src
         __syncwarp(0xffffffff);
 
         if (_is_max) {
-            decx::reduce::GPUK::cu_warp_reduce_fp64<double(double, double), 8>(decx::utils::cuda::__fp64_max, &tmp1, &tmp2);
+            //decx::reduce::GPUK::cu_warp_reduce_fp64<double(double, double), 8>(decx::utils::cuda::__fp64_max, &tmp1, &tmp2);
+            decx::reduce::GPUK::cu_warp_reduce<double, 8>(decx::utils::cuda::__fp64_max, &tmp1, &tmp2);
         }
         else {
-            decx::reduce::GPUK::cu_warp_reduce_fp64<double(double, double), 8>(decx::utils::cuda::__fp64_min, &tmp1, &tmp2);
+            //decx::reduce::GPUK::cu_warp_reduce_fp64<double(double, double), 8>(decx::utils::cuda::__fp64_min, &tmp1, &tmp2);
+            decx::reduce::GPUK::cu_warp_reduce<double, 8>(decx::utils::cuda::__fp64_min, &tmp1, &tmp2);
         }
 
         if (warp_lane_id == 0) {
@@ -170,7 +178,7 @@ template __global__ void decx::reduce::GPUK::cu_block_reduce_cmp1D_fp64<false>(c
 
 template <bool _is_max>
 __global__ void
-decx::reduce::GPUK::cu_block_reduce_cmp1D_u8(const float4* __restrict     src, 
+decx::reduce::GPUK::cu_block_reduce_cmp1D_u8(const int4* __restrict       src, 
                                              uint8_t* __restrict          dst, 
                                              const uint64_t               proc_len_v16,
                                              const uint64_t               proc_len_v1,
@@ -196,7 +204,7 @@ decx::reduce::GPUK::cu_block_reduce_cmp1D_u8(const float4* __restrict     src,
 
     if (LDG_dex < proc_len_v16) 
     {
-        _recv._vf = src[LDG_dex];
+        _recv._vi = src[LDG_dex];
         if (LDG_dex == proc_len_v16 - 1) {
             uint32_t _left_u8 = proc_len_v16 * 16 - proc_len_v1;
 
@@ -218,10 +226,12 @@ decx::reduce::GPUK::cu_block_reduce_cmp1D_u8(const float4* __restrict     src,
     }
     // warp reducing
     if (_is_max) {
-        decx::reduce::GPUK::cu_warp_reduce_int32<int32_t(int32_t, int32_t), 32>(decx::utils::cuda::__i32_max, &tmp1, &tmp2);
+        //decx::reduce::GPUK::cu_warp_reduce_int32<int32_t(int32_t, int32_t), 32>(decx::utils::cuda::__i32_max, &tmp1, &tmp2);
+        decx::reduce::GPUK::cu_warp_reduce<int32_t, 32>(decx::utils::cuda::__i32_max, &tmp1, &tmp2);
     }
     else {
-        decx::reduce::GPUK::cu_warp_reduce_int32<int32_t(int32_t, int32_t), 32>(decx::utils::cuda::__i32_min, &tmp1, &tmp2);
+        //decx::reduce::GPUK::cu_warp_reduce_int32<int32_t(int32_t, int32_t), 32>(decx::utils::cuda::__i32_min, &tmp1, &tmp2);
+        decx::reduce::GPUK::cu_warp_reduce<int32_t, 32>(decx::utils::cuda::__i32_min, &tmp1, &tmp2);
     }
 
     if (warp_lane_id == 0) {
@@ -237,10 +247,12 @@ decx::reduce::GPUK::cu_block_reduce_cmp1D_u8(const float4* __restrict     src,
         __syncwarp(0xffffffff);
 
         if (_is_max) {
-            decx::reduce::GPUK::cu_warp_reduce_int32<int32_t(int32_t, int32_t), 8>(decx::utils::cuda::__i32_max, &tmp1, &tmp2);
+            //decx::reduce::GPUK::cu_warp_reduce_int32<int32_t(int32_t, int32_t), 8>(decx::utils::cuda::__i32_max, &tmp1, &tmp2);
+            decx::reduce::GPUK::cu_warp_reduce<int32_t, 8>(decx::utils::cuda::__i32_max, &tmp1, &tmp2);
         }
         else {
-            decx::reduce::GPUK::cu_warp_reduce_int32<int32_t(int32_t, int32_t), 8>(decx::utils::cuda::__i32_min, &tmp1, &tmp2);
+            //decx::reduce::GPUK::cu_warp_reduce_int32<int32_t(int32_t, int32_t), 8>(decx::utils::cuda::__i32_min, &tmp1, &tmp2);
+            decx::reduce::GPUK::cu_warp_reduce<int32_t, 8>(decx::utils::cuda::__i32_min, &tmp1, &tmp2);
         }
 
         if (warp_lane_id == 0) {
@@ -250,9 +262,9 @@ decx::reduce::GPUK::cu_block_reduce_cmp1D_u8(const float4* __restrict     src,
 }
 
 
-template __global__ void decx::reduce::GPUK::cu_block_reduce_cmp1D_u8<true>(const float4* __restrict src, uint8_t* __restrict dst,
+template __global__ void decx::reduce::GPUK::cu_block_reduce_cmp1D_u8<true>(const int4* __restrict src, uint8_t* __restrict dst,
     const uint64_t proc_len_v4, const uint64_t proc_len_v1, const uint8_t _fill_val);
-template __global__ void decx::reduce::GPUK::cu_block_reduce_cmp1D_u8<false>(const float4* __restrict src, uint8_t* __restrict dst,
+template __global__ void decx::reduce::GPUK::cu_block_reduce_cmp1D_u8<false>(const int4* __restrict src, uint8_t* __restrict dst,
     const uint64_t proc_len_v4, const uint64_t proc_len_v1, const uint8_t _fill_val);
 
 
@@ -302,10 +314,12 @@ decx::reduce::GPUK::cu_block_reduce_cmp1D_fp16(const float4* __restrict     src,
 
     // warp reducing
     if (_is_max) {
-        decx::reduce::GPUK::cu_warp_reduce_fp16<__half(__half, __half), 32>(decx::utils::cuda::__half_max, &tmp1, &tmp2);
+        //decx::reduce::GPUK::cu_warp_reduce_fp16<__half(__half, __half), 32>(decx::utils::cuda::__half_max, &tmp1, &tmp2);
+        decx::reduce::GPUK::cu_warp_reduce<__half, 32>(decx::utils::cuda::__half_max, &tmp1, &tmp2);
     }
     else {
-        decx::reduce::GPUK::cu_warp_reduce_fp16<__half(__half, __half), 32>(decx::utils::cuda::__half_min, &tmp1, &tmp2);
+        //decx::reduce::GPUK::cu_warp_reduce_fp16<__half(__half, __half), 32>(decx::utils::cuda::__half_min, &tmp1, &tmp2);
+        decx::reduce::GPUK::cu_warp_reduce<__half, 32>(decx::utils::cuda::__half_min, &tmp1, &tmp2);
     }
 
     if (warp_lane_id == 0) {
@@ -321,10 +335,12 @@ decx::reduce::GPUK::cu_block_reduce_cmp1D_fp16(const float4* __restrict     src,
         __syncwarp(0xffffffff);
 
         if (_is_max) {
-            decx::reduce::GPUK::cu_warp_reduce_fp16<__half(__half, __half), 8>(decx::utils::cuda::__half_max, &tmp1, &tmp2);
+            //decx::reduce::GPUK::cu_warp_reduce_fp16<__half(__half, __half), 8>(decx::utils::cuda::__half_max, &tmp1, &tmp2);
+            decx::reduce::GPUK::cu_warp_reduce<__half, 8>(decx::utils::cuda::__half_max, &tmp1, &tmp2);
         }
         else {
-            decx::reduce::GPUK::cu_warp_reduce_fp16<__half(__half, __half), 8>(decx::utils::cuda::__half_min, &tmp1, &tmp2);
+            //decx::reduce::GPUK::cu_warp_reduce_fp16<__half(__half, __half), 8>(decx::utils::cuda::__half_min, &tmp1, &tmp2);
+            decx::reduce::GPUK::cu_warp_reduce<__half, 8>(decx::utils::cuda::__half_min, &tmp1, &tmp2);
         }
 
         if (warp_lane_id == 0) {
@@ -380,11 +396,13 @@ decx::reduce::GPUK::cu_warp_reduce_cmp2D_1D_fp32(const float4 * __restrict   src
 
     if (_is_max) {
         _thread_sum = decx::reduce::GPUK::float4_max(_recv._vf);
-        decx::reduce::GPUK::cu_warp_reduce_fp32<float(float, float), 32>(decx::utils::cuda::__fp32_max, &_thread_sum, &_warp_reduce_res);
+        //decx::reduce::GPUK::cu_warp_reduce_fp32<float(float, float), 32>(decx::utils::cuda::__fp32_max, &_thread_sum, &_warp_reduce_res);
+        decx::reduce::GPUK::cu_warp_reduce<float, 32>(decx::utils::cuda::__fp32_max, &_thread_sum, &_warp_reduce_res);
     }
     else {
         _thread_sum = decx::reduce::GPUK::float4_min(_recv._vf);
-        decx::reduce::GPUK::cu_warp_reduce_fp32<float(float, float), 32>(decx::utils::cuda::__fp32_min, &_thread_sum, &_warp_reduce_res);
+        //decx::reduce::GPUK::cu_warp_reduce_fp32<float(float, float), 32>(decx::utils::cuda::__fp32_min, &_thread_sum, &_warp_reduce_res);
+        decx::reduce::GPUK::cu_warp_reduce<float, 32>(decx::utils::cuda::__fp32_min, &_thread_sum, &_warp_reduce_res);
     }
 
     if (threadIdx.x == 0) {
@@ -398,10 +416,12 @@ decx::reduce::GPUK::cu_warp_reduce_cmp2D_1D_fp32(const float4 * __restrict   src
         __syncwarp(0xffffffff);
 
         if (_is_max) {
-            decx::reduce::GPUK::cu_warp_reduce_fp32<float(float, float), 8>(decx::utils::cuda::__fp32_max, &_thread_sum, &_warp_reduce_res);
+            //decx::reduce::GPUK::cu_warp_reduce_fp32<float(float, float), 8>(decx::utils::cuda::__fp32_max, &_thread_sum, &_warp_reduce_res);
+            decx::reduce::GPUK::cu_warp_reduce<float, 8>(decx::utils::cuda::__fp32_max, &_thread_sum, &_warp_reduce_res);
         }
         else {
-            decx::reduce::GPUK::cu_warp_reduce_fp32<float(float, float), 8>(decx::utils::cuda::__fp32_min, &_thread_sum, &_warp_reduce_res);
+            //decx::reduce::GPUK::cu_warp_reduce_fp32<float(float, float), 8>(decx::utils::cuda::__fp32_min, &_thread_sum, &_warp_reduce_res);
+            decx::reduce::GPUK::cu_warp_reduce<float, 8>(decx::utils::cuda::__fp32_min, &_thread_sum, &_warp_reduce_res);
         }
 
         if (threadIdx.x == 0) {

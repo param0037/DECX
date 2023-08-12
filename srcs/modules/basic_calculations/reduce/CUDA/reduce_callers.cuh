@@ -8,8 +8,8 @@
 *   More information please visit https://github.com/param0037/DECX
 */
 
-#ifndef _REDUCE_CALLERS_H_
-#define _REDUCE_CALLERS_H_
+#ifndef _REDUCE_CALLERS_CUH_
+#define _REDUCE_CALLERS_CUH_
 
 
 #include "reduce_sum.cuh"
@@ -35,6 +35,14 @@
 */
 
 
+
+#define _CU_REDUCE1D_MEM_ALIGN_8B_ 2
+#define _CU_REDUCE1D_MEM_ALIGN_4B_ 4
+#define _CU_REDUCE1D_MEM_ALIGN_2B_ 8
+#define _CU_REDUCE1D_MEM_ALIGN_1B_ 16
+
+
+
 namespace decx
 {
     namespace reduce
@@ -45,8 +53,105 @@ namespace decx
         */
         template <typename _type_in>
         class cuda_reduce1D_configs;
+
+
+        template <typename _Ty>
+        struct cu_reduce1D_param_pack;
+
+
+        template <typename _Ty>
+        using RWPK_1D = decx::reduce::cu_reduce1D_param_pack<_Ty>;
+
+
+        /**
+        * @return True if the flatten length is more than 1; False if the flatten length is 1 (Only flatten_lernel is called)
+        */
+        template <typename _type_in, typename _type_postproc>
+        bool reduce2D_flatten_postproc_configs_gen(decx::reduce::cuda_reduce1D_configs<_type_postproc>* _configs_ptr,
+            const uint32_t pirchsrc, const uint2 proc_dims_v1, decx::cuda_stream* S);
     }
 }
+
+
+
+namespace decx
+{
+    namespace reduce
+    {
+        template <typename _type_in>
+        class cuda_reduce2D_1way_configs;
+
+
+        typedef struct cu_reduce2D_1way_param_pack RWPK_2D;
+    }
+}
+
+
+template <typename _Ty>
+struct decx::reduce::cu_reduce1D_param_pack
+{
+    const void* _src;
+    void* _dst;
+    
+    uint64_t _grid_len, _block_len;
+
+    uint64_t _proc_len_v;
+    uint64_t _proc_len_v1;
+
+
+    cu_reduce1D_param_pack() {}
+
+    cu_reduce1D_param_pack(const void*      src_ptr, 
+                           void*            dst_ptr, 
+                           const uint64_t   grid_len,
+                           const uint64_t   block_len,
+                           const uint64_t   proc_len_v, 
+                           const uint64_t   proc_len_v1) :
+        _src            (src_ptr),
+        _dst            (dst_ptr),
+        _grid_len       (grid_len),
+        _block_len      (block_len),
+        _proc_len_v     (proc_len_v),
+        _proc_len_v1    (proc_len_v1)
+    {}
+};
+
+
+
+
+struct decx::reduce::cu_reduce2D_1way_param_pack
+{
+    dim3 _grid_dims, _block_dims;
+
+    const void* _src;
+    void* _dst;
+
+    // Could be in element or in scale of vector (e.g. v4, v8, etc.)
+    uint32_t _calc_pitch_src;
+    uint32_t _calc_pitch_dst;
+
+    // Could be in element or in scale of vector (e.g. v4, v8, etc.)
+    uint2 _calc_proc_dims;
+
+    cu_reduce2D_1way_param_pack() {}
+
+
+    cu_reduce2D_1way_param_pack(const dim3 grid_dims,               const dim3 block_dims,
+                                const void* src_ptr,                void* dst_ptr, 
+                                const uint32_t calc_pitch_src,      const uint32_t calc_pitch_dst, 
+                                const uint2 calc_proc_dims) :
+
+        _grid_dims          (grid_dims),
+        _block_dims         (block_dims),
+        _src                (src_ptr),
+        _dst                (dst_ptr),
+        _calc_pitch_src     (calc_pitch_src),
+        _calc_pitch_dst     (calc_pitch_dst),
+        _calc_proc_dims     (calc_proc_dims)
+    {}
+
+};
+
 
 
 
@@ -54,15 +159,38 @@ template <typename _type_in>
 class decx::reduce::cuda_reduce1D_configs
 {
 private:
-    decx::PtrInfo<void> _dev_src;
     decx::PtrInfo<void> _d_tmp1, _d_tmp2;
 
     _type_in _fill_val;
 
-    uint64_t _proc_len;
     uint64_t _actual_len;
 
     decx::alloc::MIF<void> _MIF_tmp1, _MIF_tmp2;
+
+    std::vector<decx::reduce::RWPK_1D<_type_in>> _rwpks;
+
+    template <bool _src_from_device>
+    void _calc_kernel_param_packs();
+
+    decx::reduce::RWPK_2D _rwpk_flatten;
+
+    /**
+    * The very beginning pointer of the whole process. If the source is not from device,
+    * it will be set to this->_d_tmp1.ptr. Otherwise, it will be set to the device data array.
+    */
+    void* _proc_src;
+    /**
+    * The very end pointer of the whole process. If the source is not from device,
+    * it will be set to this->get_leading_MIF().mem. Otherwise, it will be set to the device data array.
+    */
+    void* _proc_dst;
+
+
+    void inverse_mutex_MIF_states();
+
+    // to private
+    decx::alloc::MIF<void> get_leading_MIF() const;
+    decx::alloc::MIF<void> get_lagging_MIF() const;
 
 public:
     cuda_reduce1D_configs() {}
@@ -92,23 +220,20 @@ public:
     void generate_configs(decx::PtrInfo<void> dev_src, const uint64_t proc_len_v1, decx::cuda_stream* S);
 
 
-    uint64_t get_proc_len() const;
     uint64_t get_actual_len() const;
 
 
     void set_fill_val(const _type_in _val);
 
-
-    decx::PtrInfo<void> get_dev_src() const;
-    decx::PtrInfo<void> get_dev_tmp1() const;
-    decx::PtrInfo<void> get_dev_tmp2() const;
-
+    
     _type_in get_fill_val() const;
 
-    void inverse_mutex_MIF_states();
 
-    decx::alloc::MIF<void> get_leading_MIF() const;
-    decx::alloc::MIF<void> get_lagging_MIF() const;
+    void* get_src();
+    const void* get_dst();
+
+    std::vector<decx::reduce::RWPK_1D<_type_in>>& get_rwpk();
+    decx::reduce::RWPK_2D& get_rwpk_flatten();
 
 
     void release_buffer();
@@ -119,90 +244,101 @@ namespace decx
 {
     namespace reduce
     {
-        template <bool _src_from_device>
         void cuda_reduce1D_sum_fp32_caller_Async(decx::reduce::cuda_reduce1D_configs<float>* _kp_configs, decx::cuda_stream* S);
+        void cuda_reduce1D_sum_fp64_caller_Async(decx::reduce::cuda_reduce1D_configs<double>* _kp_configs, decx::cuda_stream* S);
+        void cuda_reduce1D_sum_i32_caller_Async(decx::reduce::cuda_reduce1D_configs<int32_t>* _kp_configs, decx::cuda_stream* S);
 
 
-        template <bool _src_from_device, bool _is_max>
+        template <bool _is_max>
         void cuda_reduce1D_cmp_fp32_caller_Async(decx::reduce::cuda_reduce1D_configs<float>* _kp_configs, decx::cuda_stream* S);
 
 
-        template <bool _src_from_device, bool _is_max>
+        template <bool _is_max>
         void cuda_reduce1D_cmp_fp64_caller_Async(decx::reduce::cuda_reduce1D_configs<double>* _kp_configs, decx::cuda_stream* S);
 
 
 
-        template <bool _src_from_device, bool _is_max>
+        template <bool _is_max>
         void cuda_reduce1D_cmp_fp16_caller_Async(decx::reduce::cuda_reduce1D_configs<de::Half>* _kp_configs, decx::cuda_stream* S);
 
 
-        template <bool _src_from_device>
         void cuda_reduce1D_sum_u8_i32_caller_Async(decx::reduce::cuda_reduce1D_configs<uint8_t>* _kp_configs, decx::cuda_stream* S);
 
 
-        template <bool _src_from_device, bool _is_max>
+        template <bool _is_max>
         void cuda_reduce1D_cmp_u8_caller_Async(decx::reduce::cuda_reduce1D_configs<uint8_t>* _kp_configs, decx::cuda_stream* S);
 
 
-        template <bool _src_from_device>
         void cuda_reduce1D_sum_fp16_fp32_caller_Async(decx::reduce::cuda_reduce1D_configs<de::Half>* _kp_configs, decx::cuda_stream* S);
     }
 }
 
 
-namespace decx
-{
-    namespace reduce
-    {
-        template <typename _type_in>
-        class cuda_reduce2D_1way_configs;
-    }
-}
 
 
 template <typename _type_in>
 class decx::reduce::cuda_reduce2D_1way_configs
 {
 private:
-    decx::PtrInfo<void> _dev_src;
     decx::Ptr2D_Info<void> _d_tmp1, _d_tmp2;
 
+    // Only used when the source matrix is located on device
+    uint32_t _Wdsrc;
+
     uint2 _proc_dims_actual;
-    uint2 _proc_dims_v;
+    
 
     uint32_t _kernel_call_times;
 
     decx::alloc::MIF<void> _MIF_tmp1, _MIF_tmp2;
 
+    std::vector<decx::reduce::RWPK_2D> _rwpks;
 
-    uint32_t _calc_reduce_kernel_call_times() const;
+    template <bool _src_from_device>
+    void _calc_kernel_h_param_packs(const bool _is_cmp = false);
 
+    template <bool _src_from_device>
+    void _calc_kernel_v_param_packs(const bool _is_cmp = false);
+
+
+    decx::Ptr2D_Info<void> _proc_src;
+    void* _proc_dst;
+
+    // to private
+    decx::Ptr2D_Info<void> get_dtmp1() const;
+    // to private
+    decx::Ptr2D_Info<void> get_dtmp2() const;
+
+    // to private
+    uint2 get_actual_proc_dims() const;
+
+    // to private
+    void* get_leading_ptr() const;
+    void* get_lagging_ptr() const;
+
+    // to private
+    void reverse_MIF_states();
 
 public:
     cuda_reduce2D_1way_configs() {}
 
     template <bool _is_reduce_h>
-    void generate_configs(const uint2 proc_dims, decx::cuda_stream* S);
+    void generate_configs(const uint2 proc_dims, decx::cuda_stream* S, const bool _is_cmp = false);
 
 
-    decx::Ptr2D_Info<void> get_dtmp1() const;
-    decx::Ptr2D_Info<void> get_dtmp2() const;
+    template <bool _is_reduce_h>
+    void generate_configs(decx::PtrInfo<void> dev_src, void* dst_ptr, const uint32_t Wdsrc, const uint2 proc_dims, 
+        decx::cuda_stream* S, const bool _is_cmp = false);
 
 
-    uint2 get_actual_proc_dims() const;
+
+    decx::Ptr2D_Info<void> get_src() const;
+    void* get_dst() const;
 
 
-    uint2 get_proc_dims_v() const;
+    const std::vector<decx::reduce::cu_reduce2D_1way_param_pack>& get_rwpks() const;
 
-
-    void* get_leading_ptr() const;
-    void* get_lagging_ptr() const;
-
-
-    void reverse_MIF_states();
-
-    uint32_t get_kernel_call_times() const;
-
+    
 
     void release_buffer();
 };
@@ -213,25 +349,64 @@ namespace decx
     namespace reduce
     {
         void reduce_sum2D_h_fp32_Async(decx::reduce::cuda_reduce2D_1way_configs<float>* _configs, decx::cuda_stream* S);
+        void reduce_sum2D_h_fp16_fp32_Async(decx::reduce::cuda_reduce2D_1way_configs<de::Half>* _configs, decx::cuda_stream* S);
+        void reduce_sum2D_h_u8_i32_Async(decx::reduce::cuda_reduce2D_1way_configs<uint8_t>* _configs, decx::cuda_stream* S);
 
 
         void reduce_sum2D_v_fp32_Async(decx::reduce::cuda_reduce2D_1way_configs<float>* _configs, decx::cuda_stream* S);
+        void reduce_sum2D_v_fp16_fp32_Async(decx::reduce::cuda_reduce2D_1way_configs<de::Half>* _configs, decx::cuda_stream* S);
+        void reduce_sum2D_v_u8_i32_Async(decx::reduce::cuda_reduce2D_1way_configs<uint8_t>* _configs, decx::cuda_stream* S);
 
+        // ------------------------------------------------- full -------------------------------------------
+        /**
+        * @return The pointer where the final value is stored
+        */
+        const void* reduce_sum2D_full_fp32_Async(decx::reduce::cuda_reduce1D_configs<float>* _configs, const void* src_ptr, const uint2 proc_dims,
+            const uint32_t _pitch_src_v4, decx::cuda_stream* S, const bool _more_than_flatten);
 
-        template <bool _src_from_device>
-        void reduce_sum2D_full_fp32_Async(decx::reduce::cuda_reduce1D_configs<float>* _configs, const uint2 proc_dims, 
-            const uint32_t _pitch_src_v4, decx::cuda_stream* S);
+        /**
+        * @return The pointer where the final value is stored
+        */
+        const void* reduce_sum2D_full_i32_Async(decx::reduce::cuda_reduce1D_configs<int32_t>* _configs, const void* src_ptr, const uint2 proc_dims,
+            const uint32_t _pitch_src_v4, decx::cuda_stream* S, const bool _more_than_flatten);
+
+        /**
+        * @return The pointer where the final value is stored
+        */
+        const void* reduce_sum2D_full_fp64_Async(decx::reduce::cuda_reduce1D_configs<double>* _configs, const void* src_ptr, const uint2 proc_dims,
+            const uint32_t _pitch_src_v4, decx::cuda_stream* S, const bool _more_than_flatten);
+
+        /**
+        * @return The pointer where the final value is stored
+        */
+        const void* reduce_sum2D_full_fp16_fp32_Async(decx::reduce::cuda_reduce1D_configs<float>* _configs, const void* src_ptr, const uint2 proc_dims,
+            const uint32_t _pitch_src_v4, decx::cuda_stream* S, const bool _more_than_flatten);
+
+        /**
+        * @return The pointer where the final value is stored
+        */
+        const void* reduce_sum2D_full_u8_i32_Async(decx::reduce::cuda_reduce1D_configs<int32_t>* _configs, const void* src_ptr, const uint2 proc_dims,
+            const uint32_t _pitch_src_v4, decx::cuda_stream* S, const bool _more_than_flatten);
 
 
         template <bool _is_max>
         void reduce_cmp2D_h_fp32_Async(decx::reduce::cuda_reduce2D_1way_configs<float>* _configs, decx::cuda_stream* S);
+        template <bool _is_max>
+        void reduce_cmp2D_h_fp16_Async(decx::reduce::cuda_reduce2D_1way_configs<de::Half>* _configs, decx::cuda_stream* S);
+        template <bool _is_max>
+        void reduce_cmp2D_h_u8_Async(decx::reduce::cuda_reduce2D_1way_configs<uint8_t>* _configs, decx::cuda_stream* S);
+
 
         template <bool _is_max>
         void reduce_cmp2D_v_fp32_Async(decx::reduce::cuda_reduce2D_1way_configs<float>* _configs, decx::cuda_stream* S);
+        template <bool _is_max>
+        void reduce_cmp2D_v_fp16_Async(decx::reduce::cuda_reduce2D_1way_configs<de::Half>* _configs, decx::cuda_stream* S);
+        template <bool _is_max>
+        void reduce_cmp2D_v_u8_Async(decx::reduce::cuda_reduce2D_1way_configs<uint8_t>* _configs, decx::cuda_stream* S);
 
-
-        template <bool _is_max, bool _src_from_device>
-        void reduce_cmp2D_full_fp32_Async(decx::reduce::cuda_reduce1D_configs<float>* _configs, const uint2 proc_dims,
+        // ---------------------------------------------- full --------------------------------------------
+        template <bool _is_max>
+        void reduce_cmp2D_full_fp32_Async(decx::reduce::cuda_reduce1D_configs<float>* _configs, const void* src_ptr, const uint2 proc_dims,
             const uint32_t _pitch_src_v4, decx::cuda_stream* S);
     }
 }

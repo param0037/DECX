@@ -25,9 +25,12 @@ namespace decx
             float4 _vf;
             double2 _vd;
             int4 _vi;
+            uint4 _vui;
 
             __half2 _arrh2[4];
             __half _arrh[8];
+
+            float2 _arrf2[2];
 
             uchar4 _arru8_4[4];
 
@@ -46,8 +49,15 @@ namespace decx
         union __align__(8) _cuda_vec64
         {
             float2 _vf2;
+            int2 _vi2;
+            uint2 _vui2;
+            double _fp64;
             size_t _ull;
+            __half _v_half4[4];
+            __half2 _v_h2_2[2];
             uint8_t _v_uint8[8];
+
+            __host__ __device__ _cuda_vec64() {}
         };
     }
 }
@@ -61,7 +71,13 @@ namespace decx
         __host__ __device__ __inline__ float4 vec4_set1_fp32(const float __x);
 
 
+        __host__ __device__ __inline__ float4 vec8_set1_fp16(const __half __x);
+
+
         __host__ __device__ __inline__ int4 vec4_set1_int32(const int __x);
+
+
+        __host__ __device__ __inline__ int4 vec16_set1_u8(const uint8_t __x);
 
 
         __host__ __device__ __inline__ double2 vec2_set1_fp64(const double __x);
@@ -208,7 +224,7 @@ decx::utils::add_scalar_vec4(const decx::utils::_cuda_vec128& __x, const ushort 
 {
     decx::utils::_cuda_vec128 _dst;
 
-    int _add = (((int)__y) << 16) | ((int)__y);
+    int32_t _add = (((int32_t)__y) << 16) | ((int32_t)__y);
 
     _dst._arri[0] = __vadd2(__x._arri[0], _add);
     _dst._arri[1] = __vadd2(__x._arri[1], _add);
@@ -226,12 +242,28 @@ decx::utils::vec4_set1_fp32(const float __x)
 }
 
 
+__host__ __device__ __inline__ float4
+decx::utils::vec8_set1_fp16(const __half __x)
+{
+    __half2 _fill;
+    _fill.x = __x;      _fill.y = __x;
+    return make_float4(*((float*)&_fill), *((float*)&_fill), *((float*)&_fill), *((float*)&_fill));
+}
+
+
 __host__ __device__ __inline__ int4
 decx::utils::vec4_set1_int32(const int __x)
 {
     return make_int4(__x, __x, __x, __x);
 }
 
+
+__host__ __device__ __inline__ int4 
+decx::utils::vec16_set1_u8(const uint8_t __x)
+{
+    uchar4 _fill = make_uchar4(__x, __x, __x, __x);
+    return make_int4(*((int32_t*)&_fill), *((int32_t*)&_fill), *((int32_t*)&_fill), *((int32_t*)&_fill));
+}
 
 
 

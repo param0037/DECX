@@ -12,7 +12,9 @@
 #define _MATRIX_REDUCE_H_
 
 #include "../../../classes/Matrix.h"
+#include "../../../classes/GPU_Matrix.h"
 #include "../../../classes/Vector.h"
+#include "../../../classes/GPU_Vector.h"
 #include "../../../core/configs/config.h"
 #include "../../../classes/classes_util.h"
 #include "../../../../Async Engine/Async_task_threadpool/Async_Engine.h"
@@ -34,20 +36,34 @@ namespace de
     };
 
 
-    namespace cuda {
+    namespace cuda 
+    {
+        // 1-way
         _DECX_API_ de::DH Sum(de::Matrix& src, de::Vector& dst, const int _reduce2D_mode);
         _DECX_API_ de::DH Max(de::Matrix& src, de::Vector& dst, const int _reduce2D_mode);
         _DECX_API_ de::DH Min(de::Matrix& src, de::Vector& dst, const int _reduce2D_mode);
 
+        _DECX_API_ de::DH Sum(de::GPU_Matrix& src, de::GPU_Vector& dst, const int _reduce2D_mode);
+        _DECX_API_ de::DH Max(de::GPU_Matrix& src, de::GPU_Vector& dst, const int _reduce2D_mode);
+        _DECX_API_ de::DH Min(de::GPU_Matrix& src, de::GPU_Vector& dst, const int _reduce2D_mode);
 
+
+        // Full
         _DECX_API_ de::DH Sum(de::Matrix& src, double* res);
         _DECX_API_ de::DH Max(de::Matrix& src, double* res);
         _DECX_API_ de::DH Min(de::Matrix& src, double* res);
 
-
         _DECX_API_ de::DH Sum(de::GPU_Matrix& src, double* res);
         _DECX_API_ de::DH Max(de::GPU_Matrix& src, double* res);
         _DECX_API_ de::DH Min(de::GPU_Matrix& src, double* res);
+
+        _DECX_API_ de::DH Sum_Async(de::Matrix& src, double* res, de::DecxStream& S);
+        _DECX_API_ de::DH Max_Async(de::Matrix& src, double* res, de::DecxStream& S);
+        _DECX_API_ de::DH Min_Async(de::Matrix& src, double* res, de::DecxStream& S);
+
+        _DECX_API_ de::DH Sum_Async(de::GPU_Matrix& src, double* res, de::DecxStream& S);
+        _DECX_API_ de::DH Max_Async(de::GPU_Matrix& src, double* res, de::DecxStream& S);
+        _DECX_API_ de::DH Min_Async(de::GPU_Matrix& src, double* res, de::DecxStream& S);
     }
 }
 

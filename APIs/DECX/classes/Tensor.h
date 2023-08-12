@@ -14,7 +14,6 @@
 
 #include "../basic.h"
 #include "../vectorial/vector4.h"
-#include "store_types.h"
 
 
 namespace de
@@ -25,31 +24,31 @@ namespace de
         Tensor() {}
 
 
-        virtual uint Width() = 0;
+        virtual uint Width() const = 0;
 
 
-        virtual uint Height() = 0;
+        virtual uint Height() const = 0;
 
 
-        virtual uint Depth() = 0;
+        virtual uint Depth() const = 0;
 
 
-        virtual float*              ptr_fp32(const int x, const int y, const int z)  = 0;
-        virtual int*                ptr_int32(const int x, const int y, const int z) = 0;
-        virtual double*             ptr_fp64(const int x, const int y, const int z)  = 0;
-        virtual de::Half*           ptr_fp16(const int x, const int y, const int z)  = 0;
-        virtual de::CPf*            ptr_cpl32(const int x, const int y, const int z) = 0;
-        virtual uint8_t*            ptr_uint8(const int x, const int y, const int z) = 0;
-        virtual de::Vector4f*       ptr_vec4f(const int x, const int y, const int z) = 0;
+        virtual float* ptr_fp32(const int x, const int y, const int z) = 0;
+        virtual int* ptr_int32(const int x, const int y, const int z) = 0;
+        virtual double* ptr_fp64(const int x, const int y, const int z) = 0;
+        virtual de::Half* ptr_fp16(const int x, const int y, const int z) = 0;
+        virtual de::CPf* ptr_cpl32(const int x, const int y, const int z) = 0;
+        virtual uint8_t* ptr_uint8(const int x, const int y, const int z) = 0;
+        virtual de::Vector4f* ptr_vec4f(const int x, const int y, const int z) = 0;
 
 
-        virtual de::Tensor& operator=(de::Tensor& src) = 0;
+        virtual de::Tensor& SoftCopy(de::Tensor& src) = 0;
 
 
         virtual void release() = 0;
 
 
-        virtual int Type() = 0;
+        virtual int Type() const = 0;
     };
 
 

@@ -15,9 +15,9 @@
 #include "../Vector_reduce.h"
 
 
-#define _SELECTED_CALL_(__func_name, _param1, _param2) { \
-    if (_async_call) {      decx::async::register_async_task(_stream_id, __func_name, _param1, _param2); }       \
-    else {  __func_name(_param1, _param2); }   \
+#define _SELECTED_CALL_(__func_name, _param1, _param2) {                                                        \
+    if (_async_call) {      decx::async::register_async_task(_stream_id, __func_name, _param1, _param2); }      \
+    else {  __func_name(_param1, _param2); }                                                                    \
 }
 
 
@@ -196,6 +196,7 @@ _DECX_API_ de::DH de::cuda::Max(de::Vector& src, double* res)
 }
 
 
+
 _DECX_API_ de::DH de::cuda::Max_Async(de::Vector& src, double* res, de::DecxStream& S)
 {
     de::DH handle;
@@ -226,6 +227,7 @@ _DECX_API_ de::DH de::cuda::Min(de::Vector& src, double* res)
 
     return handle;
 }
+
 
 
 _DECX_API_ de::DH de::cuda::Min_Async(de::Vector& src, double* res, de::DecxStream& S)
@@ -259,6 +261,7 @@ _DECX_API_ de::DH de::cuda::Sum(de::GPU_Vector& src, double* res)
 
     return handle;
 }
+
 
 _DECX_API_ de::DH de::cuda::Sum_Async(de::GPU_Vector& src, double* res, de::DecxStream& S)
 {

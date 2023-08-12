@@ -26,6 +26,7 @@ namespace de
 }
 
 
+
 namespace de {
 
     enum TypeCast_Method {
@@ -50,11 +51,18 @@ namespace de {
         CVT_UINT8_FP32 = 17
     };
 
-    namespace cpu {
+    namespace cpu 
+    {
         _DECX_API_ de::DH TypeCast(de::Vector& src, de::Vector& dst, const int cvt_method);
 
 
         _DECX_API_ de::DH TypeCast(de::Matrix& src, de::Matrix& dst, const int cvt_method);
+
+
+        _DECX_API_ de::DH TypeCast(de::MatrixArray& src, de::MatrixArray& dst, const int cvt_method);
+
+
+        _DECX_API_ de::DH TypeCast(de::Tensor& src, de::Tensor& dst, const int cvt_method);
     }
 }
 

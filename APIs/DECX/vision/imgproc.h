@@ -8,24 +8,49 @@
 *   More information please visit https://github.com/param0037/DECX
 */
 
-#include "../classes/class_utils.h"
+#ifndef _IMGPROC_H_
+#define _IMGPROC_H_
+
+
+#include "../basic.h"
 #include "../classes/Matrix.h"
+
 
 
 namespace de
 {
     namespace vis
     {
-        namespace cpu
+        enum ImgChannelMergeType
         {
+            BGR_to_Gray = 0,
+            Preserve_B = 1,
+            Preserve_G = 2,
+            Preserve_R = 3,
+            Preserve_Alpha = 4,
+            RGB_mean = 5,
+        };
+    }
+}
 
+
+namespace de
+{
+    namespace vis 
+    {
+        _DECX_API_ de::DH merge_channel(de::Matrix& src, de::Matrix& dst, const int flag);
+
+
+        namespace cpu 
+        {
+            
             /**
             * @brief : Execute bilateral filter on an image
             * @param border_type : Selected from de::extend_label
             *   IF de::extend_label::_EXTEND_NONE_ : ignore the pixels on the convolutional border
             *   IF de::extend_label::_EXTEND_CONSTANTE_ : fill zeros to all the pixels on the convolutional border
             *   IF de::extend_label::_EXTEND_REFLECT_ : fill the reflections of the pixels on the convolutional border
-            * @return
+            * @return 
             */
             _DECX_API_ de::DH Bilateral_Filter(de::Matrix& src, de::Matrix& dst, const de::Point2D neighbor_dims,
                 const float sigma_space, const float sigma_color, const int border_type);
@@ -40,3 +65,8 @@ namespace de
         }
     }
 }
+
+
+
+
+#endif

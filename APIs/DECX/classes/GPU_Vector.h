@@ -14,8 +14,6 @@
 
 #include "../basic.h"
 #include "class_utils.h"
-#include "store_types.h"
-
 
 namespace de
 {
@@ -25,16 +23,17 @@ namespace de
         GPU_Vector() {}
 
 
-        virtual size_t Len() = 0;
+        virtual size_t Len() const = 0;
+
 
 
         virtual void release() = 0;
 
 
-        virtual de::GPU_Vector& operator=(de::GPU_Vector& src) = 0;
+        virtual de::GPU_Vector& SoftCopy(de::GPU_Vector& src) = 0;
 
 
-        virtual int Type() = 0;
+        virtual int Type() const = 0;
 
 
         ~GPU_Vector() {}

@@ -14,7 +14,6 @@
 
 #include "../basic.h"
 #include "class_utils.h"
-#include "store_types.h"
 
 
 /**

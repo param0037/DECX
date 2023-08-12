@@ -13,9 +13,6 @@
 
 #include "../basic.h"
 #include "type_info.h"
-#include "store_types.h"
-#include "class_utils.h"
-
 
 namespace de
 {
@@ -25,26 +22,27 @@ namespace de
         Vector() {}
 
 
-        virtual size_t Len() = 0;
+        virtual size_t Len() const = 0;
 
 
-        virtual float*              ptr_fp32(size_t index)  = 0;
-        virtual int*                ptr_int32(size_t index) = 0;
-        virtual uint64_t*           ptr_uint64(size_t index) = 0;
-        virtual double*             ptr_fp64(size_t index)  = 0;
-        virtual de::Half*           ptr_fp16(size_t index)  = 0;
-        virtual de::CPf*            ptr_cpl32(size_t index) = 0;
-        virtual uint8_t*            ptr_uint8(size_t index) = 0;
-        virtual de::Vector4f*       ptr_vec4f(size_t index) = 0;
-
+        virtual float* ptr_fp32(size_t index) = 0;
+        virtual int* ptr_int32(size_t index) = 0;
+        virtual uint64_t* ptr_uint64(size_t index) = 0;
+        virtual double* ptr_fp64(size_t index) = 0;
+        virtual de::Half* ptr_fp16(size_t index) = 0;
+        virtual de::CPf* ptr_cpl32(size_t index) = 0;
+        virtual uint8_t* ptr_uint8(size_t index) = 0;
+        virtual de::Vector4f* ptr_vec4f(size_t index) = 0;
 
         virtual void release() = 0;
 
 
-        virtual de::Vector& operator=(de::Vector& src) = 0;
+        virtual de::Vector& SoftCopy(de::Vector& src) = 0;
+
+        virtual int Type() const = 0;
 
 
-        virtual ~Vector() {}
+        ~Vector() {}
     };
 
 

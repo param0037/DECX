@@ -25,6 +25,29 @@ namespace de
 
     namespace cpu {
         _DECX_API_ de::DH Transpose(de::Matrix& src, de::Matrix& dst);
+
+
+        _DECX_API_ de::DH Histogram(de::Matrix& src, de::Vector& dst);
+    }
+}
+
+
+namespace de
+{
+    namespace gen {
+        namespace cpu {
+            _DECX_API_ de::DH Zeros(de::Vector& src);
+
+
+            _DECX_API_ de::DH Zeros(de::Matrix& src);
+
+
+            _DECX_API_ de::DH Zeros(de::Tensor& src);
+
+
+            _DECX_API_ de::DH RandomGaussian(de::Matrix& src, const float mean, const float sigma, de::Point2D_d clipping_range,
+                const uint32_t resolution, const int data_type);
+        }
     }
 }
 

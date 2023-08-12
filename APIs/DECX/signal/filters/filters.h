@@ -22,30 +22,12 @@
 namespace de {
 	namespace signal {
 		namespace cuda {
-			/**
-			* Do not need to centerlize the amplidue specturm
-			* @param src : Input Vector, in type of de::_COMPLEX_F32_
-			* @param dst : Output Vector, in type of de::_COMPLEX_F32_
-			* @param cutoff_frequency : ~.x -> cutoff frequency on x-axis; ~.y -> cutoff frequency on y-axis
-			*/
 			_DECX_API_ de::DH LowPass1D_Ideal(de::GPU_Vector& src, de::GPU_Vector& dst, const size_t cutoff_frequency);
 
 
-			/**
-			* Do not need to centerlize the amplidue specturm
-			* @param src : Input Matrix, in type of de::_COMPLEX_F32_
-			* @param dst : Output Matrix, in type of de::_COMPLEX_F32_
-			* @param cutoff_frequency : ~.x -> cutoff frequency on x-axis; ~.y -> cutoff frequency on y-axis
-			*/
 			_DECX_API_ de::DH LowPass2D_Ideal(de::GPU_Matrix& src, de::GPU_Matrix& dst, const de::Point2D cutoff_frequency);
 
 
-			/*
-			* @param src : Input Vector, in type of de::_COMPLEX_F32_
-			* @param dst : Output Vector, in type of de::_COMPLEX_F32_
-			* @param u : Mean value of the Gaussian distribution
-			* @param sigma : Standard deviation of the Gaussian distribution
-			*/
 			_DECX_API_ de::DH Gaussian_Window1D(de::GPU_Vector& src, de::GPU_Vector& dst, const float u, const float sigma);
 
 
@@ -59,28 +41,12 @@ namespace de {
 		}
 
 		namespace cpu {
-			/**
-			* Do not need to centerlize the amplidue specturm
-			* @param src : Input Vector, in type of de::_COMPLEX_F32_
-			* @param dst : Output Vector, in type of de::_COMPLEX_F32_
-			* @param cutoff_frequency : ~.x -> cutoff frequency on x-axis; ~.y -> cutoff frequency on y-axis
-			*/
 			_DECX_API_ de::DH LowPass1D_Ideal(de::Vector& src, de::Vector& dst, const size_t cutoff_frequency);
 
-			/**
-			* Do not need to centerlize the amplidue specturm
-			* @param src : Input Matrix, in type of de::_COMPLEX_F32_
-			* @param dst : Output Matrix, in type of de::_COMPLEX_F32_
-			* @param cutoff_frequency : ~.x -> cutoff frequency on x-axis; ~.y -> cutoff frequency on y-axis
-			*/
+
 			_DECX_API_ de::DH LowPass2D_Ideal(de::Matrix& src, de::Matrix& dst, const de::Point2D cutoff_frequency);
 
-			/*
-			* @param src : Input Vector, in type of de::_COMPLEX_F32_
-			* @param dst : Output Vector, in type of de::_COMPLEX_F32_
-			* @param u : Mean value of the Gaussian distribution
-			* @param sigma : Standard deviation of the Gaussian distribution
-			*/
+
 			_DECX_API_ de::DH Gaussian_Window1D(de::Vector& src, de::Vector& dst, const float u, const float sigma);
 
 
@@ -91,6 +57,9 @@ namespace de {
 
 
 			_DECX_API_ de::DH Cone_Window2D(de::Matrix& src, de::Matrix& dst, const de::Point2D origin, const float radius);
+
+
+			_DECX_API_ de::DH ButterWorth_LP2D(de::Matrix& src, de::Matrix& dst, const float cutoff_freq, const int order);
 		}
 	}
 }

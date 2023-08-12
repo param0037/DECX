@@ -7,13 +7,12 @@
 *	2021.04.16
 */
 
+#pragma once
 
 #ifndef _GPU_MATRIX_H_
 #define _GPU_MATRIX_H_
 
 #include "../basic.h"
-#include "store_types.h"
-
 
 namespace de
 {
@@ -32,7 +31,10 @@ namespace de
 		virtual void release() = 0;
 
 
-		virtual de::GPU_Matrix& operator=(de::GPU_Matrix& src) = 0;
+		virtual int Type() = 0;
+
+
+		virtual de::GPU_Matrix& SoftCopy(de::GPU_Matrix& src) = 0;
 
 
 		~GPU_Matrix() {}

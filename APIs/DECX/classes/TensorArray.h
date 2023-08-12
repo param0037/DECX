@@ -12,8 +12,6 @@
 #define _TENSORARRAY_H_
 
 #include "../basic.h"
-#include "store_types.h"
-
 
 namespace de
 {
@@ -23,16 +21,16 @@ namespace de
         TensorArray() {}
 
 
-        virtual uint Width() = 0;
+        virtual uint Width() const = 0;
 
 
-        virtual uint Height() = 0;
+        virtual uint Height() const = 0;
 
 
-        virtual uint Depth() = 0;
+        virtual uint Depth() const = 0;
 
 
-        virtual uint TensorNum() = 0;
+        virtual uint TensorNum() const = 0;
 
 
         virtual float* ptr_fp32(const int x, const int y, const int z, const int tensor_id) = 0;
@@ -45,7 +43,7 @@ namespace de
         virtual de::TensorArray& SoftCopy(de::TensorArray& src) = 0;
 
 
-        virtual int Type() = 0;
+        virtual int Type() const = 0;
 
 
         virtual void release() = 0;

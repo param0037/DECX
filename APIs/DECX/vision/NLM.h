@@ -57,4 +57,14 @@ namespace de
     }
 }
 
+
+namespace de
+{
+    namespace vis {
+        namespace cpu {
+            _DECX_API_ de::DH Enhance_Retinex(de::Matrix& src, de::Matrix& dst);
+        }
+    }
+}
+
 #endif

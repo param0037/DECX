@@ -13,8 +13,6 @@
 #define _GPU_TENSOR_H_
 
 #include "tensor.h"
-#include "store_types.h"
-
 
 namespace de
 {
@@ -24,22 +22,22 @@ namespace de
         GPU_Tensor() {}
 
 
-        virtual uint Width() = 0;
+        virtual uint Width() const = 0;
 
 
-        virtual uint Height() = 0;
+        virtual uint Height() const = 0;
 
 
-        virtual uint Depth() = 0;
+        virtual uint Depth() const = 0;
 
 
-        virtual de::GPU_Tensor& operator=(de::GPU_Tensor& src) = 0;
+        virtual de::GPU_Tensor& SoftCopy(de::GPU_Tensor& src) = 0;
 
 
         virtual void release() = 0;
 
 
-        virtual int Type() = 0;
+        virtual int Type() const = 0;
     };
 
 

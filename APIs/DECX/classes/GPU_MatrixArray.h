@@ -7,12 +7,14 @@
 *	2021.04.16
 */
 
+#pragma once
+
 #ifndef _GPU_MATRIXARRAY_H_
 #define _GPU_MATRIXARRAY_H_
 
 #include "../basic.h"
 #include "MatrixArray.h"
-#include "store_types.h"
+
 
 
 namespace de
@@ -20,25 +22,23 @@ namespace de
     class _DECX_API_ GPU_MatrixArray
     {
     public:
-        uint ArrayNumber();
+        virtual uint Width() const = 0;
 
 
-        virtual uint Width() = 0;
+        virtual uint Height() const = 0;
 
 
-        virtual uint Height() = 0;
+        virtual uint MatrixNumber() const = 0;
 
 
-        virtual uint MatrixNumber() = 0;
 
-
-        virtual de::GPU_MatrixArray& operator=(de::GPU_MatrixArray& src) = 0;
+        virtual de::GPU_MatrixArray& SoftCopy(de::GPU_MatrixArray& src) = 0;
 
 
         virtual void release() = 0;
 
 
-        virtual int Type() = 0;
+        virtual int Type() const = 0;
     };
 
 

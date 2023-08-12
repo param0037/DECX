@@ -8,14 +8,15 @@
 *   More information please visit https://github.com/param0037/DECX
 */
 
-#ifndef _FFT1D_H_
-#define _FFT1D_H_
+#ifndef _FFT_H_
+#define _FFT_H_
 
 #include "../../basic.h"
 #include "../../classes/Vector.h"
 #include "../../classes/GPU_Vector.h"
 #include "../../classes/GPU_Matrix.h"
 #include "../../classes/class_utils.h"
+
 
 
 namespace de
@@ -33,7 +34,13 @@ namespace de
 			_DECX_API_ de::DH FFT1D(de::Vector& src, de::Vector& dst, const int FFT_flag);
 
 
+			_DECX_API_ de::DH FFT1D(de::GPU_Vector& src, de::GPU_Vector& dst, const int FFT_flag);
+
+
 			_DECX_API_ de::DH IFFT1D(de::Vector& src, de::Vector& dst, const int FFT_flag);
+
+
+			_DECX_API_ de::DH IFFT1D(de::GPU_Vector& src, de::GPU_Vector& dst, const int FFT_flag);
 		}
 
 		namespace cpu
@@ -42,6 +49,49 @@ namespace de
 
 
 			_DECX_API_ de::DH IFFT1D(de::Vector& src, de::Vector& dst, const int FFT_flag);
+		}
+	}
+}
+
+
+
+
+namespace de
+{
+	namespace signal {
+		namespace cpu {
+			_DECX_API_ de::DH Module(de::Matrix& src, de::Matrix& dst);
+
+
+			_DECX_API_ de::DH Angle(de::Matrix& src, de::Matrix& dst);
+		}
+	}
+}
+
+
+namespace de
+{
+	namespace signal
+	{
+		namespace cuda {
+			_DECX_API_ de::DH FFT2D(de::Matrix& src, de::Matrix& dst, const int FFT_flag);
+
+
+			_DECX_API_ de::DH FFT2D(de::GPU_Matrix& src, de::GPU_Matrix& dst, const int FFT_flag);
+
+
+			_DECX_API_ de::DH IFFT2D(de::Matrix& src, de::Matrix& dst, const int FFT_flag);
+
+
+			_DECX_API_ de::DH IFFT2D(de::GPU_Matrix& src, de::GPU_Matrix& dst, const int FFT_flag);
+		}
+
+
+		namespace cpu {
+			_DECX_API_ de::DH FFT2D(de::Matrix& src, de::Matrix& dst, const int FFT_flag);
+
+
+			_DECX_API_ de::DH IFFT2D(de::Matrix& src, de::Matrix& dst, const int FFT_flag);
 		}
 	}
 }

@@ -21,12 +21,31 @@
 #define _REDUCE2D_BLOCK_DIM_X_ 32
 #define _REDUCE2D_BLOCK_DIM_Y_ 8
 
+
+
 namespace decx
 {
 namespace reduce
 {
     namespace GPUK 
     {
+        template <typename _Ty, uint16_t reduce_length, uint16_t _parallel_lane = 1>
+        //the result is stored under the 0th thread of a warp
+        __device__ __inline__ void cu_warp_reduce(decx::utils::cuda::cu_math_ops<_Ty>& _op, const void* _src, void* _dst)
+        {
+            _Ty tmp;
+            _Ty accu = *((_Ty*)_src);
+            constexpr uint16_t _lane_reduce_len = reduce_length / _parallel_lane;
+#pragma unroll 
+            for (int16_t i = _lane_reduce_len / 2; i > 0; i >>= 1) {
+                tmp = __shfl_down_sync(0xffffffff, accu, i, _lane_reduce_len);
+                accu = _op(tmp, accu);
+            }
+            *((_Ty*)_dst) = accu;
+        }
+
+// ------------------------------------------------------------------------------------------------------------------------
+
         template <typename TypeOP, uint32_t reduce_length, uint32_t _parallel_lane = 1>
         //the result is stored under the 0th thread of a warp
         __device__ __inline__ void cu_warp_reduce_fp32(TypeOP& _op, const float* _src, float* _dst)
@@ -152,7 +171,7 @@ namespace reduce
         }
 
 
-        __device__ __inline__ float half8_reduce_sum(const float4 _in)
+        __device__ __inline__ float half8_sum(const float4 _in)
         {
             __half2 _accu = *((__half2*)&_in.x);
             _accu = __hadd2(*((__half2*)&_in.y), _accu);

@@ -13,7 +13,7 @@
 
 #include <iostream>
 #include <initializer_list>
-#include <Windows.h>
+//#include <Windows.h>
 
 
 typedef unsigned char uchar;
@@ -43,15 +43,6 @@ typedef unsigned int uint;
 
 namespace de
 {
-	//typedef struct DECX_Handle
-	//{
-	//	// Shows the types of errors, defined in DECX_error_types
-	//	int error_type;
-
-	//	// Describes the details of the errors
-	//	char* error_string;
-	//}DH;
-
 	typedef struct DECX_Handle
 	{
 		int error_type;
@@ -59,18 +50,6 @@ namespace de
 	}DH;
 }
 
-
-namespace de
-{
-	_DECX_API_ void InitCuda();
-
-
-	_DECX_API_ void InitCPUInfo();
-
-	namespace cuda {
-		_DECX_API_ void DECX_CUDA_exit();
-	}
-}
 
 namespace de
 {

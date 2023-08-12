@@ -29,10 +29,29 @@ _DECX_API_ de::DH de::cuda::Sum(de::Matrix& src, double* res)
         decx::reduce::matrix_reduce2D_full_sum_fp32(_src, &res_fp32);
         *res = res_fp32;
     }
+    else if (_src->Type() == decx::_DATA_TYPES_FLAGS_::_FP16_) {
+        float res_fp32 = 0;
+        decx::reduce::matrix_reduce2D_full_sum_fp16(_src, &res_fp32);
+        *res = res_fp32;
+    }
+    else if (_src->Type() == decx::_DATA_TYPES_FLAGS_::_UINT8_) {
+        int32_t res_int32 = 0;
+        decx::reduce::matrix_reduce2D_full_sum_u8_i32(_src, &res_int32);
+        *res = res_int32;
+    }
+    else if (_src->Type() == decx::_DATA_TYPES_FLAGS_::_FP64_) {
+        double res_fp64 = 0;
+        decx::reduce::matrix_reduce2D_full_sum_fp64(_src, &res_fp64);
+        *res = res_fp64;
+    }
+    else if (_src->Type() == decx::_DATA_TYPES_FLAGS_::_INT32_) {
+        int32_t res_int32 = 0;
+        decx::reduce::matrix_reduce2D_full_sum_i32(_src, &res_int32);
+        *res = res_int32;
+    }
 
     return handle;
 }
-
 
 
 
@@ -54,7 +73,6 @@ _DECX_API_ de::DH de::cuda::Max(de::Matrix& src, double* res)
 
     return handle;
 }
-
 
 
 
@@ -94,10 +112,29 @@ _DECX_API_ de::DH de::cuda::Sum(de::GPU_Matrix& src, double* res)
         decx::reduce::dev_matrix_reduce2D_full_sum_fp32(_src, &res_fp32);
         *res = res_fp32;
     }
+    else if (_src->Type() == decx::_DATA_TYPES_FLAGS_::_FP16_) {
+        float res_fp32 = 0;
+        decx::reduce::dev_matrix_reduce2D_full_sum_fp16(_src, &res_fp32);
+        *res = res_fp32;
+    }
+    else if (_src->Type() == decx::_DATA_TYPES_FLAGS_::_UINT8_) {
+        int32_t res_fp32 = 0;
+        decx::reduce::dev_matrix_reduce2D_full_sum_u8_i32(_src, &res_fp32);
+        *res = res_fp32;
+    }
+    else if (_src->Type() == decx::_DATA_TYPES_FLAGS_::_FP64_) {
+        double res_fp64 = 0;
+        decx::reduce::dev_matrix_reduce2D_full_sum_fp64(_src, &res_fp64);
+        *res = res_fp64;
+    }
+    else if (_src->Type() == decx::_DATA_TYPES_FLAGS_::_INT32_) {
+        int32_t res_int32 = 0;
+        decx::reduce::dev_matrix_reduce2D_full_sum_i32(_src, &res_int32);
+        *res = res_int32;
+    }
 
     return handle;
 }
-
 
 
 
@@ -119,6 +156,7 @@ _DECX_API_ de::DH de::cuda::Max(de::GPU_Matrix& src, double* res)
 
     return handle;
 }
+
 
 
 _DECX_API_ de::DH de::cuda::Min(de::GPU_Matrix& src, double* res)
@@ -159,6 +197,15 @@ _DECX_API_ de::DH de::cuda::Sum(de::Matrix& src, de::Vector& dst, const int _red
         case decx::_DATA_TYPES_FLAGS_::_FP32_:
             decx::reduce::matrix_reduce2D_1way_sum_fp32<true>(_src, _dst);
             break;
+
+        case decx::_DATA_TYPES_FLAGS_::_FP16_:
+            decx::reduce::matrix_reduce2D_1way_sum_fp16_fp32<true>(_src, _dst);
+            break;
+
+        case decx::_DATA_TYPES_FLAGS_::_UINT8_:
+            decx::reduce::matrix_reduce2D_1way_sum_u8_i32<true>(_src, _dst);
+            break;
+
         default:
             break;
         }
@@ -168,6 +215,14 @@ _DECX_API_ de::DH de::cuda::Sum(de::Matrix& src, de::Vector& dst, const int _red
         {
         case decx::_DATA_TYPES_FLAGS_::_FP32_:
             decx::reduce::matrix_reduce2D_1way_sum_fp32<false>(_src, _dst);
+            break;
+
+        case decx::_DATA_TYPES_FLAGS_::_FP16_:
+            decx::reduce::matrix_reduce2D_1way_sum_fp16_fp32<false>(_src, _dst);
+            break;
+
+        case decx::_DATA_TYPES_FLAGS_::_UINT8_:
+            decx::reduce::matrix_reduce2D_1way_sum_u8_i32<false>(_src, _dst);
             break;
         default:
             break;
@@ -179,6 +234,65 @@ _DECX_API_ de::DH de::cuda::Sum(de::Matrix& src, de::Vector& dst, const int _red
 
     return handle;
 }
+
+
+
+
+_DECX_API_ de::DH de::cuda::Sum(de::GPU_Matrix& src, de::GPU_Vector& dst, const int _reduce2D_mode)
+{
+    de::DH handle;
+    if (!decx::cuda::_is_CUDA_init()) {
+        decx::err::CUDA_Not_init<true>(&handle);
+        return handle;
+    }
+
+    decx::_GPU_Matrix* _src = dynamic_cast<decx::_GPU_Matrix*>(&src);
+    decx::_GPU_Vector* _dst = dynamic_cast<decx::_GPU_Vector*>(&dst);
+
+    if (_reduce2D_mode == de::REDUCE_METHOD::_REDUCE2D_H_) {
+        switch (_src->Type())
+        {
+        case decx::_DATA_TYPES_FLAGS_::_FP32_:
+            decx::reduce::dev_matrix_reduce2D_1way_sum_fp32<true>(_src, _dst);
+            break;
+
+        case decx::_DATA_TYPES_FLAGS_::_FP16_:
+            decx::reduce::dev_matrix_reduce2D_1way_sum_fp16_fp32<true>(_src, _dst);
+            break;
+
+        case decx::_DATA_TYPES_FLAGS_::_UINT8_:
+            decx::reduce::dev_matrix_reduce2D_1way_sum_u8_i32<true>(_src, _dst);
+            break;
+        default:
+            break;
+        }
+    }
+    else if (_reduce2D_mode == de::REDUCE_METHOD::_REDUCE2D_V_) {
+        switch (_src->Type())
+        {
+        case decx::_DATA_TYPES_FLAGS_::_FP32_:
+            decx::reduce::dev_matrix_reduce2D_1way_sum_fp32<false>(_src, _dst);
+            break;
+
+        case decx::_DATA_TYPES_FLAGS_::_FP16_:
+            decx::reduce::dev_matrix_reduce2D_1way_sum_fp16_fp32<false>(_src, _dst);
+            break;
+
+        case decx::_DATA_TYPES_FLAGS_::_UINT8_:
+            decx::reduce::dev_matrix_reduce2D_1way_sum_u8_i32<false>(_src, _dst);
+            break;
+        default:
+            break;
+        }
+    }
+    else {
+        decx::err::MeaningLessFlag<true>(&handle);
+    }
+
+    return handle;
+}
+
+
 
 
 
@@ -199,6 +313,15 @@ _DECX_API_ de::DH de::cuda::Max(de::Matrix& src, de::Vector& dst, const int _red
         case decx::_DATA_TYPES_FLAGS_::_FP32_:
             decx::reduce::matrix_reduce2D_1way_cmp_fp32<true, true>(_src, _dst);
             break;
+
+        case decx::_DATA_TYPES_FLAGS_::_FP16_:
+            decx::reduce::matrix_reduce2D_1way_cmp_fp16<true, true>(_src, _dst);
+            break;
+
+        case decx::_DATA_TYPES_FLAGS_::_UINT8_:
+            decx::reduce::matrix_reduce2D_1way_cmp_u8<true, true>(_src, _dst);
+            break;
+
         default:
             break;
         }
@@ -208,6 +331,14 @@ _DECX_API_ de::DH de::cuda::Max(de::Matrix& src, de::Vector& dst, const int _red
         {
         case decx::_DATA_TYPES_FLAGS_::_FP32_:
             decx::reduce::matrix_reduce2D_1way_cmp_fp32<true, false>(_src, _dst);
+            break;
+
+        case decx::_DATA_TYPES_FLAGS_::_FP16_:
+            decx::reduce::matrix_reduce2D_1way_cmp_fp16<true, false>(_src, _dst);
+            break;
+
+        case decx::_DATA_TYPES_FLAGS_::_UINT8_:
+            decx::reduce::matrix_reduce2D_1way_cmp_u8<true, false>(_src, _dst);
             break;
         default:
             break;
@@ -219,6 +350,65 @@ _DECX_API_ de::DH de::cuda::Max(de::Matrix& src, de::Vector& dst, const int _red
 
     return handle;
 }
+
+
+
+
+_DECX_API_ de::DH de::cuda::Max(de::GPU_Matrix& src, de::GPU_Vector& dst, const int _reduce2D_mode)
+{
+    de::DH handle;
+    if (!decx::cuda::_is_CUDA_init()) {
+        decx::err::CUDA_Not_init<true>(&handle);
+        return handle;
+    }
+
+    decx::_GPU_Matrix* _src = dynamic_cast<decx::_GPU_Matrix*>(&src);
+    decx::_GPU_Vector* _dst = dynamic_cast<decx::_GPU_Vector*>(&dst);
+
+    if (_reduce2D_mode == de::REDUCE_METHOD::_REDUCE2D_H_) {
+        switch (_src->Type())
+        {
+        case decx::_DATA_TYPES_FLAGS_::_FP32_:
+            decx::reduce::dev_matrix_reduce2D_1way_cmp_fp32<true, true>(_src, _dst);
+            break;
+
+        case decx::_DATA_TYPES_FLAGS_::_FP16_:
+            decx::reduce::dev_matrix_reduce2D_1way_cmp_fp16<true, true>(_src, _dst);
+            break;
+
+        case decx::_DATA_TYPES_FLAGS_::_UINT8_:
+            decx::reduce::dev_matrix_reduce2D_1way_cmp_u8<true, true>(_src, _dst);
+            break;
+
+        default:
+            break;
+        }
+    }
+    else if (_reduce2D_mode == de::REDUCE_METHOD::_REDUCE2D_V_) {
+        switch (_src->Type())
+        {
+        case decx::_DATA_TYPES_FLAGS_::_FP32_:
+            decx::reduce::dev_matrix_reduce2D_1way_cmp_fp32<true, false>(_src, _dst);
+            break;
+
+        case decx::_DATA_TYPES_FLAGS_::_FP16_:
+            decx::reduce::dev_matrix_reduce2D_1way_cmp_fp16<true, false>(_src, _dst);
+            break;
+
+        case decx::_DATA_TYPES_FLAGS_::_UINT8_:
+            decx::reduce::dev_matrix_reduce2D_1way_cmp_u8<true, false>(_src, _dst);
+            break;
+        default:
+            break;
+        }
+    }
+    else {
+        decx::err::MeaningLessFlag<true>(&handle);
+    }
+
+    return handle;
+}
+
 
 
 
@@ -239,6 +429,15 @@ _DECX_API_ de::DH de::cuda::Min(de::Matrix& src, de::Vector& dst, const int _red
         case decx::_DATA_TYPES_FLAGS_::_FP32_:
             decx::reduce::matrix_reduce2D_1way_cmp_fp32<false, true>(_src, _dst);
             break;
+
+        case decx::_DATA_TYPES_FLAGS_::_FP16_:
+            decx::reduce::matrix_reduce2D_1way_cmp_fp16<false, true>(_src, _dst);
+            break;
+
+        case decx::_DATA_TYPES_FLAGS_::_UINT8_:
+            decx::reduce::matrix_reduce2D_1way_cmp_u8<false, true>(_src, _dst);
+            break;
+
         default:
             break;
         }
@@ -248,6 +447,72 @@ _DECX_API_ de::DH de::cuda::Min(de::Matrix& src, de::Vector& dst, const int _red
         {
         case decx::_DATA_TYPES_FLAGS_::_FP32_:
             decx::reduce::matrix_reduce2D_1way_cmp_fp32<false, false>(_src, _dst);
+            break;
+
+        case decx::_DATA_TYPES_FLAGS_::_FP16_:
+            decx::reduce::matrix_reduce2D_1way_cmp_fp16<false, false>(_src, _dst);
+            break;
+
+        case decx::_DATA_TYPES_FLAGS_::_UINT8_:
+            decx::reduce::matrix_reduce2D_1way_cmp_u8<false, false>(_src, _dst);
+            break;
+        default:
+            break;
+        }
+    }
+    else {
+        decx::err::MeaningLessFlag<true>(&handle);
+    }
+
+    return handle;
+}
+
+
+
+
+_DECX_API_ de::DH de::cuda::Min(de::GPU_Matrix& src, de::GPU_Vector& dst, const int _reduce2D_mode)
+{
+    de::DH handle;
+    if (!decx::cuda::_is_CUDA_init()) {
+        decx::err::CUDA_Not_init<true>(&handle);
+        return handle;
+    }
+
+    decx::_GPU_Matrix* _src = dynamic_cast<decx::_GPU_Matrix*>(&src);
+    decx::_GPU_Vector* _dst = dynamic_cast<decx::_GPU_Vector*>(&dst);
+
+    if (_reduce2D_mode == de::REDUCE_METHOD::_REDUCE2D_H_) {
+        switch (_src->Type())
+        {
+        case decx::_DATA_TYPES_FLAGS_::_FP32_:
+            decx::reduce::dev_matrix_reduce2D_1way_cmp_fp32<false, true>(_src, _dst);
+            break;
+
+        case decx::_DATA_TYPES_FLAGS_::_FP16_:
+            decx::reduce::dev_matrix_reduce2D_1way_cmp_fp16<false, true>(_src, _dst);
+            break;
+
+        case decx::_DATA_TYPES_FLAGS_::_UINT8_:
+            decx::reduce::dev_matrix_reduce2D_1way_cmp_u8<false, true>(_src, _dst);
+            break;
+
+        default:
+            break;
+        }
+    }
+    else if (_reduce2D_mode == de::REDUCE_METHOD::_REDUCE2D_V_) {
+        switch (_src->Type())
+        {
+        case decx::_DATA_TYPES_FLAGS_::_FP32_:
+            decx::reduce::dev_matrix_reduce2D_1way_cmp_fp32<false, false>(_src, _dst);
+            break;
+
+        case decx::_DATA_TYPES_FLAGS_::_FP16_:
+            decx::reduce::dev_matrix_reduce2D_1way_cmp_fp16<false, false>(_src, _dst);
+            break;
+
+        case decx::_DATA_TYPES_FLAGS_::_UINT8_:
+            decx::reduce::dev_matrix_reduce2D_1way_cmp_u8<false, false>(_src, _dst);
             break;
         default:
             break;

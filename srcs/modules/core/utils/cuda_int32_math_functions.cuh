@@ -20,7 +20,11 @@ namespace decx
     {
         namespace cuda
         {
-            __device__ __inline__ int
+            template <typename _Ty>
+            using cu_math_ops = _Ty(_Ty, _Ty);
+
+
+            __device__ __inline__ int32_t
                 __i32_add(const int32_t a, const int32_t b)
             {
                 return a + b;
@@ -28,7 +32,18 @@ namespace decx
 
 
             __device__ __inline__ double
-                __float2_add(const double a, const double b)
+                __i32_add2(const double a, const double b)
+            {
+                decx::utils::_cuda_vec64 _res;
+                _res._vi2.x = ((int2*)&a)->x + ((int2*)&b)->x;
+                _res._vi2.y = ((int2*)&a)->y + ((int2*)&b)->y;
+
+                return _res._fp64;
+            }
+
+
+            __device__ __inline__ double
+                __float_add2(const double a, const double b)
             {
                 float2 res;
                 res.x = __fadd_rn(((float2*)&a)->x, ((float2*)&b)->x);
@@ -38,7 +53,7 @@ namespace decx
 
 
             __device__ __inline__ double
-                __float2_max(const double a, const double b)
+                __float_max2(const double a, const double b)
             {
                 float2 res;
                 res.x = max(((float2*)&a)->x, ((float2*)&b)->x);
@@ -48,7 +63,7 @@ namespace decx
 
 
             __device__ __inline__ double
-                __float2_min(const double a, const double b)
+                __float_min2(const double a, const double b)
             {
                 float2 res;
                 res.x = min(((float2*)&a)->x, ((float2*)&b)->x);
@@ -61,6 +76,17 @@ namespace decx
                 __u16_add(const uint16_t a, const uint16_t b)
             {
                 return a + b;
+            }
+
+
+            __device__ __inline__ double
+                __u16_add4(const double a, const double b)
+            {
+                decx::utils::_cuda_vec64 _res;
+                _res._vui2.x = __vadd2(((uint2*)&a)->x, ((uint2*)&b)->x);
+                _res._vui2.y = __vadd2(((uint2*)&a)->y, ((uint2*)&b)->y);
+
+                return _res._fp64;
             }
 
 
@@ -144,8 +170,24 @@ namespace decx
                 return min(a, b);
             }
 
-            template <class _TyData>
-            using device_op_type = _TyData(_TyData, _TyData);
+
+
+            //template <class _TyData>
+            //using device_op_type = _TyData(_TyData, _TyData);
+        }
+
+        // -------------------------------------- typecasting ------------------------------------------
+        namespace cuda
+        {
+            __device__ __inline__ double
+                __cvt_uchar4_ushort4(const int32_t _in)
+            {
+                _cuda_vec64 _res;
+                _res._vi2.x = __byte_perm(0, _in, 0x0504);
+                _res._vi2.y = __byte_perm(0, _in, 0x0706);
+
+                return _res._fp64;
+            }
         }
     }
 }
