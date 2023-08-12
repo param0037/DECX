@@ -10,14 +10,19 @@ A fast linear algebra, computer vision, and mathematic library, based on CUDA an
 # Changelog
 ## Update 16/7/2023
 1. Divide the project according to components according to their functionalities.
-2. Add CUDA scan algorithms based on decoupled lookback method [1], which gives perfect performance.
+2. Added CUDA scan algorithms based on decoupled lookback method [1], which gives perfect performance.
 
 ## Update 28/7/2023
-1. Add reduction algorithms that will be further integrated in summation, min/max, dot product, etc.
-2. Add asynchronous part of memory copying (between host and device)
+1. Added reduction algorithms will be further integrated into summation, min/max, dot product, etc.
+2. Added asynchronous part of memory copying (between host and device)
+
+## Update 12/8/2023
+1. Added full, horizontal, and vertical reduction for the 2D array.
+2. Added support of fp64(double) and int32(32-bit signed integer) in full reduction mode of de::Matrix.
+3. Sorted the APIs.
 
 # Upcoming optimizations
-1. Summation and global comparisons on vector and matrix (full matrix, horizontal and vertical)
+1. Full reduction mode of comparisons on vector and matrix.
 2. Adapt titling technique to make maximum utilization of L1 and L2 cache, to speed up memory access in CPU-based FFT.
 3. Add warp-level primitives to CUDA-based FFT kernels to speed up short-length FFT transforms.
 4. More asynchronous APIs are under development.
