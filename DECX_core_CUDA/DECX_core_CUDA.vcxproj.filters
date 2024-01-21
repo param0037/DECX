@@ -1,0 +1,351 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{45a51676-597b-422d-84fc-d94d5f513169}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\classes">
+      <UniqueIdentifier>{2ec5a236-24a3-49bd-8d7a-bea4924f5ab0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\handles">
+      <UniqueIdentifier>{7f896108-5d40-45a1-b2fc-b470408daa21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\core">
+      <UniqueIdentifier>{e30e88c2-f3e9-4341-8021-94817901212d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\core\utils">
+      <UniqueIdentifier>{9a052247-e559-4e76-bab2-fd9f9615eb4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\core\configs">
+      <UniqueIdentifier>{d8bf1f2e-c19e-4af9-867d-9cfd62c05195}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\core\cudaStream_management">
+      <UniqueIdentifier>{b86d5e61-9320-416b-9f82-1b742b438a8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\basic_process">
+      <UniqueIdentifier>{2f224c2f-69e4-4f17-a581-60ed3780cf64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\basic_process\transpose">
+      <UniqueIdentifier>{ba59b606-f20e-402d-96e8-02310f1e87bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\basic_process\store_type_convert">
+      <UniqueIdentifier>{0a9c8b48-cb64-4fa2-aa9e-8ee8e844842f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\basic_process\channel_alteration">
+      <UniqueIdentifier>{a3d68a82-73a1-4979-87f3-676855f624e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\basic_process\type_statistics">
+      <UniqueIdentifier>{f3f3236d-a2db-4219-bba1-d3e38f5946c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\basic_process\type_cast">
+      <UniqueIdentifier>{29c5ccb6-4e5c-4dc1-8a9e-63e072facb01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\basic_process\fill">
+      <UniqueIdentifier>{a29f30a8-59ec-4167-a068-ad177c26f6bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\basic_process\fill\constant">
+      <UniqueIdentifier>{267e68e6-5df2-41e9-a3ef-8fce77ce8bb1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\cv">
+      <UniqueIdentifier>{8df46b88-dd80-4f44-a797-67855f8e7925}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\cv\cv_classes">
+      <UniqueIdentifier>{b91ebb3a-bcd0-4612-848b-b6b33b09ba4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\cv\NLM">
+      <UniqueIdentifier>{6b694b63-af82-4ec6-b2cb-8dcb8cbcc9e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\signal">
+      <UniqueIdentifier>{2d842028-206f-4cd4-9606-a2230566a69d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\signal\fft">
+      <UniqueIdentifier>{bdffe23b-d53a-4f1c-8d3f-51b814bc5a3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\signal\fft\1D">
+      <UniqueIdentifier>{2b54e6c2-5227-4c5a-b9fb-2a4c18465c24}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\signal\fft\2D">
+      <UniqueIdentifier>{d74e29ea-abef-4ecf-b324-30a0ca779f99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4368f581-e1d9-47fa-9429-6ac7c9486db1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\classes">
+      <UniqueIdentifier>{c7fc8493-d3fa-40cd-bcff-67b61265cec3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\core">
+      <UniqueIdentifier>{6e84cea2-4fc5-470d-a9a0-483026dc6f54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\core\cuda_stream_management">
+      <UniqueIdentifier>{f9d0d1e7-0a53-4398-be28-6a645fa1a21a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\core\configs">
+      <UniqueIdentifier>{87693e47-1928-4096-b66f-badc91b8e6d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\core\utils">
+      <UniqueIdentifier>{6eed11bf-d8e8-4b34-b35f-8db58fb0d436}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\core\memory_management">
+      <UniqueIdentifier>{51d6463b-965d-485a-9b6e-a5ad55b68b2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\core\allocators">
+      <UniqueIdentifier>{76e5add7-7bc6-4cb6-8775-c7606e206124}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\classes\data transmission">
+      <UniqueIdentifier>{3a4b60e6-1288-497c-b80f-ea6df03d7cb8}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\srcs\modules\classes\classes_util.h">
+      <Filter>头文件\classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\modules\classes\GPU_Matrix.h">
+      <Filter>头文件\classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\modules\classes\GPU_MatrixArray.h">
+      <Filter>头文件\classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\modules\classes\GPU_Tensor.h">
+      <Filter>头文件\classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\modules\classes\GPU_TensorArray.h">
+      <Filter>头文件\classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\modules\classes\GPU_Vector.h">
+      <Filter>头文件\classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\modules\classes\Matrix.h">
+      <Filter>头文件\classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\modules\classes\MatrixArray.h">
+      <Filter>头文件\classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\modules\classes\store_types.h">
+      <Filter>头文件\classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\modules\classes\Tensor.h">
+      <Filter>头文件\classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\modules\classes\TensorArray.h">
+      <Filter>头文件\classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\modules\classes\type_info.h">
+      <Filter>头文件\classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\modules\classes\Vector.h">
+      <Filter>头文件\classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\modules\handles\decx_handles.h">
+      <Filter>头文件\handles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\modules\core\allocators.h">
+      <Filter>头文件\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\modules\core\basic.h">
+      <Filter>头文件\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\modules\core\basic_dllexport.h">
+      <Filter>头文件\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\modules\core\compile_params.h">
+      <Filter>头文件\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\modules\core\configuration.h">
+      <Filter>头文件\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\modules\core\decx_alloc_interface.h">
+      <Filter>头文件\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\modules\core\error.h">
+      <Filter>头文件\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\modules\core\include.h">
+      <Filter>头文件\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\modules\core\vector_defines.h">
+      <Filter>头文件\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\modules\core\utils\array_ptr_info.h">
+      <Filter>头文件\core\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\modules\core\utils\decx_utils_device_functions.cuh">
+      <Filter>头文件\core\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\modules\core\utils\decx_utils_functions.h">
+      <Filter>头文件\core\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\modules\core\utils\decx_utils_macros.h">
+      <Filter>头文件\core\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\modules\core\utils\fragment_arrangment.h">
+      <Filter>头文件\core\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\modules\core\utils\GPU_fill.cuh">
+      <Filter>头文件\core\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\modules\core\utils\intrinsics_ops.h">
+      <Filter>头文件\core\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\modules\core\configs\config.h">
+      <Filter>头文件\core\configs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\modules\core\cudaStream_management\cudaEvent_package.h">
+      <Filter>头文件\core\cudaStream_management</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\modules\core\cudaStream_management\cudaEvent_queue.h">
+      <Filter>头文件\core\cudaStream_management</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\modules\core\cudaStream_management\cudaStream_package.h">
+      <Filter>头文件\core\cudaStream_management</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\modules\core\cudaStream_management\cudaStream_queue.h">
+      <Filter>头文件\core\cudaStream_management</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\modules\basic_process\type_cast\CUDA\_mm128_fp32_fp64.cuh">
+      <Filter>头文件\basic_process\type_cast</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\modules\basic_process\type_cast\type_cast_methods.h">
+      <Filter>头文件\basic_process\type_cast</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\modules\basic_process\fill\constant\CUDA\constant_fill_kernels.cuh">
+      <Filter>头文件\basic_process\fill\constant</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\modules\basic_process\fill\constant\CUDA\GPU_Matrix_fill.cuh">
+      <Filter>头文件\basic_process\fill\constant</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\modules\basic_process\fill\constant\CUDA\GPU_Vector_fill.cuh">
+      <Filter>头文件\basic_process\fill\constant</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\modules\cv\cv_classes\cv_classes.h">
+      <Filter>头文件\cv\cv_classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\modules\cv\NLM\NLM.cuh">
+      <Filter>头文件\cv\NLM</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\modules\cv\NLM\NLM_BGR.cuh">
+      <Filter>头文件\cv\NLM</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\modules\cv\NLM\NLM_BGR_keep_alpha.cuh">
+      <Filter>头文件\cv\NLM</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\modules\cv\NLM\NLM_device_functions.cuh">
+      <Filter>头文件\cv\NLM</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\modules\cv\NLM\NLM_gray.cuh">
+      <Filter>头文件\cv\NLM</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\modules\signal\FFT\CUDA\1D\dev_FFT1D_sub_functions.h">
+      <Filter>头文件\signal\fft\1D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\modules\signal\FFT\CUDA\1D\dev_IFFT1D_sub_functions.h">
+      <Filter>头文件\signal\fft\1D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\modules\signal\FFT\CUDA\1D\FFT1D_sub_functions.h">
+      <Filter>头文件\signal\fft\1D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\modules\signal\FFT\CUDA\1D\IFFT1D_sub_functions.h">
+      <Filter>头文件\signal\fft\1D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\modules\signal\FFT\CUDA\2D\dev_FFT2D_sub_functions.h">
+      <Filter>头文件\signal\fft\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\modules\signal\FFT\CUDA\2D\dev_IFFT2D_sub_functions.h">
+      <Filter>头文件\signal\fft\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\modules\signal\FFT\CUDA\2D\FFT2D_Radix_2_kernel.cuh">
+      <Filter>头文件\signal\fft\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\modules\signal\FFT\CUDA\2D\FFT2D_Radix_3_kernel.cuh">
+      <Filter>头文件\signal\fft\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\modules\signal\FFT\CUDA\2D\FFT2D_Radix_4_kernel.cuh">
+      <Filter>头文件\signal\fft\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\modules\signal\FFT\CUDA\2D\FFT2D_Radix_5_kernel.cuh">
+      <Filter>头文件\signal\fft\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\modules\signal\FFT\CUDA\2D\FFT2D_sub_functions.h">
+      <Filter>头文件\signal\fft\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\modules\signal\FFT\CUDA\2D\FFT2D_utils_kernel.cuh">
+      <Filter>头文件\signal\fft\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\modules\signal\FFT\CUDA\2D\IFFT2D_sub_functions.h">
+      <Filter>头文件\signal\fft\2D</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CudaCompile Include="..\srcs\modules\classes\classes_util.cu">
+      <Filter>源文件\classes</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\classes\GPU_Matrix.cu">
+      <Filter>源文件\classes</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\classes\GPU_MatrixArray.cu">
+      <Filter>源文件\classes</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\classes\GPU_Tensor.cu">
+      <Filter>源文件\classes</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\classes\GPU_TensorArray.cu">
+      <Filter>源文件\classes</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\classes\GPU_Vector.cu">
+      <Filter>源文件\classes</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\core\global_vars.cu">
+      <Filter>源文件\core</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\core\cudaStream_management\cudaEvent_queue.cu">
+      <Filter>源文件\core\cuda_stream_management</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\core\cudaStream_management\cudaStream_queue.cu">
+      <Filter>源文件\core\cuda_stream_management</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\core\cudaStream_management\cuda_event.cu">
+      <Filter>源文件\core\cuda_stream_management</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\core\cudaStream_management\cuda_stream.cu">
+      <Filter>源文件\core\cuda_stream_management</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\core\configs\config.cu">
+      <Filter>源文件\core\configs</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\core\utils\fragment_arangement.cu">
+      <Filter>源文件\core\utils</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\core\memory_management\MemBlock.cu">
+      <Filter>源文件\core\memory_management</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\core\memory_management\MemChunk_D.cu">
+      <Filter>源文件\core\memory_management</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\core\memory_management\MemoryPool_D.cu">
+      <Filter>源文件\core\memory_management</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\core\allocators\_allocator.cu">
+      <Filter>源文件\core\allocators</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\core\allocators\_deallocator.cu">
+      <Filter>源文件\core\allocators</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\core\allocators\_memset.cu">
+      <Filter>源文件\core\allocators</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\classes\data transmission\data_transmission.cu">
+      <Filter>源文件\classes\data transmission</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\classes\data transmission\DMA_callers.cu">
+      <Filter>源文件\classes\data transmission</Filter>
+    </CudaCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="for_properties.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

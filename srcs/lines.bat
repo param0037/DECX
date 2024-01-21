@@ -1,0 +1,3 @@
+cloc ./
+@echo off
+pause

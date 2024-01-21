@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="头文件\Image_IO_GUI">
+      <UniqueIdentifier>{a2729769-aea3-4988-900d-9ef0592963f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Image_IO_GUI">
+      <UniqueIdentifier>{1e87ec50-0efc-44e1-b0f9-68c3886cd73b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\edge_detection">
+      <UniqueIdentifier>{b002206d-5771-4bc8-8dab-a6721299f58e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Enhancement">
+      <UniqueIdentifier>{a5faefe9-1907-4a19-a1ca-d939cc2bdb4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Enhancement\RETINEX">
+      <UniqueIdentifier>{bd35f374-6ace-44c2-8175-dd2af6da56f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Enhancement\Histogram_Equalization">
+      <UniqueIdentifier>{14a1cd21-f75c-4d43-b940-1f36de8f9add}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\filters">
+      <UniqueIdentifier>{883ef2f8-e4a6-4061-b763-e35c6c33902c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\utils">
+      <UniqueIdentifier>{a22b4676-800b-4bb5-93db-175c3bf9120f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\srcs\modules\cv\Image_IO\Image_GUI.h">
+      <Filter>头文件\Image_IO_GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\modules\cv\Image_IO\Image_IO.h">
+      <Filter>头文件\Image_IO_GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\modules\classes\Matrix.h">
+      <Filter>头文件\Image_IO_GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\modules\cv\Image_IO\SDL_includes.h">
+      <Filter>头文件\Image_IO_GUI</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\srcs\modules\cv\Image_IO\Image_GUI.cxx">
+      <Filter>源文件\Image_IO_GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\cv\Image_IO\Image_IO.cxx">
+      <Filter>源文件\Image_IO_GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\cv\edge_detection\CPU\Canny_ED_post_proc.cxx">
+      <Filter>源文件\edge_detection</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\cv\edge_detection\CPU\edge_detectors.cxx">
+      <Filter>源文件\edge_detection</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\cv\edge_detection\CPU\Scharr_edg_det_ops.cxx">
+      <Filter>源文件\edge_detection</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\cv\edge_detection\CPU\Sobel_edg_det_ops.cxx">
+      <Filter>源文件\edge_detection</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\cv\Enhancement\Histogram_Equalization\generate_hist.cxx">
+      <Filter>源文件\Enhancement\Histogram_Equalization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\cv\Enhancement\Histogram_Equalization\HE.cxx">
+      <Filter>源文件\Enhancement\Histogram_Equalization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\cv\filters\CPU\bilateral_filter.cxx">
+      <Filter>源文件\filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\cv\filters\CPU\bilateral_filter_exec.cxx">
+      <Filter>源文件\filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\cv\filters\CPU\exp_values_LUT.cxx">
+      <Filter>源文件\filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\cv\filters\CPU\Gaussian_filter.cxx">
+      <Filter>源文件\filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\cv\filters\CPU\Gaussian_filter_exec.cxx">
+      <Filter>源文件\filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\cv\filters\CPU\Gaussian_kernel.cxx">
+      <Filter>源文件\filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\cv\utils\channel_ops.cxx">
+      <Filter>源文件\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\cv\utils\cvt_colors.cxx">
+      <Filter>源文件\utils</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

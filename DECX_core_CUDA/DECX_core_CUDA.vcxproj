@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\srcs\modules\basic_process\fill\constant\CUDA\constant_fill_kernels.cuh" />
+    <ClInclude Include="..\srcs\modules\basic_process\fill\constant\CUDA\GPU_Matrix_fill.cuh" />
+    <ClInclude Include="..\srcs\modules\basic_process\fill\constant\CUDA\GPU_Vector_fill.cuh" />
+    <ClInclude Include="..\srcs\modules\basic_process\type_cast\CUDA\_mm128_fp32_fp64.cuh" />
+    <ClInclude Include="..\srcs\modules\basic_process\type_cast\type_cast_methods.h" />
+    <ClInclude Include="..\srcs\modules\classes\classes_util.h" />
+    <ClInclude Include="..\srcs\modules\classes\GPU_Matrix.h" />
+    <ClInclude Include="..\srcs\modules\classes\GPU_MatrixArray.h" />
+    <ClInclude Include="..\srcs\modules\classes\GPU_Tensor.h" />
+    <ClInclude Include="..\srcs\modules\classes\GPU_TensorArray.h" />
+    <ClInclude Include="..\srcs\modules\classes\GPU_Vector.h" />
+    <ClInclude Include="..\srcs\modules\classes\Matrix.h" />
+    <ClInclude Include="..\srcs\modules\classes\MatrixArray.h" />
+    <ClInclude Include="..\srcs\modules\classes\store_types.h" />
+    <ClInclude Include="..\srcs\modules\classes\Tensor.h" />
+    <ClInclude Include="..\srcs\modules\classes\TensorArray.h" />
+    <ClInclude Include="..\srcs\modules\classes\type_info.h" />
+    <ClInclude Include="..\srcs\modules\classes\Vector.h" />
+    <ClInclude Include="..\srcs\modules\core\allocators.h" />
+    <ClInclude Include="..\srcs\modules\core\basic.h" />
+    <ClInclude Include="..\srcs\modules\core\basic_dllexport.h" />
+    <ClInclude Include="..\srcs\modules\core\compile_params.h" />
+    <ClInclude Include="..\srcs\modules\core\configs\config.h" />
+    <ClInclude Include="..\srcs\modules\core\configuration.h" />
+    <ClInclude Include="..\srcs\modules\core\cudaStream_management\cudaEvent_package.h" />
+    <ClInclude Include="..\srcs\modules\core\cudaStream_management\cudaEvent_queue.h" />
+    <ClInclude Include="..\srcs\modules\core\cudaStream_management\cudaStream_package.h" />
+    <ClInclude Include="..\srcs\modules\core\cudaStream_management\cudaStream_queue.h" />
+    <ClInclude Include="..\srcs\modules\core\decx_alloc_interface.h" />
+    <ClInclude Include="..\srcs\modules\core\error.h" />
+    <ClInclude Include="..\srcs\modules\core\include.h" />
+    <ClInclude Include="..\srcs\modules\core\utils\array_ptr_info.h" />
+    <ClInclude Include="..\srcs\modules\core\utils\decx_utils_device_functions.cuh" />
+    <ClInclude Include="..\srcs\modules\core\utils\decx_utils_functions.h" />
+    <ClInclude Include="..\srcs\modules\core\utils\decx_utils_macros.h" />
+    <ClInclude Include="..\srcs\modules\core\utils\fragment_arrangment.h" />
+    <ClInclude Include="..\srcs\modules\core\utils\GPU_fill.cuh" />
+    <ClInclude Include="..\srcs\modules\core\utils\intrinsics_ops.h" />
+    <ClInclude Include="..\srcs\modules\core\vector_defines.h" />
+    <ClInclude Include="..\srcs\modules\cv\cv_classes\cv_classes.h" />
+    <ClInclude Include="..\srcs\modules\cv\NLM\NLM.cuh" />
+    <ClInclude Include="..\srcs\modules\cv\NLM\NLM_BGR.cuh" />
+    <ClInclude Include="..\srcs\modules\cv\NLM\NLM_BGR_keep_alpha.cuh" />
+    <ClInclude Include="..\srcs\modules\cv\NLM\NLM_device_functions.cuh" />
+    <ClInclude Include="..\srcs\modules\cv\NLM\NLM_gray.cuh" />
+    <ClInclude Include="..\srcs\modules\handles\decx_handles.h" />
+    <ClInclude Include="..\srcs\modules\signal\FFT\CUDA\1D\dev_FFT1D_sub_functions.h" />
+    <ClInclude Include="..\srcs\modules\signal\FFT\CUDA\1D\dev_IFFT1D_sub_functions.h" />
+    <ClInclude Include="..\srcs\modules\signal\FFT\CUDA\1D\FFT1D_sub_functions.h" />
+    <ClInclude Include="..\srcs\modules\signal\FFT\CUDA\1D\IFFT1D_sub_functions.h" />
+    <ClInclude Include="..\srcs\modules\signal\FFT\CUDA\2D\dev_FFT2D_sub_functions.h" />
+    <ClInclude Include="..\srcs\modules\signal\FFT\CUDA\2D\dev_IFFT2D_sub_functions.h" />
+    <ClInclude Include="..\srcs\modules\signal\FFT\CUDA\2D\FFT2D_Radix_2_kernel.cuh" />
+    <ClInclude Include="..\srcs\modules\signal\FFT\CUDA\2D\FFT2D_Radix_3_kernel.cuh" />
+    <ClInclude Include="..\srcs\modules\signal\FFT\CUDA\2D\FFT2D_Radix_4_kernel.cuh" />
+    <ClInclude Include="..\srcs\modules\signal\FFT\CUDA\2D\FFT2D_Radix_5_kernel.cuh" />
+    <ClInclude Include="..\srcs\modules\signal\FFT\CUDA\2D\FFT2D_sub_functions.h" />
+    <ClInclude Include="..\srcs\modules\signal\FFT\CUDA\2D\FFT2D_utils_kernel.cuh" />
+    <ClInclude Include="..\srcs\modules\signal\FFT\CUDA\2D\IFFT2D_sub_functions.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <CudaCompile Include="..\srcs\modules\classes\classes_util.cu" />
+    <CudaCompile Include="..\srcs\modules\classes\data transmission\data_transmission.cu" />
+    <CudaCompile Include="..\srcs\modules\classes\data transmission\DMA_callers.cu" />
+    <CudaCompile Include="..\srcs\modules\classes\GPU_Matrix.cu" />
+    <CudaCompile Include="..\srcs\modules\classes\GPU_MatrixArray.cu" />
+    <CudaCompile Include="..\srcs\modules\classes\GPU_Tensor.cu" />
+    <CudaCompile Include="..\srcs\modules\classes\GPU_TensorArray.cu" />
+    <CudaCompile Include="..\srcs\modules\classes\GPU_Vector.cu" />
+    <CudaCompile Include="..\srcs\modules\core\allocators\_allocator.cu" />
+    <CudaCompile Include="..\srcs\modules\core\allocators\_deallocator.cu" />
+    <CudaCompile Include="..\srcs\modules\core\allocators\_memset.cu" />
+    <CudaCompile Include="..\srcs\modules\core\configs\config.cu" />
+    <CudaCompile Include="..\srcs\modules\core\cudaStream_management\cudaEvent_queue.cu" />
+    <CudaCompile Include="..\srcs\modules\core\cudaStream_management\cudaStream_queue.cu" />
+    <CudaCompile Include="..\srcs\modules\core\cudaStream_management\cuda_event.cu" />
+    <CudaCompile Include="..\srcs\modules\core\cudaStream_management\cuda_stream.cu" />
+    <CudaCompile Include="..\srcs\modules\core\global_vars.cu" />
+    <CudaCompile Include="..\srcs\modules\core\memory_management\MemBlock.cu" />
+    <CudaCompile Include="..\srcs\modules\core\memory_management\MemChunk_D.cu" />
+    <CudaCompile Include="..\srcs\modules\core\memory_management\MemoryPool_D.cu" />
+    <CudaCompile Include="..\srcs\modules\core\utils\fragment_arangement.cu" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="for_properties.cpp" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{5bba1ac9-9e28-4611-82d8-38ab266b872f}</ProjectGuid>
+    <RootNamespace>DECXcoreCUDA</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>DECX_core_CUDA</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\CUDA 10.2.props" />
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>../bin/$(Platform)</OutDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;DECXCORECUDA_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;DECXCORECUDA_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;DECXCORECUDA_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;DECXCORECUDA_EXPORTS;_WINDOWS;_USRDLL;_DECX_CUDA_PARTS_;_DECX_CORE_CUDA_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+      <AdditionalDependencies>cudart_static.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;DECX_core_CPU.lib;DECX_Async_Engine.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../bin/$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+    <CudaCompile>
+      <Defines>_DECX_CUDA_PARTS_;_DECX_CORE_CUDA_;_DECX_CUDA_CODES_;%(Defines)</Defines>
+      <CodeGeneration>compute_75,sm_75</CodeGeneration>
+      <GenerateRelocatableDeviceCode>true</GenerateRelocatableDeviceCode>
+      <TargetMachinePlatform>64</TargetMachinePlatform>
+    </CudaCompile>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\CUDA 10.2.targets" />
+  </ImportGroup>
+</Project>
