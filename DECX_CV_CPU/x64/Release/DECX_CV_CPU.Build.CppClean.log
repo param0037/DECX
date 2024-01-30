@@ -15,6 +15,9 @@ e:\decx_world\decx_cv_cpu\x64\release\sobel_edg_det_ops.obj
 e:\decx_world\decx_cv_cpu\x64\release\scharr_edg_det_ops.obj
 e:\decx_world\decx_cv_cpu\x64\release\edge_detectors.obj
 e:\decx_world\decx_cv_cpu\x64\release\canny_ed_post_proc.obj
+e:\decx_world\decx_cv_cpu\x64\release\vevid.obj
+e:\decx_world\decx_cv_cpu\x64\release\cmp_max_exec.obj
+e:\decx_world\decx_cv_cpu\x64\release\maprange_exec.obj
 e:\decx_world\bin\x64\decx_cv_cpu.lib
 e:\decx_world\bin\x64\decx_cv_cpu.exp
 e:\decx_world\bin\x64\decx_cv_cpu.dll
@@ -25,5 +28,6 @@ e:\decx_world\decx_cv_cpu\x64\release\decx_cv_cpu.tlog\cl.read.1.tlog
 e:\decx_world\decx_cv_cpu\x64\release\decx_cv_cpu.tlog\cl.write.1.tlog
 e:\decx_world\decx_cv_cpu\x64\release\decx_cv_cpu.tlog\decx_cv_cpu.write.1u.tlog
 e:\decx_world\decx_cv_cpu\x64\release\decx_cv_cpu.tlog\link.command.1.tlog
+e:\decx_world\decx_cv_cpu\x64\release\decx_cv_cpu.tlog\link.delete.1.tlog
 e:\decx_world\decx_cv_cpu\x64\release\decx_cv_cpu.tlog\link.read.1.tlog
 e:\decx_world\decx_cv_cpu\x64\release\decx_cv_cpu.tlog\link.write.1.tlog

@@ -89,15 +89,15 @@ namespace decx
 
 
             _THREAD_FUNCTION_ void
-                _maximum_vec16_uint8_1D(const uint8_t* src, const size_t len, uint8_t* res_vec, const uint8_t _occupied_length);
+                _maximum_vec16_uint8_1D(const uint8_t* src, const uint64_t len, uint8_t* res_vec, const uint8_t _occupied_length);
 
 
             _THREAD_FUNCTION_ void
-                _minimum_vec16_uint8_1D(const uint8_t* src, const size_t len, uint8_t* res_vec, const uint8_t _occupied_length);
+                _minimum_vec16_uint8_1D(const uint8_t* src, const uint64_t len, uint8_t* res_vec, const uint8_t _occupied_length);
 
 
             _THREAD_FUNCTION_ void
-                _min_max_vec16_uint8_1D(const uint8_t* src, const size_t len, uint8_t* rea_min, uint8_t* res_max, const uint8_t _occupied_length);
+                _min_max_vec16_uint8_1D(const uint8_t* src, const uint64_t len, uint8_t* rea_min, uint8_t* res_max, const uint8_t _occupied_length);
 
 
             /*
@@ -365,8 +365,11 @@ static void decx::bp::_min_max_1D_caller(T_kernel _cmp_kernel, const T_data* src
 
 
 template <typename T_kernel, typename T_data, uint8_t _align>
-void decx::bp::_maximum_2D_caller(T_kernel _cmp_kernel, const T_data* src, const uint2 proc_dims,
-    const uint32_t Wsrc, T_data* res_vec)
+void decx::bp::_maximum_2D_caller(T_kernel          _cmp_kernel, 
+                                  const T_data*     src, 
+                                  const uint2       proc_dims,
+                                  const uint32_t    Wsrc, 
+                                  T_data*           res_vec)
 {
     // the number of available concurrent threads
     const uint conc_thr = decx::cpu::_get_permitted_concurrency();

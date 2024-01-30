@@ -124,9 +124,6 @@
     <ClInclude Include="..\srcs\modules\classes\MatrixArray.h">
       <Filter>头文件\classes</Filter>
     </ClInclude>
-    <ClInclude Include="..\srcs\modules\classes\store_types.h">
-      <Filter>头文件\classes</Filter>
-    </ClInclude>
     <ClInclude Include="..\srcs\modules\classes\Tensor.h">
       <Filter>头文件\classes</Filter>
     </ClInclude>

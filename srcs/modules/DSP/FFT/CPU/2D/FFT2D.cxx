@@ -57,9 +57,9 @@ static void decx::dsp::fft::FFT2D_caller_cplxf(decx::_Matrix* src, decx::_Matrix
                                    &_transpose_config_1st,                              
                                    &t1D);
     // Horizontal FFT
-    decx::dsp::fft::_FFT2D_H_entire_rows_cplxf<double, true>((double*)planner.get_tmp2_ptr(),                     (double*)planner.get_tmp1_ptr(), 
+    decx::dsp::fft::_FFT2D_H_entire_rows_cplxf<double, true>((double*)planner.get_tmp2_ptr(),       (double*)planner.get_tmp1_ptr(), 
                                                &planner,                                            decx::utils::ceil<uint32_t>(src->Height(), 4) * 4,  
-                                               decx::utils::ceil<uint32_t>(src->Height(), 4) * 4,  &t1D, false);
+                                               decx::utils::ceil<uint32_t>(src->Height(), 4) * 4,   &t1D, false);
     // Transpose
     decx::bp::transpose_2x2_caller((double*)planner.get_tmp1_ptr(),                     (double*)dst->Mat.ptr,
                                    decx::utils::ceil<uint32_t>(src->Height(), 4) * 4,   dst->Pitch(), 

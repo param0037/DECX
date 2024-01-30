@@ -321,6 +321,9 @@
     <ClCompile Include="..\srcs\modules\BLAS\Vectorial\transforms\3D\CPU\Matrix_transform.cxx">
       <Filter>源文件\vector4\transform\3D</Filter>
     </ClCompile>
+    <ClCompile Include="..\srcs\modules\basic_calculations\operators\Maprange_exec.cxx">
+      <Filter>源文件\basic_calculations\operators</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\srcs\modules\basic_calculations\operators\Add_exec.h">

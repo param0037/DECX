@@ -1,4 +1,7 @@
 bin/
+.vscode/
+
+release_packages/
 
 .git/
 .vs/

@@ -253,6 +253,11 @@
     <CudaCompile Include="..\srcs\modules\BLAS\Dot product\CUDA\DP2D_1way_callers.cu" />
     <CudaCompile Include="..\srcs\modules\BLAS\Dot product\CUDA\DP2D_1way_config.cu" />
     <CudaCompile Include="..\srcs\modules\BLAS\Dot product\CUDA\DP2D_kernels.cu" />
+    <CudaCompile Include="..\srcs\modules\BLAS\GEMM\CUDA\extreme_shapes\VMM.cu" />
+    <CudaCompile Include="..\srcs\modules\BLAS\GEMM\CUDA\extreme_shapes\VMM_fp16.cu" />
+    <CudaCompile Include="..\srcs\modules\BLAS\GEMM\CUDA\extreme_shapes\VMM_fp32.cu" />
+    <CudaCompile Include="..\srcs\modules\BLAS\GEMM\CUDA\extreme_shapes\VMM_fp64.cu" />
+    <CudaCompile Include="..\srcs\modules\BLAS\GEMM\CUDA\extreme_shapes\VMM_reduce_config_gen.cu" />
     <CudaCompile Include="..\srcs\modules\BLAS\GEMM\CUDA\large_squares\cpl32\GEMM_cpl32.cu" />
     <CudaCompile Include="..\srcs\modules\BLAS\GEMM\CUDA\large_squares\fp16\GEMM_fp16.cu" />
     <CudaCompile Include="..\srcs\modules\BLAS\GEMM\CUDA\large_squares\fp16\GEMM_fp16_accurate.cu" />

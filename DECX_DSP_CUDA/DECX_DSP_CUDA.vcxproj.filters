@@ -50,6 +50,9 @@
     <Filter Include="源文件\convolution\sliding_window\uint8">
       <UniqueIdentifier>{c6bf72cc-30a7-48d7-b5ed-afc040ca5aaf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\signal\FFT\3D">
+      <UniqueIdentifier>{649a5a3d-2f6e-4dc2-8d12-b8166058c7d7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="for_properties.cpp" />
@@ -147,6 +150,27 @@
     </CudaCompile>
     <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\2D\FFT2D_config.cu">
       <Filter>源文件\signal\FFT\2D</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\3D\FFT3D_planner.cu">
+      <Filter>源文件\signal\FFT\3D</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\3D\FFT3D.cu">
+      <Filter>源文件\signal\FFT\3D</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\3D\FFT3D_R4_kernels.cu">
+      <Filter>源文件\signal\FFT\3D</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\3D\FFT3D_MidProc_caller.cu">
+      <Filter>源文件\signal\FFT\3D</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\3D\FFT3D_R3_kernels.cu">
+      <Filter>源文件\signal\FFT\3D</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\3D\FFT3D_R2_kernels.cu">
+      <Filter>源文件\signal\FFT\3D</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\3D\FFT3D_R5_kernels.cu">
+      <Filter>源文件\signal\FFT\3D</Filter>
     </CudaCompile>
   </ItemGroup>
 </Project>

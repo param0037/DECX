@@ -21,8 +21,8 @@ decx::dsp::fft::_cuda_FFT2D_planner<_type_in>::_cuda_FFT2D_planner(const uint2 s
         decx::utils::align<uint32_t>(signal_dims.y, _alignment));
 
     // Allocate buffers in device
-    if (decx::alloc::_device_malloc(&this->_tmp1, this->_buffer_dims.x * this->_buffer_dims.y * sizeof(_type_in) * 4) || 
-        decx::alloc::_device_malloc(&this->_tmp2, this->_buffer_dims.x * this->_buffer_dims.y * sizeof(_type_in) * 4)) {
+    if (decx::alloc::_device_malloc(&this->_tmp1, this->_buffer_dims.x * this->_buffer_dims.y * sizeof(_type_in) * 2) || 
+        decx::alloc::_device_malloc(&this->_tmp2, this->_buffer_dims.x * this->_buffer_dims.y * sizeof(_type_in) * 2)) {
         decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_CUDA_ALLOCATION, DEV_ALLOC_FAIL);
         return;
     }

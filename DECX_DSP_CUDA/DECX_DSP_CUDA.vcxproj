@@ -49,6 +49,13 @@
     <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\2D\FFT2D_R3_kernels.cu" />
     <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\2D\FFT2D_R4_kernels.cu" />
     <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\2D\FFT2D_R5_kernels.cu" />
+    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\3D\FFT3D.cu" />
+    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\3D\FFT3D_MidProc_caller.cu" />
+    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\3D\FFT3D_planner.cu" />
+    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\3D\FFT3D_R2_kernels.cu" />
+    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\3D\FFT3D_R3_kernels.cu" />
+    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\3D\FFT3D_R4_kernels.cu" />
+    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\3D\FFT3D_R5_kernels.cu" />
     <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\CUDA_FFT_configs.cu" />
     <CudaCompile Include="..\srcs\modules\DSP\filters\CUDA\low_pass.cu" />
     <CudaCompile Include="..\srcs\modules\DSP\filters\CUDA\windows.cu" />

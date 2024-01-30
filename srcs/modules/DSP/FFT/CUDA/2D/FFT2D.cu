@@ -20,7 +20,7 @@
 #include "FFT2D_kernels.cuh"
 #include "../../../../core/utils/double_buffer.h"
 #include "../../../../BLAS/basic_process/transpose/CUDA/transpose_kernels.cuh"
-#include "FFT2D_1way_kernel_callers.cu"
+#include "FFT2D_1way_kernel_callers.cuh"
 
 
 namespace decx

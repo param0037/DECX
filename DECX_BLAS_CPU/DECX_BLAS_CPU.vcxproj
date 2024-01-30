@@ -152,6 +152,7 @@
     <ClCompile Include="..\srcs\modules\basic_calculations\operators\Div_exec.cxx" />
     <ClCompile Include="..\srcs\modules\basic_calculations\operators\Fma_exec.cxx" />
     <ClCompile Include="..\srcs\modules\basic_calculations\operators\Fms_exec.cxx" />
+    <ClCompile Include="..\srcs\modules\basic_calculations\operators\Maprange_exec.cxx" />
     <ClCompile Include="..\srcs\modules\basic_calculations\operators\Matrix\cpu_cpl_ops.cxx" />
     <ClCompile Include="..\srcs\modules\basic_calculations\operators\Matrix\integral.cxx" />
     <ClCompile Include="..\srcs\modules\basic_calculations\operators\Matrix\integral_exec.cxx" />

@@ -115,6 +115,9 @@
     <Filter Include="源文件\utils">
       <UniqueIdentifier>{c62a30e7-ff86-44f0-b567-def8a8f37047}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\GEMM\extreme_shapes">
+      <UniqueIdentifier>{9f2edbe4-d5a5-4a52-a30a-3de22bc93fff}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\DECX_DSP_CUDA\for_properties.cpp">
@@ -438,6 +441,21 @@
     </CudaCompile>
     <CudaCompile Include="..\srcs\modules\BLAS\basic_process\transpose\CUDA\transpose_kernels_dense.cu">
       <Filter>源文件\basic_process\transpose</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\BLAS\GEMM\CUDA\extreme_shapes\VMM_fp16.cu">
+      <Filter>源文件\GEMM\extreme_shapes</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\BLAS\GEMM\CUDA\extreme_shapes\VMM_fp32.cu">
+      <Filter>源文件\GEMM\extreme_shapes</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\BLAS\GEMM\CUDA\extreme_shapes\VMM_fp64.cu">
+      <Filter>源文件\GEMM\extreme_shapes</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\BLAS\GEMM\CUDA\extreme_shapes\VMM_reduce_config_gen.cu">
+      <Filter>源文件\GEMM\extreme_shapes</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\BLAS\GEMM\CUDA\extreme_shapes\VMM.cu">
+      <Filter>源文件\GEMM\extreme_shapes</Filter>
     </CudaCompile>
   </ItemGroup>
 </Project>

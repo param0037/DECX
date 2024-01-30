@@ -13,6 +13,49 @@
 
 
 
+//void decx::_tensor_layout::_attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, const uint _width,
+//    const uint _height, const uint _depth)
+//{
+//    this->_single_element_size = decx::core::_size_mapping(_type);
+//
+//    this->width = _width;
+//    this->height = _height;
+//    this->depth = _depth;
+//
+//    if (this->_single_element_size == 2) {
+//        this->wpitch = decx::utils::ceil<uint>(_width, 8) * 8;
+//    }
+//    else {
+//        this->wpitch = decx::utils::ceil<uint>(_width, 4) * 4;
+//    }
+//
+//    uint32_t _alignment = 1;
+//    switch (this->_single_element_size)
+//    {
+//    case 4:
+//        _alignment = _TENSOR_ALIGN_DEPTH_4B_;     break;
+//    case 8:
+//        _alignment = _TENSOR_ALIGN_DEPTH_8B_;     break;
+//    case 2:
+//        _alignment = _TENSOR_ALIGN_DEPTH_2B_;     break;
+//    case 1:
+//        _alignment = _TENSOR_ALIGN_DEPTH_1B_;     break;
+//    case 16:
+//        _alignment = _TENSOR_ALIGN_DEPTH_16B_;    break;
+//    default:
+//        break;
+//    }
+//    this->dpitch = decx::utils::ceil<uint>(_depth, _alignment) * _alignment;
+//
+//    this->dp_x_wp = static_cast<size_t>(this->dpitch) * static_cast<size_t>(this->wpitch);
+//
+//    this->plane[0] = static_cast<size_t>(this->height) * static_cast<size_t>(this->width);
+//    this->plane[1] = static_cast<size_t>(this->depth) * static_cast<size_t>(this->width);
+//    this->plane[2] = static_cast<size_t>(this->height) * static_cast<size_t>(this->depth);
+//}
+
+
+
 void decx::_tensor_layout::_attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, const uint _width,
     const uint _height, const uint _depth)
 {
@@ -22,12 +65,7 @@ void decx::_tensor_layout::_attribute_assign(const de::_DATA_TYPES_FLAGS_ _type,
     this->height = _height;
     this->depth = _depth;
 
-    if (this->_single_element_size == 2) {
-        this->wpitch = decx::utils::ceil<uint>(_width, 8) * 8;
-    }
-    else {
-        this->wpitch = decx::utils::ceil<uint>(_width, 4) * 4;
-    }
+    this->wpitch = decx::utils::ceil<uint>(_width, 4) * 4;
 
     uint32_t _alignment = 1;
     switch (this->_single_element_size)
@@ -56,9 +94,9 @@ void decx::_tensor_layout::_attribute_assign(const de::_DATA_TYPES_FLAGS_ _type,
 
 
 
-uint decx::_GPU_Tensor::Width() const { return this->_layout.width; }
-uint decx::_GPU_Tensor::Height() const { return this->_layout.height; }
-uint decx::_GPU_Tensor::Depth() const { return this->_layout.depth; }
+uint32_t decx::_GPU_Tensor::Width() const { return this->_layout.width; }
+uint32_t decx::_GPU_Tensor::Height() const { return this->_layout.height; }
+uint32_t decx::_GPU_Tensor::Depth() const { return this->_layout.depth; }
 
 
 
@@ -72,7 +110,7 @@ void decx::_GPU_Tensor::_attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, co
 
     this->element_num = static_cast<size_t>(this->_layout.depth) * this->_layout.plane[0];
     this->_element_num = static_cast<size_t>(this->_layout.height) * this->_layout.dp_x_wp;
-    this->total_bytes = this->_element_num * sizeof(float);
+    this->total_bytes = this->_element_num * this->_layout._single_element_size;
 }
 
 

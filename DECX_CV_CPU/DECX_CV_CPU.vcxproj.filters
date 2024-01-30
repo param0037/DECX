@@ -37,6 +37,9 @@
     <Filter Include="源文件\utils">
       <UniqueIdentifier>{a22b4676-800b-4bb5-93db-175c3bf9120f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\Enhancement\VEVID">
+      <UniqueIdentifier>{71c7bf49-6c89-48a6-a00c-ce132f3bfd8a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\srcs\modules\cv\Image_IO\Image_GUI.h">
@@ -100,6 +103,15 @@
     </ClCompile>
     <ClCompile Include="..\srcs\modules\cv\utils\cvt_colors.cxx">
       <Filter>源文件\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\CV\Enhancement\VEVID\VEVID.cxx">
+      <Filter>源文件\Enhancement\VEVID</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\basic_calculations\operators\Maprange_exec.cxx">
+      <Filter>源文件\Enhancement\VEVID</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\BLAS\basic_process\type_statistics\CPU\cmp_max_exec.cxx">
+      <Filter>源文件\Enhancement\VEVID</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

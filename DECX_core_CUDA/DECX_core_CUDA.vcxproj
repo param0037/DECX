@@ -32,7 +32,6 @@
     <ClInclude Include="..\srcs\modules\classes\GPU_Vector.h" />
     <ClInclude Include="..\srcs\modules\classes\Matrix.h" />
     <ClInclude Include="..\srcs\modules\classes\MatrixArray.h" />
-    <ClInclude Include="..\srcs\modules\classes\store_types.h" />
     <ClInclude Include="..\srcs\modules\classes\Tensor.h" />
     <ClInclude Include="..\srcs\modules\classes\TensorArray.h" />
     <ClInclude Include="..\srcs\modules\classes\type_info.h" />

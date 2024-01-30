@@ -44,6 +44,7 @@ private:
 
 public:
     uint32_t _pitchsrc, _pitchdst, _pitchtmp;
+    //uint32_t _parallel;
 
 
     _FFT2D_1way_config() {}

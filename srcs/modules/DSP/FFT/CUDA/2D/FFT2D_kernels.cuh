@@ -216,7 +216,6 @@ decx::dsp::fft::FFT2D_1st_R2C_caller_cplxf(const float2* __restrict src,
 
 
 
-
 static void 
 decx::dsp::fft::FFT2D_1st_R2C_caller_uc8_cplxf(const ushort* __restrict src, 
                                            float4* __restrict dst,

@@ -150,12 +150,15 @@
     <ClInclude Include="..\srcs\modules\cv\Image_IO\SDL_includes.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\srcs\modules\basic_calculations\operators\Maprange_exec.cxx" />
+    <ClCompile Include="..\srcs\modules\BLAS\basic_process\type_statistics\CPU\cmp_max_exec.cxx" />
     <ClCompile Include="..\srcs\modules\cv\edge_detection\CPU\Canny_ED_post_proc.cxx" />
     <ClCompile Include="..\srcs\modules\cv\edge_detection\CPU\edge_detectors.cxx" />
     <ClCompile Include="..\srcs\modules\cv\edge_detection\CPU\Scharr_edg_det_ops.cxx" />
     <ClCompile Include="..\srcs\modules\cv\edge_detection\CPU\Sobel_edg_det_ops.cxx" />
     <ClCompile Include="..\srcs\modules\cv\Enhancement\Histogram_Equalization\generate_hist.cxx" />
     <ClCompile Include="..\srcs\modules\cv\Enhancement\Histogram_Equalization\HE.cxx" />
+    <ClCompile Include="..\srcs\modules\CV\Enhancement\VEVID\VEVID.cxx" />
     <ClCompile Include="..\srcs\modules\cv\filters\CPU\bilateral_filter.cxx" />
     <ClCompile Include="..\srcs\modules\cv\filters\CPU\bilateral_filter_exec.cxx" />
     <ClCompile Include="..\srcs\modules\cv\filters\CPU\exp_values_LUT.cxx" />

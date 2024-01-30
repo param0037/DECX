@@ -61,6 +61,9 @@
     <Filter Include="源文件\fft\1D">
       <UniqueIdentifier>{43ccbd65-4a34-45b3-addb-8c3bdf58445c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\fft\3D">
+      <UniqueIdentifier>{96046837-bdf9-478f-8849-d523b397a593}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\srcs\modules\DSP\complex\cpl32_extract.cxx">
