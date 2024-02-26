@@ -37,6 +37,7 @@
     <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\sliding_window\uint8\Conv2_uint8_kernels.cu" />
     <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\1D\CUDA_FFT1D_planner.cu" />
     <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\1D\FFT1D.cu" />
+    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\1D\FFT1D_cplxf32.cu" />
     <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\1D\FFT1D_kernel_callers.cu" />
     <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\1D\FFT1D_R2_1st_dense.cu" />
     <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\1D\FFT1D_R3_1st_dense.cu" />
@@ -45,11 +46,13 @@
     <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\2D\FFT2D.cu" />
     <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\2D\FFT2D_1way_kernel_callers.cu" />
     <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\2D\FFT2D_config.cu" />
+    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\2D\FFT2D_cplxf32.cu" />
     <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\2D\FFT2D_R2_kernels.cu" />
     <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\2D\FFT2D_R3_kernels.cu" />
     <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\2D\FFT2D_R4_kernels.cu" />
     <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\2D\FFT2D_R5_kernels.cu" />
     <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\3D\FFT3D.cu" />
+    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\3D\FFT3D_cplxf32.cu" />
     <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\3D\FFT3D_MidProc_caller.cu" />
     <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\3D\FFT3D_planner.cu" />
     <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\3D\FFT3D_R2_kernels.cu" />
@@ -60,6 +63,7 @@
     <CudaCompile Include="..\srcs\modules\DSP\filters\CUDA\low_pass.cu" />
     <CudaCompile Include="..\srcs\modules\DSP\filters\CUDA\windows.cu" />
     <CudaCompile Include="..\srcs\modules\DSP\generators\CUDA\zeros.cu" />
+    <CudaCompile Include="..\srcs\modules\DSP\pre_post_proc_CUDA_DSPModule.cu" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

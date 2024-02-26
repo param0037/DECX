@@ -10,9 +10,46 @@
 
 #include "FFT2D_config.cuh"
 
+//
+//template <typename _type_in> _CRSR_
+//decx::dsp::fft::_cuda_FFT2D_planner<_type_in>::_cuda_FFT2D_planner(const uint2 signal_dims, de::DH* handle)
+//{
+//    this->_signal_dims = signal_dims;
+//
+//    constexpr uint8_t _alignment = 8 / sizeof(_type_in);
+//    this->_buffer_dims = make_uint2(decx::utils::align<uint32_t>(signal_dims.x, _alignment),
+//        decx::utils::align<uint32_t>(signal_dims.y, _alignment));
+//
+//    // Allocate buffers in device
+//    if (decx::alloc::_device_malloc(&this->_tmp1, this->_buffer_dims.x * this->_buffer_dims.y * sizeof(_type_in) * 2) || 
+//        decx::alloc::_device_malloc(&this->_tmp2, this->_buffer_dims.x * this->_buffer_dims.y * sizeof(_type_in) * 2)) {
+//        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_CUDA_ALLOCATION, DEV_ALLOC_FAIL);
+//        return;
+//    }
+//}
+//
+//template decx::dsp::fft::_cuda_FFT2D_planner<float>::_cuda_FFT2D_planner(const uint2 signal_dims, de::DH* handle);
+
+
+template <typename _data_type>
+bool decx::dsp::fft::_cuda_FFT2D_planner<_data_type>::changed(const uint2 signal_dims, 
+                                                              const uint32_t pitchsrc, 
+                                                              const uint32_t pitchdst) const
+{
+    return (*((uint64_t*)&this->_signal_dims) ^ *((uint64_t*)&signal_dims)) |
+        (this->_FFT_V._pitchsrc ^ pitchsrc) |
+        (this->_FFT_H._pitchdst ^ pitchdst);
+}
+
+template bool decx::dsp::fft::_cuda_FFT2D_planner<float>::changed(const uint2, const uint32_t, const uint32_t) const;
+
+
 
 template <typename _type_in> _CRSR_
-decx::dsp::fft::_cuda_FFT2D_planner<_type_in>::_cuda_FFT2D_planner(const uint2 signal_dims, de::DH* handle)
+void decx::dsp::fft::_cuda_FFT2D_planner<_type_in>::plan(const uint2 signal_dims, 
+                                                         const uint32_t pitchsrc, 
+                                                         const uint32_t pitchdst, 
+                                                         de::DH* handle)
 {
     this->_signal_dims = signal_dims;
 
@@ -21,19 +58,12 @@ decx::dsp::fft::_cuda_FFT2D_planner<_type_in>::_cuda_FFT2D_planner(const uint2 s
         decx::utils::align<uint32_t>(signal_dims.y, _alignment));
 
     // Allocate buffers in device
-    if (decx::alloc::_device_malloc(&this->_tmp1, this->_buffer_dims.x * this->_buffer_dims.y * sizeof(_type_in) * 2) || 
+    if (decx::alloc::_device_malloc(&this->_tmp1, this->_buffer_dims.x * this->_buffer_dims.y * sizeof(_type_in) * 2) ||
         decx::alloc::_device_malloc(&this->_tmp2, this->_buffer_dims.x * this->_buffer_dims.y * sizeof(_type_in) * 2)) {
         decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_CUDA_ALLOCATION, DEV_ALLOC_FAIL);
         return;
     }
-}
 
-template decx::dsp::fft::_cuda_FFT2D_planner<float>::_cuda_FFT2D_planner(const uint2 signal_dims, de::DH* handle);
-
-
-template <typename _type_in>
-void decx::dsp::fft::_cuda_FFT2D_planner<_type_in>::plan(const uint32_t pitchsrc, const uint32_t pitchdst)
-{
     this->_FFT_H.plan(this->_signal_dims.x);
     this->_FFT_V.plan(this->_signal_dims.y);
 
@@ -46,7 +76,7 @@ void decx::dsp::fft::_cuda_FFT2D_planner<_type_in>::plan(const uint32_t pitchsrc
     this->_FFT_H._pitchdst = pitchdst;
 }
 
-template void decx::dsp::fft::_cuda_FFT2D_planner<float>::plan(const uint32_t, const uint32_t);
+template void decx::dsp::fft::_cuda_FFT2D_planner<float>::plan(const uint2, const uint32_t, const uint32_t, de::DH*);
 
 
 uint32_t decx::dsp::fft::_FFT2D_1way_config::get_radix(const uint32_t _index) const
@@ -91,16 +121,16 @@ void decx::dsp::fft::_FFT2D_1way_config::plan(const uint32_t signal_length)
 
 
 
-template <typename _type_in> const decx::dsp::fft::_FFT2D_1way_config*
-decx::dsp::fft::_cuda_FFT2D_planner<_type_in>::get_FFT_info(const FFT_directions _dir) const
+template <typename _data_type> const decx::dsp::fft::_FFT2D_1way_config*
+decx::dsp::fft::_cuda_FFT2D_planner<_data_type>::get_FFT_info(const decx::dsp::fft::FFT_directions _dir) const
 {
     switch (_dir)
     {
-    case FFT_directions::_FFT_Horizontal:
+    case decx::dsp::fft::FFT_directions::_FFT_AlongW:
         return &this->_FFT_H;
         break;
 
-    case FFT_directions::_FFT_Vertical:
+    case decx::dsp::fft::FFT_directions::_FFT_AlongH:
         return &this->_FFT_V;
         break;
 
@@ -110,7 +140,8 @@ decx::dsp::fft::_cuda_FFT2D_planner<_type_in>::get_FFT_info(const FFT_directions
     }
 }
 
-template const decx::dsp::fft::_FFT2D_1way_config* decx::dsp::fft::_cuda_FFT2D_planner<float>::get_FFT_info(const FFT_directions) const;
+template const decx::dsp::fft::_FFT2D_1way_config* 
+decx::dsp::fft::_cuda_FFT2D_planner<float>::get_FFT_info(const decx::dsp::fft::FFT_directions) const;
 
 
 template <typename _type_in>

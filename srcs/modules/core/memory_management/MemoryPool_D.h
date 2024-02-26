@@ -45,6 +45,7 @@ public:
 
     static decx::MemPool_D* GetInstance();
 
+
     /**
      * @brief allocate a memory for user, recycle as much as possible
      *

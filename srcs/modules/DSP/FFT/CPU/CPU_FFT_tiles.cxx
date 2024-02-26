@@ -12,18 +12,10 @@
 #include "CPU_FFT_tiles.h"
 
 
-//
-//uint64_t decx::dsp::fft::FKI1D::get_warp_num() const
-//{
-//    return this->_signal_len / this->_warp_proc_len;
-//}
-
-
-
 void decx::dsp::fft::_FFT1D_kernel_tile_fp32::allocate_tile(const uint32_t tile_frag_len, de::DH* handle)
 {
-    this->_tile_row_pitch = tile_frag_len;
-    this->_tile_len = tile_frag_len * 4;        // vec4
+    this->_tile_row_pitch = decx::utils::align<uint32_t>(tile_frag_len, 4);
+    this->_tile_len = this->_tile_row_pitch * 4;        // vec4
 
     if (decx::alloc::_host_virtual_page_malloc(&this->_tmp_ptr, this->_tile_len * 2 * sizeof(de::CPf))) {
         decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION,
@@ -37,6 +29,11 @@ void decx::dsp::fft::_FFT1D_kernel_tile_fp32::release()
     decx::alloc::_host_virtual_page_dealloc(&this->_tmp_ptr);
 }
 
+
+void decx::dsp::fft::_FFT1D_kernel_tile_fp32::flush() const
+{
+    memset(this->_tmp_ptr.ptr, 0, this->_tile_row_pitch * 4 * 2 * sizeof(de::CPf));
+}
 
 
 void decx::dsp::fft::_FFT1D_kernel_tile_fp32::
@@ -91,6 +88,7 @@ _inblock_transpose_vecDist_2_VecAdj_fp32(decx::utils::double_buffer_manager* __r
     }
     _double_buffer->update_states();
 }
+
 
 
 void decx::dsp::fft::_FFT1D_kernel_tile_fp32::

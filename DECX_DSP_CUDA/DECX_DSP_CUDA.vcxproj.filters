@@ -172,5 +172,17 @@
     <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\3D\FFT3D_R5_kernels.cu">
       <Filter>源文件\signal\FFT\3D</Filter>
     </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\3D\FFT3D_cplxf32.cu">
+      <Filter>源文件\signal\FFT\3D</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\pre_post_proc_CUDA_DSPModule.cu">
+      <Filter>源文件</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\2D\FFT2D_cplxf32.cu">
+      <Filter>源文件\signal\FFT\2D</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\1D\FFT1D_cplxf32.cu">
+      <Filter>源文件\signal\FFT\1D</Filter>
+    </CudaCompile>
   </ItemGroup>
 </Project>

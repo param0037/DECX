@@ -423,6 +423,7 @@ decx::bp::CPUK::transpose_2x2_b64(const double* __restrict src,
 
 
 
+
 _THREAD_FUNCTION_ void
 decx::bp::CPUK::transpose_2x2_b64_LH(const double* __restrict src, 
                                      double* __restrict dst,
@@ -442,6 +443,41 @@ decx::bp::CPUK::transpose_2x2_b64_LH(const double* __restrict src,
     }
 }
 
+
+
+
+_THREAD_FUNCTION_ void
+decx::bp::CPUK::transpose_MK_2x2_b64_LH(const double* __restrict src, 
+                                     double* __restrict dst,
+                                     const uint2 proc_dims_src, 
+                                     const uint32_t Wsrc_v1, 
+                                     const uint32_t Wdst_v1,
+                                     const uint32_t _ch_num,
+                                     const uint64_t _gapsrc_v1,
+                                     const uint64_t _gapdst_v1)
+{                                    
+    const uint32_t _integral_x_v2 = (proc_dims_src.x >> 1);
+    const uint8_t _LX = (proc_dims_src.x % 2);
+    const uint32_t _integral_y_v2 = (proc_dims_src.y >> 1);
+    const uint8_t _LY = (proc_dims_src.y % 2);
+
+    const double* _src_plane = src;
+    double* _dst_plane = dst;
+
+    for (uint32_t i = 0; i < _ch_num; ++i) {
+        decx::bp::CPUK::transpose_2x2_b64(_src_plane, 
+                                          _dst_plane, 
+                                          make_uint2(proc_dims_src.x, _integral_y_v2 << 1), 
+                                          Wsrc_v1, Wdst_v1);
+        if (_LY) {
+            decx::bp::CPUK::transpose_Nx2_b64(_src_plane + (_integral_y_v2 << 1) * Wsrc_v1, 
+                                              _dst_plane + (_integral_y_v2 << 1), 
+                                              proc_dims_src.x, Wsrc_v1, Wdst_v1);
+        }
+        _src_plane += _gapsrc_v1;
+        _dst_plane += _gapdst_v1;
+    }
+}
 
 
 // --------------------------------------------------- callers ---------------------------------------------------
@@ -528,6 +564,37 @@ void decx::bp::transpose_2x2_caller(const double* src,                          
     const uint _L = f_mgr->is_left ? f_mgr->frag_left_over : f_mgr->frag_len;
     t1D->_async_thread[t1D->total_thread - 1] = decx::cpu::register_task_default( decx::bp::CPUK::transpose_2x2_b64_LH,
         loc_src, loc_dst, make_uint2(proc_dim_src.x, _L), Wsrc, Wdst);
+
+    t1D->__sync_all_threads();
+}
+
+
+
+void decx::bp::transpose_MK_2x2_caller(const double* src,               double* dst, 
+                                       const uint32_t Wsrc,             const uint32_t Wdst,
+                                       const decx::bp::_cpu_transpose_MK_config<8>* _config,
+                                       decx::utils::_thread_arrange_1D* t1D)
+{
+    const double* loc_src = src;
+    double* loc_dst = dst;
+
+    const decx::utils::frag_manager* f_mgr = &_config->_f_mgr;
+    const uint2& proc_dim_src = _config->_src_proc_dims;
+
+    const uint64_t frag_src = _config->_gapsrc_v1 * f_mgr->frag_len,
+        frag_dst = _config->_gapdst_v1 * f_mgr->frag_len;
+
+    for (int i = 0; i < t1D->total_thread - 1; ++i) {
+        t1D->_async_thread[i] = decx::cpu::register_task_default(decx::bp::CPUK::transpose_MK_2x2_b64_LH,
+            loc_src, loc_dst, proc_dim_src, Wsrc, Wdst, f_mgr->frag_len,
+            _config->_gapsrc_v1, _config->_gapdst_v1);
+
+        loc_src += frag_src;
+        loc_dst += frag_dst;
+    }
+    const uint32_t _L = f_mgr->is_left ? f_mgr->frag_left_over : f_mgr->frag_len;
+    t1D->_async_thread[t1D->total_thread - 1] = decx::cpu::register_task_default(decx::bp::CPUK::transpose_MK_2x2_b64_LH,
+        loc_src, loc_dst, proc_dim_src, Wsrc, Wdst, _L, _config->_gapsrc_v1, _config->_gapdst_v1);
 
     t1D->__sync_all_threads();
 }

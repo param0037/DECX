@@ -35,12 +35,12 @@ namespace dsp {
         }
 
         template <typename _type_in, bool _conj>
-        void _FFT2D_H_entire_rows_cplxf(const _type_in* __restrict src, double* __restrict dst, decx::dsp::fft::cpu_FFT2D_planner<float>* planner,
+        void _FFT2D_H_entire_rows_cplxf(const _type_in* __restrict src, double* __restrict dst, const decx::dsp::fft::cpu_FFT2D_planner<float>* planner,
             const uint32_t pitch_src, const uint32_t pitch_dst, decx::utils::_thread_arrange_1D* t1D, bool _is_FFTH);
 
 
         template <typename _type_out>
-        void _IFFT2D_H_entire_rows_cplxf(const double* __restrict src, _type_out* __restrict dst, decx::dsp::fft::cpu_FFT2D_planner<float>* planner,
+        void _IFFT2D_H_entire_rows_cplxf(const double* __restrict src, _type_out* __restrict dst, const decx::dsp::fft::cpu_FFT2D_planner<float>* planner,
             const uint32_t pitch_src, const uint32_t pitch_dst, decx::utils::_thread_arrange_1D* t1D, bool _is_FFTH);
     }
 }

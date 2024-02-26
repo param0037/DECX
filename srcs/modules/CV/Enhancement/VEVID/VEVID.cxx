@@ -11,6 +11,7 @@
 #include "VEVID.h"
 #include "../../../BLAS/basic_process/type_statistics/CPU/cmp_exec.h"
 #include "../../../basic_calculations/operators/Maprange_exec.h"
+#include "../../../core/utils/simd_fast_math_avx2.h"
 
 
 _THREAD_FUNCTION_ void 
@@ -40,7 +41,8 @@ decx::vis::CPUK::_VEVID_u8_kernel(const double* __restrict src,
 
             _reg._vf = _mm256_div_ps(_mm256_set1_ps(_original_gain), _reg._vf);
             _reg._vf = _mm256_mul_ps(_mm256_set1_ps(-_phase_gain), _mm256_add_ps(_reg._vf, _mm256_set1_ps(1.f)));
-            _reg._vf = _mm256_atan_ps(_reg._vf);
+            
+            _reg._vf = decx::utils::simd::_mm256_atan_ps(_reg._vf);
 
             _mm256_store_ps(dst + dex_dst, _reg._vf);
 

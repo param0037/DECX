@@ -29,6 +29,10 @@ namespace decx
         struct _cpu_transpose_config;
 
 
+        template <uint8_t _element_byte>
+        struct _cpu_transpose_MK_config;
+
+
         namespace CPUK 
         {
 #ifdef __GNUC__
@@ -87,6 +91,7 @@ namespace decx
             transpose_2x2_b64(const double* src, double* dst, const uint2 proc_dims_src, const uint32_t Wsrc_v1, const uint32_t Wdst_v1);
 
 
+
             /**
             * @param proc_dims_src : .x -> width of processed area, in vec4; ~.y -> height of processed area, in vec4
             * @param Wsrc : width of source matrix (in vec4)
@@ -94,6 +99,11 @@ namespace decx
             */
             _THREAD_FUNCTION_ void
             transpose_2x2_b64_LH(const double* src, double* dst, const uint2 proc_dims_src, const uint32_t Wsrc, const uint32_t Wdst);
+
+
+            _THREAD_FUNCTION_ void
+            transpose_MK_2x2_b64_LH(const double* src, double* dst, const uint2 proc_dims_src, const uint32_t Wsrc, const uint32_t Wdst, 
+                const uint32_t _ch_num, const uint64_t _gapsrc_v1, const uint64_t _gapdst_v1);
         }
 
 
@@ -122,6 +132,10 @@ namespace decx
         */
         void transpose_2x2_caller(const double* src, double* dst, const uint32_t Wsrc, const uint32_t Wdst,
             const decx::bp::_cpu_transpose_config<8>* _config, decx::utils::_thread_arrange_1D* t1D);
+
+
+        void transpose_MK_2x2_caller(const double* src, double* dst, const uint32_t Wsrc, const uint32_t Wdst,
+            const decx::bp::_cpu_transpose_MK_config<8>* _config, decx::utils::_thread_arrange_1D* t1D);
     }
 }
 
@@ -264,15 +278,82 @@ struct decx::bp::_cpu_transpose_config
     decx::utils::frag_manager _f_mgr;
     uint2 _src_proc_dims;
 
-    _cpu_transpose_config(const uint2 _proc_dims_src, const uint32_t _thread_num) {
+    _cpu_transpose_config() {}
+
+
+    _cpu_transpose_config(const uint2 _proc_dims_src, 
+                          const uint32_t _thread_num) 
+    {
         uint8_t _alignment = 16 / _element_byte;
         if (_element_byte == 1) {
             _alignment = 8;
         }
 
         this->_src_proc_dims = _proc_dims_src;
-        //decx::utils::frag_manager_gen(&this->_f_mgr, _proc_dims_src.y / _alignment, _thread_num);
         decx::utils::frag_manager_gen_Nx(&this->_f_mgr, _proc_dims_src.y, _thread_num, _alignment);
+    }
+
+
+    template <uint8_t _byte_src>
+    decx::bp::_cpu_transpose_config<_element_byte>& operator=(const decx::bp::_cpu_transpose_config<_byte_src>& src)
+    {
+        if ((void*)this != (void*)(&src)) {
+            this->_f_mgr = src._f_mgr;
+            this->_src_proc_dims = src._src_proc_dims;
+        }
+        return *this;
+    }
+};
+
+
+
+template <uint8_t _element_byte>
+struct decx::bp::_cpu_transpose_MK_config
+{
+    decx::utils::frag_manager _f_mgr;
+    uint2 _src_proc_dims;
+    uint64_t _gapsrc_v1, _gapdst_v1;
+    uint32_t _channel_num;
+
+
+    _cpu_transpose_MK_config() {}
+
+
+    _cpu_transpose_MK_config(const uint2 _proc_dims_src, 
+                             const uint32_t _thread_num, 
+                             const uint32_t _channel_num,
+                             const uint64_t _gapsrc_v1, 
+                             const uint64_t _gapdst_v1) 
+    {
+        uint8_t _alignment = 16 / _element_byte;
+        this->_channel_num = _channel_num;
+        this->_gapsrc_v1 = _gapsrc_v1;
+        this->_gapdst_v1 = _gapdst_v1;
+
+        this->_src_proc_dims = _proc_dims_src;
+
+        if (_element_byte == 1) {
+            _alignment = 8;
+        }
+        if (_channel_num < _thread_num) {
+            decx::utils::frag_manager_gen_Nx(&this->_f_mgr, _proc_dims_src.y, _thread_num, _alignment);
+        }
+        else {
+            decx::utils::frag_manager_gen(&this->_f_mgr, this->_channel_num, _thread_num);
+        }
+    }
+
+    template <uint8_t _byte_src>
+    decx::bp::_cpu_transpose_MK_config<_element_byte>& operator=(const decx::bp::_cpu_transpose_MK_config<_byte_src>& src)
+    {
+        if ((void*)this != (void*)(&src)) {
+            this->_f_mgr = src._f_mgr;
+            this->_src_proc_dims = src._src_proc_dims;
+            this->_gapdst_v1 = src._gapdst_v1;
+            this->_gapsrc_v1 = src._gapsrc_v1;
+            this->_channel_num = src._channel_num;
+        }
+        return *this;
     }
 };
 

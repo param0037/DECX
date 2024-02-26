@@ -177,6 +177,30 @@ media/wayne/Disk/DECX_world/srcs/modules/CV/Enhancement/Histogram_Equalization/g
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/DECX_CV_CPU.dir/build.make CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/Enhancement/Histogram_Equalization/generate_hist.cxx.s
 .PHONY : media/wayne/Disk/DECX_world/srcs/modules/CV/Enhancement/Histogram_Equalization/generate_hist.cxx.s
 
+media/wayne/Disk/DECX_world/srcs/modules/CV/Enhancement/VEVID/VEVID.o: media/wayne/Disk/DECX_world/srcs/modules/CV/Enhancement/VEVID/VEVID.cxx.o
+.PHONY : media/wayne/Disk/DECX_world/srcs/modules/CV/Enhancement/VEVID/VEVID.o
+
+# target to build an object file
+media/wayne/Disk/DECX_world/srcs/modules/CV/Enhancement/VEVID/VEVID.cxx.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/DECX_CV_CPU.dir/build.make CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/Enhancement/VEVID/VEVID.cxx.o
+.PHONY : media/wayne/Disk/DECX_world/srcs/modules/CV/Enhancement/VEVID/VEVID.cxx.o
+
+media/wayne/Disk/DECX_world/srcs/modules/CV/Enhancement/VEVID/VEVID.i: media/wayne/Disk/DECX_world/srcs/modules/CV/Enhancement/VEVID/VEVID.cxx.i
+.PHONY : media/wayne/Disk/DECX_world/srcs/modules/CV/Enhancement/VEVID/VEVID.i
+
+# target to preprocess a source file
+media/wayne/Disk/DECX_world/srcs/modules/CV/Enhancement/VEVID/VEVID.cxx.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/DECX_CV_CPU.dir/build.make CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/Enhancement/VEVID/VEVID.cxx.i
+.PHONY : media/wayne/Disk/DECX_world/srcs/modules/CV/Enhancement/VEVID/VEVID.cxx.i
+
+media/wayne/Disk/DECX_world/srcs/modules/CV/Enhancement/VEVID/VEVID.s: media/wayne/Disk/DECX_world/srcs/modules/CV/Enhancement/VEVID/VEVID.cxx.s
+.PHONY : media/wayne/Disk/DECX_world/srcs/modules/CV/Enhancement/VEVID/VEVID.s
+
+# target to generate assembly for a file
+media/wayne/Disk/DECX_world/srcs/modules/CV/Enhancement/VEVID/VEVID.cxx.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/DECX_CV_CPU.dir/build.make CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/Enhancement/VEVID/VEVID.cxx.s
+.PHONY : media/wayne/Disk/DECX_world/srcs/modules/CV/Enhancement/VEVID/VEVID.cxx.s
+
 media/wayne/Disk/DECX_world/srcs/modules/CV/Image_IO/Image_GUI.o: media/wayne/Disk/DECX_world/srcs/modules/CV/Image_IO/Image_GUI.cxx.o
 .PHONY : media/wayne/Disk/DECX_world/srcs/modules/CV/Image_IO/Image_GUI.o
 
@@ -528,6 +552,9 @@ help:
 	@echo "... media/wayne/Disk/DECX_world/srcs/modules/CV/Enhancement/Histogram_Equalization/generate_hist.o"
 	@echo "... media/wayne/Disk/DECX_world/srcs/modules/CV/Enhancement/Histogram_Equalization/generate_hist.i"
 	@echo "... media/wayne/Disk/DECX_world/srcs/modules/CV/Enhancement/Histogram_Equalization/generate_hist.s"
+	@echo "... media/wayne/Disk/DECX_world/srcs/modules/CV/Enhancement/VEVID/VEVID.o"
+	@echo "... media/wayne/Disk/DECX_world/srcs/modules/CV/Enhancement/VEVID/VEVID.i"
+	@echo "... media/wayne/Disk/DECX_world/srcs/modules/CV/Enhancement/VEVID/VEVID.s"
 	@echo "... media/wayne/Disk/DECX_world/srcs/modules/CV/Image_IO/Image_GUI.o"
 	@echo "... media/wayne/Disk/DECX_world/srcs/modules/CV/Image_IO/Image_GUI.i"
 	@echo "... media/wayne/Disk/DECX_world/srcs/modules/CV/Image_IO/Image_GUI.s"

@@ -9,9 +9,7 @@
 */
 
 #include "FFT2D.h"
-#include "FFT2D_kernels.h"
-#include "../../../../BLAS/basic_process/transpose/CPU/transpose_exec.h"
-
+#include "CPU_FFT2D_planner.h"
 
 
 namespace decx
@@ -36,36 +34,47 @@ static void decx::dsp::fft::FFT2D_caller_cplxf(decx::_Matrix* src, decx::_Matrix
 {
     decx::utils::_thread_arrange_1D t1D(decx::cpu::_get_permitted_concurrency());
 
-    decx::dsp::fft::cpu_FFT2D_planner<float> planner(make_uint2(src->Width(), src->Height()), handle);
-    planner.plan(&t1D, handle);
+    //decx::dsp::fft::cpu_FFT2D_planner<float> planner/*(make_uint2(src->Width(), src->Height()), handle)*/;
+    //planner.plan<double>(&src->get_layout(), &dst->get_layout(), &t1D, handle);
+    //Check_Runtime_Error(handle);
 
-    decx::bp::_cpu_transpose_config<8> _transpose_config_1st(make_uint2(src->Width(), src->Height()), t1D.total_thread);
-    decx::bp::_cpu_transpose_config<8> _transpose_config_2nd(make_uint2(src->Height(), src->Width()), t1D.total_thread);
+    if (decx::dsp::fft::cpu_FFT2D_cplxf32_planner == NULL) {
+        decx::dsp::fft::cpu_FFT2D_cplxf32_planner = new decx::dsp::fft::cpu_FFT2D_planner<float>;
+    }
+    if (decx::dsp::fft::cpu_FFT2D_cplxf32_planner->changed(&src->get_layout(), &dst->get_layout(), t1D.total_thread)) {
+        decx::dsp::fft::cpu_FFT2D_cplxf32_planner->plan<double>(&src->get_layout(), &dst->get_layout(), &t1D, handle);
+        Check_Runtime_Error(handle);
+    }
 
-    // Horizontal FFT
-    decx::dsp::fft::_FFT2D_H_entire_rows_cplxf<_type_in, false>((_type_in*)src->Mat.ptr,                             
-                                                                (double*)planner.get_tmp1_ptr(), 
-                                                                &planner,                                            
-                                                                src->Pitch(), 
-                                                                decx::utils::ceil<uint32_t>(src->Width(), 4) * 4,   
-                                                                &t1D, true);
-    // Transpose
-    decx::bp::transpose_2x2_caller((double*)planner.get_tmp1_ptr(),                     
-                                   (double*)planner.get_tmp2_ptr(),
-                                   decx::utils::ceil<uint32_t>(src->Width(), 4) * 4,   
-                                   decx::utils::ceil<uint32_t>(src->Height(), 4) * 4, 
-                                   &_transpose_config_1st,                              
-                                   &t1D);
-    // Horizontal FFT
-    decx::dsp::fft::_FFT2D_H_entire_rows_cplxf<double, true>((double*)planner.get_tmp2_ptr(),       (double*)planner.get_tmp1_ptr(), 
-                                               &planner,                                            decx::utils::ceil<uint32_t>(src->Height(), 4) * 4,  
-                                               decx::utils::ceil<uint32_t>(src->Height(), 4) * 4,   &t1D, false);
-    // Transpose
-    decx::bp::transpose_2x2_caller((double*)planner.get_tmp1_ptr(),                     (double*)dst->Mat.ptr,
-                                   decx::utils::ceil<uint32_t>(src->Height(), 4) * 4,   dst->Pitch(), 
-                                   &_transpose_config_2nd,                              &t1D);
+    //decx::bp::_cpu_transpose_config<8> _transpose_config_1st(make_uint2(src->Width(), src->Height()), t1D.total_thread);
+    //decx::bp::_cpu_transpose_config<8> _transpose_config_2nd(make_uint2(src->Height(), src->Width()), t1D.total_thread);
 
-    planner.release_buffers();
+    //// Horizontal FFT
+    //decx::dsp::fft::_FFT2D_H_entire_rows_cplxf<_type_in, false>((_type_in*)src->Mat.ptr,                             
+    //                                                            (double*)planner.get_tmp1_ptr(), 
+    //                                                            &planner,                                            
+    //                                                            src->Pitch(), 
+    //                                                            decx::utils::ceil<uint32_t>(src->Width(), 4) * 4,   
+    //                                                            &t1D, true);
+    //// Transpose
+    //decx::bp::transpose_2x2_caller((double*)planner.get_tmp1_ptr(),                     
+    //                               (double*)planner.get_tmp2_ptr(),
+    //                               decx::utils::ceil<uint32_t>(src->Width(), 4) * 4,   
+    //                               decx::utils::ceil<uint32_t>(src->Height(), 4) * 4, 
+    //                               &_transpose_config_1st,                              
+    //                               &t1D);
+    //// Horizontal FFT
+    //decx::dsp::fft::_FFT2D_H_entire_rows_cplxf<double, true>((double*)planner.get_tmp2_ptr(),       (double*)planner.get_tmp1_ptr(), 
+    //                                           &planner,                                            decx::utils::ceil<uint32_t>(src->Height(), 4) * 4,  
+    //                                           decx::utils::ceil<uint32_t>(src->Height(), 4) * 4,   &t1D, false);
+    //// Transpose
+    //decx::bp::transpose_2x2_caller((double*)planner.get_tmp1_ptr(),                     (double*)dst->Mat.ptr,
+    //                               decx::utils::ceil<uint32_t>(src->Height(), 4) * 4,   dst->Pitch(), 
+    //                               &_transpose_config_2nd,                              &t1D);
+
+    decx::dsp::fft::cpu_FFT2D_cplxf32_planner->Forward<_type_in>(src, dst, &t1D);
+    //planner.Forward<_type_in>(src, dst, &t1D);
+    //planner.release_buffers();
 }
 
 
@@ -74,53 +83,63 @@ template <typename _type_out>
 static void decx::dsp::fft::IFFT2D_caller_cplxf(decx::_Matrix* src, decx::_Matrix* dst, de::DH* handle)
 {
     decx::utils::_thread_arrange_1D t1D(decx::cpu::_get_permitted_concurrency());
-    decx::dsp::fft::cpu_FFT2D_planner<float> planner(make_uint2(src->Width(), src->Height()), handle);
+    //decx::dsp::fft::cpu_FFT2D_planner<float> planner/*(make_uint2(src->Width(), src->Height()), handle)*/;
+    //planner.plan<_type_out>(&src->get_layout(), &dst->get_layout(), &t1D, handle);
+    //Check_Runtime_Error(handle);
     
-    planner.plan(&t1D, handle);
-    decx::bp::_cpu_transpose_config<8> _transpose_config_1st(make_uint2(src->Width(), src->Height()), t1D.total_thread);
-    decx::bp::_cpu_transpose_config<sizeof(_type_out)> _transpose_config_2nd(make_uint2(src->Height(), src->Width()), t1D.total_thread);
-    // Horizontal FFT
-    decx::dsp::fft::_IFFT2D_H_entire_rows_cplxf<double>((double*)src->Mat.ptr,                
-                                                        (double*)planner.get_tmp1_ptr(), 
-                                                        &planner,                                            
-                                                        src->Pitch(), 
-                                                        decx::utils::ceil<uint32_t>(src->Width(), 4) * 4,    
-                                                        &t1D, true);
-                                                        
-    // Transpose
-    decx::bp::transpose_2x2_caller((double*)planner.get_tmp1_ptr(),                     
-                                   (double*)planner.get_tmp2_ptr(),
-                                   decx::utils::ceil<uint32_t>(src->Width(), 4) * 4,    
-                                   decx::utils::ceil<uint32_t>(src->Height(), 4) * 4, 
-                                   &_transpose_config_1st,                              
-                                   &t1D);
-                                   
-    // Horizontal FFT
-    const uint8_t _STG_alignment = decx::dsp::fft::cpu_FFT2D_planner<float>::get_alignment_FFT_last_dimension<_type_out>();
-    decx::dsp::fft::_IFFT2D_H_entire_rows_cplxf<_type_out>((double*)planner.get_tmp2_ptr(),       
-                                                           (_type_out*)planner.get_tmp1_ptr(), 
-                                                           &planner,                                            
-                                                           decx::utils::ceil<uint32_t>(src->Height(), 4) * 4,  
-                                                           decx::utils::ceil<uint32_t>(src->Height(), _STG_alignment) * _STG_alignment,
-                                                           &t1D, false);
-                                                           
-    // Transpose
-    if constexpr (std::is_same_v<_type_out, double>){
-        decx::bp::transpose_2x2_caller((double*)planner.get_tmp1_ptr(),                     (double*)dst->Mat.ptr,
-                                       decx::utils::ceil<uint32_t>(src->Height(), 4) * 4,  dst->Pitch(), 
-                                       &_transpose_config_2nd,                              &t1D);
+    if (decx::dsp::fft::cpu_IFFT2D_cplxf32_planner == NULL) {
+        decx::dsp::fft::cpu_IFFT2D_cplxf32_planner = new decx::dsp::fft::cpu_FFT2D_planner<float>;
     }
-    else if constexpr (std::is_same_v<_type_out, uint8_t>) {
-        decx::bp::transpose_8x8_caller((double*)planner.get_tmp1_ptr(),                                             (double*)dst->Mat.ptr,
-                                       decx::utils::ceil<uint32_t>(src->Height(), _STG_alignment) * _STG_alignment, dst->Pitch(),
-                                       &_transpose_config_2nd,                                                      &t1D);
+    if (decx::dsp::fft::cpu_IFFT2D_cplxf32_planner->changed(&src->get_layout(), &dst->get_layout(), t1D.total_thread)) {
+        decx::dsp::fft::cpu_IFFT2D_cplxf32_planner->plan<_type_out>(&src->get_layout(), &dst->get_layout(), &t1D, handle);
+        Check_Runtime_Error(handle);
     }
-    else {
-        decx::bp::transpose_4x4_caller((float*)planner.get_tmp1_ptr(),                                              (float*)dst->Mat.ptr,
-                                       decx::utils::ceil<uint32_t>(src->Height(), _STG_alignment) * _STG_alignment, dst->Pitch(),
-                                       &_transpose_config_2nd,                                                      &t1D);
-    }
-    planner.release_buffers();
+    //decx::bp::_cpu_transpose_config<8> _transpose_config_1st(make_uint2(src->Width(), src->Height()), t1D.total_thread);
+    //decx::bp::_cpu_transpose_config<sizeof(_type_out)> _transpose_config_2nd(make_uint2(src->Height(), src->Width()), t1D.total_thread);
+    //// Horizontal FFT
+    //decx::dsp::fft::_IFFT2D_H_entire_rows_cplxf<double>((double*)src->Mat.ptr,                
+    //                                                    (double*)planner.get_tmp1_ptr(), 
+    //                                                    &planner,                                            
+    //                                                    src->Pitch(), 
+    //                                                    decx::utils::ceil<uint32_t>(src->Width(), 4) * 4,    
+    //                                                    &t1D, true);
+    //                                                    
+    //// Transpose
+    //decx::bp::transpose_2x2_caller((double*)planner.get_tmp1_ptr(),                     
+    //                               (double*)planner.get_tmp2_ptr(),
+    //                               decx::utils::ceil<uint32_t>(src->Width(), 4) * 4,    
+    //                               decx::utils::ceil<uint32_t>(src->Height(), 4) * 4, 
+    //                               &_transpose_config_1st,                              
+    //                               &t1D);
+    //                               
+    //// Horizontal FFT
+    //const uint8_t _STG_alignment = decx::dsp::fft::cpu_FFT2D_planner<float>::get_alignment_FFT_last_dimension<_type_out>();
+    //decx::dsp::fft::_IFFT2D_H_entire_rows_cplxf<_type_out>((double*)planner.get_tmp2_ptr(),       
+    //                                                       (_type_out*)planner.get_tmp1_ptr(), 
+    //                                                       &planner,                                            
+    //                                                       decx::utils::ceil<uint32_t>(src->Height(), 4) * 4,  
+    //                                                       decx::utils::ceil<uint32_t>(src->Height(), _STG_alignment) * _STG_alignment,
+    //                                                       &t1D, false);
+    //                                                       
+    //// Transpose
+    //if constexpr (std::is_same_v<_type_out, double>){
+    //    decx::bp::transpose_2x2_caller((double*)planner.get_tmp1_ptr(),                     (double*)dst->Mat.ptr,
+    //                                   decx::utils::ceil<uint32_t>(src->Height(), 4) * 4,  dst->Pitch(), 
+    //                                   &_transpose_config_2nd,                              &t1D);
+    //}
+    //else if constexpr (std::is_same_v<_type_out, uint8_t>) {
+    //    decx::bp::transpose_8x8_caller((double*)planner.get_tmp1_ptr(),                                             (double*)dst->Mat.ptr,
+    //                                   decx::utils::ceil<uint32_t>(src->Height(), _STG_alignment) * _STG_alignment, dst->Pitch(),
+    //                                   &_transpose_config_2nd,                                                      &t1D);
+    //}
+    //else {
+    //    decx::bp::transpose_4x4_caller((float*)planner.get_tmp1_ptr(),                                              (float*)dst->Mat.ptr,
+    //                                   decx::utils::ceil<uint32_t>(src->Height(), _STG_alignment) * _STG_alignment, dst->Pitch(),
+    //                                   &_transpose_config_2nd,                                                      &t1D);
+    //}
+    decx::dsp::fft::cpu_IFFT2D_cplxf32_planner->Inverse<_type_out>(src, dst, &t1D);
+    //planner.Inverse<_type_out>(src, dst, &t1D);
+    //planner.release_buffers();
 }
 
 
@@ -182,4 +201,26 @@ _DECX_API_ de::DH de::dsp::cpu::IFFT(de::Matrix& src, de::Matrix& dst, const de:
     }
 
     return handle;
+}
+
+
+
+void decx::dsp::InitFFT2Resources()
+{
+    decx::dsp::fft::cpu_FFT2D_cplxf32_planner = NULL;
+    decx::dsp::fft::cpu_IFFT2D_cplxf32_planner = NULL;
+}
+
+
+
+void decx::dsp::FreeFFT2Resources()
+{
+    if (decx::dsp::fft::cpu_FFT2D_cplxf32_planner != NULL) {
+        decx::dsp::fft::cpu_FFT2D_cplxf32_planner->release_buffers();
+        delete decx::dsp::fft::cpu_FFT2D_cplxf32_planner;
+    }
+    if (decx::dsp::fft::cpu_IFFT2D_cplxf32_planner != NULL) {
+        decx::dsp::fft::cpu_IFFT2D_cplxf32_planner->release_buffers();
+        delete decx::dsp::fft::cpu_IFFT2D_cplxf32_planner;
+    }
 }

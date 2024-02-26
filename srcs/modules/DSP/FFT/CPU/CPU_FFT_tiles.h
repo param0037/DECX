@@ -72,6 +72,9 @@ struct decx::dsp::fft::_FFT1D_kernel_tile_fp32
     }
 
 
+    void flush() const;
+
+
     void _inblock_transpose_vecAdj_2_VecDist_cplxf(decx::utils::double_buffer_manager* __restrict _double_buffer) const;
 
 

@@ -9,18 +9,9 @@
 */
 
 
-#include "../../../../classes/GPU_Matrix.h"
 #include "../../../../core/basic.h"
-
-#include "../../FFT_commons.h"
-
-#include "../../../../core/cudaStream_management/cudaEvent_queue.h"
-#include "../../../../core/cudaStream_management/cudaStream_queue.h"
-
-#include "FFT2D_kernels.cuh"
-#include "../../../../core/utils/double_buffer.h"
-#include "../../../../BLAS/basic_process/transpose/CUDA/transpose_kernels.cuh"
-#include "FFT2D_1way_kernel_callers.cuh"
+#include "FFT2D_config.cuh"
+#include "../CUDA_FFTs.cuh"
 
 
 namespace decx
@@ -47,37 +38,21 @@ static void decx::dsp::fft::_FFT2D_caller_cplxf(decx::_GPU_Matrix* src, decx::_G
     decx::cuda_event* E;
     E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
 
-    decx::dsp::fft::_cuda_FFT2D_planner<float> _planner(make_uint2(src->Width(), src->Height()), handle);
-    _planner.plan(src->Pitch(), dst->Pitch());
+    if (decx::dsp::fft::cuda_FFT2D_cplxf32_planner == NULL) {
+        decx::dsp::fft::cuda_FFT2D_cplxf32_planner = new decx::dsp::fft::_cuda_FFT2D_planner<float>;
+    }
+    if (decx::dsp::fft::cuda_FFT2D_cplxf32_planner->changed(make_uint2(src->Width(), src->Height()), src->Pitch(), dst->Pitch())) {
+        decx::dsp::fft::cuda_FFT2D_cplxf32_planner->plan(make_uint2(src->Width(), src->Height()), src->Pitch(), dst->Pitch(), handle);
+        Check_Runtime_Error(handle);
+    }
 
-    decx::utils::double_buffer_manager double_buffer(_planner.get_tmp1_ptr<void>(), _planner.get_tmp2_ptr<void>());
-
-    decx::dsp::fft::FFT2D_cplxf_1st_1way_caller<_type_in, false>(src->Mat.ptr, &double_buffer,
-        _planner.get_FFT_info(decx::dsp::fft::_cuda_FFT2D_planner<float>::_FFT_Vertical),
-        S);
-
-    decx::bp::transpose2D_b8(double_buffer.get_leading_ptr<double2>(), 
-                             double_buffer.get_lagging_ptr<double2>(),
-                             make_uint2(_planner.get_buffer_dims().y, _planner.get_buffer_dims().x),
-                             _planner.get_buffer_dims().x, 
-                             _planner.get_buffer_dims().y, 
-                             S);
-    double_buffer.update_states();
-
-    decx::dsp::fft::FFT2D_C2C_cplxf_1way_caller<_FFT2D_END_>(&double_buffer,
-        _planner.get_FFT_info(decx::dsp::fft::_cuda_FFT2D_planner<float>::_FFT_Horizontal),
-        S);
-
-    decx::bp::transpose2D_b8(double_buffer.get_leading_ptr<double2>(), 
-                             (double2*)dst->Mat.ptr,
-                             make_uint2(dst->Width(), dst->Height()),
-                             _planner.get_buffer_dims().y, 
-                             dst->Pitch(), S);
+    decx::dsp::fft::cuda_FFT2D_cplxf32_planner->Forward<_type_in>(src, dst, S);
     
     E->event_record(S);
     E->synchronize();
 
-    _planner.release_buffers();
+    S->detach();
+    E->detach();
 }
 
 
@@ -90,65 +65,21 @@ static void decx::dsp::fft::_IFFT2D_caller_cplxf(decx::_GPU_Matrix* src, decx::_
     decx::cuda_event* E;
     E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
 
-    decx::dsp::fft::_cuda_FFT2D_planner<float> _planner(make_uint2(src->Width(), src->Height()), handle);
-    _planner.plan(src->Pitch(), dst->Pitch());
-
-    decx::utils::double_buffer_manager double_buffer(_planner.get_tmp1_ptr<void>(), _planner.get_tmp2_ptr<void>());
-
-    decx::dsp::fft::FFT2D_cplxf_1st_1way_caller<de::CPf, true>(src->Mat.ptr, &double_buffer,
-        _planner.get_FFT_info(decx::dsp::fft::_cuda_FFT2D_planner<float>::_FFT_Vertical),
-        S);
-
-    decx::bp::transpose2D_b8(double_buffer.get_leading_ptr<double2>(), 
-                             double_buffer.get_lagging_ptr<double2>(),
-                             make_uint2(_planner.get_buffer_dims().y, _planner.get_buffer_dims().x),
-                             _planner.get_buffer_dims().x, _planner.get_buffer_dims().y, 
-                             S);
-    double_buffer.update_states();
-
-    decx::dsp::fft::FFT2D_C2C_cplxf_1way_caller<_IFFT2D_END_(_type_out)>(&double_buffer,
-        _planner.get_FFT_info(decx::dsp::fft::_cuda_FFT2D_planner<float>::_FFT_Horizontal),
-        S);
-    if (std::is_same<_type_out, de::CPf>::value) {
-        decx::bp::transpose2D_b8(double_buffer.get_leading_ptr<double2>(), 
-                                 (double2*)dst->Mat.ptr,
-                                 make_uint2(dst->Width(), dst->Height()),
-                                 _planner.get_buffer_dims().y, 
-                                 dst->Pitch(), S);
+    if (decx::dsp::fft::cuda_IFFT2D_cplxf32_planner == NULL) {
+        decx::dsp::fft::cuda_IFFT2D_cplxf32_planner = new decx::dsp::fft::_cuda_FFT2D_planner<float>;
     }
-    else if (std::is_same<_type_out, uint8_t>::value) {
-        decx::bp::transpose2D_b1(double_buffer.get_leading_ptr<uint32_t>(), 
-                                 (uint32_t*)dst->Mat.ptr,
-                                 make_uint2(dst->Width(), dst->Height()),
-                                 _planner.get_buffer_dims().y * 8,  // Times 8 cuz 8 uchars in one de::CPf
-                                 dst->Pitch(), S);
+    if (decx::dsp::fft::cuda_IFFT2D_cplxf32_planner->changed(make_uint2(src->Width(), src->Height()), src->Pitch(), dst->Pitch())) {
+        decx::dsp::fft::cuda_IFFT2D_cplxf32_planner->plan(make_uint2(src->Width(), src->Height()), src->Pitch(), dst->Pitch(), handle);
+        Check_Runtime_Error(handle);
     }
-    else if (std::is_same<_type_out, float>::value) {
-        decx::bp::transpose2D_b4(double_buffer.get_leading_ptr<float2>(), 
-                                 (float2*)dst->Mat.ptr,
-                                 make_uint2(dst->Width(), dst->Height()),
-                                 _planner.get_buffer_dims().y * 2,  // Times 2 cuz 2 floats in one de::CPf
-                                 dst->Pitch(), S);
-    }
+
+    decx::dsp::fft::cuda_IFFT2D_cplxf32_planner->Inverse<_type_out>(src, dst, S);
     
     E->event_record(S);
     E->synchronize();
 
-    _planner.release_buffers();
-}
-
-
-namespace de
-{
-namespace dsp {
-namespace cuda
-{
-    _DECX_API_ de::DH FFT(de::GPU_Matrix& src, de::GPU_Matrix& dst);
-
-
-    _DECX_API_ de::DH IFFT(de::GPU_Matrix& src, de::GPU_Matrix& dst, const de::_DATA_TYPES_FLAGS_ type_out);
-}
-}
+    S->detach();
+    E->detach();
 }
 
 
@@ -207,4 +138,23 @@ _DECX_API_ de::DH de::dsp::cuda::IFFT(de::GPU_Matrix& src, de::GPU_Matrix& dst, 
     }
     
     return handle;
+}
+
+
+void decx::dsp::InitCUDA_FFT2D_Resources()
+{
+    decx::dsp::fft::cuda_FFT2D_cplxf32_planner = NULL;
+    decx::dsp::fft::cuda_IFFT2D_cplxf32_planner = NULL;
+}
+
+
+
+void decx::dsp::FreeCUDA_FFT2D_Resources()
+{
+    if (decx::dsp::fft::cuda_FFT2D_cplxf32_planner != NULL) {
+        delete decx::dsp::fft::cuda_FFT2D_cplxf32_planner;
+    }
+    if (decx::dsp::fft::cuda_IFFT2D_cplxf32_planner != NULL) {
+        delete decx::dsp::fft::cuda_IFFT2D_cplxf32_planner;
+    }
 }

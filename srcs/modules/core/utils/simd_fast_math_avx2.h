@@ -31,6 +31,7 @@ namespace utils{
         FORCEINLINE __m256d _mm256_signinv_pd(__m256d __proc);
 
         inline __m256 _mm256_atan2_ps(const __m256 __y, const __m256 __x);
+        inline __m256 _mm256_atan_ps(const __m256 __x);
         inline __m256 _mm256_cos_ps(const __m256 __x);
         inline __m256 _mm256_sin_ps(const __m256 __x);
     }
@@ -89,6 +90,28 @@ inline __m256 decx::utils::simd::_mm256_atan2_ps(const __m256 __y, const __m256 
     _crit = _mm256_and_ps(__y, _mm256_castsi256_ps(_mm256_set1_epi32(0x80000000)));
     return _mm256_xor_ps(dst, _crit);
 }
+
+
+
+
+inline __m256 decx::utils::simd::_mm256_atan_ps(__m256 __x)
+{
+    using namespace decx::utils::simd;
+    const __m256 _abs_GT1 = _mm256_cmp_ps(_mm256_abs_ps(__x), _mm256_set1_ps(1.f), _CMP_GT_OS);
+    const __m256 _neg = _mm256_cmp_ps(__x, _mm256_set1_ps(0.f), _CMP_LE_OS);
+    const __m256 _norm = _mm256_blendv_ps(_mm256_abs_ps(__x),
+        _mm256_div_ps(_mm256_set1_ps(1.f), _mm256_abs_ps(__x)), _abs_GT1);
+
+    const __m256 _s = _mm256_mul_ps(_norm, _norm);
+    const __m256 _r1 = _mm256_fmadd_ps(_s, _mm256_set1_ps(-0.0464964749), _mm256_set1_ps(0.15931422));
+    const __m256 _r2 = _mm256_fmadd_ps(_r1, _s, _mm256_set1_ps(-0.327622764));
+    const __m256 _r3 = _mm256_mul_ps(_norm, _mm256_fmadd_ps(_r2, _s, _mm256_set1_ps(1)));
+
+    __m256 dst1 = _mm256_blendv_ps(_r3, _mm256_sub_ps(_mm256_set1_ps(1.57079637f), _r3), _abs_GT1);
+    return _mm256_signinv_ps_masked(dst1, _neg);
+}
+
+
 
 
 inline __m256 decx::utils::simd::_mm256_cos_ps(const __m256 __x)

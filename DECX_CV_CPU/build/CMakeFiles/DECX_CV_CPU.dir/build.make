@@ -97,10 +97,24 @@ CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/Enhanceme
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/Enhancement/Histogram_Equalization/generate_hist.cxx.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /media/wayne/Disk/DECX_world/srcs/modules/CV/Enhancement/Histogram_Equalization/generate_hist.cxx -o CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/Enhancement/Histogram_Equalization/generate_hist.cxx.s
 
+CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/Enhancement/VEVID/VEVID.cxx.o: CMakeFiles/DECX_CV_CPU.dir/flags.make
+CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/Enhancement/VEVID/VEVID.cxx.o: /media/wayne/Disk/DECX_world/srcs/modules/CV/Enhancement/VEVID/VEVID.cxx
+CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/Enhancement/VEVID/VEVID.cxx.o: CMakeFiles/DECX_CV_CPU.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/media/wayne/Disk/DECX_world/DECX_CV_CPU/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/Enhancement/VEVID/VEVID.cxx.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/Enhancement/VEVID/VEVID.cxx.o -MF CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/Enhancement/VEVID/VEVID.cxx.o.d -o CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/Enhancement/VEVID/VEVID.cxx.o -c /media/wayne/Disk/DECX_world/srcs/modules/CV/Enhancement/VEVID/VEVID.cxx
+
+CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/Enhancement/VEVID/VEVID.cxx.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/Enhancement/VEVID/VEVID.cxx.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /media/wayne/Disk/DECX_world/srcs/modules/CV/Enhancement/VEVID/VEVID.cxx > CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/Enhancement/VEVID/VEVID.cxx.i
+
+CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/Enhancement/VEVID/VEVID.cxx.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/Enhancement/VEVID/VEVID.cxx.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /media/wayne/Disk/DECX_world/srcs/modules/CV/Enhancement/VEVID/VEVID.cxx -o CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/Enhancement/VEVID/VEVID.cxx.s
+
 CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/Image_IO/Image_GUI.cxx.o: CMakeFiles/DECX_CV_CPU.dir/flags.make
 CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/Image_IO/Image_GUI.cxx.o: /media/wayne/Disk/DECX_world/srcs/modules/CV/Image_IO/Image_GUI.cxx
 CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/Image_IO/Image_GUI.cxx.o: CMakeFiles/DECX_CV_CPU.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/media/wayne/Disk/DECX_world/DECX_CV_CPU/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/Image_IO/Image_GUI.cxx.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/media/wayne/Disk/DECX_world/DECX_CV_CPU/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/Image_IO/Image_GUI.cxx.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/Image_IO/Image_GUI.cxx.o -MF CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/Image_IO/Image_GUI.cxx.o.d -o CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/Image_IO/Image_GUI.cxx.o -c /media/wayne/Disk/DECX_world/srcs/modules/CV/Image_IO/Image_GUI.cxx
 
 CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/Image_IO/Image_GUI.cxx.i: cmake_force
@@ -114,7 +128,7 @@ CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/Image_IO/
 CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/Image_IO/Image_IO.cxx.o: CMakeFiles/DECX_CV_CPU.dir/flags.make
 CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/Image_IO/Image_IO.cxx.o: /media/wayne/Disk/DECX_world/srcs/modules/CV/Image_IO/Image_IO.cxx
 CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/Image_IO/Image_IO.cxx.o: CMakeFiles/DECX_CV_CPU.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/media/wayne/Disk/DECX_world/DECX_CV_CPU/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/Image_IO/Image_IO.cxx.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/media/wayne/Disk/DECX_world/DECX_CV_CPU/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/Image_IO/Image_IO.cxx.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/Image_IO/Image_IO.cxx.o -MF CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/Image_IO/Image_IO.cxx.o.d -o CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/Image_IO/Image_IO.cxx.o -c /media/wayne/Disk/DECX_world/srcs/modules/CV/Image_IO/Image_IO.cxx
 
 CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/Image_IO/Image_IO.cxx.i: cmake_force
@@ -128,7 +142,7 @@ CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/Image_IO/
 CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/edge_detection/CPU/Canny_ED_post_proc.cxx.o: CMakeFiles/DECX_CV_CPU.dir/flags.make
 CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/edge_detection/CPU/Canny_ED_post_proc.cxx.o: /media/wayne/Disk/DECX_world/srcs/modules/CV/edge_detection/CPU/Canny_ED_post_proc.cxx
 CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/edge_detection/CPU/Canny_ED_post_proc.cxx.o: CMakeFiles/DECX_CV_CPU.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/media/wayne/Disk/DECX_world/DECX_CV_CPU/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/edge_detection/CPU/Canny_ED_post_proc.cxx.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/media/wayne/Disk/DECX_world/DECX_CV_CPU/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/edge_detection/CPU/Canny_ED_post_proc.cxx.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/edge_detection/CPU/Canny_ED_post_proc.cxx.o -MF CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/edge_detection/CPU/Canny_ED_post_proc.cxx.o.d -o CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/edge_detection/CPU/Canny_ED_post_proc.cxx.o -c /media/wayne/Disk/DECX_world/srcs/modules/CV/edge_detection/CPU/Canny_ED_post_proc.cxx
 
 CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/edge_detection/CPU/Canny_ED_post_proc.cxx.i: cmake_force
@@ -142,7 +156,7 @@ CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/edge_dete
 CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/edge_detection/CPU/Scharr_edg_det_ops.cxx.o: CMakeFiles/DECX_CV_CPU.dir/flags.make
 CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/edge_detection/CPU/Scharr_edg_det_ops.cxx.o: /media/wayne/Disk/DECX_world/srcs/modules/CV/edge_detection/CPU/Scharr_edg_det_ops.cxx
 CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/edge_detection/CPU/Scharr_edg_det_ops.cxx.o: CMakeFiles/DECX_CV_CPU.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/media/wayne/Disk/DECX_world/DECX_CV_CPU/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/edge_detection/CPU/Scharr_edg_det_ops.cxx.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/media/wayne/Disk/DECX_world/DECX_CV_CPU/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/edge_detection/CPU/Scharr_edg_det_ops.cxx.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/edge_detection/CPU/Scharr_edg_det_ops.cxx.o -MF CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/edge_detection/CPU/Scharr_edg_det_ops.cxx.o.d -o CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/edge_detection/CPU/Scharr_edg_det_ops.cxx.o -c /media/wayne/Disk/DECX_world/srcs/modules/CV/edge_detection/CPU/Scharr_edg_det_ops.cxx
 
 CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/edge_detection/CPU/Scharr_edg_det_ops.cxx.i: cmake_force
@@ -156,7 +170,7 @@ CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/edge_dete
 CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/edge_detection/CPU/Sobel_edg_det_ops.cxx.o: CMakeFiles/DECX_CV_CPU.dir/flags.make
 CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/edge_detection/CPU/Sobel_edg_det_ops.cxx.o: /media/wayne/Disk/DECX_world/srcs/modules/CV/edge_detection/CPU/Sobel_edg_det_ops.cxx
 CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/edge_detection/CPU/Sobel_edg_det_ops.cxx.o: CMakeFiles/DECX_CV_CPU.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/media/wayne/Disk/DECX_world/DECX_CV_CPU/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/edge_detection/CPU/Sobel_edg_det_ops.cxx.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/media/wayne/Disk/DECX_world/DECX_CV_CPU/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/edge_detection/CPU/Sobel_edg_det_ops.cxx.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/edge_detection/CPU/Sobel_edg_det_ops.cxx.o -MF CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/edge_detection/CPU/Sobel_edg_det_ops.cxx.o.d -o CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/edge_detection/CPU/Sobel_edg_det_ops.cxx.o -c /media/wayne/Disk/DECX_world/srcs/modules/CV/edge_detection/CPU/Sobel_edg_det_ops.cxx
 
 CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/edge_detection/CPU/Sobel_edg_det_ops.cxx.i: cmake_force
@@ -170,7 +184,7 @@ CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/edge_dete
 CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/edge_detection/CPU/edge_detectors.cxx.o: CMakeFiles/DECX_CV_CPU.dir/flags.make
 CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/edge_detection/CPU/edge_detectors.cxx.o: /media/wayne/Disk/DECX_world/srcs/modules/CV/edge_detection/CPU/edge_detectors.cxx
 CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/edge_detection/CPU/edge_detectors.cxx.o: CMakeFiles/DECX_CV_CPU.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/media/wayne/Disk/DECX_world/DECX_CV_CPU/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/edge_detection/CPU/edge_detectors.cxx.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/media/wayne/Disk/DECX_world/DECX_CV_CPU/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/edge_detection/CPU/edge_detectors.cxx.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/edge_detection/CPU/edge_detectors.cxx.o -MF CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/edge_detection/CPU/edge_detectors.cxx.o.d -o CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/edge_detection/CPU/edge_detectors.cxx.o -c /media/wayne/Disk/DECX_world/srcs/modules/CV/edge_detection/CPU/edge_detectors.cxx
 
 CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/edge_detection/CPU/edge_detectors.cxx.i: cmake_force
@@ -184,7 +198,7 @@ CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/edge_dete
 CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/Gaussian_filter.cxx.o: CMakeFiles/DECX_CV_CPU.dir/flags.make
 CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/Gaussian_filter.cxx.o: /media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/Gaussian_filter.cxx
 CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/Gaussian_filter.cxx.o: CMakeFiles/DECX_CV_CPU.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/media/wayne/Disk/DECX_world/DECX_CV_CPU/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/Gaussian_filter.cxx.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/media/wayne/Disk/DECX_world/DECX_CV_CPU/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/Gaussian_filter.cxx.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/Gaussian_filter.cxx.o -MF CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/Gaussian_filter.cxx.o.d -o CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/Gaussian_filter.cxx.o -c /media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/Gaussian_filter.cxx
 
 CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/Gaussian_filter.cxx.i: cmake_force
@@ -198,7 +212,7 @@ CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/filters/C
 CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/Gaussian_filter_exec.cxx.o: CMakeFiles/DECX_CV_CPU.dir/flags.make
 CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/Gaussian_filter_exec.cxx.o: /media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/Gaussian_filter_exec.cxx
 CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/Gaussian_filter_exec.cxx.o: CMakeFiles/DECX_CV_CPU.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/media/wayne/Disk/DECX_world/DECX_CV_CPU/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/Gaussian_filter_exec.cxx.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/media/wayne/Disk/DECX_world/DECX_CV_CPU/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/Gaussian_filter_exec.cxx.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/Gaussian_filter_exec.cxx.o -MF CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/Gaussian_filter_exec.cxx.o.d -o CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/Gaussian_filter_exec.cxx.o -c /media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/Gaussian_filter_exec.cxx
 
 CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/Gaussian_filter_exec.cxx.i: cmake_force
@@ -212,7 +226,7 @@ CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/filters/C
 CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/Gaussian_kernel.cxx.o: CMakeFiles/DECX_CV_CPU.dir/flags.make
 CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/Gaussian_kernel.cxx.o: /media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/Gaussian_kernel.cxx
 CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/Gaussian_kernel.cxx.o: CMakeFiles/DECX_CV_CPU.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/media/wayne/Disk/DECX_world/DECX_CV_CPU/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/Gaussian_kernel.cxx.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/media/wayne/Disk/DECX_world/DECX_CV_CPU/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/Gaussian_kernel.cxx.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/Gaussian_kernel.cxx.o -MF CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/Gaussian_kernel.cxx.o.d -o CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/Gaussian_kernel.cxx.o -c /media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/Gaussian_kernel.cxx
 
 CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/Gaussian_kernel.cxx.i: cmake_force
@@ -226,7 +240,7 @@ CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/filters/C
 CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/bilateral_filter.cxx.o: CMakeFiles/DECX_CV_CPU.dir/flags.make
 CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/bilateral_filter.cxx.o: /media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/bilateral_filter.cxx
 CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/bilateral_filter.cxx.o: CMakeFiles/DECX_CV_CPU.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/media/wayne/Disk/DECX_world/DECX_CV_CPU/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/bilateral_filter.cxx.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/media/wayne/Disk/DECX_world/DECX_CV_CPU/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/bilateral_filter.cxx.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/bilateral_filter.cxx.o -MF CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/bilateral_filter.cxx.o.d -o CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/bilateral_filter.cxx.o -c /media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/bilateral_filter.cxx
 
 CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/bilateral_filter.cxx.i: cmake_force
@@ -240,7 +254,7 @@ CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/filters/C
 CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/bilateral_filter_exec.cxx.o: CMakeFiles/DECX_CV_CPU.dir/flags.make
 CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/bilateral_filter_exec.cxx.o: /media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/bilateral_filter_exec.cxx
 CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/bilateral_filter_exec.cxx.o: CMakeFiles/DECX_CV_CPU.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/media/wayne/Disk/DECX_world/DECX_CV_CPU/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/bilateral_filter_exec.cxx.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/media/wayne/Disk/DECX_world/DECX_CV_CPU/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/bilateral_filter_exec.cxx.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/bilateral_filter_exec.cxx.o -MF CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/bilateral_filter_exec.cxx.o.d -o CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/bilateral_filter_exec.cxx.o -c /media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/bilateral_filter_exec.cxx
 
 CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/bilateral_filter_exec.cxx.i: cmake_force
@@ -254,7 +268,7 @@ CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/filters/C
 CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/exp_values_LUT.cxx.o: CMakeFiles/DECX_CV_CPU.dir/flags.make
 CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/exp_values_LUT.cxx.o: /media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/exp_values_LUT.cxx
 CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/exp_values_LUT.cxx.o: CMakeFiles/DECX_CV_CPU.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/media/wayne/Disk/DECX_world/DECX_CV_CPU/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/exp_values_LUT.cxx.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/media/wayne/Disk/DECX_world/DECX_CV_CPU/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/exp_values_LUT.cxx.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/exp_values_LUT.cxx.o -MF CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/exp_values_LUT.cxx.o.d -o CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/exp_values_LUT.cxx.o -c /media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/exp_values_LUT.cxx
 
 CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/filters/CPU/exp_values_LUT.cxx.i: cmake_force
@@ -268,7 +282,7 @@ CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/filters/C
 CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/utils/channel_ops.cxx.o: CMakeFiles/DECX_CV_CPU.dir/flags.make
 CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/utils/channel_ops.cxx.o: /media/wayne/Disk/DECX_world/srcs/modules/CV/utils/channel_ops.cxx
 CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/utils/channel_ops.cxx.o: CMakeFiles/DECX_CV_CPU.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/media/wayne/Disk/DECX_world/DECX_CV_CPU/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/utils/channel_ops.cxx.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/media/wayne/Disk/DECX_world/DECX_CV_CPU/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/utils/channel_ops.cxx.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/utils/channel_ops.cxx.o -MF CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/utils/channel_ops.cxx.o.d -o CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/utils/channel_ops.cxx.o -c /media/wayne/Disk/DECX_world/srcs/modules/CV/utils/channel_ops.cxx
 
 CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/utils/channel_ops.cxx.i: cmake_force
@@ -282,7 +296,7 @@ CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/utils/cha
 CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/utils/cvt_colors.cxx.o: CMakeFiles/DECX_CV_CPU.dir/flags.make
 CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/utils/cvt_colors.cxx.o: /media/wayne/Disk/DECX_world/srcs/modules/CV/utils/cvt_colors.cxx
 CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/utils/cvt_colors.cxx.o: CMakeFiles/DECX_CV_CPU.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/media/wayne/Disk/DECX_world/DECX_CV_CPU/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/utils/cvt_colors.cxx.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/media/wayne/Disk/DECX_world/DECX_CV_CPU/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building CXX object CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/utils/cvt_colors.cxx.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/utils/cvt_colors.cxx.o -MF CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/utils/cvt_colors.cxx.o.d -o CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/utils/cvt_colors.cxx.o -c /media/wayne/Disk/DECX_world/srcs/modules/CV/utils/cvt_colors.cxx
 
 CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/utils/cvt_colors.cxx.i: cmake_force
@@ -297,6 +311,7 @@ CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/utils/cvt
 DECX_CV_CPU_OBJECTS = \
 "CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/Enhancement/Histogram_Equalization/HE.cxx.o" \
 "CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/Enhancement/Histogram_Equalization/generate_hist.cxx.o" \
+"CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/Enhancement/VEVID/VEVID.cxx.o" \
 "CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/Image_IO/Image_GUI.cxx.o" \
 "CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/Image_IO/Image_IO.cxx.o" \
 "CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/edge_detection/CPU/Canny_ED_post_proc.cxx.o" \
@@ -317,6 +332,7 @@ DECX_CV_CPU_EXTERNAL_OBJECTS =
 
 /media/wayne/Disk/DECX_world/bin/x64/libDECX_CV_CPU.so: CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/Enhancement/Histogram_Equalization/HE.cxx.o
 /media/wayne/Disk/DECX_world/bin/x64/libDECX_CV_CPU.so: CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/Enhancement/Histogram_Equalization/generate_hist.cxx.o
+/media/wayne/Disk/DECX_world/bin/x64/libDECX_CV_CPU.so: CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/Enhancement/VEVID/VEVID.cxx.o
 /media/wayne/Disk/DECX_world/bin/x64/libDECX_CV_CPU.so: CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/Image_IO/Image_GUI.cxx.o
 /media/wayne/Disk/DECX_world/bin/x64/libDECX_CV_CPU.so: CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/Image_IO/Image_IO.cxx.o
 /media/wayne/Disk/DECX_world/bin/x64/libDECX_CV_CPU.so: CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/edge_detection/CPU/Canny_ED_post_proc.cxx.o
@@ -333,7 +349,7 @@ DECX_CV_CPU_EXTERNAL_OBJECTS =
 /media/wayne/Disk/DECX_world/bin/x64/libDECX_CV_CPU.so: CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/utils/cvt_colors.cxx.o
 /media/wayne/Disk/DECX_world/bin/x64/libDECX_CV_CPU.so: CMakeFiles/DECX_CV_CPU.dir/build.make
 /media/wayne/Disk/DECX_world/bin/x64/libDECX_CV_CPU.so: CMakeFiles/DECX_CV_CPU.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/media/wayne/Disk/DECX_world/DECX_CV_CPU/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Linking CXX shared library /media/wayne/Disk/DECX_world/bin/x64/libDECX_CV_CPU.so"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/media/wayne/Disk/DECX_world/DECX_CV_CPU/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Linking CXX shared library /media/wayne/Disk/DECX_world/bin/x64/libDECX_CV_CPU.so"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/DECX_CV_CPU.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

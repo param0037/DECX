@@ -8,7 +8,7 @@
 *   More information please visit https://github.com/param0037/DECX
 */
 
-#include "FFT1D.h"
+#include "../2D/FFT2D.h"
 #include "CPU_FFT1D_planner.h"
 #include "FFT1D_kernels.h"
 
@@ -33,10 +33,16 @@ void decx::dsp::fft::FFT1D_caller(decx::_Vector* src, decx::_Vector* dst, de::DH
 {
     decx::utils::_thr_1D t1D(decx::cpu::_get_permitted_concurrency());
 
-    decx::dsp::fft::cpu_FFT1D_planner<float> _planner(src->Len());
-    _planner.plan(&t1D, handle);
+    //decx::dsp::fft::cpu_FFT1D_planner<float> _planner/*(src->Len())*/;
+    if (decx::dsp::fft::cpu_FFT1D_cplxf32_planner == NULL) {
+        decx::dsp::fft::cpu_FFT1D_cplxf32_planner = new decx::dsp::fft::cpu_FFT1D_planner<float>;
+    }
+    if (decx::dsp::fft::cpu_FFT1D_cplxf32_planner->changed(src->Len(), t1D.total_thread)) {
+        decx::dsp::fft::cpu_FFT1D_cplxf32_planner->plan(src->Len(), &t1D, handle);
+        Check_Runtime_Error(handle);
+    }
 
-    decx::utils::double_buffer_manager _double_buffer(_planner.get_tmp1_ptr(), 
+    /*decx::utils::double_buffer_manager _double_buffer(_planner.get_tmp1_ptr(), 
                                                       _planner.get_tmp2_ptr());
     
     decx::dsp::fft::FIMT1D _FIMT1D(_planner.get_signal_len(), _planner.get_smaller_FFT_info_ptr(0)->get_signal_len());
@@ -75,9 +81,9 @@ void decx::dsp::fft::FFT1D_caller(decx::_Vector* src, decx::_Vector* dst, de::DH
         }
 
         _double_buffer.update_states();
-    }
-
-    _planner.release_buffers();
+    }*/
+    decx::dsp::fft::cpu_FFT1D_cplxf32_planner->Forward<_type_in>(src, dst, &t1D);
+    //_planner.release_buffers();
 }
 
 
@@ -88,10 +94,16 @@ void decx::dsp::fft::IFFT1D_caller(decx::_Vector* src, decx::_Vector* dst, de::D
 {
     decx::utils::_thr_1D t1D(decx::cpu::_get_permitted_concurrency());
 
-    decx::dsp::fft::cpu_FFT1D_planner<float> _planner(src->Len());
-    _planner.plan(&t1D, handle);
+    //decx::dsp::fft::cpu_FFT1D_planner<float> _planner/*(src->Len())*/;
+    if (decx::dsp::fft::cpu_IFFT1D_cplxf32_planner == NULL) {
+        decx::dsp::fft::cpu_IFFT1D_cplxf32_planner = new decx::dsp::fft::cpu_FFT1D_planner<float>;
+    }
+    if (decx::dsp::fft::cpu_IFFT1D_cplxf32_planner->changed(src->Len(), t1D.total_thread)) {
+        decx::dsp::fft::cpu_IFFT1D_cplxf32_planner->plan(src->Len(), &t1D, handle);
+        Check_Runtime_Error(handle);
+    }
 
-    decx::utils::double_buffer_manager _double_buffer(_planner.get_tmp1_ptr(), 
+    /*decx::utils::double_buffer_manager _double_buffer(_planner.get_tmp1_ptr(), 
                                                       _planner.get_tmp2_ptr());
     
     decx::dsp::fft::FIMT1D _FIMT1D(_planner.get_signal_len(), _planner.get_smaller_FFT_info_ptr(0)->get_signal_len());
@@ -129,9 +141,9 @@ void decx::dsp::fft::IFFT1D_caller(decx::_Vector* src, decx::_Vector* dst, de::D
         }
 
         _double_buffer.update_states();
-    }
-
-    _planner.release_buffers();
+    }*/
+    decx::dsp::fft::cpu_IFFT1D_cplxf32_planner->Inverse<_type_out>(src, dst, &t1D);
+    //_planner.release_buffers();
 }
 
 
@@ -198,4 +210,26 @@ _DECX_API_ de::DH de::dsp::cpu::IFFT(de::Vector& src, de::Vector& dst, const de:
     }
 
     return handle;
+}
+
+
+
+void decx::dsp::InitFFT1Resources()
+{
+    decx::dsp::fft::cpu_FFT1D_cplxf32_planner = NULL;
+    decx::dsp::fft::cpu_IFFT1D_cplxf32_planner = NULL;
+}
+
+
+
+void decx::dsp::FreeFFT1Resources()
+{
+    if (decx::dsp::fft::cpu_FFT1D_cplxf32_planner != NULL) {
+        decx::dsp::fft::cpu_FFT1D_cplxf32_planner->release_buffers();
+        delete decx::dsp::fft::cpu_FFT1D_cplxf32_planner;
+    }
+    if (decx::dsp::fft::cpu_IFFT1D_cplxf32_planner != NULL) {
+        decx::dsp::fft::cpu_IFFT1D_cplxf32_planner->release_buffers();
+        delete decx::dsp::fft::cpu_IFFT1D_cplxf32_planner;
+    }
 }

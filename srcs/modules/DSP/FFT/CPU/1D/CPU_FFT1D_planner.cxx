@@ -12,15 +12,15 @@
 #include "CPU_FFT1D_planner.h"
 
 
-
-template <typename _type_in>
-decx::dsp::fft::cpu_FFT1D_planner<_type_in>::cpu_FFT1D_planner(const uint64_t signal_length)
-{
-    this->_signal_length = signal_length;
-}
-
-template decx::dsp::fft::cpu_FFT1D_planner<float>::cpu_FFT1D_planner(const uint64_t signal_length);
-//template decx::dsp::fft::cpu_FFT1D_planner<double>::cpu_FFT1D_planner(const uint64_t signal_length);
+//
+//template <typename _type_in>
+//decx::dsp::fft::cpu_FFT1D_planner<_type_in>::cpu_FFT1D_planner(const uint64_t signal_length)
+//{
+//    this->_signal_length = signal_length;
+//}
+//
+//template decx::dsp::fft::cpu_FFT1D_planner<float>::cpu_FFT1D_planner(const uint64_t signal_length);
+////template decx::dsp::fft::cpu_FFT1D_planner<double>::cpu_FFT1D_planner(const uint64_t signal_length);
 
 
 template <typename _type_in>
@@ -120,8 +120,10 @@ template void decx::dsp::fft::cpu_FFT1D_planner<float>::_apart_for_smaller_FFTs(
 
 
 template <>
-void decx::dsp::fft::cpu_FFT1D_planner<float>::plan(decx::utils::_thr_1D* t1D, de::DH* handle)
+void decx::dsp::fft::cpu_FFT1D_planner<float>::plan(const uint64_t signal_len, decx::utils::_thr_1D* t1D, de::DH* handle)
 {
+    this->_signal_length = signal_len;
+
     this->_permitted_concurrency = decx::cpu::_get_permitted_concurrency();
 
     this->_without_larger_DFT = decx::dsp::fft::_radix_apart<true>(this->_signal_length, &this->_all_radixes);
@@ -167,6 +169,17 @@ void decx::dsp::fft::cpu_FFT1D_planner<float>::plan(decx::utils::_thr_1D* t1D, d
 
     this->_allocate_spaces(handle);
 }
+
+
+template <typename _data_type>
+bool decx::dsp::fft::cpu_FFT1D_planner<_data_type>::changed(const uint64_t signal_len, const uint32_t concurrency) const
+{
+    return (this->_signal_length ^ signal_len) | 
+           (this->_permitted_concurrency ^ concurrency);
+}
+
+template bool decx::dsp::fft::cpu_FFT1D_planner<float>::changed(const uint64_t, const uint32_t) const;
+
 
 
 template <typename _type_in>

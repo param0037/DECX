@@ -18,6 +18,7 @@
 #include "../W_table.h"
 #include "../../../../core/utils/Fixed_Length_Array.h"
 #include "../CPU_FFT_defs.h"
+#include "../../../../classes/Vector.h"
 
 
 namespace decx
@@ -34,7 +35,7 @@ namespace fft
     class cpu_FFT1D_smaller;
 
 
-    class _Inner_FFT1D_thread_param;
+    //class _Inner_FFT1D_thread_param;
 }
 }
 }
@@ -62,6 +63,7 @@ public:
 
 
     _CRSR_ void set_length(const uint32_t signal_length, de::DH* handle);
+
 
 
     _CRSR_ const decx::dsp::fft::FKI1D* get_kernel_info_ptr(const uint32_t _id) const;
@@ -94,7 +96,7 @@ public:
 
 
 
-template <typename _type_in>
+template <typename _data_type>
 class decx::dsp::fft::cpu_FFT1D_planner
 {
 private:
@@ -117,7 +119,7 @@ private:
     std::vector<uint32_t> _all_radixes;
 
     
-    decx::utils::Fixed_Length_Array<decx::dsp::fft::cpu_FFT1D_smaller<_type_in>> _smaller_FFTs;
+    decx::utils::Fixed_Length_Array<decx::dsp::fft::cpu_FFT1D_smaller<_data_type>> _smaller_FFTs;
     
     
 
@@ -131,7 +133,9 @@ public:
     cpu_FFT1D_planner() {}
 
 
-    cpu_FFT1D_planner(const uint64_t signal_length);
+    //cpu_FFT1D_planner(const uint64_t signal_length);
+    
+    bool changed(const uint64_t signal_len, const uint32_t concurrency) const;
 
 
     uint64_t get_signal_len() const;
@@ -140,14 +144,21 @@ public:
     void set_signal_length(const uint64_t signal_length);
 
 
+    template <typename _type_in>
+    void Forward(decx::_Vector* src, decx::_Vector* dst, decx::utils::_thread_arrange_1D* t1D) const;
 
-    void plan(decx::utils::_thr_1D* t1D, de::DH *handle);
+
+    template <typename _type_out>
+    void Inverse(decx::_Vector* src, decx::_Vector* dst, decx::utils::_thread_arrange_1D* t1D) const;
+
+
+    void plan(const uint64_t signal_len, decx::utils::_thr_1D* t1D, de::DH *handle);
 
 
     const decx::dsp::fft::FKT1D_fp32* get_tile_ptr(const uint32_t _thread_id) const;
 
 
-    const decx::dsp::fft::cpu_FFT1D_smaller<_type_in>* get_smaller_FFT_info_ptr(const uint32_t _order) const;
+    const decx::dsp::fft::cpu_FFT1D_smaller<_data_type>* get_smaller_FFT_info_ptr(const uint32_t _order) const;
 
 
     const decx::dsp::fft::FKI1D* get_outer_kernel_info(const uint32_t _order) const;
@@ -221,6 +232,17 @@ struct decx::dsp::fft::CPU_FFT1D_Intermediate_Twd
         return this->_signal_length / this->_previous_fact_sum / this->_next_FFT_len;
     }
 };
+
+
+namespace decx
+{
+    namespace dsp {
+        namespace fft {
+            extern decx::dsp::fft::cpu_FFT1D_planner<float>* cpu_FFT1D_cplxf32_planner;
+            extern decx::dsp::fft::cpu_FFT1D_planner<float>* cpu_IFFT1D_cplxf32_planner;
+        }
+    }
+}
 
 
 #endif

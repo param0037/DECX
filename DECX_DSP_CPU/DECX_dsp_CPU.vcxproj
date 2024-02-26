@@ -40,6 +40,7 @@
     <ClCompile Include="..\srcs\modules\DSP\convolution\CPU\sliding_window\uint8\conv2_uint8_exec.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\CPU_FFT1D_planner.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\FFT1D.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\FFT1D_cplxf32.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\FFT1D_kernel_utils.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\FFT1D_R2_kernels.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\FFT1D_R3_kernels.cxx" />
@@ -48,7 +49,12 @@
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\kernel_callers.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\2D\CPU_FFT2D_planner.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\2D\FFT2D.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\2D\FFT2D_cplxf32.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\2D\FFT2D_kernel_callers.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\3D\FFT3D.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\3D\CPU_FFT3D_planner.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\3D\FFT3D_cplxf32.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\3D\FFT3D_kernel_callers.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\CPU_FFT_tiles.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\W_table.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\filters\CPU\low_pass.cxx" />
@@ -56,6 +62,7 @@
     <ClCompile Include="..\srcs\modules\DSP\generators\CPU\distributions_exec.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\generators\CPU\random.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\generators\CPU\zeros.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\pre_post_proc_CPU_DSPModule.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\regional\regional_comparision\CPU\fp32\rcp2_CCOEFF_fp32_exec.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\regional\regional_comparision\CPU\fp32\rcp2_SQDIFF_fp32_exec.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\regional\regional_comparision\CPU\rcp2.cxx" />

@@ -18,6 +18,8 @@
 #include "../../../../core/cudaStream_management/cudaStream_queue.h"
 #include "../../../../classes/Tensor.h"
 
+#include "../../../../classes/GPU_Tensor.h"
+
 
 namespace decx
 {
@@ -61,7 +63,7 @@ namespace dsp {
 */
 
 
-template <typename _type_in>
+template <typename _data_type>
 class decx::dsp::fft::_cuda_FFT3D_planner
 {
 private:
@@ -78,27 +80,12 @@ private:
     decx::dsp::fft::_FFT2D_1way_config _FFT_D,  // Along depth
                                        _FFT_H;  // Along height
 
+    uint32_t _input_typesize, _output_typesize;
+
     decx::dsp::fft::_cuda_FFT3D_mid_config _FFT_W;  // Alongg width
 
-public:
-    enum FFT_directions {
-        _FFT_AlongH = 0,
-        _FFT_AlongW = 1,
-        _FFT_AlongD = 2
-    };
 
-
-    _cuda_FFT3D_planner() {}
-
-
-    _CRSR_ _cuda_FFT3D_planner(const uint3 signal_dims);
-
-
-    void _CRSR_ plan(const decx::_tensor_layout* _src_layout, const decx::_tensor_layout* _dst_layout,
-        de::DH* handle, decx::cuda_stream* S);
-
-
-    const decx::dsp::fft::_FFT2D_1way_config* get_FFT_info(const FFT_directions _dir) const;
+    const decx::dsp::fft::_FFT2D_1way_config* get_FFT_info(const decx::dsp::fft::FFT_directions _dir) const;
 
 
     const decx::dsp::fft::_cuda_FFT3D_mid_config* get_midFFT_info() const;
@@ -115,12 +102,46 @@ public:
         return static_cast<_ptr_type*>(this->_tmp2.ptr);
     }
 
+public:
+
+
+    _cuda_FFT3D_planner() {}
+
+
+    //_CRSR_ _cuda_FFT3D_planner(const uint3 signal_dims);
+
+
+    void _CRSR_ plan(const decx::_tensor_layout* _src_layout, const decx::_tensor_layout* _dst_layout,
+        de::DH* handle, decx::cuda_stream* S);
+
+
+    template <typename _type_in>
+    void Forward(decx::_GPU_Tensor* src, decx::_GPU_Tensor* dst, decx::cuda_stream* S) const;
+
+
+    template <typename _type_out>
+    void Inverse(decx::_GPU_Tensor* src, decx::_GPU_Tensor* dst, decx::cuda_stream* S) const;
+
+
+    bool changed(const decx::_tensor_layout* src_layout, const decx::_tensor_layout* dst_layout) const;
+
 
     void release();
 
 
     ~_cuda_FFT3D_planner();
 };
+
+
+namespace decx
+{
+    namespace dsp {
+        namespace fft {
+            extern decx::dsp::fft::_cuda_FFT3D_planner<float>* cuda_FFT3D_cplxf32_planner;
+            extern decx::dsp::fft::_cuda_FFT3D_planner<float>* cuda_IFFT3D_cplxf32_planner;
+        }
+    }
+}
 
 
 

@@ -12,6 +12,12 @@
 #define _FFT2D_CONFIG_CUH_
 
 #include "../../FFT_commons.h"
+#include "../../../../classes/GPU_Matrix.h"
+
+#include "../../../../core/cudaStream_management/cudaEvent_queue.h"
+#include "../../../../core/cudaStream_management/cudaStream_queue.h"
+
+
 
 namespace decx
 {
@@ -44,7 +50,6 @@ private:
 
 public:
     uint32_t _pitchsrc, _pitchdst, _pitchtmp;
-    //uint32_t _parallel;
 
 
     _FFT2D_1way_config() {}
@@ -68,7 +73,7 @@ public:
 
 
 
-template <typename _type_in>
+template <typename _data_type>
 class decx::dsp::fft::_cuda_FFT2D_planner
 {
 private:
@@ -80,22 +85,19 @@ private:
 
     uint2 _buffer_dims;
 
+
 public:
-    enum FFT_directions {
-        _FFT_Horizontal = 0,
-        _FFT_Vertical = 1
-    };
 
     _cuda_FFT2D_planner() {}
 
 
-    _CRSR_ _cuda_FFT2D_planner(const uint2 signal_dims, de::DH* handle);
+    bool changed(const uint2 signal_dims, const uint32_t pitchsrc, const uint32_t pitchdst) const;
 
 
-    void plan(const uint32_t pitchsrc, const uint32_t pitchdst);
+    void _CRSR_ plan(const uint2 signal_dims, const uint32_t pitchsrc, const uint32_t pitchdst, de::DH* handle);
 
     
-    const decx::dsp::fft::_FFT2D_1way_config* get_FFT_info(const FFT_directions _dir) const;
+    const decx::dsp::fft::_FFT2D_1way_config* get_FFT_info(const decx::dsp::fft::FFT_directions _dir) const;
 
 
     template <typename _ptr_type>
@@ -113,11 +115,29 @@ public:
     uint2 get_buffer_dims() const;
 
 
+    template <typename _type_in>
+    void Forward(decx::_GPU_Matrix* src, decx::_GPU_Matrix* dst, decx::cuda_stream* S) const;
+
+    template <typename _type_out>
+    void Inverse(decx::_GPU_Matrix* src, decx::_GPU_Matrix* dst, decx::cuda_stream* S) const;
+
+
     void release_buffers();
 
 
     ~_cuda_FFT2D_planner();
 };
+
+
+namespace decx
+{
+    namespace dsp {
+        namespace fft {
+            extern decx::dsp::fft::_cuda_FFT2D_planner<float>* cuda_FFT2D_cplxf32_planner;
+            extern decx::dsp::fft::_cuda_FFT2D_planner<float>* cuda_IFFT2D_cplxf32_planner;
+        }
+    }
+}
 
 
 #endif

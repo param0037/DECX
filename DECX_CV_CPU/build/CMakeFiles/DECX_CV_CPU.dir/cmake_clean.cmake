@@ -5,6 +5,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/Enhancement/Histogram_Equalization/HE.cxx.o.d"
   "CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/Enhancement/Histogram_Equalization/generate_hist.cxx.o"
   "CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/Enhancement/Histogram_Equalization/generate_hist.cxx.o.d"
+  "CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/Enhancement/VEVID/VEVID.cxx.o"
+  "CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/Enhancement/VEVID/VEVID.cxx.o.d"
   "CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/Image_IO/Image_GUI.cxx.o"
   "CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/Image_IO/Image_GUI.cxx.o.d"
   "CMakeFiles/DECX_CV_CPU.dir/media/wayne/Disk/DECX_world/srcs/modules/CV/Image_IO/Image_IO.cxx.o"

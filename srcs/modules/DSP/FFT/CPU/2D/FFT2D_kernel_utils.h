@@ -135,6 +135,7 @@ decx::dsp::fft::CPUK::load_entire_row_transpose_cplxf(const double* __restrict  
         {
             _reg._vd = _mm256_load_pd(_src_row_ptr + (j << 2));
             if constexpr (_IFFT) { _reg._vf = _mm256_div_ps(_reg._vf, _mm256_set1_ps(_signal_length)); }
+            
             _mm256_store_pd(_dst_row_ptr + (j << 2), _reg._vd);
         }
         _src_row_ptr += _pitch_src;
@@ -172,6 +173,7 @@ decx::dsp::fft::CPUK::store_entire_row_transpose_cplxf(decx::utils::double_buffe
             if constexpr (_conj) { 
                 _reg._vf = decx::dsp::CPUK::_cp4_conjugate_fp32(_reg._vf); 
             }
+
             _mm256_store_pd(_dst_row_ptr + (j << 2), _reg._vd);
         }
         _src_row_ptr += _tiles->_tile_row_pitch;

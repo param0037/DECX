@@ -449,7 +449,7 @@ decx::dsp::fft::GPUK::cu_FFT2_R5_C2R_cplxf_u8(const float4* __restrict src,
         tmp._vf = decx::dsp::fft::GPUK::_complex_2fma1_fp32(recv[3]._vf, de::CPf(-0.809017, -0.5877853), tmp._vf);
         res._vf2 = make_float2(__fsub_rn(fmaf(recv[4]._vf.x, 0.309017, tmp._vf.x), __fmul_rn(recv[4]._vf.y, -0.9510565)),
             __fsub_rn(fmaf(recv[4]._vf.z, 0.309017, tmp._vf.z), __fmul_rn(recv[4]._vf.w, -0.9510565)));
-
+        
         dst[_FFT_domain_dex * _pitchdst_v2 + tidx] = make_uchar2(res._arrf[0], res._arrf[1]);
         _FFT_domain_dex += _kernel_info._store_pitch;
 

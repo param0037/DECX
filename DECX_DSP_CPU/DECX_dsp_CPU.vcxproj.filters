@@ -195,5 +195,26 @@
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\CPU_FFT_tiles.cxx">
       <Filter>源文件\fft</Filter>
     </ClCompile>
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\3D\FFT3D.cxx">
+      <Filter>源文件\fft\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\3D\CPU_FFT3D_planner.cxx">
+      <Filter>源文件\fft\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\3D\FFT3D_kernel_callers.cxx">
+      <Filter>源文件\fft\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\3D\FFT3D_cplxf32.cxx">
+      <Filter>源文件\fft\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\DSP\pre_post_proc_CPU_DSPModule.cxx">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\2D\FFT2D_cplxf32.cxx">
+      <Filter>源文件\fft\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\FFT1D_cplxf32.cxx">
+      <Filter>源文件\fft\1D</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

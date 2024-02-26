@@ -15,6 +15,72 @@
 #include "../basic.h"
 #include "decx_utils_functions.h"
 
+
+namespace decx{
+namespace utils {
+    template <typename _addr_type>
+    struct unpitched_frac_mapping;
+}
+}
+
+
+
+template <typename _addr_type>
+struct decx::utils::unpitched_frac_mapping
+{
+    uint32_t _pitch_L1;
+    uint32_t _effective_L1;
+
+    uint32_t _pitch_L2;
+    uint32_t _effective_L2;
+
+    bool _is_Level2;
+    bool _is_zipped;
+
+
+    unpitched_frac_mapping() {}
+
+
+    void set_attributes(const uint32_t pitch, const uint32_t effective)
+    {
+        this->_pitch_L1 = pitch;
+        this->_effective_L1 = effective;
+
+        this->_pitch_L2 = 0;
+        this->_effective_L2 = 0;
+
+        this->_is_Level2 = false;
+        this->_is_zipped = (this->_pitch_L1 != this->_effective_L1);
+    }
+
+
+    void set_attributes(const uint32_t pitch_L1, const uint32_t effective_L1, const uint32_t pitch_L2, const uint32_t effective_L2)
+    {
+        this->_pitch_L1 = pitch_L1;
+        this->_effective_L1 = effective_L1;
+
+        this->_pitch_L2 = pitch_L2 * pitch_L1;
+        this->_effective_L2 = effective_L2 * effective_L1;
+
+        this->_is_Level2 = true;
+        this->_is_zipped = this->_is_zipped = (this->_pitch_L1 != this->_effective_L1 || this->_pitch_L2 != this->_effective_L2);
+    }
+
+
+    __inline _addr_type get_phyaddr_L1(const _addr_type _viraddr) const
+    {
+        return (_viraddr / this->_effective_L1) * this->_pitch_L1 + (_viraddr % this->_effective_L1);
+    }
+
+
+    __inline _addr_type get_phyaddr_L2(const _addr_type _viraddr) const
+    {
+        return (_viraddr / this->_effective_L2) * this->_pitch_L2 + this->get_phyaddr_L1(_viraddr % this->_effective_L2);
+    }
+};
+
+
+
 namespace decx
 {
     namespace utils

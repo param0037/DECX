@@ -11,8 +11,8 @@
 #include "CUDA_FFT1D_planner.cuh"
 
 
-template <typename _type_in>
-void decx::dsp::fft::_cuda_FFT1D_planner<_type_in>::plan(const uint64_t signal_length, de::DH* handle, decx::cuda_stream* S)
+template <typename _data_type>
+void decx::dsp::fft::_cuda_FFT1D_planner<_data_type>::plan(const uint64_t signal_length, de::DH* handle, decx::cuda_stream* S)
 {
     this->_signal_length = signal_length;
     decx::dsp::fft::_radix_apart<true>(this->_signal_length, &this->_all_radixes);
@@ -23,6 +23,14 @@ void decx::dsp::fft::_cuda_FFT1D_planner<_type_in>::plan(const uint64_t signal_l
 template void decx::dsp::fft::_cuda_FFT1D_planner<float>::plan(const uint64_t, de::DH*, decx::cuda_stream*);
 //template void decx::dsp::fft::_cuda_FFT1D_planner<double>::plan(const uint64_t, de::DH*, decx::cuda_stream*);
 
+
+template <typename _data_type>
+bool decx::dsp::fft::_cuda_FFT1D_planner<_data_type>::changed(const uint64_t signal_len) const
+{
+    return this->_signal_length ^ signal_len;
+}
+
+template bool decx::dsp::fft::_cuda_FFT1D_planner<float>::changed(const uint64_t) const;
 
 
 // Method 1 : combined
@@ -62,10 +70,9 @@ void decx::dsp::fft::_cuda_FFT1D_planner<_type_in>::_plan_group_radixes(de::DH* 
     this->_large_FFT_lengths[0] = _min_exceeded;
     this->_large_FFT_lengths[1] = this->_signal_length / _min_exceeded;
 
-    this->_FFT2D_layout = decx::dsp::fft::_cuda_FFT2D_planner<_type_in>(
-        make_uint2(this->_large_FFT_lengths[1], this->_large_FFT_lengths[0]), handle);
+    this->_FFT2D_layout.plan(make_uint2(this->_large_FFT_lengths[1], this->_large_FFT_lengths[0]),
+        this->_large_FFT_lengths[1], this->_large_FFT_lengths[0], handle);
     Check_Runtime_Error(handle);
-    this->_FFT2D_layout.plan(this->_large_FFT_lengths[1], this->_large_FFT_lengths[0]);
 }
 
 template void decx::dsp::fft::_cuda_FFT1D_planner<float>::_plan_group_radixes(de::DH*, decx::cuda_stream*);

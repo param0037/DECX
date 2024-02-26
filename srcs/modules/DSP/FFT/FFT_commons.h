@@ -92,6 +92,13 @@ namespace fft
 
 
     typedef struct _FFT1D_kernel_info FKI1D;
+
+
+    enum FFT_directions {
+        _FFT_AlongH = 0,
+        _FFT_AlongW = 1,
+        _FFT_AlongD = 2
+    };
 }
 }
 }

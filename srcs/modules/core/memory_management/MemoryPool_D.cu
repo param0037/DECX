@@ -32,7 +32,6 @@ decx::MemPool_D* decx::MemPool_D::GetInstance()
 }
 
 
-
 bool decx::MemPool_D::search_for_idle(size_t req_size, int begin_dex, decx::MemBlock** _ptr)
 {
     bool _found = false;
@@ -145,8 +144,7 @@ void decx::MemPool_D::release()
 
 decx::MemPool_D::~MemPool_D()
 {
-    // I can not call this->release(), cudart.dll(.so) has already exited before this
-    // destructing function is called
+    
 }
 
 

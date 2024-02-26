@@ -19,8 +19,8 @@
 #include "type_info.h"
 
 
-#define _TENSOR_ALIGN_DEPTH_4B_ 4
-#define _TENSOR_ALIGN_DEPTH_8B_ 2
+#define _TENSOR_ALIGN_DEPTH_4B_ 8
+#define _TENSOR_ALIGN_DEPTH_8B_ 4
 #define _TENSOR_ALIGN_DEPTH_2B_ 8
 #define _TENSOR_ALIGN_DEPTH_1B_ 16
 #define _TENSOR_ALIGN_DEPTH_16B_ 1
