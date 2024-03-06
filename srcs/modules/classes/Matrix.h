@@ -69,6 +69,9 @@ namespace de {
         virtual void Reinterpret(const de::_DATA_TYPES_FLAGS_ _new_type) = 0;
 
 
+        virtual de::_DATA_FORMATS_ Format() const = 0;
+
+
         ~Matrix() {}
     };
 }
@@ -111,10 +114,10 @@ public:
 
 
 /**
-* The data storage structure is shown below
+* The data storage structure is shown below:
+* 
 *            <-------------- width ------------->
 *            <---------------- pitch ------------------>
-*             <-dpitch->
 *            [[x x x x x x... ...    ... ...x x x....] T        
 *            [[x x x x x x... ...    ... ...x x x....] |    
 *            [[x x x x x x... ...    ... ...x x x....] |    
@@ -137,7 +140,7 @@ namespace decx
         void alloc_data_space();
 
 
-        void _attribute_assign(const de::_DATA_TYPES_FLAGS_ type, const uint _width, const uint _height);
+        void _attribute_assign(const de::_DATA_TYPES_FLAGS_ type, const uint32_t _width, const uint32_t _height);
 
         decx::_matrix_layout _layout;
 
@@ -145,27 +148,32 @@ namespace decx
 
         de::_DATA_TYPES_FLAGS_ type;
 
+        /**
+        * Active when the matrix represents image, or contains complex numbers.
+        * Otherwise, preserved.
+        */
+        de::_DATA_FORMATS_ _format;
+
         bool _init;
 
-        size_t    // true_width * true_height
-            total_bytes;       // true_width * true_height * sizeof(T)
+        uint64_t    // true_width * true_height
+            total_bytes;       // true_width * true_height * sizeof(DATA)
 
     public:
         
         decx::PtrInfo<void> Mat;
 
-        
 
-        void construct(const de::_DATA_TYPES_FLAGS_ type, uint width, uint height);
+        void construct(const de::_DATA_TYPES_FLAGS_ type, uint32_t width, uint32_t height, const de::_DATA_FORMATS_ format = de::_NA_);
 
 
-        void re_construct(const de::_DATA_TYPES_FLAGS_ type, uint width, uint height);
+        void re_construct(const de::_DATA_TYPES_FLAGS_ type, uint32_t width, uint32_t height);
 
 
         _Matrix();
 
 
-        _Matrix(const de::_DATA_TYPES_FLAGS_ type, const uint _width, const uint _height);
+        _Matrix(const de::_DATA_TYPES_FLAGS_ type, const uint32_t _width, const uint32_t _height, const de::_DATA_FORMATS_ format = de::_NA_);
 
 
         virtual uint32_t Width() const;
@@ -195,6 +203,9 @@ namespace decx
         virtual void Reinterpret(const de::_DATA_TYPES_FLAGS_ _new_type);
 
 
+        virtual de::_DATA_FORMATS_ Format() const;
+
+
         virtual ~_Matrix();
 
 
@@ -208,6 +219,12 @@ namespace decx
 
 
         uint64_t get_total_bytes() const;
+
+
+        de::_DATA_FORMATS_ get_data_format() const;
+
+
+        void set_data_format(const de::_DATA_FORMATS_& format);
     };
 }
 
@@ -222,10 +239,12 @@ namespace de
     _DECX_API_ de::Matrix& CreateMatrixRef();
 
 
-    _DECX_API_ de::Matrix* CreateMatrixPtr(const de::_DATA_TYPES_FLAGS_ type, const uint _width, const uint _height);
+    _DECX_API_ de::Matrix* CreateMatrixPtr(const de::_DATA_TYPES_FLAGS_ type, const uint _width, const uint _height,
+        const de::_DATA_FORMATS_ format = de::_NA_);
 
 
-    _DECX_API_ de::Matrix& CreateMatrixRef(const de::_DATA_TYPES_FLAGS_ type, const uint _width, const uint _height);
+    _DECX_API_ de::Matrix& CreateMatrixRef(const de::_DATA_TYPES_FLAGS_ type, const uint _width, const uint _height,
+        const de::_DATA_FORMATS_ format = de::_NA_);
 }
 
 

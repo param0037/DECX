@@ -17,7 +17,8 @@
 // vectors for CPU codes
 #ifndef _DECX_CUDA_PARTS_
 
-
+//extern "C"
+//{
 struct __align__(8) int2
 {
     int x, y;
@@ -189,14 +190,14 @@ static inline int3 make_int3(const int x, const int y, const int z) {
 static inline uchar4 make_uchar4_from_fp32(const float x, const float y, const float z, const float w)
 {
     uchar4 ans;
-    ans.x = static_cast<uchar>(x);
-    ans.y = static_cast<uchar>(y);
-    ans.z = static_cast<uchar>(z);
-    ans.w = static_cast<uchar>(w);
+    ans.x = (uchar)x;
+    ans.y = (uchar)y;
+    ans.z = (uchar)z;
+    ans.w = (uchar)w;
     return ans;
 }
 
-
+//}
 
 
 #endif

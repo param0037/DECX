@@ -28,7 +28,7 @@ _DECX_API_ de::DH de::cpu::Histogram(de::Matrix& src, de::Vector& dst)
     {
     case de::_DATA_TYPES_FLAGS_::_UINT8_:
         _dst->re_construct(de::_DATA_TYPES_FLAGS_::_UINT64_, 256);
-        decx::bp::_histgen2D_u8_caller((uint8_t*)_src->Mat.ptr, (uint64_t*)_dst->Vec.ptr, 
+        decx::bp::_histgen2D_u8_u64_caller((uint8_t*)_src->Mat.ptr, (uint64_t*)_dst->Vec.ptr, 
             make_uint2(_src->Width(), _src->Height()), _src->Pitch());
         break;
     default:

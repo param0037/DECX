@@ -167,7 +167,7 @@
     <ClCompile Include="..\srcs\modules\cv\filters\CPU\Gaussian_kernel.cxx" />
     <ClCompile Include="..\srcs\modules\cv\Image_IO\Image_GUI.cxx" />
     <ClCompile Include="..\srcs\modules\cv\Image_IO\Image_IO.cxx" />
-    <ClCompile Include="..\srcs\modules\cv\utils\channel_ops.cxx" />
+    <ClCompile Include="..\srcs\modules\cv\utils\color_transform.cxx" />
     <ClCompile Include="..\srcs\modules\cv\utils\cvt_colors.cxx" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

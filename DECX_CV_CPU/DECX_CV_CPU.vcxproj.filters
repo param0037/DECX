@@ -98,7 +98,7 @@
     <ClCompile Include="..\srcs\modules\cv\filters\CPU\Gaussian_kernel.cxx">
       <Filter>源文件\filters</Filter>
     </ClCompile>
-    <ClCompile Include="..\srcs\modules\cv\utils\channel_ops.cxx">
+    <ClCompile Include="..\srcs\modules\cv\utils\color_transform.cxx">
       <Filter>源文件\utils</Filter>
     </ClCompile>
     <ClCompile Include="..\srcs\modules\cv\utils\cvt_colors.cxx">

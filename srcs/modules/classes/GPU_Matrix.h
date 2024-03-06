@@ -44,6 +44,9 @@ namespace de
         virtual de::GPU_Matrix& SoftCopy(de::GPU_Matrix& src) = 0;
 
 
+        virtual de::_DATA_FORMATS_ Format() const = 0;
+
+
         ~GPU_Matrix() {}
     };
 }
@@ -79,12 +82,14 @@ namespace decx
         void alloc_data_space();
 
 
-        void _attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, uint width, uint height);
+        void _attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, uint32_t width, uint32_t height);
 
         decx::_matrix_layout _layout;
 
         //unsigned short Store_Type;
         de::_DATA_TYPES_FLAGS_ type;
+
+        de::_DATA_FORMATS_ _format;
 
         bool _init;
 
@@ -95,16 +100,18 @@ namespace decx
         decx::PtrInfo<void> Mat;
 
 
-        void construct(const de::_DATA_TYPES_FLAGS_ _type, uint width, uint height);
+        void construct(const de::_DATA_TYPES_FLAGS_ _type, uint32_t width, uint32_t height, 
+            const de::_DATA_FORMATS_ format = de::_NA_);
 
 
-        void re_construct(const de::_DATA_TYPES_FLAGS_ _type, uint width, uint height);
+        void re_construct(const de::_DATA_TYPES_FLAGS_ _type, uint32_t width, uint32_t height);
 
 
         _GPU_Matrix();
 
 
-        _GPU_Matrix(const de::_DATA_TYPES_FLAGS_ _type, const uint _width, const uint _height);
+        _GPU_Matrix(const de::_DATA_TYPES_FLAGS_ _type, const uint32_t _width, const uint32_t _height,
+            const de::_DATA_FORMATS_ format = de::_NA_);
 
 
         virtual uint Width() const;
@@ -125,6 +132,9 @@ namespace decx
         virtual de::GPU_Matrix& SoftCopy(de::GPU_Matrix& src);
 
 
+        de::_DATA_FORMATS_ Format() const;
+
+
         ~_GPU_Matrix() {}
 
 
@@ -138,6 +148,12 @@ namespace decx
 
 
         uint64_t get_total_bytes();
+
+
+        de::_DATA_FORMATS_ get_data_format() const;
+
+
+        void set_data_format(const de::_DATA_FORMATS_& format);
     };
 }
 
@@ -151,10 +167,12 @@ namespace de
     _DECX_API_ de::GPU_Matrix* CreateGPUMatrixPtr();
 
 
-    _DECX_API_ de::GPU_Matrix& CreateGPUMatrixRef(const de::_DATA_TYPES_FLAGS_ _type, const uint32_t width, const uint32_t height);
+    _DECX_API_ de::GPU_Matrix& CreateGPUMatrixRef(const de::_DATA_TYPES_FLAGS_ _type, const uint32_t width, const uint32_t height,
+        const de::_DATA_FORMATS_ format);
 
 
-    _DECX_API_ de::GPU_Matrix* CreateGPUMatrixPtr(const de::_DATA_TYPES_FLAGS_ _type, const uint32_t width, const uint32_t height);
+    _DECX_API_ de::GPU_Matrix* CreateGPUMatrixPtr(const de::_DATA_TYPES_FLAGS_ _type, const uint32_t width, const uint32_t height,
+        const de::_DATA_FORMATS_ format);
 
 
     namespace cuda

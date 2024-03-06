@@ -11,8 +11,9 @@ A fast linear algebra, computer vision, and mathematic library, based on CUDA an
 ## The project is recommended to be compiled using C++ 17 standard or above.
 
 # Changelog
-## Update 16/12/2023
-1. Optimization of 2D convolution CUDA kernels.
+## Update 29/02/2024
+1. Added 3D FFT on both CPU and CUDA.
+2. The convolution on DECX_NN_CPU and DECX_NN_CUDA are temporarily unavailable.
 
 # Upcoming optimizations
 1. Full reduction mode of comparisons on vector and matrix.

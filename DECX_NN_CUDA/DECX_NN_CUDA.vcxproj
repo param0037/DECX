@@ -149,16 +149,6 @@
   <ItemGroup>
     <ClCompile Include="..\DECX_core_CUDA\for_properties.cpp" />
   </ItemGroup>
-  <ItemGroup>
-    <CudaCompile Include="..\srcs\modules\NN\convolution\CUDA\conv2_im2row.cu" />
-    <CudaCompile Include="..\srcs\modules\NN\convolution\CUDA\fp16\conv2_BC_im2col_fp16.cu" />
-    <CudaCompile Include="..\srcs\modules\NN\convolution\CUDA\fp16\conv2_NB_im2col_fp16.cu" />
-    <CudaCompile Include="..\srcs\modules\NN\convolution\CUDA\fp16\eq_GEMM_fp16.cu" />
-    <CudaCompile Include="..\srcs\modules\NN\convolution\CUDA\fp32\conv2_BC_im2col_fp32.cu" />
-    <CudaCompile Include="..\srcs\modules\NN\convolution\CUDA\fp32\conv2_NB_im2col_fp32.cu" />
-    <CudaCompile Include="..\srcs\modules\NN\convolution\CUDA\fp32\eq_GEMM_fp32.cu" />
-    <CudaCompile Include="..\srcs\modules\NN\convolution\CUDA\im2col.cu" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(VCTargetsPath)\BuildCustomizations\CUDA 10.2.targets" />

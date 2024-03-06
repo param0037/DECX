@@ -74,6 +74,12 @@ void decx::_Matrix::Reinterpret(const de::_DATA_TYPES_FLAGS_ _new_type)
 }
 
 
+de::_DATA_FORMATS_ decx::_Matrix::Format() const
+{
+    return this->_format;
+}
+
+
 uint32_t decx::_Matrix::Pitch() const
 {
     return this->_layout.pitch;
@@ -86,16 +92,18 @@ const decx::_matrix_layout& decx::_Matrix::get_layout() const
 }
 
 
-void decx::_Matrix::construct(const de::_DATA_TYPES_FLAGS_ type, uint _width, uint _height)
+void decx::_Matrix::construct(const de::_DATA_TYPES_FLAGS_ type, uint32_t _width, uint32_t _height,
+    const de::_DATA_FORMATS_ format)
 {
     this->_attribute_assign(type, _width, _height);
+    this->_format = format;
 
     this->alloc_data_space();
 }
 
 
 
-void decx::_Matrix::re_construct(const de::_DATA_TYPES_FLAGS_ type, uint _width, uint _height)
+void decx::_Matrix::re_construct(const de::_DATA_TYPES_FLAGS_ type, uint32_t _width, uint32_t _height)
 {
     // If all the parameters are the same, it is meaningless to re-construt the data
     if (this->type != type || this->_layout.width != _width || this->_layout.height != _height)
@@ -144,9 +152,10 @@ decx::_Matrix::_Matrix()
 
 
 
-decx::_Matrix::_Matrix(const de::_DATA_TYPES_FLAGS_ type, const uint _width, const uint _height)
+decx::_Matrix::_Matrix(const de::_DATA_TYPES_FLAGS_ type, const uint32_t _width, const uint32_t _height,
+    de::_DATA_FORMATS_ format)
 {
-    this->construct(type, _width, _height);
+    this->construct(type, _width, _height, format);
 }
 
 
@@ -226,6 +235,17 @@ uint64_t decx::_Matrix::get_total_bytes() const
 }
 
 
+de::_DATA_FORMATS_ decx::_Matrix::get_data_format() const
+{
+    return this->_format;
+}
+
+
+void decx::_Matrix::set_data_format(const de::_DATA_FORMATS_& format)
+{
+    this->_format = format;
+}
+
 
 de::Matrix& decx::_Matrix::SoftCopy(de::Matrix& src)
 {
@@ -256,14 +276,16 @@ de::Matrix* de::CreateMatrixPtr()
 
 
 
-de::Matrix& de::CreateMatrixRef(const de::_DATA_TYPES_FLAGS_ type, const uint _width, const uint _height)
+de::Matrix& de::CreateMatrixRef(const de::_DATA_TYPES_FLAGS_ type, const uint _width, const uint _height,
+    const de::_DATA_FORMATS_ format)
 {
-    return *(new decx::_Matrix(type, _width, _height));
+    return *(new decx::_Matrix(type, _width, _height, format));
 }
 
 
 
-de::Matrix* de::CreateMatrixPtr(const de::_DATA_TYPES_FLAGS_ type, const uint _width, const uint _height)
+de::Matrix* de::CreateMatrixPtr(const de::_DATA_TYPES_FLAGS_ type, const uint _width, const uint _height,
+    const de::_DATA_FORMATS_ format)
 {
-    return new decx::_Matrix(type, _width, _height);
+    return new decx::_Matrix(type, _width, _height, format);
 }

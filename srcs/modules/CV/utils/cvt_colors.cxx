@@ -11,16 +11,17 @@
 
 #include "cvt_colors.h"
 #include "../../core/utils/fragment_arrangment.h"
+#include "../../core/thread_management/thread_arrange.h"
 
 
 _THREAD_FUNCTION_ void 
-decx::vis::_BGR2Gray_ST_UC2UC(const float* __restrict    src, 
+decx::vis::CPUK::_BGR2Gray_UC42UC(const float* __restrict    src, 
                               float* __restrict          dst, 
                               const int2                 dims,
-                              const uint                 pitchsrc, 
-                              const uint                 pitchdst)
+                              const uint32_t             pitchsrc, 
+                              const uint32_t             pitchdst)
 {
-    size_t glo_dex_src = 0, glo_dex_dst = 0;
+    uint64_t glo_dex_src = 0, glo_dex_dst = 0;
     const __m128i _shuffle_var = _mm_setr_epi8(0, 4, 8, 12, 1, 5, 9, 13, 2, 6, 10, 14, 3, 7, 11, 15);
     __m128i __recv;
     __m128i __res, __buf;
@@ -56,13 +57,13 @@ decx::vis::_BGR2Gray_ST_UC2UC(const float* __restrict    src,
 
 
 _THREAD_FUNCTION_ void 
-decx::vis::_BGR2Mean_ST_UC2UC(const float* __restrict   src, 
+decx::vis::CPUK::_BGR2Mean_UC42UC(const float* __restrict   src, 
                               float* __restrict         dst, 
                               const int2                dims, 
-                              const uint                pitchsrc, 
-                              const uint                pitchdst)
+                              const uint32_t            pitchsrc, 
+                              const uint32_t            pitchdst)
 {
-    size_t glo_dex_src = 0, glo_dex_dst = 0;
+    uint64_t glo_dex_src = 0, glo_dex_dst = 0;
     const __m128i _shuffle_var = _mm_setr_epi8(0, 4, 8, 12, 1, 5, 9, 13, 2, 6, 10, 14, 3, 7, 11, 15);
     __m128i __recv;
     __m128i __res, __buf;
@@ -99,13 +100,13 @@ decx::vis::_BGR2Mean_ST_UC2UC(const float* __restrict   src,
 
 
 _THREAD_FUNCTION_ void 
-decx::vis::_Preserve_B_ST_UC2UC(const float* __restrict     src, 
+decx::vis::CPUK::_Preserve_B_UC42UC(const float* __restrict     src, 
                                 float* __restrict           dst, 
                                 const int2                  dims, 
-                                const uint                  pitchsrc, 
-                                const uint                  pitchdst)
+                                const uint32_t              pitchsrc, 
+                                const uint32_t              pitchdst)
 {
-    size_t glo_dex_src = 0, glo_dex_dst = 0;
+    uint64_t glo_dex_src = 0, glo_dex_dst = 0;
     const __m128i _shuffle_var = _mm_setr_epi8(2, 6, 10, 14, 3, 7, 11, 15, 0, 4, 8, 12, 1, 5, 9, 13);
     __m128i __recv;
     __m128i __res;
@@ -127,13 +128,13 @@ decx::vis::_Preserve_B_ST_UC2UC(const float* __restrict     src,
 
 
 _THREAD_FUNCTION_ void 
-decx::vis::_Preserve_G_ST_UC2UC(const float* __restrict     src, 
+decx::vis::CPUK::_Preserve_G_UC42UC(const float* __restrict     src, 
                                 float* __restrict           dst, 
                                 const int2                  dims, 
-                                const uint                  pitchsrc, 
-                                const uint                  pitchdst)
+                                const uint32_t              pitchsrc, 
+                                const uint32_t              pitchdst)
 {
-    size_t glo_dex_src = 0, glo_dex_dst = 0;
+    uint64_t glo_dex_src = 0, glo_dex_dst = 0;
     const __m128i _shuffle_var = _mm_setr_epi8(1, 5, 9, 13, 3, 7, 11, 15, 0, 4, 8, 12, 2, 6, 10, 14);
     __m128i __recv;
     __m128i __res;
@@ -155,13 +156,13 @@ decx::vis::_Preserve_G_ST_UC2UC(const float* __restrict     src,
 
 
 _THREAD_FUNCTION_ void 
-decx::vis::_Preserve_R_ST_UC2UC(const float* __restrict     src, 
+decx::vis::CPUK::_Preserve_R_UC42UC(const float* __restrict     src, 
                                 float* __restrict           dst, 
                                 const int2                  dims, 
-                                const uint                  pitchsrc, 
-                                const uint                  pitchdst)
+                                const uint32_t              pitchsrc, 
+                                const uint32_t              pitchdst)
 {
-    size_t glo_dex_src = 0, glo_dex_dst = 0;
+    uint64_t glo_dex_src = 0, glo_dex_dst = 0;
     const __m128i _shuffle_var = _mm_setr_epi8(0, 4, 8, 12, 1, 5, 9, 13, 2, 6, 10, 14, 3, 7, 11, 15);
     __m128i __recv;
     __m128i __res;
@@ -183,13 +184,13 @@ decx::vis::_Preserve_R_ST_UC2UC(const float* __restrict     src,
 
 
 _THREAD_FUNCTION_ void 
-decx::vis::_Preserve_A_ST_UC2UC(const float* __restrict     src, 
+decx::vis::CPUK::_Preserve_A_UC42UC(const float* __restrict     src, 
                                 float* __restrict           dst, 
                                 const int2                  dims, 
-                                const uint                  pitchsrc, 
-                                const uint                  pitchdst)
+                                const uint32_t              pitchsrc, 
+                                const uint32_t              pitchdst)
 {
-    size_t glo_dex_src = 0, glo_dex_dst = 0;
+    uint64_t glo_dex_src = 0, glo_dex_dst = 0;
     const __m128i _shuffle_var = _mm_setr_epi8(3, 7, 11, 15, 1, 5, 9, 13, 0, 4, 8, 12, 2, 6, 10, 14);
     __m128i __recv;
     __m128i __res;
@@ -209,36 +210,274 @@ decx::vis::_Preserve_A_ST_UC2UC(const float* __restrict     src,
 }
 
 
+
+_THREAD_FUNCTION_ void 
+decx::vis::CPUK::_RGB2YUV_UC42UC4(const float* __restrict     src, 
+                                     float* __restrict           dst, 
+                                     const int2                  dims, 
+                                     const uint32_t              pitchsrc, 
+                                     const uint32_t              pitchdst)
+{
+    uint64_t glo_dex_src = 0, glo_dex_dst = 0;
+
+    const __m256i shuffle_var2 = _mm256_setr_epi32(0, 1, 4, 5, 2, 3, 6, 7);
+    const __m256i cvtu8_u16_mask = _mm256_set1_epi64x(0x00FF00FF00FF00FF);
+    const __m256i shuffle_cvti16_u8 = _mm256_setr_epi64x(0x00000a0200000800, 0x00000e0600000c04,
+                                                         0x00000a0200000800, 0x00000e0600000c04);
+
+    decx::utils::simd::xmm256_reg _IO, _reg256, _YU_res;
+    decx::utils::simd::xmm128_reg _V_res;
+
+    for (uint32_t i = 0; i < dims.y; ++i) {
+        glo_dex_src = i * pitchsrc;
+        glo_dex_dst = i * pitchdst;
+        for (uint32_t j = 0; j < dims.x; ++j) 
+        {
+            // [[R0 G0 B0 X0], [R1 G1 B1 X1], ... [R7 G7 B7 X7]] <8-bit>
+            _IO._vf = _mm256_load_ps(src + glo_dex_src);
+            // R
+            // [[R0 R1 R2 R3], [R4 R5 R6 R7], [R0 R1 R2 R3], [R4 R5 R6 R7]] <16-bit>
+            _reg256._vi = _mm256_and_si256(_mm256_shuffle_epi8(_IO._vi, _mm256_set1_epi64x(0x000c000800040000)), cvtu8_u16_mask);
+            _reg256._vi = _mm256_permutevar8x32_epi32(_reg256._vi, shuffle_var2);
+
+            _YU_res._vi = _mm256_mullo_epi16(_reg256._vi, _mm256_setr_epi32(5046349, 5046349, 5046349, 5046349, 
+                                                                            -2752555, -2752555, -2752555, -2752555));
+            _V_res._vi = _mm_slli_epi16(_mm256_castsi256_si128(_reg256._vi), 7);
+
+            // G
+            // [[G0 G1 G2 G3], [G4 G5 G6 G7], [G0 G1 G2 G3], [G4 G5 G6 G7]] <16-bit>
+            _reg256._vi = _mm256_and_si256(_mm256_shuffle_epi8(_IO._vi, _mm256_set1_epi64x(0x000d000900050001)), cvtu8_u16_mask);
+            _reg256._vi = _mm256_permutevar8x32_epi32(_reg256._vi, shuffle_var2);
+
+            _YU_res._vi = _mm256_add_epi16(_mm256_mullo_epi16(_reg256._vi, _mm256_setr_epi32(9830550, 9830550, 9830550, 9830550, 
+                                                                                            -5505109, -5505109, -5505109, -5505109)), _YU_res._vi);
+            _V_res._vi = _mm_sub_epi16(_V_res._vi, _mm_mullo_epi16(_mm256_castsi256_si128(_reg256._vi), _mm_set1_epi16(107)));
+
+            // B
+            // [[B0 B1 B2 B3], [B4 B5 B6 B7], [B0 B1 B2 B3], [B4 B5 B6 B7]] <16-bit>
+            _reg256._vi = _mm256_and_si256(_mm256_shuffle_epi8(_IO._vi, _mm256_set1_epi64x(0x000e000a00060002)), cvtu8_u16_mask);
+            _reg256._vi = _mm256_permutevar8x32_epi32(_reg256._vi, shuffle_var2);
+
+            _YU_res._vi = _mm256_add_epi16(_mm256_mullo_epi16(_reg256._vi, _mm256_setr_epi32(1900573, 1900573, 1900573, 1900573, 
+                                                                                            8388736, 8388736, 8388736, 8388736)), _YU_res._vi);
+            _V_res._vi = _mm_sub_epi16(_V_res._vi, _mm_mullo_epi16(_mm256_castsi256_si128(_reg256._vi), _mm_set1_epi16(21)));
+
+            _YU_res._vi = _mm256_add_epi16(_YU_res._vi, _mm256_setr_epi32(0, 0, 0, 0, -2147450880, -2147450880, -2147450880, -2147450880));
+            _V_res._vi = _mm_add_epi16(_V_res._vi, _mm_set1_epi16(32768));
+
+            _YU_res._vi = _mm256_srai_epi16(_YU_res._vi, 8);
+            _V_res._vi = _mm_srai_epi16(_V_res._vi, 8);
+
+            // CVT
+            _YU_res._vi = _mm256_permutevar8x32_epi32(_YU_res._vi, _mm256_setr_epi32(0, 1, 4, 5, 2, 3, 6, 7));
+            _YU_res._vi = _mm256_shuffle_epi8(_YU_res._vi, shuffle_cvti16_u8);
+            _YU_res._vi = _mm256_and_si256(_YU_res._vi, _mm256_set1_epi32(0xffff));
+
+            // Merge V channel
+            _reg256._vi = _mm256_castsi128_si256(_V_res._vi);
+            _reg256._vi = _mm256_permutevar8x32_epi32(_reg256._vi, _mm256_setr_epi32(0, 1, 4, 5, 2, 3, 6, 7));
+
+            _reg256._vi = _mm256_shuffle_epi8(_reg256._vi, _mm256_setr_epi64x(0x0002000000000000, 0x0006000000040000,
+                0x0002000000000000, 0x0006000000040000));
+
+            _YU_res._vi = _mm256_xor_si256(_YU_res._vi, _mm256_and_si256(_reg256._vi, _mm256_set1_epi32(0x00ff0000)));
+
+            // Merge Alpha channel
+            _YU_res._vi = _mm256_xor_si256(_YU_res._vi, _mm256_and_si256(_IO._vi, _mm256_set1_epi32(0xff000000)));
+
+            _mm256_store_ps(dst + glo_dex_dst, _YU_res._vf);
+
+            glo_dex_src += 8;
+            glo_dex_dst += 8;
+        }
+    }
+}
+
+
+
+
+_THREAD_FUNCTION_ void 
+decx::vis::CPUK::_YUV2RGB_UC42UC4(const float* __restrict     src,
+                                     float* __restrict           dst, 
+                                     const int2                  dims, 
+                                     const uint32_t              pitchsrc, 
+                                     const uint32_t              pitchdst)
+{
+    uint64_t glo_dex_src = 0, glo_dex_dst = 0;
+
+    const __m256i shuffle_var2 = _mm256_setr_epi32(0, 1, 4, 5, 2, 3, 6, 7);
+    const __m256i cvtu8_u16_mask = _mm256_set1_epi64x(0x00FF00FF00FF00FF);
+    const __m256i shuffle_cvti16_u8 = _mm256_setr_epi64x(0x00000a0200000800, 0x00000e0600000c04,
+                                                         0x00000a0200000800, 0x00000e0600000c04);
+
+    decx::utils::simd::xmm256_reg _IO, _reg256, _RG_res;
+    decx::utils::simd::xmm128_reg _B_res;
+
+    for (uint32_t i = 0; i < dims.y; ++i) {
+        glo_dex_src = i * pitchsrc;
+        glo_dex_dst = i * pitchdst;
+        for (uint32_t j = 0; j < dims.x; ++j) 
+        {
+            // [[R0 G0 B0 X0], [R1 G1 B1 X1], ... [R7 G7 B7 X7]] <8-bit>
+            _IO._vf = _mm256_load_ps(src + glo_dex_src);
+            // Y
+            // [[R0 R1 R2 R3], [R4 R5 R6 R7], [R0 R1 R2 R3], [R4 R5 R6 R7]] <16-bit>
+            _reg256._vi = _mm256_and_si256(_mm256_shuffle_epi8(_IO._vi, _mm256_set1_epi64x(0x000c000800040000)), cvtu8_u16_mask);
+            _RG_res._vi = _mm256_permutevar8x32_epi32(_reg256._vi, shuffle_var2);
+
+            _B_res._vi = _mm256_castsi256_si128(_RG_res._vi);
+
+            // Cr (U)
+            // [[G0 G1 G2 G3], [G4 G5 G6 G7], [G0 G1 G2 G3], [G4 G5 G6 G7]] <16-bit>
+            _reg256._vi = _mm256_and_si256(_mm256_shuffle_epi8(_IO._vi, _mm256_set1_epi64x(0x000d000900050001)), cvtu8_u16_mask);
+            _reg256._vi = _mm256_permutevar8x32_epi32(_reg256._vi, shuffle_var2);
+            _reg256._vi = _mm256_sub_epi16(_reg256._vi, _mm256_set1_epi16(128));
+
+            _RG_res._vi = _mm256_add_epi16(
+                _mm256_srai_epi16(_mm256_mullo_epi16(_reg256._vi, _mm256_setr_epi32(0, 0, 0, 0, 
+                                                                -5701720, -5701720, -5701720, -5701720)), 8), _RG_res._vi);
+            _B_res._vi = _mm_add_epi16(_B_res._vi, _mm256_castsi256_si128(_reg256._vi));
+            _B_res._vi = _mm_add_epi16(_B_res._vi,
+                _mm_srai_epi16(_mm_mullo_epi16(_mm256_castsi256_si128(_reg256._vi), _mm_set1_epi16(198)), 8));
+            
+            // Cb (V)
+            // [[B0 B1 B2 B3], [B4 B5 B6 B7], [B0 B1 B2 B3], [B4 B5 B6 B7]] <16-bit>
+            _reg256._vi = _mm256_and_si256(_mm256_shuffle_epi8(_IO._vi, _mm256_set1_epi64x(0x000e000a00060002)), cvtu8_u16_mask);
+            _reg256._vi = _mm256_permutevar8x32_epi32(_reg256._vi, shuffle_var2);
+            _reg256._vi = _mm256_sub_epi16(_reg256._vi, _mm256_set1_epi16(128));
+
+            _RG_res._vi = _mm256_add_epi16(_RG_res._vi, _mm256_and_si256(_reg256._vi, _mm256_setr_epi64x(0xffffffffffffffff, 0xffffffffffffffff, 0, 0)));
+            _RG_res._vi = _mm256_add_epi16(
+                _mm256_srai_epi16(_mm256_mullo_epi16(_reg256._vi, _mm256_setr_epi32(6750311, 6750311, 6750311, 6750311, 
+                                                                        -11927735, -11927735, -11927735, -11927735)), 8), _RG_res._vi);
+            
+            // Clamp to range
+            _RG_res._vi = _mm256_or_si256(_RG_res._vi, _mm256_cmpgt_epi16(_RG_res._vi, _mm256_set1_epi16(255)));
+            _RG_res._vi = _mm256_and_si256(_RG_res._vi, _mm256_cmpgt_epi16(_RG_res._vi, _mm256_set1_epi16(0)));
+            _B_res._vi = _mm_or_si128(_B_res._vi, _mm_cmpgt_epi16(_B_res._vi, _mm_set1_epi16(255)));
+            _B_res._vi = _mm_and_si128(_B_res._vi, _mm_cmpgt_epi16(_B_res._vi, _mm_set1_epi16(0)));
+
+            // CVT
+            _RG_res._vi = _mm256_permutevar8x32_epi32(_RG_res._vi, _mm256_setr_epi32(0, 1, 4, 5, 2, 3, 6, 7));
+            _RG_res._vi = _mm256_shuffle_epi8(_RG_res._vi, shuffle_cvti16_u8);
+            _RG_res._vi = _mm256_and_si256(_RG_res._vi, _mm256_set1_epi32(0xffff));
+
+            // Merge B channel
+            _reg256._vi = _mm256_castsi128_si256(_B_res._vi);
+            _reg256._vi = _mm256_permutevar8x32_epi32(_reg256._vi, _mm256_setr_epi32(0, 1, 4, 5, 2, 3, 6, 7));
+
+            _reg256._vi = _mm256_shuffle_epi8(_reg256._vi, _mm256_setr_epi64x(0x0002000000000000, 0x0006000000040000,
+                0x0002000000000000, 0x0006000000040000));
+
+            _RG_res._vi = _mm256_xor_si256(_RG_res._vi, _mm256_and_si256(_reg256._vi, _mm256_set1_epi32(0x00ff0000)));
+
+            // Merge Alpha channel
+            _RG_res._vi = _mm256_xor_si256(_RG_res._vi, _mm256_and_si256(_IO._vi, _mm256_set1_epi32(0xff000000)));
+
+            _mm256_store_ps(dst + glo_dex_dst, _RG_res._vf);
+
+            glo_dex_src += 8;
+            glo_dex_dst += 8;
+        }
+    }
+}
+
+
+
+
+_THREAD_FUNCTION_ void 
+decx::vis::CPUK::_RGB2BGR_UC42UC4(const float* __restrict     src, 
+                                  float* __restrict           dst, 
+                                  const int2                  dims, 
+                                  const uint32_t              pitchsrc, 
+                                  const uint32_t              pitchdst)
+{
+    uint64_t glo_dex_src = 0, glo_dex_dst = 0;
+    const __m256i shuffle_var = _mm256_setr_epi64x(0x0704050603000102, 0x0f0c0d0e0b08090a,
+        0x0704050603000102, 0x0f0c0d0e0b08090a);
+    
+    decx::utils::simd::xmm256_reg _IO;
+
+    for (uint32_t i = 0; i < dims.y; ++i) {
+        glo_dex_src = i * pitchsrc;
+        glo_dex_dst = i * pitchdst;
+        for (uint32_t j = 0; j < dims.x; ++j) 
+        {
+            // [[R0 G0 B0 X0], [R1 G1 B1 X1], ... [R7 G7 B7 X7]] <8-bit>
+            _IO._vf = _mm256_load_ps(src + glo_dex_src);
+            _IO._vi = _mm256_shuffle_epi8(_IO._vi, shuffle_var);
+
+            _mm256_store_ps(dst + glo_dex_dst, _IO._vf);
+
+            glo_dex_src += 8;
+            glo_dex_dst += 8;
+        }
+    }
+}
+
+
+
 // --------------------------------------- CALLERS --------------------------------------------------------
 
 
-void decx::vis::_channel_ops_general_caller(decx::vis::channel_ops_kernel kernel, const float* src, float* dst, const int2 dims, 
-    const uint pitchsrc, const uint pitchdst)
+void decx::vis::_channel_ops_UC42UC_caller(decx::vis::channel_ops_kernel kernel, 
+                                            const float* src, float* dst, const int2 dims, 
+                                            const uint32_t pitchsrc, const uint32_t pitchdst)
 {
-    int _concurrent = (int)decx::cpu::_get_permitted_concurrency();
-    int2 sub_dims = make_int2(dims.x / 4, dims.y / _concurrent);
-    size_t fragment_src = pitchsrc * (size_t)sub_dims.y, 
-        fragment_dst = pitchdst * (size_t)sub_dims.y / 4,
-        offset_src = 0,
-        offset_dst = 0;
+    decx::utils::_thread_arrange_1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::frag_manager f_mgr;
+    decx::utils::frag_manager_gen(&f_mgr, dims.y, t1D.total_thread);
 
-    std::future<void>* _thread_handle = new std::future<void>[_concurrent];
+    int2 sub_dims = make_int2(decx::utils::ceil<uint32_t>(dims.x, 4), f_mgr.frag_len);
 
-    for (int i = 0; i < _concurrent - 1; ++i) {
-        _thread_handle[i] = decx::cpu::register_task_default(kernel, src + offset_src, dst + offset_dst, sub_dims,
+    uint64_t fragment_src = pitchsrc * (uint64_t)sub_dims.y, 
+             fragment_dst = (pitchdst / 4) * (uint64_t)sub_dims.y,
+             offset_src = 0,
+             offset_dst = 0;
+
+    for (int i = 0; i < t1D.total_thread - 1; ++i) {
+        t1D._async_thread[i] = decx::cpu::register_task_default(kernel, src + offset_src, dst + offset_dst, sub_dims,
             pitchsrc, pitchdst);
         offset_src += fragment_src;
         offset_dst += fragment_dst;
     }
 
-    sub_dims.y = dims.y - (_concurrent - 1) * sub_dims.y;
-    _thread_handle[decx::cpu::_get_permitted_concurrency() - 1] =
+    sub_dims.y = f_mgr.is_left ? f_mgr.frag_left_over : f_mgr.frag_len;
+    t1D._async_thread[decx::cpu::_get_permitted_concurrency() - 1] =
         decx::cpu::register_task_default(kernel, src + offset_src, dst + offset_dst, sub_dims,
             pitchsrc, pitchdst);
 
-    for (int i = 0; i < _concurrent; ++i) {
-        _thread_handle[i].get();
+    t1D.__sync_all_threads();
+}
+
+
+
+void decx::vis::_channel_ops_UC42UC4_caller(decx::vis::channel_ops_kernel kernel, 
+                                            const float* src, float* dst, const int2 dims, 
+                                            const uint32_t pitchsrc, const uint32_t pitchdst)
+{
+    decx::utils::_thread_arrange_1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::frag_manager f_mgr;
+    decx::utils::frag_manager_gen(&f_mgr, dims.y, t1D.total_thread);
+
+    int2 sub_dims = make_int2(decx::utils::ceil<uint32_t>(dims.x, 8), f_mgr.frag_len);
+
+    uint64_t fragment_src = pitchsrc * (uint64_t)sub_dims.y, 
+             fragment_dst = pitchdst * (uint64_t)sub_dims.y,
+             offset_src = 0,
+             offset_dst = 0;
+
+    for (int i = 0; i < t1D.total_thread - 1; ++i) {
+        t1D._async_thread[i] = decx::cpu::register_task_default(kernel, src + offset_src, dst + offset_dst, sub_dims,
+            pitchsrc, pitchdst);
+        offset_src += fragment_src;
+        offset_dst += fragment_dst;
     }
 
-    delete[] _thread_handle;
+    sub_dims.y = f_mgr.is_left ? f_mgr.frag_left_over : f_mgr.frag_len;
+    t1D._async_thread[decx::cpu::_get_permitted_concurrency() - 1] =
+        decx::cpu::register_task_default(kernel, src + offset_src, dst + offset_dst, sub_dims,
+            pitchsrc, pitchdst);
+
+    t1D.__sync_all_threads();
 }

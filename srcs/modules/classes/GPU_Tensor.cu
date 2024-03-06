@@ -12,50 +12,6 @@
 #include "GPU_Tensor.h"
 
 
-
-//void decx::_tensor_layout::_attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, const uint _width,
-//    const uint _height, const uint _depth)
-//{
-//    this->_single_element_size = decx::core::_size_mapping(_type);
-//
-//    this->width = _width;
-//    this->height = _height;
-//    this->depth = _depth;
-//
-//    if (this->_single_element_size == 2) {
-//        this->wpitch = decx::utils::ceil<uint>(_width, 8) * 8;
-//    }
-//    else {
-//        this->wpitch = decx::utils::ceil<uint>(_width, 4) * 4;
-//    }
-//
-//    uint32_t _alignment = 1;
-//    switch (this->_single_element_size)
-//    {
-//    case 4:
-//        _alignment = _TENSOR_ALIGN_DEPTH_4B_;     break;
-//    case 8:
-//        _alignment = _TENSOR_ALIGN_DEPTH_8B_;     break;
-//    case 2:
-//        _alignment = _TENSOR_ALIGN_DEPTH_2B_;     break;
-//    case 1:
-//        _alignment = _TENSOR_ALIGN_DEPTH_1B_;     break;
-//    case 16:
-//        _alignment = _TENSOR_ALIGN_DEPTH_16B_;    break;
-//    default:
-//        break;
-//    }
-//    this->dpitch = decx::utils::ceil<uint>(_depth, _alignment) * _alignment;
-//
-//    this->dp_x_wp = static_cast<size_t>(this->dpitch) * static_cast<size_t>(this->wpitch);
-//
-//    this->plane[0] = static_cast<size_t>(this->height) * static_cast<size_t>(this->width);
-//    this->plane[1] = static_cast<size_t>(this->depth) * static_cast<size_t>(this->width);
-//    this->plane[2] = static_cast<size_t>(this->height) * static_cast<size_t>(this->depth);
-//}
-
-
-
 void decx::_tensor_layout::_attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, const uint _width,
     const uint _height, const uint _depth)
 {
@@ -65,17 +21,16 @@ void decx::_tensor_layout::_attribute_assign(const de::_DATA_TYPES_FLAGS_ _type,
     this->height = _height;
     this->depth = _depth;
 
-    //this->wpitch = decx::utils::ceil<uint>(_width, 4) * 4;
-
     uint32_t _alignment = 1;
+
     switch (this->_single_element_size)
     {
     case 4:
-        _alignment = 8;     break;
-    case 8:
         _alignment = 4;     break;
+    case 8:
+        _alignment = 2;     break;
     case 2:
-        _alignment = _TENSOR_ALIGN_DEPTH_2B_;     break;
+        _alignment = 8;     break;
     case 1:
         _alignment = 8;     break;
     case 16:
@@ -83,14 +38,15 @@ void decx::_tensor_layout::_attribute_assign(const de::_DATA_TYPES_FLAGS_ _type,
     default:
         break;
     }
+
     this->wpitch = decx::utils::ceil<uint>(_width, _alignment) * _alignment;
     this->dpitch = decx::utils::ceil<uint>(_depth, _alignment) * _alignment;
 
-    this->dp_x_wp = static_cast<size_t>(this->dpitch) * static_cast<size_t>(this->wpitch);
+    this->dp_x_wp = static_cast<uint64_t>(this->dpitch) * static_cast<uint64_t>(this->wpitch);
 
-    this->plane[0] = static_cast<size_t>(this->height) * static_cast<size_t>(this->width);
-    this->plane[1] = static_cast<size_t>(this->depth) * static_cast<size_t>(this->width);
-    this->plane[2] = static_cast<size_t>(this->height) * static_cast<size_t>(this->depth);
+    this->plane[0] = static_cast<uint64_t>(this->height) * static_cast<uint64_t>(this->width);
+    this->plane[1] = static_cast<uint64_t>(this->depth) * static_cast<uint64_t>(this->width);
+    this->plane[2] = static_cast<uint64_t>(this->height) * static_cast<uint64_t>(this->depth);
 }
 
 
@@ -109,8 +65,8 @@ void decx::_GPU_Tensor::_attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, co
 
     this->_layout._attribute_assign(_type, _width, _height, _depth);
 
-    this->element_num = static_cast<size_t>(this->_layout.depth) * this->_layout.plane[0];
-    this->_element_num = static_cast<size_t>(this->_layout.height) * this->_layout.dp_x_wp;
+    this->element_num = static_cast<uint64_t>(this->_layout.depth) * this->_layout.plane[0];
+    this->_element_num = static_cast<uint64_t>(this->_layout.height) * this->_layout.dp_x_wp;
     this->total_bytes = this->_element_num * this->_layout._single_element_size;
 }
 
@@ -198,7 +154,7 @@ void decx::_GPU_Tensor::construct(const de::_DATA_TYPES_FLAGS_ _type, const uint
 void decx::_GPU_Tensor::re_construct(const de::_DATA_TYPES_FLAGS_ _type, const uint _width, const uint _height, const uint _depth)
 {
     if (this->type != _type || this->_layout.width != _width || this->_layout.height != _height || this->_layout.depth != _depth) {
-        const size_t pre_size = this->total_bytes;
+        const uint64_t pre_size = this->total_bytes;
         this->_attribute_assign(_type, _width, _height, _depth);
 
         if (this->total_bytes > pre_size) {

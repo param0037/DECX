@@ -64,6 +64,7 @@ namespace decx
 
 
             static double _mm256d_h_sum(__m256d v);
+            static int64_t _mm256i_h_sum_epi64(__m256i v);
 
             static double _mm256d_h_max(__m256d v);
 
@@ -127,6 +128,16 @@ static double decx::utils::simd::_mm256d_h_sum(__m256d v) {
 
     __m128d high64 = _mm_unpackhi_pd(vlow, vlow);
     return  _mm_cvtsd_f64(_mm_add_sd(vlow, high64));  // reduce to scalar
+}
+
+
+static int64_t decx::utils::simd::_mm256i_h_sum_epi64(__m256i v) {
+    __m128i vlow = _mm256_castsi256_si128(v);
+    __m128i vhigh = _mm256_extractf128_si256(v, 1); // high 128
+    vlow = _mm_add_epi64(vlow, vhigh);     // reduce down to 128
+
+    __m128i high64 = _mm_unpackhi_epi64(vlow, vlow);
+    return _mm_extract_epi64(_mm_add_epi64(vlow, high64), 0);
 }
 
 

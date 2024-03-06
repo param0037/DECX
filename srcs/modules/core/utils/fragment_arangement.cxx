@@ -11,7 +11,7 @@
 #include "fragment_arrangment.h"
 
 _DECX_API_
-bool decx::utils::frag_manager_gen(decx::utils::frag_manager* src, const size_t _tot, const size_t _frag_num)
+bool decx::utils::frag_manager_gen(decx::utils::frag_manager* src, const uint64_t _tot, const uint64_t _frag_num)
 {
     src->total = _tot;
     src->frag_num = _frag_num;
@@ -30,7 +30,7 @@ bool decx::utils::frag_manager_gen(decx::utils::frag_manager* src, const size_t 
 
 
 _DECX_API_
-bool decx::utils::frag_manager_gen_from_fragLen(decx::utils::frag_manager* src, const size_t _tot, const size_t _frag_len)
+bool decx::utils::frag_manager_gen_from_fragLen(decx::utils::frag_manager* src, const uint64_t _tot, const uint64_t _frag_len)
 {
     src->total = _tot;
     src->frag_len = _frag_len;
@@ -50,20 +50,20 @@ bool decx::utils::frag_manager_gen_from_fragLen(decx::utils::frag_manager* src, 
 
 
 _DECX_API_
-bool decx::utils::frag_manager_gen_Nx(decx::utils::frag_manager* src, const size_t _tot,
-    const size_t _frag_num, const uint N)
+bool decx::utils::frag_manager_gen_Nx(decx::utils::frag_manager* src, const uint64_t _tot,
+    const uint64_t _frag_num, const uint32_t N)
 {
     src->total = _tot;
     src->frag_num = _frag_num;
     if (_tot % N) {
         src->is_left = true;
-        uint new_tot = _tot / N;
+        uint32_t new_tot = _tot / N;
         src->frag_len = new_tot / _frag_num * N;
         src->frag_left_over = _tot - (_frag_num - 1) * src->frag_len;
         return false;
     }
     else {
-        uint new_tot = _tot / N;
+        uint32_t new_tot = _tot / N;
         if (new_tot % _frag_num) {
             src->is_left = true;
             src->frag_len = new_tot / _frag_num * N;
