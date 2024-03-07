@@ -22,4 +22,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <CudaCompile Include="..\srcs\modules\NN\convolution\CUDA\fp32\im2col_fp32.cu">
+      <Filter>源文件\convolution</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\NN\convolution\CUDA\fp32\Conv2D.cu">
+      <Filter>源文件\convolution</Filter>
+    </CudaCompile>
+  </ItemGroup>
 </Project>

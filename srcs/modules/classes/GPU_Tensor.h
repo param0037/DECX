@@ -140,6 +140,9 @@ namespace decx
         const decx::_tensor_layout& get_layout() const;
 
 
+        decx::_tensor_layout& get_layout_modify();
+
+
         bool is_init() const;
 
 

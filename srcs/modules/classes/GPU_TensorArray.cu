@@ -233,6 +233,24 @@ de::GPU_TensorArray& decx::_GPU_TensorArray::SoftCopy(const de::GPU_TensorArray&
 
 
 
+de::DH decx::_GPU_TensorArray::Extract_SoftCopy(const uint32_t index, de::GPU_Tensor& dst) const
+{
+    de::DH handle;
+    decx::_GPU_Tensor* _dst = dynamic_cast<decx::_GPU_Tensor*>(&dst);
+
+    if (index > this->TensorNum() - 1) {
+        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_DimsNotMatching,
+            "Overrange\n");
+        return handle;
+    }
+
+    _dst->get_layout_modify() = this->_layout;
+    _dst->Tens.ptr = this->TensptrArr.ptr[index];
+
+    return handle;
+}
+
+
 
 void decx::_GPU_TensorArray::release()
 {

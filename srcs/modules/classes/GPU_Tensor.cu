@@ -26,15 +26,15 @@ void decx::_tensor_layout::_attribute_assign(const de::_DATA_TYPES_FLAGS_ _type,
     switch (this->_single_element_size)
     {
     case 4:
-        _alignment = 4;     break;
+        _alignment = 32;     break;
     case 8:
-        _alignment = 2;     break;
+        _alignment = 16;     break;
     case 2:
-        _alignment = 8;     break;
+        _alignment = 64;     break;
     case 1:
-        _alignment = 8;     break;
+        _alignment = 128;     break;
     case 16:
-        _alignment = _TENSOR_ALIGN_DEPTH_16B_;    break;
+        _alignment = 8;    break;
     default:
         break;
     }
@@ -247,6 +247,12 @@ void decx::_GPU_Tensor::Reinterpret(const de::_DATA_TYPES_FLAGS_ _new_type)
 
 
 const decx::_tensor_layout& decx::_GPU_Tensor::get_layout() const
+{
+    return this->_layout;
+}
+
+
+decx::_tensor_layout& decx::_GPU_Tensor::get_layout_modify()
 {
     return this->_layout;
 }

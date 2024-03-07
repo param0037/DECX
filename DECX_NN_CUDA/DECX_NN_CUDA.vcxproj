@@ -149,6 +149,10 @@
   <ItemGroup>
     <ClCompile Include="..\DECX_core_CUDA\for_properties.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <CudaCompile Include="..\srcs\modules\NN\convolution\CUDA\fp32\Conv2D.cu" />
+    <CudaCompile Include="..\srcs\modules\NN\convolution\CUDA\fp32\im2col_fp32.cu" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(VCTargetsPath)\BuildCustomizations\CUDA 10.2.targets" />

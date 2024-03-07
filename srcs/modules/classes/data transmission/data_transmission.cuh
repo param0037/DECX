@@ -45,6 +45,10 @@ namespace decx
         void Memcpy_Tens(decx::_Tensor* __host, decx::_GPU_Tensor* __decxvice, const de::Point3D start_src, const de::Point3D start_dst,
             const de::Point3D cpy_size, const int _memcpy_flag, de::DH* handle, const uint32_t _stream_id = 0);
 
+        template <bool _async_call>
+        void Memcpy_TensArr(decx::_TensorArray* __host, decx::_GPU_TensorArray* __decxvice, const de::Point3D start_src, const de::Point3D start_dst,
+            const de::Point3D cpy_size, const int _memcpy_flag, de::DH* handle, const uint32_t _stream_id = 0);
+
 
         template <bool _print>
         void MemcpyLinear_caller(void* __host, void* __device, const uint64_t _host_len, const uint64_t _device_len,

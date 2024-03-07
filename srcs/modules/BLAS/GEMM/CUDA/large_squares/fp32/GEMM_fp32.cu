@@ -13,29 +13,29 @@
 
 
 __global__
-void decx::gemm::GPUK::cu_GEMM_fp32_spec(float4 *                  A,
-                       float4 *                  B,
-                       float4 *                  dst,
-                       const uint                pitch_A,
-                       const uint                pitch_B,
-                       const uint                __iter)
+void decx::gemm::GPUK::cu_GEMM_fp32_spec(const float4* __restrict  A,
+                                         const float4* __restrict  B,
+                                         float4* __restrict        dst,
+                                         const uint32_t            pitch_A,
+                                         const uint32_t            pitch_B,
+                                         const uint32_t            __iter)
 {
-    uint x_glo;
-    uint y_glo;
+    uint32_t x_glo;
+    uint32_t y_glo;
     
     __shared__ float4 shmemA[32][128 / 8 + 1];
     __shared__ float4 shmemB[32][128 / 8 + 1];
     
     float4 sum[8][2];
-    Init_Sum
+    Init_Sum;
 
     float4 tmp_A[2];
     float4 tmp_B[2];
     
-    size_t glo_dex_A = ((threadIdx.x / 16) * 8 + ((threadIdx.x / 4) % 4) + 128 * blockIdx.x) * pitch_A + threadIdx.x % 4;
-    size_t glo_dex_B = ((threadIdx.x % 16) * 2 + blockIdx.y * 32) + pitch_B * (threadIdx.x / 16);
+    uint64_t glo_dex_A = ((threadIdx.x / 16) * 8 + ((threadIdx.x / 4) % 4) + 128 * blockIdx.x) * pitch_A + threadIdx.x % 4;
+    uint64_t glo_dex_B = ((threadIdx.x % 16) * 2 + blockIdx.y * 32) + pitch_B * (threadIdx.x / 16);
     
-    for (uint i = 0; i < __iter; ++i)
+    for (uint32_t i = 0; i < __iter; ++i)
     {
         tmp_A[0] = A[glo_dex_A];
         tmp_A[1] = A[glo_dex_A + pitch_A * 4];
@@ -65,7 +65,7 @@ void decx::gemm::GPUK::cu_GEMM_fp32_spec(float4 *                  A,
         glo_dex_B += 16 * pitch_B;
         
 #pragma unroll 16
-        for (uint __line = 0; __line < 16; ++__line)
+        for (uint32_t __line = 0; __line < 16; ++__line)
         {
             tmp_A[0] = shmemA[__line][x_glo];
             tmp_A[1] = shmemA[__line + 16][x_glo];
@@ -81,7 +81,7 @@ void decx::gemm::GPUK::cu_GEMM_fp32_spec(float4 *                  A,
     x_glo = (threadIdx.x / 16 + blockIdx.x * 16) * 8;
     y_glo = (threadIdx.x % 16 + blockIdx.y * 16);
     glo_dex_A = x_glo * pitch_B + y_glo * 2;
-    s_store(glo_dex_A)
+    s_store(glo_dex_A);
 }
 
 
@@ -89,16 +89,16 @@ void decx::gemm::GPUK::cu_GEMM_fp32_spec(float4 *                  A,
 
 
 __global__
-void decx::gemm::GPUK::cu_GEMM_fp32_ABC_spec(float4 *                A,
-                           float4 *                B,
-                           float4 *                C,
-                           float4 *                dst,
-                           const uint              pitch_A,
-                           const uint              pitch_B,
-                           const uint              __iter)
+void decx::gemm::GPUK::cu_GEMM_fp32_ABC_spec(const float4* __restrict   A,
+                                             const float4* __restrict   B,
+                                             const float4* __restrict   C,
+                                             float4 *                   dst,
+                                             const uint32_t             pitch_A,
+                                             const uint32_t             pitch_B,
+                                             const uint32_t             __iter)
 {
-    uint x_glo, y_glo;
-    size_t glo_dex_A;
+    uint32_t x_glo, y_glo;
+    uint64_t glo_dex_A;
 
     x_glo = (threadIdx.x / 16 + blockIdx.x * 16) * 8;
     y_glo = (threadIdx.x % 16 + blockIdx.y * 16);
@@ -106,7 +106,7 @@ void decx::gemm::GPUK::cu_GEMM_fp32_ABC_spec(float4 *                A,
 
     float4 sum[8][2];
 
-    s_loadC(glo_dex_A)            // initialize sum with C
+    s_loadC(glo_dex_A);            // initialize sum with C
 
     __shared__ float4 shmemA[32][128 / 8 + 1];
     __shared__ float4 shmemB[32][128 / 8 + 1];
@@ -114,9 +114,9 @@ void decx::gemm::GPUK::cu_GEMM_fp32_ABC_spec(float4 *                A,
     float4 tmp_A[2], tmp_B[2];
     
     glo_dex_A = ((threadIdx.x / 16) * 8 + ((threadIdx.x / 4) % 4) + 128 * blockIdx.x) * pitch_A + threadIdx.x % 4;
-    size_t glo_dex_B = ((threadIdx.x % 16) * 2 + blockIdx.y * 32) + pitch_B * (threadIdx.x / 16);
+    uint64_t glo_dex_B = ((threadIdx.x % 16) * 2 + blockIdx.y * 32) + pitch_B * (threadIdx.x / 16);
     
-    for (uint i = 0; i < __iter; ++i)
+    for (uint32_t i = 0; i < __iter; ++i)
     {
         tmp_A[0] = A[glo_dex_A];
         tmp_A[1] = A[glo_dex_A + pitch_A * 4];
@@ -146,7 +146,7 @@ void decx::gemm::GPUK::cu_GEMM_fp32_ABC_spec(float4 *                A,
         glo_dex_B += 16 * pitch_B;
         
 #pragma unroll 16
-        for (uint __line = 0; __line < 16; ++__line)
+        for (uint32_t __line = 0; __line < 16; ++__line)
         {
             tmp_A[0] = shmemA[__line][x_glo];
             tmp_A[1] = shmemA[__line + 16][x_glo];
@@ -162,42 +162,42 @@ void decx::gemm::GPUK::cu_GEMM_fp32_ABC_spec(float4 *                A,
     x_glo = (threadIdx.x / 16 + blockIdx.x * 16) * 8;
     y_glo = (threadIdx.x % 16 + blockIdx.y * 16);
     glo_dex_A = x_glo * pitch_B + y_glo * 2;
-    s_store(glo_dex_A)
+    s_store(glo_dex_A);
 }
 
 
 
 
 __global__
-void decx::gemm::GPUK::cu_GEMM_fp32_anyWH_specL(float4*                   A,
-                              float4*                   B,
-                              float4*                   dst,
-                              const uint                pitch_A,
-                              const uint                pitch_B,
-                              const uint                Hdst,
-                              const uint                __iter)
+void decx::gemm::GPUK::cu_GEMM_fp32_anyWH_specL(const float4* __restrict    A,
+                                                const float4* __restrict    B,
+                                                float4*                     dst,
+                                                const uint32_t              pitch_A,
+                                                const uint32_t              pitch_B,
+                                                const uint32_t              Hdst,
+                                                const uint32_t              __iter)
 {
-    uint x_gloA, y_gloA, x_gloB, y_gloB;
-    uint x_loc, y_loc;
+    uint32_t x_gloA, y_gloA, x_gloB, y_gloB;
+    uint32_t x_loc, y_loc;
     
     __shared__ float4 shmemA[32][128 / 8 + 1];
     __shared__ float4 shmemB[32][128 / 8 + 1];
     
     float4 sum[8][2];
-    Init_Sum
+    Init_Sum;
 
     float4 tmp_A[2] = { make_float4(0, 0, 0, 0), make_float4(0, 0, 0, 0) };
     float4 tmp_B[2] = { make_float4(0, 0, 0, 0), make_float4(0, 0, 0, 0) };
     
     x_gloA = (threadIdx.x / 16) * 8 + ((threadIdx.x / 4) % 4) + 128 * blockIdx.x;
     y_gloA = threadIdx.x % 4;
-    size_t glo_dex_A = x_gloA * pitch_A + y_gloA;
+    uint64_t glo_dex_A = x_gloA * pitch_A + y_gloA;
 
     x_gloB = threadIdx.x / 16;
     y_gloB = (threadIdx.x % 16) * 2 + blockIdx.y * 32;
-    size_t glo_dex_B = y_gloB + pitch_B * x_gloB;
+    uint64_t glo_dex_B = y_gloB + pitch_B * x_gloB;
     
-    for (uint i = 0; i < __iter; ++i)
+    for (uint32_t i = 0; i < __iter; ++i)
     {
         if (x_gloA < Hdst)
             tmp_A[0] = A[glo_dex_A];
@@ -231,7 +231,7 @@ void decx::gemm::GPUK::cu_GEMM_fp32_anyWH_specL(float4*                   A,
         glo_dex_B += 16 * pitch_B;
         
 #pragma unroll 16
-        for (uint __line = 0; __line < 16; ++__line)
+        for (uint32_t __line = 0; __line < 16; ++__line)
         {
             tmp_A[0] = shmemA[__line][x_loc];
             tmp_A[1] = shmemA[__line + 16][x_loc];
@@ -263,18 +263,18 @@ void decx::gemm::GPUK::cu_GEMM_fp32_anyWH_specL(float4*                   A,
 
 
 __global__
-void decx::gemm::GPUK::cu_GEMM_fp32_ABC_anyWH_specL(float4*                   A,
-                                  float4*                   B,
-                                  float4*                   C,
-                                  float4*                   dst,
-                                  const uint                pitch_A,
-                                  const uint                pitch_B,
-                                  const uint                Hdst,
-                                  const uint                __iter)
+void decx::gemm::GPUK::cu_GEMM_fp32_ABC_anyWH_specL(const float4* __restrict      A,
+                                                    const float4* __restrict      B,
+                                                    const float4* __restrict      C,
+                                                    float4* __restrict            dst,
+                                                    const uint32_t                pitch_A,
+                                                    const uint32_t                pitch_B,
+                                                    const uint32_t                Hdst,
+                                                    const uint32_t                __iter)
 {
-    uint x_gloA, y_gloA, x_gloB, y_gloB;
-    uint x_loc, y_loc;
-    size_t glo_dex_A, glo_dex_B;
+    uint32_t x_gloA, y_gloA, x_gloB, y_gloB;
+    uint32_t x_loc, y_loc;
+    uint64_t glo_dex_A, glo_dex_B;
 
     __shared__ float4 shmemA[32][128 / 8 + 1];
     __shared__ float4 shmemB[32][128 / 8 + 1];
@@ -305,7 +305,7 @@ void decx::gemm::GPUK::cu_GEMM_fp32_ABC_anyWH_specL(float4*                   A,
     y_gloB = (threadIdx.x % 16) * 2 + blockIdx.y * 32;
     glo_dex_B = y_gloB + pitch_B * x_gloB;
 
-    for (uint i = 0; i < __iter; ++i)
+    for (uint32_t i = 0; i < __iter; ++i)
     {
         tmp_A[0] = make_float4(0, 0, 0, 0);         tmp_A[1] = make_float4(0, 0, 0, 0);
         tmp_B[0] = make_float4(0, 0, 0, 0);         tmp_B[1] = make_float4(0, 0, 0, 0);
@@ -345,7 +345,7 @@ void decx::gemm::GPUK::cu_GEMM_fp32_ABC_anyWH_specL(float4*                   A,
         x_gloB += 16;
 
 #pragma unroll 16
-        for (uint __line = 0; __line < 16; ++__line)
+        for (uint32_t __line = 0; __line < 16; ++__line)
         {
             tmp_A[0] = shmemA[__line][x_loc];
             tmp_A[1] = shmemA[__line + 16][x_loc];
@@ -378,35 +378,35 @@ void decx::gemm::GPUK::cu_GEMM_fp32_ABC_anyWH_specL(float4*                   A,
 
 
 __global__
-void decx::gemm::GPUK::cu_GEMM_fp32_anyWH_anyL(float4*                   A,
-                             float4*                   B,
-                             float4*                   dst,
-                             const uint                pitch_A,
-                             const uint                pitch_B,
-                             const uint                Hdst,
-                             const uint                HB,
-                             const uint                __iter)
+void decx::gemm::GPUK::cu_GEMM_fp32_anyWH_anyL(const float4* __restrict   A,
+                                               const float4* __restrict   B,
+                                               float4* __restrict         dst,
+                                               const uint32_t             pitch_A,
+                                               const uint32_t             pitch_B,
+                                               const uint32_t             Hdst,
+                                               const uint32_t             HB,
+                                               const uint32_t             __iter)
 {
-    uint x_gloA, y_gloA, x_gloB, y_gloB;
-    uint x_loc, y_loc;
+    uint32_t x_gloA, y_gloA, x_gloB, y_gloB;
+    uint32_t x_loc, y_loc;
     
     __shared__ float4 shmemA[32][128 / 8 + 1];
     __shared__ float4 shmemB[32][128 / 8 + 1];
     
     float4 sum[8][2];
-    Init_Sum
+    Init_Sum;
 
     float4 tmp_A[2], tmp_B[2];
     
     x_gloA = (threadIdx.x / 16) * 8 + ((threadIdx.x / 4) % 4) + 128 * blockIdx.x;
     y_gloA = threadIdx.x % 4;
-    size_t glo_dex_A = x_gloA * pitch_A + y_gloA;
+    uint64_t glo_dex_A = x_gloA * pitch_A + y_gloA;
 
     x_gloB = threadIdx.x / 16;
     y_gloB = (threadIdx.x % 16) * 2 + blockIdx.y * 32;
-    size_t glo_dex_B = y_gloB + pitch_B * x_gloB;
+    uint64_t glo_dex_B = y_gloB + pitch_B * x_gloB;
     
-    for (uint i = 0; i < __iter; ++i)
+    for (uint32_t i = 0; i < __iter; ++i)
     {
         tmp_A[0] = make_float4(0, 0, 0, 0);         tmp_A[1] = make_float4(0, 0, 0, 0);
         tmp_B[0] = make_float4(0, 0, 0, 0);         tmp_B[1] = make_float4(0, 0, 0, 0);
@@ -450,7 +450,7 @@ void decx::gemm::GPUK::cu_GEMM_fp32_anyWH_anyL(float4*                   A,
         x_gloB += 16;
         
 #pragma unroll 16
-        for (uint __line = 0; __line < 16; ++__line)
+        for (uint32_t __line = 0; __line < 16; ++__line)
         {
             tmp_A[0] = shmemA[__line][x_loc];
             tmp_A[1] = shmemA[__line + 16][x_loc];
@@ -482,19 +482,19 @@ void decx::gemm::GPUK::cu_GEMM_fp32_anyWH_anyL(float4*                   A,
 
 
 __global__
-void decx::gemm::GPUK::cu_GEMM_fp32_ABC_anyWH_anyL(float4*                   A,
-                                 float4*                   B,
-                                 float4*                   C,
-                                 float4*                   dst,
-                                 const uint                pitch_A,
-                                 const uint                pitch_B,
-                                 const uint                Hdst,
-                                 const uint                HB,
-                                 const uint                __iter)
+void decx::gemm::GPUK::cu_GEMM_fp32_ABC_anyWH_anyL(const float4* __restrict  A,
+                                                   const float4* __restrict  B,
+                                                   const float4* __restrict  C,
+                                                   float4* __restrict        dst,
+                                                   const uint32_t            pitch_A,
+                                                   const uint32_t            pitch_B,
+                                                   const uint32_t            Hdst,
+                                                   const uint32_t            HB,
+                                                   const uint32_t            __iter)
 {
-    uint x_gloA, y_gloA, x_gloB, y_gloB;
-    uint x_loc, y_loc;
-    size_t glo_dex_A, glo_dex_B;
+    uint32_t x_gloA, y_gloA, x_gloB, y_gloB;
+    uint32_t x_loc, y_loc;
+    uint64_t glo_dex_A, glo_dex_B;
     
     __shared__ float4 shmemA[32][128 / 8 + 1];
     __shared__ float4 shmemB[32][128 / 8 + 1];
@@ -525,7 +525,7 @@ void decx::gemm::GPUK::cu_GEMM_fp32_ABC_anyWH_anyL(float4*                   A,
     y_gloB = (threadIdx.x % 16) * 2 + blockIdx.y * 32;
     glo_dex_B = y_gloB + pitch_B * x_gloB;
     
-    for (uint i = 0; i < __iter; ++i)
+    for (uint32_t i = 0; i < __iter; ++i)
     {
         tmp_A[0] = make_float4(0, 0, 0, 0);         tmp_A[1] = make_float4(0, 0, 0, 0);
         tmp_B[0] = make_float4(0, 0, 0, 0);         tmp_B[1] = make_float4(0, 0, 0, 0);
@@ -569,7 +569,7 @@ void decx::gemm::GPUK::cu_GEMM_fp32_ABC_anyWH_anyL(float4*                   A,
         x_gloB += 16;
         
 #pragma unroll 16
-        for (uint __line = 0; __line < 16; ++__line)
+        for (uint32_t __line = 0; __line < 16; ++__line)
         {
             tmp_A[0] = shmemA[__line][x_loc];
             tmp_A[1] = shmemA[__line + 16][x_loc];
@@ -601,34 +601,34 @@ void decx::gemm::GPUK::cu_GEMM_fp32_ABC_anyWH_anyL(float4*                   A,
 
 
 __global__
-void decx::gemm::GPUK::cu_GEMM_fp32_specWH_anyL(float4*                   A,
-                              float4*                   B,
-                              float4*                   dst,
-                              const uint                pitch_A,
-                              const uint                pitch_B,
-                              const uint                HB,
-                              const uint                __iter)
+void decx::gemm::GPUK::cu_GEMM_fp32_specWH_anyL(const float4* __restrict      A,
+                                                const float4* __restrict      B,
+                                                float4* __restrict            dst,
+                                                const uint32_t                pitch_A,
+                                                const uint32_t                pitch_B,
+                                                const uint32_t                HB,
+                                                const uint32_t                __iter)
 {
-    uint x_gloA, y_gloA, x_gloB, y_gloB;
-    uint x_loc, y_loc;
-    
+    uint32_t x_gloA, y_gloA, x_gloB, y_gloB;
+    uint32_t x_loc, y_loc;
+
     __shared__ float4 shmemA[32][128 / 8 + 1];
     __shared__ float4 shmemB[32][128 / 8 + 1];
-    
-    float4 sum[8][2];
-    Init_Sum
 
-    float4 tmp_A[2], tmp_B[2];
-    
+    float4 sum[8][2];
+    Init_Sum;
+
+        float4 tmp_A[2], tmp_B[2];
+
     x_gloA = (threadIdx.x / 16) * 8 + ((threadIdx.x / 4) % 4) + 128 * blockIdx.x;
     y_gloA = threadIdx.x % 4;
-    size_t glo_dex_A = x_gloA * pitch_A + y_gloA;
+    uint64_t glo_dex_A = x_gloA * pitch_A + y_gloA;
 
     x_gloB = threadIdx.x / 16;
     y_gloB = (threadIdx.x % 16) * 2 + blockIdx.y * 32;
-    size_t glo_dex_B = y_gloB + pitch_B * x_gloB;
-    
-    for (uint i = 0; i < __iter; ++i)
+    uint64_t glo_dex_B = y_gloB + pitch_B * x_gloB;
+
+    for (uint32_t i = 0; i < __iter; ++i)
     {
         tmp_A[0] = make_float4(0, 0, 0, 0);         tmp_A[1] = make_float4(0, 0, 0, 0);
         tmp_B[0] = make_float4(0, 0, 0, 0);         tmp_B[1] = make_float4(0, 0, 0, 0);
@@ -637,7 +637,7 @@ void decx::gemm::GPUK::cu_GEMM_fp32_specWH_anyL(float4*                   A,
             tmp_A[0] = A[glo_dex_A];
             tmp_A[1] = A[glo_dex_A + pitch_A * 4];
         }
-        
+
         x_loc = 4 * (threadIdx.x % 4);            y_loc = (threadIdx.x % 16) / 4;
 
         *((float*)&(shmemA[x_loc][threadIdx.x / 16]) + y_loc) = tmp_A[0].x;
@@ -659,16 +659,16 @@ void decx::gemm::GPUK::cu_GEMM_fp32_specWH_anyL(float4*                   A,
 
         shmemB[x_loc][y_loc] = tmp_B[0];            //load globalB to shmemB
         shmemB[x_loc + 16][y_loc] = tmp_B[1];
-        
+
         __syncthreads();
 
         glo_dex_A += 4;
         glo_dex_B += 16 * pitch_B;
         y_gloA += 4;
         x_gloB += 16;
-        
+
 #pragma unroll 16
-        for (uint __line = 0; __line < 16; ++__line)
+        for (uint32_t __line = 0; __line < 16; ++__line)
         {
             tmp_A[0] = shmemA[__line][x_loc];
             tmp_A[1] = shmemA[__line + 16][x_loc];
@@ -684,24 +684,24 @@ void decx::gemm::GPUK::cu_GEMM_fp32_specWH_anyL(float4*                   A,
     x_gloA = (threadIdx.x / 16 + blockIdx.x * 16) * 8;
     y_gloA = (threadIdx.x % 16 + blockIdx.y * 16);
     glo_dex_A = x_gloA * pitch_B + y_gloA * 2;
-    s_store(glo_dex_A)
+    s_store(glo_dex_A);
 }
 
 
 
 __global__
-void decx::gemm::GPUK::cu_GEMM_fp32_ABC_specWH_anyL(float4*                   A,
-                                  float4*                   B,
-                                  float4*                   C,
-                                  float4*                   dst,
-                                  const uint                pitch_A,
-                                  const uint                pitch_B,
-                                  const uint                HB,
-                                  const uint                __iter)
+void decx::gemm::GPUK::cu_GEMM_fp32_ABC_specWH_anyL(const float4* __restrict    A,
+                                                    const float4* __restrict    B,
+                                                    const float4* __restrict    C,
+                                                    float4* __restrict          dst,
+                                                    const uint32_t              pitch_A,
+                                                    const uint32_t              pitch_B,
+                                                    const uint32_t              HB,
+                                                    const uint32_t              __iter)
 {
-    uint x_gloA, y_gloA, x_gloB, y_gloB;
-    uint x_loc, y_loc;
-    size_t glo_dex_A, glo_dex_B;
+    uint32_t x_gloA, y_gloA, x_gloB, y_gloB;
+    uint32_t x_loc, y_loc;
+    uint64_t glo_dex_A, glo_dex_B;
     
     __shared__ float4 shmemA[32][128 / 8 + 1];
     __shared__ float4 shmemB[32][128 / 8 + 1];
@@ -723,7 +723,7 @@ void decx::gemm::GPUK::cu_GEMM_fp32_ABC_specWH_anyL(float4*                   A,
     y_gloB = (threadIdx.x % 16) * 2 + blockIdx.y * 32;
     glo_dex_B = y_gloB + pitch_B * x_gloB;
     
-    for (uint i = 0; i < __iter; ++i)
+    for (uint32_t i = 0; i < __iter; ++i)
     {
         tmp_A[0] = make_float4(0, 0, 0, 0);         tmp_A[1] = make_float4(0, 0, 0, 0);
         tmp_B[0] = make_float4(0, 0, 0, 0);         tmp_B[1] = make_float4(0, 0, 0, 0);
@@ -763,7 +763,7 @@ void decx::gemm::GPUK::cu_GEMM_fp32_ABC_specWH_anyL(float4*                   A,
         x_gloB += 16;
         
 #pragma unroll 16
-        for (uint __line = 0; __line < 16; ++__line)
+        for (uint32_t __line = 0; __line < 16; ++__line)
         {
             tmp_A[0] = shmemA[__line][x_loc];
             tmp_A[1] = shmemA[__line + 16][x_loc];
@@ -779,5 +779,5 @@ void decx::gemm::GPUK::cu_GEMM_fp32_ABC_specWH_anyL(float4*                   A,
     x_gloA = (threadIdx.x / 16 + blockIdx.x * 16) * 8;
     y_gloA = (threadIdx.x % 16 + blockIdx.y * 16);
     glo_dex_A = x_gloA * pitch_B + y_gloA * 2;
-    s_store(glo_dex_A)
+    s_store(glo_dex_A);
 }

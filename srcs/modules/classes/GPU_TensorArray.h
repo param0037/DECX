@@ -16,6 +16,7 @@
 #include "../core/allocators.h"
 #include "../classes/classes_util.h"
 #include "TensorArray.h"
+#include "GPU_Tensor.h"
 
 
 namespace de
@@ -45,6 +46,9 @@ namespace de
 
 
         virtual de::GPU_TensorArray& SoftCopy(const de::GPU_TensorArray& src) = 0;
+
+
+        virtual de::DH Extract_SoftCopy(const uint32_t index, de::GPU_Tensor& dst) const = 0;
 
 
         virtual void release() = 0;
@@ -160,6 +164,9 @@ namespace decx
 
 
         virtual de::GPU_TensorArray& SoftCopy(const de::GPU_TensorArray& src);
+
+
+        virtual de::DH Extract_SoftCopy(const uint32_t index, de::GPU_Tensor& dst) const;
 
 
         virtual void release();

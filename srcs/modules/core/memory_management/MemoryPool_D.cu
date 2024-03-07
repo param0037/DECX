@@ -79,7 +79,7 @@ void decx::MemPool_D::allocate(size_t req_size, decx::MemBlock** _ptr)
 
     if (!_found)        // physically allocate one
     {
-        size_t alloc_size = 1 << (begin_dex + dex_to_pow_bias);
+        uint64_t alloc_size = (uint64_t)1 << (begin_dex + dex_to_pow_bias);
         auto chunk_set = this->mem_chunk_set_list.begin() + begin_dex;
         chunk_set->mem_chunk_list.emplace_back(
             decx::MemChunk_D(alloc_size, req_size, begin_dex, chunk_set->list_length));

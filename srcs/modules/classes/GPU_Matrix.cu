@@ -21,7 +21,7 @@ void decx::_matrix_layout::_attribute_assign(const de::_DATA_TYPES_FLAGS_ type, 
     uint32_t _alignment = 1;
     if (type != de::_DATA_TYPES_FLAGS_::_VOID_)
     {
-        switch (this->_single_element_size)
+        /*switch (this->_single_element_size)
         {
         case 4:
             _alignment = _MATRIX_ALIGN_4B_;     break;
@@ -31,6 +31,20 @@ void decx::_matrix_layout::_attribute_assign(const de::_DATA_TYPES_FLAGS_ type, 
             _alignment = _MATRIX_ALIGN_2B_;     break;
         case 1:
             _alignment = _MATRIX_ALIGN_1B_;     break;
+        default:
+            break;
+        }*/
+
+        switch (this->_single_element_size)
+        {
+        case 4:
+            _alignment = 32;     break;
+        case 8:
+            _alignment = 16;     break;
+        case 2:
+            _alignment = 64;     break;
+        case 1:
+            _alignment = 128;     break;
         default:
             break;
         }
