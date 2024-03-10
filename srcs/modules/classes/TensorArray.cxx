@@ -16,7 +16,6 @@ void decx::_TensorArray::_attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, c
 {
     this->type = _type;
 
-    this->type = _type;
     this->tensor_num = _tensor_num;
     this->_init = (_type != de::_DATA_TYPES_FLAGS_::_VOID_);
 
@@ -252,6 +251,25 @@ de::_DATA_TYPES_FLAGS_ decx::_TensorArray::Type() const
 void decx::_TensorArray::Reinterpret(const de::_DATA_TYPES_FLAGS_ _new_type)
 {
     this->type = _new_type;
+}
+
+
+
+de::DH decx::_TensorArray::Extract_SoftCopy(const uint32_t index, de::Tensor& dst) const
+{
+    de::DH handle;
+    decx::_Tensor* _dst = dynamic_cast<decx::_Tensor*>(&dst);
+
+    if (index > this->TensorNum() - 1) {
+        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_DimsNotMatching,
+            "Overrange\n");
+        return handle;
+    }
+
+    _dst->_attribute_assign(this->type, this->Width(), this->Height(), this->Depth());
+    _dst->Tens.ptr = this->TensptrArr.ptr[index];
+
+    return handle;
 }
 
 

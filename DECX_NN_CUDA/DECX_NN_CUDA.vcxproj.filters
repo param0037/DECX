@@ -16,6 +16,9 @@
     <Filter Include="源文件\convolution">
       <UniqueIdentifier>{11fa6784-d91b-4f9b-bf40-541993ea42ba}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\convolution\utils">
+      <UniqueIdentifier>{e2a8c4cc-0aba-4bb3-beba-25d23435de88}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\DECX_core_CUDA\for_properties.cpp">
@@ -27,6 +30,12 @@
       <Filter>源文件\convolution</Filter>
     </CudaCompile>
     <CudaCompile Include="..\srcs\modules\NN\convolution\CUDA\fp32\Conv2D.cu">
+      <Filter>源文件\convolution</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\BLAS\basic_process\transpose\CUDA\transpose_kernels.cu">
+      <Filter>源文件\convolution\utils</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\NN\convolution\CUDA\fp32\im2col_GEMM_fp32.cu">
       <Filter>源文件\convolution</Filter>
     </CudaCompile>
   </ItemGroup>

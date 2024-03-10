@@ -13,146 +13,66 @@
 
 
 __global__ void 
-decx::nn::GPUK::cu_im2col_NB_fp32(const float4* __restrict  src, 
+decx::nn::GPUK::cu_im2col_D4_NB_fp32_divKH(const float4* __restrict  src, 
                                   float4* __restrict        dst, 
                                   const uint2               conv2D_area, 
                                   const uint2               kernel_dims,
-                                  const uint32_t            dpitch_src_v1, 
+                                  const uint32_t            wpitch_dst_v1, 
                                   const uint32_t            wpitch_src_v1, 
-                                  const uint64_t            dst_row_size)
+                                  const uint64_t            im2col_buf_pitch_v1)
 {
-    uint64_t dex_src = 0, dex_dst = 0;
+    uint64_t dex_src = 0;
 
-    const uint8_t _dp_v4_lane_size = dpitch_src_v1 / 4;
-    const uint8_t _dst_blockDimx = blockDim.x / _dp_v4_lane_size;
-    const uint8_t _lane_id = threadIdx.x / _dp_v4_lane_size;
-    const uint8_t _lane_loc_id = threadIdx.x % _dp_v4_lane_size;
+    const uint32_t dex_plane_src_x = threadIdx.x + blockIdx.x * blockDim.x;
+    const uint32_t dex_plane_src_y = threadIdx.y + blockIdx.y * blockDim.y;
 
-    const uint32_t dex_plane_x = _lane_id + blockIdx.x * _dst_blockDimx;
-    const uint32_t dex_plane_y = threadIdx.y + blockIdx.y * _IM2COL_FP32_BLOCK_Y_;
+    const uint8_t STG_threadIdx_x = (threadIdx.x + blockDim.x * threadIdx.y) % _CUDA_WARP_SIZE_;
+    //const uint8_t STG_threadIdx_y = ((threadIdx.x + blockDim.x * threadIdx.y) / _CUDA_WARP_SIZE_) % 4;
+    const uint8_t STG_threadIdx_y = threadIdx.x / _CUDA_WARP_SIZE_;
 
-    /*uint32_t dex_src_plane = _lane_loc_id + dex_plane_x * dpitch_src_v1;
-    uint32_t dex_src_y = dex_plane_y;*/
+    const uint32_t dex_plane_dst_x = STG_threadIdx_x + blockIdx.x * _CUDA_WARP_SIZE_;
+    const uint32_t dex_plane_dst_y = STG_threadIdx_y;
 
     decx::utils::_cuda_vec128 _reg;
-    _reg._vf = decx::utils::vec4_set1_fp32(0);
 
-    // 256 (default)
-    constexpr uint32_t block_size_1D = _IM2COL_FP32_BLOCK_X_ * _IM2COL_FP32_BLOCK_Y_;
-    // 128 (usually)
-    constexpr uint32_t warp_proc_v4_size = _WARP_SIZE_ * 4;
-    // 64 (usually)
-    constexpr uint32_t thread_per_row_shmem = _IM2COL_GET_THREAD_PER_ROW_(4);
-    // 4 (usually)
-    constexpr uint8_t STG_blockDim_y = _IM2COL_GET_STG_BLOCKDIM_Y_(thread_per_row_shmem);
+    const uint32_t STG_dex_x = dex_plane_dst_x + dex_plane_src_y * wpitch_dst_v1 / 4;
+    //const uint32_t STG_dex_x = dex_plane_dst_x * 4 + dex_plane_src_y * wpitch_dst_v1/* / 4*/;
+    uint32_t STG_dex_y = dex_plane_dst_y;
 
-    const uint8_t block_1D_loc_tid = threadIdx.x + blockDim.x * threadIdx.y;
+    __shared__ float _shmem[_IM2COL_D4_FP32_BLOCK_Y_ * 4][_IM2COL_D4_FP32_BLOCK_X_ + 4];
 
-    const uint32_t STG_dex_x = (block_1D_loc_tid % thread_per_row_shmem) + blockIdx.x * thread_per_row_shmem;
-    uint32_t STG_dex_y = (block_1D_loc_tid / thread_per_row_shmem)/* + blockIdx.y * STG_blockDim_y*/;
-
-    __shared__ float _shmem[4][block_size_1D + 4];
-
-    for (uint32_t i = 0; i < kernel_dims.x; ++i) 
+    for (uint32_t i = 0; i < kernel_dims.y; ++i) 
     {
-        dex_src = _lane_loc_id + dex_plane_x * dpitch_src_v1 / 4 + dex_plane_y * wpitch_src_v1 * dpitch_src_v1;
-        for (uint32_t j = 0; j < kernel_dims.y; ++j) 
+        dex_src = dex_plane_src_x + (blockIdx.z + dex_plane_src_y + i) * wpitch_src_v1;
+        for (uint32_t j = 0; j < kernel_dims.x; ++j) 
         {
-            if (dex_plane_x < conv2D_area.x && dex_plane_y < conv2D_area.y) {
+            _reg._vf = decx::utils::vec4_set1_fp32(0);
+
+            if (dex_plane_src_x < conv2D_area.x && dex_plane_src_y < conv2D_area.y) {
                 _reg._vf = src[dex_src];
             }
-            
-            _shmem[0][block_1D_loc_tid] = _reg._arrf[0];
-            _shmem[1][block_1D_loc_tid] = _reg._arrf[1];
-            _shmem[2][block_1D_loc_tid] = _reg._arrf[2];
-            _shmem[3][block_1D_loc_tid] = _reg._arrf[3];
+
+            _shmem[threadIdx.y * 4 + 0][threadIdx.x] = _reg._arrf[0];
+            _shmem[threadIdx.y * 4 + 1][threadIdx.x] = _reg._arrf[1];
+            _shmem[threadIdx.y * 4 + 2][threadIdx.x] = _reg._arrf[2];
+            _shmem[threadIdx.y * 4 + 3][threadIdx.x] = _reg._arrf[3];
 
             __syncthreads();
 
-            _reg._vf = ((float4*)_shmem[block_1D_loc_tid / thread_per_row_shmem])[(block_1D_loc_tid % thread_per_row_shmem)];
+            _reg._vf = ((float4*)_shmem[threadIdx.y * 4 + STG_threadIdx_y])[STG_threadIdx_x];
 
-            if (dex_plane_x < conv2D_area.x && dex_plane_y < conv2D_area.y) {
-                dst[STG_dex_x + STG_dex_y * dst_row_size / 4] = _reg._vf;
+            if (dex_plane_src_x < conv2D_area.x && dex_plane_src_y < conv2D_area.y) 
+            {
+                dst[STG_dex_x + (STG_dex_y + blockIdx.z * kernel_dims.x * 4) * im2col_buf_pitch_v1 / 4] = _reg._vf;
+                /*_dst[STG_dex_x + (STG_dex_y + blockIdx.z * kernel_dims.x * 4) * im2col_buf_pitch_v1] = _reg._vf.x;
+                _dst[STG_dex_x + (STG_dex_y + blockIdx.z * kernel_dims.x * 4) * im2col_buf_pitch_v1 + 1] = _reg._vf.y;
+                _dst[STG_dex_x + (STG_dex_y + blockIdx.z * kernel_dims.x * 4) * im2col_buf_pitch_v1 + 2] = _reg._vf.z;
+                _dst[STG_dex_x + (STG_dex_y + blockIdx.z * kernel_dims.x * 4) * im2col_buf_pitch_v1 + 3] = _reg._vf.w;*/
             }
-            STG_dex_y += STG_blockDim_y;
-            dex_src += dpitch_src_v1;
-        }
-        dex_src += wpitch_src_v1 * dpitch_src_v1;
-    }
-
-
-}
-
-
-
-
-__global__ void 
-decx::nn::GPUK::cu_im2col_NB_fp32_divKH(const float4* __restrict  src, 
-                                  float4* __restrict        dst, 
-                                  const uint2               conv2D_area, 
-                                  const uint2               kernel_dims,
-                                  const uint32_t            dpitch_src_v1, 
-                                  const uint32_t            wpitch_src_v1, 
-                                  const uint64_t            dst_row_size)
-{
-    uint64_t dex_src = 0, dex_dst = 0;
-
-    const uint8_t _dp_v4_lane_size = dpitch_src_v1 / 4;
-    const uint8_t _dst_blockDimx = blockDim.x / _dp_v4_lane_size;
-    const uint8_t _lane_id = threadIdx.x / _dp_v4_lane_size;
-    const uint8_t _lane_loc_id = threadIdx.x % _dp_v4_lane_size;
-
-    const uint32_t dex_plane_x = _lane_id + blockIdx.x * _dst_blockDimx;
-    const uint32_t dex_plane_y = blockIdx.z + threadIdx.y + blockIdx.y * _IM2COL_FP32_BLOCK_Y_;
-
-    /*uint32_t dex_src_plane = _lane_loc_id + dex_plane_x * dpitch_src_v1;
-    uint32_t dex_src_y = dex_plane_y;*/
-
-    decx::utils::_cuda_vec128 _reg;
-    _reg._vf = decx::utils::vec4_set1_fp32(0);
-
-    // 256 (default)
-    constexpr uint32_t block_size_1D = _IM2COL_FP32_BLOCK_X_ * _IM2COL_FP32_BLOCK_Y_;
-    // 128 (usually)
-    constexpr uint32_t warp_proc_v4_size = _WARP_SIZE_ * 4;
-    // 64 (usually)
-    constexpr uint32_t thread_per_row_shmem = _IM2COL_GET_THREAD_PER_ROW_(4);
-    // 4 (usually)
-    constexpr uint8_t STG_blockDim_y = _IM2COL_GET_STG_BLOCKDIM_Y_(thread_per_row_shmem);
-
-    const uint8_t block_1D_loc_tid = threadIdx.x + blockDim.x * threadIdx.y;
-
-    const uint32_t STG_dex_x = (block_1D_loc_tid % thread_per_row_shmem) + blockIdx.x * thread_per_row_shmem;
-    uint32_t STG_dex_y = (block_1D_loc_tid / thread_per_row_shmem)/* + blockIdx.y * STG_blockDim_y*/;
-
-    __shared__ float _shmem[4][block_size_1D + 4];
-
-    for (uint32_t i = 0; i < kernel_dims.x; ++i) 
-    {
-        dex_src = _lane_loc_id + dex_plane_x * dpitch_src_v1 / 4 + dex_plane_y * wpitch_src_v1 * dpitch_src_v1;
-        for (uint32_t j = 0; j < kernel_dims.y; ++j) 
-        {
-            if (dex_plane_x < conv2D_area.x && dex_plane_y < conv2D_area.y) {
-                _reg._vf = src[dex_src];
-            }
-            
-            _shmem[0][block_1D_loc_tid] = _reg._arrf[0];
-            _shmem[1][block_1D_loc_tid] = _reg._arrf[1];
-            _shmem[2][block_1D_loc_tid] = _reg._arrf[2];
-            _shmem[3][block_1D_loc_tid] = _reg._arrf[3];
+            STG_dex_y += 4;
+            dex_src += 1;
 
             __syncthreads();
-
-            _reg._vf = ((float4*)_shmem[block_1D_loc_tid / thread_per_row_shmem])[(block_1D_loc_tid % thread_per_row_shmem)];
-
-            if (dex_plane_x < conv2D_area.x && dex_plane_y < conv2D_area.y) {
-                dst[STG_dex_x + STG_dex_y * dst_row_size / 4] = _reg._vf;
-            }
-            STG_dex_y += STG_blockDim_y;
-            dex_src += dpitch_src_v1;
         }
-        dex_src += wpitch_src_v1 * dpitch_src_v1;
     }
-
-
 }

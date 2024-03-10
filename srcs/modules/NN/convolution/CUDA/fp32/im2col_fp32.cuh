@@ -17,11 +17,15 @@
 #include "../../../../core/cudaStream_management/cudaStream_queue.h"
 
 
-#define _IM2COL_FP32_BLOCK_X_ _CUDA_WARP_SIZE_
-#define _IM2COL_FP32_BLOCK_Y_ 8
+#define _IM2COL_D4_FP32_BLOCK_X_ _CUDA_WARP_SIZE_ * 4
+#define _IM2COL_D4_FP32_BLOCK_Y_ 2
 
-#define _IM2COL_GET_THREAD_PER_ROW_(_proc_vec) (_IM2COL_FP32_BLOCK_X_ * _IM2COL_FP32_BLOCK_Y_ / _proc_vec)
-#define _IM2COL_GET_STG_BLOCKDIM_Y_(_thread_per_row) (_IM2COL_FP32_BLOCK_X_ * _IM2COL_FP32_BLOCK_Y_ / _thread_per_row)
+#define _IM2COL_D8_FP32_BLOCK_X_ _CUDA_WARP_SIZE_ * 4
+#define _IM2COL_D8_FP32_BLOCK_Y_ 2
+
+#define _IM2COL_GET_STG_BLOCKDIM_X_(_block_dim_x, _dpitch_v1) ((_block_dim_x / _dpitch_v1) * 4)
+#define _IM2COL_GET_STG_BLOCKDIM_Y_(_block_dim_y) (_block_dim_y)
+
 
 #define _MAX_IM2COL_BUF_SIZE_ 1024 * 1024 * 4
 
@@ -38,8 +42,8 @@ namespace nn {
             const uint32_t dpitch_src, const uint32_t wpitch_src, const uint64_t dst_size);
 
 
-        __global__ void cu_im2col_NB_fp32_divKH(const float4* src, float4* dst, const uint2 dst_dims, const uint2 kernel_dims,
-            const uint32_t dpitch_src, const uint32_t wpitch_src, const uint64_t dst_size);
+        __global__ void cu_im2col_D4_NB_fp32_divKH(const float4* src, float4* dst, const uint2 dst_dims, const uint2 kernel_dims,
+            const uint32_t wpitch_dst, const uint32_t wpitch_src, const uint64_t im2col_buf_pitch_v1);
     }
 }
 }

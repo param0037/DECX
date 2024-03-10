@@ -244,7 +244,7 @@ de::DH decx::_GPU_TensorArray::Extract_SoftCopy(const uint32_t index, de::GPU_Te
         return handle;
     }
 
-    _dst->get_layout_modify() = this->_layout;
+    _dst->_attribute_assign(this->Type(), this->Width(), this->Height(), this->Depth());
     _dst->Tens.ptr = this->TensptrArr.ptr[index];
 
     return handle;

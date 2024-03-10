@@ -19,8 +19,8 @@
 #include "type_info.h"
 
 
-#define _TENSOR_ALIGN_DEPTH_4B_ 8
-#define _TENSOR_ALIGN_DEPTH_8B_ 4
+#define _TENSOR_ALIGN_DEPTH_4B_ 4
+#define _TENSOR_ALIGN_DEPTH_8B_ 2
 #define _TENSOR_ALIGN_DEPTH_2B_ 8
 #define _TENSOR_ALIGN_DEPTH_1B_ 16
 #define _TENSOR_ALIGN_DEPTH_16B_ 1
@@ -148,9 +148,6 @@ namespace decx
     class _DECX_API_ _Tensor : public de::Tensor
     {
     private:
-        void _attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, const uint _width, const uint _height, const uint _depth);
-
-
         void alloc_data_space();
 
 
@@ -170,6 +167,9 @@ namespace decx
 
 
         size_t _element_num;        // the total number of elements, including Non_active numbers
+
+
+        void _attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, const uint _width, const uint _height, const uint _depth);
 
 
         void construct(const de::_DATA_TYPES_FLAGS_ _type, const uint32_t _width, const uint32_t _height, const uint32_t _depth);
@@ -221,6 +221,9 @@ namespace decx
 
 
         uint64_t get_total_bytes() const;
+
+
+        decx::_tensor_layout& get_layout_modify();
     };
 }
 

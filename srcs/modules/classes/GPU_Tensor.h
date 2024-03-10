@@ -77,9 +77,7 @@ namespace decx
     class _DECX_API_ _GPU_Tensor : public de::GPU_Tensor
     {
     private:
-        void _attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, const uint _width, const uint _height, const uint _depth);
-
-
+        
         void alloc_data_space();
 
 
@@ -100,6 +98,9 @@ namespace decx
 
 
         size_t _element_num;        // the total number of elements, including Non_active numbers
+
+
+        void _attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, const uint _width, const uint _height, const uint _depth);
 
 
         void construct(const de::_DATA_TYPES_FLAGS_ _type, const uint _width, const uint _height, const uint _depth);
@@ -138,9 +139,6 @@ namespace decx
 
 
         const decx::_tensor_layout& get_layout() const;
-
-
-        decx::_tensor_layout& get_layout_modify();
 
 
         bool is_init() const;

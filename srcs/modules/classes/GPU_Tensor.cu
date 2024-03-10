@@ -22,8 +22,9 @@ void decx::_tensor_layout::_attribute_assign(const de::_DATA_TYPES_FLAGS_ _type,
     this->depth = _depth;
 
     uint32_t _alignment = 1;
+    uint32_t _alignment_W = 8;
 
-    switch (this->_single_element_size)
+    /*switch (this->_single_element_size)
     {
     case 4:
         _alignment = 32;     break;
@@ -37,9 +38,25 @@ void decx::_tensor_layout::_attribute_assign(const de::_DATA_TYPES_FLAGS_ _type,
         _alignment = 8;    break;
     default:
         break;
+    }*/
+
+    switch (this->_single_element_size)
+    {
+    case 4:
+        _alignment = 4;     break;
+    case 8:
+        _alignment = 2;     break;
+    case 2:
+        _alignment = 8;     break;
+    case 1:
+        _alignment = 16;     break;
+    case 16:
+        _alignment = 1;    break;
+    default:
+        break;
     }
 
-    this->wpitch = decx::utils::ceil<uint>(_width, _alignment) * _alignment;
+    this->wpitch = decx::utils::ceil<uint>(_width, _alignment_W) * _alignment_W;
     this->dpitch = decx::utils::ceil<uint>(_depth, _alignment) * _alignment;
 
     this->dp_x_wp = static_cast<uint64_t>(this->dpitch) * static_cast<uint64_t>(this->wpitch);
@@ -251,11 +268,6 @@ const decx::_tensor_layout& decx::_GPU_Tensor::get_layout() const
     return this->_layout;
 }
 
-
-decx::_tensor_layout& decx::_GPU_Tensor::get_layout_modify()
-{
-    return this->_layout;
-}
 
 
 bool decx::_GPU_Tensor::is_init() const
