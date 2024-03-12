@@ -58,6 +58,9 @@ namespace de
         virtual void Reinterpret(const de::_DATA_TYPES_FLAGS_ _new_type) = 0;
 
 
+        virtual de::_DATA_FORMATS_ Format() const = 0;
+
+
         ~Matrix() {}
     };
 
@@ -68,10 +71,12 @@ namespace de
     _DECX_API_ de::Matrix& CreateMatrixRef();
 
 
-    _DECX_API_ de::Matrix* CreateMatrixPtr(const de::_DATA_TYPES_FLAGS_ type, const uint _width, const uint _height);
+    _DECX_API_ de::Matrix* CreateMatrixPtr(const de::_DATA_TYPES_FLAGS_ type, const uint32_t _width, const uint32_t _height,
+        const de::_DATA_FORMATS_ format = de::_NA_);
 
 
-    _DECX_API_ de::Matrix& CreateMatrixRef(const de::_DATA_TYPES_FLAGS_ type, const uint _width, const uint _height);
+    _DECX_API_ de::Matrix& CreateMatrixRef(const de::_DATA_TYPES_FLAGS_ type, const uint32_t _width, const uint32_t _height,
+        const de::_DATA_FORMATS_ format = de::_NA_);
 }
 
 #endif

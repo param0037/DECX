@@ -161,6 +161,16 @@ namespace de
 }
 
 
+namespace de
+{
+	namespace nn {
+		namespace cuda
+		{
+			_DECX_API_ de::DH Conv2D(de::GPU_Tensor& src, de::GPU_TensorArray& kernel, de::GPU_Tensor& dst,
+				const de::Point2D strides = { 1, 1 });
+		}
+	}
+}
 
 
 #endif

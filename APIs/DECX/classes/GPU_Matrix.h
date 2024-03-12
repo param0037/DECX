@@ -40,6 +40,9 @@ namespace de
         virtual de::GPU_Matrix& SoftCopy(de::GPU_Matrix& src) = 0;
 
 
+        virtual de::_DATA_FORMATS_ Format() const = 0;
+
+
         ~GPU_Matrix() {}
     };
 
@@ -50,10 +53,13 @@ namespace de
 	_DECX_API_ de::GPU_Matrix* CreateGPUMatrixPtr();
 
 
-	_DECX_API_ de::GPU_Matrix& CreateGPUMatrixRef(const de::_DATA_TYPES_FLAGS_ _type, const uint width, const uint height);
+
+    _DECX_API_ de::GPU_Matrix* CreateGPUMatrixPtr(const de::_DATA_TYPES_FLAGS_ type, const uint32_t _width, const uint32_t _height,
+        const de::_DATA_FORMATS_ format = de::_NA_);
 
 
-    _DECX_API_ de::GPU_Matrix* CreateGPUMatrixPtr(const de::_DATA_TYPES_FLAGS_ _type, const uint width, const uint height);
+    _DECX_API_ de::GPU_Matrix& CreateGPUMatrixRef(const de::_DATA_TYPES_FLAGS_ type, const uint32_t _width, const uint32_t _height,
+        const de::_DATA_FORMATS_ format = de::_NA_);
 
 
 	namespace cuda

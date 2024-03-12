@@ -54,7 +54,7 @@ namespace de
     namespace cpu 
     {
         _DECX_API_ de::DH Extend(de::Matrix& src, de::Matrix& dst, const uint32_t left, const uint32_t right,
-            const uint32_t top, const uint32_t bottom, const int border_type, void* val);
+            const uint32_t top, const uint32_t bottom, const int border_type, void* val = NULL);
     }
 }
 
@@ -63,6 +63,9 @@ namespace de
 {
     namespace cuda {
         _DECX_API_ de::DH Transpose(de::GPU_Matrix& src, de::GPU_Matrix& dst);
+
+
+        _DECX_API_ de::DH Transpose(de::GPU_Vector& src, de::GPU_Vector& dst);
     }
 
     namespace cpu {

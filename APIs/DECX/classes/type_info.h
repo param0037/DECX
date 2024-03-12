@@ -18,18 +18,28 @@ namespace de
 {
     enum _DATA_TYPES_FLAGS_
     {
-        _VOID_ = 0,
-        _INT32_ = 1,
-        _FP32_ = 2,
-        _FP64_ = 3,
-        _FP16_ = 4,
-        _COMPLEX_F32_ = 5,
-        _UINT8_ = 6,
-        _UCHAR3_ = 7,
-        _UCHAR4_ = 8,
-        _VECTOR3F_ = 9,
-        _VECTOR4F_ = 10,
-        _UINT64_ = 11
+        _VOID_          = 0,
+        _INT32_         = 1,
+        _FP32_          = 2,
+        _FP64_          = 3,
+        _FP16_          = 4,
+        _COMPLEX_F32_   = 5,
+        _UINT8_         = 6,
+        _UCHAR3_        = 7,
+        _UCHAR4_        = 8,
+        _VECTOR3F_      = 9,
+        _VECTOR4F_      = 10,
+        _UINT64_        = 11
+    };
+
+    enum _DATA_FORMATS_
+    {
+        _NA_            = 0,
+        _RGB_           = 1,
+        _YUV444_        = 2,
+        _HSV_           = 3,
+        _CPLX_CARTESIAN_ = 4,
+        _CPLX_POLAR_    = 5
     };
 }
 

@@ -30,6 +30,23 @@
 #define _MAX_IM2COL_BUF_SIZE_ 1024 * 1024 * 4
 
 
+//float _reg1 = threadIdx.x, _reg2 = warpSize + threadIdx.x;
+//float tmp;
+//
+//for (int i = 0; i < 5; ++i) {
+//    tmp = __shfl_sync(0xffffffff, _reg2, i, 32);
+//    _reg1 = __shfl_down_sync(0xffffffff, _reg1, 1, 32);
+//    if (threadIdx.x == 31) {
+//        _reg1 = tmp;
+//    }
+//
+//    printf("%d, ", (int)_reg1);
+//    if (threadIdx.x == 31) {
+//        printf("\n");
+//    }
+//}
+
+
 namespace decx
 {
 namespace nn {
@@ -38,12 +55,12 @@ namespace nn {
         struct _cuda_im2col_params;
 
 
-        __global__ void cu_im2col_NB_fp32(const float4* src, float4* dst, const uint2 dst_dims, const uint2 kernel_dims,
-            const uint32_t dpitch_src, const uint32_t wpitch_src, const uint64_t dst_size);
+        __global__ void cu_im2col_DP4_NB_fp32(const float4* src, float4* dst, const uint2 dst_dims, const uint2 kernel_dims,
+            const uint2 strides, const uint32_t wpitch_dst, const uint32_t wpitch_src, const uint64_t im2col_buf_pitch_v1);
 
 
-        __global__ void cu_im2col_D4_NB_fp32_divKH(const float4* src, float4* dst, const uint2 dst_dims, const uint2 kernel_dims,
-            const uint32_t wpitch_dst, const uint32_t wpitch_src, const uint64_t im2col_buf_pitch_v1);
+        __global__ void cu_im2col_DP8_NB_fp32(const float4* src, float2* dst, const uint2 dst_dims, const uint2 kernel_dims,
+            const uint2 strides, const uint32_t wpitch_dst, const uint32_t wpitch_src, const uint64_t im2col_buf_pitch_v1);
     }
 }
 }

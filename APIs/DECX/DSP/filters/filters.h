@@ -20,7 +20,7 @@
 
 
 namespace de {
-	namespace signal {
+	namespace dsp {
 		namespace cuda {
 			_DECX_API_ de::DH LowPass1D_Ideal(de::GPU_Vector& src, de::GPU_Vector& dst, const size_t cutoff_frequency);
 

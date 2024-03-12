@@ -18,97 +18,77 @@
 #include "../../classes/class_utils.h"
 
 
-
 namespace de
 {
-	namespace signal
+namespace dsp
+{
+	namespace cpu
 	{
-		enum FFT_flags {
-			FFT_R2C = 0,
-			FFT_C2C = 1,
-			IFFT_C2C = 2,
-			IFFT_C2R = 3
-		};
-
-		namespace cuda {
-			_DECX_API_ de::DH FFT1D(de::Vector& src, de::Vector& dst, const int FFT_flag);
+		_DECX_API_ de::DH FFT(de::Vector& src, de::Vector& dst);
 
 
-			_DECX_API_ de::DH FFT1D(de::GPU_Vector& src, de::GPU_Vector& dst, const int FFT_flag);
+		_DECX_API_ de::DH FFT(de::Matrix& src, de::Matrix& dst);
 
 
-			_DECX_API_ de::DH IFFT1D(de::Vector& src, de::Vector& dst, const int FFT_flag);
+		_DECX_API_ de::DH FFT(de::Tensor& src, de::Tensor& dst);
 
 
-			_DECX_API_ de::DH IFFT1D(de::GPU_Vector& src, de::GPU_Vector& dst, const int FFT_flag);
-		}
-
-		namespace cpu
-		{
-			_DECX_API_ de::DH FFT1D(de::Vector& src, de::Vector& dst, const int FFT_flag);
+		_DECX_API_ de::DH IFFT(de::Tensor& src, de::Tensor& dst, const de::_DATA_TYPES_FLAGS_ _output_type);
 
 
-			_DECX_API_ de::DH IFFT1D(de::Vector& src, de::Vector& dst, const int FFT_flag);
-		}
+		_DECX_API_ de::DH IFFT(de::Vector& src, de::Vector& dst, const de::_DATA_TYPES_FLAGS_ _output_type);
+
+
+		_DECX_API_ de::DH IFFT(de::Matrix& src, de::Matrix& dst, const de::_DATA_TYPES_FLAGS_ _output_type);
 	}
+}
 }
 
 
 
 namespace de
 {
-	namespace dsp
-	{
-		namespace cpu
-		{
-			_DECX_API_ de::DH FFT(de::Vector& src, de::Vector& dst);
+namespace dsp {
+	namespace cpu {
+		_DECX_API_ de::DH Module(de::Matrix& src, de::Matrix& dst);
 
 
-			_DECX_API_ de::DH IFFT(de::Vector& src, de::Vector& dst);
-		}
+		_DECX_API_ de::DH Angle(de::Matrix& src, de::Matrix& dst);
 	}
 }
-
-
-
-namespace de
-{
-	namespace signal {
-		namespace cpu {
-			_DECX_API_ de::DH Module(de::Matrix& src, de::Matrix& dst);
-
-
-			_DECX_API_ de::DH Angle(de::Matrix& src, de::Matrix& dst);
-		}
-	}
 }
 
 
 namespace de
 {
-	namespace signal
+namespace dsp
+{
+	namespace cuda
 	{
-		namespace cuda {
-			_DECX_API_ de::DH FFT2D(de::Matrix& src, de::Matrix& dst, const int FFT_flag);
+		_DECX_API_ de::DH FFT(de::Vector& src, de::Vector& dst);
 
 
-			_DECX_API_ de::DH FFT2D(de::GPU_Matrix& src, de::GPU_Matrix& dst, const int FFT_flag);
+		_DECX_API_ de::DH FFT(de::GPU_Vector& src, de::GPU_Vector& dst);
 
 
-			_DECX_API_ de::DH IFFT2D(de::Matrix& src, de::Matrix& dst, const int FFT_flag);
+		_DECX_API_ de::DH IFFT(de::Vector& src, de::Vector& dst, const de::_DATA_TYPES_FLAGS_ _type_out);
 
 
-			_DECX_API_ de::DH IFFT2D(de::GPU_Matrix& src, de::GPU_Matrix& dst, const int FFT_flag);
-		}
+		_DECX_API_ de::DH IFFT(de::GPU_Vector& src, de::GPU_Vector& dst, const de::_DATA_TYPES_FLAGS_ _type_out);
 
 
-		namespace cpu {
-			_DECX_API_ de::DH FFT2D(de::Matrix& src, de::Matrix& dst, const int FFT_flag);
+		_DECX_API_ de::DH FFT(de::GPU_Matrix& src, de::GPU_Matrix& dst);
 
 
-			_DECX_API_ de::DH IFFT2D(de::Matrix& src, de::Matrix& dst, const int FFT_flag);
-		}
+		_DECX_API_ de::DH IFFT(de::GPU_Matrix& src, de::GPU_Matrix& dst, const de::_DATA_TYPES_FLAGS_ type_out);
+
+
+		_DECX_API_ de::DH FFT(de::GPU_Tensor& src, de::GPU_Tensor& dst);
+
+
+		_DECX_API_ de::DH IFFT(de::GPU_Tensor& src, de::GPU_Tensor& dst, const de::_DATA_TYPES_FLAGS_ type_out);
 	}
+}
 }
 
 

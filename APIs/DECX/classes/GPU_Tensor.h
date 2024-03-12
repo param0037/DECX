@@ -41,6 +41,9 @@ namespace de
 
 
         virtual void Reinterpret(const de::_DATA_TYPES_FLAGS_ _new_type) = 0;
+
+
+        virtual de::DH Extract_SoftCopy(const uint32_t index, de::GPU_Tensor& dst) const = 0;
     };
 
 

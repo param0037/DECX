@@ -25,21 +25,24 @@ namespace de
         virtual size_t Len() const = 0;
 
 
-        virtual float* ptr_fp32(size_t index) = 0;
-        virtual int* ptr_int32(size_t index) = 0;
-        virtual uint64_t* ptr_uint64(size_t index) = 0;
-        virtual double* ptr_fp64(size_t index) = 0;
-        virtual de::Half* ptr_fp16(size_t index) = 0;
-        virtual de::CPf* ptr_cpl32(size_t index) = 0;
-        virtual uint8_t* ptr_uint8(size_t index) = 0;
-        virtual de::Vector4f* ptr_vec4f(size_t index) = 0;
+        virtual float*              ptr_fp32(size_t index)  = 0;
+        virtual int*                ptr_int32(size_t index) = 0;
+        virtual uint64_t*           ptr_uint64(size_t index) = 0;
+        virtual double*             ptr_fp64(size_t index)  = 0;
+        virtual de::Half*           ptr_fp16(size_t index)  = 0;
+        virtual de::CPf*            ptr_cpl32(size_t index) = 0;
+        virtual uint8_t*            ptr_uint8(size_t index) = 0;
+        virtual de::Vector4f*       ptr_vec4f(size_t index) = 0;
 
         virtual void release() = 0;
 
 
         virtual de::Vector& SoftCopy(de::Vector& src) = 0;
 
-        virtual int Type() const = 0;
+        virtual de::_DATA_TYPES_FLAGS_ Type() const = 0;
+
+
+        virtual void Reinterpret(const de::_DATA_TYPES_FLAGS_ _new_type) = 0;
 
 
         ~Vector() {}

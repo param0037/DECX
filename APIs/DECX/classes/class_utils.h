@@ -36,16 +36,24 @@ namespace de
 
 	__align__(8) struct Point2D
 	{
-		int x, y;
-		Point2D(const int _x, const int _y) { x = _x; y = _y; }
+		int32_t x, y;
+
+		Point2D(const int32_t _x, const int32_t _y) { x = _x; y = _y; }
+
+		Point2D(const uint32_t _x, const uint32_t _y) { x = (int32_t)_x; y = (int32_t)_y; }
+
 		Point2D() {}
 	};
 
 
 	__align__(16) struct Point3D
 	{
-		int x, y, z;
-		Point3D(const int _x, const int _y, const int _z) { x = _x; y = _y; z = _z; }
+		int32_t x, y, z;
+
+		Point3D(const int32_t _x, const int32_t _y, const int32_t _z) { x = _x; y = _y; z = _z; }
+
+		Point3D(const uint32_t _x, const uint32_t _y, const uint32_t _z) { x = (int32_t)_x; y = (int32_t)_y; z = (int32_t)_z; }
+
 		Point3D() {}
 	};
 

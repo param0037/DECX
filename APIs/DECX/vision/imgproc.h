@@ -21,14 +21,16 @@ namespace de
 {
     namespace vis
     {
-        enum ImgChannelMergeType
-        {
-            BGR_to_Gray = 0,
+        enum color_transform_types {
+            RGB_to_Gray = 0,
             Preserve_B = 1,
             Preserve_G = 2,
             Preserve_R = 3,
             Preserve_Alpha = 4,
             RGB_mean = 5,
+            RGB_to_YUV = 6,
+            YUV_to_RGB = 7,
+            RGB_to_BGR = 8
         };
     }
 }
@@ -38,7 +40,7 @@ namespace de
 {
     namespace vis 
     {
-        _DECX_API_ de::DH merge_channel(de::Matrix& src, de::Matrix& dst, const int flag);
+        _DECX_API_ de::DH ColorTransform(de::Matrix& src, de::Matrix& dst, const de::vis::color_transform_types flag);
 
 
         namespace cpu 
@@ -65,7 +67,6 @@ namespace de
         }
     }
 }
-
 
 
 

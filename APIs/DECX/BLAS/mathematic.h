@@ -186,6 +186,9 @@ namespace de
     namespace cuda
     {
         _DECX_API_ de::DH Dot_product(de::Matrix& A, de::Matrix& B, de::Vector& dst, const de::REDUCE_METHOD _rd_method, const uint32_t _fp16_accu);
+
+        _DECX_API_ de::DH GEMM(de::Vector& A, de::Matrix& B, de::Vector& dst, const uint32_t _fp16_accu = 0);
+        _DECX_API_ de::DH GEMM(de::Matrix& A, de::Vector& B, de::Vector& dst, const uint32_t _fp16_accu = 0);
     }
 }
 

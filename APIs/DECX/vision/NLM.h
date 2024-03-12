@@ -30,13 +30,13 @@ namespace de
             * @param search_window_size : radius
             * @param template_window_size : radius
             */
-            _DECX_API_ de::DH NLM_RGB_keep_alpha(de::Matrix& src, de::Matrix& dst, uint search_window_size, uint template_window_size, float h);
+            _DECX_API_ de::DH NLM_RGB_keep_alpha(de::Matrix& src, de::Matrix& dst, uint search_window_radius, uint template_window_radius, float h);
 
 
             _DECX_API_ de::DH NLM_RGB_keep_alpha(de::Matrix& src, de::Matrix& dst, uint search_window_radius, uint template_window_radius, float h);
 
 
-            _DECX_API_ de::DH NLM_Gray(de::Matrix& src, de::Matrix& dst, uint search_window_size, uint template_window_size, float h);
+            _DECX_API_ de::DH NLM_Gray(de::Matrix& src, de::Matrix& dst, uint search_window_radius, uint template_window_radius, float h);
         }
     }
 }
@@ -63,6 +63,10 @@ namespace de
     namespace vis {
         namespace cpu {
             _DECX_API_ de::DH Enhance_Retinex(de::Matrix& src, de::Matrix& dst);
+
+
+            _DECX_API_ de::DH VEVID_gray(de::Matrix& src, de::Matrix& dst, const float _phase_gain,
+                const float _original_gain);
         }
     }
 }

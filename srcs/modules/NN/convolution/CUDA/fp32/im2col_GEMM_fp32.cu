@@ -17,14 +17,14 @@
 // load_kernel[1, 4]
 // store_dst[4, 128]
 __global__
-void decx::nn::GPUK::cu_im2col_GEMM_DP4_fp32(const float4* __restrict im2col_buf, 
-                                             const float4* __restrict kernel,
-                                             float4* __restrict dst, 
-                                             const uint32_t dpitch_dst_v1, 
-                                             const uint32_t wpitch_i2c_v1, 
-                                             const uint32_t wpitch_dst_v1, 
-                                             const uint32_t _L_proc_v1, 
-                                             const uint2 conv2D_area)
+void decx::nn::GPUK::cu_im2col_GEMM_fp32(const float4* __restrict   im2col_buf, 
+                                         const float4* __restrict   kernel,
+                                         float4* __restrict         dst, 
+                                         const uint32_t             dpitch_dst_v1, 
+                                         const uint32_t             wpitch_i2c_v1, 
+                                         const uint32_t             wpitch_dst_v1, 
+                                         const uint32_t             _L_proc_v1, 
+                                         const uint2                conv2D_area)
 {
     const int32_t tidx_dist = threadIdx.x + blockIdx.x * blockDim.x;
     const int32_t tidy_dist = threadIdx.y + blockIdx.y * blockDim.y;
@@ -73,9 +73,11 @@ void decx::nn::GPUK::cu_im2col_GEMM_DP4_fp32(const float4* __restrict im2col_buf
     for (int32_t j = 0; j < 4; ++j) 
     {
         _res[j]._vf = _shmem[threadIdx.y][threadIdx.x + j * 32];
+        
         if (tidx_dist + _CUDA_WARP_SIZE_ * j < conv2D_area.x && tidy_dist < conv2D_area.y) {
             dst[_STG_dst_X] = _res[j]._vf;
             _STG_dst_X += _CUDA_WARP_SIZE_;
         }
     }
 }
+
