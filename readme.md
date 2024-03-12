@@ -9,18 +9,18 @@ A fast linear algebra, computer vision, and mathematic library, based on CUDA an
 
 # Warning
 ## The project is recommended to be compiled using C++ 17 standard or above.
+## The samples are out-of-dated, please ignore them. The latest version is coming.
 
 # Changelog
 ## Update 29/02/2024
-1. Added 3D FFT on both CPU and CUDA.
-2. The convolution on DECX_NN_CPU and DECX_NN_CUDA are temporarily unavailable.
+1. Added dpitch=4 and 8 case for conv2D im2col. More depths will be adjusted later.
+2. Added strides parameter for conv2D im2col.
+3. The memcpy series functions are changed, de::MemcpyLinear is cancelled due to the data structure alignment changes.
 
 # Upcoming optimizations
-1. Full reduction mode of comparisons on vector and matrix.
-2. Adapt titling technique to make maximum utilization of L1 and L2 cache, to speed up memory access in CPU-based FFT.
-3. Add warp-level primitives to CUDA-based FFT kernels to speed up short-length FFT transforms.
-4. More asynchronous APIs are under development.
-5. CmakeLists for building on Linux.
+1. Adjust the pitch of CUDA FFTs kernels (1D, 2D and 3D) to be aligned to 128 bytes for coalesced memory access.
+2. Linear algebra mathematical functions, especially iterations (Jacob and GS method) for solving linear equations.
+
 
 # How to build
 ## 1. Windows
