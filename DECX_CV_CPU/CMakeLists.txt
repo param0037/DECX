@@ -9,6 +9,9 @@ string(REGEX REPLACE "/$" "" CURRENT_FOLDER_ABSOLUTE ${CMAKE_CURRENT_SOURCE_DIR}
 get_filename_component(DECX_WORLD_ABS_DIR ${CURRENT_FOLDER_ABSOLUTE} DIRECTORY)
 
 file(GLOB_RECURSE CV_CORE "${DECX_WORLD_ABS_DIR}/srcs/modules/CV/*.cxx")
+file(GLOB_RECURSE UTILS "${DECX_WORLD_ABS_DIR}/srcs/modules/BLAS/basic_process/type_statistics/CPU/cmp_max_exec.cxx"
+                        "${DECX_WORLD_ABS_DIR}/srcs/modules/BLAS/basic_process/type_statistics/CPU/cmp_min_exec.cxx"
+                        "${DECX_WORLD_ABS_DIR}/srcs/modules/basic_calculations/operators/Maprange_exec.cxx")
 
 set(CXX_FLAGS -mFMA -mAVX2 -mAVX)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native")
@@ -49,7 +52,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
                     ${DECX_WORLD_ABS_DIR}/bin/x64/Release
                     ${DECX_WORLD_ABS_DIR}/bin/x64)
 
-    add_library(DECX_CV_CPU SHARED ${CV_CORE})
+    add_library(DECX_CV_CPU SHARED ${CV_CORE} ${UTILS})
     target_link_libraries(DECX_CV_CPU SDL2.lib SDL2main.lib SDL2test.lib SDL2_image.lib DECX_core_CPU.lib DECX_BLAS_CPU.lib)
     
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")

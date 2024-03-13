@@ -1,729 +1,287 @@
-The system is: Linux - 5.15.0-91-generic - x86_64
+The system is: Windows - 10.0.19042 - AMD64
 Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
-Compiler: /usr/bin/c++ 
+Compiler:  
 Build flags: 
 Id flags:  
 
 The output was:
 0
+用于 .NET Framework 的 Microsoft (R) 生成引擎版本 16.11.2+f32259642
+版权所有(C) Microsoft Corporation。保留所有权利。
+
+生成启动时间为 2024/3/13 12:50:59。
+节点 1 上的项目“E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\3.24.0\CompilerIdCXX\CompilerIdCXX.vcxproj”(默认目标)。
+PrepareForBuild:
+  正在创建目录“Debug\”。
+  正在创建目录“Debug\CompilerIdCXX.tlog\”。
+InitializeBuildStatus:
+  正在创建“Debug\CompilerIdCXX.tlog\unsuccessfulbuild”，因为已指定“AlwaysCreate”。
+ClCompile:
+  D:\Microsoft Visual Studio\Visual Studio\VC\Tools\MSVC\14.29.30133\bin\HostX64\x64\CL.exe /c /nologo /W0 /WX- /diagnostics:column /Od /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\" /Fd"Debug\vc142.pdb" /external:W0 /Gd /TP /FC /errorReport:queue CMakeCXXCompilerId.cpp
+  CMakeCXXCompilerId.cpp
+Link:
+  D:\Microsoft Visual Studio\Visual Studio\VC\Tools\MSVC\14.29.30133\bin\HostX64\x64\link.exe /ERRORREPORT:QUEUE /OUT:".\CompilerIdCXX.exe" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:".\CompilerIdCXX.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:".\CompilerIdCXX.lib" /MACHINE:X64 Debug\CMakeCXXCompilerId.obj
+  CompilerIdCXX.vcxproj -> E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\3.24.0\CompilerIdCXX\CompilerIdCXX.exe
+PostBuildEvent:
+  for %%i in (cl.exe) do @echo CMAKE_CXX_COMPILER=%%~$PATH:i
+  :VCEnd
+  CMAKE_CXX_COMPILER=D:\Microsoft Visual Studio\Visual Studio\VC\Tools\MSVC\14.29.30133\bin\Hostx64\x64\cl.exe
+FinalizeBuildStatus:
+  正在删除文件“Debug\CompilerIdCXX.tlog\unsuccessfulbuild”。
+  正在对“Debug\CompilerIdCXX.tlog\CompilerIdCXX.lastbuildstate”执行 Touch 任务。
+已完成生成项目“E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\3.24.0\CompilerIdCXX\CompilerIdCXX.vcxproj”(默认目标)的操作。
+
+已成功生成。
+    0 个警告
+    0 个错误
+
+已用时间 00:00:01.10
 
 
-Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "a.out"
+Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CompilerIdCXX.exe"
 
-The CXX compiler identification is GNU, found in "/media/wayne/Disk/DECX_world/DECX_CV_CUDA/build/CMakeFiles/3.25.0/CompilerIdCXX/a.out"
+Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CompilerIdCXX.vcxproj"
 
-Checking whether the CUDA compiler is NVIDIA using "" matched "nvcc: NVIDIA \(R\) Cuda compiler driver":
-nvcc: NVIDIA (R) Cuda compiler driver
-Copyright (c) 2005-2019 NVIDIA Corporation
-Built on Wed_Oct_23_19:24:38_PDT_2019
-Cuda compilation tools, release 10.2, V10.2.89
+The CXX compiler identification is MSVC, found in "E:/DECX_world/DECX_CV_CUDA/build/CMakeFiles/3.24.0/CompilerIdCXX/CompilerIdCXX.exe"
+
 Compiling the CUDA compiler identification source file "CMakeCUDACompilerId.cu" succeeded.
-Compiler: /usr/local/cuda/bin/nvcc 
+Compiler:  
 Build flags: 
 Id flags: --keep;--keep-dir;tmp -v
 
 The output was:
 0
-#$ _NVVM_BRANCH_=nvvm
-#$ _SPACE_= 
-#$ _CUDART_=cudart
-#$ _HERE_=/usr/local/cuda/bin
-#$ _THERE_=/usr/local/cuda/bin
-#$ _TARGET_SIZE_=
-#$ _TARGET_DIR_=
-#$ _TARGET_DIR_=targets/x86_64-linux
-#$ TOP=/usr/local/cuda/bin/..
-#$ NVVMIR_LIBRARY_DIR=/usr/local/cuda/bin/../nvvm/libdevice
-#$ LD_LIBRARY_PATH=/usr/local/cuda/bin/../lib:
-#$ PATH=/usr/local/cuda/bin/../nvvm/bin:/usr/local/cuda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin:/usr/local/cuda/bin
-#$ INCLUDES="-I/usr/local/cuda/bin/../targets/x86_64-linux/include"  
-#$ LIBRARIES=  "-L/usr/local/cuda/bin/../targets/x86_64-linux/lib/stubs" "-L/usr/local/cuda/bin/../targets/x86_64-linux/lib"
-#$ CUDAFE_FLAGS=
-#$ PTXAS_FLAGS=
-#$ rm tmp/a_dlink.reg.c
-#$ gcc -D__CUDA_ARCH__=300 -E -x c++  -DCUDA_DOUBLE_MATH_FUNCTIONS -D__CUDACC__ -D__NVCC__  "-I/usr/local/cuda/bin/../targets/x86_64-linux/include"    -D__CUDACC_VER_MAJOR__=10 -D__CUDACC_VER_MINOR__=2 -D__CUDACC_VER_BUILD__=89 -include "cuda_runtime.h" -m64 "CMakeCUDACompilerId.cu" -o "tmp/CMakeCUDACompilerId.cpp1.ii" 
-#$ cicc --c++14 --gnu_version=80400 --allow_managed   -arch compute_30 -m64 -ftz=0 -prec_div=1 -prec_sqrt=1 -fmad=1 --include_file_name "CMakeCUDACompilerId.fatbin.c" -tused -nvvmir-library "/usr/local/cuda/bin/../nvvm/libdevice/libdevice.10.bc" --gen_module_id_file --module_id_file_name "tmp/CMakeCUDACompilerId.module_id" --orig_src_file_name "CMakeCUDACompilerId.cu" --gen_c_file_name "tmp/CMakeCUDACompilerId.cudafe1.c" --stub_file_name "tmp/CMakeCUDACompilerId.cudafe1.stub.c" --gen_device_file_name "tmp/CMakeCUDACompilerId.cudafe1.gpu"  "tmp/CMakeCUDACompilerId.cpp1.ii" -o "tmp/CMakeCUDACompilerId.ptx"
-#$ ptxas -arch=sm_30 -m64  "tmp/CMakeCUDACompilerId.ptx"  -o "tmp/CMakeCUDACompilerId.sm_30.cubin" 
-#$ fatbinary --create="tmp/CMakeCUDACompilerId.fatbin" -64 --cicc-cmdline="-ftz=0 -prec_div=1 -prec_sqrt=1 -fmad=1 " "--image3=kind=elf,sm=30,file=tmp/CMakeCUDACompilerId.sm_30.cubin" "--image3=kind=ptx,sm=30,file=tmp/CMakeCUDACompilerId.ptx" --embedded-fatbin="tmp/CMakeCUDACompilerId.fatbin.c" 
-#$ gcc -E -x c++ -D__CUDACC__ -D__NVCC__  "-I/usr/local/cuda/bin/../targets/x86_64-linux/include"    -D__CUDACC_VER_MAJOR__=10 -D__CUDACC_VER_MINOR__=2 -D__CUDACC_VER_BUILD__=89 -include "cuda_runtime.h" -m64 "CMakeCUDACompilerId.cu" -o "tmp/CMakeCUDACompilerId.cpp4.ii" 
-#$ cudafe++ --c++14 --gnu_version=80400 --allow_managed  --m64 --parse_templates --gen_c_file_name "tmp/CMakeCUDACompilerId.cudafe1.cpp" --stub_file_name "CMakeCUDACompilerId.cudafe1.stub.c" --module_id_file_name "tmp/CMakeCUDACompilerId.module_id" "tmp/CMakeCUDACompilerId.cpp4.ii" 
-#$ gcc -D__CUDA_ARCH__=300 -c -x c++  -DCUDA_DOUBLE_MATH_FUNCTIONS "-I/usr/local/cuda/bin/../targets/x86_64-linux/include"   -m64 "tmp/CMakeCUDACompilerId.cudafe1.cpp" -o "tmp/CMakeCUDACompilerId.o" 
-#$ nvlink --arch=sm_30 --register-link-binaries="tmp/a_dlink.reg.c"  -m64   "-L/usr/local/cuda/bin/../targets/x86_64-linux/lib/stubs" "-L/usr/local/cuda/bin/../targets/x86_64-linux/lib" -cpu-arch=X86_64 "tmp/CMakeCUDACompilerId.o"  -o "tmp/a_dlink.sm_30.cubin"
-#$ fatbinary --create="tmp/a_dlink.fatbin" -64 --cicc-cmdline="-ftz=0 -prec_div=1 -prec_sqrt=1 -fmad=1 " -link "--image3=kind=elf,sm=30,file=tmp/a_dlink.sm_30.cubin" --embedded-fatbin="tmp/a_dlink.fatbin.c" 
-#$ gcc -c -x c++ -DFATBINFILE="\"tmp/a_dlink.fatbin.c\"" -DREGISTERLINKBINARYFILE="\"tmp/a_dlink.reg.c\"" -I. -D__NV_EXTRA_INITIALIZATION= -D__NV_EXTRA_FINALIZATION= -D__CUDA_INCLUDE_COMPILER_INTERNAL_HEADERS__  "-I/usr/local/cuda/bin/../targets/x86_64-linux/include"    -D__CUDACC_VER_MAJOR__=10 -D__CUDACC_VER_MINOR__=2 -D__CUDACC_VER_BUILD__=89 -m64 "/usr/local/cuda/bin/crt/link.stub" -o "tmp/a_dlink.o" 
-#$ g++ -m64 -Wl,--start-group "tmp/a_dlink.o" "tmp/CMakeCUDACompilerId.o"   "-L/usr/local/cuda/bin/../targets/x86_64-linux/lib/stubs" "-L/usr/local/cuda/bin/../targets/x86_64-linux/lib"  -lcudadevrt  -lcudart_static  -lrt -lpthread  -ldl  -Wl,--end-group -o "a.out" 
+用于 .NET Framework 的 Microsoft (R) 生成引擎版本 16.11.2+f32259642
+版权所有(C) Microsoft Corporation。保留所有权利。
+
+生成启动时间为 2024/3/13 12:51:01。
+节点 1 上的项目“E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\3.24.0\CompilerIdCUDA\CompilerIdCUDA.vcxproj”(默认目标)。
+PrepareForBuild:
+  正在创建目录“Debug\”。
+  正在创建目录“Debug\CompilerIdCUDA.tlog\”。
+InitializeBuildStatus:
+  正在创建“Debug\CompilerIdCUDA.tlog\unsuccessfulbuild”，因为已指定“AlwaysCreate”。
+AddCudaCompileDeps:
+  D:\Microsoft Visual Studio\Visual Studio\VC\Tools\MSVC\14.29.30133\bin\HostX64\x64\cl.exe /E /nologo /showIncludes /TP /D__CUDACC__ /D_MBCS /ID:\CUDA\Development\include /ID:\CUDA\Development\bin /ID:\CUDA\Development\include /I. /FIcuda_runtime.h /c E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\3.24.0\CompilerIdCUDA\CMakeCUDACompilerId.cu 
+项目“E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\3.24.0\CompilerIdCUDA\CompilerIdCUDA.vcxproj”(1)正在节点 1 上生成“E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\3.24.0\CompilerIdCUDA\CompilerIdCUDA.vcxproj”(1:2) (CudaBuildCore 个目标)。
+CudaBuildCore:
+  Compiling CUDA source file CMakeCUDACompilerId.cu...
+  cmd.exe /C "C:\Users\Wayne\AppData\Local\Temp\tmp1301324e83fb41e89ddbf58990b019ba.cmd"
+  "D:\CUDA\Development\bin\nvcc.exe" -gencode=arch=compute_30,code=\"sm_30,compute_30\" --use-local-env -ccbin "D:\Microsoft Visual Studio\Visual Studio\VC\Tools\MSVC\14.29.30133\bin\HostX64\x64" -x cu  -ID:\CUDA\Development\include -ID:\CUDA\Development\include  -G   --keep-dir x64\Debug -maxrregcount=0  --machine 64 --compile -cudart static -v -g   -D_MBCS -Xcompiler "/EHsc /W0 /nologo /Od /FdDebug\vc142.pdb /FS /Zi /RTC1 /MDd " -o Debug\CMakeCUDACompilerId.cu.obj "E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\3.24.0\CompilerIdCUDA\CMakeCUDACompilerId.cu"
+  
+  E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\3.24.0\CompilerIdCUDA>"D:\CUDA\Development\bin\nvcc.exe" -gencode=arch=compute_30,code=\"sm_30,compute_30\" --use-local-env -ccbin "D:\Microsoft Visual Studio\Visual Studio\VC\Tools\MSVC\14.29.30133\bin\HostX64\x64" -x cu  -ID:\CUDA\Development\include -ID:\CUDA\Development\include  -G   --keep-dir x64\Debug -maxrregcount=0  --machine 64 --compile -cudart static -v -g   -D_MBCS -Xcompiler "/EHsc /W0 /nologo /Od /FdDebug\vc142.pdb /FS /Zi /RTC1 /MDd " -o Debug\CMakeCUDACompilerId.cu.obj "E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\3.24.0\CompilerIdCUDA\CMakeCUDACompilerId.cu" 
+  #$ _NVVM_BRANCH_=nvvm
+  #$ _SPACE_= 
+  #$ _CUDART_=cudart
+  #$ _HERE_=D:\CUDA\Development\bin
+  #$ _THERE_=D:\CUDA\Development\bin
+  #$ _TARGET_SIZE_=
+  #$ _TARGET_DIR_=
+  #$ _TARGET_SIZE_=64
+  #$ _WIN_PLATFORM_=x64
+  #$ TOP=D:\CUDA\Development\bin/..
+  #$ NVVMIR_LIBRARY_DIR=D:\CUDA\Development\bin/../nvvm/libdevice
+  #$ PATH=D:\CUDA\Development\bin/../nvvm/bin;D:\CUDA\Development\bin;D:\CUDA\Development\bin/../lib;D:\Microsoft Visual Studio\Visual Studio\VC\Tools\MSVC\14.29.30133\bin\HostX64\x64;D:\Windows Kits\10\bin\10.0.18362.0\x64;;D:\Windows Kits\10\bin\10.0.18362.0\x86;;D:\Microsoft Visual Studio\Visual Studio\Common7\tools;D:\Microsoft Visual Studio\Visual Studio\Common7\ide;C:\Program Files (x86)\HTML Help Workshop;;D:\Microsoft Visual Studio\Visual Studio\MSBuild\Current\Bin;C:\Windows\Microsoft.NET\Framework64\v4.0.30319\;C:\Windows\Microsoft.NET\Framework\v4.0.30319\;D:\Microsoft Visual Studio\Visual Studio\MSBuild\Current\Bin;C:\Windows\Microsoft.NET\Framework\v4.0.30319\;;C:\Program Files (x86)\Common Files\Intel\Shared Libraries\redist\ia32_win\compiler;C:\Program Files (x86)\Common Files\Intel\Shared Libraries\redist\intel64_win\compiler;D:\C libraries\opencv_msvc\install\x64\vc16\bin;D:\Vulkan\Bin;D:\;D:\CUDA\Development\bin;D:\Python3.7.4\Scripts;D:\Python3.7.4;E:\DECX_world\bin\x64;C:\WINDOWS\system32;D:\C libraries\opencvmingw\install\bin;D:\JAVA\jre8\bin;D:\cmake\bin;D:\C libraries\SDL2-2.26.0\lib\x64;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;;D:\Easyshare\x86\;D:\Easyshare\x64\;C:\Program Files (x86)\IVI Foundation\VISA\WinNT\Bin\;C:\Program Files\IVI Foundation\VISA\Win64\Bin\;C:\Program Files (x86)\IVI Foundation\VISA\WinNT\Bin;D:\Python3.7.4\Scripts\;D:\Python3.7.4\;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.2;D:\MSVC\MSVC\14.16.27023\bin\Hostx86\x64;D:\opencv_msvc\install\x64\vc16\bin;D:\CUDA\Development;D:\MinGW\bin;D:\ffmpeg;C:\Users\Wayne\AppData\Local\Microsoft\WindowsApps;D:\Microsoft VS Code\Microsoft VS Code\bin;D:\CUDA\Samples\common\inc;E:\DECX_world\DECX_bin\x64;D:\QuartusPrime\modelsim_ase\win32aloem;
+  #$ INCLUDES="-ID:\CUDA\Development\bin/../include"  
+  #$ LIBRARIES=  "/LIBPATH:D:\CUDA\Development\bin/../lib/x64"
+  #$ CUDAFE_FLAGS=--sdk_dir "D:\Windows Kits\10"
+  #$ PTXAS_FLAGS=
+  CMakeCUDACompilerId.cu
+  #$ cl.exe @"C:\Users\Wayne\AppData\Local\Temp/tmpxft_000016e0_00000000-8.res" > "C:/Users/Wayne/AppData/Local/Temp/tmpxft_000016e0_00000000-7_CMakeCUDACompilerId.cpp1.ii" 
+  CMakeCUDACompilerId.cu
+  #$ erase C:\Users\Wayne\AppData\Local\Temp/tmpxft_000016e0_00000000-8.res
+  #$ cicc --microsoft_version=1929 --msvc_target_version=1929 --compiler_bindir "D:/Microsoft Visual Studio/Visual Studio/VC/Tools/MSVC/14.29.30133/bin/HostX64/x64/../../../../../../.." --allow_managed --debug_mode --sdk_dir "D:\Windows Kits\10"  -arch compute_30 -m64 -ftz=0 -prec_div=1 -prec_sqrt=1 -fmad=1 --include_file_name "tmpxft_000016e0_00000000-3_CMakeCUDACompilerId.fatbin.c" -g -O0 -tused -nvvmir-library "D:\CUDA\Development\bin/../nvvm/libdevice/libdevice.10.bc" --gen_module_id_file --module_id_file_name "C:/Users/Wayne/AppData/Local/Temp/tmpxft_000016e0_00000000-4_CMakeCUDACompilerId.module_id" --orig_src_file_name "E:/DECX_world/DECX_CV_CUDA/build/CMakeFiles/3.24.0/CompilerIdCUDA/CMakeCUDACompilerId.cu" --gen_c_file_name "C:/Users/Wayne/AppData/Local/Temp/tmpxft_000016e0_00000000-6_CMakeCUDACompilerId.cudafe1.c" --stub_file_name "C:/Users/Wayne/AppData/Local/Temp/tmpxft_000016e0_00000000-6_CMakeCUDACompilerId.cudafe1.stub.c" --gen_device_file_name "C:/Users/Wayne/AppData/Local/Temp/tmpxft_000016e0_00000000-6_CMakeCUDACompilerId.cudafe1.gpu"  "C:/Users/Wayne/AppData/Local/Temp/tmpxft_000016e0_00000000-7_CMakeCUDACompilerId.cpp1.ii" -o "C:/Users/Wayne/AppData/Local/Temp/tmpxft_000016e0_00000000-6_CMakeCUDACompilerId.ptx"
+  #$ ptxas -arch=sm_30 -m64 -g --dont-merge-basicblocks --return-at-end "C:/Users/Wayne/AppData/Local/Temp/tmpxft_000016e0_00000000-6_CMakeCUDACompilerId.ptx"  -o "C:/Users/Wayne/AppData/Local/Temp/tmpxft_000016e0_00000000-9_CMakeCUDACompilerId.sm_30.cubin" 
+  #$ fatbinary -64 --ident="E:/DECX_world/DECX_CV_CUDA/build/CMakeFiles/3.24.0/CompilerIdCUDA/CMakeCUDACompilerId.cu" --cmdline="-g --dont-merge-basicblocks --return-at-end " --cicc-cmdline="-ftz=0 -prec_div=1 -prec_sqrt=1 -fmad=1 " -g "--image3=kind=elf,sm=30,file=C:/Users/Wayne/AppData/Local/Temp/tmpxft_000016e0_00000000-9_CMakeCUDACompilerId.sm_30.cubin" "--image3=kind=ptx,sm=30,file=C:/Users/Wayne/AppData/Local/Temp/tmpxft_000016e0_00000000-6_CMakeCUDACompilerId.ptx" --embedded-fatbin="C:/Users/Wayne/AppData/Local/Temp/tmpxft_000016e0_00000000-3_CMakeCUDACompilerId.fatbin.c" 
+  #$ erase C:/Users/Wayne/AppData/Local/Temp/tmpxft_000016e0_00000000-3_CMakeCUDACompilerId.fatbin
+  #$ cl.exe @"C:\Users\Wayne\AppData\Local\Temp/tmpxft_000016e0_00000000-10.res" > "C:/Users/Wayne/AppData/Local/Temp/tmpxft_000016e0_00000000-5_CMakeCUDACompilerId.cpp4.ii" 
+  CMakeCUDACompilerId.cu
+  #$ erase C:\Users\Wayne\AppData\Local\Temp/tmpxft_000016e0_00000000-10.res
+  #$ cudafe++ --microsoft_version=1929 --msvc_target_version=1929 --compiler_bindir "D:/Microsoft Visual Studio/Visual Studio/VC/Tools/MSVC/14.29.30133/bin/HostX64/x64/../../../../../../.." --allow_managed --debug_mode --sdk_dir "D:\Windows Kits\10" --m64 --parse_templates --gen_c_file_name "C:/Users/Wayne/AppData/Local/Temp/tmpxft_000016e0_00000000-6_CMakeCUDACompilerId.cudafe1.cpp" --stub_file_name "tmpxft_000016e0_00000000-6_CMakeCUDACompilerId.cudafe1.stub.c" --module_id_file_name "C:/Users/Wayne/AppData/Local/Temp/tmpxft_000016e0_00000000-4_CMakeCUDACompilerId.module_id" "C:/Users/Wayne/AppData/Local/Temp/tmpxft_000016e0_00000000-5_CMakeCUDACompilerId.cpp4.ii" 
+  #$ cl.exe @"C:\Users\Wayne\AppData\Local\Temp/tmpxft_000016e0_00000000-11.res" -Fo"Debug/CMakeCUDACompilerId.cu.obj" 
+  tmpxft_000016e0_00000000-6_CMakeCUDACompilerId.cudafe1.cpp
+  #$ erase C:\Users\Wayne\AppData\Local\Temp/tmpxft_000016e0_00000000-11.res
+已完成生成项目“E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\3.24.0\CompilerIdCUDA\CompilerIdCUDA.vcxproj”(CudaBuildCore 个目标)的操作。
+Link:
+  D:\Microsoft Visual Studio\Visual Studio\VC\Tools\MSVC\14.29.30133\bin\HostX64\x64\link.exe /ERRORREPORT:QUEUE /OUT:".\CompilerIdCUDA.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:D:\CUDA\Development\lib\x64 cudart_static.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:".\CompilerIdCUDA.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:".\CompilerIdCUDA.lib" /MACHINE:X64 Debug\CMakeCUDACompilerId.cu.obj
+    正在创建库 .\CompilerIdCUDA.lib 和对象 .\CompilerIdCUDA.exp
+  CompilerIdCUDA.vcxproj -> E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\3.24.0\CompilerIdCUDA\CompilerIdCUDA.exe
+PostBuildEvent:
+  echo CMAKE_CUDA_COMPILER=D:\CUDA\Development\bin\nvcc.exe
+  :VCEnd
+  CMAKE_CUDA_COMPILER=D:\CUDA\Development\bin\nvcc.exe
+FinalizeBuildStatus:
+  正在删除文件“Debug\CompilerIdCUDA.tlog\unsuccessfulbuild”。
+  正在对“Debug\CompilerIdCUDA.tlog\CompilerIdCUDA.lastbuildstate”执行 Touch 任务。
+已完成生成项目“E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\3.24.0\CompilerIdCUDA\CompilerIdCUDA.vcxproj”(默认目标)的操作。
+
+已成功生成。
+    0 个警告
+    0 个错误
+
+已用时间 00:00:02.44
 
 
-Compilation of the CUDA compiler identification source "CMakeCUDACompilerId.cu" produced "a.out"
+Compilation of the CUDA compiler identification source "CMakeCUDACompilerId.cu" produced "CompilerIdCUDA.exe"
 
-The CUDA compiler identification is NVIDIA, found in "/media/wayne/Disk/DECX_world/DECX_CV_CUDA/build/CMakeFiles/3.25.0/CompilerIdCUDA/a.out"
+Compilation of the CUDA compiler identification source "CMakeCUDACompilerId.cu" produced "CompilerIdCUDA.exp"
 
-Parsed CUDA nvcc implicit link information from above output:
-  found 'PATH=' string: [/usr/local/cuda/bin/../nvvm/bin:/usr/local/cuda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin:/usr/local/cuda/bin]
-  found 'LIBRARIES=' string: ["-L/usr/local/cuda/bin/../targets/x86_64-linux/lib/stubs" "-L/usr/local/cuda/bin/../targets/x86_64-linux/lib"]
-  considering line: [#$ rm tmp/a_dlink.reg.c]
-  considering line: [gcc -D__CUDA_ARCH__=300 -E -x c++  -DCUDA_DOUBLE_MATH_FUNCTIONS -D__CUDACC__ -D__NVCC__  "-I/usr/local/cuda/bin/../targets/x86_64-linux/include"    -D__CUDACC_VER_MAJOR__=10 -D__CUDACC_VER_MINOR__=2 -D__CUDACC_VER_BUILD__=89 -include "cuda_runtime.h" -m64 "CMakeCUDACompilerId.cu" -o "tmp/CMakeCUDACompilerId.cpp1.ii" ]
-  considering line: [cicc --c++14 --gnu_version=80400 --allow_managed   -arch compute_30 -m64 -ftz=0 -prec_div=1 -prec_sqrt=1 -fmad=1 --include_file_name "CMakeCUDACompilerId.fatbin.c" -tused -nvvmir-library "/usr/local/cuda/bin/../nvvm/libdevice/libdevice.10.bc" --gen_module_id_file --module_id_file_name "tmp/CMakeCUDACompilerId.module_id" --orig_src_file_name "CMakeCUDACompilerId.cu" --gen_c_file_name "tmp/CMakeCUDACompilerId.cudafe1.c" --stub_file_name "tmp/CMakeCUDACompilerId.cudafe1.stub.c" --gen_device_file_name "tmp/CMakeCUDACompilerId.cudafe1.gpu"  "tmp/CMakeCUDACompilerId.cpp1.ii" -o "tmp/CMakeCUDACompilerId.ptx"]
-  considering line: [ptxas -arch=sm_30 -m64  "tmp/CMakeCUDACompilerId.ptx"  -o "tmp/CMakeCUDACompilerId.sm_30.cubin" ]
-  considering line: [fatbinary --create="tmp/CMakeCUDACompilerId.fatbin" -64 --cicc-cmdline="-ftz=0 -prec_div=1 -prec_sqrt=1 -fmad=1 " "--image3=kind=elf,sm=30,file=tmp/CMakeCUDACompilerId.sm_30.cubin" "--image3=kind=ptx,sm=30,file=tmp/CMakeCUDACompilerId.ptx" --embedded-fatbin="tmp/CMakeCUDACompilerId.fatbin.c" ]
-  considering line: [gcc -E -x c++ -D__CUDACC__ -D__NVCC__  "-I/usr/local/cuda/bin/../targets/x86_64-linux/include"    -D__CUDACC_VER_MAJOR__=10 -D__CUDACC_VER_MINOR__=2 -D__CUDACC_VER_BUILD__=89 -include "cuda_runtime.h" -m64 "CMakeCUDACompilerId.cu" -o "tmp/CMakeCUDACompilerId.cpp4.ii" ]
-  considering line: [cudafe++ --c++14 --gnu_version=80400 --allow_managed  --m64 --parse_templates --gen_c_file_name "tmp/CMakeCUDACompilerId.cudafe1.cpp" --stub_file_name "CMakeCUDACompilerId.cudafe1.stub.c" --module_id_file_name "tmp/CMakeCUDACompilerId.module_id" "tmp/CMakeCUDACompilerId.cpp4.ii" ]
-  considering line: [gcc -D__CUDA_ARCH__=300 -c -x c++  -DCUDA_DOUBLE_MATH_FUNCTIONS "-I/usr/local/cuda/bin/../targets/x86_64-linux/include"   -m64 "tmp/CMakeCUDACompilerId.cudafe1.cpp" -o "tmp/CMakeCUDACompilerId.o" ]
-  considering line: [nvlink --arch=sm_30 --register-link-binaries="tmp/a_dlink.reg.c"  -m64   "-L/usr/local/cuda/bin/../targets/x86_64-linux/lib/stubs" "-L/usr/local/cuda/bin/../targets/x86_64-linux/lib" -cpu-arch=X86_64 "tmp/CMakeCUDACompilerId.o"  -o "tmp/a_dlink.sm_30.cubin"]
-    ignoring nvlink line
-  considering line: [fatbinary --create="tmp/a_dlink.fatbin" -64 --cicc-cmdline="-ftz=0 -prec_div=1 -prec_sqrt=1 -fmad=1 " -link "--image3=kind=elf,sm=30,file=tmp/a_dlink.sm_30.cubin" --embedded-fatbin="tmp/a_dlink.fatbin.c" ]
-  considering line: [gcc -c -x c++ -DFATBINFILE="\"tmp/a_dlink.fatbin.c\"" -DREGISTERLINKBINARYFILE="\"tmp/a_dlink.reg.c\"" -I. -D__NV_EXTRA_INITIALIZATION= -D__NV_EXTRA_FINALIZATION= -D__CUDA_INCLUDE_COMPILER_INTERNAL_HEADERS__  "-I/usr/local/cuda/bin/../targets/x86_64-linux/include"    -D__CUDACC_VER_MAJOR__=10 -D__CUDACC_VER_MINOR__=2 -D__CUDACC_VER_BUILD__=89 -m64 "/usr/local/cuda/bin/crt/link.stub" -o "tmp/a_dlink.o" ]
-  considering line: [g++ -m64 -Wl,--start-group "tmp/a_dlink.o" "tmp/CMakeCUDACompilerId.o"   "-L/usr/local/cuda/bin/../targets/x86_64-linux/lib/stubs" "-L/usr/local/cuda/bin/../targets/x86_64-linux/lib"  -lcudadevrt  -lcudart_static  -lrt -lpthread  -ldl  -Wl,--end-group -o "a.out" ]
-    extracted link line: [g++ -m64 -Wl,--start-group "tmp/a_dlink.o" "tmp/CMakeCUDACompilerId.o"   "-L/usr/local/cuda/bin/../targets/x86_64-linux/lib/stubs" "-L/usr/local/cuda/bin/../targets/x86_64-linux/lib"  -lcudadevrt  -lcudart_static  -lrt -lpthread  -ldl  -Wl,--end-group -o "a.out" ]
-  considering line: []
-  extracted link launcher name: [g++]
-  found link launcher absolute path: [/usr/bin/g++]
+Compilation of the CUDA compiler identification source "CMakeCUDACompilerId.cu" produced "CompilerIdCUDA.lib"
 
-  link line regex: [^( *|.*[/\])(ld|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\]+-)?ld|collect2)[^/\]*( |$)]
-  link line: [cuda-fake-ld g++ -m64 -Wl,--start-group "tmp/a_dlink.o" "tmp/CMakeCUDACompilerId.o"   "-L/usr/local/cuda/bin/../targets/x86_64-linux/lib/stubs" "-L/usr/local/cuda/bin/../targets/x86_64-linux/lib"  -lcudadevrt  -lcudart_static  -lrt -lpthread  -ldl  -Wl,--end-group -o "a.out" ]
-    arg [cuda-fake-ld] ==> ignore
-    arg [g++] ==> ignore
-    arg [-m64] ==> ignore
-    arg [-Wl,--start-group] ==> ignore
-    arg [tmp/a_dlink.o] ==> ignore
-    arg [tmp/CMakeCUDACompilerId.o] ==> ignore
-    arg [-L/usr/local/cuda/bin/../targets/x86_64-linux/lib/stubs] ==> dir [/usr/local/cuda/bin/../targets/x86_64-linux/lib/stubs]
-    arg [-L/usr/local/cuda/bin/../targets/x86_64-linux/lib] ==> dir [/usr/local/cuda/bin/../targets/x86_64-linux/lib]
-    arg [-lcudadevrt] ==> lib [cudadevrt]
-    arg [-lcudart_static] ==> lib [cudart_static]
-    arg [-lrt] ==> lib [rt]
-    arg [-lpthread] ==> lib [pthread]
-    arg [-ldl] ==> lib [dl]
-    arg [-Wl,--end-group] ==> ignore
-    arg [-o] ==> ignore
-    arg [a.out] ==> ignore
-  collapse library dir [/usr/local/cuda/bin/../targets/x86_64-linux/lib/stubs] ==> [/usr/local/cuda/targets/x86_64-linux/lib/stubs]
-  collapse library dir [/usr/local/cuda/bin/../targets/x86_64-linux/lib] ==> [/usr/local/cuda/targets/x86_64-linux/lib]
-  implicit libs: [cudadevrt;cudart_static;rt;pthread;dl]
-  implicit objs: []
-  implicit dirs: [/usr/local/cuda/targets/x86_64-linux/lib/stubs;/usr/local/cuda/targets/x86_64-linux/lib]
-  implicit fwks: []
+Compilation of the CUDA compiler identification source "CMakeCUDACompilerId.cu" produced "CompilerIdCUDA.vcxproj"
 
+The CUDA compiler identification is NVIDIA, found in "E:/DECX_world/DECX_CV_CUDA/build/CMakeFiles/3.24.0/CompilerIdCUDA/CompilerIdCUDA.exe"
 
 Parsed CUDA nvcc include information from above output:
-  found 'PATH=' string: [/usr/local/cuda/bin/../nvvm/bin:/usr/local/cuda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin:/usr/local/cuda/bin]
-  found 'LIBRARIES=' string: ["-L/usr/local/cuda/bin/../targets/x86_64-linux/lib/stubs" "-L/usr/local/cuda/bin/../targets/x86_64-linux/lib"]
-  considering line: [#$ rm tmp/a_dlink.reg.c]
-  considering line: [gcc -D__CUDA_ARCH__=300 -E -x c++  -DCUDA_DOUBLE_MATH_FUNCTIONS -D__CUDACC__ -D__NVCC__  "-I/usr/local/cuda/bin/../targets/x86_64-linux/include"    -D__CUDACC_VER_MAJOR__=10 -D__CUDACC_VER_MINOR__=2 -D__CUDACC_VER_BUILD__=89 -include "cuda_runtime.h" -m64 "CMakeCUDACompilerId.cu" -o "tmp/CMakeCUDACompilerId.cpp1.ii" ]
-  considering line: [cicc --c++14 --gnu_version=80400 --allow_managed   -arch compute_30 -m64 -ftz=0 -prec_div=1 -prec_sqrt=1 -fmad=1 --include_file_name "CMakeCUDACompilerId.fatbin.c" -tused -nvvmir-library "/usr/local/cuda/bin/../nvvm/libdevice/libdevice.10.bc" --gen_module_id_file --module_id_file_name "tmp/CMakeCUDACompilerId.module_id" --orig_src_file_name "CMakeCUDACompilerId.cu" --gen_c_file_name "tmp/CMakeCUDACompilerId.cudafe1.c" --stub_file_name "tmp/CMakeCUDACompilerId.cudafe1.stub.c" --gen_device_file_name "tmp/CMakeCUDACompilerId.cudafe1.gpu"  "tmp/CMakeCUDACompilerId.cpp1.ii" -o "tmp/CMakeCUDACompilerId.ptx"]
-  considering line: [ptxas -arch=sm_30 -m64  "tmp/CMakeCUDACompilerId.ptx"  -o "tmp/CMakeCUDACompilerId.sm_30.cubin" ]
-  considering line: [fatbinary --create="tmp/CMakeCUDACompilerId.fatbin" -64 --cicc-cmdline="-ftz=0 -prec_div=1 -prec_sqrt=1 -fmad=1 " "--image3=kind=elf,sm=30,file=tmp/CMakeCUDACompilerId.sm_30.cubin" "--image3=kind=ptx,sm=30,file=tmp/CMakeCUDACompilerId.ptx" --embedded-fatbin="tmp/CMakeCUDACompilerId.fatbin.c" ]
-  considering line: [gcc -E -x c++ -D__CUDACC__ -D__NVCC__  "-I/usr/local/cuda/bin/../targets/x86_64-linux/include"    -D__CUDACC_VER_MAJOR__=10 -D__CUDACC_VER_MINOR__=2 -D__CUDACC_VER_BUILD__=89 -include "cuda_runtime.h" -m64 "CMakeCUDACompilerId.cu" -o "tmp/CMakeCUDACompilerId.cpp4.ii" ]
-  considering line: [cudafe++ --c++14 --gnu_version=80400 --allow_managed  --m64 --parse_templates --gen_c_file_name "tmp/CMakeCUDACompilerId.cudafe1.cpp" --stub_file_name "CMakeCUDACompilerId.cudafe1.stub.c" --module_id_file_name "tmp/CMakeCUDACompilerId.module_id" "tmp/CMakeCUDACompilerId.cpp4.ii" ]
-  considering line: [gcc -D__CUDA_ARCH__=300 -c -x c++  -DCUDA_DOUBLE_MATH_FUNCTIONS "-I/usr/local/cuda/bin/../targets/x86_64-linux/include"   -m64 "tmp/CMakeCUDACompilerId.cudafe1.cpp" -o "tmp/CMakeCUDACompilerId.o" ]
-  considering line: [nvlink --arch=sm_30 --register-link-binaries="tmp/a_dlink.reg.c"  -m64   "-L/usr/local/cuda/bin/../targets/x86_64-linux/lib/stubs" "-L/usr/local/cuda/bin/../targets/x86_64-linux/lib" -cpu-arch=X86_64 "tmp/CMakeCUDACompilerId.o"  -o "tmp/a_dlink.sm_30.cubin"]
-    ignoring nvlink line
-  considering line: [fatbinary --create="tmp/a_dlink.fatbin" -64 --cicc-cmdline="-ftz=0 -prec_div=1 -prec_sqrt=1 -fmad=1 " -link "--image3=kind=elf,sm=30,file=tmp/a_dlink.sm_30.cubin" --embedded-fatbin="tmp/a_dlink.fatbin.c" ]
-  considering line: [gcc -c -x c++ -DFATBINFILE="\"tmp/a_dlink.fatbin.c\"" -DREGISTERLINKBINARYFILE="\"tmp/a_dlink.reg.c\"" -I. -D__NV_EXTRA_INITIALIZATION= -D__NV_EXTRA_FINALIZATION= -D__CUDA_INCLUDE_COMPILER_INTERNAL_HEADERS__  "-I/usr/local/cuda/bin/../targets/x86_64-linux/include"    -D__CUDACC_VER_MAJOR__=10 -D__CUDACC_VER_MINOR__=2 -D__CUDACC_VER_BUILD__=89 -m64 "/usr/local/cuda/bin/crt/link.stub" -o "tmp/a_dlink.o" ]
-  considering line: [g++ -m64 -Wl,--start-group "tmp/a_dlink.o" "tmp/CMakeCUDACompilerId.o"   "-L/usr/local/cuda/bin/../targets/x86_64-linux/lib/stubs" "-L/usr/local/cuda/bin/../targets/x86_64-linux/lib"  -lcudadevrt  -lcudart_static  -lrt -lpthread  -ldl  -Wl,--end-group -o "a.out" ]
-    extracted link line: [g++ -m64 -Wl,--start-group "tmp/a_dlink.o" "tmp/CMakeCUDACompilerId.o"   "-L/usr/local/cuda/bin/../targets/x86_64-linux/lib/stubs" "-L/usr/local/cuda/bin/../targets/x86_64-linux/lib"  -lcudadevrt  -lcudart_static  -lrt -lpthread  -ldl  -Wl,--end-group -o "a.out" ]
-  considering line: []
-  extracted link launcher name: [g++]
-  found link launcher absolute path: [/usr/bin/g++]
-  found 'INCLUDES=' string: ["-I/usr/local/cuda/bin/../targets/x86_64-linux/include"  ]
+  found 'INCLUDES=' string: ["-ID:\CUDA\Development\bin/../include"  ]
 
-  link line regex: [^( *|.*[/\])(ld|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\]+-)?ld|collect2)[^/\]*( |$)]
-  link line: [cuda-fake-ld g++ -m64 -Wl,--start-group "tmp/a_dlink.o" "tmp/CMakeCUDACompilerId.o"   "-L/usr/local/cuda/bin/../targets/x86_64-linux/lib/stubs" "-L/usr/local/cuda/bin/../targets/x86_64-linux/lib"  -lcudadevrt  -lcudart_static  -lrt -lpthread  -ldl  -Wl,--end-group -o "a.out" ]
-    arg [cuda-fake-ld] ==> ignore
-    arg [g++] ==> ignore
-    arg [-m64] ==> ignore
-    arg [-Wl,--start-group] ==> ignore
-    arg [tmp/a_dlink.o] ==> ignore
-    arg [tmp/CMakeCUDACompilerId.o] ==> ignore
-    arg [-L/usr/local/cuda/bin/../targets/x86_64-linux/lib/stubs] ==> dir [/usr/local/cuda/bin/../targets/x86_64-linux/lib/stubs]
-    arg [-L/usr/local/cuda/bin/../targets/x86_64-linux/lib] ==> dir [/usr/local/cuda/bin/../targets/x86_64-linux/lib]
-    arg [-lcudadevrt] ==> lib [cudadevrt]
-    arg [-lcudart_static] ==> lib [cudart_static]
-    arg [-lrt] ==> lib [rt]
-    arg [-lpthread] ==> lib [pthread]
-    arg [-ldl] ==> lib [dl]
-    arg [-Wl,--end-group] ==> ignore
-    arg [-o] ==> ignore
-    arg [a.out] ==> ignore
-  collapse library dir [/usr/local/cuda/bin/../targets/x86_64-linux/lib/stubs] ==> [/usr/local/cuda/targets/x86_64-linux/lib/stubs]
-  collapse library dir [/usr/local/cuda/bin/../targets/x86_64-linux/lib] ==> [/usr/local/cuda/targets/x86_64-linux/lib]
-  implicit libs: [cudadevrt;cudart_static;rt;pthread;dl]
-  implicit objs: []
-  implicit dirs: [/usr/local/cuda/targets/x86_64-linux/lib/stubs;/usr/local/cuda/targets/x86_64-linux/lib]
-  implicit fwks: []
 
 
 Detecting CXX compiler ABI info compiled with the following output:
-Change Dir: /media/wayne/Disk/DECX_world/DECX_CV_CUDA/build/CMakeFiles/CMakeScratch/TryCompile-oFtn0l
+Change Dir: E:/DECX_world/DECX_CV_CUDA/build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_f5bc4/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_f5bc4.dir/build.make CMakeFiles/cmTC_f5bc4.dir/build
-gmake[1]: Entering directory '/media/wayne/Disk/DECX_world/DECX_CV_CUDA/build/CMakeFiles/CMakeScratch/TryCompile-oFtn0l'
-Building CXX object CMakeFiles/cmTC_f5bc4.dir/CMakeCXXCompilerABI.cpp.o
-/usr/bin/c++   -v -o CMakeFiles/cmTC_f5bc4.dir/CMakeCXXCompilerABI.cpp.o -c /usr/share/cmake-3.25/Modules/CMakeCXXCompilerABI.cpp
-Using built-in specs.
-COLLECT_GCC=/usr/bin/c++
-OFFLOAD_TARGET_NAMES=nvptx-none
-OFFLOAD_TARGET_DEFAULT=1
-Target: x86_64-linux-gnu
-Configured with: ../src/configure -v --with-pkgversion='Ubuntu 8.4.0-3ubuntu2' --with-bugurl=file:///usr/share/doc/gcc-8/README.Bugs --enable-languages=c,ada,c++,go,brig,d,fortran,objc,obj-c++ --prefix=/usr --with-gcc-major-version-only --program-suffix=-8 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/lib --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-bootstrap --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-gnu-unique-object --disable-vtable-verify --enable-libmpx --enable-plugin --enable-default-pie --with-system-zlib --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32,m64,mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu
-Thread model: posix
-gcc version 8.4.0 (Ubuntu 8.4.0-3ubuntu2) 
-COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_f5bc4.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64'
- /usr/lib/gcc/x86_64-linux-gnu/8/cc1plus -quiet -v -imultiarch x86_64-linux-gnu -D_GNU_SOURCE /usr/share/cmake-3.25/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpbase CMakeCXXCompilerABI.cpp -mtune=generic -march=x86-64 -auxbase-strip CMakeFiles/cmTC_f5bc4.dir/CMakeCXXCompilerABI.cpp.o -version -fasynchronous-unwind-tables -fstack-protector-strong -Wformat -Wformat-security -fstack-clash-protection -fcf-protection -o /tmp/ccYgX5ZN.s
-GNU C++14 (Ubuntu 8.4.0-3ubuntu2) version 8.4.0 (x86_64-linux-gnu)
-	compiled by GNU C version 8.4.0, GMP version 6.2.0, MPFR version 4.0.2, MPC version 1.1.0, isl version isl-0.22.1-GMP
+Run Build Command(s):D:/Microsoft Visual Studio/Visual Studio/MSBuild/Current/Bin/MSBuild.exe cmTC_e8629.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && 用于 .NET Framework 的 Microsoft (R) 生成引擎版本 16.11.2+f32259642
+版权所有(C) Microsoft Corporation。保留所有权利。
+
+  用于 x64 的 Microsoft (R) C/C++ 优化编译器 19.29.30146 版
+  版权所有(C) Microsoft Corporation。保留所有权利。
+  CMakeCXXCompilerABI.cpp
+  cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\"Debug\"" /Gm- /EHsc /RTC1 /MDd /GS /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_e8629.dir\Debug\\" /Fd"cmTC_e8629.dir\Debug\vc142.pdb" /external:W3 /Gd /TP /errorReport:queue "D:\cmake\share\cmake-3.24\Modules\CMakeCXXCompilerABI.cpp"
+  cmTC_e8629.vcxproj -> E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\Debug\cmTC_e8629.exe
 
-warning: GMP header version 6.2.0 differs from library version 6.2.1.
-warning: MPFR header version 4.0.2 differs from library version 4.1.0.
-warning: MPC header version 1.1.0 differs from library version 1.2.1.
-GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
-ignoring duplicate directory "/usr/include/x86_64-linux-gnu/c++/8"
-ignoring nonexistent directory "/usr/local/include/x86_64-linux-gnu"
-ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/8/include-fixed"
-ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/8/../../../../x86_64-linux-gnu/include"
-#include "..." search starts here:
-#include <...> search starts here:
- /usr/include/c++/8
- /usr/include/x86_64-linux-gnu/c++/8
- /usr/include/c++/8/backward
- /usr/lib/gcc/x86_64-linux-gnu/8/include
- /usr/local/include
- /usr/include/x86_64-linux-gnu
- /usr/include
-End of search list.
-GNU C++14 (Ubuntu 8.4.0-3ubuntu2) version 8.4.0 (x86_64-linux-gnu)
-	compiled by GNU C version 8.4.0, GMP version 6.2.0, MPFR version 4.0.2, MPC version 1.1.0, isl version isl-0.22.1-GMP
-
-warning: GMP header version 6.2.0 differs from library version 6.2.1.
-warning: MPFR header version 4.0.2 differs from library version 4.1.0.
-warning: MPC header version 1.1.0 differs from library version 1.2.1.
-GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
-Compiler executable checksum: 7f898f3e7c9bafa983b4c472f0e6877a
-COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_f5bc4.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64'
- as -v --64 -o CMakeFiles/cmTC_f5bc4.dir/CMakeCXXCompilerABI.cpp.o /tmp/ccYgX5ZN.s
-GNU assembler version 2.38 (x86_64-linux-gnu) using BFD version (GNU Binutils for Ubuntu) 2.38
-COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/
-LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/8/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/8/../../../:/lib/:/usr/lib/
-COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_f5bc4.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64'
-Linking CXX executable cmTC_f5bc4
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_f5bc4.dir/link.txt --verbose=1
-/usr/bin/c++  -v -rdynamic CMakeFiles/cmTC_f5bc4.dir/CMakeCXXCompilerABI.cpp.o -o cmTC_f5bc4 
-Using built-in specs.
-COLLECT_GCC=/usr/bin/c++
-COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-linux-gnu/8/lto-wrapper
-OFFLOAD_TARGET_NAMES=nvptx-none
-OFFLOAD_TARGET_DEFAULT=1
-Target: x86_64-linux-gnu
-Configured with: ../src/configure -v --with-pkgversion='Ubuntu 8.4.0-3ubuntu2' --with-bugurl=file:///usr/share/doc/gcc-8/README.Bugs --enable-languages=c,ada,c++,go,brig,d,fortran,objc,obj-c++ --prefix=/usr --with-gcc-major-version-only --program-suffix=-8 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/lib --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-bootstrap --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-gnu-unique-object --disable-vtable-verify --enable-libmpx --enable-plugin --enable-default-pie --with-system-zlib --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32,m64,mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu
-Thread model: posix
-gcc version 8.4.0 (Ubuntu 8.4.0-3ubuntu2) 
-COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/
-LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/8/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/8/../../../:/lib/:/usr/lib/
-COLLECT_GCC_OPTIONS='-v' '-rdynamic' '-o' 'cmTC_f5bc4' '-shared-libgcc' '-mtune=generic' '-march=x86-64'
- /usr/lib/gcc/x86_64-linux-gnu/8/collect2 -plugin /usr/lib/gcc/x86_64-linux-gnu/8/liblto_plugin.so -plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/8/lto-wrapper -plugin-opt=-fresolution=/tmp/ccFmrqJr.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -export-dynamic -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_f5bc4 /usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/8/crtbeginS.o -L/usr/lib/gcc/x86_64-linux-gnu/8 -L/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/8/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/8/../../.. CMakeFiles/cmTC_f5bc4.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-linux-gnu/8/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/crtn.o
-COLLECT_GCC_OPTIONS='-v' '-rdynamic' '-o' 'cmTC_f5bc4' '-shared-libgcc' '-mtune=generic' '-march=x86-64'
-gmake[1]: Leaving directory '/media/wayne/Disk/DECX_world/DECX_CV_CUDA/build/CMakeFiles/CMakeScratch/TryCompile-oFtn0l'
-
-
-
-Parsed CXX implicit include dir info from above output: rv=done
-  found start of include info
-  found start of implicit include info
-    add: [/usr/include/c++/8]
-    add: [/usr/include/x86_64-linux-gnu/c++/8]
-    add: [/usr/include/c++/8/backward]
-    add: [/usr/lib/gcc/x86_64-linux-gnu/8/include]
-    add: [/usr/local/include]
-    add: [/usr/include/x86_64-linux-gnu]
-    add: [/usr/include]
-  end of search list found
-  collapse include dir [/usr/include/c++/8] ==> [/usr/include/c++/8]
-  collapse include dir [/usr/include/x86_64-linux-gnu/c++/8] ==> [/usr/include/x86_64-linux-gnu/c++/8]
-  collapse include dir [/usr/include/c++/8/backward] ==> [/usr/include/c++/8/backward]
-  collapse include dir [/usr/lib/gcc/x86_64-linux-gnu/8/include] ==> [/usr/lib/gcc/x86_64-linux-gnu/8/include]
-  collapse include dir [/usr/local/include] ==> [/usr/local/include]
-  collapse include dir [/usr/include/x86_64-linux-gnu] ==> [/usr/include/x86_64-linux-gnu]
-  collapse include dir [/usr/include] ==> [/usr/include]
-  implicit include dirs: [/usr/include/c++/8;/usr/include/x86_64-linux-gnu/c++/8;/usr/include/c++/8/backward;/usr/lib/gcc/x86_64-linux-gnu/8/include;/usr/local/include;/usr/include/x86_64-linux-gnu;/usr/include]
-
-
-Parsed CXX implicit link information from above output:
-  link line regex: [^( *|.*[/\])(ld|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\]+-)?ld|collect2)[^/\]*( |$)]
-  ignore line: [Change Dir: /media/wayne/Disk/DECX_world/DECX_CV_CUDA/build/CMakeFiles/CMakeScratch/TryCompile-oFtn0l]
-  ignore line: []
-  ignore line: [Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_f5bc4/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_f5bc4.dir/build.make CMakeFiles/cmTC_f5bc4.dir/build]
-  ignore line: [gmake[1]: Entering directory '/media/wayne/Disk/DECX_world/DECX_CV_CUDA/build/CMakeFiles/CMakeScratch/TryCompile-oFtn0l']
-  ignore line: [Building CXX object CMakeFiles/cmTC_f5bc4.dir/CMakeCXXCompilerABI.cpp.o]
-  ignore line: [/usr/bin/c++   -v -o CMakeFiles/cmTC_f5bc4.dir/CMakeCXXCompilerABI.cpp.o -c /usr/share/cmake-3.25/Modules/CMakeCXXCompilerABI.cpp]
-  ignore line: [Using built-in specs.]
-  ignore line: [COLLECT_GCC=/usr/bin/c++]
-  ignore line: [OFFLOAD_TARGET_NAMES=nvptx-none]
-  ignore line: [OFFLOAD_TARGET_DEFAULT=1]
-  ignore line: [Target: x86_64-linux-gnu]
-  ignore line: [Configured with: ../src/configure -v --with-pkgversion='Ubuntu 8.4.0-3ubuntu2' --with-bugurl=file:///usr/share/doc/gcc-8/README.Bugs --enable-languages=c ada c++ go brig d fortran objc obj-c++ --prefix=/usr --with-gcc-major-version-only --program-suffix=-8 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/lib --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-bootstrap --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-gnu-unique-object --disable-vtable-verify --enable-libmpx --enable-plugin --enable-default-pie --with-system-zlib --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32 m64 mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu]
-  ignore line: [Thread model: posix]
-  ignore line: [gcc version 8.4.0 (Ubuntu 8.4.0-3ubuntu2) ]
-  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_f5bc4.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64']
-  ignore line: [ /usr/lib/gcc/x86_64-linux-gnu/8/cc1plus -quiet -v -imultiarch x86_64-linux-gnu -D_GNU_SOURCE /usr/share/cmake-3.25/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpbase CMakeCXXCompilerABI.cpp -mtune=generic -march=x86-64 -auxbase-strip CMakeFiles/cmTC_f5bc4.dir/CMakeCXXCompilerABI.cpp.o -version -fasynchronous-unwind-tables -fstack-protector-strong -Wformat -Wformat-security -fstack-clash-protection -fcf-protection -o /tmp/ccYgX5ZN.s]
-  ignore line: [GNU C++14 (Ubuntu 8.4.0-3ubuntu2) version 8.4.0 (x86_64-linux-gnu)]
-  ignore line: [	compiled by GNU C version 8.4.0  GMP version 6.2.0  MPFR version 4.0.2  MPC version 1.1.0  isl version isl-0.22.1-GMP]
-  ignore line: []
-  ignore line: [warning: GMP header version 6.2.0 differs from library version 6.2.1.]
-  ignore line: [warning: MPFR header version 4.0.2 differs from library version 4.1.0.]
-  ignore line: [warning: MPC header version 1.1.0 differs from library version 1.2.1.]
-  ignore line: [GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072]
-  ignore line: [ignoring duplicate directory "/usr/include/x86_64-linux-gnu/c++/8"]
-  ignore line: [ignoring nonexistent directory "/usr/local/include/x86_64-linux-gnu"]
-  ignore line: [ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/8/include-fixed"]
-  ignore line: [ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/8/../../../../x86_64-linux-gnu/include"]
-  ignore line: [#include "..." search starts here:]
-  ignore line: [#include <...> search starts here:]
-  ignore line: [ /usr/include/c++/8]
-  ignore line: [ /usr/include/x86_64-linux-gnu/c++/8]
-  ignore line: [ /usr/include/c++/8/backward]
-  ignore line: [ /usr/lib/gcc/x86_64-linux-gnu/8/include]
-  ignore line: [ /usr/local/include]
-  ignore line: [ /usr/include/x86_64-linux-gnu]
-  ignore line: [ /usr/include]
-  ignore line: [End of search list.]
-  ignore line: [GNU C++14 (Ubuntu 8.4.0-3ubuntu2) version 8.4.0 (x86_64-linux-gnu)]
-  ignore line: [	compiled by GNU C version 8.4.0  GMP version 6.2.0  MPFR version 4.0.2  MPC version 1.1.0  isl version isl-0.22.1-GMP]
-  ignore line: []
-  ignore line: [warning: GMP header version 6.2.0 differs from library version 6.2.1.]
-  ignore line: [warning: MPFR header version 4.0.2 differs from library version 4.1.0.]
-  ignore line: [warning: MPC header version 1.1.0 differs from library version 1.2.1.]
-  ignore line: [GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072]
-  ignore line: [Compiler executable checksum: 7f898f3e7c9bafa983b4c472f0e6877a]
-  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_f5bc4.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64']
-  ignore line: [ as -v --64 -o CMakeFiles/cmTC_f5bc4.dir/CMakeCXXCompilerABI.cpp.o /tmp/ccYgX5ZN.s]
-  ignore line: [GNU assembler version 2.38 (x86_64-linux-gnu) using BFD version (GNU Binutils for Ubuntu) 2.38]
-  ignore line: [COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/]
-  ignore line: [LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/8/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/8/../../../:/lib/:/usr/lib/]
-  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_f5bc4.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64']
-  ignore line: [Linking CXX executable cmTC_f5bc4]
-  ignore line: [/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_f5bc4.dir/link.txt --verbose=1]
-  ignore line: [/usr/bin/c++  -v -rdynamic CMakeFiles/cmTC_f5bc4.dir/CMakeCXXCompilerABI.cpp.o -o cmTC_f5bc4 ]
-  ignore line: [Using built-in specs.]
-  ignore line: [COLLECT_GCC=/usr/bin/c++]
-  ignore line: [COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-linux-gnu/8/lto-wrapper]
-  ignore line: [OFFLOAD_TARGET_NAMES=nvptx-none]
-  ignore line: [OFFLOAD_TARGET_DEFAULT=1]
-  ignore line: [Target: x86_64-linux-gnu]
-  ignore line: [Configured with: ../src/configure -v --with-pkgversion='Ubuntu 8.4.0-3ubuntu2' --with-bugurl=file:///usr/share/doc/gcc-8/README.Bugs --enable-languages=c ada c++ go brig d fortran objc obj-c++ --prefix=/usr --with-gcc-major-version-only --program-suffix=-8 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/lib --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-bootstrap --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-gnu-unique-object --disable-vtable-verify --enable-libmpx --enable-plugin --enable-default-pie --with-system-zlib --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32 m64 mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu]
-  ignore line: [Thread model: posix]
-  ignore line: [gcc version 8.4.0 (Ubuntu 8.4.0-3ubuntu2) ]
-  ignore line: [COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/]
-  ignore line: [LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/8/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/8/../../../:/lib/:/usr/lib/]
-  ignore line: [COLLECT_GCC_OPTIONS='-v' '-rdynamic' '-o' 'cmTC_f5bc4' '-shared-libgcc' '-mtune=generic' '-march=x86-64']
-  link line: [ /usr/lib/gcc/x86_64-linux-gnu/8/collect2 -plugin /usr/lib/gcc/x86_64-linux-gnu/8/liblto_plugin.so -plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/8/lto-wrapper -plugin-opt=-fresolution=/tmp/ccFmrqJr.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -export-dynamic -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_f5bc4 /usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/8/crtbeginS.o -L/usr/lib/gcc/x86_64-linux-gnu/8 -L/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/8/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/8/../../.. CMakeFiles/cmTC_f5bc4.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-linux-gnu/8/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/crtn.o]
-    arg [/usr/lib/gcc/x86_64-linux-gnu/8/collect2] ==> ignore
-    arg [-plugin] ==> ignore
-    arg [/usr/lib/gcc/x86_64-linux-gnu/8/liblto_plugin.so] ==> ignore
-    arg [-plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/8/lto-wrapper] ==> ignore
-    arg [-plugin-opt=-fresolution=/tmp/ccFmrqJr.res] ==> ignore
-    arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
-    arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
-    arg [-plugin-opt=-pass-through=-lc] ==> ignore
-    arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
-    arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
-    arg [--build-id] ==> ignore
-    arg [--eh-frame-hdr] ==> ignore
-    arg [-m] ==> ignore
-    arg [elf_x86_64] ==> ignore
-    arg [--hash-style=gnu] ==> ignore
-    arg [--as-needed] ==> ignore
-    arg [-export-dynamic] ==> ignore
-    arg [-dynamic-linker] ==> ignore
-    arg [/lib64/ld-linux-x86-64.so.2] ==> ignore
-    arg [-pie] ==> ignore
-    arg [-znow] ==> ignore
-    arg [-zrelro] ==> ignore
-    arg [-o] ==> ignore
-    arg [cmTC_f5bc4] ==> ignore
-    arg [/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/Scrt1.o] ==> obj [/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/Scrt1.o]
-    arg [/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/crti.o] ==> obj [/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/crti.o]
-    arg [/usr/lib/gcc/x86_64-linux-gnu/8/crtbeginS.o] ==> obj [/usr/lib/gcc/x86_64-linux-gnu/8/crtbeginS.o]
-    arg [-L/usr/lib/gcc/x86_64-linux-gnu/8] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/8]
-    arg [-L/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu]
-    arg [-L/usr/lib/gcc/x86_64-linux-gnu/8/../../../../lib] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/8/../../../../lib]
-    arg [-L/lib/x86_64-linux-gnu] ==> dir [/lib/x86_64-linux-gnu]
-    arg [-L/lib/../lib] ==> dir [/lib/../lib]
-    arg [-L/usr/lib/x86_64-linux-gnu] ==> dir [/usr/lib/x86_64-linux-gnu]
-    arg [-L/usr/lib/../lib] ==> dir [/usr/lib/../lib]
-    arg [-L/usr/lib/gcc/x86_64-linux-gnu/8/../../..] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/8/../../..]
-    arg [CMakeFiles/cmTC_f5bc4.dir/CMakeCXXCompilerABI.cpp.o] ==> ignore
-    arg [-lstdc++] ==> lib [stdc++]
-    arg [-lm] ==> lib [m]
-    arg [-lgcc_s] ==> lib [gcc_s]
-    arg [-lgcc] ==> lib [gcc]
-    arg [-lc] ==> lib [c]
-    arg [-lgcc_s] ==> lib [gcc_s]
-    arg [-lgcc] ==> lib [gcc]
-    arg [/usr/lib/gcc/x86_64-linux-gnu/8/crtendS.o] ==> obj [/usr/lib/gcc/x86_64-linux-gnu/8/crtendS.o]
-    arg [/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/crtn.o] ==> obj [/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/crtn.o]
-  collapse obj [/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/Scrt1.o] ==> [/usr/lib/x86_64-linux-gnu/Scrt1.o]
-  collapse obj [/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/crti.o] ==> [/usr/lib/x86_64-linux-gnu/crti.o]
-  collapse obj [/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/crtn.o] ==> [/usr/lib/x86_64-linux-gnu/crtn.o]
-  collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/8] ==> [/usr/lib/gcc/x86_64-linux-gnu/8]
-  collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu] ==> [/usr/lib/x86_64-linux-gnu]
-  collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/8/../../../../lib] ==> [/usr/lib]
-  collapse library dir [/lib/x86_64-linux-gnu] ==> [/lib/x86_64-linux-gnu]
-  collapse library dir [/lib/../lib] ==> [/lib]
-  collapse library dir [/usr/lib/x86_64-linux-gnu] ==> [/usr/lib/x86_64-linux-gnu]
-  collapse library dir [/usr/lib/../lib] ==> [/usr/lib]
-  collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/8/../../..] ==> [/usr/lib]
-  implicit libs: [stdc++;m;gcc_s;gcc;c;gcc_s;gcc]
-  implicit objs: [/usr/lib/x86_64-linux-gnu/Scrt1.o;/usr/lib/x86_64-linux-gnu/crti.o;/usr/lib/gcc/x86_64-linux-gnu/8/crtbeginS.o;/usr/lib/gcc/x86_64-linux-gnu/8/crtendS.o;/usr/lib/x86_64-linux-gnu/crtn.o]
-  implicit dirs: [/usr/lib/gcc/x86_64-linux-gnu/8;/usr/lib/x86_64-linux-gnu;/usr/lib;/lib/x86_64-linux-gnu;/lib]
-  implicit fwks: []
 
 
 Detecting CUDA compiler ABI info compiled with the following output:
-Change Dir: /media/wayne/Disk/DECX_world/DECX_CV_CUDA/build/CMakeFiles/CMakeScratch/TryCompile-QxKWAK
+Change Dir: E:/DECX_world/DECX_CV_CUDA/build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_a8add/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_a8add.dir/build.make CMakeFiles/cmTC_a8add.dir/build
-gmake[1]: Entering directory '/media/wayne/Disk/DECX_world/DECX_CV_CUDA/build/CMakeFiles/CMakeScratch/TryCompile-QxKWAK'
-Building CUDA object CMakeFiles/cmTC_a8add.dir/CMakeCUDACompilerABI.cu.o
-/usr/local/cuda/bin/nvcc -forward-unknown-to-host-compiler   -Xcompiler=-v -MD -MT CMakeFiles/cmTC_a8add.dir/CMakeCUDACompilerABI.cu.o -MF CMakeFiles/cmTC_a8add.dir/CMakeCUDACompilerABI.cu.o.d -x cu -c /usr/share/cmake-3.25/Modules/CMakeCUDACompilerABI.cu -o CMakeFiles/cmTC_a8add.dir/CMakeCUDACompilerABI.cu.o
-Using built-in specs.
-COLLECT_GCC=gcc
-OFFLOAD_TARGET_NAMES=nvptx-none
-OFFLOAD_TARGET_DEFAULT=1
-Target: x86_64-linux-gnu
-Configured with: ../src/configure -v --with-pkgversion='Ubuntu 8.4.0-3ubuntu2' --with-bugurl=file:///usr/share/doc/gcc-8/README.Bugs --enable-languages=c,ada,c++,go,brig,d,fortran,objc,obj-c++ --prefix=/usr --with-gcc-major-version-only --program-suffix=-8 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/lib --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-bootstrap --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-gnu-unique-object --disable-vtable-verify --enable-libmpx --enable-plugin --enable-default-pie --with-system-zlib --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32,m64,mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu
-Thread model: posix
-gcc version 8.4.0 (Ubuntu 8.4.0-3ubuntu2) 
-COLLECT_GCC_OPTIONS='-D' '__CUDA_ARCH__=300' '-E' '-D' 'CUDA_DOUBLE_MATH_FUNCTIONS' '-D' '__CUDACC__' '-D' '__NVCC__' '-v' '-I' '/usr/local/cuda/bin/../targets/x86_64-linux/include' '-D' '__CUDACC_VER_MAJOR__=10' '-D' '__CUDACC_VER_MINOR__=2' '-D' '__CUDACC_VER_BUILD__=89' '-include' 'cuda_runtime.h' '-m64' '-o' '/tmp/tmpxft_0000112b_00000000-6_CMakeCUDACompilerABI.cpp1.ii' '-mtune=generic' '-march=x86-64'
- /usr/lib/gcc/x86_64-linux-gnu/8/cc1plus -E -quiet -v -I /usr/local/cuda/bin/../targets/x86_64-linux/include -imultiarch x86_64-linux-gnu -D_GNU_SOURCE -D __CUDA_ARCH__=300 -D CUDA_DOUBLE_MATH_FUNCTIONS -D __CUDACC__ -D __NVCC__ -D __CUDACC_VER_MAJOR__=10 -D __CUDACC_VER_MINOR__=2 -D __CUDACC_VER_BUILD__=89 -include cuda_runtime.h /usr/share/cmake-3.25/Modules/CMakeCUDACompilerABI.cu -o /tmp/tmpxft_0000112b_00000000-6_CMakeCUDACompilerABI.cpp1.ii -m64 -mtune=generic -march=x86-64 -fasynchronous-unwind-tables -fstack-protector-strong -Wformat -Wformat-security -fstack-clash-protection -fcf-protection
-ignoring duplicate directory "/usr/include/x86_64-linux-gnu/c++/8"
-ignoring nonexistent directory "/usr/local/include/x86_64-linux-gnu"
-ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/8/include-fixed"
-ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/8/../../../../x86_64-linux-gnu/include"
-#include "..." search starts here:
-#include <...> search starts here:
- /usr/local/cuda/bin/../targets/x86_64-linux/include
- /usr/include/c++/8
- /usr/include/x86_64-linux-gnu/c++/8
- /usr/include/c++/8/backward
- /usr/lib/gcc/x86_64-linux-gnu/8/include
- /usr/local/include
- /usr/include/x86_64-linux-gnu
- /usr/include
-End of search list.
-COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/
-LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/8/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/8/../../../:/lib/:/usr/lib/
-COLLECT_GCC_OPTIONS='-D' '__CUDA_ARCH__=300' '-E' '-D' 'CUDA_DOUBLE_MATH_FUNCTIONS' '-D' '__CUDACC__' '-D' '__NVCC__' '-v' '-I' '/usr/local/cuda/bin/../targets/x86_64-linux/include' '-D' '__CUDACC_VER_MAJOR__=10' '-D' '__CUDACC_VER_MINOR__=2' '-D' '__CUDACC_VER_BUILD__=89' '-include' 'cuda_runtime.h' '-m64' '-o' '/tmp/tmpxft_0000112b_00000000-6_CMakeCUDACompilerABI.cpp1.ii' '-mtune=generic' '-march=x86-64'
-Using built-in specs.
-COLLECT_GCC=gcc
-OFFLOAD_TARGET_NAMES=nvptx-none
-OFFLOAD_TARGET_DEFAULT=1
-Target: x86_64-linux-gnu
-Configured with: ../src/configure -v --with-pkgversion='Ubuntu 8.4.0-3ubuntu2' --with-bugurl=file:///usr/share/doc/gcc-8/README.Bugs --enable-languages=c,ada,c++,go,brig,d,fortran,objc,obj-c++ --prefix=/usr --with-gcc-major-version-only --program-suffix=-8 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/lib --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-bootstrap --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-gnu-unique-object --disable-vtable-verify --enable-libmpx --enable-plugin --enable-default-pie --with-system-zlib --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32,m64,mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu
-Thread model: posix
-gcc version 8.4.0 (Ubuntu 8.4.0-3ubuntu2) 
-COLLECT_GCC_OPTIONS='-E' '-D' '__CUDACC__' '-D' '__NVCC__' '-v' '-I' '/usr/local/cuda/bin/../targets/x86_64-linux/include' '-D' '__CUDACC_VER_MAJOR__=10' '-D' '__CUDACC_VER_MINOR__=2' '-D' '__CUDACC_VER_BUILD__=89' '-include' 'cuda_runtime.h' '-m64' '-o' '/tmp/tmpxft_0000112b_00000000-4_CMakeCUDACompilerABI.cpp4.ii' '-mtune=generic' '-march=x86-64'
- /usr/lib/gcc/x86_64-linux-gnu/8/cc1plus -E -quiet -v -I /usr/local/cuda/bin/../targets/x86_64-linux/include -imultiarch x86_64-linux-gnu -D_GNU_SOURCE -D __CUDACC__ -D __NVCC__ -D __CUDACC_VER_MAJOR__=10 -D __CUDACC_VER_MINOR__=2 -D __CUDACC_VER_BUILD__=89 -include cuda_runtime.h /usr/share/cmake-3.25/Modules/CMakeCUDACompilerABI.cu -o /tmp/tmpxft_0000112b_00000000-4_CMakeCUDACompilerABI.cpp4.ii -m64 -mtune=generic -march=x86-64 -fasynchronous-unwind-tables -fstack-protector-strong -Wformat -Wformat-security -fstack-clash-protection -fcf-protection
-ignoring duplicate directory "/usr/include/x86_64-linux-gnu/c++/8"
-ignoring nonexistent directory "/usr/local/include/x86_64-linux-gnu"
-ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/8/include-fixed"
-ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/8/../../../../x86_64-linux-gnu/include"
-#include "..." search starts here:
-#include <...> search starts here:
- /usr/local/cuda/bin/../targets/x86_64-linux/include
- /usr/include/c++/8
- /usr/include/x86_64-linux-gnu/c++/8
- /usr/include/c++/8/backward
- /usr/lib/gcc/x86_64-linux-gnu/8/include
- /usr/local/include
- /usr/include/x86_64-linux-gnu
- /usr/include
-End of search list.
-COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/
-LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/8/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/8/../../../:/lib/:/usr/lib/
-COLLECT_GCC_OPTIONS='-E' '-D' '__CUDACC__' '-D' '__NVCC__' '-v' '-I' '/usr/local/cuda/bin/../targets/x86_64-linux/include' '-D' '__CUDACC_VER_MAJOR__=10' '-D' '__CUDACC_VER_MINOR__=2' '-D' '__CUDACC_VER_BUILD__=89' '-include' 'cuda_runtime.h' '-m64' '-o' '/tmp/tmpxft_0000112b_00000000-4_CMakeCUDACompilerABI.cpp4.ii' '-mtune=generic' '-march=x86-64'
-Using built-in specs.
-COLLECT_GCC=gcc
-OFFLOAD_TARGET_NAMES=nvptx-none
-OFFLOAD_TARGET_DEFAULT=1
-Target: x86_64-linux-gnu
-Configured with: ../src/configure -v --with-pkgversion='Ubuntu 8.4.0-3ubuntu2' --with-bugurl=file:///usr/share/doc/gcc-8/README.Bugs --enable-languages=c,ada,c++,go,brig,d,fortran,objc,obj-c++ --prefix=/usr --with-gcc-major-version-only --program-suffix=-8 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/lib --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-bootstrap --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-gnu-unique-object --disable-vtable-verify --enable-libmpx --enable-plugin --enable-default-pie --with-system-zlib --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32,m64,mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu
-Thread model: posix
-gcc version 8.4.0 (Ubuntu 8.4.0-3ubuntu2) 
-COLLECT_GCC_OPTIONS='-D' '__CUDA_ARCH__=300' '-c' '-D' 'CUDA_DOUBLE_MATH_FUNCTIONS' '-v' '-I' '/usr/local/cuda/bin/../targets/x86_64-linux/include' '-m64' '-o' 'CMakeFiles/cmTC_a8add.dir/CMakeCUDACompilerABI.cu.o' '-mtune=generic' '-march=x86-64'
- /usr/lib/gcc/x86_64-linux-gnu/8/cc1plus -quiet -v -I /usr/local/cuda/bin/../targets/x86_64-linux/include -imultiarch x86_64-linux-gnu -D_GNU_SOURCE -D __CUDA_ARCH__=300 -D CUDA_DOUBLE_MATH_FUNCTIONS /tmp/tmpxft_0000112b_00000000-5_CMakeCUDACompilerABI.cudafe1.cpp -quiet -dumpbase tmpxft_0000112b_00000000-5_CMakeCUDACompilerABI.cudafe1.cpp -m64 -mtune=generic -march=x86-64 -auxbase-strip CMakeFiles/cmTC_a8add.dir/CMakeCUDACompilerABI.cu.o -version -fasynchronous-unwind-tables -fstack-protector-strong -Wformat -Wformat-security -fstack-clash-protection -fcf-protection -o /tmp/ccCU7c8i.s
-GNU C++14 (Ubuntu 8.4.0-3ubuntu2) version 8.4.0 (x86_64-linux-gnu)
-	compiled by GNU C version 8.4.0, GMP version 6.2.0, MPFR version 4.0.2, MPC version 1.1.0, isl version isl-0.22.1-GMP
-
-warning: GMP header version 6.2.0 differs from library version 6.2.1.
-warning: MPFR header version 4.0.2 differs from library version 4.1.0.
-warning: MPC header version 1.1.0 differs from library version 1.2.1.
-GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
-ignoring duplicate directory "/usr/include/x86_64-linux-gnu/c++/8"
-ignoring nonexistent directory "/usr/local/include/x86_64-linux-gnu"
-ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/8/include-fixed"
-ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/8/../../../../x86_64-linux-gnu/include"
-#include "..." search starts here:
-#include <...> search starts here:
- /usr/local/cuda/bin/../targets/x86_64-linux/include
- /usr/include/c++/8
- /usr/include/x86_64-linux-gnu/c++/8
- /usr/include/c++/8/backward
- /usr/lib/gcc/x86_64-linux-gnu/8/include
- /usr/local/include
- /usr/include/x86_64-linux-gnu
- /usr/include
-End of search list.
-GNU C++14 (Ubuntu 8.4.0-3ubuntu2) version 8.4.0 (x86_64-linux-gnu)
-	compiled by GNU C version 8.4.0, GMP version 6.2.0, MPFR version 4.0.2, MPC version 1.1.0, isl version isl-0.22.1-GMP
-
-warning: GMP header version 6.2.0 differs from library version 6.2.1.
-warning: MPFR header version 4.0.2 differs from library version 4.1.0.
-warning: MPC header version 1.1.0 differs from library version 1.2.1.
-GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
-Compiler executable checksum: 7f898f3e7c9bafa983b4c472f0e6877a
-COLLECT_GCC_OPTIONS='-D' '__CUDA_ARCH__=300' '-c' '-D' 'CUDA_DOUBLE_MATH_FUNCTIONS' '-v' '-I' '/usr/local/cuda/bin/../targets/x86_64-linux/include' '-m64' '-o' 'CMakeFiles/cmTC_a8add.dir/CMakeCUDACompilerABI.cu.o' '-mtune=generic' '-march=x86-64'
- as -v -I /usr/local/cuda/bin/../targets/x86_64-linux/include --64 -o CMakeFiles/cmTC_a8add.dir/CMakeCUDACompilerABI.cu.o /tmp/ccCU7c8i.s
-GNU assembler version 2.38 (x86_64-linux-gnu) using BFD version (GNU Binutils for Ubuntu) 2.38
-COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/
-LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/8/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/8/../../../:/lib/:/usr/lib/
-COLLECT_GCC_OPTIONS='-D' '__CUDA_ARCH__=300' '-c' '-D' 'CUDA_DOUBLE_MATH_FUNCTIONS' '-v' '-I' '/usr/local/cuda/bin/../targets/x86_64-linux/include' '-m64' '-o' 'CMakeFiles/cmTC_a8add.dir/CMakeCUDACompilerABI.cu.o' '-mtune=generic' '-march=x86-64'
-Linking CUDA executable cmTC_a8add
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_a8add.dir/link.txt --verbose=1
-/usr/bin/g++  -v CMakeFiles/cmTC_a8add.dir/CMakeCUDACompilerABI.cu.o -o cmTC_a8add  -lcudadevrt -lcudart_static -lrt -lpthread -ldl  -L"/usr/local/cuda/targets/x86_64-linux/lib/stubs" -L"/usr/local/cuda/targets/x86_64-linux/lib"
-Using built-in specs.
-COLLECT_GCC=/usr/bin/g++
-COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-linux-gnu/8/lto-wrapper
-OFFLOAD_TARGET_NAMES=nvptx-none
-OFFLOAD_TARGET_DEFAULT=1
-Target: x86_64-linux-gnu
-Configured with: ../src/configure -v --with-pkgversion='Ubuntu 8.4.0-3ubuntu2' --with-bugurl=file:///usr/share/doc/gcc-8/README.Bugs --enable-languages=c,ada,c++,go,brig,d,fortran,objc,obj-c++ --prefix=/usr --with-gcc-major-version-only --program-suffix=-8 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/lib --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-bootstrap --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-gnu-unique-object --disable-vtable-verify --enable-libmpx --enable-plugin --enable-default-pie --with-system-zlib --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32,m64,mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu
-Thread model: posix
-gcc version 8.4.0 (Ubuntu 8.4.0-3ubuntu2) 
-COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/
-LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/8/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/8/../../../:/lib/:/usr/lib/
-COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_a8add' '-L/usr/local/cuda/targets/x86_64-linux/lib/stubs' '-L/usr/local/cuda/targets/x86_64-linux/lib' '-shared-libgcc' '-mtune=generic' '-march=x86-64'
- /usr/lib/gcc/x86_64-linux-gnu/8/collect2 -plugin /usr/lib/gcc/x86_64-linux-gnu/8/liblto_plugin.so -plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/8/lto-wrapper -plugin-opt=-fresolution=/tmp/ccfY6EEE.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_a8add /usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/8/crtbeginS.o -L/usr/local/cuda/targets/x86_64-linux/lib/stubs -L/usr/local/cuda/targets/x86_64-linux/lib -L/usr/lib/gcc/x86_64-linux-gnu/8 -L/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/8/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/8/../../.. CMakeFiles/cmTC_a8add.dir/CMakeCUDACompilerABI.cu.o -lcudadevrt -lcudart_static -lrt -lpthread -ldl -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-linux-gnu/8/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/crtn.o
-COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_a8add' '-L/usr/local/cuda/targets/x86_64-linux/lib/stubs' '-L/usr/local/cuda/targets/x86_64-linux/lib' '-shared-libgcc' '-mtune=generic' '-march=x86-64'
-gmake[1]: Leaving directory '/media/wayne/Disk/DECX_world/DECX_CV_CUDA/build/CMakeFiles/CMakeScratch/TryCompile-QxKWAK'
+Run Build Command(s):D:/Microsoft Visual Studio/Visual Studio/MSBuild/Current/Bin/MSBuild.exe cmTC_c8f28.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && 用于 .NET Framework 的 Microsoft (R) 生成引擎版本 16.11.2+f32259642
+版权所有(C) Microsoft Corporation。保留所有权利。
+
+  Compiling CUDA source file D:\cmake\share\cmake-3.24\Modules\CMakeCUDACompilerABI.cu...
+  
+  E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp>"D:\CUDA\Development\bin\nvcc.exe"  --use-local-env -ccbin "D:\Microsoft Visual Studio\Visual Studio\VC\Tools\MSVC\14.29.30133\bin\HostX64\x64" -x cu   -ID:\CUDA\Development\include     --keep-dir x64\Debug -maxrregcount=0  --machine 64 --compile -cudart static -Xcompiler="/EHsc -Zi -Ob0 -v" -g   -D_WINDOWS -D"CMAKE_INTDIR=\"Debug\"" -D_MBCS -D"CMAKE_INTDIR=\"Debug\"" -Xcompiler "/EHsc /W3 /nologo /Od /FdcmTC_c8f28.dir\Debug\vc142.pdb /FS /Zi /RTC1 /MDd /GR" -o cmTC_c8f28.dir\Debug\CMakeCUDACompilerABI.obj "D:\cmake\share\cmake-3.24\Modules\CMakeCUDACompilerABI.cu" 
+cl : 命令行 warning D9002: 忽略未知选项“-v” [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
+D:\CUDA\Development\include\sm_20_intrinsics.h(1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
+D:\CUDA\Development\include\sm_20_intrinsics.h(926): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
+cl : 命令行 warning D9002: 忽略未知选项“-v” [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
+D:\CUDA\Development\include\sm_20_intrinsics.h(1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
+D:\CUDA\Development\include\sm_20_intrinsics.h(926): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
+  CMakeCUDACompilerABI.cu
+cl : 命令行 warning D9002: 忽略未知选项“-v” [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
+LINK : warning LNK4044: 无法识别的选项“/v”；已忽略 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
+    正在创建库 E:/DECX_world/DECX_CV_CUDA/build/CMakeFiles/CMakeTmp/Debug/cmTC_c8f28.lib 和对象 E:/DECX_world/DECX_CV_CUDA/build/CMakeFiles/CMakeTmp/Debug/cmTC_c8f28.exp
+  cmTC_c8f28.vcxproj -> E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\Debug\cmTC_c8f28.exe
 
 
 
-Parsed CUDA implicit include dir info from above output: rv=done
-  found start of include info
-  found start of implicit include info
-    add: [/usr/local/cuda/bin/../targets/x86_64-linux/include]
-    add: [/usr/include/c++/8]
-    add: [/usr/include/x86_64-linux-gnu/c++/8]
-    add: [/usr/include/c++/8/backward]
-    add: [/usr/lib/gcc/x86_64-linux-gnu/8/include]
-    add: [/usr/local/include]
-    add: [/usr/include/x86_64-linux-gnu]
-    add: [/usr/include]
-  end of search list found
-  collapse include dir [/usr/local/cuda/bin/../targets/x86_64-linux/include] ==> [/usr/local/cuda/targets/x86_64-linux/include]
-  collapse include dir [/usr/include/c++/8] ==> [/usr/include/c++/8]
-  collapse include dir [/usr/include/x86_64-linux-gnu/c++/8] ==> [/usr/include/x86_64-linux-gnu/c++/8]
-  collapse include dir [/usr/include/c++/8/backward] ==> [/usr/include/c++/8/backward]
-  collapse include dir [/usr/lib/gcc/x86_64-linux-gnu/8/include] ==> [/usr/lib/gcc/x86_64-linux-gnu/8/include]
-  collapse include dir [/usr/local/include] ==> [/usr/local/include]
-  collapse include dir [/usr/include/x86_64-linux-gnu] ==> [/usr/include/x86_64-linux-gnu]
-  collapse include dir [/usr/include] ==> [/usr/include]
-  implicit include dirs: [/usr/local/cuda/targets/x86_64-linux/include;/usr/include/c++/8;/usr/include/x86_64-linux-gnu/c++/8;/usr/include/c++/8/backward;/usr/lib/gcc/x86_64-linux-gnu/8/include;/usr/local/include;/usr/include/x86_64-linux-gnu;/usr/include]
+Parsed CUDA implicit include dir info from above output: rv=start
+  warn: unable to parse implicit include dirs!
 
 
 Parsed CUDA implicit link information from above output:
-  link line regex: [^( *|.*[/\])(ld|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\]+-)?ld|collect2)[^/\]*( |$)]
-  ignore line: [Change Dir: /media/wayne/Disk/DECX_world/DECX_CV_CUDA/build/CMakeFiles/CMakeScratch/TryCompile-QxKWAK]
+  link line regex: [^( *|.*[/\])(link\.exe|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\]+-)?ld|collect2)[^/\]*( |$)]
+  ignore line: [Change Dir: E:/DECX_world/DECX_CV_CUDA/build/CMakeFiles/CMakeTmp]
   ignore line: []
-  ignore line: [Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_a8add/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_a8add.dir/build.make CMakeFiles/cmTC_a8add.dir/build]
-  ignore line: [gmake[1]: Entering directory '/media/wayne/Disk/DECX_world/DECX_CV_CUDA/build/CMakeFiles/CMakeScratch/TryCompile-QxKWAK']
-  ignore line: [Building CUDA object CMakeFiles/cmTC_a8add.dir/CMakeCUDACompilerABI.cu.o]
-  ignore line: [/usr/local/cuda/bin/nvcc -forward-unknown-to-host-compiler   -Xcompiler=-v -MD -MT CMakeFiles/cmTC_a8add.dir/CMakeCUDACompilerABI.cu.o -MF CMakeFiles/cmTC_a8add.dir/CMakeCUDACompilerABI.cu.o.d -x cu -c /usr/share/cmake-3.25/Modules/CMakeCUDACompilerABI.cu -o CMakeFiles/cmTC_a8add.dir/CMakeCUDACompilerABI.cu.o]
-  ignore line: [Using built-in specs.]
-  ignore line: [COLLECT_GCC=gcc]
-  ignore line: [OFFLOAD_TARGET_NAMES=nvptx-none]
-  ignore line: [OFFLOAD_TARGET_DEFAULT=1]
-  ignore line: [Target: x86_64-linux-gnu]
-  ignore line: [Configured with: ../src/configure -v --with-pkgversion='Ubuntu 8.4.0-3ubuntu2' --with-bugurl=file:///usr/share/doc/gcc-8/README.Bugs --enable-languages=c ada c++ go brig d fortran objc obj-c++ --prefix=/usr --with-gcc-major-version-only --program-suffix=-8 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/lib --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-bootstrap --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-gnu-unique-object --disable-vtable-verify --enable-libmpx --enable-plugin --enable-default-pie --with-system-zlib --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32 m64 mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu]
-  ignore line: [Thread model: posix]
-  ignore line: [gcc version 8.4.0 (Ubuntu 8.4.0-3ubuntu2) ]
-  ignore line: [COLLECT_GCC_OPTIONS='-D' '__CUDA_ARCH__=300' '-E' '-D' 'CUDA_DOUBLE_MATH_FUNCTIONS' '-D' '__CUDACC__' '-D' '__NVCC__' '-v' '-I' '/usr/local/cuda/bin/../targets/x86_64-linux/include' '-D' '__CUDACC_VER_MAJOR__=10' '-D' '__CUDACC_VER_MINOR__=2' '-D' '__CUDACC_VER_BUILD__=89' '-include' 'cuda_runtime.h' '-m64' '-o' '/tmp/tmpxft_0000112b_00000000-6_CMakeCUDACompilerABI.cpp1.ii' '-mtune=generic' '-march=x86-64']
-  ignore line: [ /usr/lib/gcc/x86_64-linux-gnu/8/cc1plus -E -quiet -v -I /usr/local/cuda/bin/../targets/x86_64-linux/include -imultiarch x86_64-linux-gnu -D_GNU_SOURCE -D __CUDA_ARCH__=300 -D CUDA_DOUBLE_MATH_FUNCTIONS -D __CUDACC__ -D __NVCC__ -D __CUDACC_VER_MAJOR__=10 -D __CUDACC_VER_MINOR__=2 -D __CUDACC_VER_BUILD__=89 -include cuda_runtime.h /usr/share/cmake-3.25/Modules/CMakeCUDACompilerABI.cu -o /tmp/tmpxft_0000112b_00000000-6_CMakeCUDACompilerABI.cpp1.ii -m64 -mtune=generic -march=x86-64 -fasynchronous-unwind-tables -fstack-protector-strong -Wformat -Wformat-security -fstack-clash-protection -fcf-protection]
-  ignore line: [ignoring duplicate directory "/usr/include/x86_64-linux-gnu/c++/8"]
-  ignore line: [ignoring nonexistent directory "/usr/local/include/x86_64-linux-gnu"]
-  ignore line: [ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/8/include-fixed"]
-  ignore line: [ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/8/../../../../x86_64-linux-gnu/include"]
-  ignore line: [#include "..." search starts here:]
-  ignore line: [#include <...> search starts here:]
-  ignore line: [ /usr/local/cuda/bin/../targets/x86_64-linux/include]
-  ignore line: [ /usr/include/c++/8]
-  ignore line: [ /usr/include/x86_64-linux-gnu/c++/8]
-  ignore line: [ /usr/include/c++/8/backward]
-  ignore line: [ /usr/lib/gcc/x86_64-linux-gnu/8/include]
-  ignore line: [ /usr/local/include]
-  ignore line: [ /usr/include/x86_64-linux-gnu]
-  ignore line: [ /usr/include]
-  ignore line: [End of search list.]
-  ignore line: [COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/]
-  ignore line: [LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/8/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/8/../../../:/lib/:/usr/lib/]
-  ignore line: [COLLECT_GCC_OPTIONS='-D' '__CUDA_ARCH__=300' '-E' '-D' 'CUDA_DOUBLE_MATH_FUNCTIONS' '-D' '__CUDACC__' '-D' '__NVCC__' '-v' '-I' '/usr/local/cuda/bin/../targets/x86_64-linux/include' '-D' '__CUDACC_VER_MAJOR__=10' '-D' '__CUDACC_VER_MINOR__=2' '-D' '__CUDACC_VER_BUILD__=89' '-include' 'cuda_runtime.h' '-m64' '-o' '/tmp/tmpxft_0000112b_00000000-6_CMakeCUDACompilerABI.cpp1.ii' '-mtune=generic' '-march=x86-64']
-  ignore line: [Using built-in specs.]
-  ignore line: [COLLECT_GCC=gcc]
-  ignore line: [OFFLOAD_TARGET_NAMES=nvptx-none]
-  ignore line: [OFFLOAD_TARGET_DEFAULT=1]
-  ignore line: [Target: x86_64-linux-gnu]
-  ignore line: [Configured with: ../src/configure -v --with-pkgversion='Ubuntu 8.4.0-3ubuntu2' --with-bugurl=file:///usr/share/doc/gcc-8/README.Bugs --enable-languages=c ada c++ go brig d fortran objc obj-c++ --prefix=/usr --with-gcc-major-version-only --program-suffix=-8 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/lib --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-bootstrap --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-gnu-unique-object --disable-vtable-verify --enable-libmpx --enable-plugin --enable-default-pie --with-system-zlib --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32 m64 mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu]
-  ignore line: [Thread model: posix]
-  ignore line: [gcc version 8.4.0 (Ubuntu 8.4.0-3ubuntu2) ]
-  ignore line: [COLLECT_GCC_OPTIONS='-E' '-D' '__CUDACC__' '-D' '__NVCC__' '-v' '-I' '/usr/local/cuda/bin/../targets/x86_64-linux/include' '-D' '__CUDACC_VER_MAJOR__=10' '-D' '__CUDACC_VER_MINOR__=2' '-D' '__CUDACC_VER_BUILD__=89' '-include' 'cuda_runtime.h' '-m64' '-o' '/tmp/tmpxft_0000112b_00000000-4_CMakeCUDACompilerABI.cpp4.ii' '-mtune=generic' '-march=x86-64']
-  ignore line: [ /usr/lib/gcc/x86_64-linux-gnu/8/cc1plus -E -quiet -v -I /usr/local/cuda/bin/../targets/x86_64-linux/include -imultiarch x86_64-linux-gnu -D_GNU_SOURCE -D __CUDACC__ -D __NVCC__ -D __CUDACC_VER_MAJOR__=10 -D __CUDACC_VER_MINOR__=2 -D __CUDACC_VER_BUILD__=89 -include cuda_runtime.h /usr/share/cmake-3.25/Modules/CMakeCUDACompilerABI.cu -o /tmp/tmpxft_0000112b_00000000-4_CMakeCUDACompilerABI.cpp4.ii -m64 -mtune=generic -march=x86-64 -fasynchronous-unwind-tables -fstack-protector-strong -Wformat -Wformat-security -fstack-clash-protection -fcf-protection]
-  ignore line: [ignoring duplicate directory "/usr/include/x86_64-linux-gnu/c++/8"]
-  ignore line: [ignoring nonexistent directory "/usr/local/include/x86_64-linux-gnu"]
-  ignore line: [ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/8/include-fixed"]
-  ignore line: [ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/8/../../../../x86_64-linux-gnu/include"]
-  ignore line: [#include "..." search starts here:]
-  ignore line: [#include <...> search starts here:]
-  ignore line: [ /usr/local/cuda/bin/../targets/x86_64-linux/include]
-  ignore line: [ /usr/include/c++/8]
-  ignore line: [ /usr/include/x86_64-linux-gnu/c++/8]
-  ignore line: [ /usr/include/c++/8/backward]
-  ignore line: [ /usr/lib/gcc/x86_64-linux-gnu/8/include]
-  ignore line: [ /usr/local/include]
-  ignore line: [ /usr/include/x86_64-linux-gnu]
-  ignore line: [ /usr/include]
-  ignore line: [End of search list.]
-  ignore line: [COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/]
-  ignore line: [LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/8/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/8/../../../:/lib/:/usr/lib/]
-  ignore line: [COLLECT_GCC_OPTIONS='-E' '-D' '__CUDACC__' '-D' '__NVCC__' '-v' '-I' '/usr/local/cuda/bin/../targets/x86_64-linux/include' '-D' '__CUDACC_VER_MAJOR__=10' '-D' '__CUDACC_VER_MINOR__=2' '-D' '__CUDACC_VER_BUILD__=89' '-include' 'cuda_runtime.h' '-m64' '-o' '/tmp/tmpxft_0000112b_00000000-4_CMakeCUDACompilerABI.cpp4.ii' '-mtune=generic' '-march=x86-64']
-  ignore line: [Using built-in specs.]
-  ignore line: [COLLECT_GCC=gcc]
-  ignore line: [OFFLOAD_TARGET_NAMES=nvptx-none]
-  ignore line: [OFFLOAD_TARGET_DEFAULT=1]
-  ignore line: [Target: x86_64-linux-gnu]
-  ignore line: [Configured with: ../src/configure -v --with-pkgversion='Ubuntu 8.4.0-3ubuntu2' --with-bugurl=file:///usr/share/doc/gcc-8/README.Bugs --enable-languages=c ada c++ go brig d fortran objc obj-c++ --prefix=/usr --with-gcc-major-version-only --program-suffix=-8 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/lib --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-bootstrap --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-gnu-unique-object --disable-vtable-verify --enable-libmpx --enable-plugin --enable-default-pie --with-system-zlib --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32 m64 mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu]
-  ignore line: [Thread model: posix]
-  ignore line: [gcc version 8.4.0 (Ubuntu 8.4.0-3ubuntu2) ]
-  ignore line: [COLLECT_GCC_OPTIONS='-D' '__CUDA_ARCH__=300' '-c' '-D' 'CUDA_DOUBLE_MATH_FUNCTIONS' '-v' '-I' '/usr/local/cuda/bin/../targets/x86_64-linux/include' '-m64' '-o' 'CMakeFiles/cmTC_a8add.dir/CMakeCUDACompilerABI.cu.o' '-mtune=generic' '-march=x86-64']
-  ignore line: [ /usr/lib/gcc/x86_64-linux-gnu/8/cc1plus -quiet -v -I /usr/local/cuda/bin/../targets/x86_64-linux/include -imultiarch x86_64-linux-gnu -D_GNU_SOURCE -D __CUDA_ARCH__=300 -D CUDA_DOUBLE_MATH_FUNCTIONS /tmp/tmpxft_0000112b_00000000-5_CMakeCUDACompilerABI.cudafe1.cpp -quiet -dumpbase tmpxft_0000112b_00000000-5_CMakeCUDACompilerABI.cudafe1.cpp -m64 -mtune=generic -march=x86-64 -auxbase-strip CMakeFiles/cmTC_a8add.dir/CMakeCUDACompilerABI.cu.o -version -fasynchronous-unwind-tables -fstack-protector-strong -Wformat -Wformat-security -fstack-clash-protection -fcf-protection -o /tmp/ccCU7c8i.s]
-  ignore line: [GNU C++14 (Ubuntu 8.4.0-3ubuntu2) version 8.4.0 (x86_64-linux-gnu)]
-  ignore line: [	compiled by GNU C version 8.4.0  GMP version 6.2.0  MPFR version 4.0.2  MPC version 1.1.0  isl version isl-0.22.1-GMP]
+  ignore line: [Run Build Command(s):D:/Microsoft Visual Studio/Visual Studio/MSBuild/Current/Bin/MSBuild.exe cmTC_c8f28.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && 用于 .NET Framework 的 Microsoft (R) 生成引擎版本 16.11.2+f32259642]
+  ignore line: [版权所有(C) Microsoft Corporation。保留所有权利。]
   ignore line: []
-  ignore line: [warning: GMP header version 6.2.0 differs from library version 6.2.1.]
-  ignore line: [warning: MPFR header version 4.0.2 differs from library version 4.1.0.]
-  ignore line: [warning: MPC header version 1.1.0 differs from library version 1.2.1.]
-  ignore line: [GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072]
-  ignore line: [ignoring duplicate directory "/usr/include/x86_64-linux-gnu/c++/8"]
-  ignore line: [ignoring nonexistent directory "/usr/local/include/x86_64-linux-gnu"]
-  ignore line: [ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/8/include-fixed"]
-  ignore line: [ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/8/../../../../x86_64-linux-gnu/include"]
-  ignore line: [#include "..." search starts here:]
-  ignore line: [#include <...> search starts here:]
-  ignore line: [ /usr/local/cuda/bin/../targets/x86_64-linux/include]
-  ignore line: [ /usr/include/c++/8]
-  ignore line: [ /usr/include/x86_64-linux-gnu/c++/8]
-  ignore line: [ /usr/include/c++/8/backward]
-  ignore line: [ /usr/lib/gcc/x86_64-linux-gnu/8/include]
-  ignore line: [ /usr/local/include]
-  ignore line: [ /usr/include/x86_64-linux-gnu]
-  ignore line: [ /usr/include]
-  ignore line: [End of search list.]
-  ignore line: [GNU C++14 (Ubuntu 8.4.0-3ubuntu2) version 8.4.0 (x86_64-linux-gnu)]
-  ignore line: [	compiled by GNU C version 8.4.0  GMP version 6.2.0  MPFR version 4.0.2  MPC version 1.1.0  isl version isl-0.22.1-GMP]
+  ignore line: [  Compiling CUDA source file D:\cmake\share\cmake-3.24\Modules\CMakeCUDACompilerABI.cu...]
+  ignore line: [  ]
+  ignore line: [  E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp>"D:\CUDA\Development\bin\nvcc.exe"  --use-local-env -ccbin "D:\Microsoft Visual Studio\Visual Studio\VC\Tools\MSVC\14.29.30133\bin\HostX64\x64" -x cu   -ID:\CUDA\Development\include     --keep-dir x64\Debug -maxrregcount=0  --machine 64 --compile -cudart static -Xcompiler="/EHsc -Zi -Ob0 -v" -g   -D_WINDOWS -D"CMAKE_INTDIR=\"Debug\"" -D_MBCS -D"CMAKE_INTDIR=\"Debug\"" -Xcompiler "/EHsc /W3 /nologo /Od /FdcmTC_c8f28.dir\Debug\vc142.pdb /FS /Zi /RTC1 /MDd /GR" -o cmTC_c8f28.dir\Debug\CMakeCUDACompilerABI.obj "D:\cmake\share\cmake-3.24\Modules\CMakeCUDACompilerABI.cu" ]
+  ignore line: [cl : 命令行 warning D9002: 忽略未知选项“-v” [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\sm_20_intrinsics.h(1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\sm_20_intrinsics.h(926): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
+  ignore line: [cl : 命令行 warning D9002: 忽略未知选项“-v” [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\sm_20_intrinsics.h(1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\sm_20_intrinsics.h(926): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
+  ignore line: [  CMakeCUDACompilerABI.cu]
+  ignore line: [cl : 命令行 warning D9002: 忽略未知选项“-v” [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
+  ignore line: [LINK : warning LNK4044: 无法识别的选项“/v”；已忽略 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
+  ignore line: [    正在创建库 E:/DECX_world/DECX_CV_CUDA/build/CMakeFiles/CMakeTmp/Debug/cmTC_c8f28.lib 和对象 E:/DECX_world/DECX_CV_CUDA/build/CMakeFiles/CMakeTmp/Debug/cmTC_c8f28.exp]
+  ignore line: [  cmTC_c8f28.vcxproj -> E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\Debug\cmTC_c8f28.exe]
   ignore line: []
-  ignore line: [warning: GMP header version 6.2.0 differs from library version 6.2.1.]
-  ignore line: [warning: MPFR header version 4.0.2 differs from library version 4.1.0.]
-  ignore line: [warning: MPC header version 1.1.0 differs from library version 1.2.1.]
-  ignore line: [GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072]
-  ignore line: [Compiler executable checksum: 7f898f3e7c9bafa983b4c472f0e6877a]
-  ignore line: [COLLECT_GCC_OPTIONS='-D' '__CUDA_ARCH__=300' '-c' '-D' 'CUDA_DOUBLE_MATH_FUNCTIONS' '-v' '-I' '/usr/local/cuda/bin/../targets/x86_64-linux/include' '-m64' '-o' 'CMakeFiles/cmTC_a8add.dir/CMakeCUDACompilerABI.cu.o' '-mtune=generic' '-march=x86-64']
-  ignore line: [ as -v -I /usr/local/cuda/bin/../targets/x86_64-linux/include --64 -o CMakeFiles/cmTC_a8add.dir/CMakeCUDACompilerABI.cu.o /tmp/ccCU7c8i.s]
-  ignore line: [GNU assembler version 2.38 (x86_64-linux-gnu) using BFD version (GNU Binutils for Ubuntu) 2.38]
-  ignore line: [COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/]
-  ignore line: [LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/8/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/8/../../../:/lib/:/usr/lib/]
-  ignore line: [COLLECT_GCC_OPTIONS='-D' '__CUDA_ARCH__=300' '-c' '-D' 'CUDA_DOUBLE_MATH_FUNCTIONS' '-v' '-I' '/usr/local/cuda/bin/../targets/x86_64-linux/include' '-m64' '-o' 'CMakeFiles/cmTC_a8add.dir/CMakeCUDACompilerABI.cu.o' '-mtune=generic' '-march=x86-64']
-  ignore line: [Linking CUDA executable cmTC_a8add]
-  ignore line: [/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_a8add.dir/link.txt --verbose=1]
-  ignore line: [/usr/bin/g++  -v CMakeFiles/cmTC_a8add.dir/CMakeCUDACompilerABI.cu.o -o cmTC_a8add  -lcudadevrt -lcudart_static -lrt -lpthread -ldl  -L"/usr/local/cuda/targets/x86_64-linux/lib/stubs" -L"/usr/local/cuda/targets/x86_64-linux/lib"]
-  ignore line: [Using built-in specs.]
-  ignore line: [COLLECT_GCC=/usr/bin/g++]
-  ignore line: [COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-linux-gnu/8/lto-wrapper]
-  ignore line: [OFFLOAD_TARGET_NAMES=nvptx-none]
-  ignore line: [OFFLOAD_TARGET_DEFAULT=1]
-  ignore line: [Target: x86_64-linux-gnu]
-  ignore line: [Configured with: ../src/configure -v --with-pkgversion='Ubuntu 8.4.0-3ubuntu2' --with-bugurl=file:///usr/share/doc/gcc-8/README.Bugs --enable-languages=c ada c++ go brig d fortran objc obj-c++ --prefix=/usr --with-gcc-major-version-only --program-suffix=-8 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/lib --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-bootstrap --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-gnu-unique-object --disable-vtable-verify --enable-libmpx --enable-plugin --enable-default-pie --with-system-zlib --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32 m64 mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu]
-  ignore line: [Thread model: posix]
-  ignore line: [gcc version 8.4.0 (Ubuntu 8.4.0-3ubuntu2) ]
-  ignore line: [COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/]
-  ignore line: [LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/8/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/8/../../../:/lib/:/usr/lib/]
-  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_a8add' '-L/usr/local/cuda/targets/x86_64-linux/lib/stubs' '-L/usr/local/cuda/targets/x86_64-linux/lib' '-shared-libgcc' '-mtune=generic' '-march=x86-64']
-  link line: [ /usr/lib/gcc/x86_64-linux-gnu/8/collect2 -plugin /usr/lib/gcc/x86_64-linux-gnu/8/liblto_plugin.so -plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/8/lto-wrapper -plugin-opt=-fresolution=/tmp/ccfY6EEE.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_a8add /usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/8/crtbeginS.o -L/usr/local/cuda/targets/x86_64-linux/lib/stubs -L/usr/local/cuda/targets/x86_64-linux/lib -L/usr/lib/gcc/x86_64-linux-gnu/8 -L/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/8/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/8/../../.. CMakeFiles/cmTC_a8add.dir/CMakeCUDACompilerABI.cu.o -lcudadevrt -lcudart_static -lrt -lpthread -ldl -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-linux-gnu/8/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/crtn.o]
-    arg [/usr/lib/gcc/x86_64-linux-gnu/8/collect2] ==> ignore
-    arg [-plugin] ==> ignore
-    arg [/usr/lib/gcc/x86_64-linux-gnu/8/liblto_plugin.so] ==> ignore
-    arg [-plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/8/lto-wrapper] ==> ignore
-    arg [-plugin-opt=-fresolution=/tmp/ccfY6EEE.res] ==> ignore
-    arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
-    arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
-    arg [-plugin-opt=-pass-through=-lc] ==> ignore
-    arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
-    arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
-    arg [--build-id] ==> ignore
-    arg [--eh-frame-hdr] ==> ignore
-    arg [-m] ==> ignore
-    arg [elf_x86_64] ==> ignore
-    arg [--hash-style=gnu] ==> ignore
-    arg [--as-needed] ==> ignore
-    arg [-dynamic-linker] ==> ignore
-    arg [/lib64/ld-linux-x86-64.so.2] ==> ignore
-    arg [-pie] ==> ignore
-    arg [-znow] ==> ignore
-    arg [-zrelro] ==> ignore
-    arg [-o] ==> ignore
-    arg [cmTC_a8add] ==> ignore
-    arg [/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/Scrt1.o] ==> obj [/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/Scrt1.o]
-    arg [/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/crti.o] ==> obj [/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/crti.o]
-    arg [/usr/lib/gcc/x86_64-linux-gnu/8/crtbeginS.o] ==> obj [/usr/lib/gcc/x86_64-linux-gnu/8/crtbeginS.o]
-    arg [-L/usr/local/cuda/targets/x86_64-linux/lib/stubs] ==> dir [/usr/local/cuda/targets/x86_64-linux/lib/stubs]
-    arg [-L/usr/local/cuda/targets/x86_64-linux/lib] ==> dir [/usr/local/cuda/targets/x86_64-linux/lib]
-    arg [-L/usr/lib/gcc/x86_64-linux-gnu/8] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/8]
-    arg [-L/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu]
-    arg [-L/usr/lib/gcc/x86_64-linux-gnu/8/../../../../lib] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/8/../../../../lib]
-    arg [-L/lib/x86_64-linux-gnu] ==> dir [/lib/x86_64-linux-gnu]
-    arg [-L/lib/../lib] ==> dir [/lib/../lib]
-    arg [-L/usr/lib/x86_64-linux-gnu] ==> dir [/usr/lib/x86_64-linux-gnu]
-    arg [-L/usr/lib/../lib] ==> dir [/usr/lib/../lib]
-    arg [-L/usr/lib/gcc/x86_64-linux-gnu/8/../../..] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/8/../../..]
-    arg [CMakeFiles/cmTC_a8add.dir/CMakeCUDACompilerABI.cu.o] ==> ignore
-    arg [-lcudadevrt] ==> lib [cudadevrt]
-    arg [-lcudart_static] ==> lib [cudart_static]
-    arg [-lrt] ==> lib [rt]
-    arg [-lpthread] ==> lib [pthread]
-    arg [-ldl] ==> lib [dl]
-    arg [-lstdc++] ==> lib [stdc++]
-    arg [-lm] ==> lib [m]
-    arg [-lgcc_s] ==> lib [gcc_s]
-    arg [-lgcc] ==> lib [gcc]
-    arg [-lc] ==> lib [c]
-    arg [-lgcc_s] ==> lib [gcc_s]
-    arg [-lgcc] ==> lib [gcc]
-    arg [/usr/lib/gcc/x86_64-linux-gnu/8/crtendS.o] ==> obj [/usr/lib/gcc/x86_64-linux-gnu/8/crtendS.o]
-    arg [/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/crtn.o] ==> obj [/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/crtn.o]
-  collapse obj [/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/Scrt1.o] ==> [/usr/lib/x86_64-linux-gnu/Scrt1.o]
-  collapse obj [/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/crti.o] ==> [/usr/lib/x86_64-linux-gnu/crti.o]
-  collapse obj [/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/crtn.o] ==> [/usr/lib/x86_64-linux-gnu/crtn.o]
-  collapse library dir [/usr/local/cuda/targets/x86_64-linux/lib/stubs] ==> [/usr/local/cuda/targets/x86_64-linux/lib/stubs]
-  collapse library dir [/usr/local/cuda/targets/x86_64-linux/lib] ==> [/usr/local/cuda/targets/x86_64-linux/lib]
-  collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/8] ==> [/usr/lib/gcc/x86_64-linux-gnu/8]
-  collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu] ==> [/usr/lib/x86_64-linux-gnu]
-  collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/8/../../../../lib] ==> [/usr/lib]
-  collapse library dir [/lib/x86_64-linux-gnu] ==> [/lib/x86_64-linux-gnu]
-  collapse library dir [/lib/../lib] ==> [/lib]
-  collapse library dir [/usr/lib/x86_64-linux-gnu] ==> [/usr/lib/x86_64-linux-gnu]
-  collapse library dir [/usr/lib/../lib] ==> [/usr/lib]
-  collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/8/../../..] ==> [/usr/lib]
-  implicit libs: [cudadevrt;cudart_static;rt;pthread;dl;stdc++;m;gcc_s;gcc;c;gcc_s;gcc]
-  implicit objs: [/usr/lib/x86_64-linux-gnu/Scrt1.o;/usr/lib/x86_64-linux-gnu/crti.o;/usr/lib/gcc/x86_64-linux-gnu/8/crtbeginS.o;/usr/lib/gcc/x86_64-linux-gnu/8/crtendS.o;/usr/lib/x86_64-linux-gnu/crtn.o]
-  implicit dirs: [/usr/local/cuda/targets/x86_64-linux/lib/stubs;/usr/local/cuda/targets/x86_64-linux/lib;/usr/lib/gcc/x86_64-linux-gnu/8;/usr/lib/x86_64-linux-gnu;/usr/lib;/lib/x86_64-linux-gnu;/lib]
+  ignore line: []
+  implicit libs: []
+  implicit objs: []
+  implicit dirs: []
   implicit fwks: []
 
 

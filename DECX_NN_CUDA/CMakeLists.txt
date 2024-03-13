@@ -17,6 +17,7 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 
 file(GLOB_RECURSE NN_CORE "${DECX_WORLD_ABS_DIR}/srcs/modules/NN/*.cu")
+file(GLOB_RECURSE UTILS "${DECX_WORLD_ABS_DIR}/srcs/modules/BLAS/basic_process/transpose/CUDA/transpose_kernels.cu")
 
 
 add_compile_definitions(_DECX_CUDA_PARTS_)
@@ -41,7 +42,7 @@ else()
     message(STATUS "Building on unknown platform. Failed, not supported!")
 endif()
 
-add_library(DECX_NN_CUDA SHARED ${NN_CORE})
+add_library(DECX_NN_CUDA SHARED ${NN_CORE} ${UTILS})
 
 set_target_properties(DECX_NN_CUDA PROPERTIES CUDA_ARCHITECTURES "75")
 
