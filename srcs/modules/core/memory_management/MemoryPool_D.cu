@@ -101,6 +101,7 @@ void decx::MemPool_D::allocate(size_t req_size, decx::MemBlock** _ptr)
 void decx::MemPool_D::deallocate(decx::MemBlock* _ptr)
 {
     if (_ptr != NULL) {
+        this->_mtx.lock();
         decx::MemChunk_D* tmp_ptr = &this->mem_chunk_set_list[_ptr->_loc.x].mem_chunk_list[_ptr->_loc.y];
         // if the reference time is 1, which means that it will be zero when deallocated.
         // So set this block idle and check if it can be merged
@@ -113,6 +114,7 @@ void decx::MemPool_D::deallocate(decx::MemBlock* _ptr)
         else {
             tmp_ptr->mem_block_list[_ptr->_loc.z]->_ref_times--;
         }
+        this->_mtx.unlock();
     }
 }
 
@@ -121,7 +123,9 @@ void decx::MemPool_D::deallocate(decx::MemBlock* _ptr)
 void decx::MemPool_D::register_reference(decx::MemBlock* _ptr)
 {
     // Increase one to the reference number
+    this->_mtx.lock();
     this->mem_chunk_set_list[_ptr->_loc.x].mem_chunk_list[_ptr->_loc.y].mem_block_list[_ptr->_loc.z]->_ref_times++;
+    this->_mtx.unlock();
 }
 
 

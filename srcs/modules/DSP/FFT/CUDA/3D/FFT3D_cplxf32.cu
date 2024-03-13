@@ -31,6 +31,16 @@ void decx::dsp::fft::_cuda_FFT3D_planner<float>::Forward(decx::_GPU_Tensor* src,
 
     // Along W
     const decx::dsp::fft::_cuda_FFT3D_mid_config* _along_W = this->get_midFFT_info();
+#if _CUDA_FFT3D_restrict_coalesce_
+    if (this->_sync_dpitchdst_needed) {
+        checkCudaErrors(cudaMemcpy2DAsync(double_buffer.get_lagging_ptr<void>(),    _along_W->_1way_FFT_conf._pitchsrc * sizeof(de::CPf),
+                                          double_buffer.get_leading_ptr<void>(),    src->get_layout().dpitch * sizeof(de::CPf),
+                                          this->_signal_dims.x * sizeof(de::CPf),   src->get_layout().wpitch * src->Height(),
+                                          cudaMemcpyDeviceToDevice,                 S->get_raw_stream_ref()));
+        double_buffer.update_states();
+    }
+#endif
+
     decx::dsp::fft::FFT3D_cplxf_1st_1way_caller<false>(&double_buffer, _along_W, S);
 
     // Along D
@@ -71,6 +81,16 @@ void decx::dsp::fft::_cuda_FFT3D_planner<float>::Inverse(decx::_GPU_Tensor* src,
         this->get_FFT_info(decx::dsp::fft::_FFT_AlongH), S);
 
     // Along W
+#if _CUDA_FFT3D_restrict_coalesce_
+    if (this->_sync_dpitchdst_needed) {
+        checkCudaErrors(cudaMemcpy2DAsync(double_buffer.get_lagging_ptr<void>(),    this->_FFT_W._1way_FFT_conf._pitchsrc * sizeof(de::CPf),
+                                          double_buffer.get_leading_ptr<void>(),    src->get_layout().dpitch * sizeof(de::CPf),
+                                          this->_signal_dims.x * sizeof(de::CPf),   src->get_layout().wpitch * src->Height(),
+                                          cudaMemcpyDeviceToDevice,                 S->get_raw_stream_ref()));
+        double_buffer.update_states();
+    }
+#endif
+
     const decx::dsp::fft::_cuda_FFT3D_mid_config* _along_W = this->get_midFFT_info();
     decx::dsp::fft::FFT3D_cplxf_1st_1way_caller<true>(&double_buffer, _along_W, S);
 

@@ -44,9 +44,18 @@ void decx::dsp::fft::_cuda_FFT3D_planner<_type_in>::plan(const decx::_tensor_lay
     this->_FFT_H._pitchtmp = _src_layout->dp_x_wp;
     this->_FFT_H._pitchdst = this->_FFT_H._pitchtmp;
 
+#if _CUDA_FFT3D_restrict_coalesce_
+    this->_FFT_W._1way_FFT_conf._pitchsrc = decx::utils::align<uint32_t>(_src_layout->dpitch, 16);
+    this->_FFT_W._1way_FFT_conf._pitchdst = decx::utils::align<uint32_t>(_src_layout->dpitch, 16);
+    this->_FFT_W._1way_FFT_conf._pitchtmp = decx::utils::align<uint32_t>(_src_layout->dpitch, 16);
+
+    this->_sync_dpitchdst_needed = (this->_FFT_W._1way_FFT_conf._pitchdst != _src_layout->dpitch);
+#else
     this->_FFT_W._1way_FFT_conf._pitchsrc = _src_layout->dpitch;
     this->_FFT_W._1way_FFT_conf._pitchdst = _src_layout->dpitch;
     this->_FFT_W._1way_FFT_conf._pitchtmp = _src_layout->dpitch;
+#endif
+
     this->_FFT_W._signal_pitch_src = _src_layout->wpitch;
     this->_FFT_W._signal_pitch_dst = _dst_layout->wpitch;
     this->_FFT_W._parallel = this->_signal_dims.z;
@@ -56,7 +65,7 @@ void decx::dsp::fft::_cuda_FFT3D_planner<_type_in>::plan(const decx::_tensor_lay
     this->_FFT_D._pitchtmp = _dst_layout->wpitch * _dst_layout->height;
 
     const ulonglong3 _alloc_sizes = make_ulonglong3(this->_FFT_H._pitchtmp * this->_FFT_H.get_signal_len(),
-                    this->_FFT_W._1way_FFT_conf._pitchtmp * this->_FFT_W._1way_FFT_conf.get_signal_len(),
+                    this->_FFT_W._1way_FFT_conf._pitchtmp * this->_FFT_W._1way_FFT_conf.get_signal_len() * this->_FFT_W._parallel,
                     this->_FFT_D._pitchtmp * this->_FFT_D.get_signal_len());
 
     const uint64_t alloc_size = max(max(_alloc_sizes.x, _alloc_sizes.y), _alloc_sizes.z);

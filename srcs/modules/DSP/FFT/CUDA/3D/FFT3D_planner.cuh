@@ -62,6 +62,11 @@ namespace dsp {
 * Signal_pitch should be consistent with the output tensor. 
 */
 
+/*
+* On my device, the efficiency improvement is not significant to compete the 
+* extra time of cudaMemcpy2DAsync(D2D). Hence I turned it off.
+*/
+#define _CUDA_FFT3D_restrict_coalesce_ 0
 
 template <typename _data_type>
 class decx::dsp::fft::_cuda_FFT3D_planner
@@ -79,6 +84,9 @@ private:
 
     decx::dsp::fft::_FFT2D_1way_config _FFT_D,  // Along depth
                                        _FFT_H;  // Along height
+#if _CUDA_FFT3D_restrict_coalesce_
+    bool _sync_dpitchdst_needed;
+#endif
 
     uint32_t _input_typesize, _output_typesize;
 

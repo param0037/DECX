@@ -67,7 +67,6 @@ decx::calc::CPUK::maprange2D_cvtf32_u8vec8_ST(const float* __restrict   src,
             _pixels_IO_v8 = *((double*)&_reg._vi);
 
             dst[dex_dst] = _pixels_IO_v8;
-            //*((uint64_t*)&dst[dex_dst]) = 0xffffffffffffffff;
             dex_src += 8;
             ++dex_dst;
         }
