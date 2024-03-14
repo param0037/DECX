@@ -26,7 +26,7 @@ A fast linear algebra, computer vision, and mathematic library, based on CUDA an
 ## 2. Linux
    Open cmd under the project directory and enter ""build.sh" to call the build manager script. Follow the instruction
    of the script.
-##3. Install
+## 3. Install
     Configure the directory of the built binaries to your environmental variables. All the include headers are in ${project_dir}/APIs!
 
 # References
