@@ -25,33 +25,82 @@ namespace decx
 {
     namespace nn {
         class cuda_conv2D_fp32_im2col_planner;
+
+
+        template <typename _data_type>
+        struct cuda_conv2D_im2col_kernel_arrange;
     }
 }
 
 
+template <typename _data_type>
+struct decx::nn::cuda_conv2D_im2col_kernel_arrange
+{
+    decx::PtrInfo<void> _shrinked_kernel, _transposed_kernel;
+
+    uint2 _eq_kernel_dims_2D;
+    uint2 _transp_ker_dims;
+    uint32_t _kernel_tensor_num;
+
+    const decx::_tensor_layout* _kernel_layout;
+
+    cudaMemcpy3DParms _kernel_cpy_params;
+
+
+    void _CRSR_ init(const decx::_GPU_TensorArray* kernel, decx::cuda_stream* S, de::DH* handle);
+
+
+    void arrange_kernel(const decx::_GPU_TensorArray* kernel, decx::cuda_stream* S);
+
+
+    void release();
+};
+
+
+
+/**
+* The execution order should be : plan -> dst_dims_query -> run 
+*/
 class decx::nn::cuda_conv2D_fp32_im2col_planner
 {
-private:
+public:
     uint2 _strides;
     const decx::_tensor_layout* _src_layout;
-    const decx::_tensor_layout* _kernel_layout;
-    uint32_t _kernel_tensor_num;
-    const decx::_tensor_layout* _dst_layout;
 
-    decx::bp::extend_label _ext_method;
+    decx::nn::cuda_conv2D_im2col_kernel_arrange<float> _kernel_manager;
 
-    decx::PtrInfo<float4> _ext_src_buf;     // Allocated if extend method == border_zero
+    // [D, W, H]
+    uint3 _dst_dims;
+    
+    de::extend_label _ext_method;
+
+    
+    ulong2 _im2col_buf_dims;
+    decx::Ptr2D_Info<float4> _ext_src_buf;     // Allocated if extend method == border_zero
     decx::PtrInfo<void> _im2col_buf;
+    
 
-    decx::PtrInfo<void> _shrinked_kernel, _transposed_kernel;
+    dim3 _grid_i2c, _block_i2c;
+    dim3 _grid_gemm, _block_gemm;
+
+
+    void _cpy_src_ext(decx::_GPU_Tensor* src, decx::cuda_stream* S) const;
+
 
 public:
     cuda_conv2D_fp32_im2col_planner() {}
 
 
-    void _CRSR_ plan(const decx::_tensor_layout* src_layout, const decx::_GPU_TensorArray* kernel_layout,
-        const decx::_tensor_layout* dst_layout, const decx::bp::extend_label ext_method, const uint2 strides, 
+    void _CRSR_ plan(const decx::_tensor_layout* src_layout, const decx::_GPU_TensorArray* kernel,
+        const de::extend_label ext_method, const uint2 strides, 
         decx::cuda_stream* S, de::DH *handle);
+
+
+    void _CRSR_ run(decx::_GPU_Tensor* src, decx::_GPU_TensorArray* kernel, decx::_GPU_Tensor* dst, 
+        decx::cuda_stream* S, de::DH* handle);
+
+    // [D, W, H]
+    const uint3& dst_dims_query() const;
 };
 
 

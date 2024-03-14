@@ -74,9 +74,9 @@ void decx::nn::GPUK::cu_im2col_GEMM_fp32(const float4* __restrict   im2col_buf,
     {
         _res[j]._vf = _shmem[threadIdx.y][threadIdx.x + j * 32];
         
-        if (tidx_dist + _CUDA_WARP_SIZE_ * j < conv2D_area.x && tidy_dist < conv2D_area.y) {
+        if (threadIdx.x + blockIdx.x * 128 + _CUDA_WARP_SIZE_ * j < conv2D_area.x && tidy_dist < conv2D_area.y) {
             dst[_STG_dst_X] = _res[j]._vf;
-            _STG_dst_X += _CUDA_WARP_SIZE_;
+            _STG_dst_X += _CUDA_WARP_SIZE_ * dpitch_dst_v1 / 4;
         }
     }
 }

@@ -16,8 +16,7 @@ A fast linear algebra, computer vision, and mathematic library, based on CUDA an
 1. Added build manager script for Windows
 
 # Upcoming optimizations
-1. Adjust the pitch of CUDA FFTs kernels (1D, 2D and 3D) to be aligned to 128 bytes for coalesced memory access.
-2. Linear algebra mathematical functions, especially iterations (Jacob and GS method) for solving linear equations.
+1. Linear algebra mathematical functions, especially iterations (Jacob and GS method) for solving linear equations.
 
 
 # How to build

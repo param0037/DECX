@@ -35,11 +35,11 @@ _DECX_API_ de::DH de::cpu::Extend(de::Vector& src, de::Vector& dst, const uint32
 
     switch (extend_type)
     {
-    case decx::bp::extend_label::_EXTEND_REFLECT_:
+    case de::extend_label::_EXTEND_REFLECT_:
         decx::bp::_extend1D_reflect<true>(_src, _dst, left, right, &handle);
         break;
 
-    case decx::bp::extend_label::_EXTEND_CONSTANT_:
+    case de::extend_label::_EXTEND_CONSTANT_:
         decx::bp::_extend1D_constant<true>(_src, _dst, val, left, right, &handle);
         break;
     default:
@@ -80,11 +80,11 @@ _DECX_API_ de::DH de::cpu::Extend(de::Matrix& src, de::Matrix& dst, const uint32
 
     switch (extend_type)
     {
-    case decx::bp::extend_label::_EXTEND_REFLECT_:
+    case de::extend_label::_EXTEND_REFLECT_:
         decx::bp::_extend2D_reflect<true>(_src, _dst, _ext_param, &handle);
         break;
 
-    case decx::bp::extend_label::_EXTEND_CONSTANT_:
+    case de::extend_label::_EXTEND_CONSTANT_:
         decx::bp::_extend2D_constant<true>(_src, _dst, val, _ext_param, &handle);
         break;
     default:

@@ -44,12 +44,12 @@ void decx::conv::Filter2D_fp32(decx::_Matrix* src, decx::_Matrix* kernel, decx::
 {
     switch (flag)
     {
-    case decx::bp::extend_label::_EXTEND_NONE_:
+    case de::extend_label::_EXTEND_NONE_:
         dst->re_construct(src->Type(), src->Width() - kernel->Width() + 1, src->Height() - kernel->Height() + 1);
         decx::conv::_conv2_fp32_NB<_print>(src, kernel, dst, handle);
         break;
 
-    case decx::bp::extend_label::_EXTEND_CONSTANT_:
+    case de::extend_label::_EXTEND_CONSTANT_:
         dst->re_construct(src->Type(), src->Width(), src->Height());
         decx::conv::_conv2_fp32_BC<_print>(src, kernel, dst, handle);
         break;
@@ -66,12 +66,12 @@ void decx::conv::Filter2D_fp64(decx::_Matrix* src, decx::_Matrix* kernel, decx::
 {
     switch (flag)
     {
-    case decx::bp::extend_label::_EXTEND_NONE_:
+    case de::extend_label::_EXTEND_NONE_:
         dst->re_construct(src->Type(), src->Width() - kernel->Width() + 1, src->Height() - kernel->Height() + 1);
         decx::conv::_conv2_fp64_NB<_print>(src, kernel, dst, handle);
         break;
 
-    case decx::bp::extend_label::_EXTEND_CONSTANT_:
+    case de::extend_label::_EXTEND_CONSTANT_:
         dst->re_construct(src->Type(), src->Width(), src->Height());
         decx::conv::_conv2_fp64_BC<_print>(src, kernel, dst, handle);
         break;
@@ -111,12 +111,12 @@ void decx::conv::Filter2D_uint8(decx::_Matrix* src, decx::_Matrix* kernel, decx:
     
     switch (flag)
     {
-    case decx::bp::extend_label::_EXTEND_NONE_:
+    case de::extend_label::_EXTEND_NONE_:
         dst->re_construct(_output_type, src->Width() - kernel->Width() + 1, src->Height() - kernel->Height() + 1);
         decx::conv::_conv2_uint8_NB<_print>(src, kernel, tmp_ker.ptr, dst, handle, _output_type);
         break;
 
-    case decx::bp::extend_label::_EXTEND_CONSTANT_:
+    case de::extend_label::_EXTEND_CONSTANT_:
         dst->re_construct(_output_type, src->Width(), src->Height());
         decx::conv::_conv2_uint8_BC<_print>(src, kernel, tmp_ker.ptr, dst, handle, _output_type);
         break;
@@ -160,12 +160,12 @@ void decx::conv::Conv2_single_channel_fp32(decx::_MatrixArray* _src, decx::_Matr
 
     switch (flag)
     {
-    case decx::bp::extend_label::_EXTEND_NONE_:
+    case de::extend_label::_EXTEND_NONE_:
         _dst->re_construct(_src->Type(), _src->Width() - _kernel->Width() + 1, _src->Height() - _kernel->Height() + 1, _src->Array_num());
         decx::conv::_conv2_fp32_SK_NB<_print>(_src, _kernel, _dst, handle);
         break;
 
-    case decx::bp::extend_label::_EXTEND_CONSTANT_:
+    case de::extend_label::_EXTEND_CONSTANT_:
         _dst->re_construct(_src->Type(), _src->Width(), _src->Height(), _src->Array_num());
         decx::conv::_conv2_fp32_SK_BC<_print>(_src, _kernel, _dst, handle);
         break;
@@ -182,12 +182,12 @@ void decx::conv::Conv2_multi_channel_fp32(decx::_MatrixArray* _src, decx::_Matri
 {
     switch (flag)
     {
-    case decx::bp::extend_label::_EXTEND_NONE_:
+    case de::extend_label::_EXTEND_NONE_:
         _dst->re_construct(_src->Type(), _src->Width() - _kernel->Width() + 1, _src->Height() - _kernel->Height() + 1, _src->Array_num());
         decx::conv::_conv2_fp32_MK_NB<_print>(_src, _kernel, _dst, handle);
         break;
 
-    case decx::bp::extend_label::_EXTEND_CONSTANT_:
+    case de::extend_label::_EXTEND_CONSTANT_:
         _dst->re_construct(_src->Type(), _src->Width(), _src->Height(), _src->Array_num());
         decx::conv::_conv2_fp32_MK_BC<_print>(_src, _kernel, _dst, handle);
         break;
@@ -209,12 +209,12 @@ void decx::conv::Conv2_single_channel_fp64(decx::_MatrixArray* _src, decx::_Matr
 
     switch (flag)
     {
-    case decx::bp::extend_label::_EXTEND_NONE_:
+    case de::extend_label::_EXTEND_NONE_:
         _dst->re_construct(_src->Type(), _src->Width() - _kernel->Width() + 1, _src->Height() - _kernel->Height() + 1, _src->Array_num());
         decx::conv::_conv2_fp64_SK_NB<_print>(_src, _kernel, _dst, handle);
         break;
 
-    case decx::bp::extend_label::_EXTEND_CONSTANT_:
+    case de::extend_label::_EXTEND_CONSTANT_:
         _dst->re_construct(_src->Type(), _src->Width(), _src->Height(), _src->Array_num());
         decx::conv::_conv2_fp64_SK_BC<_print>(_src, _kernel, _dst, handle);
         break;
@@ -236,12 +236,12 @@ void decx::conv::Conv2_multi_channel_fp64(decx::_MatrixArray* _src, decx::_Matri
 
     switch (flag)
     {
-    case decx::bp::extend_label::_EXTEND_NONE_:
+    case de::extend_label::_EXTEND_NONE_:
         _dst->re_construct(_src->Type(), _src->Width() - _kernel->Width() + 1, _src->Height() - _kernel->Height() + 1, _src->Array_num());
         decx::conv::_conv2_fp64_MK_NB<_print>(_src, _kernel, _dst, handle);
         break;
 
-    case decx::bp::extend_label::_EXTEND_CONSTANT_:
+    case de::extend_label::_EXTEND_CONSTANT_:
         _dst->re_construct(_src->Type(), _src->Width(), _src->Height(), _src->Array_num());
         decx::conv::_conv2_fp64_MK_BC<_print>(_src, _kernel, _dst, handle);
         break;

@@ -52,9 +52,6 @@ namespace decx
 namespace nn {
     namespace GPUK 
     {
-        struct _cuda_im2col_params;
-
-
         __global__ void cu_im2col_DP4_NB_fp32(const float4* src, float4* dst, const uint2 dst_dims, const uint2 kernel_dims,
             const uint2 strides, const uint32_t wpitch_dst, const uint32_t wpitch_src, const uint64_t im2col_buf_pitch_v1);
 
@@ -73,11 +70,6 @@ namespace nn {
 }
 }
 
-
-struct decx::nn::GPUK::_cuda_im2col_params
-{
-
-};
 
 
 #endif

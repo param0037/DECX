@@ -13,15 +13,13 @@
 #define _EXTEND_FLAGS_H_
 
 
-namespace decx
+namespace de
 {
-    namespace bp {
-        enum extend_label {
-            _EXTEND_NONE_       = 0,
-            _EXTEND_REFLECT_    = 1,
-            _EXTEND_CONSTANT_   = 2,
-        };
-    }
+    enum extend_label {
+        _EXTEND_NONE_ = 0,
+        _EXTEND_REFLECT_ = 1,
+        _EXTEND_CONSTANT_ = 2,
+    };
 }
 
 

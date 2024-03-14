@@ -172,10 +172,12 @@ void decx::_GPU_Tensor::re_construct(const de::_DATA_TYPES_FLAGS_ _type, const u
 {
     if (this->type != _type || this->_layout.width != _width || this->_layout.height != _height || this->_layout.depth != _depth) {
         const uint64_t pre_size = this->total_bytes;
+
         this->_attribute_assign(_type, _width, _height, _depth);
 
         if (this->total_bytes > pre_size) {
             this->re_alloc_data_space();
+            //checkCudaErrors(cudaMalloc(&this->Tens.ptr, this->total_bytes));
         }
     }
 }
