@@ -38,11 +38,13 @@ void decx::reduce::cuda_reduce2D_1way_configs<_type_in>::_calc_kernel_h_param_pa
     else if (sizeof(_type_in) == 8) {
         _proc_align_tr = _CU_REDUCE1D_MEM_ALIGN_8B_;
     }
+    //_proc_align_tr = 128 / sizeof(_type_in);
 
     if (this->_remain_load_byte) {
         _proc_align = _proc_align_tr;
     } else {
         _proc_align = sizeof(_type_in) <= 4 ? _CU_REDUCE2D_MEM_ALIGN_4B_ : _CU_REDUCE2D_MEM_ALIGN_8B_;
+        //_proc_align = sizeof(_type_in) <= 4 ? 32 : 16;
     }
 
     _rwpk._src = _src_from_device ? 

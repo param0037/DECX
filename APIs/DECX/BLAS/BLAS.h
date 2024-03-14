@@ -20,6 +20,7 @@
 #include "../classes/GPU_Tensor.h"
 #include "../classes/class_utils.h"
 #include "../Async/DecxStream.h"
+#include "../basic_proc/VectorProc.h"
 
 
 namespace de
@@ -167,7 +168,7 @@ namespace de
 		namespace cuda
 		{
 			_DECX_API_ de::DH Conv2D(de::GPU_Tensor& src, de::GPU_TensorArray& kernel, de::GPU_Tensor& dst,
-				const de::Point2D strides = { 1, 1 });
+				const de::Point2D strides = { 1, 1 }, const de::extend_label extend = de::_EXTEND_NONE_);
 		}
 	}
 }
