@@ -99,7 +99,7 @@ decx::nn::cuda_conv2D_fp32_im2col_planner::plan(const decx::_tensor_layout* src_
                                      src_layout->height / strides.y);
     }
     else {
-        printf("meaningless flag\n");
+        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ErrorFlag, MEANINGLESS_FLAG);
         return;
     }
 
@@ -131,8 +131,22 @@ decx::nn::cuda_conv2D_fp32_im2col_planner::plan(const decx::_tensor_layout* src_
                                 decx::utils::ceil<uint32_t>(this->_dst_dims.z, _IM2COL_GEMM_FP32_BLOCK_Y_),
                                 decx::utils::ceil<uint32_t>(kernel->TensorNum(), 4));
     } 
-    else {
+    else if (src_layout->dpitch == 8) {
         constexpr uint32_t STG_block_dimx = _IM2COL_GET_STG_BLOCKDIM_X_(_IM2COL_D8_FP32_BLOCK_X_, 8);
+        constexpr uint32_t STG_block_dimy = _IM2COL_GET_STG_BLOCKDIM_Y_(_IM2COL_D8_FP32_BLOCK_Y_);
+
+        this->_block_i2c = dim3(_IM2COL_D8_FP32_BLOCK_X_, _IM2COL_D8_FP32_BLOCK_Y_);
+        this->_grid_i2c = dim3(decx::utils::ceil<uint32_t>(this->_dst_dims.y, STG_block_dimx),
+                               decx::utils::ceil<uint32_t>(this->_dst_dims.z, STG_block_dimy),
+                               kernel->Height());
+
+        this->_block_gemm = dim3(_IM2COL_GEMM_FP32_BLOCK_X_, _IM2COL_GEMM_FP32_BLOCK_Y_);
+        this->_grid_gemm = dim3(decx::utils::ceil<uint32_t>(this->_dst_dims.y, STG_block_dimx),
+                                decx::utils::ceil<uint32_t>(this->_dst_dims.z, _IM2COL_GEMM_FP32_BLOCK_Y_),
+                                decx::utils::ceil<uint32_t>(kernel->TensorNum(), 4));
+    }
+    else {
+        constexpr uint32_t STG_block_dimx = _IM2COL_GET_STG_BLOCKDIM_X_(_IM2COL_D8_FP32_BLOCK_X_, 16);
         constexpr uint32_t STG_block_dimy = _IM2COL_GET_STG_BLOCKDIM_Y_(_IM2COL_D8_FP32_BLOCK_Y_);
 
         this->_block_i2c = dim3(_IM2COL_D8_FP32_BLOCK_X_, _IM2COL_D8_FP32_BLOCK_Y_);
@@ -213,6 +227,14 @@ decx::nn::cuda_conv2D_fp32_im2col_planner::run(decx::_GPU_Tensor* src, decx::_GP
                 src->get_layout().wpitch,       this->_im2col_buf_dims.x);
             break;
 
+        case 16:
+            decx::nn::GPUK::cu_im2col_DP16_NB_fp32 << <this->_grid_i2c, this->_block_i2c, 0, S->get_raw_stream_ref() >> > (
+                (float4*)src->Tens.ptr,         (float*)this->_im2col_buf.ptr,       
+                make_uint2(this->_dst_dims.y, this->_dst_dims.z), make_uint2(kernel->Width(), kernel->Height()),
+                this->_strides,                 decx::utils::align<uint32_t>(this->_dst_dims.y, 32),
+                src->get_layout().wpitch,       this->_im2col_buf_dims.x);
+            break;
+
         default:
             break;
         }
@@ -236,6 +258,14 @@ decx::nn::cuda_conv2D_fp32_im2col_planner::run(decx::_GPU_Tensor* src, decx::_GP
                 this->_ext_src_buf._dims.x,     this->_im2col_buf_dims.x);
             break;
 
+        case 16:
+            decx::nn::GPUK::cu_im2col_DP16_BC_fp32 << <this->_grid_i2c, this->_block_i2c, 0, S->get_raw_stream_ref() >> > (
+                this->_ext_src_buf._ptr.ptr,    (float*)this->_im2col_buf.ptr,
+                make_uint2(this->_dst_dims.y, this->_dst_dims.z), make_uint2(kernel->Width(), kernel->Height()),
+                this->_strides,                 decx::utils::align<uint32_t>(this->_dst_dims.y, 32),
+                this->_ext_src_buf._dims.x,     this->_im2col_buf_dims.x);
+            break;
+
         default:
             break;
         }
@@ -253,4 +283,15 @@ decx::nn::cuda_conv2D_fp32_im2col_planner::run(decx::_GPU_Tensor* src, decx::_GP
 const uint3& decx::nn::cuda_conv2D_fp32_im2col_planner::dst_dims_query() const
 {
     return this->_dst_dims;
+}
+
+
+void decx::nn::cuda_conv2D_fp32_im2col_planner::release()
+{
+    decx::alloc::_device_dealloc(&this->_ext_src_buf._ptr);
+    if (this->_ext_method == de::extend_label::_EXTEND_CONSTANT_) {
+        decx::alloc::_device_dealloc(&this->_ext_src_buf._ptr);
+    }
+
+    this->_kernel_manager.release();
 }

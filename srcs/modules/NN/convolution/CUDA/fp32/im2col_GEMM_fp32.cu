@@ -42,7 +42,7 @@ void decx::nn::GPUK::cu_im2col_GEMM_fp32(const float4* __restrict   im2col_buf,
 
     __shared__ float4 _shmem[_IM2COL_GEMM_FP32_BLOCK_Y_][32 * 4 + 1];
 
-    for (uint32_t i = 0; i < _L_proc_v1; ++i) 
+    for (uint32_t i = 0; i < _L_proc_v1; ++i)
     {
         _recv_i2c._vf = decx::utils::vec4_set1_fp32(0);
         _recv_kernel._vf = decx::utils::vec4_set1_fp32(0);

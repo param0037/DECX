@@ -101,6 +101,9 @@ public:
 
     // [D, W, H]
     const uint3& dst_dims_query() const;
+
+
+    void release();
 };
 
 
