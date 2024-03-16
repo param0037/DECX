@@ -66,6 +66,14 @@ namespace nn {
 
         __global__ void cu_im2col_DP8_BC_fp32(const float4* src, float2* dst, const uint2 dst_dims, const uint2 kernel_dims,
             const uint2 strides, const uint32_t wpitch_dst, const uint32_t wpitch_src, const uint64_t im2col_buf_pitch_v1);
+
+
+        __global__ void cu_im2col_DP16_NB_fp32(const float4* src, float* dst, const uint2 dst_dims, const uint2 kernel_dims,
+            const uint2 strides, const uint32_t wpitch_dst, const uint32_t wpitch_src, const uint64_t im2col_buf_pitch_v1);
+
+
+        __global__ void cu_im2col_DP16_BC_fp32(const float4* src, float* dst, const uint2 dst_dims, const uint2 kernel_dims,
+            const uint2 strides, const uint32_t wpitch_dst, const uint32_t wpitch_src, const uint64_t im2col_buf_pitch_v1);
     }
 }
 }
