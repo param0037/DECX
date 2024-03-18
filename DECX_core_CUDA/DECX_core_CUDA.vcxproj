@@ -98,6 +98,7 @@
     <CudaCompile Include="..\srcs\modules\core\memory_management\MemBlock.cu" />
     <CudaCompile Include="..\srcs\modules\core\memory_management\MemChunk_D.cu" />
     <CudaCompile Include="..\srcs\modules\core\memory_management\MemoryPool_D.cu" />
+    <CudaCompile Include="..\srcs\modules\core\utils\float_half_convert.cu" />
     <CudaCompile Include="..\srcs\modules\core\utils\fragment_arangement.cu" />
   </ItemGroup>
   <ItemGroup>

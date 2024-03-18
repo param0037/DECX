@@ -28,7 +28,7 @@ void decx_frequnce_domain_filtering_CUDA()
     // create a de::Matrix object to store data of grayscale image
     de::Matrix& src_gray = de::CreateMatrixRef(de::_UINT8_, src.Width(), src.Height());
     // convert a BGR image to grayscale
-    de::vis::merge_channel(src, src_gray, de::vis::BGR_to_Gray);
+    de::vis::ColorTransform(src, src_gray, de::vis::RGB_to_Gray);
 
     // create a de::Matrix object to store data for the input of FFT2D
     de::Matrix& src_fp32 = de::CreateMatrixRef(de::_FP32_, src.Width(), src.Height());
@@ -46,23 +46,23 @@ void decx_frequnce_domain_filtering_CUDA()
     // convert data_type from uint8(unsigned char) to fp32(32-bit floating point)
     de::cpu::TypeCast(src_gray, src_fp32, de::CVT_UINT8_FP32);
     // load data from host to device
-    de::MemcpyLinear(src_fp32, D_src_fp32, de::DECX_MEMCPY_H2D);
+    de::Memcpy(src_fp32, D_src_fp32, { 0, 0 }, { 0, 0 }, { src_fp32.Width(), src_fp32.Height() }, de::DECX_MEMCPY_H2D);
     // call FFT2D() API on GPU
-    de::dsp::cuda::FFT2D(D_src_fp32, D_FFTres, de::dsp::FFT_R2C);
+    de::dsp::cuda::FFT(D_src_fp32, D_FFTres);
 
     //de::signal::cuda::Gaussian_Window2D(D_FFTres, D_Filter_res, de::Point2D_f(0, 0), de::Point2D_f(50, 200), 0.9);
     // call low-pass filter API on GPU
     de::dsp::cuda::LowPass2D_Ideal(D_FFTres, D_Filter_res, de::Point2D(100, 50));
     // load data from device to host
-    de::MemcpyLinear(FFTres, D_Filter_res, de::DECX_MEMCPY_D2H);
+    de::Memcpy(FFTres, D_Filter_res, { 0, 0 }, { 0, 0 }, { FFTres.Width(), FFTres.Height() }, de::DECX_MEMCPY_D2H);
 
     clock_t s, e;
     s = clock();
     // call IFFT2D() API on GPU
-    de::dsp::cuda::IFFT2D(D_Filter_res, D_src_fp32, de::dsp::IFFT_C2R);
+    de::dsp::cuda::IFFT(D_Filter_res, D_src_fp32, de::_FP32_);
     e = clock();
     // load data from device to host
-    de::MemcpyLinear(src_fp32, D_src_fp32, de::DECX_MEMCPY_D2H);
+    de::Memcpy(src_fp32, D_src_fp32, { 0, 0 }, { 0, 0 }, { src_fp32.Width(), src_fp32.Height() }, de::DECX_MEMCPY_D2H);
 
     std::cout << "time spent (IFFT2D) on GPU : " << (e - s) << "msec" << std::endl;
     // get the amplitudes specturm of the filtered image
@@ -111,7 +111,7 @@ void decx_frequnce_domain_filtering_CPU()
     // create a de::Matrix object to store data of grayscale image
     de::Matrix& src_gray = de::CreateMatrixRef(de::_UINT8_, src.Width(), src.Height());
     // convert a BGR image to grayscale
-    de::vis::merge_channel(src, src_gray, de::vis::BGR_to_Gray);
+    de::vis::ColorTransform(src, src_gray, de::vis::RGB_to_Gray);
 
     de::Matrix& FFTres = de::CreateMatrixRef(de::_COMPLEX_F32_, src.Width(), src.Height());
     de::Matrix& Filter_res = de::CreateMatrixRef(de::_COMPLEX_F32_, src.Width(), src.Height());

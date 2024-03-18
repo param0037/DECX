@@ -9,11 +9,10 @@ A fast linear algebra, computer vision, and mathematic library, based on CUDA an
 
 # Warning
 ## The project is recommended to be compiled using C++ 17 standard or above.
-## The samples are out-of-dated, please ignore them. The latest version is coming.
 
 # Changelog
-## Update 13/03/2024
-1. Added build manager script for Windows
+## Update 18/03/2024
+1. The samples are now available.
 
 # Upcoming optimizations
 1. Linear algebra mathematical functions, especially iterations (Jacob and GS method) for solving linear equations.

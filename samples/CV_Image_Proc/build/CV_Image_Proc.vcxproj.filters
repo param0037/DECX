@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="E:\DECX_world\samples\CV_Image_Proc\CV_Image_Proc.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="E:\DECX_world\samples\CV_Image_Proc\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{F60C253C-8CF2-349F-AADB-3B58B78E5E20}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

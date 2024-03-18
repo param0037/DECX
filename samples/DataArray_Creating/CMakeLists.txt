@@ -37,11 +37,11 @@ add_executable(DataArray_Creating ${CXX_SOURCE})
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     message(STATUS "Building on Windows")
-    target_link_libraries(DataArray_Creating DECX_core_CPU.lib DECX_core_CUDA.lib DECX_BLAS_CPU.lib)
+    target_link_libraries(DataArray_Creating DECX_core_CPU.lib DECX_core_CUDA.lib DECX_BLAS_CPU.lib DECX_BLAS_CUDA.lib)
 
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     message(STATUS "Building on Linux")
-    target_link_libraries(DataArray_Creating DECX_core_CPU.so DECX_core_CUDA.so DECX_BLAS_CPU.so)
+    target_link_libraries(DataArray_Creating DECX_core_CPU.so DECX_core_CUDA.so DECX_BLAS_CPU.so DECX_BLAS_CUDA.so)
     
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     message(STATUS "Building on macOS. Failed, not supported!")

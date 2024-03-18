@@ -1,0 +1,25 @@
+﻿  MatMul.cpp
+E:\DECX_world\samples\Matrix_Multiplication\MatMul.cpp(30,23): warning C4018: “<”: 有符号/无符号不匹配
+E:\DECX_world\samples\Matrix_Multiplication\MatMul.cpp(31,27): warning C4018: “<”: 有符号/无符号不匹配
+E:\DECX_world\samples\Matrix_Multiplication\MatMul.cpp(32,33): warning C4244: “=”: 从“int”转换到“float”，可能丢失数据
+E:\DECX_world\samples\Matrix_Multiplication\MatMul.cpp(36,23): warning C4018: “<”: 有符号/无符号不匹配
+E:\DECX_world\samples\Matrix_Multiplication\MatMul.cpp(37,27): warning C4018: “<”: 有符号/无符号不匹配
+E:\DECX_world\samples\Matrix_Multiplication\MatMul.cpp(38,33): warning C4244: “=”: 从“int”转换到“float”，可能丢失数据
+E:\DECX_world\samples\Matrix_Multiplication\MatMul.cpp(55,39): warning C4018: “<”: 有符号/无符号不匹配
+E:\DECX_world\samples\Matrix_Multiplication\MatMul.cpp(56,42): warning C4018: “<”: 有符号/无符号不匹配
+E:\DECX_world\samples\Matrix_Multiplication\MatMul.cpp(79,23): warning C4018: “<”: 有符号/无符号不匹配
+E:\DECX_world\samples\Matrix_Multiplication\MatMul.cpp(80,27): warning C4018: “<”: 有符号/无符号不匹配
+E:\DECX_world\samples\Matrix_Multiplication\MatMul.cpp(81,39): warning C4244: “=”: 从“int”转换到“float”，可能丢失数据
+E:\DECX_world\samples\Matrix_Multiplication\MatMul.cpp(86,23): warning C4018: “<”: 有符号/无符号不匹配
+E:\DECX_world\samples\Matrix_Multiplication\MatMul.cpp(87,27): warning C4018: “<”: 有符号/无符号不匹配
+E:\DECX_world\samples\Matrix_Multiplication\MatMul.cpp(93,23): warning C4018: “<”: 有符号/无符号不匹配
+E:\DECX_world\samples\Matrix_Multiplication\MatMul.cpp(94,27): warning C4018: “<”: 有符号/无符号不匹配
+E:\DECX_world\samples\Matrix_Multiplication\MatMul.cpp(95,39): warning C4244: “=”: 从“int”转换到“float”，可能丢失数据
+E:\DECX_world\samples\Matrix_Multiplication\MatMul.cpp(115,39): warning C4018: “<”: 有符号/无符号不匹配
+E:\DECX_world\samples\Matrix_Multiplication\MatMul.cpp(116,42): warning C4018: “<”: 有符号/无符号不匹配
+    正在创建库 E:\DECX_world\samples\x64\Release\Matrix_Multiplication.lib 和对象 E:\DECX_world\samples\x64\Release\Matrix_Multiplication.exp
+  正在生成代码
+  Previous IPDB not found, fall back to full compilation.
+  All 79 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  已完成代码的生成
+  Matrix_Multiplication.vcxproj -> E:\DECX_world\samples\x64\Release\Matrix_Multiplication.exe

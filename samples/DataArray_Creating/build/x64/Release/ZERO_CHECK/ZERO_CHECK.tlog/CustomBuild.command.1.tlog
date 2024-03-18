@@ -1,0 +1,10 @@
+^E:\DECX_WORLD\SAMPLES\DATAARRAY_CREATING\BUILD\CMAKEFILES\3CCB8DDFC6ACF03E23F94619C6CAD4E2\GENERATE.STAMP.RULE
+setlocal
+D:\cmake\bin\cmake.exe -SE:/DECX_world/samples/DataArray_Creating -BE:/DECX_world/samples/DataArray_Creating/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file E:/DECX_world/samples/DataArray_Creating/build/DataArray_Creating.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

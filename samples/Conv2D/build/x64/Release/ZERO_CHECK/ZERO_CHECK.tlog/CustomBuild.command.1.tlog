@@ -1,0 +1,10 @@
+^E:\DECX_WORLD\SAMPLES\CONV2D\BUILD\CMAKEFILES\4804D5FE611BC4B80A6A6B97C4205CC1\GENERATE.STAMP.RULE
+setlocal
+D:\cmake\bin\cmake.exe -SE:/DECX_world/samples/Conv2D -BE:/DECX_world/samples/Conv2D/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file E:/DECX_world/samples/Conv2D/build/Conv2D.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

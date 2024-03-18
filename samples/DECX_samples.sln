@@ -11,6 +11,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Matrix_Multiplication", "Ma
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CV_Image_Proc", "CV_Image_Proc\CV_Image_Proc.vcxproj", "{C096B81B-BC0A-46F6-8149-83E29964AFFB}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Conv2D", "Conv2D\Conv2D.vcxproj", "{C8BAFA10-0D52-4F2C-9060-AE1621109360}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -51,6 +53,14 @@ Global
 		{C096B81B-BC0A-46F6-8149-83E29964AFFB}.Release|x64.Build.0 = Release|x64
 		{C096B81B-BC0A-46F6-8149-83E29964AFFB}.Release|x86.ActiveCfg = Release|Win32
 		{C096B81B-BC0A-46F6-8149-83E29964AFFB}.Release|x86.Build.0 = Release|Win32
+		{C8BAFA10-0D52-4F2C-9060-AE1621109360}.Debug|x64.ActiveCfg = Debug|x64
+		{C8BAFA10-0D52-4F2C-9060-AE1621109360}.Debug|x64.Build.0 = Debug|x64
+		{C8BAFA10-0D52-4F2C-9060-AE1621109360}.Debug|x86.ActiveCfg = Debug|Win32
+		{C8BAFA10-0D52-4F2C-9060-AE1621109360}.Debug|x86.Build.0 = Debug|Win32
+		{C8BAFA10-0D52-4F2C-9060-AE1621109360}.Release|x64.ActiveCfg = Release|x64
+		{C8BAFA10-0D52-4F2C-9060-AE1621109360}.Release|x64.Build.0 = Release|x64
+		{C8BAFA10-0D52-4F2C-9060-AE1621109360}.Release|x86.ActiveCfg = Release|Win32
+		{C8BAFA10-0D52-4F2C-9060-AE1621109360}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

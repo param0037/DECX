@@ -97,9 +97,9 @@ void MatMul_GPU_CPL32()
         }
     }
 
-    de::MemcpyLinear(A, dev_A, de::DECX_MEMCPY_H2D);
-    de::MemcpyLinear(B, dev_B, de::DECX_MEMCPY_H2D);
-    de::MemcpyLinear(C, dev_C, de::DECX_MEMCPY_H2D);
+    de::Memcpy(A, dev_A, { 0, 0 }, { 0, 0 }, { A.Width(), A.Height() }, de::DECX_MEMCPY_H2D);
+    de::Memcpy(B, dev_B, { 0, 0 }, { 0, 0 }, { B.Width(), B.Height() }, de::DECX_MEMCPY_H2D);
+    de::Memcpy(C, dev_C, { 0, 0 }, { 0, 0 }, { C.Width(), C.Height() }, de::DECX_MEMCPY_H2D);
 
     clock_t s, e;
     s = clock();
@@ -110,7 +110,7 @@ void MatMul_GPU_CPL32()
 
     std::cout << "time : " << (e - s) / 1 << "msec" << std::endl;
 
-    de::MemcpyLinear(dst, dev_dst, de::DECX_MEMCPY_D2H);
+    de::Memcpy(dst, dev_dst, { 0, 0 }, { 0, 0 }, { dst.Width(), dst.Height() }, de::DECX_MEMCPY_D2H);
 
     for (int i = dst.Height() - 10; i < dst.Height(); ++i) {
         for (int j = dst.Width() - 10; j < dst.Width(); ++j) {

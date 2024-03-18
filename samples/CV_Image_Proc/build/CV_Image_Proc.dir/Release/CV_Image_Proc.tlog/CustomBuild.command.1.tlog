@@ -1,0 +1,10 @@
+^E:\DECX_WORLD\SAMPLES\CV_IMAGE_PROC\CMAKELISTS.TXT
+setlocal
+D:\cmake\bin\cmake.exe -SE:/DECX_world/samples/CV_Image_Proc -BE:/DECX_world/samples/CV_Image_Proc/build --check-stamp-file E:/DECX_world/samples/CV_Image_Proc/build/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

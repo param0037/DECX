@@ -19,7 +19,7 @@ void FindEdge()
     de::Matrix& src = de::CreateMatrixRef();
     de::vis::ReadImage("../../CV_Image_Proc/test_image.jpg", src);
     de::Matrix& src_gray = de::CreateMatrixRef(de::_UINT8_, src.Width(), src.Height());
-    de::vis::merge_channel(src, src_gray, de::vis::BGR_to_Gray);
+    de::vis::ColorTransform(src, src_gray, de::vis::RGB_to_Gray);
     de::Matrix& src_gray_blur = de::CreateMatrixRef(de::_UINT8_, src.Width(), src.Height());
     de::Matrix& dst = de::CreateMatrixRef(de::_UINT8_, src.Width(), src.Height());
     
@@ -60,8 +60,8 @@ void NLM()
 
 int main()
 {
-    //FindEdge();
-    NLM();
+    FindEdge();
+    //NLM();
 
     system("pause");
     return 0;

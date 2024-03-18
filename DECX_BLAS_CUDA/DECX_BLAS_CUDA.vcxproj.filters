@@ -346,9 +346,6 @@
     <CudaCompile Include="..\srcs\modules\BLAS\basic_process\type_cast\CUDA\GPU_Vector_type_cast.cu">
       <Filter>源文件\basic_process\type_cast</Filter>
     </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\BLAS\basic_process\float_half_convert.cu">
-      <Filter>源文件\basic_process</Filter>
-    </CudaCompile>
     <CudaCompile Include="..\srcs\modules\basic_calculations\operators\Vector\Vector_integral.cu">
       <Filter>源文件\basic_calculations\operators\Vector</Filter>
     </CudaCompile>

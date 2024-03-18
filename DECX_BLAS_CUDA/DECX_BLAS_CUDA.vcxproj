@@ -235,7 +235,6 @@
     <CudaCompile Include="..\srcs\modules\BLAS\basic_process\fill\constant\CUDA\constant_fill_kernels.cu" />
     <CudaCompile Include="..\srcs\modules\BLAS\basic_process\fill\constant\CUDA\GPU_Matrix_fill.cu" />
     <CudaCompile Include="..\srcs\modules\BLAS\basic_process\fill\constant\CUDA\GPU_Vector_fill.cu" />
-    <CudaCompile Include="..\srcs\modules\BLAS\basic_process\float_half_convert.cu" />
     <CudaCompile Include="..\srcs\modules\BLAS\basic_process\transpose\CUDA\transpose.cu" />
     <CudaCompile Include="..\srcs\modules\BLAS\basic_process\transpose\CUDA\transpose_kernels.cu" />
     <CudaCompile Include="..\srcs\modules\BLAS\basic_process\transpose\CUDA\transpose_kernels_dense.cu" />

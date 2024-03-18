@@ -1,3 +1,0 @@
-E:/DECX_world/DECX_CV_CPU/build/CMakeFiles/DECX_CV_CPU.dir
-E:/DECX_world/DECX_CV_CPU/build/CMakeFiles/ALL_BUILD.dir
-E:/DECX_world/DECX_CV_CPU/build/CMakeFiles/ZERO_CHECK.dir

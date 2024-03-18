@@ -336,6 +336,9 @@
     <CudaCompile Include="..\srcs\modules\classes\data transmission\data_transmission.cu">
       <Filter>源文件\classes\data transmission</Filter>
     </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\core\utils\float_half_convert.cu">
+      <Filter>源文件\core\utils</Filter>
+    </CudaCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="for_properties.cpp">
