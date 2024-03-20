@@ -37,10 +37,15 @@ struct decx::utils::unpitched_frac_mapping
     bool _is_Level2;
     bool _is_zipped;
 
-
+#ifdef _DECX_CUDA_PARTS_
+    __host__ __device__
+#endif
     unpitched_frac_mapping() {}
 
 
+#ifdef _DECX_CUDA_PARTS_
+    __host__ __device__
+#endif
     void set_attributes(const uint32_t pitch, const uint32_t effective)
     {
         this->_pitch_L1 = pitch;
@@ -54,6 +59,9 @@ struct decx::utils::unpitched_frac_mapping
     }
 
 
+#ifdef _DECX_CUDA_PARTS_
+    __host__ __device__
+#endif
     void set_attributes(const uint32_t pitch_L1, const uint32_t effective_L1, const uint32_t pitch_L2, const uint32_t effective_L2)
     {
         this->_pitch_L1 = pitch_L1;
@@ -67,12 +75,18 @@ struct decx::utils::unpitched_frac_mapping
     }
 
 
+#ifdef _DECX_CUDA_PARTS_
+    __host__ __device__
+#endif
     __inline _addr_type get_phyaddr_L1(const _addr_type _viraddr) const
     {
         return (_viraddr / this->_effective_L1) * this->_pitch_L1 + (_viraddr % this->_effective_L1);
     }
 
 
+#ifdef _DECX_CUDA_PARTS_
+    __host__ __device__
+#endif
     __inline _addr_type get_phyaddr_L2(const _addr_type _viraddr) const
     {
         return (_viraddr / this->_effective_L2) * this->_pitch_L2 + this->get_phyaddr_L1(_viraddr % this->_effective_L2);

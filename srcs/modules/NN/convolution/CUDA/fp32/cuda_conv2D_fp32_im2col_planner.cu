@@ -39,7 +39,7 @@ void decx::nn::cuda_conv2D_im2col_kernel_arrange<float>::init(const decx::_GPU_T
 
     this->_kernel_cpy_params.srcPtr = make_cudaPitchedPtr(NULL, kernel->get_layout().dpitch * sizeof(float),
         kernel->Depth() * sizeof(float), kernel->get_layout().wpitch);
-    this->_kernel_cpy_params.dstPtr = make_cudaPitchedPtr(this->_shrinked_kernel.ptr, decx::utils::align<uint32_t>(kernel->Depth(), 4) * sizeof(float),
+    this->_kernel_cpy_params.dstPtr = make_cudaPitchedPtr(this->_shrinked_kernel.ptr, kernel->Depth() * sizeof(float),
         kernel->Depth() * sizeof(float), kernel->Width());
 }
 
@@ -172,6 +172,15 @@ decx::nn::cuda_conv2D_fp32_im2col_planner::plan(const decx::_tensor_layout* src_
             return;
         }
     }
+
+    this->_Lproc_gemm_params.set_attributes(kernel->get_layout().dpitch, kernel->Depth());
+
+    checkCudaErrors(cudaMemcpyToSymbolAsync(decx::nn::GPUK::_Lproc_params_i2c_fp32, 
+                                            &this->_Lproc_gemm_params, 
+                                            sizeof(decx::utils::unpitched_frac_mapping<uint32_t>), 
+                                            0,
+                                            cudaMemcpyHostToDevice, 
+                                            S->get_raw_stream_ref()));
 }
 
 
@@ -182,7 +191,7 @@ void decx::nn::cuda_conv2D_fp32_im2col_planner::_cpy_src_ext(decx::_GPU_Tensor* 
     if (this->_ext_method == de::extend_label::_EXTEND_CONSTANT_)
     {
         float4* _cpy_start = this->_ext_src_buf._ptr.ptr +
-            (this->_kernel_manager._kernel_layout->width >> 1) * (src->get_layout().depth / 4);
+            (this->_kernel_manager._kernel_layout->width >> 1) * (src->get_layout().dpitch / 4);
 
         checkCudaErrors(cudaMemcpy2DAsync(_cpy_start,
             this->_ext_src_buf._dims.x * src->get_layout().dpitch * sizeof(float),

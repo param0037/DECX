@@ -38,7 +38,7 @@ _DECX_API_ de::DH de::cpu::Conv2D(de::Tensor& src, de::TensorArray& kernel, de::
     
     switch (conv_flag)
     {
-    case decx::bp::extend_label::_EXTEND_NONE_:
+    case de::extend_label::_EXTEND_NONE_:
         if (strideXY.x < 2 && strideXY.y < 2) {
             decx::conv_I2R::conv2_im2row_fp32_NB(_src, _kernel, _dst, &handle);
         }
@@ -47,7 +47,7 @@ _DECX_API_ de::DH de::cpu::Conv2D(de::Tensor& src, de::TensorArray& kernel, de::
         }
         break;
 
-    case decx::bp::extend_label::_EXTEND_CONSTANT_:
+    case de::extend_label::_EXTEND_CONSTANT_:
         if (strideXY.x < 2 && strideXY.y < 2) {
             decx::conv_I2R::conv2_im2row_fp32_BC(_src, _kernel, _dst, &handle);
         }

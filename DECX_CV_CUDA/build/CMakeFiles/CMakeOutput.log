@@ -9,7 +9,7 @@ The output was:
 用于 .NET Framework 的 Microsoft (R) 生成引擎版本 16.11.2+f32259642
 版权所有(C) Microsoft Corporation。保留所有权利。
 
-生成启动时间为 2024/3/13 12:50:59。
+生成启动时间为 2024/3/20 17:00:17。
 节点 1 上的项目“E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\3.24.0\CompilerIdCXX\CompilerIdCXX.vcxproj”(默认目标)。
 PrepareForBuild:
   正在创建目录“Debug\”。
@@ -35,7 +35,7 @@ FinalizeBuildStatus:
     0 个警告
     0 个错误
 
-已用时间 00:00:01.10
+已用时间 00:00:01.08
 
 
 Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CompilerIdCXX.exe"
@@ -54,7 +54,7 @@ The output was:
 用于 .NET Framework 的 Microsoft (R) 生成引擎版本 16.11.2+f32259642
 版权所有(C) Microsoft Corporation。保留所有权利。
 
-生成启动时间为 2024/3/13 12:51:01。
+生成启动时间为 2024/3/20 17:00:18。
 节点 1 上的项目“E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\3.24.0\CompilerIdCUDA\CompilerIdCUDA.vcxproj”(默认目标)。
 PrepareForBuild:
   正在创建目录“Debug\”。
@@ -66,7 +66,7 @@ AddCudaCompileDeps:
 项目“E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\3.24.0\CompilerIdCUDA\CompilerIdCUDA.vcxproj”(1)正在节点 1 上生成“E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\3.24.0\CompilerIdCUDA\CompilerIdCUDA.vcxproj”(1:2) (CudaBuildCore 个目标)。
 CudaBuildCore:
   Compiling CUDA source file CMakeCUDACompilerId.cu...
-  cmd.exe /C "C:\Users\Wayne\AppData\Local\Temp\tmp1301324e83fb41e89ddbf58990b019ba.cmd"
+  cmd.exe /C "C:\Users\Wayne\AppData\Local\Temp\tmpb7334b08df0b4dfebe7805b923ef0d91.cmd"
   "D:\CUDA\Development\bin\nvcc.exe" -gencode=arch=compute_30,code=\"sm_30,compute_30\" --use-local-env -ccbin "D:\Microsoft Visual Studio\Visual Studio\VC\Tools\MSVC\14.29.30133\bin\HostX64\x64" -x cu  -ID:\CUDA\Development\include -ID:\CUDA\Development\include  -G   --keep-dir x64\Debug -maxrregcount=0  --machine 64 --compile -cudart static -v -g   -D_MBCS -Xcompiler "/EHsc /W0 /nologo /Od /FdDebug\vc142.pdb /FS /Zi /RTC1 /MDd " -o Debug\CMakeCUDACompilerId.cu.obj "E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\3.24.0\CompilerIdCUDA\CMakeCUDACompilerId.cu"
   
   E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\3.24.0\CompilerIdCUDA>"D:\CUDA\Development\bin\nvcc.exe" -gencode=arch=compute_30,code=\"sm_30,compute_30\" --use-local-env -ccbin "D:\Microsoft Visual Studio\Visual Studio\VC\Tools\MSVC\14.29.30133\bin\HostX64\x64" -x cu  -ID:\CUDA\Development\include -ID:\CUDA\Development\include  -G   --keep-dir x64\Debug -maxrregcount=0  --machine 64 --compile -cudart static -v -g   -D_MBCS -Xcompiler "/EHsc /W0 /nologo /Od /FdDebug\vc142.pdb /FS /Zi /RTC1 /MDd " -o Debug\CMakeCUDACompilerId.cu.obj "E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\3.24.0\CompilerIdCUDA\CMakeCUDACompilerId.cu" 
@@ -87,20 +87,20 @@ CudaBuildCore:
   #$ CUDAFE_FLAGS=--sdk_dir "D:\Windows Kits\10"
   #$ PTXAS_FLAGS=
   CMakeCUDACompilerId.cu
-  #$ cl.exe @"C:\Users\Wayne\AppData\Local\Temp/tmpxft_000016e0_00000000-8.res" > "C:/Users/Wayne/AppData/Local/Temp/tmpxft_000016e0_00000000-7_CMakeCUDACompilerId.cpp1.ii" 
+  #$ cl.exe @"C:\Users\Wayne\AppData\Local\Temp/tmpxft_0000152c_00000000-8.res" > "C:/Users/Wayne/AppData/Local/Temp/tmpxft_0000152c_00000000-7_CMakeCUDACompilerId.cpp1.ii" 
   CMakeCUDACompilerId.cu
-  #$ erase C:\Users\Wayne\AppData\Local\Temp/tmpxft_000016e0_00000000-8.res
-  #$ cicc --microsoft_version=1929 --msvc_target_version=1929 --compiler_bindir "D:/Microsoft Visual Studio/Visual Studio/VC/Tools/MSVC/14.29.30133/bin/HostX64/x64/../../../../../../.." --allow_managed --debug_mode --sdk_dir "D:\Windows Kits\10"  -arch compute_30 -m64 -ftz=0 -prec_div=1 -prec_sqrt=1 -fmad=1 --include_file_name "tmpxft_000016e0_00000000-3_CMakeCUDACompilerId.fatbin.c" -g -O0 -tused -nvvmir-library "D:\CUDA\Development\bin/../nvvm/libdevice/libdevice.10.bc" --gen_module_id_file --module_id_file_name "C:/Users/Wayne/AppData/Local/Temp/tmpxft_000016e0_00000000-4_CMakeCUDACompilerId.module_id" --orig_src_file_name "E:/DECX_world/DECX_CV_CUDA/build/CMakeFiles/3.24.0/CompilerIdCUDA/CMakeCUDACompilerId.cu" --gen_c_file_name "C:/Users/Wayne/AppData/Local/Temp/tmpxft_000016e0_00000000-6_CMakeCUDACompilerId.cudafe1.c" --stub_file_name "C:/Users/Wayne/AppData/Local/Temp/tmpxft_000016e0_00000000-6_CMakeCUDACompilerId.cudafe1.stub.c" --gen_device_file_name "C:/Users/Wayne/AppData/Local/Temp/tmpxft_000016e0_00000000-6_CMakeCUDACompilerId.cudafe1.gpu"  "C:/Users/Wayne/AppData/Local/Temp/tmpxft_000016e0_00000000-7_CMakeCUDACompilerId.cpp1.ii" -o "C:/Users/Wayne/AppData/Local/Temp/tmpxft_000016e0_00000000-6_CMakeCUDACompilerId.ptx"
-  #$ ptxas -arch=sm_30 -m64 -g --dont-merge-basicblocks --return-at-end "C:/Users/Wayne/AppData/Local/Temp/tmpxft_000016e0_00000000-6_CMakeCUDACompilerId.ptx"  -o "C:/Users/Wayne/AppData/Local/Temp/tmpxft_000016e0_00000000-9_CMakeCUDACompilerId.sm_30.cubin" 
-  #$ fatbinary -64 --ident="E:/DECX_world/DECX_CV_CUDA/build/CMakeFiles/3.24.0/CompilerIdCUDA/CMakeCUDACompilerId.cu" --cmdline="-g --dont-merge-basicblocks --return-at-end " --cicc-cmdline="-ftz=0 -prec_div=1 -prec_sqrt=1 -fmad=1 " -g "--image3=kind=elf,sm=30,file=C:/Users/Wayne/AppData/Local/Temp/tmpxft_000016e0_00000000-9_CMakeCUDACompilerId.sm_30.cubin" "--image3=kind=ptx,sm=30,file=C:/Users/Wayne/AppData/Local/Temp/tmpxft_000016e0_00000000-6_CMakeCUDACompilerId.ptx" --embedded-fatbin="C:/Users/Wayne/AppData/Local/Temp/tmpxft_000016e0_00000000-3_CMakeCUDACompilerId.fatbin.c" 
-  #$ erase C:/Users/Wayne/AppData/Local/Temp/tmpxft_000016e0_00000000-3_CMakeCUDACompilerId.fatbin
-  #$ cl.exe @"C:\Users\Wayne\AppData\Local\Temp/tmpxft_000016e0_00000000-10.res" > "C:/Users/Wayne/AppData/Local/Temp/tmpxft_000016e0_00000000-5_CMakeCUDACompilerId.cpp4.ii" 
+  #$ erase C:\Users\Wayne\AppData\Local\Temp/tmpxft_0000152c_00000000-8.res
+  #$ cicc --microsoft_version=1929 --msvc_target_version=1929 --compiler_bindir "D:/Microsoft Visual Studio/Visual Studio/VC/Tools/MSVC/14.29.30133/bin/HostX64/x64/../../../../../../.." --allow_managed --debug_mode --sdk_dir "D:\Windows Kits\10"  -arch compute_30 -m64 -ftz=0 -prec_div=1 -prec_sqrt=1 -fmad=1 --include_file_name "tmpxft_0000152c_00000000-3_CMakeCUDACompilerId.fatbin.c" -g -O0 -tused -nvvmir-library "D:\CUDA\Development\bin/../nvvm/libdevice/libdevice.10.bc" --gen_module_id_file --module_id_file_name "C:/Users/Wayne/AppData/Local/Temp/tmpxft_0000152c_00000000-4_CMakeCUDACompilerId.module_id" --orig_src_file_name "E:/DECX_world/DECX_CV_CUDA/build/CMakeFiles/3.24.0/CompilerIdCUDA/CMakeCUDACompilerId.cu" --gen_c_file_name "C:/Users/Wayne/AppData/Local/Temp/tmpxft_0000152c_00000000-6_CMakeCUDACompilerId.cudafe1.c" --stub_file_name "C:/Users/Wayne/AppData/Local/Temp/tmpxft_0000152c_00000000-6_CMakeCUDACompilerId.cudafe1.stub.c" --gen_device_file_name "C:/Users/Wayne/AppData/Local/Temp/tmpxft_0000152c_00000000-6_CMakeCUDACompilerId.cudafe1.gpu"  "C:/Users/Wayne/AppData/Local/Temp/tmpxft_0000152c_00000000-7_CMakeCUDACompilerId.cpp1.ii" -o "C:/Users/Wayne/AppData/Local/Temp/tmpxft_0000152c_00000000-6_CMakeCUDACompilerId.ptx"
+  #$ ptxas -arch=sm_30 -m64 -g --dont-merge-basicblocks --return-at-end "C:/Users/Wayne/AppData/Local/Temp/tmpxft_0000152c_00000000-6_CMakeCUDACompilerId.ptx"  -o "C:/Users/Wayne/AppData/Local/Temp/tmpxft_0000152c_00000000-9_CMakeCUDACompilerId.sm_30.cubin" 
+  #$ fatbinary -64 --ident="E:/DECX_world/DECX_CV_CUDA/build/CMakeFiles/3.24.0/CompilerIdCUDA/CMakeCUDACompilerId.cu" --cmdline="-g --dont-merge-basicblocks --return-at-end " --cicc-cmdline="-ftz=0 -prec_div=1 -prec_sqrt=1 -fmad=1 " -g "--image3=kind=elf,sm=30,file=C:/Users/Wayne/AppData/Local/Temp/tmpxft_0000152c_00000000-9_CMakeCUDACompilerId.sm_30.cubin" "--image3=kind=ptx,sm=30,file=C:/Users/Wayne/AppData/Local/Temp/tmpxft_0000152c_00000000-6_CMakeCUDACompilerId.ptx" --embedded-fatbin="C:/Users/Wayne/AppData/Local/Temp/tmpxft_0000152c_00000000-3_CMakeCUDACompilerId.fatbin.c" 
+  #$ erase C:/Users/Wayne/AppData/Local/Temp/tmpxft_0000152c_00000000-3_CMakeCUDACompilerId.fatbin
+  #$ cl.exe @"C:\Users\Wayne\AppData\Local\Temp/tmpxft_0000152c_00000000-10.res" > "C:/Users/Wayne/AppData/Local/Temp/tmpxft_0000152c_00000000-5_CMakeCUDACompilerId.cpp4.ii" 
   CMakeCUDACompilerId.cu
-  #$ erase C:\Users\Wayne\AppData\Local\Temp/tmpxft_000016e0_00000000-10.res
-  #$ cudafe++ --microsoft_version=1929 --msvc_target_version=1929 --compiler_bindir "D:/Microsoft Visual Studio/Visual Studio/VC/Tools/MSVC/14.29.30133/bin/HostX64/x64/../../../../../../.." --allow_managed --debug_mode --sdk_dir "D:\Windows Kits\10" --m64 --parse_templates --gen_c_file_name "C:/Users/Wayne/AppData/Local/Temp/tmpxft_000016e0_00000000-6_CMakeCUDACompilerId.cudafe1.cpp" --stub_file_name "tmpxft_000016e0_00000000-6_CMakeCUDACompilerId.cudafe1.stub.c" --module_id_file_name "C:/Users/Wayne/AppData/Local/Temp/tmpxft_000016e0_00000000-4_CMakeCUDACompilerId.module_id" "C:/Users/Wayne/AppData/Local/Temp/tmpxft_000016e0_00000000-5_CMakeCUDACompilerId.cpp4.ii" 
-  #$ cl.exe @"C:\Users\Wayne\AppData\Local\Temp/tmpxft_000016e0_00000000-11.res" -Fo"Debug/CMakeCUDACompilerId.cu.obj" 
-  tmpxft_000016e0_00000000-6_CMakeCUDACompilerId.cudafe1.cpp
-  #$ erase C:\Users\Wayne\AppData\Local\Temp/tmpxft_000016e0_00000000-11.res
+  #$ erase C:\Users\Wayne\AppData\Local\Temp/tmpxft_0000152c_00000000-10.res
+  #$ cudafe++ --microsoft_version=1929 --msvc_target_version=1929 --compiler_bindir "D:/Microsoft Visual Studio/Visual Studio/VC/Tools/MSVC/14.29.30133/bin/HostX64/x64/../../../../../../.." --allow_managed --debug_mode --sdk_dir "D:\Windows Kits\10" --m64 --parse_templates --gen_c_file_name "C:/Users/Wayne/AppData/Local/Temp/tmpxft_0000152c_00000000-6_CMakeCUDACompilerId.cudafe1.cpp" --stub_file_name "tmpxft_0000152c_00000000-6_CMakeCUDACompilerId.cudafe1.stub.c" --module_id_file_name "C:/Users/Wayne/AppData/Local/Temp/tmpxft_0000152c_00000000-4_CMakeCUDACompilerId.module_id" "C:/Users/Wayne/AppData/Local/Temp/tmpxft_0000152c_00000000-5_CMakeCUDACompilerId.cpp4.ii" 
+  #$ cl.exe @"C:\Users\Wayne\AppData\Local\Temp/tmpxft_0000152c_00000000-11.res" -Fo"Debug/CMakeCUDACompilerId.cu.obj" 
+  tmpxft_0000152c_00000000-6_CMakeCUDACompilerId.cudafe1.cpp
+  #$ erase C:\Users\Wayne\AppData\Local\Temp/tmpxft_0000152c_00000000-11.res
 已完成生成项目“E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\3.24.0\CompilerIdCUDA\CompilerIdCUDA.vcxproj”(CudaBuildCore 个目标)的操作。
 Link:
   D:\Microsoft Visual Studio\Visual Studio\VC\Tools\MSVC\14.29.30133\bin\HostX64\x64\link.exe /ERRORREPORT:QUEUE /OUT:".\CompilerIdCUDA.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:D:\CUDA\Development\lib\x64 cudart_static.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:".\CompilerIdCUDA.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:".\CompilerIdCUDA.lib" /MACHINE:X64 Debug\CMakeCUDACompilerId.cu.obj
@@ -119,7 +119,7 @@ FinalizeBuildStatus:
     0 个警告
     0 个错误
 
-已用时间 00:00:02.44
+已用时间 00:00:02.33
 
 
 Compilation of the CUDA compiler identification source "CMakeCUDACompilerId.cu" produced "CompilerIdCUDA.exe"
@@ -140,76 +140,76 @@ Parsed CUDA nvcc include information from above output:
 Detecting CXX compiler ABI info compiled with the following output:
 Change Dir: E:/DECX_world/DECX_CV_CUDA/build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):D:/Microsoft Visual Studio/Visual Studio/MSBuild/Current/Bin/MSBuild.exe cmTC_e8629.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && 用于 .NET Framework 的 Microsoft (R) 生成引擎版本 16.11.2+f32259642
+Run Build Command(s):D:/Microsoft Visual Studio/Visual Studio/MSBuild/Current/Bin/MSBuild.exe cmTC_0db8c.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && 用于 .NET Framework 的 Microsoft (R) 生成引擎版本 16.11.2+f32259642
 版权所有(C) Microsoft Corporation。保留所有权利。
 
   用于 x64 的 Microsoft (R) C/C++ 优化编译器 19.29.30146 版
   版权所有(C) Microsoft Corporation。保留所有权利。
   CMakeCXXCompilerABI.cpp
-  cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\"Debug\"" /Gm- /EHsc /RTC1 /MDd /GS /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_e8629.dir\Debug\\" /Fd"cmTC_e8629.dir\Debug\vc142.pdb" /external:W3 /Gd /TP /errorReport:queue "D:\cmake\share\cmake-3.24\Modules\CMakeCXXCompilerABI.cpp"
-  cmTC_e8629.vcxproj -> E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\Debug\cmTC_e8629.exe
+  cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\"Debug\"" /Gm- /EHsc /RTC1 /MDd /GS /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_0db8c.dir\Debug\\" /Fd"cmTC_0db8c.dir\Debug\vc142.pdb" /external:W3 /Gd /TP /errorReport:queue "D:\cmake\share\cmake-3.24\Modules\CMakeCXXCompilerABI.cpp"
+  cmTC_0db8c.vcxproj -> E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\Debug\cmTC_0db8c.exe
 
 
 
 Detecting CUDA compiler ABI info compiled with the following output:
 Change Dir: E:/DECX_world/DECX_CV_CUDA/build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):D:/Microsoft Visual Studio/Visual Studio/MSBuild/Current/Bin/MSBuild.exe cmTC_c8f28.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && 用于 .NET Framework 的 Microsoft (R) 生成引擎版本 16.11.2+f32259642
+Run Build Command(s):D:/Microsoft Visual Studio/Visual Studio/MSBuild/Current/Bin/MSBuild.exe cmTC_0edd2.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && 用于 .NET Framework 的 Microsoft (R) 生成引擎版本 16.11.2+f32259642
 版权所有(C) Microsoft Corporation。保留所有权利。
 
   Compiling CUDA source file D:\cmake\share\cmake-3.24\Modules\CMakeCUDACompilerABI.cu...
   
-  E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp>"D:\CUDA\Development\bin\nvcc.exe"  --use-local-env -ccbin "D:\Microsoft Visual Studio\Visual Studio\VC\Tools\MSVC\14.29.30133\bin\HostX64\x64" -x cu   -ID:\CUDA\Development\include     --keep-dir x64\Debug -maxrregcount=0  --machine 64 --compile -cudart static -Xcompiler="/EHsc -Zi -Ob0 -v" -g   -D_WINDOWS -D"CMAKE_INTDIR=\"Debug\"" -D_MBCS -D"CMAKE_INTDIR=\"Debug\"" -Xcompiler "/EHsc /W3 /nologo /Od /FdcmTC_c8f28.dir\Debug\vc142.pdb /FS /Zi /RTC1 /MDd /GR" -o cmTC_c8f28.dir\Debug\CMakeCUDACompilerABI.obj "D:\cmake\share\cmake-3.24\Modules\CMakeCUDACompilerABI.cu" 
-cl : 命令行 warning D9002: 忽略未知选项“-v” [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
-D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
-D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
-D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
-D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
-D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
-D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
-D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
-D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
-D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
-D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
-D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
-D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
-D:\CUDA\Development\include\sm_20_intrinsics.h(1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
-D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
-D:\CUDA\Development\include\sm_20_intrinsics.h(926): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
-D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
-D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
-D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
-D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
-D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
-D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
-D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
-cl : 命令行 warning D9002: 忽略未知选项“-v” [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
-D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
-D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
-D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
-D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
-D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
-D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
-D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
-D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
-D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
-D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
-D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
-D:\CUDA\Development\include\sm_20_intrinsics.h(1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
-D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
-D:\CUDA\Development\include\sm_20_intrinsics.h(926): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
-D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
-D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
-D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
-D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
-D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
-D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
-D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
+  E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp>"D:\CUDA\Development\bin\nvcc.exe"  --use-local-env -ccbin "D:\Microsoft Visual Studio\Visual Studio\VC\Tools\MSVC\14.29.30133\bin\HostX64\x64" -x cu   -ID:\CUDA\Development\include     --keep-dir x64\Debug -maxrregcount=0  --machine 64 --compile -cudart static -Xcompiler="/EHsc -Zi -Ob0 -v" -g   -D_WINDOWS -D"CMAKE_INTDIR=\"Debug\"" -D_MBCS -D"CMAKE_INTDIR=\"Debug\"" -Xcompiler "/EHsc /W3 /nologo /Od /FdcmTC_0edd2.dir\Debug\vc142.pdb /FS /Zi /RTC1 /MDd /GR" -o cmTC_0edd2.dir\Debug\CMakeCUDACompilerABI.obj "D:\cmake\share\cmake-3.24\Modules\CMakeCUDACompilerABI.cu" 
+cl : 命令行 warning D9002: 忽略未知选项“-v” [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]
+D:\CUDA\Development\include\sm_20_intrinsics.h(1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]
+D:\CUDA\Development\include\sm_20_intrinsics.h(926): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]
+cl : 命令行 warning D9002: 忽略未知选项“-v” [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]
+D:\CUDA\Development\include\sm_20_intrinsics.h(1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]
+D:\CUDA\Development\include\sm_20_intrinsics.h(926): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]
+D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]
   CMakeCUDACompilerABI.cu
-cl : 命令行 warning D9002: 忽略未知选项“-v” [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
-LINK : warning LNK4044: 无法识别的选项“/v”；已忽略 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]
-    正在创建库 E:/DECX_world/DECX_CV_CUDA/build/CMakeFiles/CMakeTmp/Debug/cmTC_c8f28.lib 和对象 E:/DECX_world/DECX_CV_CUDA/build/CMakeFiles/CMakeTmp/Debug/cmTC_c8f28.exp
-  cmTC_c8f28.vcxproj -> E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\Debug\cmTC_c8f28.exe
+cl : 命令行 warning D9002: 忽略未知选项“-v” [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]
+LINK : warning LNK4044: 无法识别的选项“/v”；已忽略 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]
+    正在创建库 E:/DECX_world/DECX_CV_CUDA/build/CMakeFiles/CMakeTmp/Debug/cmTC_0edd2.lib 和对象 E:/DECX_world/DECX_CV_CUDA/build/CMakeFiles/CMakeTmp/Debug/cmTC_0edd2.exp
+  cmTC_0edd2.vcxproj -> E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\Debug\cmTC_0edd2.exe
 
 
 
@@ -221,62 +221,62 @@ Parsed CUDA implicit link information from above output:
   link line regex: [^( *|.*[/\])(link\.exe|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\]+-)?ld|collect2)[^/\]*( |$)]
   ignore line: [Change Dir: E:/DECX_world/DECX_CV_CUDA/build/CMakeFiles/CMakeTmp]
   ignore line: []
-  ignore line: [Run Build Command(s):D:/Microsoft Visual Studio/Visual Studio/MSBuild/Current/Bin/MSBuild.exe cmTC_c8f28.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && 用于 .NET Framework 的 Microsoft (R) 生成引擎版本 16.11.2+f32259642]
+  ignore line: [Run Build Command(s):D:/Microsoft Visual Studio/Visual Studio/MSBuild/Current/Bin/MSBuild.exe cmTC_0edd2.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && 用于 .NET Framework 的 Microsoft (R) 生成引擎版本 16.11.2+f32259642]
   ignore line: [版权所有(C) Microsoft Corporation。保留所有权利。]
   ignore line: []
   ignore line: [  Compiling CUDA source file D:\cmake\share\cmake-3.24\Modules\CMakeCUDACompilerABI.cu...]
   ignore line: [  ]
-  ignore line: [  E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp>"D:\CUDA\Development\bin\nvcc.exe"  --use-local-env -ccbin "D:\Microsoft Visual Studio\Visual Studio\VC\Tools\MSVC\14.29.30133\bin\HostX64\x64" -x cu   -ID:\CUDA\Development\include     --keep-dir x64\Debug -maxrregcount=0  --machine 64 --compile -cudart static -Xcompiler="/EHsc -Zi -Ob0 -v" -g   -D_WINDOWS -D"CMAKE_INTDIR=\"Debug\"" -D_MBCS -D"CMAKE_INTDIR=\"Debug\"" -Xcompiler "/EHsc /W3 /nologo /Od /FdcmTC_c8f28.dir\Debug\vc142.pdb /FS /Zi /RTC1 /MDd /GR" -o cmTC_c8f28.dir\Debug\CMakeCUDACompilerABI.obj "D:\cmake\share\cmake-3.24\Modules\CMakeCUDACompilerABI.cu" ]
-  ignore line: [cl : 命令行 warning D9002: 忽略未知选项“-v” [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
-  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
-  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
-  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
-  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
-  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
-  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
-  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
-  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
-  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
-  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
-  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
-  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
-  ignore line: [D:\CUDA\Development\include\sm_20_intrinsics.h(1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
-  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
-  ignore line: [D:\CUDA\Development\include\sm_20_intrinsics.h(926): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
-  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
-  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
-  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
-  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
-  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
-  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
-  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
-  ignore line: [cl : 命令行 warning D9002: 忽略未知选项“-v” [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
-  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
-  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
-  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
-  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
-  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
-  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
-  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
-  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
-  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
-  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
-  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
-  ignore line: [D:\CUDA\Development\include\sm_20_intrinsics.h(1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
-  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
-  ignore line: [D:\CUDA\Development\include\sm_20_intrinsics.h(926): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
-  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
-  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
-  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
-  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
-  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
-  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
-  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
+  ignore line: [  E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp>"D:\CUDA\Development\bin\nvcc.exe"  --use-local-env -ccbin "D:\Microsoft Visual Studio\Visual Studio\VC\Tools\MSVC\14.29.30133\bin\HostX64\x64" -x cu   -ID:\CUDA\Development\include     --keep-dir x64\Debug -maxrregcount=0  --machine 64 --compile -cudart static -Xcompiler="/EHsc -Zi -Ob0 -v" -g   -D_WINDOWS -D"CMAKE_INTDIR=\"Debug\"" -D_MBCS -D"CMAKE_INTDIR=\"Debug\"" -Xcompiler "/EHsc /W3 /nologo /Od /FdcmTC_0edd2.dir\Debug\vc142.pdb /FS /Zi /RTC1 /MDd /GR" -o cmTC_0edd2.dir\Debug\CMakeCUDACompilerABI.obj "D:\cmake\share\cmake-3.24\Modules\CMakeCUDACompilerABI.cu" ]
+  ignore line: [cl : 命令行 warning D9002: 忽略未知选项“-v” [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\sm_20_intrinsics.h(1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\sm_20_intrinsics.h(926): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]]
+  ignore line: [cl : 命令行 warning D9002: 忽略未知选项“-v” [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\sm_20_intrinsics.h(1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\sm_20_intrinsics.h(926): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]]
+  ignore line: [D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]]
   ignore line: [  CMakeCUDACompilerABI.cu]
-  ignore line: [cl : 命令行 warning D9002: 忽略未知选项“-v” [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
-  ignore line: [LINK : warning LNK4044: 无法识别的选项“/v”；已忽略 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_c8f28.vcxproj]]
-  ignore line: [    正在创建库 E:/DECX_world/DECX_CV_CUDA/build/CMakeFiles/CMakeTmp/Debug/cmTC_c8f28.lib 和对象 E:/DECX_world/DECX_CV_CUDA/build/CMakeFiles/CMakeTmp/Debug/cmTC_c8f28.exp]
-  ignore line: [  cmTC_c8f28.vcxproj -> E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\Debug\cmTC_c8f28.exe]
+  ignore line: [cl : 命令行 warning D9002: 忽略未知选项“-v” [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]]
+  ignore line: [LINK : warning LNK4044: 无法识别的选项“/v”；已忽略 [E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\cmTC_0edd2.vcxproj]]
+  ignore line: [    正在创建库 E:/DECX_world/DECX_CV_CUDA/build/CMakeFiles/CMakeTmp/Debug/cmTC_0edd2.lib 和对象 E:/DECX_world/DECX_CV_CUDA/build/CMakeFiles/CMakeTmp/Debug/cmTC_0edd2.exp]
+  ignore line: [  cmTC_0edd2.vcxproj -> E:\DECX_world\DECX_CV_CUDA\build\CMakeFiles\CMakeTmp\Debug\cmTC_0edd2.exe]
   ignore line: []
   ignore line: []
   implicit libs: []

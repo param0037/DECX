@@ -45,11 +45,11 @@ void decx::conv::Conv2_fp32(decx::_Matrix* _src, decx::_Matrix* _kernel, decx::_
 {
     switch (flag)
     {
-    case decx::bp::extend_label::_EXTEND_NONE_:
+    case de::extend_label::_EXTEND_NONE_:
         decx::conv::conv2_fp32_border_ignore<_print>(_src, _kernel, _dst, handle);
         break;
 
-    case decx::bp::extend_label::_EXTEND_CONSTANT_:
+    case de::extend_label::_EXTEND_CONSTANT_:
         decx::conv::conv2_fp32_border_zero<_print>(_src, _kernel, _dst, handle);
         break;
     default:
@@ -71,7 +71,7 @@ void decx::conv::Conv2_uint8(decx::_Matrix* _src, decx::_Matrix* _kernel, decx::
 
     switch (flag)
     {
-    case decx::bp::extend_label::_EXTEND_NONE_:
+    case de::extend_label::_EXTEND_NONE_:
         _dst->re_construct(output_type, _src->Width() - _kernel->Width() + 1,
             _src->Height() - _kernel->Height() + 1);
 
@@ -85,7 +85,7 @@ void decx::conv::Conv2_uint8(decx::_Matrix* _src, decx::_Matrix* _kernel, decx::
         }
         break;
 
-    case decx::bp::extend_label::_EXTEND_CONSTANT_:
+    case de::extend_label::_EXTEND_CONSTANT_:
         _dst->re_construct(output_type, _src->Width(), _src->Height());
 
         _conv2_preset._Kparams._dst_confs.gen_matrix_configs(_dst);
@@ -114,11 +114,11 @@ void decx::conv::Conv2_fp16(decx::_Matrix* _src, decx::_Matrix* _kernel, decx::_
 {
     switch (conv_flag)
     {
-    case decx::bp::extend_label::_EXTEND_NONE_:
+    case de::extend_label::_EXTEND_NONE_:
         decx::conv::conv2_fp16_border_ignore<true>(_src, _kernel, _dst, handle, accu_flag);
         break;
 
-    case decx::bp::extend_label::_EXTEND_CONSTANT_:
+    case de::extend_label::_EXTEND_CONSTANT_:
         decx::conv::conv2_fp16_border_zero<true>(_src, _kernel, _dst, handle, accu_flag);
         break;
     default:

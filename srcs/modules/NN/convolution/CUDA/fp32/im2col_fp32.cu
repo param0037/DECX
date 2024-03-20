@@ -128,6 +128,7 @@ decx::nn::GPUK::cu_im2col_DP4_BC_fp32(const float4* __restrict  src,
                 _reg._vf = ((float4*)_shmem[threadIdx.y * 4 + STG_threadIdx_y])[STG_threadIdx_x];
 
                 if (dex_plane_src_x < conv2D_area.x && dex_plane_src_y < conv2D_area.y) {
+                    //_reg._vf = decx::utils::vec4_set1_fp32(255);
                     dst[STG_dex_x + (dex_plane_dst_y + blockIdx.z * kernel_dims.x * 4) * im2col_buf_pitch_v1 / 4] = _reg._vf;
                 }
                 dex_plane_dst_y += 4;

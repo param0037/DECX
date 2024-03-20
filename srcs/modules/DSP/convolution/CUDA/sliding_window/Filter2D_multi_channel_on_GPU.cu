@@ -65,7 +65,7 @@ decx::conv::dev_filter2D_uc8_SK_organiser(decx::_GPU_MatrixArray* src, decx::_GP
 
     switch (conv_flag)
     {
-    case decx::bp::extend_label::_EXTEND_NONE_:
+    case de::extend_label::_EXTEND_NONE_:
         dst->re_construct(output_type, src->Width() - kernel->Width() + 1,
             src->Height() - kernel->Height() + 1, src->MatrixNumber());
 
@@ -79,7 +79,7 @@ decx::conv::dev_filter2D_uc8_SK_organiser(decx::_GPU_MatrixArray* src, decx::_GP
         }
         break;
 
-    case decx::bp::extend_label::_EXTEND_CONSTANT_:
+    case de::extend_label::_EXTEND_CONSTANT_:
         dst->re_construct(output_type, src->Width(), src->Height(), src->MatrixNumber());
 
         _conv2_preset._Kparams._dst_confs.gen_matrix_configs(dst);
@@ -114,7 +114,7 @@ decx::conv::dev_filter2D_uc8_MK_organiser(decx::_GPU_MatrixArray* src, decx::_GP
 
     switch (conv_flag)
     {
-    case decx::bp::extend_label::_EXTEND_NONE_:
+    case de::extend_label::_EXTEND_NONE_:
         dst->re_construct(output_type, src->Width() - kernel->Width() + 1,
             src->Height() - kernel->Height() + 1, src->MatrixNumber());
 
@@ -128,7 +128,7 @@ decx::conv::dev_filter2D_uc8_MK_organiser(decx::_GPU_MatrixArray* src, decx::_GP
         }
         break;
 
-    case decx::bp::extend_label::_EXTEND_CONSTANT_:
+    case de::extend_label::_EXTEND_CONSTANT_:
         dst->re_construct(output_type, src->Width(), src->Height(), src->MatrixNumber());
 
         _conv2_preset._Kparams._dst_confs.gen_matrix_configs(dst);
@@ -159,14 +159,14 @@ decx::conv::dev_filter2D_fp32_SK_organiser(decx::_GPU_MatrixArray* src, decx::_G
 {
     switch (conv_flag)
     {
-    case decx::bp::extend_label::_EXTEND_NONE_:
+    case de::extend_label::_EXTEND_NONE_:
         dst->re_construct(de::_DATA_TYPES_FLAGS_::_FP32_, src->Width() - kernel->Width() + 1,
             src->Height() - kernel->Height() + 1, src->MatrixNumber());
 
         decx::conv::dev_conv2_fp32_NB_SK<_print>(src, kernel, dst, handle);
         break;
 
-    case decx::bp::extend_label::_EXTEND_CONSTANT_:
+    case de::extend_label::_EXTEND_CONSTANT_:
         dst->re_construct(de::_DATA_TYPES_FLAGS_::_FP32_, src->Width(), src->Height(), src->MatrixNumber());
 
         decx::conv::dev_conv2_fp32_BC_SK<_print>(src, kernel, dst, handle);
@@ -187,14 +187,14 @@ decx::conv::dev_filter2D_fp32_MK_organiser(decx::_GPU_MatrixArray* src, decx::_G
 {
     switch (conv_flag)
     {
-    case decx::bp::extend_label::_EXTEND_NONE_:
+    case de::extend_label::_EXTEND_NONE_:
         dst->re_construct(de::_DATA_TYPES_FLAGS_::_FP32_, src->Width() - kernel->Width() + 1,
             src->Height() - kernel->Height() + 1, src->MatrixNumber());
 
         decx::conv::dev_conv2_fp32_NB_MK<_print>(src, kernel, dst, handle);
         break;
 
-    case decx::bp::extend_label::_EXTEND_CONSTANT_:
+    case de::extend_label::_EXTEND_CONSTANT_:
         dst->re_construct(de::_DATA_TYPES_FLAGS_::_FP32_, src->Width(), src->Height(), src->MatrixNumber());
 
         decx::conv::dev_conv2_fp32_BC_MK<_print>(src, kernel, dst, handle);
@@ -213,14 +213,14 @@ decx::conv::dev_filter2D_fp16_SK_organiser(decx::_GPU_MatrixArray* src, decx::_G
 {
     switch (conv_flag)
     {
-    case decx::bp::extend_label::_EXTEND_NONE_:
+    case de::extend_label::_EXTEND_NONE_:
         dst->re_construct(de::_DATA_TYPES_FLAGS_::_FP16_, src->Width() - kernel->Width() + 1,
             src->Height() - kernel->Height() + 1, src->MatrixNumber());
 
         decx::conv::dev_conv2_fp16_NB_SK<_print>(src, kernel, dst, _accu_flag, handle);
         break;
 
-    case decx::bp::extend_label::_EXTEND_CONSTANT_:
+    case de::extend_label::_EXTEND_CONSTANT_:
         dst->re_construct(de::_DATA_TYPES_FLAGS_::_FP16_, src->Width(), src->Height(), src->MatrixNumber());
 
         decx::conv::dev_conv2_fp16_BC_SK<_print>(src, kernel, dst, _accu_flag, handle);
@@ -241,14 +241,14 @@ decx::conv::dev_filter2D_fp16_MK_organiser(decx::_GPU_MatrixArray* src, decx::_G
 {
     switch (conv_flag)
     {
-    case decx::bp::extend_label::_EXTEND_NONE_:
+    case de::extend_label::_EXTEND_NONE_:
         dst->re_construct(de::_DATA_TYPES_FLAGS_::_FP16_, src->Width() - kernel->Width() + 1,
             src->Height() - kernel->Height() + 1, src->MatrixNumber());
 
         decx::conv::dev_conv2_fp16_NB_MK<_print>(src, kernel, dst, _accu_flag, handle);
         break;
 
-    case decx::bp::extend_label::_EXTEND_CONSTANT_:
+    case de::extend_label::_EXTEND_CONSTANT_:
         dst->re_construct(de::_DATA_TYPES_FLAGS_::_FP16_, src->Width(), src->Height(), src->MatrixNumber());
 
         decx::conv::dev_conv2_fp16_BC_MK<_print>(src, kernel, dst, _accu_flag, handle);

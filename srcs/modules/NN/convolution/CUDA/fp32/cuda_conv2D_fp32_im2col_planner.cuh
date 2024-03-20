@@ -69,6 +69,8 @@ public:
 
     decx::nn::cuda_conv2D_im2col_kernel_arrange<float> _kernel_manager;
 
+    decx::utils::unpitched_frac_mapping<uint32_t> _Lproc_gemm_params;
+
     // [D, W, H]
     uint3 _dst_dims;
     

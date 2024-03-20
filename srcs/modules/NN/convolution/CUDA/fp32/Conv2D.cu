@@ -66,14 +66,12 @@ decx::nn::conv2D_im2col_fp32_caller(decx::_GPU_Tensor* src,
     Check_Runtime_Error(handle);
 
     const uint3 dst_dims = planner.dst_dims_query();
-    dst->re_construct(de::_DATA_TYPES_FLAGS_::_FP32_, dst_dims.y, dst_dims.z, dst_dims.x);
+    dst->re_construct(de::_DATA_TYPES_FLAGS_::_FP32_, dst_dims.y, dst_dims.z, dst_dims.x, S);
     
     planner.run(src, kernel, dst, S, handle);
 
     E->event_record(S);
     E->synchronize();
-
-
 
     E->detach();
     S->detach();

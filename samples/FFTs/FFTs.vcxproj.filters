@@ -15,8 +15,16 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Conv2D.cpp">
+    <ClCompile Include="FFTs.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="FFT1D.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="FFT3D.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

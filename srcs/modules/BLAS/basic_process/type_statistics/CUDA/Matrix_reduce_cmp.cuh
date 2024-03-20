@@ -13,7 +13,7 @@
 
 
 #include "../Matrix_reduce.h"
-#include "../../float_half_convert.h"
+#include "../../../../core/utils/float_half_convert.h"
 #include "../../../../classes/Matrix.h"
 #include "../../../../classes/Vector.h"
 #include "../../../../classes/GPU_Matrix.h"

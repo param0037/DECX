@@ -12,6 +12,9 @@
 #include "../../../../core/utils/decx_cuda_vectypes_ops.cuh"
 
 
+__constant__ decx::utils::unpitched_frac_mapping<uint32_t> decx::nn::GPUK::_Lproc_params_i2c_fp32[1];
+
+
 // block[32, 8]
 // load_src[128, 1]
 // load_kernel[1, 4]
@@ -46,11 +49,14 @@ void decx::nn::GPUK::cu_im2col_GEMM_fp32(const float4* __restrict   im2col_buf,
     {
         _recv_i2c._vf = decx::utils::vec4_set1_fp32(0);
         _recv_kernel._vf = decx::utils::vec4_set1_fp32(0);
+
+        uint32_t _physical_i = decx::nn::GPUK::_Lproc_params_i2c_fp32[0].get_phyaddr_L1(i);
+        
         if (tidx_dist < decx::utils::ceil<uint32_t>(conv2D_area.x, 4) && tidy_dist < conv2D_area.y)
         {
-            _recv_i2c._vf = im2col_buf[_LDG_I2C_X + i * _logical_pitch_i2c_v1 / 4];
-            
-            _recv_kernel._vf = kernel[blockIdx.z + i * 8];  // 1 stands for DP4 / 4 (the dpitch_v4 of dst is 1)
+            _recv_i2c._vf = im2col_buf[_LDG_I2C_X + _physical_i * _logical_pitch_i2c_v1 / 4];
+
+            _recv_kernel._vf = kernel[blockIdx.z + i * 8];  // 8 stands for 128bytes = 8float4
 
 #pragma unroll 4
             for (int32_t j = 0; j < 4; ++j) {

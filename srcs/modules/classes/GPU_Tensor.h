@@ -24,13 +24,13 @@ namespace de
         GPU_Tensor() {}
 
 
-        virtual uint Width() const = 0;
+        virtual uint32_t Width() const = 0;
 
 
-        virtual uint Height() const = 0;
+        virtual uint32_t Height() const = 0;
 
 
-        virtual uint Depth() const = 0;
+        virtual uint32_t Depth() const = 0;
 
 
         virtual de::GPU_Tensor& SoftCopy(de::GPU_Tensor& src) = 0;
@@ -81,7 +81,7 @@ namespace decx
         void alloc_data_space();
 
 
-        void re_alloc_data_space();
+        void re_alloc_data_space(decx::cuda_stream* S = NULL);
 
 
         de::_DATA_TYPES_FLAGS_ type;
@@ -100,29 +100,30 @@ namespace decx
         size_t _element_num;        // the total number of elements, including Non_active numbers
 
 
-        void _attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, const uint _width, const uint _height, const uint _depth);
+        void _attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, const uint32_t _width, const uint32_t _height, const uint32_t _depth);
 
 
-        void construct(const de::_DATA_TYPES_FLAGS_ _type, const uint _width, const uint _height, const uint _depth);
+        void construct(const de::_DATA_TYPES_FLAGS_ _type, const uint32_t _width, const uint32_t _height, const uint32_t _depth);
 
 
-        void re_construct(const de::_DATA_TYPES_FLAGS_ _type, const uint _width, const uint _height, const uint _depth);
+        void re_construct(const de::_DATA_TYPES_FLAGS_ _type, const uint32_t _width, const uint32_t _height, const uint32_t _depth,
+            decx::cuda_stream* S = NULL);
 
 
         _GPU_Tensor();
 
 
-        _GPU_Tensor(const de::_DATA_TYPES_FLAGS_ _type, const uint _width, const uint _height, const uint _depth);
+        _GPU_Tensor(const de::_DATA_TYPES_FLAGS_ _type, const uint32_t _width, const uint32_t _height, const uint32_t _depth);
 
 
 
-        virtual uint Width() const;
+        virtual uint32_t Width() const;
 
 
-        virtual uint Height() const;
+        virtual uint32_t Height() const;
 
 
-        virtual uint Depth() const;
+        virtual uint32_t Depth() const;
 
 
         virtual de::GPU_Tensor& SoftCopy(de::GPU_Tensor& src);
@@ -158,10 +159,10 @@ namespace de
     _DECX_API_ de::GPU_Tensor& CreateGPUTensorRef();
 
 
-    _DECX_API_ de::GPU_Tensor* CreateGPUTensorPtr(const de::_DATA_TYPES_FLAGS_ _type, const uint _width, const uint _height, const uint _depth);
+    _DECX_API_ de::GPU_Tensor* CreateGPUTensorPtr(const de::_DATA_TYPES_FLAGS_ _type, const uint32_t _width, const uint32_t _height, const uint32_t _depth);
 
 
-    _DECX_API_ de::GPU_Tensor& CreateGPUTensorRef(const de::_DATA_TYPES_FLAGS_ _type, const uint _width, const uint _height, const uint _depth);
+    _DECX_API_ de::GPU_Tensor& CreateGPUTensorRef(const de::_DATA_TYPES_FLAGS_ _type, const uint32_t _width, const uint32_t _height, const uint32_t _depth);
 }
 
 

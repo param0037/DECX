@@ -14,6 +14,7 @@
 #include "../../../../core/basic.h"
 #include "../../../../core/cudaStream_management/cudaEvent_queue.h"
 #include "../../../../core/cudaStream_management/cudaStream_queue.h"
+#include "../../../../core/utils/fragment_arrangment.h"
 
 
 #define _IM2COL_GEMM_FP32_BLOCK_X_ _CUDA_WARP_SIZE_
@@ -23,10 +24,14 @@
 namespace decx
 {
 namespace nn {
-    namespace GPUK {
+    namespace GPUK 
+    {
         __global__ void cu_im2col_GEMM_fp32(const float4* im2col_buf, const float4* kernel,
             float4* dst, const uint32_t dpitch_dst_v1, const uint32_t wpitch_i2c_v1, 
             const uint32_t wpitch_dst_v1, const uint32_t _L_proc_v1, const uint2 conv2D_area);
+
+
+        extern __constant__ decx::utils::unpitched_frac_mapping<uint32_t> _Lproc_params_i2c_fp32[1];
     }
 }
 }

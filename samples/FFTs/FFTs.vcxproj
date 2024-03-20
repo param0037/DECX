@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{c8bafa10-0d52-4f2c-9060-ae1621109360}</ProjectGuid>
-    <RootNamespace>Conv2D</RootNamespace>
+    <ProjectGuid>{8d9eed6d-8ac2-411f-affa-c2114770cf1e}</ProjectGuid>
+    <RootNamespace>FFTs</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -137,12 +137,16 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>DECX_core_CPU.lib;DECX_core_CUDA.lib;DECX_BLAS_CUDA.lib;DECX_CV_CPU.lib;DECX_NN_CPU.lib;DECX_NN_CUDA.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>../../bin/x64/release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>DECX_core_CPU.lib;DECX_core_CUDA.lib;DECX_DSP_CPU.lib;DECX_DSP_CUDA.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Conv2D.cpp" />
+    <ClCompile Include="FFTs.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="FFT1D.h" />
+    <ClInclude Include="FFT3D.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

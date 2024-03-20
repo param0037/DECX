@@ -238,11 +238,11 @@ static void decx::vis::_bilateral_uint8_BC(decx::_Matrix* src, decx::_Matrix* ds
     uint8_t* start_place_src = DECX_PTR_SHF_XY<uint8_t, uint8_t>(tmp_src.ptr, neighbor_dims.y / 2, neighbor_dims.x / 2, tmp_src_dims.x);
     switch (border_type)
     {
-    case (decx::bp::extend_label::_EXTEND_CONSTANT_):
+    case (de::extend_label::_EXTEND_CONSTANT_):
         decx::_cpy2D_anybit_caller<uint8_t>(
             (uint8_t*)src->Mat.ptr, start_place_src, src->Pitch(), tmp_src_dims.x, make_uint2(src->Width(), src->Height()));
         break;
-    case (decx::bp::extend_label::_EXTEND_REFLECT_):
+    case (de::extend_label::_EXTEND_REFLECT_):
         decx::bp::_extend_reflect_b8_2D<_print>((uint8_t*)src->Mat.ptr, tmp_src.ptr,
             make_uint4(neighbor_dims.x / 2, neighbor_dims.x / 2, neighbor_dims.y / 2, neighbor_dims.y / 2),
             src->Pitch(), tmp_src_dims.x, src->Width(), src->Height(), handle);
@@ -291,11 +291,11 @@ static void decx::vis::_bilateral_uchar4_BC(decx::_Matrix* src, decx::_Matrix* d
     float* start_place_src = DECX_PTR_SHF_XY<float, float>(tmp_src.ptr, neighbor_dims.y / 2, neighbor_dims.x / 2, tmp_src_dims.x);
     switch (border_type)
     {
-    case (decx::bp::extend_label::_EXTEND_CONSTANT_):
+    case (de::extend_label::_EXTEND_CONSTANT_):
         decx::_cpy2D_anybit_caller<float>(
             (float*)src->Mat.ptr, start_place_src, src->Pitch(), tmp_src_dims.x, make_uint2(src->Width(), src->Height()));
         break;
-    case (decx::bp::extend_label::_EXTEND_REFLECT_):
+    case (de::extend_label::_EXTEND_REFLECT_):
         decx::bp::_extend_reflect_b32_2D<_print>((float*)src->Mat.ptr, tmp_src.ptr,
             make_uint4(neighbor_dims.x / 2, neighbor_dims.x / 2, neighbor_dims.y / 2, neighbor_dims.y / 2),
             src->Pitch(), tmp_src_dims.x, src->Width(), src->Height(), handle);

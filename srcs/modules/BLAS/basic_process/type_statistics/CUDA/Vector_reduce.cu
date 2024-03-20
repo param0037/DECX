@@ -11,7 +11,7 @@
 
 #include "Vector_reduce_sum.cuh"
 #include "Vector_reduce_cmp.cuh"
-#include "../../float_half_convert.h"
+#include "../../../../core/utils/float_half_convert.h"
 #include "../Vector_reduce.h"
 
 

@@ -234,17 +234,17 @@ decx::vis::_Gaussian_filter_uint8_organisor(decx::_Matrix* src, decx::_Matrix* d
 
     switch (border_type)
     {
-    case decx::bp::extend_label::_EXTEND_NONE_:
+    case de::extend_label::_EXTEND_NONE_:
         dst->re_construct(src->Type(), src->Width() - neighbor_dims.x + 1, src->Height() - neighbor_dims.y + 1);
         decx::vis::_gaussian_uint8_NB<_print>(src, &kernel_H, &kernel_V, dst, handle);
         break;
 
-    case decx::bp::extend_label::_EXTEND_CONSTANT_:
+    case de::extend_label::_EXTEND_CONSTANT_:
         dst->re_construct(src->Type(), src->Width(), src->Height());
         decx::vis::_gaussian_uint8_BC_zero<_print>(src, &kernel_H, &kernel_V, dst, handle);
         break;
 
-    case decx::bp::extend_label::_EXTEND_REFLECT_:
+    case de::extend_label::_EXTEND_REFLECT_:
         dst->re_construct(src->Type(), src->Width(), src->Height());
         decx::vis::_gaussian_uint8_BC_reflect<_print>(src, &kernel_H, &kernel_V, dst, handle);
         break;
@@ -458,19 +458,19 @@ decx::vis::_Gaussian_filter_uchar4_organisor(decx::_Matrix* src, decx::_Matrix* 
     clock_t s, e;
     switch (border_type)
     {
-    case decx::bp::extend_label::_EXTEND_NONE_:
+    case de::extend_label::_EXTEND_NONE_:
         dst->re_construct(src->Type(), src->Width() - neighbor_dims.x + 1, src->Height() - neighbor_dims.y + 1);
         decx::vis::_gaussian_uchar4_NB<_print>(src, &kernel_H, &kernel_V, dst, handle);
         break;
 
-    case decx::bp::extend_label::_EXTEND_CONSTANT_:
+    case de::extend_label::_EXTEND_CONSTANT_:
         
         dst->re_construct(src->Type(), src->Width(), src->Height());
         
         decx::vis::_gaussian_uchar4_BC_zero<_print>(src, &kernel_H, &kernel_V, dst, handle);
         break;
 
-    case decx::bp::extend_label::_EXTEND_REFLECT_:
+    case de::extend_label::_EXTEND_REFLECT_:
         dst->re_construct(src->Type(), src->Width(), src->Height());
         decx::vis::_gaussian_uchar4_BC_reflect<_print>(src, &kernel_H, &kernel_V, dst, handle);
         break;

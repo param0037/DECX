@@ -13,6 +13,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CV_Image_Proc", "CV_Image_P
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Conv2D", "Conv2D\Conv2D.vcxproj", "{C8BAFA10-0D52-4F2C-9060-AE1621109360}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FFTs", "FFTs\FFTs.vcxproj", "{8D9EED6D-8AC2-411F-AFFA-C2114770CF1E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -61,6 +63,14 @@ Global
 		{C8BAFA10-0D52-4F2C-9060-AE1621109360}.Release|x64.Build.0 = Release|x64
 		{C8BAFA10-0D52-4F2C-9060-AE1621109360}.Release|x86.ActiveCfg = Release|Win32
 		{C8BAFA10-0D52-4F2C-9060-AE1621109360}.Release|x86.Build.0 = Release|Win32
+		{8D9EED6D-8AC2-411F-AFFA-C2114770CF1E}.Debug|x64.ActiveCfg = Debug|x64
+		{8D9EED6D-8AC2-411F-AFFA-C2114770CF1E}.Debug|x64.Build.0 = Debug|x64
+		{8D9EED6D-8AC2-411F-AFFA-C2114770CF1E}.Debug|x86.ActiveCfg = Debug|Win32
+		{8D9EED6D-8AC2-411F-AFFA-C2114770CF1E}.Debug|x86.Build.0 = Debug|Win32
+		{8D9EED6D-8AC2-411F-AFFA-C2114770CF1E}.Release|x64.ActiveCfg = Release|x64
+		{8D9EED6D-8AC2-411F-AFFA-C2114770CF1E}.Release|x64.Build.0 = Release|x64
+		{8D9EED6D-8AC2-411F-AFFA-C2114770CF1E}.Release|x86.ActiveCfg = Release|Win32
+		{8D9EED6D-8AC2-411F-AFFA-C2114770CF1E}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

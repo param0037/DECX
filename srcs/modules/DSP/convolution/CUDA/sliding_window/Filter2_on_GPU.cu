@@ -43,11 +43,11 @@ void decx::conv::dev_Conv2_on_GPU_fp32(decx::_GPU_Matrix* src, decx::_GPU_Matrix
 {
     switch (flag)
     {
-    case decx::bp::extend_label::_EXTEND_NONE_:
+    case de::extend_label::_EXTEND_NONE_:
         decx::conv::dev_conv2_fp32_border_ignore<_print>(src, kernel, dst, handle);
         break;
 
-    case decx::bp::extend_label::_EXTEND_CONSTANT_:
+    case de::extend_label::_EXTEND_CONSTANT_:
         decx::conv::dev_conv2_fp32_border_zero<_print>(src, kernel, dst, handle);
         break;
     default:
@@ -62,11 +62,11 @@ void decx::conv::dev_Conv2_on_GPU_fp16(decx::_GPU_Matrix* src, decx::_GPU_Matrix
 {
     switch (conv_flag)
     {
-    case decx::bp::extend_label::_EXTEND_NONE_:
+    case de::extend_label::_EXTEND_NONE_:
         decx::conv::dev_conv2_fp16_border_ignore<_print>(src, kernel, dst, handle, accu_flag);
         break;
 
-    case decx::bp::extend_label::_EXTEND_CONSTANT_:
+    case de::extend_label::_EXTEND_CONSTANT_:
         decx::conv::dev_conv2_fp16_border_zero<_print>(src, kernel, dst, handle, accu_flag);
         break;
     default:
@@ -87,7 +87,7 @@ void decx::conv::dev_Conv2_on_GPU_uint8(decx::_GPU_Matrix* src, decx::_GPU_Matri
 
     switch (flag)
     {
-    case decx::bp::extend_label::_EXTEND_NONE_:
+    case de::extend_label::_EXTEND_NONE_:
         dst->re_construct(output_type, src->Width() - kernel->Width() + 1,
             src->Height() - kernel->Height() + 1);
 
@@ -100,7 +100,7 @@ void decx::conv::dev_Conv2_on_GPU_uint8(decx::_GPU_Matrix* src, decx::_GPU_Matri
             decx::conv::dev_conv2_uc8_fp32_NB<_print>(&_conv2_preset, handle);
         }
         break;
-    case decx::bp::extend_label::_EXTEND_CONSTANT_:
+    case de::extend_label::_EXTEND_CONSTANT_:
         dst->re_construct(output_type, src->Width(), src->Height());
 
         _conv2_preset._Kparams._dst_confs.gen_matrix_configs(dst);

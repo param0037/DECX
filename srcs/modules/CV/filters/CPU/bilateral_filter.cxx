@@ -29,7 +29,7 @@ de::vis::cpu::Bilateral_Filter(de::Matrix& src, de::Matrix& dst, const de::Point
     switch (_src->Type())
     {
     case de::_DATA_TYPES_FLAGS_::_UINT8_:
-        if (border_type == decx::bp::extend_label::_EXTEND_NONE_) 
+        if (border_type == de::extend_label::_EXTEND_NONE_) 
         {
             _dst->re_construct(_src->Type(), _src->Width() - neighbor_dims.x + 1, _src->Height() - neighbor_dims.y + 1);
             decx::vis::_bilateral_uint8_NB<true>(_src, _dst, make_uint2(neighbor_dims.x, neighbor_dims.y),
@@ -43,7 +43,7 @@ de::vis::cpu::Bilateral_Filter(de::Matrix& src, de::Matrix& dst, const de::Point
         break;
 
     case de::_DATA_TYPES_FLAGS_::_UCHAR4_:
-        if (border_type == decx::bp::extend_label::_EXTEND_NONE_) 
+        if (border_type == de::extend_label::_EXTEND_NONE_) 
         {
             _dst->re_construct(_src->Type(), _src->Width() - neighbor_dims.x + 1, _src->Height() - neighbor_dims.y + 1);
             decx::vis::_bilateral_uchar4_NB<true>(_src, _dst, make_uint2(neighbor_dims.x, neighbor_dims.y),

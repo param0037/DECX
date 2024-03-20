@@ -30,11 +30,11 @@ namespace decx
     namespace alloc
     {
         template<typename T>
-        static int _host_virtual_page_malloc(decx::PtrInfo<T>* ptr_info, size_t size, const bool set_zero = true);
+        static int _host_virtual_page_malloc(decx::PtrInfo<T>* ptr_info, uint64_t size, const bool set_zero = true);
 
 #if defined(_DECX_CUDA_PARTS_)
         template<typename T>
-        static int _device_malloc(decx::PtrInfo<T>* ptr_info, size_t size, bool _set_zero = false, decx::cuda_stream* S = NULL);
+        static int _device_malloc(decx::PtrInfo<T>* ptr_info, uint64_t size, bool _set_zero = false, decx::cuda_stream* S = NULL);
 #endif
 
         template<typename T>
@@ -47,11 +47,11 @@ namespace decx
 #endif
 
         template<typename T>
-        static int _host_virtual_page_realloc(decx::PtrInfo<T>* ptr_info, size_t size);
+        static int _host_virtual_page_realloc(decx::PtrInfo<T>* ptr_info, uint64_t size);
 
 #if defined(_DECX_CUDA_PARTS_)
         template<typename T>
-        static int _device_realloc(decx::PtrInfo<T>* ptr_info, size_t size);
+        static int _device_realloc(decx::PtrInfo<T>* ptr_info, uint64_t size, bool _set_zero = false, decx::cuda_stream* S = NULL);
 #endif
     }
 }
@@ -99,7 +99,7 @@ static void decx::alloc::_device_dealloc(decx::PtrInfo<T>* ptr_info) {
 
 
 template<typename T>
-static int decx::alloc::_host_virtual_page_malloc(decx::PtrInfo<T>* ptr_info, size_t size, const bool set_zero)
+static int decx::alloc::_host_virtual_page_malloc(decx::PtrInfo<T>* ptr_info, uint64_t size, const bool set_zero)
 {
     int32_t ans = decx::alloc::_alloc_Hv(&ptr_info->block, size);
     ptr_info->ptr = reinterpret_cast<T*>(ptr_info->block->_ptr);
@@ -122,7 +122,7 @@ static void decx::alloc::_host_virtual_page_malloc_same_place(decx::PtrInfo<T>* 
 
 #if defined(_DECX_CUDA_PARTS_)
 template<typename T>
-static int decx::alloc::_device_malloc(decx::PtrInfo<T>* ptr_info, size_t size, bool _set_zero, decx::cuda_stream *S)
+static int decx::alloc::_device_malloc(decx::PtrInfo<T>* ptr_info, uint64_t size, bool _set_zero, decx::cuda_stream *S)
 {
     int ans = decx::alloc::_alloc_D(&ptr_info->block, size);
     ptr_info->ptr = reinterpret_cast<T*>(ptr_info->block->_ptr);
@@ -152,7 +152,7 @@ static void decx::alloc::_device_malloc_same_place(decx::PtrInfo<T>* ptr_info)
 
 
 template<typename T>
-int decx::alloc::_host_virtual_page_realloc(decx::PtrInfo<T>* ptr_info, size_t size)
+int decx::alloc::_host_virtual_page_realloc(decx::PtrInfo<T>* ptr_info, uint64_t size)
 {
     if (ptr_info->block != NULL) {
         if (ptr_info->block->_ptr != NULL) {            // if it is previously allocated
@@ -169,7 +169,7 @@ int decx::alloc::_host_virtual_page_realloc(decx::PtrInfo<T>* ptr_info, size_t s
 
 #if defined(_DECX_CUDA_PARTS_)
 template<typename T>
-int decx::alloc::_device_realloc(decx::PtrInfo<T>* ptr_info, size_t size)
+int decx::alloc::_device_realloc(decx::PtrInfo<T>* ptr_info, uint64_t size, bool _set_zero, decx::cuda_stream* S)
 {
     if (ptr_info->block != NULL) {
         if (ptr_info->block->_ptr != NULL) {            // if it is previously allocated
@@ -179,6 +179,15 @@ int decx::alloc::_device_realloc(decx::PtrInfo<T>* ptr_info, size_t size)
     // reallocate new memory of new size
     int ans = decx::alloc::_alloc_D(&ptr_info->block, size);
     ptr_info->ptr = reinterpret_cast<T*>(ptr_info->block->_ptr);
+
+    if (_set_zero) {
+        if (S == NULL) {
+            checkCudaErrors(cudaMemset(ptr_info->ptr, 0, size));
+        }
+        else {
+            checkCudaErrors(cudaMemsetAsync(ptr_info->ptr, 0, size, S->get_raw_stream_ref()));
+        }
+    }
 
     return ans;
 }

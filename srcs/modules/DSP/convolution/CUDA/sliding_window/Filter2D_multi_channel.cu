@@ -64,7 +64,7 @@ decx::conv::filter2D_uc8_SK_organiser(decx::_MatrixArray* src, decx::_Matrix* ke
 
     switch (conv_flag)
     {
-    case decx::bp::extend_label::_EXTEND_NONE_:
+    case de::extend_label::_EXTEND_NONE_:
         dst->re_construct(output_type, src->Width() - kernel->Width() + 1,
             src->Height() - kernel->Height() + 1, src->MatrixNumber());
 
@@ -78,7 +78,7 @@ decx::conv::filter2D_uc8_SK_organiser(decx::_MatrixArray* src, decx::_Matrix* ke
         }
         break;
 
-    case decx::bp::extend_label::_EXTEND_CONSTANT_:
+    case de::extend_label::_EXTEND_CONSTANT_:
         dst->re_construct(output_type, src->Width(), src->Height(), src->MatrixNumber());
 
         _ccac._Kparams._dst_confs.gen_matrix_configs(dst);
@@ -110,7 +110,7 @@ decx::conv::filter2D_uc8_MK_organiser(decx::_MatrixArray* src, decx::_MatrixArra
 
     switch (conv_flag)
     {
-    case decx::bp::extend_label::_EXTEND_NONE_:
+    case de::extend_label::_EXTEND_NONE_:
         dst->re_construct(output_type, src->Width() - kernel->Width() + 1,
             src->Height() - kernel->Height() + 1, src->MatrixNumber());
 
@@ -124,7 +124,7 @@ decx::conv::filter2D_uc8_MK_organiser(decx::_MatrixArray* src, decx::_MatrixArra
         }
         break;
 
-    case decx::bp::extend_label::_EXTEND_CONSTANT_:
+    case de::extend_label::_EXTEND_CONSTANT_:
         dst->re_construct(output_type, src->Width(), src->Height(), src->MatrixNumber());
 
         _ccac._Kparams._dst_confs.gen_matrix_configs(dst);
@@ -152,14 +152,14 @@ decx::conv::filter2D_fp32_SK_organiser(decx::_MatrixArray* src, decx::_Matrix* k
 {
     switch (conv_flag)
     {
-    case decx::bp::extend_label::_EXTEND_NONE_:
+    case de::extend_label::_EXTEND_NONE_:
         dst->re_construct(de::_DATA_TYPES_FLAGS_::_FP32_, src->Width() - kernel->Width() + 1,
             src->Height() - kernel->Height() + 1, src->MatrixNumber());
 
         decx::conv::conv2_fp32_NB_SK<_print>(src, kernel, dst, handle);
         break;
 
-    case decx::bp::extend_label::_EXTEND_CONSTANT_:
+    case de::extend_label::_EXTEND_CONSTANT_:
         dst->re_construct(de::_DATA_TYPES_FLAGS_::_FP32_, src->Width(), src->Height(), src->MatrixNumber());
 
         decx::conv::conv2_fp32_BC_SK<_print>(src, kernel, dst, handle);
@@ -178,14 +178,14 @@ decx::conv::filter2D_fp32_MK_organiser(decx::_MatrixArray* src, decx::_MatrixArr
 {
     switch (conv_flag)
     {
-    case decx::bp::extend_label::_EXTEND_NONE_:
+    case de::extend_label::_EXTEND_NONE_:
         dst->re_construct(de::_DATA_TYPES_FLAGS_::_FP32_, src->Width() - kernel->Width() + 1,
             src->Height() - kernel->Height() + 1, src->MatrixNumber());
 
         decx::conv::conv2_fp32_NB_MK<_print>(src, kernel, dst, handle);
         break;
 
-    case decx::bp::extend_label::_EXTEND_CONSTANT_:
+    case de::extend_label::_EXTEND_CONSTANT_:
         dst->re_construct(de::_DATA_TYPES_FLAGS_::_FP32_, src->Width(), src->Height(), src->MatrixNumber());
 
         decx::conv::conv2_fp32_BC_MK<_print>(src, kernel, dst, handle);
@@ -205,14 +205,14 @@ decx::conv::filter2D_fp16_SK_organiser(decx::_MatrixArray* src, decx::_Matrix* k
 {
     switch (conv_flag)
     {
-    case decx::bp::extend_label::_EXTEND_NONE_:
+    case de::extend_label::_EXTEND_NONE_:
         dst->re_construct(de::_DATA_TYPES_FLAGS_::_FP16_, src->Width() - kernel->Width() + 1,
             src->Height() - kernel->Height() + 1, src->MatrixNumber());
 
         decx::conv::conv2_fp16_NB_SK<_print>(src, kernel, dst, _accu_flag, handle);
         break;
 
-    case decx::bp::extend_label::_EXTEND_CONSTANT_:
+    case de::extend_label::_EXTEND_CONSTANT_:
         dst->re_construct(de::_DATA_TYPES_FLAGS_::_FP16_, src->Width(), src->Height(), src->MatrixNumber());
 
         decx::conv::conv2_fp16_BC_SK<_print>(src, kernel, dst, _accu_flag, handle);
@@ -231,14 +231,14 @@ decx::conv::filter2D_fp16_MK_organiser(decx::_MatrixArray* src, decx::_MatrixArr
 {
     switch (conv_flag)
     {
-    case decx::bp::extend_label::_EXTEND_NONE_:
+    case de::extend_label::_EXTEND_NONE_:
         dst->re_construct(de::_DATA_TYPES_FLAGS_::_FP16_, src->Width() - kernel->Width() + 1,
             src->Height() - kernel->Height() + 1, src->MatrixNumber());
 
         decx::conv::conv2_fp16_NB_MK<_print>(src, kernel, dst, _accu_flag, handle);
         break;
 
-    case decx::bp::extend_label::_EXTEND_CONSTANT_:
+    case de::extend_label::_EXTEND_CONSTANT_:
         dst->re_construct(de::_DATA_TYPES_FLAGS_::_FP16_, src->Width(), src->Height(), src->MatrixNumber());
 
         decx::conv::conv2_fp16_BC_MK<_print>(src, kernel, dst, _accu_flag, handle);
