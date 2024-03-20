@@ -1,0 +1,10 @@
+^E:\DECX_WORLD\SAMPLES\FFTS\BUILD\CMAKEFILES\92552D59A52BCF8D9F8CBB9A8638A839\GENERATE.STAMP.RULE
+setlocal
+D:\cmake\bin\cmake.exe -SE:/DECX_world/samples/FFTs -BE:/DECX_world/samples/FFTs/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file E:/DECX_world/samples/FFTs/build/FFTs.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

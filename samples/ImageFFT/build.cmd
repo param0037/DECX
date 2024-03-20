@@ -1,6 +1,6 @@
 @echo off
 
-cd "E:\DECX_world\samplesImageFFT"
+cd "E:\DECX_world\samples\ImageFFT"
 
 cmake -B build -G"Visual Studio 16 2019"
 

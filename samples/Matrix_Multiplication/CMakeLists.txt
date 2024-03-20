@@ -12,7 +12,6 @@ include_directories("../../APIs")
 
 file(GLOB_RECURSE CXX_SOURCE "MatMul.cpp")
 
-set(CXX_FLAGS -mFMA -mAVX2 -mAVX)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native")
 
 

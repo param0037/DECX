@@ -89,7 +89,6 @@ void decx::_GPU_Tensor::_attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, co
 
 
 
-
 void decx::_GPU_Tensor::alloc_data_space()
 {
     decx::cuda_stream* S = NULL;
