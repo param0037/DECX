@@ -30,7 +30,11 @@ namespace de
 {
     /** �� channel_adjcent �ķ�ʽ�洢���� channel �������ճ�8����, CPU�˿�����__m256��GPU�˿�����float2
     * �����ֽڵ� half ���ʹճ��ı���,GPU�˿��Դճ�ż���� half2, �� double �Ȱ��ֽڵ��������ʹճ�ż��*/
-    class _DECX_API_ Tensor
+    class 
+#if _CPP_EXPORT_ENABLED_
+        _DECX_API_
+#endif
+        Tensor
     {
     public:
         Tensor() {}
@@ -77,11 +81,11 @@ namespace decx
 class decx::_tensor_layout
 {
 public:
-    uint width, height, depth;
+    uint32_t width, height, depth;
 
-    uint dpitch;                // NOT IN BYTES, the true depth (4x)
-    uint wpitch;                // NOT IN BYTES, the true width (4x)
-    size_t dp_x_wp;             // NOT IN BYTES, true depth multiply true width
+    uint32_t dpitch;                // NOT IN BYTES, the true depth (4x)
+    uint32_t wpitch;                // NOT IN BYTES, the true width (4x)
+    uint64_t dp_x_wp;             // NOT IN BYTES, true depth multiply true width
 
     uint8_t _single_element_size;
 
@@ -91,7 +95,7 @@ public:
     *  plane[1] : plane-WD
     *  plane[2] : plane-HD
     */
-    size_t plane[3];
+    uint64_t plane[3];
 
 
     _tensor_layout() {}
@@ -118,7 +122,7 @@ public:
     }
 
 
-    void _attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, const uint _width, const uint _height, const uint _depth);
+    void _attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, const uint32_t _width, const uint32_t _height, const uint32_t _depth);
 };
 
 
@@ -145,7 +149,7 @@ public:
 namespace decx
 {
     // z-channel stored adjacently
-    class _DECX_API_ _Tensor : public de::Tensor
+    class /*_DECX_API_*/ _Tensor : public de::Tensor
     {
     private:
         void alloc_data_space();
@@ -162,14 +166,14 @@ namespace decx
 
 
         decx::PtrInfo<void> Tens;
-        size_t element_num;        // is the number of all the ACTIVE elements
-        size_t total_bytes;        // is the size of ALL(including pitch) elements
+        uint64_t element_num;        // is the number of all the ACTIVE elements
+        uint64_t total_bytes;        // is the size of ALL(including pitch) elements
 
 
-        size_t _element_num;        // the total number of elements, including Non_active numbers
+        uint64_t _element_num;        // the total number of elements, including Non_active numbers
 
 
-        void _attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, const uint _width, const uint _height, const uint _depth);
+        void _attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, const uint32_t _width, const uint32_t _height, const uint32_t _depth);
 
 
         void construct(const de::_DATA_TYPES_FLAGS_ _type, const uint32_t _width, const uint32_t _height, const uint32_t _depth);
@@ -193,13 +197,13 @@ namespace decx
         virtual de::Vector4f*       ptr_vec4f(const int x, const int y, const int z);
 
 
-        virtual uint Width() const;
+        virtual uint32_t Width() const;
 
 
-        virtual uint Height() const;
+        virtual uint32_t Height() const;
 
 
-        virtual uint Depth() const;
+        virtual uint32_t Depth() const;
 
 
         virtual de::Tensor& SoftCopy(de::Tensor& src);
@@ -232,19 +236,52 @@ namespace decx
 
 namespace de
 {
-    _DECX_API_ de::Tensor* CreateTensorPtr();
+#if _CPP_EXPORT_ENABLED_
+    _DECX_API_
+#endif 
+        de::Tensor* CreateTensorPtr();
 
 
-    _DECX_API_ de::Tensor& CreateTensorRef();
+#if _CPP_EXPORT_ENABLED_
+    _DECX_API_
+#endif 
+        de::Tensor& CreateTensorRef();
 
 
-    _DECX_API_ de::Tensor* CreateTensorPtr(const de::_DATA_TYPES_FLAGS_ _type, const uint32_t _width, const uint32_t _height, const uint32_t _depth);
+#if _CPP_EXPORT_ENABLED_
+    _DECX_API_
+#endif 
+        de::Tensor* CreateTensorPtr(const de::_DATA_TYPES_FLAGS_ _type, const uint32_t _width, const uint32_t _height, const uint32_t _depth);
 
 
-    _DECX_API_ de::Tensor& CreateTensorRef(const de::_DATA_TYPES_FLAGS_ _type, const uint32_t _width, const uint32_t _height, const uint32_t _depth);
+#if _CPP_EXPORT_ENABLED_
+    _DECX_API_
+#endif 
+        de::Tensor& CreateTensorRef(const de::_DATA_TYPES_FLAGS_ _type, const uint32_t _width, const uint32_t _height, const uint32_t _depth);
 }
 
 
+
+#if _C_EXPORT_ENABLED_
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+    typedef struct DECX_Tensor_t
+    {
+        void* _segment;
+    }DECX_Tensor;
+
+
+    _DECX_API_ DECX_Tensor DE_CreateEmptyTensor();
+
+
+    _DECX_API_ DECX_Tensor DE_CreateTensor(const int8_t type, const uint32_t _width, const uint32_t _height,
+        const uint32_t _depth);
+#ifdef __cplusplus
+}
+#endif      // # ifdef __cplusplus
+#endif      // #if _C_EXPORT_ENABLED_
 
 
 #endif

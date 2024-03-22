@@ -297,3 +297,31 @@ uint64_t decx::_TensorArray::get_total_bytes() const
 {
     return this->total_bytes;
 }
+
+
+
+#if _C_EXPORT_ENABLED_
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+    _DECX_API_ DECX_TensorArray DE_CreateEmptyTensorArray()
+    {
+        DECX_TensorArray _res;
+        _res._segment = static_cast<void*>(de::CreateTensorArrayPtr());
+        return _res;
+    }
+
+
+    _DECX_API_ DECX_TensorArray DE_CreateTensorArray(const int8_t type, const uint32_t _width, const uint32_t _height,
+        const uint32_t _depth, const uint32_t tensor_num)
+    {
+        DECX_TensorArray _res;
+        _res._segment = static_cast<void*>(de::CreateTensorArrayPtr(static_cast<de::_DATA_TYPES_FLAGS_>(type), _width, _height,
+            _depth, tensor_num));
+        return _res;
+    }
+#ifdef __cplusplus
+}
+#endif
+#endif

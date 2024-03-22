@@ -31,7 +31,11 @@
 
 namespace de
 {
-    class _DECX_API_ Vector
+    class 
+#if _CPP_EXPORT_ENABLED_
+        _DECX_API_
+#endif 
+        Vector
     {
     public:
         Vector() {}
@@ -77,7 +81,7 @@ namespace de
 
 namespace decx
 {
-    class _DECX_API_ _Vector : public de::Vector
+    class /*_DECX_API_*/ _Vector : public de::Vector
     {
     private:
         void _attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, size_t len);
@@ -153,6 +157,57 @@ namespace decx
         ~_Vector();
     };
 }
+
+
+
+namespace de
+{
+#if _CPP_EXPORT_ENABLED_
+    _DECX_API_
+#endif 
+        de::Vector& CreateVectorRef();
+
+
+#if _CPP_EXPORT_ENABLED_
+    _DECX_API_
+#endif 
+        de::Vector* CreateVectorPtr();
+
+
+#if _CPP_EXPORT_ENABLED_
+    _DECX_API_
+#endif 
+        de::Vector& CreateVectorRef(const de::_DATA_TYPES_FLAGS_ _type, size_t len);
+
+
+#if _CPP_EXPORT_ENABLED_
+    _DECX_API_
+#endif 
+        de::Vector* CreateVectorPtr(const de::_DATA_TYPES_FLAGS_ _type, size_t len);
+}
+
+
+
+#if _C_EXPORT_ENABLED_
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+    typedef struct DECX_Vector_t
+    {
+        void* _segment;
+    }DECX_Vector;
+
+
+    _DECX_API_ DECX_Vector DE_CreateEmptyVector();
+
+
+    _DECX_API_ DECX_Vector DE_CreateVector(const int8_t type, const uint32_t len);
+#ifdef __cplusplus
+}
+#endif      // # ifdef __cplusplus
+#endif      // #if _C_EXPORT_ENABLED_
+
 
 
 #endif

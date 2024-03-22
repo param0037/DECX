@@ -92,31 +92,9 @@ namespace decx
 namespace decx {
     namespace cpu 
     {
-//#ifdef _DECX_CORE_CPU_
-//        template <class FuncType, class ...Args>
-//        static std::future<void> register_task(decx::ThreadPool* _tp, FuncType&& f, Args&& ...args)
-//        {
-//            size_t id;
-//            _tp->_find_task_queue_id_ranged(&id, 
-//                make_uint2(0, decx::utils::clamp_max<size_t>(decx::cpu::_get_permitted_concurrency(), _tp->current_thread_num)));
-//
-//            //decx::ThreadTaskQueue* tmp_task_que = &(_tp->_task_schd[id]);
-//            decx::ThreadTaskQueue* tmp_task_que = decx::cpu::_get_task_queue_(id);
-//            tmp_task_que->_mtx.lock();
-//            std::future<void> fut = decx::emplace_back(tmp_task_que, std::forward<FuncType>(f), std::forward<Args>(args)...);
-//            tmp_task_que->_mtx.unlock();
-//            tmp_task_que->_cv.notify_one();
-//
-//            return fut;
-//        }
-//#endif
-
-
         template <class FuncType, class ...Args>
         static std::future<void> register_task_default(FuncType&& f, Args&& ...args)
         {
-            //uint64_t id = decx::cpu::_get_optimal_thread_id_();
-
             uint64_t id = decx::cpu::_get_optimal_thread_id_ranged_(
                 make_uint2(0, decx::utils::clamp_max<size_t>(decx::cpu::_get_permitted_concurrency(), decx::cpu::_get_current_thread_num_())));
 

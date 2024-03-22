@@ -172,22 +172,6 @@ de::Vector4f* decx::_Vector::ptr_vec4f(size_t index)
 }
 
 
-namespace de
-{
-    _DECX_API_ de::Vector& CreateVectorRef();
-
-
-    _DECX_API_ de::Vector* CreateVectorPtr();
-
-
-    _DECX_API_ de::Vector& CreateVectorRef(const de::_DATA_TYPES_FLAGS_ _type, size_t len);
-
-
-    _DECX_API_ de::Vector* CreateVectorPtr(const de::_DATA_TYPES_FLAGS_ _type, size_t len);
-}
-
-
-
 de::Vector& de::CreateVectorRef()
 {
     return *(new decx::_Vector());
@@ -270,3 +254,29 @@ uint64_t decx::_Vector::get_total_bytes() const
 {
     return this->total_bytes;
 }
+
+
+
+#if _C_EXPORT_ENABLED_
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+    _DECX_API_ DECX_Vector DE_CreateEmptyVector()
+    {
+        DECX_Vector _res;
+        _res._segment = static_cast<void*>(de::CreateVectorPtr());
+        return _res;
+    }
+
+
+    _DECX_API_ DECX_Vector DE_CreateVector(const int8_t type, const uint32_t len)
+    {
+        DECX_Vector _res;
+        _res._segment = static_cast<void*>(de::CreateVectorPtr(static_cast<de::_DATA_TYPES_FLAGS_>(type), len));
+        return _res;
+    }
+#ifdef __cplusplus
+}
+#endif
+#endif

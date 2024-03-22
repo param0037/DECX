@@ -12,8 +12,8 @@
 #include "Tensor.h"
 
 
-void decx::_tensor_layout::_attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, const uint _width,
-    const uint _height, const uint _depth)
+void decx::_tensor_layout::_attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, const uint32_t _width,
+    const uint32_t _height, const uint32_t _depth)
 {
     this->_single_element_size = decx::core::_size_mapping(_type);
 
@@ -58,7 +58,7 @@ decx::_Tensor::_Tensor()
 
 
 
-void decx::_Tensor::_attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, const uint _width, const uint _height, const uint _depth)
+void decx::_Tensor::_attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, const uint32_t _width, const uint32_t _height, const uint32_t _depth)
 {
     this->type = _type;
     
@@ -70,7 +70,6 @@ void decx::_Tensor::_attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, const 
     this->_element_num = static_cast<size_t>(this->_layout.height) * this->_layout.dp_x_wp;
     this->total_bytes = this->_element_num * this->_layout._single_element_size;
 }
-
 
 
 
@@ -86,7 +85,6 @@ void decx::_Tensor::alloc_data_space()
 
 
 
-
 void decx::_Tensor::re_alloc_data_space()
 {
     decx::alloc::_host_virtual_page_realloc<void>(&this->Tens, this->total_bytes);
@@ -96,7 +94,7 @@ void decx::_Tensor::re_alloc_data_space()
 
 
 
-void decx::_Tensor::construct(const de::_DATA_TYPES_FLAGS_ _type, const uint _width, const uint _height, const uint _depth)
+void decx::_Tensor::construct(const de::_DATA_TYPES_FLAGS_ _type, const uint32_t _width, const uint32_t _height, const uint32_t _depth)
 {
     this->_attribute_assign(_type, _width, _height, _depth);
 
@@ -106,12 +104,12 @@ void decx::_Tensor::construct(const de::_DATA_TYPES_FLAGS_ _type, const uint _wi
 
 
 
-void decx::_Tensor::re_construct(const de::_DATA_TYPES_FLAGS_ _type, const uint _width, const uint _height, const uint _depth)
+void decx::_Tensor::re_construct(const de::_DATA_TYPES_FLAGS_ _type, const uint32_t _width, const uint32_t _height, const uint32_t _depth)
 {
     // If all the parameters are the same, it is meaningless to re-construt the data
     if (this->type != _type || this->_layout.width != _width || this->_layout.height != _height)
     {
-        const size_t pre_size = this->total_bytes;
+        const uint64_t pre_size = this->total_bytes;
 
         this->_attribute_assign(_type, _width, _height, _depth);
 
@@ -126,7 +124,7 @@ void decx::_Tensor::re_construct(const de::_DATA_TYPES_FLAGS_ _type, const uint 
 
 
 
-decx::_Tensor::_Tensor(const de::_DATA_TYPES_FLAGS_ _type, const uint _width, const uint _height, const uint _depth)
+decx::_Tensor::_Tensor(const de::_DATA_TYPES_FLAGS_ _type, const uint32_t _width, const uint32_t _height, const uint32_t _depth)
 {
     this->_attribute_assign(_type, _width, _height, _depth);
 
@@ -237,28 +235,28 @@ decx::_tensor_layout& decx::_Tensor::get_layout_modify()
 }
 
 
-_DECX_API_ de::Tensor& de::CreateTensorRef()
+de::Tensor& de::CreateTensorRef()
 {
     return *(new decx::_Tensor());
 }
 
 
 
-_DECX_API_ de::Tensor* de::CreateTensorPtr()
+de::Tensor* de::CreateTensorPtr()
 {
     return new decx::_Tensor();
 }
 
 
 
-_DECX_API_ de::Tensor& de::CreateTensorRef(const de::_DATA_TYPES_FLAGS_ _type, const uint32_t _width, const uint32_t _height, const uint32_t _depth)
+de::Tensor& de::CreateTensorRef(const de::_DATA_TYPES_FLAGS_ _type, const uint32_t _width, const uint32_t _height, const uint32_t _depth)
 {
     return *(new decx::_Tensor(_type, _width, _height, _depth));
 }
 
 
 
-_DECX_API_ de::Tensor* de::CreateTensorPtr(const de::_DATA_TYPES_FLAGS_ _type, const uint32_t _width, const uint32_t _height, const uint32_t _depth)
+de::Tensor* de::CreateTensorPtr(const de::_DATA_TYPES_FLAGS_ _type, const uint32_t _width, const uint32_t _height, const uint32_t _depth)
 {
     return new decx::_Tensor(_type, _width, _height, _depth);
 }
@@ -282,3 +280,31 @@ de::Tensor& decx::_Tensor::SoftCopy(de::Tensor& src)
 
     return *this;
 }
+
+
+
+#if _C_EXPORT_ENABLED_
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+    _DECX_API_ DECX_Tensor DE_CreateEmptyTensor()
+    {
+        DECX_Tensor _res;
+        _res._segment = static_cast<void*>(de::CreateTensorPtr());
+        return _res;
+    }
+
+
+    _DECX_API_ DECX_Tensor DE_CreateTensor(const int8_t type, const uint32_t _width, const uint32_t _height,
+        const uint32_t _depth)
+    {
+        DECX_Tensor _res;
+        _res._segment = static_cast<void*>(de::CreateTensorPtr(static_cast<de::_DATA_TYPES_FLAGS_>(type), _width, _height,
+            _depth));
+        return _res;
+    }
+#ifdef __cplusplus
+}
+#endif
+#endif

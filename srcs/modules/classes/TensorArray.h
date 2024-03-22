@@ -21,22 +21,26 @@
 
 namespace de
 {
-    class _DECX_API_ TensorArray
+    class 
+#if _CPP_EXPORT_ENABLED_
+        _DECX_API_
+#endif 
+        TensorArray
     {
     public:
         TensorArray() {}
 
 
-        virtual uint Width() const = 0;
+        virtual uint32_t Width() const = 0;
 
 
-        virtual uint Height() const = 0;
+        virtual uint32_t Height() const = 0;
 
 
-        virtual uint Depth() const = 0;
+        virtual uint32_t Depth() const = 0;
 
 
-        virtual uint TensorNum() const = 0;
+        virtual uint32_t TensorNum() const = 0;
 
 
         virtual float* ptr_fp32(const int x, const int y, const int z, const int tensor_id) = 0;
@@ -96,10 +100,10 @@ namespace de
 
 namespace decx
 {
-    class _DECX_API_ _TensorArray : public de::TensorArray
+    class /*_DECX_API_*/ _TensorArray : public de::TensorArray
     {
     private:
-        void _attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, const uint _width, const uint _height, const uint _depth, const uint _tensor_num);
+        void _attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, const uint32_t _width, const uint32_t _height, const uint32_t _depth, const uint32_t _tensor_num);
 
 
         void alloc_data_space();
@@ -129,7 +133,7 @@ namespace decx
          *  plane[1] : plane-WD
          *  plane[2] : plane-HD
          */
-         //size_t plane[3];
+         //uint64_t plane[3];
 
          // The true size of a Tensor, including pitch
         uint64_t _gap;
@@ -204,18 +208,51 @@ namespace decx
 
 namespace de
 {
-    _DECX_API_ de::TensorArray& CreateTensorArrayRef();
+#if _CPP_EXPORT_ENABLED_
+    _DECX_API_
+#endif 
+        de::TensorArray& CreateTensorArrayRef();
 
 
-    _DECX_API_ de::TensorArray* CreateTensorArrayPtr();
+#if _CPP_EXPORT_ENABLED_
+    _DECX_API_
+#endif 
+        de::TensorArray* CreateTensorArrayPtr();
 
 
-    _DECX_API_ de::TensorArray& CreateTensorArrayRef(const de::_DATA_TYPES_FLAGS_ _type, const uint width, const uint height, const uint depth, const uint tensor_num);
+#if _CPP_EXPORT_ENABLED_
+    _DECX_API_
+#endif 
+        de::TensorArray& CreateTensorArrayRef(const de::_DATA_TYPES_FLAGS_ _type, const uint32_t width, const uint32_t height, const uint32_t depth, const uint32_t tensor_num);
 
 
-    _DECX_API_ de::TensorArray* CreateTensorArrayPtr(const de::_DATA_TYPES_FLAGS_ _type, const uint width, const uint height, const uint depth, const uint tensor_num);
+#if _CPP_EXPORT_ENABLED_
+    _DECX_API_
+#endif 
+        de::TensorArray* CreateTensorArrayPtr(const de::_DATA_TYPES_FLAGS_ _type, const uint32_t width, const uint32_t height, const uint32_t depth, const uint32_t tensor_num);
 }
 
+
+#if _C_EXPORT_ENABLED_
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+    typedef struct DECX_TensorArray_t
+    {
+        void* _segment;
+    }DECX_TensorArray;
+
+
+    _DECX_API_ DECX_TensorArray DE_CreateEmptyTensorArray();
+
+
+    _DECX_API_ DECX_TensorArray DE_CreateTensorArray(const int8_t type, const uint32_t _width, const uint32_t _height,
+        const uint32_t _depth, const uint32_t tensor_num);
+#ifdef __cplusplus
+}
+#endif      // # ifdef __cplusplus
+#endif      // #if _C_EXPORT_ENABLED_
 
 
 #endif        // #ifndef _TENSORARRAY_H_

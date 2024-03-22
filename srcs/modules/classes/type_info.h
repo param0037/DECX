@@ -47,18 +47,47 @@ namespace de
     };
 }
 
-#define _SIZE_INT32_ sizeof(int)
-#define _SIZE_FLOAT32_ sizeof(float)
-#define _SIZE_UINT64_ sizeof(uint64_t)
-#define _SIZE_FLOAT64_ sizeof(double)
-#define _SIZE_FLOAT16_ sizeof(de::Half)
-#define _SIZE_COMPLEX_F32_ sizeof(de::CPf)
-#define _SIZE_UINT8_ sizeof(uchar)
-#define _SIZE_UCHAR3_ sizeof(uchar4)
-#define _SIZE_UCHAR4_ sizeof(uchar4)
+#define _SIZE_INT32_        sizeof(int)
+#define _SIZE_FLOAT32_      sizeof(float)
+#define _SIZE_UINT64_       sizeof(uint64_t)
+#define _SIZE_FLOAT64_      sizeof(double)
+#define _SIZE_FLOAT16_      sizeof(de::Half)
+#define _SIZE_COMPLEX_F32_  sizeof(de::CPf)
+#define _SIZE_UINT8_        sizeof(uchar)
+#define _SIZE_UCHAR3_       sizeof(uchar4)
+#define _SIZE_UCHAR4_       sizeof(uchar4)
 #define _SIZE_VECTOR4_FP32_ sizeof(de::Vector4f)
 #define _SIZE_VECTOR3_FP32_ sizeof(de::Vector3f)
 
+
+// C defs
+#if _C_EXPORT_ENABLED_
+// Data Types
+#define DECX_TYPE_VOID      0
+#define DECX_TYPE_INT32     1
+#define DECX_TYPE_FP32      2
+#define DECX_TYPE_FP64      3
+#define DECX_TYPE_FP16      4
+#define DECX_TYPE_CPLXF32   5
+#define DECX_TYPE_UINT8     6
+#define DECX_TYPE_UC3       7
+#define DECX_TYPE_UC4       8
+#define DECX_TYPE_VEC3F     9
+#define DECX_TYPE_VEC4F     10
+#define DECX_TYPE_UINT64    11
+
+// Data Formats
+#define DECX_FORMAT_NA                  0
+#define DECX_FORMAT_COLOR_RGB           1
+#define DECX_FORMAT_COLOR_BGR           2
+#define DECX_FORMAT_COLOR_RGBA          3
+#define DECX_FORMAT_COLOR_YUV           4
+#define DECX_FORMAT_COLOR_HSV           5
+#define DECX_FORMAT_CPLX_CARTESIAN      6
+#define DECX_FORMAT_CPLX_POLAR          7
+
+// End of C defs
+#endif
 
 namespace decx
 {

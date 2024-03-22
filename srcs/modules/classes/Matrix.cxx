@@ -12,7 +12,8 @@
 #include "Matrix.h"
 
 
-void decx::_matrix_layout::_attribute_assign(const de::_DATA_TYPES_FLAGS_ type, const uint _width, const uint _height)
+
+void decx::_matrix_layout::_attribute_assign(const de::_DATA_TYPES_FLAGS_ type, const uint32_t _width, const uint32_t _height)
 {
     this->_single_element_size = decx::core::_size_mapping(type);
 
@@ -122,7 +123,7 @@ void decx::_Matrix::re_construct(const de::_DATA_TYPES_FLAGS_ type, uint32_t _wi
 
 
 
-void decx::_Matrix::_attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, const uint _width, const uint _height)
+void decx::_Matrix::_attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, const uint32_t _width, const uint32_t _height)
 {
     this->type = _type;
 
@@ -261,8 +262,6 @@ de::Matrix& decx::_Matrix::SoftCopy(de::Matrix& src)
 }
 
 
-
-
 de::Matrix& de::CreateMatrixRef()
 {
     return *(new decx::_Matrix());
@@ -276,7 +275,7 @@ de::Matrix* de::CreateMatrixPtr()
 
 
 
-de::Matrix& de::CreateMatrixRef(const de::_DATA_TYPES_FLAGS_ type, const uint _width, const uint _height,
+de::Matrix& de::CreateMatrixRef(const de::_DATA_TYPES_FLAGS_ type, const uint32_t _width, const uint32_t _height,
     const de::_DATA_FORMATS_ format)
 {
     return *(new decx::_Matrix(type, _width, _height, format));
@@ -284,8 +283,35 @@ de::Matrix& de::CreateMatrixRef(const de::_DATA_TYPES_FLAGS_ type, const uint _w
 
 
 
-de::Matrix* de::CreateMatrixPtr(const de::_DATA_TYPES_FLAGS_ type, const uint _width, const uint _height,
+de::Matrix* de::CreateMatrixPtr(const de::_DATA_TYPES_FLAGS_ type, const uint32_t _width, const uint32_t _height,
     const de::_DATA_FORMATS_ format)
 {
     return new decx::_Matrix(type, _width, _height, format);
 }
+
+
+#if _C_EXPORT_ENABLED_
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+    _DECX_API_ DECX_Matrix DE_CreateEmptyMatrix()
+    {
+        DECX_Matrix _res;
+        _res._segment = static_cast<void*>(de::CreateMatrixPtr());
+        return _res;
+    }
+
+
+    _DECX_API_ DECX_Matrix DE_CreateMatrix(const int8_t type, const uint32_t _width, const uint32_t _height,
+        const int8_t format)
+    {
+        DECX_Matrix _res;
+        _res._segment = static_cast<void*>(de::CreateMatrixPtr(static_cast<de::_DATA_TYPES_FLAGS_>(type), _width, _height,
+            static_cast<de::_DATA_FORMATS_>(format)));
+        return _res;
+    }
+#ifdef __cplusplus
+}
+#endif
+#endif

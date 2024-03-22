@@ -33,16 +33,20 @@
 * ensure the utilization of __m128 and __m256, as well as multi threads
 */
 namespace de {
-    class _DECX_API_ Matrix
+    class 
+#if _CPP_EXPORT_ENABLED_
+        _DECX_API_
+#endif
+        Matrix
     {
     public:
         Matrix() {}
 
 
-        virtual uint Width() const = 0;
+        virtual uint32_t Width() const = 0;
 
 
-        virtual uint Height() const = 0;
+        virtual uint32_t Height() const = 0;
 
 
 
@@ -108,7 +112,7 @@ public:
     }
 
 
-    void _attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, const uint _width, const uint _height);
+    void _attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, const uint32_t _width, const uint32_t _height);
 };
 
 
@@ -130,7 +134,7 @@ public:
 
 namespace decx
 {
-    class _DECX_API_ _Matrix : public de::Matrix
+    class /*_DECX_API_*/ _Matrix : public de::Matrix
     {
     private:
         // call AFTER attributes are assigned !
@@ -230,24 +234,55 @@ namespace decx
 
 
 
-
 namespace de
 {
-    _DECX_API_ de::Matrix* CreateMatrixPtr();
+#if _CPP_EXPORT_ENABLED_
+    _DECX_API_
+#endif
+        de::Matrix* CreateMatrixPtr();
 
 
-    _DECX_API_ de::Matrix& CreateMatrixRef();
+#if _CPP_EXPORT_ENABLED_
+    _DECX_API_
+#endif 
+        de::Matrix& CreateMatrixRef();
 
 
-    _DECX_API_ de::Matrix* CreateMatrixPtr(const de::_DATA_TYPES_FLAGS_ type, const uint _width, const uint _height,
+#if _CPP_EXPORT_ENABLED_
+    _DECX_API_
+#endif 
+        de::Matrix* CreateMatrixPtr(const de::_DATA_TYPES_FLAGS_ type, const uint32_t _width, const uint32_t _height,
         const de::_DATA_FORMATS_ format = de::_NA_);
 
 
-    _DECX_API_ de::Matrix& CreateMatrixRef(const de::_DATA_TYPES_FLAGS_ type, const uint _width, const uint _height,
+#if _CPP_EXPORT_ENABLED_
+    _DECX_API_
+#endif 
+        de::Matrix& CreateMatrixRef(const de::_DATA_TYPES_FLAGS_ type, const uint32_t _width, const uint32_t _height,
         const de::_DATA_FORMATS_ format = de::_NA_);
 }
 
 
+#if _C_EXPORT_ENABLED_
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+    typedef struct DECX_Matrix_t
+    {
+        void* _segment;
+    }DECX_Matrix;
+
+
+    _DECX_API_ DECX_Matrix DE_CreateEmptyMatrix();
+
+
+    _DECX_API_ DECX_Matrix DE_CreateMatrix(const int8_t type, const uint32_t _width, const uint32_t _height,
+        const int8_t format);
+#ifdef __cplusplus
+}
+#endif      // # ifdef __cplusplus
+#endif      // #if _C_EXPORT_ENABLED_
 
 
 #endif

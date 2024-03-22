@@ -25,7 +25,11 @@ namespace de
     * one by one in the memory block, without gap; Compared with de::Tensor<T>, the channel "z"
     * is separated.
     */
-    class _DECX_API_ MatrixArray
+    class 
+#if _CPP_EXPORT_ENABLED_
+        _DECX_API_
+#endif 
+        MatrixArray
     {
     public:
         uint ArrayNumber;        
@@ -81,7 +85,7 @@ namespace de
 
 namespace decx
 {
-    class _DECX_API_ _MatrixArray : public de::MatrixArray
+    class /*_DECX_API_*/ _MatrixArray : public de::MatrixArray
     {
     private:
         // call AFTER attributes are assigned !
@@ -179,18 +183,51 @@ namespace decx
 
 namespace de
 {
-    _DECX_API_ de::MatrixArray& CreateMatrixArrayRef();
+#if _CPP_EXPORT_ENABLED_
+    _DECX_API_
+#endif 
+        de::MatrixArray& CreateMatrixArrayRef();
 
 
-    _DECX_API_ de::MatrixArray* CreateMatrixArrayPtr();
+#if _CPP_EXPORT_ENABLED_
+    _DECX_API_
+#endif 
+        de::MatrixArray* CreateMatrixArrayPtr();
 
 
-    _DECX_API_ de::MatrixArray& CreateMatrixArrayRef(const de::_DATA_TYPES_FLAGS_ _type, uint32_t width, uint32_t height, uint32_t MatrixNum);
+#if _CPP_EXPORT_ENABLED_
+    _DECX_API_
+#endif 
+        de::MatrixArray& CreateMatrixArrayRef(const de::_DATA_TYPES_FLAGS_ _type, uint32_t width, uint32_t height, uint32_t MatrixNum);
 
 
-    _DECX_API_ de::MatrixArray* CreateMatrixArrayPtr(const de::_DATA_TYPES_FLAGS_ _type, uint32_t width, uint32_t height, uint32_t MatrixNum);
+#if _CPP_EXPORT_ENABLED_
+    _DECX_API_
+#endif 
+        de::MatrixArray* CreateMatrixArrayPtr(const de::_DATA_TYPES_FLAGS_ _type, uint32_t width, uint32_t height, uint32_t MatrixNum);
 }
 
+
+#if _C_EXPORT_ENABLED_
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+    typedef struct DECX_MatrixArray_t
+    {
+        void* _segment;
+    }DECX_MatrixArray;
+
+
+    _DECX_API_ DECX_MatrixArray DE_CreateEmptyMatrixArray();
+
+
+    _DECX_API_ DECX_MatrixArray DE_CreateMatrixArray(const int8_t type, const uint32_t _width, const uint32_t _height,
+        uint32_t MatrixNum);
+#ifdef __cplusplus
+}
+#endif          // #ifdef __cplusplus
+#endif          // #if _C_EXPORT_ENABLED_
 
 
 #endif        // #ifndef _MATRIXARRAY_H_

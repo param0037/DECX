@@ -178,8 +178,6 @@ uint8_t* decx::_MatrixArray::ptr_uint8(const uint row, const uint col, const uin
 
 
 
-
-
 de::MatrixArray& de::CreateMatrixArrayRef()
 {
     return *(new decx::_MatrixArray());
@@ -194,7 +192,6 @@ de::MatrixArray* de::CreateMatrixArrayPtr()
 
 
 
-
 de::MatrixArray& de::CreateMatrixArrayRef(const de::_DATA_TYPES_FLAGS_ _type, uint width, uint height, uint MatrixNum)
 {
     return *(new decx::_MatrixArray(_type, width, height, MatrixNum));
@@ -202,13 +199,10 @@ de::MatrixArray& de::CreateMatrixArrayRef(const de::_DATA_TYPES_FLAGS_ _type, ui
 
 
 
-
 de::MatrixArray* de::CreateMatrixArrayPtr(const de::_DATA_TYPES_FLAGS_ _type, uint width, uint height, uint MatrixNum)
 {
     return new decx::_MatrixArray(_type, width, height, MatrixNum);
 }
-
-
 
 
 void decx::_MatrixArray::release()
@@ -230,7 +224,6 @@ void decx::_MatrixArray::Reinterpret(const de::_DATA_TYPES_FLAGS_ _new_type)
 {
     this->type = _new_type;
 }
-
 
 
 de::MatrixArray& decx::_MatrixArray::SoftCopy(de::MatrixArray& src)
@@ -267,7 +260,6 @@ const decx::_matrix_layout& decx::_MatrixArray::get_layout() const
 
 
 
-
 bool decx::_MatrixArray::is_init() const
 {
     return this->_init;
@@ -278,3 +270,31 @@ uint64_t decx::_MatrixArray::get_total_bytes() const
 {
     return this->total_bytes;
 }
+
+
+
+#if _C_EXPORT_ENABLED_
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+    _DECX_API_ DECX_MatrixArray DE_CreateEmptyMatrixArray()
+    {
+        DECX_MatrixArray _res;
+        _res._segment = static_cast<void*>(de::CreateMatrixArrayPtr());
+        return _res;
+    }
+
+
+    _DECX_API_ DECX_MatrixArray DE_CreateMatrixArray(const int8_t type, const uint32_t _width, const uint32_t _height,
+        uint32_t MatrixNum)
+    {
+        DECX_MatrixArray _res;
+        _res._segment = static_cast<void*>(de::CreateMatrixArrayPtr(static_cast<de::_DATA_TYPES_FLAGS_>(type), _width, _height,
+            MatrixNum));
+        return _res;
+    }
+#ifdef __cplusplus
+}
+#endif
+#endif
