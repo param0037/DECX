@@ -100,7 +100,7 @@ namespace de
 
 namespace decx
 {
-    class /*_DECX_API_*/ _TensorArray : public de::TensorArray
+    class _DECX_API_ _TensorArray : public de::TensorArray
     {
     private:
         void _attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, const uint32_t _width, const uint32_t _height, const uint32_t _depth, const uint32_t _tensor_num);

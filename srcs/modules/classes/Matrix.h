@@ -134,7 +134,7 @@ public:
 
 namespace decx
 {
-    class /*_DECX_API_*/ _Matrix : public de::Matrix
+    class _DECX_API_ _Matrix : public de::Matrix
     {
     private:
         // call AFTER attributes are assigned !
@@ -279,6 +279,12 @@ extern "C"
 
     _DECX_API_ DECX_Matrix DE_CreateMatrix(const int8_t type, const uint32_t _width, const uint32_t _height,
         const int8_t format);
+
+
+    /*
+    * @return : [Width, Height]
+    */
+    _DECX_API_ DECX_Point2D DE_GetMatrixSizes(const DECX_Matrix src);
 #ifdef __cplusplus
 }
 #endif      // # ifdef __cplusplus

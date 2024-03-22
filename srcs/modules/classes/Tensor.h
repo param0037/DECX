@@ -149,7 +149,7 @@ public:
 namespace decx
 {
     // z-channel stored adjacently
-    class /*_DECX_API_*/ _Tensor : public de::Tensor
+    class _DECX_API_ _Tensor : public de::Tensor
     {
     private:
         void alloc_data_space();

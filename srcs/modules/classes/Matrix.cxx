@@ -311,6 +311,15 @@ extern "C"
             static_cast<de::_DATA_FORMATS_>(format)));
         return _res;
     }
+
+
+    _DECX_API_ DECX_Point2D DE_GetMatrixSizes(const DECX_Matrix src)
+    {
+        de::Matrix* _src = (de::Matrix*)(src._segment);
+
+        DECX_Point2D _res = { _src->Width(), _src->Height() };
+        return _res;
+    }
 #ifdef __cplusplus
 }
 #endif

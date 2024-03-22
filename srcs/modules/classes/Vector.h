@@ -81,7 +81,7 @@ namespace de
 
 namespace decx
 {
-    class /*_DECX_API_*/ _Vector : public de::Vector
+    class _DECX_API_ _Vector : public de::Vector
     {
     private:
         void _attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, size_t len);

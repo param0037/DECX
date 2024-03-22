@@ -20,7 +20,11 @@
 
 namespace de
 {
-    class _DECX_API_ GPU_Matrix
+    class
+#if _CPP_EXPORT_ENABLED_
+        _DECX_API_ 
+#endif
+        GPU_Matrix
     {
     public:
         GPU_Matrix() {}
@@ -50,8 +54,6 @@ namespace de
         ~GPU_Matrix() {}
     };
 }
-
-
 
 
 
@@ -161,29 +163,69 @@ namespace decx
 
 namespace de
 {
-    _DECX_API_ de::GPU_Matrix& CreateGPUMatrixRef();
+#if _CPP_EXPORT_ENABLED_
+    _DECX_API_
+#endif 
+    de::GPU_Matrix& CreateGPUMatrixRef();
 
 
-    _DECX_API_ de::GPU_Matrix* CreateGPUMatrixPtr();
+#if _CPP_EXPORT_ENABLED_
+    _DECX_API_
+#endif 
+    de::GPU_Matrix* CreateGPUMatrixPtr();
 
 
-    _DECX_API_ de::GPU_Matrix& CreateGPUMatrixRef(const de::_DATA_TYPES_FLAGS_ _type, const uint32_t width, const uint32_t height,
+#if _CPP_EXPORT_ENABLED_
+    _DECX_API_
+#endif  
+    de::GPU_Matrix& CreateGPUMatrixRef(const de::_DATA_TYPES_FLAGS_ _type, const uint32_t width, const uint32_t height,
         const de::_DATA_FORMATS_ format);
 
 
-    _DECX_API_ de::GPU_Matrix* CreateGPUMatrixPtr(const de::_DATA_TYPES_FLAGS_ _type, const uint32_t width, const uint32_t height,
+#if _CPP_EXPORT_ENABLED_
+    _DECX_API_
+#endif  
+    de::GPU_Matrix* CreateGPUMatrixPtr(const de::_DATA_TYPES_FLAGS_ _type, const uint32_t width, const uint32_t height,
         const de::_DATA_FORMATS_ format);
 
 
     namespace cuda
     {
-        _DECX_API_ de::DH PinMemory(de::Matrix& src);
+#if _CPP_EXPORT_ENABLED_
+        _DECX_API_
+#endif 
+        de::DH PinMemory(de::Matrix& src);
 
 
-        _DECX_API_ de::DH UnpinMemory(de::Matrix& src);
+#if _CPP_EXPORT_ENABLED_
+            _DECX_API_
+#endif 
+        de::DH UnpinMemory(de::Matrix& src);
     }
 }
 
 
+#if _C_EXPORT_ENABLED_
+#ifdef __cplusplus
+extern "C"
+{
+    typedef struct DECX_GPU_Matrix_t
+    {
+        void* _segment;
+    }DECX_GPU_Matrix;
+
+
+    _DECX_API_ DECX_GPU_Matrix CreateEmptyGPUMatrix();
+
+
+    _DECX_API_ DECX_GPU_Matrix CreateGPUMatrix(const int8_t type, const uint32_t width, const uint32_t height, 
+        const int8_t format);
+#ifdef __cplusplus
+}
+#endif
+#endif
+
+
+#endif
 
 #endif

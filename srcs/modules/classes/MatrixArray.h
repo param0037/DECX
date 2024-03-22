@@ -85,7 +85,7 @@ namespace de
 
 namespace decx
 {
-    class /*_DECX_API_*/ _MatrixArray : public de::MatrixArray
+    class _DECX_API_ _MatrixArray : public de::MatrixArray
     {
     private:
         // call AFTER attributes are assigned !

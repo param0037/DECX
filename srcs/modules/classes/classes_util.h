@@ -236,7 +236,7 @@ typedef __align__(16) union _16b
 #endif
 };
 
-
+// REMEMBER! chage it to de::, aligned with the include headers for users
 namespace decx
 {
     enum Fp16_Accuracy_Levels
@@ -260,6 +260,39 @@ namespace decx
         Fp16_Accurate_L3 = 2,
     };
 }
+
+
+#if _C_EXPORT_ENABLED_
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+    typedef struct __align__(8) DECX_Point2D_t
+    {
+        int32_t x, y;
+    }DECX_Point2D;
+
+
+    typedef struct __align__(8) DECX_Point2D_f_t
+    {
+        float x, y;
+    }DECX_Point2D_f;
+
+
+    typedef struct __align__(16) DECX_Point2D_d_t
+    {
+        double x, y;
+    }DECX_Point2D_d;
+
+
+    typedef struct __align__(8) DECX_Complex_f_t
+    {
+        float _real, _image;
+    }DECX_CPf;
+#ifdef __cplusplus
+}
+#endif
+#endif
 
 
 #endif
