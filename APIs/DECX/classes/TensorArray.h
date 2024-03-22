@@ -13,6 +13,7 @@
 
 #include "../basic.h"
 
+#ifdef __cplusplus
 namespace de
 {
     class _DECX_API_ TensorArray
@@ -79,6 +80,22 @@ namespace de
         _DECX_API_ de::DH UnpinMemory(de::TensorArray& src);
     }
 }
+#endif
+
+
+#ifdef _C_CONTEXT_
+typedef struct DECX_TensorArray_t
+{
+    void* _segment;
+}DECX_TensorArray;
+
+
+_DECX_API_ DECX_TensorArray DE_CreateEmptyTensorArray();
+
+
+_DECX_API_ DECX_TensorArray DE_CreateTensorArray(const int8_t type, const uint32_t _width, const uint32_t _height,
+    const uint32_t _depth, const uint32_t tensor_num);
+#endif
 
 
 #endif

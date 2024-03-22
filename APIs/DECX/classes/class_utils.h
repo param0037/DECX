@@ -13,7 +13,7 @@
 #include "../basic.h"
 #include "type_info.h"
 
-
+#ifdef __cplusplus
 namespace de
 {
 	struct Half
@@ -128,6 +128,6 @@ namespace de
 		Fp16_Accurate_L3 = 2,
 	};
 }
-
+#endif
 
 #endif

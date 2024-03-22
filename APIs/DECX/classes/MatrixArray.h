@@ -14,6 +14,7 @@
 
 #include "../basic.h"
 
+#ifdef __cplusplus
 namespace de
 {
 	/*
@@ -69,5 +70,21 @@ namespace de
     _DECX_API_
     de::MatrixArray* CreateMatrixArrayPtr(const de::_DATA_TYPES_FLAGS_ _type, uint width, uint height, uint MatrixNum);
 }
+#endif
+
+#ifdef _C_CONTEXT_
+typedef struct DECX_MatrixArray_t
+{
+    void* _segment;
+}DECX_MatrixArray;
+
+
+_DECX_API_ DECX_MatrixArray DE_CreateEmptyMatrixArray();
+
+
+_DECX_API_ DECX_MatrixArray DE_CreateMatrixArray(const int8_t type, const uint32_t _width, const uint32_t _height,
+    uint32_t MatrixNum);
+#endif
+
 
 #endif

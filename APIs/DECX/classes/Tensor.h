@@ -15,7 +15,7 @@
 #include "../basic.h"
 #include "../vectorial/vector4.h"
 
-
+#ifdef __cplusplus
 namespace de
 {
     class _DECX_API_ Tensor
@@ -66,5 +66,22 @@ namespace de
 
     de::Tensor& CreateTensorRef(const de::_DATA_TYPES_FLAGS_ _type, const uint _width, const uint _height, const uint _depth);
 }
+#endif
+
+
+#ifdef _C_CONTEXT_
+typedef struct DECX_Tensor_t
+{
+    void* _segment;
+}DECX_Tensor;
+
+
+_DECX_API_ DECX_Tensor DE_CreateEmptyTensor();
+
+
+_DECX_API_ DECX_Tensor DE_CreateTensor(const int8_t type, const uint32_t _width, const uint32_t _height,
+    const uint32_t _depth);
+#endif
+
 
 #endif

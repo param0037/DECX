@@ -22,20 +22,26 @@
 
 
 #ifdef BasicClasses
-#include "DECX/classes/Matrix.h"
 #include "DECX/classes/Vector.h"
+#include "DECX/classes/Matrix.h"
+#include "DECX/classes/Tensor.h"
+#include "DECX/classes/MatrixArray.h"
+#include "DECX/classes/TensorArray.h"
+#ifdef __cplusplus
+
 #include "DECX/classes/GPU_Matrix.h"
 #include "DECX/classes/GPU_Vector.h"
 #include "DECX/classes/GPU_MatrixArray.h"
-#include "DECX/classes/Tensor.h"
-#include "DECX/classes/TensorArray.h"
+
+
 #include "DECX/classes/GPU_Tensor.h"
 #include "DECX/classes/GPU_TensorArray.h"
 #include "DECX/classes/decx_memcpy.h"
 #include "DECX/classes/DecxNumber.h"
 #endif
+#endif
 
-
+#ifdef __cplusplus
 #ifdef BasicProc
 #include "DECX/BLAS/BLAS.h"
 #include "DECX/BLAS/mathematic.h"
@@ -58,10 +64,8 @@
 #endif
 
 
-
 #include "DECX/Async/DecxStream.h"
-
-
+#endif
 
 
 #endif

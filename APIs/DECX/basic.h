@@ -11,9 +11,20 @@
 #ifndef _BASIC_H_
 #define _BASIC_H_
 
+
+// Language context
+#if (defined(__STDC__) || defined(__STDC_VERSION__) || defined(__STDC_HOSTED__)) && !defined(__cplusplus)
+#define _C_CONTEXT_
+#endif
+
+#ifdef __cplusplus
 #include <iostream>
 #include <initializer_list>
-//#include <Windows.h>
+#endif
+
+#ifdef _C_CONTEXT_
+#include <stdio.h>
+#endif
 
 
 typedef unsigned char uchar;
@@ -25,14 +36,15 @@ typedef unsigned int uint;
 #endif
 
 
-
 #if defined(__linux__) || defined(__GNUC__)
 #define Linux
 #endif
 
 
 #ifdef Windows
+
 #define _DECX_API_ __declspec(dllexport)
+
 #define __align__(n) __declspec(align(n))
 #endif
 
@@ -41,6 +53,7 @@ typedef unsigned int uint;
 #define __align__(n) __attribute__(align(n))
 #endif
 
+#ifdef __cplusplus
 namespace de
 {
 	typedef struct DECX_Handle
@@ -51,12 +64,12 @@ namespace de
 }
 
 
-enum DATA_STORE_TYPE
-{
-	Page_Locked = 0x00,         // call(ed) cudaHostAlloc(..., cudaHostAllocDefault)
-	Page_Default = 0x01,         // call(ed) decx::alloc::aligned_malloc_Hv() -> std::malloc()
-	Device_Memory = 0x02          // call(ed) decx::alloc::aligned_malloc_D() -> cudaMalloc()
-};
+//enum DATA_STORE_TYPE
+//{
+//	Page_Locked = 0x00,         // call(ed) cudaHostAlloc(..., cudaHostAllocDefault)
+//	Page_Default = 0x01,         // call(ed) decx::alloc::aligned_malloc_Hv() -> std::malloc()
+//	Device_Memory = 0x02          // call(ed) decx::alloc::aligned_malloc_D() -> cudaMalloc()
+//};
 
 
 namespace de
@@ -65,6 +78,7 @@ namespace de
 
 
 	_DECX_API_ void InitCPUInfo();
+
 
 	namespace cuda {
 		_DECX_API_ void DECX_CUDA_exit();
@@ -135,6 +149,12 @@ namespace de
 		DECX_FAIL_ALLOCATION = 0x10
 	};
 }
+#endif
 
+#ifdef _C_CONTEXT_
+typedef char int8_t;
+typedef int int32_t;
+typedef unsigned int uint32_t;
+#endif
 
 #endif

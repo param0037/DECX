@@ -14,6 +14,7 @@
 #include "../basic.h"
 #include "type_info.h"
 
+#ifdef __cplusplus
 namespace de
 {
     class _DECX_API_ Vector
@@ -60,8 +61,21 @@ namespace de
 
     _DECX_API_ de::Vector* CreateVectorPtr(const de::_DATA_TYPES_FLAGS_ _type, size_t len);
 }
+#endif
 
 
+#ifdef _C_CONTEXT_
+typedef struct DECX_Vector_t
+{
+    void* _segment;
+}DECX_Vector;
+
+
+_DECX_API_ DECX_Vector DE_CreateEmptyVector();
+
+
+_DECX_API_ DECX_Vector DE_CreateVector(const int8_t type, const uint32_t len);
+#endif
 
 
 #endif

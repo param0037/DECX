@@ -16,6 +16,7 @@
 #include "class_utils.h"
 
 
+#ifdef __cplusplus
 /**
 * in host, allocate page-locaked memory in 8-times both on width and height
 * ensure the utilization of __m128 and __m256, as well as multi threads
@@ -78,5 +79,22 @@ namespace de
     _DECX_API_ de::Matrix& CreateMatrixRef(const de::_DATA_TYPES_FLAGS_ type, const uint32_t _width, const uint32_t _height,
         const de::_DATA_FORMATS_ format = de::_NA_);
 }
+#endif
+
+
+#ifdef _C_CONTEXT_
+typedef struct DECX_Matrix_t
+{
+    void* _segment;
+}DECX_Matrix;
+
+
+_DECX_API_ DECX_Matrix DE_CreateEmptyMatrix();
+
+
+_DECX_API_ DECX_Matrix DE_CreateMatrix(const int8_t type, const uint32_t _width, const uint32_t _height,
+    const int8_t format);
+#endif
+
 
 #endif
