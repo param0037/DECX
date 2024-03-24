@@ -180,32 +180,21 @@ namespace decx
 }
 
 
-
+#if _CPP_EXPORT_ENABLED_
 namespace de
 {
-#if _CPP_EXPORT_ENABLED_
-    _DECX_API_
-#endif 
-        de::MatrixArray& CreateMatrixArrayRef();
+    _DECX_API_ de::MatrixArray& CreateMatrixArrayRef();
 
 
-#if _CPP_EXPORT_ENABLED_
-    _DECX_API_
-#endif 
-        de::MatrixArray* CreateMatrixArrayPtr();
+    _DECX_API_ de::MatrixArray* CreateMatrixArrayPtr();
 
 
-#if _CPP_EXPORT_ENABLED_
-    _DECX_API_
-#endif 
-        de::MatrixArray& CreateMatrixArrayRef(const de::_DATA_TYPES_FLAGS_ _type, uint32_t width, uint32_t height, uint32_t MatrixNum);
+    _DECX_API_ de::MatrixArray& CreateMatrixArrayRef(const de::_DATA_TYPES_FLAGS_ _type, uint32_t width, uint32_t height, uint32_t MatrixNum);
 
 
-#if _CPP_EXPORT_ENABLED_
-    _DECX_API_
-#endif 
-        de::MatrixArray* CreateMatrixArrayPtr(const de::_DATA_TYPES_FLAGS_ _type, uint32_t width, uint32_t height, uint32_t MatrixNum);
+    _DECX_API_ de::MatrixArray* CreateMatrixArrayPtr(const de::_DATA_TYPES_FLAGS_ _type, uint32_t width, uint32_t height, uint32_t MatrixNum);
 }
+#endif
 
 
 #if _C_EXPORT_ENABLED_
@@ -213,10 +202,7 @@ namespace de
 extern "C"
 {
 #endif
-    typedef struct DECX_MatrixArray_t
-    {
-        void* _segment;
-    }DECX_MatrixArray;
+    typedef struct decx::_MatrixArray* DECX_MatrixArray;
 
 
     _DECX_API_ DECX_MatrixArray DE_CreateEmptyMatrixArray();
@@ -224,6 +210,9 @@ extern "C"
 
     _DECX_API_ DECX_MatrixArray DE_CreateMatrixArray(const int8_t type, const uint32_t _width, const uint32_t _height,
         uint32_t MatrixNum);
+
+
+    // _DECX_API_ DECX_Handle DE_GetMatrixArrayProp(const DECX_MatrixArray src, DECX_MatrixLayout* prop);
 #ifdef __cplusplus
 }
 #endif          // #ifdef __cplusplus

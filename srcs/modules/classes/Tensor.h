@@ -233,33 +233,21 @@ namespace decx
 
 
 
-
+#if _CPP_EXPORT_ENABLED_
 namespace de
 {
-#if _CPP_EXPORT_ENABLED_
-    _DECX_API_
-#endif 
-        de::Tensor* CreateTensorPtr();
+    _DECX_API_ de::Tensor* CreateTensorPtr();
 
 
-#if _CPP_EXPORT_ENABLED_
-    _DECX_API_
-#endif 
-        de::Tensor& CreateTensorRef();
+    _DECX_API_ de::Tensor& CreateTensorRef();
 
 
-#if _CPP_EXPORT_ENABLED_
-    _DECX_API_
-#endif 
-        de::Tensor* CreateTensorPtr(const de::_DATA_TYPES_FLAGS_ _type, const uint32_t _width, const uint32_t _height, const uint32_t _depth);
+    _DECX_API_ de::Tensor* CreateTensorPtr(const de::_DATA_TYPES_FLAGS_ _type, const uint32_t _width, const uint32_t _height, const uint32_t _depth);
 
 
-#if _CPP_EXPORT_ENABLED_
-    _DECX_API_
-#endif 
-        de::Tensor& CreateTensorRef(const de::_DATA_TYPES_FLAGS_ _type, const uint32_t _width, const uint32_t _height, const uint32_t _depth);
+    _DECX_API_ de::Tensor& CreateTensorRef(const de::_DATA_TYPES_FLAGS_ _type, const uint32_t _width, const uint32_t _height, const uint32_t _depth);
 }
-
+#endif
 
 
 #if _C_EXPORT_ENABLED_
@@ -267,10 +255,19 @@ namespace de
 extern "C"
 {
 #endif
-    typedef struct DECX_Tensor_t
+    typedef struct decx::_Tensor* DECX_Tensor;
+
+
+    typedef struct DECX_TensorLayout_t
     {
-        void* _segment;
-    }DECX_Tensor;
+        uint32_t _width, _height, _depth;
+
+        uint32_t _dpitch;                   // NOT IN BYTES, the true depth (4x)
+        uint32_t _wpitch;                   // NOT IN BYTES, the true width (4x)
+        uint64_t _dp_x_wp;                  // NOT IN BYTES, true depth multiply true width
+
+        uint8_t _single_element_size;
+    }DECX_TensorLayout;
 
 
     _DECX_API_ DECX_Tensor DE_CreateEmptyTensor();
@@ -278,6 +275,9 @@ extern "C"
 
     _DECX_API_ DECX_Tensor DE_CreateTensor(const int8_t type, const uint32_t _width, const uint32_t _height,
         const uint32_t _depth);
+
+
+    _DECX_API_ DECX_Handle DE_GetTensorProp(const DECX_Tensor src, DECX_TensorLayout* prop);
 #ifdef __cplusplus
 }
 #endif      // # ifdef __cplusplus

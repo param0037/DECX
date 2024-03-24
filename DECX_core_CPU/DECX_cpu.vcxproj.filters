@@ -266,8 +266,5 @@
     <ClCompile Include="..\srcs\modules\core\utils\fragment_arangement.cxx">
       <Filter>源文件\core\utils</Filter>
     </ClCompile>
-    <ClCompile Include="..\srcs\modules\classes\host_class_common_stat.c">
-      <Filter>源文件\classes</Filter>
-    </ClCompile>
   </ItemGroup>
 </Project>

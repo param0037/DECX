@@ -234,12 +234,11 @@ decx::_tensor_layout& decx::_Tensor::get_layout_modify()
     return this->_layout;
 }
 
-
+#if _CPP_EXPORT_ENABLED_
 de::Tensor& de::CreateTensorRef()
 {
     return *(new decx::_Tensor());
 }
-
 
 
 de::Tensor* de::CreateTensorPtr()
@@ -248,19 +247,17 @@ de::Tensor* de::CreateTensorPtr()
 }
 
 
-
 de::Tensor& de::CreateTensorRef(const de::_DATA_TYPES_FLAGS_ _type, const uint32_t _width, const uint32_t _height, const uint32_t _depth)
 {
     return *(new decx::_Tensor(_type, _width, _height, _depth));
 }
 
 
-
 de::Tensor* de::CreateTensorPtr(const de::_DATA_TYPES_FLAGS_ _type, const uint32_t _width, const uint32_t _height, const uint32_t _depth)
 {
     return new decx::_Tensor(_type, _width, _height, _depth);
 }
-
+#endif
 
 
 uint32_t decx::_Tensor::Width() const { return this->_layout.width; }
@@ -290,19 +287,29 @@ extern "C"
 #endif
     _DECX_API_ DECX_Tensor DE_CreateEmptyTensor()
     {
-        DECX_Tensor _res;
-        _res._segment = static_cast<void*>(de::CreateTensorPtr());
-        return _res;
+        return (DECX_Tensor)(new decx::_Tensor());
     }
 
 
     _DECX_API_ DECX_Tensor DE_CreateTensor(const int8_t type, const uint32_t _width, const uint32_t _height,
         const uint32_t _depth)
     {
-        DECX_Tensor _res;
-        _res._segment = static_cast<void*>(de::CreateTensorPtr(static_cast<de::_DATA_TYPES_FLAGS_>(type), _width, _height,
-            _depth));
-        return _res;
+        return (DECX_Tensor)(new decx::_Tensor(static_cast<de::_DATA_TYPES_FLAGS_>(type), _width, _height, _depth));
+    }
+
+    
+    _DECX_API_ DECX_Handle DE_GetTensorProp(const DECX_Tensor src, DECX_TensorLayout* prop)
+    {
+        decx::_Tensor* _src = (decx::_Tensor*)src;
+        de::DH handle;
+
+        if (prop == NULL) {
+            decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_INVALID_PARAM,
+                INVALID_PARAM);
+            return _CAST_HANDLE_(DECX_Handle, handle);
+        }
+        memcpy(prop, &_src->get_layout(), sizeof(DECX_TensorLayout));
+        return _CAST_HANDLE_(DECX_Handle, handle);
     }
 #ifdef __cplusplus
 }

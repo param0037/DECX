@@ -21,7 +21,7 @@ if ((handle_ptr)->error_type != decx::DECX_error_types::DECX_SUCCESS) {     \
 }                                                                           \
 }                                                                           \
 
-
+#ifdef __cplusplus
 namespace decx
 {
     enum DECX_error_types
@@ -158,7 +158,7 @@ namespace decx
         DECX_FAIL_HOST_MEM_UNREGISTERED = 0x15
     };
 }
-
+#endif
 
 
 // --------------------------- ERROR_STATEMENTS -------------------------------
@@ -203,6 +203,7 @@ namespace decx
 #endif
 
 
+#ifdef __cplusplus
 namespace de
 {
     typedef struct DECX_Handle
@@ -228,6 +229,28 @@ namespace de
         }
     }DH;
 }
+#endif      // #ifdef __cplusplus
+
+
+#if _C_EXPORT_ENABLED_
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+    typedef struct DECX_Handle_t 
+    {
+        // indicates the type index of error
+        int error_type;
+
+        // describes the error statements
+        char error_string[100];
+    }DECX_Handle;
+
+#ifdef __cplusplus
+#define _CAST_HANDLE_(dst_handle_type, src) *((dst_handle_type*)&(src))
+}
+#endif
+#endif
 
 
 #endif

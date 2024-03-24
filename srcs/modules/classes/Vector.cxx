@@ -172,11 +172,11 @@ de::Vector4f* decx::_Vector::ptr_vec4f(size_t index)
 }
 
 
+#if _CPP_EXPORT_ENABLED_
 de::Vector& de::CreateVectorRef()
 {
     return *(new decx::_Vector());
 }
-
 
 
 de::Vector* de::CreateVectorPtr()
@@ -185,19 +185,17 @@ de::Vector* de::CreateVectorPtr()
 }
 
 
-
 de::Vector& de::CreateVectorRef(const de::_DATA_TYPES_FLAGS_ _type, size_t len)
 {
     return *(new decx::_Vector(_type, len));
 }
 
 
-
 de::Vector* de::CreateVectorPtr(const de::_DATA_TYPES_FLAGS_ _type, size_t len)
 {
     return new decx::_Vector(_type, len);
 }
-
+#endif
 
 
 void decx::_Vector::release()
@@ -264,17 +262,19 @@ extern "C"
 #endif
     _DECX_API_ DECX_Vector DE_CreateEmptyVector()
     {
-        DECX_Vector _res;
-        _res._segment = static_cast<void*>(de::CreateVectorPtr());
-        return _res;
+        return (DECX_Vector)(new decx::_Vector());
     }
 
 
     _DECX_API_ DECX_Vector DE_CreateVector(const int8_t type, const uint32_t len)
     {
-        DECX_Vector _res;
-        _res._segment = static_cast<void*>(de::CreateVectorPtr(static_cast<de::_DATA_TYPES_FLAGS_>(type), len));
-        return _res;
+        return (DECX_Vector)(new decx::_Vector(static_cast<de::_DATA_TYPES_FLAGS_>(type), len));
+    }
+
+
+    _DECX_API_ uint64_t DE_GetVectorLength(DECX_Vector src)
+    {
+        return ((decx::_Vector*)src)->Len();
     }
 #ifdef __cplusplus
 }

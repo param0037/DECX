@@ -159,33 +159,21 @@ namespace decx
 }
 
 
-
+#if _CPP_EXPORT_ENABLED_
 namespace de
 {
-#if _CPP_EXPORT_ENABLED_
-    _DECX_API_
-#endif 
-        de::Vector& CreateVectorRef();
+    _DECX_API_ de::Vector& CreateVectorRef();
 
 
-#if _CPP_EXPORT_ENABLED_
-    _DECX_API_
-#endif 
-        de::Vector* CreateVectorPtr();
+    _DECX_API_ de::Vector* CreateVectorPtr();
 
 
-#if _CPP_EXPORT_ENABLED_
-    _DECX_API_
-#endif 
-        de::Vector& CreateVectorRef(const de::_DATA_TYPES_FLAGS_ _type, size_t len);
+    _DECX_API_ de::Vector& CreateVectorRef(const de::_DATA_TYPES_FLAGS_ _type, size_t len);
 
 
-#if _CPP_EXPORT_ENABLED_
-    _DECX_API_
-#endif 
-        de::Vector* CreateVectorPtr(const de::_DATA_TYPES_FLAGS_ _type, size_t len);
+    _DECX_API_ de::Vector* CreateVectorPtr(const de::_DATA_TYPES_FLAGS_ _type, size_t len);
 }
-
+#endif
 
 
 #if _C_EXPORT_ENABLED_
@@ -193,16 +181,16 @@ namespace de
 extern "C"
 {
 #endif
-    typedef struct DECX_Vector_t
-    {
-        void* _segment;
-    }DECX_Vector;
+    typedef struct decx::_Vector* DECX_Vector;
 
 
     _DECX_API_ DECX_Vector DE_CreateEmptyVector();
 
 
     _DECX_API_ DECX_Vector DE_CreateVector(const int8_t type, const uint32_t len);
+
+
+    _DECX_API_ uint64_t DE_GetVectorLength(DECX_Vector src);
 #ifdef __cplusplus
 }
 #endif      // # ifdef __cplusplus

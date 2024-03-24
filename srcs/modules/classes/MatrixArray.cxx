@@ -177,12 +177,11 @@ uint8_t* decx::_MatrixArray::ptr_uint8(const uint row, const uint col, const uin
 }
 
 
-
+#if _CPP_EXPORT_ENABLED_
 de::MatrixArray& de::CreateMatrixArrayRef()
 {
     return *(new decx::_MatrixArray());
 }
-
 
 
 de::MatrixArray* de::CreateMatrixArrayPtr()
@@ -191,18 +190,17 @@ de::MatrixArray* de::CreateMatrixArrayPtr()
 }
 
 
-
 de::MatrixArray& de::CreateMatrixArrayRef(const de::_DATA_TYPES_FLAGS_ _type, uint width, uint height, uint MatrixNum)
 {
     return *(new decx::_MatrixArray(_type, width, height, MatrixNum));
 }
 
 
-
 de::MatrixArray* de::CreateMatrixArrayPtr(const de::_DATA_TYPES_FLAGS_ _type, uint width, uint height, uint MatrixNum)
 {
     return new decx::_MatrixArray(_type, width, height, MatrixNum);
 }
+#endif
 
 
 void decx::_MatrixArray::release()
@@ -280,20 +278,30 @@ extern "C"
 #endif
     _DECX_API_ DECX_MatrixArray DE_CreateEmptyMatrixArray()
     {
-        DECX_MatrixArray _res;
-        _res._segment = static_cast<void*>(de::CreateMatrixArrayPtr());
-        return _res;
+        return (DECX_MatrixArray)(new decx::_MatrixArray());
     }
 
 
-    _DECX_API_ DECX_MatrixArray DE_CreateMatrixArray(const int8_t type, const uint32_t _width, const uint32_t _height,
+    _DECX_API_ DECX_MatrixArray DE_CreateMatrixArray(const int8_t type, const uint32_t width, const uint32_t height,
         uint32_t MatrixNum)
     {
-        DECX_MatrixArray _res;
-        _res._segment = static_cast<void*>(de::CreateMatrixArrayPtr(static_cast<de::_DATA_TYPES_FLAGS_>(type), _width, _height,
-            MatrixNum));
-        return _res;
+        return (DECX_MatrixArray)(new decx::_MatrixArray(static_cast<de::_DATA_TYPES_FLAGS_>(type), width, height, MatrixNum));
     }
+
+
+    /*_DECX_API_ DECX_Handle DE_GetMatrixArrayProp(const DECX_MatrixArray src, DECX_MatrixLayout* prop)
+    {
+        decx::_MatrixArray* _src = (decx::_MatrixArray*)src;
+        de::DH handle;
+
+        if (prop == NULL) {
+            decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_INVALID_PARAM,
+                INVALID_PARAM);
+            return _CAST_HANDLE_(DECX_Handle, handle);
+        }
+        memcpy(prop, &_src->get_layout(), sizeof(DECX_MatrixLayout));
+        return _CAST_HANDLE_(DECX_Handle, handle);
+    }*/
 #ifdef __cplusplus
 }
 #endif

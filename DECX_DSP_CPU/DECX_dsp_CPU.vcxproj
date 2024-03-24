@@ -192,7 +192,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;DECXDSPCPU_EXPORTS;_WINDOWS;_USRDLL;_DECX_DSP_CPU_;_DECX_CPU_PARTS_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;DECXDSPCPU_EXPORTS;_WINDOWS;_USRDLL;_DECX_DSP_CPU_;_DECX_CPU_PARTS_;_C_EXPORT_ENABLED_=1;_CPP_EXPORT_ENABLED_=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>

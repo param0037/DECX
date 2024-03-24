@@ -153,13 +153,11 @@ decx::_TensorArray::_TensorArray(const de::_DATA_TYPES_FLAGS_ _type, const uint 
 
 
 
-
+#if _CPP_EXPORT_ENABLED_
 de::TensorArray& de::CreateTensorArrayRef()
 {
     return *(new decx::_TensorArray());
 }
-
-
 
 
 de::TensorArray* de::CreateTensorArrayPtr()
@@ -168,21 +166,17 @@ de::TensorArray* de::CreateTensorArrayPtr()
 }
 
 
-
-
 de::TensorArray& de::CreateTensorArrayRef(const de::_DATA_TYPES_FLAGS_ _type, const uint width, const uint height, const uint depth, const uint tensor_num)
 {
     return *(new decx::_TensorArray(_type, width, height, depth, tensor_num));
 }
 
 
-
-
 de::TensorArray* de::CreateTensorArrayPtr(const de::_DATA_TYPES_FLAGS_ _type, const uint width, const uint height, const uint depth, const uint tensor_num)
 {
     return new decx::_TensorArray(_type, width, height, depth, tensor_num);
 }
-
+#endif
 
 
 
@@ -307,19 +301,14 @@ extern "C"
 #endif
     _DECX_API_ DECX_TensorArray DE_CreateEmptyTensorArray()
     {
-        DECX_TensorArray _res;
-        _res._segment = static_cast<void*>(de::CreateTensorArrayPtr());
-        return _res;
+        return DECX_TensorArray(new decx::_TensorArray());
     }
 
 
-    _DECX_API_ DECX_TensorArray DE_CreateTensorArray(const int8_t type, const uint32_t _width, const uint32_t _height,
-        const uint32_t _depth, const uint32_t tensor_num)
+    _DECX_API_ DECX_TensorArray DE_CreateTensorArray(const int8_t type, const uint32_t width, const uint32_t height,
+        const uint32_t depth, const uint32_t tensor_num)
     {
-        DECX_TensorArray _res;
-        _res._segment = static_cast<void*>(de::CreateTensorArrayPtr(static_cast<de::_DATA_TYPES_FLAGS_>(type), _width, _height,
-            _depth, tensor_num));
-        return _res;
+        return DECX_TensorArray(new decx::_TensorArray(static_cast<de::_DATA_TYPES_FLAGS_>(type), width, height, depth, tensor_num));
     }
 #ifdef __cplusplus
 }

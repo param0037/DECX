@@ -129,7 +129,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;DECXCPU_EXPORTS;_WINDOWS;_USRDLL;_DECX_CPU_PARTS_;_DECX_CV_CPU_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;DECXCPU_EXPORTS;_WINDOWS;_USRDLL;_DECX_CPU_PARTS_;_DECX_CV_CPU_;_C_EXPORT_ENABLED_=1;_CPP_EXPORT_ENABLED_=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>E:\DECX_world\3rdparty\Windows\SDL\SDL2_image-devel-2.6.2-VC\include;E:\DECX_world\3rdparty\Windows\SDL\SDL2-devel-2.6.2-VC\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>

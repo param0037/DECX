@@ -32,6 +32,7 @@
 * in host, allocate page-locaked memory in 8-times both on width and height
 * ensure the utilization of __m128 and __m256, as well as multi threads
 */
+#ifdef __cplusplus
 namespace de {
     class 
 #if _CPP_EXPORT_ENABLED_
@@ -233,34 +234,25 @@ namespace decx
 }
 
 
-
+#if _CPP_EXPORT_ENABLED_
 namespace de
 {
-#if _CPP_EXPORT_ENABLED_
-    _DECX_API_
-#endif
-        de::Matrix* CreateMatrixPtr();
+    _DECX_API_ de::Matrix* CreateMatrixPtr();
 
 
-#if _CPP_EXPORT_ENABLED_
-    _DECX_API_
-#endif 
-        de::Matrix& CreateMatrixRef();
+    _DECX_API_ de::Matrix& CreateMatrixRef();
 
 
-#if _CPP_EXPORT_ENABLED_
-    _DECX_API_
-#endif 
-        de::Matrix* CreateMatrixPtr(const de::_DATA_TYPES_FLAGS_ type, const uint32_t _width, const uint32_t _height,
+    _DECX_API_ de::Matrix* CreateMatrixPtr(const de::_DATA_TYPES_FLAGS_ type, const uint _width, const uint _height,
         const de::_DATA_FORMATS_ format = de::_NA_);
 
 
-#if _CPP_EXPORT_ENABLED_
-    _DECX_API_
-#endif 
-        de::Matrix& CreateMatrixRef(const de::_DATA_TYPES_FLAGS_ type, const uint32_t _width, const uint32_t _height,
+    _DECX_API_ de::Matrix& CreateMatrixRef(const de::_DATA_TYPES_FLAGS_ type, const uint _width, const uint _height,
         const de::_DATA_FORMATS_ format = de::_NA_);
 }
+#endif  // #if _CPP_EXPORT_ENABLED_
+
+#endif
 
 
 #if _C_EXPORT_ENABLED_
@@ -268,10 +260,16 @@ namespace de
 extern "C"
 {
 #endif
-    typedef struct DECX_Matrix_t
+    typedef decx::_Matrix* DECX_Matrix;
+
+
+    typedef struct DECX_MatrixLayout_t
     {
-        void* _segment;
-    }DECX_Matrix;
+        uint32_t _width, _height;
+        uint32_t _pitch;
+
+        int32_t _single_element_size;
+    }DECX_MatrixLayout;
 
 
     _DECX_API_ DECX_Matrix DE_CreateEmptyMatrix();
@@ -280,11 +278,10 @@ extern "C"
     _DECX_API_ DECX_Matrix DE_CreateMatrix(const int8_t type, const uint32_t _width, const uint32_t _height,
         const int8_t format);
 
-
     /*
     * @return : [Width, Height]
     */
-    _DECX_API_ DECX_Point2D DE_GetMatrixSizes(const DECX_Matrix src);
+    _DECX_API_ DECX_Handle DE_GetMatrixProp(const DECX_Matrix src, DECX_MatrixLayout* prop);
 #ifdef __cplusplus
 }
 #endif      // # ifdef __cplusplus

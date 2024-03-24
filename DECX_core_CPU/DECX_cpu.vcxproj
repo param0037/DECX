@@ -202,7 +202,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\srcs\modules\classes\classes_util.cxx" />
-    <ClCompile Include="..\srcs\modules\classes\host_class_common_stat.c" />
     <ClCompile Include="..\srcs\modules\classes\Matrix.cxx" />
     <ClCompile Include="..\srcs\modules\classes\MatrixArray.cxx" />
     <ClCompile Include="..\srcs\modules\classes\Tensor.cxx" />
