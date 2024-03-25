@@ -1,9 +1,0 @@
-{
-    "files.associations": {
-        "*.tcc": "cpp",
-        "chrono": "cpp",
-        "cmath": "cpp",
-        "cstdlib": "cpp",
-        "vector": "cpp"
-    }
-}

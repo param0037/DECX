@@ -155,6 +155,7 @@
     <CudaCompile Include="..\srcs\modules\NN\convolution\CUDA\fp32\cuda_conv2D_fp32_im2col_planner.cu" />
     <CudaCompile Include="..\srcs\modules\NN\convolution\CUDA\fp32\im2col_fp32.cu" />
     <CudaCompile Include="..\srcs\modules\NN\convolution\CUDA\fp32\im2col_GEMM_fp32.cu" />
+    <CudaCompile Include="..\srcs\modules\NN\pre_post_proc_CUDA_NNModule.cu" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

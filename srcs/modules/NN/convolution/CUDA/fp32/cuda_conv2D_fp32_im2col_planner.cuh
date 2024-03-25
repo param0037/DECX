@@ -19,6 +19,7 @@
 #include "../../../../classes/GPU_TensorArray.h"
 #include "../../../../BLAS/basic_process/transpose/CUDA/transpose_kernels.cuh"
 #include "../../../../BLAS/basic_process/extension/extend_flags.h"
+#include "../../../../core/utils/Fixed_Length_Array.h"
 
 
 namespace decx
@@ -29,8 +30,30 @@ namespace decx
 
         template <typename _data_type>
         struct cuda_conv2D_im2col_kernel_arrange;
+
+
+        struct cuda_conv2D_im2col_kernel_params;
+
+
+        void InitCUDAConv2DResource();
     }
 }
+
+
+struct decx::nn::cuda_conv2D_im2col_kernel_params
+{
+    void* _src_loc;
+    void* _dst_loc;
+    
+    uint32_t _proc_H;
+    uint64_t _im2col_bufW;
+
+    dim3 _grid_i2c, _block_i2c;
+    dim3 _grid_gemm, _block_gemm;
+};
+
+
+#define _MAX_IM2COL_TILE_SIZE_ (uint64_t)2048*2048*16
 
 
 template <typename _data_type>
@@ -66,28 +89,35 @@ class decx::nn::cuda_conv2D_fp32_im2col_planner
 public:
     uint2 _strides;
     const decx::_tensor_layout* _src_layout;
+    const decx::_tensor_layout* _dst_layout;
 
     decx::nn::cuda_conv2D_im2col_kernel_arrange<float> _kernel_manager;
 
     decx::utils::unpitched_frac_mapping<uint32_t> _Lproc_gemm_params;
+
+    uint32_t _I2C_wpitch;       // 128 bytes aligned
+    uint32_t _wpitchsrc_proc_v1;
 
     // [D, W, H]
     uint3 _dst_dims;
     
     de::extend_label _ext_method;
 
+    decx::utils::Fixed_Length_Array<decx::nn::cuda_conv2D_im2col_kernel_params> _params_array;
     
-    ulong2 _im2col_buf_dims;
     decx::Ptr2D_Info<float4> _ext_src_buf;     // Allocated if extend method == border_zero
     decx::PtrInfo<void> _im2col_buf;
+
+    ulong2 _im2col_buf_alloc;
     
-
-    dim3 _grid_i2c, _block_i2c;
-    dim3 _grid_gemm, _block_gemm;
-
 
     void _cpy_src_ext(decx::_GPU_Tensor* src, decx::cuda_stream* S) const;
 
+
+    void _kernel_launch_config(const uint32_t _proc_idx, const uint32_t _proc_h);
+
+
+    void _flush_im2col_buf(decx::cuda_stream* S);
 
 public:
     cuda_conv2D_fp32_im2col_planner() {}
@@ -98,8 +128,23 @@ public:
         decx::cuda_stream* S, de::DH *handle);
 
 
-    void _CRSR_ run(decx::_GPU_Tensor* src, decx::_GPU_TensorArray* kernel, decx::_GPU_Tensor* dst, 
+    bool changed(const decx::_tensor_layout* src_layout, const decx::_GPU_TensorArray* kernel,
+        const de::extend_label ext_method, const uint2 strides) const;
+
+
+    template <bool _boundless_T, bool _boundless_B>
+    void _CRSR_ run_single_frag_BC(const uint32_t _proc_idx, decx::cuda_stream* S);
+
+
+    void _CRSR_ run_single_frag_NB(const uint32_t _proc_idx, decx::cuda_stream* S);
+
+
+    void _CRSR_ run(decx::_GPU_Tensor* src, decx::_GPU_TensorArray* kernel, decx::_GPU_Tensor* dst,
         decx::cuda_stream* S, de::DH* handle);
+
+
+    void update_dst_layout(const decx::_tensor_layout* dst_layout);
+
 
     // [D, W, H]
     const uint3& dst_dims_query() const;
@@ -107,6 +152,14 @@ public:
 
     void release();
 };
+
+
+namespace decx
+{
+    namespace nn {
+        extern decx::nn::cuda_conv2D_fp32_im2col_planner* _conv2_fp32_planner;
+    }
+}
 
 
 #endif

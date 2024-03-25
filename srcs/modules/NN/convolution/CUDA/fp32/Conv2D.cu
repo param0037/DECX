@@ -8,12 +8,6 @@
 *   More information please visit https://github.com/param0037/DECX
 */
 
-//#include "im2col_fp32.cuh"
-//#include "im2col_GEMM_fp32.cuh"
-//#include "../../../../classes/GPU_Tensor.h"
-//#include "../../../../classes/GPU_TensorArray.h"
-//#include "../../../../BLAS/basic_process/transpose/CUDA/transpose_kernels.cuh"
-
 #include "cuda_conv2D_fp32_im2col_planner.cuh"
 
 
@@ -46,7 +40,7 @@ decx::nn::conv2D_im2col_fp32_caller(decx::_GPU_Tensor* src,
                                     const de::extend_label extend,
                                     de::DH* handle)
 {
-    decx::cuda_stream* S = NULL;
+    /*decx::cuda_stream* S = NULL;
     decx::cuda_event* E = NULL;
     S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
     E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
@@ -68,7 +62,46 @@ decx::nn::conv2D_im2col_fp32_caller(decx::_GPU_Tensor* src,
     const uint3 dst_dims = planner.dst_dims_query();
     dst->re_construct(de::_DATA_TYPES_FLAGS_::_FP32_, dst_dims.y, dst_dims.z, dst_dims.x, S);
     
+    planner.update_dst_layout(&dst->get_layout());
+
     planner.run(src, kernel, dst, S, handle);
+
+    E->event_record(S);
+    E->synchronize();
+
+    E->detach();
+    S->detach();*/
+
+
+    decx::cuda_stream* S = NULL;
+    decx::cuda_event* E = NULL;
+    S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
+    E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
+    if (S == NULL) {
+        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_CUDA_STREAM,
+            CUDA_STREAM_ACCESS_FAIL);
+        return;
+    }
+    if (E == NULL) {
+        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_CUDA_EVENT,
+            CUDA_EVENT_ACCESS_FAIL);
+        return;
+    }
+
+    if (decx::nn::_conv2_fp32_planner == NULL) {
+        decx::nn::_conv2_fp32_planner = new decx::nn::cuda_conv2D_fp32_im2col_planner;
+    }
+    if (decx::nn::_conv2_fp32_planner->changed(&src->get_layout(), kernel, extend, make_uint2(strides.x, strides.y))) {
+        decx::nn::_conv2_fp32_planner->plan(&src->get_layout(), kernel, extend, make_uint2(strides.x, strides.y), S, handle);
+        Check_Runtime_Error(handle);
+    }
+
+    const uint3 dst_dims = decx::nn::_conv2_fp32_planner->dst_dims_query();
+    dst->re_construct(de::_DATA_TYPES_FLAGS_::_FP32_, dst_dims.y, dst_dims.z, dst_dims.x, S);
+
+    decx::nn::_conv2_fp32_planner->update_dst_layout(&dst->get_layout());
+
+    decx::nn::_conv2_fp32_planner->run(src, kernel, dst, S, handle);
 
     E->event_record(S);
     E->synchronize();

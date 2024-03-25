@@ -32,18 +32,26 @@ bool decx::utils::frag_manager_gen(decx::utils::frag_manager* src, const size_t 
 bool decx::utils::frag_manager_gen_from_fragLen(decx::utils::frag_manager* src, const size_t _tot, const size_t _frag_len)
 {
     src->total = _tot;
-    src->frag_len = _frag_len;
-    if (_tot % _frag_len) {     // is left
-        src->is_left = true;
-        src->frag_num = _tot / _frag_len + 1;
-        src->frag_left_over = _tot % _frag_len;
-        return false;
+    src->frag_left_over = _tot % _frag_len;
+
+    if (_frag_len < _tot) {
+        src->frag_len = _frag_len;
+        if (_tot % _frag_len) {     // is left
+            src->is_left = true;
+            src->frag_num = _tot / _frag_len + 1;
+            return false;
+        }
+        else {
+            src->is_left = false;
+            src->frag_num = _tot / _frag_len;
+            return true;
+        }
     }
     else {
-        src->is_left = false;
-        src->frag_num = _tot / _frag_len;
-        src->frag_left_over = _tot % _frag_len;
-        return true;
+        src->frag_len = _tot;
+        src->frag_num = 1;
+        src->is_left = (bool)src->frag_left_over;
+        return false;
     }
 }
 

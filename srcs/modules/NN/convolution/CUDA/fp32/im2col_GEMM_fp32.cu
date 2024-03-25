@@ -86,4 +86,3 @@ void decx::nn::GPUK::cu_im2col_GEMM_fp32(const float4* __restrict   im2col_buf,
         }
     }
 }
-

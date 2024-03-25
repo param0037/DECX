@@ -44,5 +44,8 @@
     <CudaCompile Include="..\srcs\modules\NN\convolution\CUDA\fp32\im2col_GEMM_fp32.cu">
       <Filter>源文件\convolution\fp32</Filter>
     </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\NN\pre_post_proc_CUDA_NNModule.cu">
+      <Filter>源文件</Filter>
+    </CudaCompile>
   </ItemGroup>
 </Project>
