@@ -40,39 +40,6 @@ decx::nn::conv2D_im2col_fp32_caller(decx::_GPU_Tensor* src,
                                     const de::extend_label extend,
                                     de::DH* handle)
 {
-    /*decx::cuda_stream* S = NULL;
-    decx::cuda_event* E = NULL;
-    S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
-    E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
-    if (S == NULL) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_CUDA_STREAM,
-            CUDA_STREAM_ACCESS_FAIL);
-        return;
-    }
-    if (E == NULL) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_CUDA_EVENT,
-            CUDA_EVENT_ACCESS_FAIL);
-        return;
-    }
-
-    decx::nn::cuda_conv2D_fp32_im2col_planner planner;
-    planner.plan(&src->get_layout(), kernel, extend, make_uint2(strides.x, strides.y), S, handle);
-    Check_Runtime_Error(handle);
-
-    const uint3 dst_dims = planner.dst_dims_query();
-    dst->re_construct(de::_DATA_TYPES_FLAGS_::_FP32_, dst_dims.y, dst_dims.z, dst_dims.x, S);
-    
-    planner.update_dst_layout(&dst->get_layout());
-
-    planner.run(src, kernel, dst, S, handle);
-
-    E->event_record(S);
-    E->synchronize();
-
-    E->detach();
-    S->detach();*/
-
-
     decx::cuda_stream* S = NULL;
     decx::cuda_event* E = NULL;
     S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);

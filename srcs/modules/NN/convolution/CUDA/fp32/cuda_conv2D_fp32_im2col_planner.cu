@@ -112,10 +112,10 @@ void decx::nn::cuda_conv2D_fp32_im2col_planner::_kernel_launch_config(const uint
     // Plan for the CUDA kernel configureations
     if (this->_src_layout->dpitch == 4)
     {
-        constexpr uint32_t STG_block_dimx = _IM2COL_GET_STG_BLOCKDIM_X_(_IM2COL_D4_FP32_BLOCK_X_, 4);
-        constexpr uint32_t STG_block_dimy = _IM2COL_GET_STG_BLOCKDIM_Y_(_IM2COL_D4_FP32_BLOCK_Y_);
+        constexpr uint32_t STG_block_dimx = _IM2COL_GET_STG_BLOCKDIM_X_(_IM2COL_D4N_FP32_BLOCK_X_, 4);
+        constexpr uint32_t STG_block_dimy = _IM2COL_GET_STG_BLOCKDIM_Y_(_IM2COL_D4N_FP32_BLOCK_Y_);
 
-        _ptr->_block_i2c = dim3(_IM2COL_D4_FP32_BLOCK_X_, _IM2COL_D4_FP32_BLOCK_Y_);
+        _ptr->_block_i2c = dim3(_IM2COL_D4N_FP32_BLOCK_X_, _IM2COL_D4N_FP32_BLOCK_Y_);
         _ptr->_grid_i2c = dim3(decx::utils::ceil<uint32_t>(this->_dst_dims.y, STG_block_dimx),
                                decx::utils::ceil<uint32_t>(_ptr->_proc_H, STG_block_dimy),
                                this->_kernel_manager._kernel_layout->height);
@@ -126,10 +126,24 @@ void decx::nn::cuda_conv2D_fp32_im2col_planner::_kernel_launch_config(const uint
                                 decx::utils::ceil<uint32_t>(this->_kernel_manager._kernel_tensor_num, 4));
     }
     else if (this->_src_layout->dpitch == 8) {
-        constexpr uint32_t STG_block_dimx = _IM2COL_GET_STG_BLOCKDIM_X_(_IM2COL_D8_FP32_BLOCK_X_, 8);
-        constexpr uint32_t STG_block_dimy = _IM2COL_GET_STG_BLOCKDIM_Y_(_IM2COL_D8_FP32_BLOCK_Y_);
+        constexpr uint32_t STG_block_dimx = _IM2COL_GET_STG_BLOCKDIM_X_(_IM2COL_D4N_FP32_BLOCK_X_, 8);
+        constexpr uint32_t STG_block_dimy = _IM2COL_GET_STG_BLOCKDIM_Y_(_IM2COL_D4N_FP32_BLOCK_Y_);
 
-        _ptr->_block_i2c = dim3(_IM2COL_D8_FP32_BLOCK_X_, _IM2COL_D8_FP32_BLOCK_Y_);
+        _ptr->_block_i2c = dim3(_IM2COL_D4N_FP32_BLOCK_X_, _IM2COL_D4N_FP32_BLOCK_Y_);
+        _ptr->_grid_i2c = dim3(decx::utils::ceil<uint32_t>(this->_dst_dims.y, STG_block_dimx),
+            decx::utils::ceil<uint32_t>(_ptr->_proc_H, STG_block_dimy),
+            this->_kernel_manager._kernel_layout->height);
+
+        _ptr->_block_gemm = dim3(_IM2COL_GEMM_FP32_BLOCK_X_, _IM2COL_GEMM_FP32_BLOCK_Y_);
+        _ptr->_grid_gemm = dim3(decx::utils::ceil<uint32_t>(this->_dst_dims.y, STG_block_dimx),
+            decx::utils::ceil<uint32_t>(_ptr->_proc_H, _IM2COL_GEMM_FP32_BLOCK_Y_),
+            decx::utils::ceil<uint32_t>(this->_kernel_manager._kernel_tensor_num, 4));
+    }
+    else if (this->_src_layout->dpitch == 12) {
+        constexpr uint32_t STG_block_dimx = _IM2COL_GET_STG_BLOCKDIM_X_(_IM2COL_D12_FP32_BLOCK_X_, 12);
+        constexpr uint32_t STG_block_dimy = _IM2COL_GET_STG_BLOCKDIM_Y_(_IM2COL_D12_FP32_BLOCK_Y_);
+
+        _ptr->_block_i2c = dim3(_IM2COL_D12_FP32_BLOCK_X_, _IM2COL_D12_FP32_BLOCK_Y_);
         _ptr->_grid_i2c = dim3(decx::utils::ceil<uint32_t>(this->_dst_dims.y, STG_block_dimx),
             decx::utils::ceil<uint32_t>(_ptr->_proc_H, STG_block_dimy),
             this->_kernel_manager._kernel_layout->height);
@@ -140,10 +154,10 @@ void decx::nn::cuda_conv2D_fp32_im2col_planner::_kernel_launch_config(const uint
             decx::utils::ceil<uint32_t>(this->_kernel_manager._kernel_tensor_num, 4));
     }
     else {
-        constexpr uint32_t STG_block_dimx = _IM2COL_GET_STG_BLOCKDIM_X_(_IM2COL_D8_FP32_BLOCK_X_, 16);
-        constexpr uint32_t STG_block_dimy = _IM2COL_GET_STG_BLOCKDIM_Y_(_IM2COL_D8_FP32_BLOCK_Y_);
+        constexpr uint32_t STG_block_dimx = _IM2COL_GET_STG_BLOCKDIM_X_(_IM2COL_D4N_FP32_BLOCK_X_, 16);
+        constexpr uint32_t STG_block_dimy = _IM2COL_GET_STG_BLOCKDIM_Y_(_IM2COL_D4N_FP32_BLOCK_Y_);
 
-        _ptr->_block_i2c = dim3(_IM2COL_D8_FP32_BLOCK_X_, _IM2COL_D8_FP32_BLOCK_Y_);
+        _ptr->_block_i2c = dim3(_IM2COL_D4N_FP32_BLOCK_X_, _IM2COL_D4N_FP32_BLOCK_Y_);
         _ptr->_grid_i2c = dim3(decx::utils::ceil<uint32_t>(this->_dst_dims.y, STG_block_dimx),
             decx::utils::ceil<uint32_t>(_ptr->_proc_H, STG_block_dimy),
             this->_kernel_manager._kernel_layout->height);
@@ -292,6 +306,15 @@ decx::nn::cuda_conv2D_fp32_im2col_planner::run_single_frag_NB(const uint32_t _pr
             this->_wpitchsrc_proc_v1, _ptr->_im2col_bufW);
         break;
 
+    case 12:
+        decx::nn::GPUK::cu_im2col_DP12_NB_fp32 << <_ptr->_grid_i2c, _ptr->_block_i2c, 0, S->get_raw_stream_ref() >> > (
+            (float4*)_ptr->_src_loc, (float2*)this->_im2col_buf.ptr,
+            make_uint2(this->_dst_dims.y, _ptr->_proc_H),
+            make_uint2(this->_kernel_manager._kernel_layout->width, this->_kernel_manager._kernel_layout->height),
+            this->_strides, decx::utils::align<uint32_t>(this->_dst_dims.y, 32),
+            this->_wpitchsrc_proc_v1, _ptr->_im2col_bufW);
+        break;
+
     case 16:
         decx::nn::GPUK::cu_im2col_DP16_NB_fp32 << <_ptr->_grid_i2c, _ptr->_block_i2c, 0, S->get_raw_stream_ref() >> > (
             (float4*)_ptr->_src_loc, (float*)this->_im2col_buf.ptr,
@@ -315,10 +338,30 @@ decx::nn::cuda_conv2D_fp32_im2col_planner::run_single_frag_NB(const uint32_t _pr
 
 
 
-void decx::nn::cuda_conv2D_fp32_im2col_planner::_flush_im2col_buf(decx::cuda_stream* S)
+void decx::nn::cuda_conv2D_fp32_im2col_planner::_flush_im2col_buf(decx::cuda_stream* S, const bool _is_top)
 {
-    checkCudaErrors(cudaMemsetAsync(this->_im2col_buf.ptr, 0, this->_im2col_buf_alloc.x * this->_im2col_buf_alloc.y * sizeof(float), S->get_raw_stream_ref()));
+    const uint32_t _flush_EQdst_rows = this->_kernel_manager._kernel_layout->height / 2;
+    const uint32_t _flush_EQi2c_cols = _flush_EQdst_rows * this->_I2C_wpitch;
+
+    if (_is_top) {
+        checkCudaErrors(cudaMemset2DAsync(this->_im2col_buf.ptr, 
+                                          this->_im2col_buf_alloc.x * sizeof(float),
+                                          0, 
+                                          _flush_EQi2c_cols * sizeof(float), 
+                                          this->_im2col_buf_alloc.y, 
+                                          S->get_raw_stream_ref()));
+    }
+    else {
+        checkCudaErrors(cudaMemset2DAsync((float*)this->_im2col_buf.ptr + 
+            (this->_params_array.back()->_proc_H - _flush_EQdst_rows) * this->_I2C_wpitch,
+                                          this->_params_array.back()->_im2col_bufW * sizeof(float),
+                                          0, 
+                                          _flush_EQi2c_cols * sizeof(float), 
+                                          this->_im2col_buf_alloc.y, 
+                                          S->get_raw_stream_ref()));
+    }
 }
+
 
 
 template <bool _boundless_T, bool _boundless_B> void _CRSR_
@@ -331,30 +374,55 @@ decx::nn::cuda_conv2D_fp32_im2col_planner::run_single_frag_BC(const uint32_t _pr
     switch (this->_src_layout->dpitch)
     {
     case 4:
-        decx::nn::GPUK::cu_im2col_DP4_BC_fp32<_boundless_T, _boundless_B> << <_ptr->_grid_i2c, _ptr->_block_i2c, 0, S->get_raw_stream_ref() >> > (
-            (float4*)_ptr->_src_loc,    (float4*)this->_im2col_buf.ptr,
+        decx::nn::GPUK::cu_im2col_DP4_BC_fp32
+            <_boundless_T, _boundless_B> << <_ptr->_grid_i2c, _ptr->_block_i2c, 0, S->get_raw_stream_ref() >> > (
+            (float4*)_ptr->_src_loc,    
+            (float4*)this->_im2col_buf.ptr,
             make_uint2(this->_dst_dims.y, _ptr->_proc_H),
             make_uint2(this->_kernel_manager._kernel_layout->width, this->_kernel_manager._kernel_layout->height),
-            this->_strides,                 decx::utils::align<uint32_t>(this->_dst_dims.y, 32),
-            this->_wpitchsrc_proc_v1,            _ptr->_im2col_bufW);
+            this->_strides,                 
+            decx::utils::align<uint32_t>(this->_dst_dims.y, 32),
+            this->_wpitchsrc_proc_v1,            
+            _ptr->_im2col_bufW);
         break;
     
     case 8:
-        decx::nn::GPUK::cu_im2col_DP8_BC_fp32<_boundless_T, _boundless_B> << <_ptr->_grid_i2c, _ptr->_block_i2c, 0, S->get_raw_stream_ref() >> > (
-            (float4*)_ptr->_src_loc,    (float2*)this->_im2col_buf.ptr,
+        decx::nn::GPUK::cu_im2col_DP8_BC_fp32
+            <_boundless_T, _boundless_B> << <_ptr->_grid_i2c, _ptr->_block_i2c, 0, S->get_raw_stream_ref() >> > (
+            (float4*)_ptr->_src_loc,    
+            (float2*)this->_im2col_buf.ptr,
             make_uint2(this->_dst_dims.y, _ptr->_proc_H),
             make_uint2(this->_kernel_manager._kernel_layout->width, this->_kernel_manager._kernel_layout->height),
-            this->_strides,                 decx::utils::align<uint32_t>(this->_dst_dims.y, 32),
-            this->_wpitchsrc_proc_v1,            _ptr->_im2col_bufW);
+            this->_strides,                 
+            decx::utils::align<uint32_t>(this->_dst_dims.y, 32),
+            this->_wpitchsrc_proc_v1,            
+            _ptr->_im2col_bufW);
+        break;
+
+    case 12:
+        decx::nn::GPUK::cu_im2col_DP12_BC_fp32
+            <_boundless_T, _boundless_B> << <_ptr->_grid_i2c, _ptr->_block_i2c, 0, S->get_raw_stream_ref() >> > (
+            (float4*)_ptr->_src_loc,    
+            (float2*)this->_im2col_buf.ptr,
+            make_uint2(this->_dst_dims.y, _ptr->_proc_H),
+            make_uint2(this->_kernel_manager._kernel_layout->width, this->_kernel_manager._kernel_layout->height),
+            this->_strides,                 
+            decx::utils::align<uint32_t>(this->_dst_dims.y, 32),
+            this->_wpitchsrc_proc_v1,            
+            _ptr->_im2col_bufW);
         break;
 
     case 16:
-        decx::nn::GPUK::cu_im2col_DP16_BC_fp32<_boundless_T, _boundless_B> << <_ptr->_grid_i2c, _ptr->_block_i2c, 0, S->get_raw_stream_ref() >> > (
-            (float4*)_ptr->_src_loc,    (float*)this->_im2col_buf.ptr,
+        decx::nn::GPUK::cu_im2col_DP16_BC_fp32
+            <_boundless_T, _boundless_B> << <_ptr->_grid_i2c, _ptr->_block_i2c, 0, S->get_raw_stream_ref() >> > (
+            (float4*)_ptr->_src_loc,    
+            (float*)this->_im2col_buf.ptr,
             make_uint2(this->_dst_dims.y, _ptr->_proc_H),
             make_uint2(this->_kernel_manager._kernel_layout->width, this->_kernel_manager._kernel_layout->height),
-            this->_strides,                 decx::utils::align<uint32_t>(this->_dst_dims.y, 32),
-            this->_wpitchsrc_proc_v1,            _ptr->_im2col_bufW);
+            this->_strides,                 
+            decx::utils::align<uint32_t>(this->_dst_dims.y, 32),
+            this->_wpitchsrc_proc_v1,            
+            _ptr->_im2col_bufW);
         break;
 
     default:
@@ -367,6 +435,8 @@ decx::nn::cuda_conv2D_fp32_im2col_planner::run_single_frag_BC(const uint32_t _pr
         decx::utils::align<uint32_t>(this->_dst_dims.y, 32),        this->_dst_layout->wpitch,               
         _kernel_layout->depth * _kernel_layout->width * _kernel_layout->height,
         make_uint2(this->_dst_dims.y, _ptr->_proc_H));
+
+
 }
 
 template void _CRSR_ decx::nn::cuda_conv2D_fp32_im2col_planner::run_single_frag_BC<false, false>(const uint32_t, decx::cuda_stream*);
@@ -398,6 +468,11 @@ decx::nn::cuda_conv2D_fp32_im2col_planner::run(decx::_GPU_Tensor* src, decx::_GP
     if (this->_params_array.size() > 1) {
         for (uint32_t i = 0; i < this->_params_array.size(); ++i)
         {
+            if (i == 0 || i == this->_params_array.size() - 1) {
+                this->_flush_im2col_buf(S, i == 0);
+            }
+            //checkCudaErrors(cudaMemsetAsync(this->_im2col_buf.ptr, 0, this->_im2col_buf_alloc.x * this->_im2col_buf_alloc.y * sizeof(float), S->get_raw_stream_ref()));
+
             this->_params_array[i]._src_loc = _src_loc;
             this->_params_array[i]._dst_loc = _dst_loc;
 
@@ -410,12 +485,8 @@ decx::nn::cuda_conv2D_fp32_im2col_planner::run(decx::_GPU_Tensor* src, decx::_GP
             else {
                 this->run_single_frag_NB(i, S);
             }
-            _src_loc += _src_dp_x_wp * (this->_params_array[i]._proc_H);
+            _src_loc += _src_dp_x_wp * (this->_params_array[i]._proc_H * this->_strides.y);
             _dst_loc += this->_dst_layout->dp_x_wp * this->_params_array[i]._proc_H;
-
-            if (i < this->_params_array.size() - 1) {
-                this->_flush_im2col_buf(S);
-            }
         }
     }
     else {

@@ -117,7 +117,7 @@ public:
     void _kernel_launch_config(const uint32_t _proc_idx, const uint32_t _proc_h);
 
 
-    void _flush_im2col_buf(decx::cuda_stream* S);
+    void _flush_im2col_buf(decx::cuda_stream* S, const bool _is_top);
 
 public:
     cuda_conv2D_fp32_im2col_planner() {}
