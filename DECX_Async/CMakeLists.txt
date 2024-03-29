@@ -13,6 +13,9 @@ file(GLOB GLOBAL_VARS "${DECX_WORLD_ABS_DIR}/srcs/modules/core/global_vars.cxx")
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native")
 add_compile_definitions(_DECX_ASYNC_CORE_)
+add_compile_definitions(_C_EXPORT_ENABLED_=1)
+add_compile_definitions(_CPP_EXPORT_ENABLED_=1)
+
 
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE release CACHE STRING "Build Type" FORCE)

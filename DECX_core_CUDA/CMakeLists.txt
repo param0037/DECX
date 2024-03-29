@@ -21,6 +21,9 @@ file(GLOB_RECURSE CLASS "${DECX_WORLD_ABS_DIR}/srcs/modules/classes/*.cu")
 # add_compile_definitions(_DECX_CUDA_CODES_)
 add_compile_definitions(_DECX_CUDA_PARTS_)
 add_compile_definitions(_DECX_CORE_CUDA_)
+add_compile_definitions(_C_EXPORT_ENABLED_=1)
+add_compile_definitions(_CPP_EXPORT_ENABLED_=1)
+
 
 if(NOT CMAKE_BUILD_TYPE)
 	set(CMAKE_BUILD_TYPE release CACHE STRING "Build Type" FORCE)

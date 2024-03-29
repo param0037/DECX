@@ -90,6 +90,7 @@ _DECX_API_ de::DH de::nn::cuda::Conv2D(de::GPU_Tensor& src, de::GPU_TensorArray&
     switch (_src->Type())
     {
     case de::_DATA_TYPES_FLAGS_::_FP32_:
+        //printf("yes\n");
         decx::nn::conv2D_im2col_fp32_caller(_src, _kernel, _dst, make_uint2(strides.x, strides.y), extend, &handle);
         break;
 

@@ -20,6 +20,9 @@ file(GLOB_RECURSE CV_CORE "${DECX_WORLD_ABS_DIR}/srcs/modules/CV/*.cu")
 
 add_compile_definitions(_DECX_CUDA_PARTS_)
 add_compile_definitions(_DECX_CV_CUDA_)
+add_compile_definitions(_C_EXPORT_ENABLED_=1)
+add_compile_definitions(_CPP_EXPORT_ENABLED_=1)
+
 
 if(NOT CMAKE_BUILD_TYPE)
 	set(CMAKE_BUILD_TYPE release CACHE STRING "Build Type" FORCE)

@@ -22,6 +22,9 @@ file(GLOB_RECURSE UTILS "${DECX_WORLD_ABS_DIR}/srcs/modules/BLAS/basic_process/t
 
 add_compile_definitions(_DECX_CUDA_PARTS_)
 add_compile_definitions(_DECX_DSP_CUDA_)
+add_compile_definitions(_C_EXPORT_ENABLED_=1)
+add_compile_definitions(_CPP_EXPORT_ENABLED_=1)
+
 
 if(NOT CMAKE_BUILD_TYPE)
 	set(CMAKE_BUILD_TYPE release CACHE STRING "Build Type" FORCE)

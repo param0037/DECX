@@ -16,6 +16,9 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native")
 # add_compile_definitions(_DECX_CPU_CODES_)
 add_compile_definitions(_DECX_CPU_PARTS_)
 add_compile_definitions(_DECX_CORE_CPU_)
+add_compile_definitions(_C_EXPORT_ENABLED_=1)
+add_compile_definitions(_CPP_EXPORT_ENABLED_=1)
+
 
 include_directories(${SDL_PATH}/include ${SDL_IMAGE_PATH}/include)
 

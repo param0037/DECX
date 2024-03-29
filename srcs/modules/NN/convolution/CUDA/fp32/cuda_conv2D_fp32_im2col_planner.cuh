@@ -118,7 +118,7 @@ public:
     void _flush_im2col_buf(decx::cuda_stream* S, const bool _is_top);
 
 public:
-    cuda_conv2D_fp32_im2col_planner() {}
+    cuda_conv2D_fp32_im2col_planner();
 
 
     void _CRSR_ plan(const decx::_tensor_layout* src_layout, const decx::_GPU_TensorArray* kernel,

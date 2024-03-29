@@ -145,9 +145,13 @@ void decx::_GPU_Tensor::construct(const de::_DATA_TYPES_FLAGS_ _type, const uint
 void decx::_GPU_Tensor::re_construct(const de::_DATA_TYPES_FLAGS_ _type, const uint32_t _width, const uint32_t _height, const uint32_t _depth,
     decx::cuda_stream* S)
 {
-    if (this->type != _type || this->_layout.width != _width || this->_layout.height != _height || this->_layout.depth != _depth) {
+    if (this->type != _type || 
+        this->_layout.width != _width || 
+        this->_layout.height != _height || 
+        this->_layout.depth != _depth) 
+    {
         const uint64_t pre_size = this->total_bytes;
-
+        
         this->_attribute_assign(_type, _width, _height, _depth);
 
         if (this->total_bytes > pre_size) {

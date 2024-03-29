@@ -67,6 +67,12 @@ void decx::nn::cuda_conv2D_im2col_kernel_arrange<float>::arrange_kernel(const de
 
 
 
+decx::nn::cuda_conv2D_fp32_im2col_planner::cuda_conv2D_fp32_im2col_planner()
+{
+    memset(this, 0, sizeof(decx::nn::cuda_conv2D_fp32_im2col_planner));
+}
+
+
 bool decx::nn::cuda_conv2D_fp32_im2col_planner::changed(const decx::_tensor_layout* src_layout,
                                                         const decx::_GPU_TensorArray* kernel,
                                                         const de::extend_label ext_method, 
