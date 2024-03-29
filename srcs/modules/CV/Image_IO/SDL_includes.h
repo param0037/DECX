@@ -16,9 +16,13 @@
 #include "../../core/compile_params.h"
 
 #ifdef Windows
-#include "../../../../3rdparty/Windows/SDL/SDL2-devel-2.6.2-VC/include/SDL.h"
-#include "../../../../3rdparty/Windows/SDL/SDL2-devel-2.6.2-VC/include/SDL_shape.h"
-#include "../../../../3rdparty/Windows/SDL/SDL2_image-devel-2.6.2-VC/include/SDL_image.h"
+//#include "../../../../3rdparty/Windows/SDL/SDL2-devel-2.6.2-VC/include/SDL.h"
+//#include "../../../../3rdparty/Windows/SDL/SDL2-devel-2.6.2-VC/include/SDL_shape.h"
+//#include "../../../../3rdparty/Windows/SDL/SDL2_image-devel-2.6.2-VC/include/SDL_image.h"
+
+#include <SDL.h>
+#include <SDL_shape.h>
+#include <SDL_image.h>
 
 #endif
 

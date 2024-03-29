@@ -29,14 +29,14 @@ set(LIBRARY_OUTPUT_PATH ${DECX_WORLD_ABS_DIR}/bin/x64)
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     message(STATUS "Building on Windows")
-    set(SDL_PATH "${DECX_WORLD_ABS_DIR}/3rdparty/Windows/SDL/SDL2-devel-2.6.2-VC")
-    set(SDL_IMAGE_PATH "${DECX_WORLD_ABS_DIR}/3rdparty/Windows/SDL/SDL2_image-devel-2.6.2-VC")
+    set(SDL_PATH "${DECX_WORLD_ABS_DIR}/3rdparty/SDL2/Windows")
+    set(SDL_IMAGE_PATH "${DECX_WORLD_ABS_DIR}/3rdparty/SDL2_Image/Windows")
     include_directories(${SDL_PATH}/include ${SDL_IMAGE_PATH}/include)
 
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     message(STATUS "Building on Linux")
-    set(SDL_PATH "${DECX_WORLD_ABS_DIR}/3rdparty/Linux/SDL2")
-    set(SDL_IMAGE_PATH "${DECX_WORLD_ABS_DIR}/3rdparty/Linux/SDL2_Image")
+    set(SDL_PATH "${DECX_WORLD_ABS_DIR}/3rdparty/SDL2/Linux")
+    set(SDL_IMAGE_PATH "${DECX_WORLD_ABS_DIR}/3rdparty/SDL2_Image/Linux")
     include_directories(${SDL_PATH}/include)
     
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")

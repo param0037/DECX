@@ -203,7 +203,7 @@ decx::nn::cuda_conv2D_fp32_im2col_planner::plan(const decx::_tensor_layout* src_
     
     this->_I2C_wpitch = decx::utils::align(this->_dst_dims.y, 32);
 
-    const uint32_t I2C_kernel_len = kernel->Width() * kernel->Height() * decx::utils::align<uint32_t>(src_layout->depth, 4);
+    const uint32_t I2C_kernel_len = kernel->Width() * kernel->Height() * /*decx::utils::align<uint32_t>(src_layout->depth, 4)*/kernel->Depth();
     const uint64_t I2C_WD_size = this->_I2C_wpitch * I2C_kernel_len * sizeof(float);
     const uint32_t procH = _MAX_IM2COL_TILE_SIZE_ / I2C_WD_size;
 
@@ -238,15 +238,6 @@ decx::nn::cuda_conv2D_fp32_im2col_planner::plan(const decx::_tensor_layout* src_
             return;
         }
     }
-
-    this->_Lproc_gemm_params.set_attributes(kernel->get_layout().dpitch, kernel->Depth());
-
-    checkCudaErrors(cudaMemcpyToSymbolAsync(decx::nn::GPUK::_Lproc_params_i2c_fp32, 
-                                            &this->_Lproc_gemm_params, 
-                                            sizeof(decx::utils::unpitched_frac_mapping<uint32_t>), 
-                                            0,
-                                            cudaMemcpyHostToDevice, 
-                                            S->get_raw_stream_ref()));
 
     this->_params_array.define_capacity(_conv_div_info.frag_num);
     for (uint32_t i = 0; i < _conv_div_info.frag_num - 1; ++i) {
@@ -292,7 +283,7 @@ decx::nn::cuda_conv2D_fp32_im2col_planner::run_single_frag_NB(const uint32_t _pr
         decx::nn::GPUK::cu_im2col_DP4_NB_fp32 << <_ptr->_grid_i2c, _ptr->_block_i2c, 0, S->get_raw_stream_ref() >> > (
             (float4*)_ptr->_src_loc,         (float4*)this->_im2col_buf.ptr,
             make_uint2(this->_dst_dims.y, _ptr->_proc_H),  
-            make_uint2(this->_kernel_manager._kernel_layout->width, this->_kernel_manager._kernel_layout->height),
+            make_uint3(_kernel_layout->width, _kernel_layout->height, _kernel_layout->depth),
             this->_strides,                 decx::utils::align<uint32_t>(this->_dst_dims.y, 32),
             this->_wpitchsrc_proc_v1, _ptr->_im2col_bufW);
         break;
@@ -301,7 +292,7 @@ decx::nn::cuda_conv2D_fp32_im2col_planner::run_single_frag_NB(const uint32_t _pr
         decx::nn::GPUK::cu_im2col_DP8_NB_fp32 << <_ptr->_grid_i2c, _ptr->_block_i2c, 0, S->get_raw_stream_ref() >> > (
             (float4*)_ptr->_src_loc, (float2*)this->_im2col_buf.ptr,
             make_uint2(this->_dst_dims.y, _ptr->_proc_H),
-            make_uint2(this->_kernel_manager._kernel_layout->width, this->_kernel_manager._kernel_layout->height),
+            make_uint3(_kernel_layout->width, _kernel_layout->height, _kernel_layout->depth),
             this->_strides, decx::utils::align<uint32_t>(this->_dst_dims.y, 32),
             this->_wpitchsrc_proc_v1, _ptr->_im2col_bufW);
         break;
@@ -310,7 +301,7 @@ decx::nn::cuda_conv2D_fp32_im2col_planner::run_single_frag_NB(const uint32_t _pr
         decx::nn::GPUK::cu_im2col_DP12_NB_fp32 << <_ptr->_grid_i2c, _ptr->_block_i2c, 0, S->get_raw_stream_ref() >> > (
             (float4*)_ptr->_src_loc, (float2*)this->_im2col_buf.ptr,
             make_uint2(this->_dst_dims.y, _ptr->_proc_H),
-            make_uint2(this->_kernel_manager._kernel_layout->width, this->_kernel_manager._kernel_layout->height),
+            make_uint3(_kernel_layout->width, _kernel_layout->height, _kernel_layout->depth),
             this->_strides, decx::utils::align<uint32_t>(this->_dst_dims.y, 32),
             this->_wpitchsrc_proc_v1, _ptr->_im2col_bufW);
         break;
@@ -319,7 +310,7 @@ decx::nn::cuda_conv2D_fp32_im2col_planner::run_single_frag_NB(const uint32_t _pr
         decx::nn::GPUK::cu_im2col_DP16_NB_fp32 << <_ptr->_grid_i2c, _ptr->_block_i2c, 0, S->get_raw_stream_ref() >> > (
             (float4*)_ptr->_src_loc, (float*)this->_im2col_buf.ptr,
             make_uint2(this->_dst_dims.y, _ptr->_proc_H),
-            make_uint2(this->_kernel_manager._kernel_layout->width, this->_kernel_manager._kernel_layout->height),
+            make_uint3(_kernel_layout->width, _kernel_layout->height, _kernel_layout->depth),
             this->_strides, decx::utils::align<uint32_t>(this->_dst_dims.y, 32),
             this->_wpitchsrc_proc_v1,       _ptr->_im2col_bufW);
         break;
@@ -379,7 +370,7 @@ decx::nn::cuda_conv2D_fp32_im2col_planner::run_single_frag_BC(const uint32_t _pr
             (float4*)_ptr->_src_loc,    
             (float4*)this->_im2col_buf.ptr,
             make_uint2(this->_dst_dims.y, _ptr->_proc_H),
-            make_uint2(this->_kernel_manager._kernel_layout->width, this->_kernel_manager._kernel_layout->height),
+            make_uint3(_kernel_layout->width, _kernel_layout->height, _kernel_layout->depth),
             this->_strides,                 
             decx::utils::align<uint32_t>(this->_dst_dims.y, 32),
             this->_wpitchsrc_proc_v1,            
@@ -392,7 +383,7 @@ decx::nn::cuda_conv2D_fp32_im2col_planner::run_single_frag_BC(const uint32_t _pr
             (float4*)_ptr->_src_loc,    
             (float2*)this->_im2col_buf.ptr,
             make_uint2(this->_dst_dims.y, _ptr->_proc_H),
-            make_uint2(this->_kernel_manager._kernel_layout->width, this->_kernel_manager._kernel_layout->height),
+            make_uint3(_kernel_layout->width, _kernel_layout->height, _kernel_layout->depth),
             this->_strides,                 
             decx::utils::align<uint32_t>(this->_dst_dims.y, 32),
             this->_wpitchsrc_proc_v1,            
@@ -405,8 +396,8 @@ decx::nn::cuda_conv2D_fp32_im2col_planner::run_single_frag_BC(const uint32_t _pr
             (float4*)_ptr->_src_loc,    
             (float2*)this->_im2col_buf.ptr,
             make_uint2(this->_dst_dims.y, _ptr->_proc_H),
-            make_uint2(this->_kernel_manager._kernel_layout->width, this->_kernel_manager._kernel_layout->height),
-            this->_strides,                 
+            make_uint3(_kernel_layout->width, _kernel_layout->height, _kernel_layout->depth),
+            this->_strides,
             decx::utils::align<uint32_t>(this->_dst_dims.y, 32),
             this->_wpitchsrc_proc_v1,            
             _ptr->_im2col_bufW);
@@ -418,7 +409,7 @@ decx::nn::cuda_conv2D_fp32_im2col_planner::run_single_frag_BC(const uint32_t _pr
             (float4*)_ptr->_src_loc,    
             (float*)this->_im2col_buf.ptr,
             make_uint2(this->_dst_dims.y, _ptr->_proc_H),
-            make_uint2(this->_kernel_manager._kernel_layout->width, this->_kernel_manager._kernel_layout->height),
+            make_uint3(_kernel_layout->width, _kernel_layout->height, _kernel_layout->depth),
             this->_strides,                 
             decx::utils::align<uint32_t>(this->_dst_dims.y, 32),
             this->_wpitchsrc_proc_v1,            

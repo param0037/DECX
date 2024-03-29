@@ -131,14 +131,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;DECXCPU_EXPORTS;_WINDOWS;_USRDLL;_DECX_CPU_PARTS_;_DECX_CV_CPU_;_C_EXPORT_ENABLED_=1;_CPP_EXPORT_ENABLED_=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>E:\DECX_world\3rdparty\Windows\SDL\SDL2_image-devel-2.6.2-VC\include;E:\DECX_world\3rdparty\Windows\SDL\SDL2-devel-2.6.2-VC\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../3rdparty/SDL2/Windows/include;../3rdparty/SDL2_Image/Windows/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>false</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>../bin/$(Platform);E:\DECX_world\3rdparty\Windows\SDL\SDL2-devel-2.6.2-VC\lib\x64;E:\DECX_world\3rdparty\Windows\SDL\SDL2_image-devel-2.6.2-VC\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>../bin/$(Platform);../3rdparty/SDL2/Windows/lib/x64;../3rdparty/SDL2_Image/Windows/lib/x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>DECX_core_CPU.lib;DECX_BLAS_CPU.lib;SDL2.lib;SDL2main.lib;SDL2test.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ProgramDatabaseFile />
     </Link>

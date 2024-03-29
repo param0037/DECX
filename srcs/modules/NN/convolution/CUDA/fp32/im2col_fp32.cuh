@@ -52,35 +52,35 @@ namespace decx
 namespace nn {
     namespace GPUK 
     {
-        __global__ void cu_im2col_DP4_NB_fp32(const float4* src, float4* dst, const uint2 dst_dims, const uint2 kernel_dims,
+        __global__ void cu_im2col_DP4_NB_fp32(const float4* src, float4* dst, const uint2 dst_dims, const uint3 kernel_dims,
             const uint2 strides, const uint32_t wpitch_dst, const uint32_t wpitch_src, const uint64_t im2col_buf_pitch_v1);
 
         template <bool _bound_T, bool _bound_B>
-        __global__ void cu_im2col_DP4_BC_fp32(const float4* __restrict src, float4* __restrict dst, const uint2 dst_dims, const uint2 kernel_dims,
+        __global__ void cu_im2col_DP4_BC_fp32(const float4* __restrict src, float4* __restrict dst, const uint2 dst_dims, const uint3 kernel_dims,
             const uint2 strides, const uint32_t wpitch_dst, const uint32_t wpitch_src, const uint64_t im2col_buf_pitch_v1);
 
 
-        __global__ void cu_im2col_DP8_NB_fp32(const float4* src, float2* dst, const uint2 dst_dims, const uint2 kernel_dims,
-            const uint2 strides, const uint32_t wpitch_dst, const uint32_t wpitch_src, const uint64_t im2col_buf_pitch_v1);
-
-        template <bool _bound_T, bool _bound_B>
-        __global__ void cu_im2col_DP8_BC_fp32(const float4* __restrict src, float2* __restrict dst, const uint2 dst_dims, const uint2 kernel_dims,
-            const uint2 strides, const uint32_t wpitch_dst, const uint32_t wpitch_src, const uint64_t im2col_buf_pitch_v1);
-
-
-        __global__ void cu_im2col_DP12_NB_fp32(const float4* src, float2* dst, const uint2 dst_dims, const uint2 kernel_dims,
+        __global__ void cu_im2col_DP8_NB_fp32(const float4* src, float2* dst, const uint2 dst_dims, const uint3 kernel_dims,
             const uint2 strides, const uint32_t wpitch_dst, const uint32_t wpitch_src, const uint64_t im2col_buf_pitch_v1);
 
         template <bool _bound_T, bool _bound_B>
-        __global__ void cu_im2col_DP12_BC_fp32(const float4* __restrict src, float2* __restrict dst, const uint2 dst_dims, const uint2 kernel_dims,
+        __global__ void cu_im2col_DP8_BC_fp32(const float4* __restrict src, float2* __restrict dst, const uint2 dst_dims, const uint3 kernel_dims,
             const uint2 strides, const uint32_t wpitch_dst, const uint32_t wpitch_src, const uint64_t im2col_buf_pitch_v1);
 
 
-        __global__ void cu_im2col_DP16_NB_fp32(const float4* src, float* dst, const uint2 dst_dims, const uint2 kernel_dims,
+        __global__ void cu_im2col_DP12_NB_fp32(const float4* src, float2* dst, const uint2 dst_dims, const uint3 kernel_dims,
             const uint2 strides, const uint32_t wpitch_dst, const uint32_t wpitch_src, const uint64_t im2col_buf_pitch_v1);
 
         template <bool _bound_T, bool _bound_B>
-        __global__ void cu_im2col_DP16_BC_fp32(const float4* __restrict src, float* __restrict dst, const uint2 dst_dims, const uint2 kernel_dims,
+        __global__ void cu_im2col_DP12_BC_fp32(const float4* __restrict src, float2* __restrict dst, const uint2 dst_dims, const uint3 kernel_dims,
+            const uint2 strides, const uint32_t wpitch_dst, const uint32_t wpitch_src, const uint64_t im2col_buf_pitch_v1);
+
+
+        __global__ void cu_im2col_DP16_NB_fp32(const float4* src, float* dst, const uint2 dst_dims, const uint3 kernel_dims,
+            const uint2 strides, const uint32_t wpitch_dst, const uint32_t wpitch_src, const uint64_t im2col_buf_pitch_v1);
+
+        template <bool _bound_T, bool _bound_B>
+        __global__ void cu_im2col_DP16_BC_fp32(const float4* __restrict src, float* __restrict dst, const uint2 dst_dims, const uint3 kernel_dims,
             const uint2 strides, const uint32_t wpitch_dst, const uint32_t wpitch_src, const uint64_t im2col_buf_pitch_v1);
     }
 }

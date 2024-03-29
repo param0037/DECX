@@ -16,7 +16,7 @@ __global__ void
 decx::nn::GPUK::cu_im2col_DP4_NB_fp32(const float4* __restrict  src, 
                                       float4* __restrict        dst, 
                                       const uint2               conv2D_area, 
-                                      const uint2               kernel_dims,
+                                      const uint3               kernel_dims,        // [W, H, D]
                                       const uint2               strides,
                                       const uint32_t            wpitch_dst_v1, 
                                       const uint32_t            wpitch_src_v1, 
@@ -61,9 +61,11 @@ decx::nn::GPUK::cu_im2col_DP4_NB_fp32(const float4* __restrict  src,
             _reg._vf = ((float4*)_shmem[threadIdx.y * 4 + STG_threadIdx_y])[STG_threadIdx_x];
 
             if (dex_plane_dst_x < conv2D_area.x && dex_plane_src_y < conv2D_area.y) {
-                dst[STG_dex_x + (dex_plane_dst_y + blockIdx.z * kernel_dims.x * 4) * im2col_buf_pitch_v1 / 4] = _reg._vf;
+                if (STG_threadIdx_y < kernel_dims.z) {
+                    dst[STG_dex_x + (dex_plane_dst_y + blockIdx.z * kernel_dims.x * kernel_dims.z) * im2col_buf_pitch_v1 / 4] = _reg._vf;
+                }
             }
-            dex_plane_dst_y += 4;
+            dex_plane_dst_y += kernel_dims.z;
             dex_src += 1;
 
             __syncthreads();
@@ -76,7 +78,7 @@ template <bool _boundless_T, bool _boundless_B> __global__ void
 decx::nn::GPUK::cu_im2col_DP4_BC_fp32(const float4* __restrict  src, 
                                       float4* __restrict        dst, 
                                       const uint2               conv2D_area, 
-                                      const uint2               kernel_dims,
+                                      const uint3               kernel_dims,
                                       const uint2               strides,
                                       const uint32_t            wpitch_dst_v1, 
                                       const uint32_t            wpitch_src_v1, 
@@ -127,9 +129,11 @@ decx::nn::GPUK::cu_im2col_DP4_BC_fp32(const float4* __restrict  src,
                 _reg._vf = ((float4*)_shmem[threadIdx.y * 4 + STG_threadIdx_y])[STG_threadIdx_x];
 
                 if (dex_plane_dst_x < conv2D_area.x && dex_plane_src_y < conv2D_area.y) {
-                    dst[STG_dex_x + (dex_plane_dst_y + blockIdx.z * kernel_dims.x * 4) * im2col_buf_pitch_v1 / 4] = _reg._vf;
+                    if (STG_threadIdx_y < kernel_dims.z) {
+                        dst[STG_dex_x + (dex_plane_dst_y + blockIdx.z * kernel_dims.x * kernel_dims.z) * im2col_buf_pitch_v1 / 4] = _reg._vf;
+                    }
                 }
-                dex_plane_dst_y += 4;
+                dex_plane_dst_y += kernel_dims.z;
                 dex_src += 1;
 
                 __syncthreads();
@@ -139,13 +143,13 @@ decx::nn::GPUK::cu_im2col_DP4_BC_fp32(const float4* __restrict  src,
 }
 
 
-template __global__ void decx::nn::GPUK::cu_im2col_DP4_BC_fp32<false, false>(const float4* __restrict, float4* __restrict, const uint2, const uint2,
+template __global__ void decx::nn::GPUK::cu_im2col_DP4_BC_fp32<false, false>(const float4* __restrict, float4* __restrict, const uint2, const uint3,
     const uint2, const uint32_t, const uint32_t, const uint64_t);
 
-template __global__ void decx::nn::GPUK::cu_im2col_DP4_BC_fp32<true, false>(const float4* __restrict, float4* __restrict, const uint2, const uint2,
+template __global__ void decx::nn::GPUK::cu_im2col_DP4_BC_fp32<true, false>(const float4* __restrict, float4* __restrict, const uint2, const uint3,
     const uint2, const uint32_t, const uint32_t, const uint64_t);
 
-template __global__ void decx::nn::GPUK::cu_im2col_DP4_BC_fp32<false, true>(const float4* __restrict, float4* __restrict, const uint2, const uint2,
+template __global__ void decx::nn::GPUK::cu_im2col_DP4_BC_fp32<false, true>(const float4* __restrict, float4* __restrict, const uint2, const uint3,
     const uint2, const uint32_t, const uint32_t, const uint64_t);
 
 
@@ -155,7 +159,7 @@ __global__ void
 decx::nn::GPUK::cu_im2col_DP8_NB_fp32(const float4* __restrict  src, 
                                       float2* __restrict        dst, 
                                       const uint2               conv2D_area, 
-                                      const uint2               kernel_dims,
+                                      const uint3               kernel_dims,
                                       const uint2               strides,
                                       const uint32_t            wpitch_dst_v1, 
                                       const uint32_t            wpitch_src_v1, 
@@ -202,13 +206,15 @@ decx::nn::GPUK::cu_im2col_DP8_NB_fp32(const float4* __restrict  src,
             if (dex_plane_dst_x < conv2D_area.x && dex_plane_src_y < conv2D_area.y)
             {
                 _reg._arrf2[0] = ((float2*)_shmem[threadIdx.y * 4 + _logical_stgl.y])[_logical_stgl.x];
-                dst[STG_dex_x + (dex_plane_dst_y + blockIdx.z * kernel_dims.x * 8) * im2col_buf_pitch_v1 / 2] = _reg._arrf2[0];
-                
+                dst[STG_dex_x + (dex_plane_dst_y + blockIdx.z * kernel_dims.x * kernel_dims.z) * im2col_buf_pitch_v1 / 2] = _reg._arrf2[0];
+
                 dex_plane_dst_y += 4;
 
                 _reg._arrf2[1] = ((float2*)_shmem[threadIdx.y * 4 + _logical_stgl.y])[_logical_stgl.x + _CUDA_WARP_SIZE_];
-                dst[STG_dex_x + (dex_plane_dst_y + blockIdx.z * kernel_dims.x * 8) * im2col_buf_pitch_v1 / 2] = _reg._arrf2[1];
-                dex_plane_dst_y += 4;
+                if (_logical_stgl.y + 4 < kernel_dims.z) {
+                    dst[STG_dex_x + (dex_plane_dst_y + blockIdx.z * kernel_dims.x * kernel_dims.z) * im2col_buf_pitch_v1 / 2] = _reg._arrf2[1];
+                }
+                dex_plane_dst_y += kernel_dims.z - 4;
             }
 
             dex_src += 2;
@@ -224,7 +230,7 @@ template <bool _boundless_T, bool _boundless_B> __global__ void
 decx::nn::GPUK::cu_im2col_DP8_BC_fp32(const float4* __restrict  src, 
                                       float2* __restrict        dst, 
                                       const uint2               conv2D_area, 
-                                      const uint2               kernel_dims,
+                                      const uint3               kernel_dims,
                                       const uint2               strides,
                                       const uint32_t            wpitch_dst_v1, 
                                       const uint32_t            wpitch_src_v1, 
@@ -277,15 +283,17 @@ decx::nn::GPUK::cu_im2col_DP8_BC_fp32(const float4* __restrict  src,
                 if (dex_plane_dst_x < conv2D_area.x && dex_plane_src_y < conv2D_area.y)
                 {
                     _reg._arrf2[0] = ((float2*)_shmem[threadIdx.y * 4 + _logical_stgl.y])[_logical_stgl.x];
-                    dst[STG_dex_x + (dex_plane_dst_y + blockIdx.z * kernel_dims.x * 8) * im2col_buf_pitch_v1 / 2] = _reg._arrf2[0];
+                    dst[STG_dex_x + (dex_plane_dst_y + blockIdx.z * kernel_dims.x * kernel_dims.z) * im2col_buf_pitch_v1 / 2] = _reg._arrf2[0];
 
                     dex_plane_dst_y += 4;
 
                     _reg._arrf2[1] = ((float2*)_shmem[threadIdx.y * 4 + _logical_stgl.y])[_logical_stgl.x + _CUDA_WARP_SIZE_];
-                    dst[STG_dex_x + (dex_plane_dst_y + blockIdx.z * kernel_dims.x * 8) * im2col_buf_pitch_v1 / 2] = _reg._arrf2[1];
+                    if (_logical_stgl.y + 4 < kernel_dims.z) {
+                        dst[STG_dex_x + (dex_plane_dst_y + blockIdx.z * kernel_dims.x * kernel_dims.z) * im2col_buf_pitch_v1 / 2] = _reg._arrf2[1];
+                    }
+                    dex_plane_dst_y += kernel_dims.z - 4;
                 }
 
-                dex_plane_dst_y += 4;
                 dex_src += 2;
 
                 __syncthreads();
@@ -294,13 +302,13 @@ decx::nn::GPUK::cu_im2col_DP8_BC_fp32(const float4* __restrict  src,
     }
 }
 
-template __global__ void decx::nn::GPUK::cu_im2col_DP8_BC_fp32<false, false>(const float4* __restrict, float2* __restrict, const uint2, const uint2,
+template __global__ void decx::nn::GPUK::cu_im2col_DP8_BC_fp32<false, false>(const float4* __restrict, float2* __restrict, const uint2, const uint3,
     const uint2, const uint32_t, const uint32_t, const uint64_t);
 
-template __global__ void decx::nn::GPUK::cu_im2col_DP8_BC_fp32<true, false>(const float4* __restrict, float2* __restrict, const uint2, const uint2,
+template __global__ void decx::nn::GPUK::cu_im2col_DP8_BC_fp32<true, false>(const float4* __restrict, float2* __restrict, const uint2, const uint3,
     const uint2, const uint32_t, const uint32_t, const uint64_t);
 
-template __global__ void decx::nn::GPUK::cu_im2col_DP8_BC_fp32<false, true>(const float4* __restrict, float2* __restrict, const uint2, const uint2,
+template __global__ void decx::nn::GPUK::cu_im2col_DP8_BC_fp32<false, true>(const float4* __restrict, float2* __restrict, const uint2, const uint3,
     const uint2, const uint32_t, const uint32_t, const uint64_t);
 
 
@@ -311,7 +319,7 @@ __global__ void
 decx::nn::GPUK::cu_im2col_DP12_NB_fp32(const float4* __restrict  src, 
                                       float2* __restrict        dst, 
                                       const uint2               conv2D_area, 
-                                      const uint2               kernel_dims,
+                                      const uint3               kernel_dims,
                                       const uint2               strides,
                                       const uint32_t            wpitch_dst_v1, 
                                       const uint32_t            wpitch_src_v1, 
@@ -358,13 +366,15 @@ decx::nn::GPUK::cu_im2col_DP12_NB_fp32(const float4* __restrict  src,
             if (dex_plane_dst_x < conv2D_area.x && dex_plane_src_y < conv2D_area.y)
             {
                 _reg._arrf2[0] = ((float2*)_shmem[threadIdx.y * 4 + _logical_stgl.z])[_logical_stgl.x + _CUDA_WARP_SIZE_ * _logical_stgl.y];
-                dst[STG_dex_x + (dex_plane_dst_y + blockIdx.z * kernel_dims.x * 12) * im2col_buf_pitch_v1 / 2] = _reg._arrf2[0];
+                dst[STG_dex_x + (dex_plane_dst_y + blockIdx.z * kernel_dims.x * kernel_dims.z) * im2col_buf_pitch_v1 / 2] = _reg._arrf2[0];
                 
                 dex_plane_dst_y += 6;
 
                 _reg._arrf2[1] = ((float2*)_shmem[threadIdx.y * 4 + 2 + _logical_stgl.z])[_logical_stgl.x + _CUDA_WARP_SIZE_ * _logical_stgl.y];
-                dst[STG_dex_x + (dex_plane_dst_y + blockIdx.z * kernel_dims.x * 12) * im2col_buf_pitch_v1 / 2] = _reg._arrf2[1];
-                dex_plane_dst_y += 6;
+                if (_logical_stgl.y + _logical_stgl.z * 3 + 6 < kernel_dims.z) {
+                    dst[STG_dex_x + (dex_plane_dst_y + blockIdx.z * kernel_dims.x * kernel_dims.z) * im2col_buf_pitch_v1 / 2] = _reg._arrf2[1];
+                }
+                dex_plane_dst_y += kernel_dims.z - 6;
             }
 
             dex_src += 3;
@@ -381,7 +391,7 @@ template <bool _boundless_T, bool _boundless_B> __global__ void
 decx::nn::GPUK::cu_im2col_DP12_BC_fp32(const float4* __restrict  src, 
                                        float2* __restrict        dst, 
                                        const uint2               conv2D_area, 
-                                       const uint2               kernel_dims,
+                                       const uint3               kernel_dims,
                                        const uint2               strides,
                                        const uint32_t            wpitch_dst_v1, 
                                        const uint32_t            wpitch_src_v1, 
@@ -434,15 +444,17 @@ decx::nn::GPUK::cu_im2col_DP12_BC_fp32(const float4* __restrict  src,
                 if (dex_plane_dst_x < conv2D_area.x && dex_plane_src_y < conv2D_area.y)
                 {
                     _reg._arrf2[0] = ((float2*)_shmem[threadIdx.y * 4 + _logical_stgl.z])[_logical_stgl.x + _CUDA_WARP_SIZE_ * _logical_stgl.y];
-                    dst[STG_dex_x + (dex_plane_dst_y + blockIdx.z * kernel_dims.x * 12) * im2col_buf_pitch_v1 / 2] = _reg._arrf2[0];
+                    dst[STG_dex_x + (dex_plane_dst_y + blockIdx.z * kernel_dims.x * kernel_dims.z) * im2col_buf_pitch_v1 / 2] = _reg._arrf2[0];
 
                     dex_plane_dst_y += 6;
 
                     _reg._arrf2[1] = ((float2*)_shmem[threadIdx.y * 4 + 2 + _logical_stgl.z])[_logical_stgl.x + _CUDA_WARP_SIZE_ * _logical_stgl.y];
-                    dst[STG_dex_x + (dex_plane_dst_y + blockIdx.z * kernel_dims.x * 12) * im2col_buf_pitch_v1 / 2] = _reg._arrf2[1];
+                    if (_logical_stgl.y + _logical_stgl.z * 3 + 6 < kernel_dims.z) {
+                        dst[STG_dex_x + (dex_plane_dst_y + blockIdx.z * kernel_dims.x * kernel_dims.z) * im2col_buf_pitch_v1 / 2] = _reg._arrf2[1];
+                    }
+                    dex_plane_dst_y += kernel_dims.z - 6;
                 }
 
-                dex_plane_dst_y += 6;
                 dex_src += 3;
 
                 __syncthreads();
@@ -451,13 +463,13 @@ decx::nn::GPUK::cu_im2col_DP12_BC_fp32(const float4* __restrict  src,
     }
 }
 
-template __global__ void decx::nn::GPUK::cu_im2col_DP12_BC_fp32<false, false>(const float4* __restrict, float2* __restrict, const uint2, const uint2,
+template __global__ void decx::nn::GPUK::cu_im2col_DP12_BC_fp32<false, false>(const float4* __restrict, float2* __restrict, const uint2, const uint3,
     const uint2, const uint32_t, const uint32_t, const uint64_t);
 
-template __global__ void decx::nn::GPUK::cu_im2col_DP12_BC_fp32<true, false>(const float4* __restrict, float2* __restrict, const uint2, const uint2,
+template __global__ void decx::nn::GPUK::cu_im2col_DP12_BC_fp32<true, false>(const float4* __restrict, float2* __restrict, const uint2, const uint3,
     const uint2, const uint32_t, const uint32_t, const uint64_t);
 
-template __global__ void decx::nn::GPUK::cu_im2col_DP12_BC_fp32<false, true>(const float4* __restrict, float2* __restrict, const uint2, const uint2,
+template __global__ void decx::nn::GPUK::cu_im2col_DP12_BC_fp32<false, true>(const float4* __restrict, float2* __restrict, const uint2, const uint3,
     const uint2, const uint32_t, const uint32_t, const uint64_t);
 
 
@@ -467,7 +479,7 @@ __global__ void
 decx::nn::GPUK::cu_im2col_DP16_NB_fp32(const float4* __restrict  src, 
                                        float* __restrict         dst, 
                                        const uint2               conv2D_area, 
-                                       const uint2               kernel_dims,
+                                       const uint3               kernel_dims,
                                        const uint2               strides,
                                        const uint32_t            wpitch_dst_v1, 
                                        const uint32_t            wpitch_src_v1, 
@@ -513,14 +525,17 @@ decx::nn::GPUK::cu_im2col_DP16_NB_fp32(const float4* __restrict  src,
 
             if (dex_plane_dst_x < conv2D_area.x && dex_plane_src_y < conv2D_area.y)
             {
-#pragma unroll 4
-                for (int k = 0; k < 4; ++k) {
+#pragma unroll 3
+                for (int k = 0; k < 3; ++k) {
                     _reg._arrf[k] = _shmem[threadIdx.y * 4 + _logical_stgl.y][_logical_stgl.x + _CUDA_WARP_SIZE_ * k];
-                    
-                    dst[STG_dex_x + (dex_plane_dst_y + blockIdx.z * kernel_dims.x * 16) * im2col_buf_pitch_v1] = _reg._arrf[k];
-
+                    dst[STG_dex_x + (dex_plane_dst_y + blockIdx.z * kernel_dims.x * kernel_dims.z) * im2col_buf_pitch_v1] = _reg._arrf[k];
                     dex_plane_dst_y += 4;
                 }
+                _reg._arrf[3] = _shmem[threadIdx.y * 4 + _logical_stgl.y][_logical_stgl.x + _CUDA_WARP_SIZE_ * 3];
+                if (_logical_stgl.y + 12 < kernel_dims.z) {
+                    dst[STG_dex_x + (dex_plane_dst_y + blockIdx.z * kernel_dims.x * kernel_dims.z) * im2col_buf_pitch_v1] = _reg._arrf[3];
+                }
+                dex_plane_dst_y += kernel_dims.z - 12;
             }
             
             dex_src += 4;
@@ -538,7 +553,7 @@ template <bool _boundless_T, bool _boundless_B> __global__ void
 decx::nn::GPUK::cu_im2col_DP16_BC_fp32(const float4* __restrict  src, 
                                        float* __restrict         dst, 
                                        const uint2               conv2D_area, 
-                                       const uint2               kernel_dims,
+                                       const uint3               kernel_dims,
                                        const uint2               strides,
                                        const uint32_t            wpitch_dst_v1, 
                                        const uint32_t            wpitch_src_v1, 
@@ -591,14 +606,17 @@ decx::nn::GPUK::cu_im2col_DP16_BC_fp32(const float4* __restrict  src,
 
                 if (dex_plane_dst_x < conv2D_area.x && dex_plane_src_y < conv2D_area.y)
                 {
-#pragma unroll 4
-                    for (int k = 0; k < 4; ++k) {
+#pragma unroll 3
+                    for (int k = 0; k < 3; ++k) {
                         _reg._arrf[k] = _shmem[threadIdx.y * 4 + _logical_stgl.y][_logical_stgl.x + _CUDA_WARP_SIZE_ * k];
-
-                        dst[STG_dex_x + (dex_plane_dst_y + blockIdx.z * kernel_dims.x * 16) * im2col_buf_pitch_v1] = _reg._arrf[k];
-
+                        dst[STG_dex_x + (dex_plane_dst_y + blockIdx.z * kernel_dims.x * kernel_dims.z) * im2col_buf_pitch_v1] = _reg._arrf[k];
                         dex_plane_dst_y += 4;
                     }
+                    _reg._arrf[3] = _shmem[threadIdx.y * 4 + _logical_stgl.y][_logical_stgl.x + _CUDA_WARP_SIZE_ * 3];
+                    if (_logical_stgl.y + 12 < kernel_dims.z) {
+                        dst[STG_dex_x + (dex_plane_dst_y + blockIdx.z * kernel_dims.x * kernel_dims.z) * im2col_buf_pitch_v1] = _reg._arrf[3];
+                    }
+                    dex_plane_dst_y += kernel_dims.z - 12;
                 }
 
                 dex_src += 4;
@@ -609,11 +627,11 @@ decx::nn::GPUK::cu_im2col_DP16_BC_fp32(const float4* __restrict  src,
     }
 }
 
-template __global__ void decx::nn::GPUK::cu_im2col_DP16_BC_fp32<false, false>(const float4* __restrict, float* __restrict, const uint2, const uint2,
+template __global__ void decx::nn::GPUK::cu_im2col_DP16_BC_fp32<false, false>(const float4* __restrict, float* __restrict, const uint2, const uint3,
     const uint2, const uint32_t, const uint32_t, const uint64_t);
 
-template __global__ void decx::nn::GPUK::cu_im2col_DP16_BC_fp32<true, false>(const float4* __restrict, float* __restrict, const uint2, const uint2,
+template __global__ void decx::nn::GPUK::cu_im2col_DP16_BC_fp32<true, false>(const float4* __restrict, float* __restrict, const uint2, const uint3,
     const uint2, const uint32_t, const uint32_t, const uint64_t);
 
-template __global__ void decx::nn::GPUK::cu_im2col_DP16_BC_fp32<false, true>(const float4* __restrict, float* __restrict, const uint2, const uint2,
+template __global__ void decx::nn::GPUK::cu_im2col_DP16_BC_fp32<false, true>(const float4* __restrict, float* __restrict, const uint2, const uint3,
     const uint2, const uint32_t, const uint32_t, const uint64_t);
