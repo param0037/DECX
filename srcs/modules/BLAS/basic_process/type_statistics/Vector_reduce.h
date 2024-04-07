@@ -14,8 +14,6 @@
 #include "../../../classes/Vector.h"
 #include "../../../core/configs/config.h"
 #include "../../../classes/classes_util.h"
-#include "../../../../Async Engine/Async_task_threadpool/Async_Engine.h"
-#include "../../../../Async Engine/DecxStream/DecxStream.h"
 #ifdef _DECX_CUDA_PARTS_
 #include "../../../basic_calculations/reduce/CUDA/reduce_callers.cuh"
 #include "../../../classes/GPU_Vector.h"
@@ -28,27 +26,21 @@ namespace de
     namespace cuda
     {
         _DECX_API_ de::DH Sum(de::Vector& src, de::DecxNumber* res, const uint32_t _fp16_accu);
-        _DECX_API_ de::DH Sum_Async(de::Vector& src, de::DecxNumber* res, const uint32_t _fp16_accu, de::DecxStream& S);
 
 
         _DECX_API_ de::DH Max(de::Vector& src, de::DecxNumber* res);
-        _DECX_API_ de::DH Max_Async(de::Vector& src, de::DecxNumber* res, de::DecxStream& S);
 
 
         _DECX_API_ de::DH Min(de::Vector& src, de::DecxNumber* res);
-        _DECX_API_ de::DH Min_Async(de::Vector& src, de::DecxNumber* res, de::DecxStream& S);
 
 
         _DECX_API_ de::DH Sum(de::GPU_Vector& src, de::DecxNumber* res, const uint32_t _fp16_accu);
-        _DECX_API_ de::DH Sum_Async(de::GPU_Vector& src, de::DecxNumber* res, const uint32_t _fp16_accu, de::DecxStream& S);
 
 
         _DECX_API_ de::DH Max(de::GPU_Vector& src, de::DecxNumber* res);
-        _DECX_API_ de::DH Max_Async(de::GPU_Vector& src, de::DecxNumber* res, de::DecxStream& S);
 
 
         _DECX_API_ de::DH Min(de::GPU_Vector& src, de::DecxNumber* res);
-        _DECX_API_ de::DH Min_Async(de::GPU_Vector& src, de::DecxNumber* res, de::DecxStream& S);
     }
 }
 

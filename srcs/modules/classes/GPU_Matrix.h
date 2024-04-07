@@ -78,7 +78,7 @@ namespace decx
     {
     private:
         // call AFTER attributes are assigned !
-        void re_alloc_data_space();
+        void re_alloc_data_space(decx::cuda_stream* S);
 
         // call AFTER attributes are assigned !
         void alloc_data_space();
@@ -106,7 +106,8 @@ namespace decx
             const de::_DATA_FORMATS_ format = de::_NA_);
 
 
-        void re_construct(const de::_DATA_TYPES_FLAGS_ _type, uint32_t width, uint32_t height);
+        void re_construct(const de::_DATA_TYPES_FLAGS_ _type, uint32_t width, uint32_t height,
+            decx::cuda_stream* S = NULL);
 
 
         _GPU_Matrix();

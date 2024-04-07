@@ -88,52 +88,6 @@ de::DH de::cuda::GEMM(de::Matrix& A, de::Matrix& B, de::Matrix& C, de::Matrix& d
 
 
 
-_DECX_API_ void 
-decx::cuda::GEMM_AB_Raw_API(decx::_Matrix* A, decx::_Matrix* B, decx::_Matrix* dst, de::DH* handle)
-{
-    switch (A->Type())
-    {
-    case de::_DATA_TYPES_FLAGS_::_FP32_:
-        decx::cuda::GEMM_fp32_organizer<false>(A, B, dst, handle);
-        break;
-
-    case de::_DATA_TYPES_FLAGS_::_FP16_:
-        decx::cuda::GEMM_fp16_organizer<false>(A, B, dst, handle);
-        break;
-
-    case de::_DATA_TYPES_FLAGS_::_COMPLEX_F32_:
-        decx::cuda::GEMM_cpl32_organizer<false>(A, B, dst, handle);
-        break;
-    default:
-        break;
-    }
-}
-
-
-
-_DECX_API_ void 
-decx::cuda::GEMM_ABC_Raw_API(decx::_Matrix* A, decx::_Matrix* B, decx::_Matrix* C, decx::_Matrix* dst, de::DH* handle)
-{
-    switch (A->Type())
-    {
-    case de::_DATA_TYPES_FLAGS_::_FP32_:
-        decx::cuda::GEMM_fp32_ABC_organizer<false>(A, B, C, dst, handle);
-        break;
-
-    case de::_DATA_TYPES_FLAGS_::_FP16_:
-        decx::cuda::GEMM_fp16_ABC_organizer<false>(A, B, C, dst, handle);
-        break;
-
-    case de::_DATA_TYPES_FLAGS_::_COMPLEX_F32_:
-        decx::cuda::GEMM_cpl32_ABC_organizer<false>(A, B, C, dst, handle);
-        break;
-    default:
-        break;
-    }
-}
-
-
-
 // --------------------------------------------- pure GPU ------------------------------------------------
 
 
@@ -205,50 +159,4 @@ de::DH de::cuda::GEMM(de::GPU_Matrix& A, de::GPU_Matrix& B, de::GPU_Matrix& C, d
 
     decx::err::Success(&handle);
     return handle;
-}
-
-
-
-_DECX_API_ void 
-decx::cuda::dev_GEMM_AB_Raw_API(decx::_GPU_Matrix* A, decx::_GPU_Matrix* B, decx::_GPU_Matrix* dst, const int flag, de::DH* handle)
-{
-    switch (A->Type())
-    {
-    case de::_DATA_TYPES_FLAGS_::_FP32_:
-        decx::cuda::GEMM_on_GPU_fp32<false>(A, B, dst, handle);
-        break;
-
-    case de::_DATA_TYPES_FLAGS_::_FP16_:
-        decx::cuda::GEMM_on_GPU_fp16<false>(A, B, dst, flag, handle);
-        break;
-
-    case de::_DATA_TYPES_FLAGS_::_COMPLEX_F32_:
-        decx::cuda::GEMM_on_GPU_cpl32<false>(A, B, dst, handle);
-        break;
-    default:
-        break;
-    }
-}
-
-
-
-_DECX_API_ void 
-decx::cuda::dev_GEMM_ABC_Raw_API(decx::_GPU_Matrix* A, decx::_GPU_Matrix* B, decx::_GPU_Matrix* C, decx::_GPU_Matrix* dst, const int flag, de::DH* handle)
-{
-    switch (A->Type())
-    {
-    case de::_DATA_TYPES_FLAGS_::_FP32_:
-        decx::cuda::GEMM_on_GPU_fp32_ABC<false>(A, B, C, dst, handle);
-        break;
-
-    case de::_DATA_TYPES_FLAGS_::_FP16_:
-        decx::cuda::GEMM_on_GPU_fp16_ABC<false>(A, B, C, dst, flag, handle);
-        break;
-
-    case de::_DATA_TYPES_FLAGS_::_COMPLEX_F32_:
-        decx::cuda::GEMM_on_GPU_cpl32_ABC<false>(A, B, C, dst, handle);
-        break;
-    default:
-        break;
-    }
 }

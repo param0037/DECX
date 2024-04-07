@@ -89,37 +89,11 @@ void decx::_GPU_Matrix::alloc_data_space()
 
 
 
-void decx::_GPU_Matrix::re_alloc_data_space()
+void decx::_GPU_Matrix::re_alloc_data_space(decx::cuda_stream* S)
 {
-    decx::cuda_stream* S = NULL;
-    S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
-    if (S == NULL) {
-        SetConsoleColor(4);
-        printf("Internal error.\n");
-        ResetConsoleColor;
+    if (decx::alloc::_device_realloc(&this->Mat, this->total_bytes, true, S)) {
         return;
     }
-    decx::cuda_event* E = NULL;
-    E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
-    if (E == NULL) {
-        SetConsoleColor(4);
-        printf("Internal error.\n");
-        ResetConsoleColor;
-        return;
-    }
-
-    if (decx::alloc::_device_realloc(&this->Mat, this->total_bytes)) {
-        SetConsoleColor(4);
-        printf("Matrix malloc failed! Please check if there is enough space in your device.\n");
-        ResetConsoleColor;
-        return;
-    }
-
-    E->event_record(S);
-    E->synchronize();
-
-    S->detach();
-    E->detach();
 }
 
 
@@ -135,7 +109,8 @@ void decx::_GPU_Matrix::construct(const de::_DATA_TYPES_FLAGS_ _type, uint32_t _
 
 
 
-void decx::_GPU_Matrix::re_construct(const de::_DATA_TYPES_FLAGS_ _type, uint32_t _width, uint32_t _height)
+void decx::_GPU_Matrix::re_construct(const de::_DATA_TYPES_FLAGS_ _type, uint32_t _width, uint32_t _height,
+    decx::cuda_stream* S)
 {
     // If all the parameters are the same, it is meaningless to re-construt the data
     if (this->_layout.width != _width || this->_layout.height != _height)
@@ -144,7 +119,7 @@ void decx::_GPU_Matrix::re_construct(const de::_DATA_TYPES_FLAGS_ _type, uint32_
         this->_attribute_assign(_type, _width, _height);
 
         if (this->total_bytes > pre_size) {
-            this->re_alloc_data_space();
+            this->re_alloc_data_space(S);
         }
     }
 

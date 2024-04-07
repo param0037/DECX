@@ -132,7 +132,6 @@ decx::ThreadPool::ThreadPool(const int thread_num, const bool start_at_begin)
 
 
 
-
 void decx::ThreadPool::add_thread(const int add_thread_num)
 {
     if (this->current_thread_num + add_thread_num > this->_max_thr_num) {
@@ -150,7 +149,6 @@ void decx::ThreadPool::add_thread(const int add_thread_num)
         this->current_thread_num += add_thread_num;
     }
 }
-
 
 
 

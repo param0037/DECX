@@ -13,18 +13,6 @@
 #include "DP1D_callers.cuh"
 
 
-#define _SELECTED_CALL_P3_(__func_name, _param1, _param2, _param3) {                                                        \
-    if (_async_call) {      decx::async::register_async_task(_stream_id, __func_name, _param1, _param2, _param3); }      \
-    else {  __func_name(_param1, _param2, _param3); }                                                                    \
-}
-
-
-#define _SELECTED_CALL_P4_(__func_name, _param1, _param2, _param3, _param4) {                                                        \
-    if (_async_call) {      decx::async::register_async_task(_stream_id, __func_name, _param1, _param2, _param3, _param4); }      \
-    else {  __func_name(_param1, _param2, _param3, _param4); }                                                                    \
-}
-
-
 namespace decx
 {
     namespace dot
@@ -42,16 +30,16 @@ template <bool _async_call>
 static void decx::dot::_vector_dot_caller(decx::_Vector* A, decx::_Vector* B, de::DecxNumber* res, de::DH* handle, const uint32_t _fp16_accu, const uint32_t _stream_id)
 {
     if (A->Type() == de::_DATA_TYPES_FLAGS_::_FP32_) {
-        _SELECTED_CALL_P3_(decx::dot::vector_dot_fp32, A, B, res);
+        decx::dot::vector_dot_fp32(A, B, res);
     }
     else if (A->Type() == de::_DATA_TYPES_FLAGS_::_FP16_) {
-        _SELECTED_CALL_P4_(decx::dot::vector_dot_fp16, A, B, res, _fp16_accu);
+        decx::dot::vector_dot_fp16(A, B, res, _fp16_accu);
     }
     else if (A->Type() == de::_DATA_TYPES_FLAGS_::_FP64_) {
-        _SELECTED_CALL_P3_(decx::dot::vector_dot_fp64, A, B, res);
+        decx::dot::vector_dot_fp64(A, B, res);
     }
     else if (A->Type() == de::_DATA_TYPES_FLAGS_::_COMPLEX_F32_) {
-        _SELECTED_CALL_P3_(decx::dot::vector_dot_cplxf, A, B, res);
+        decx::dot::vector_dot_cplxf(A, B, res);
     }
     else {
         decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_UNSUPPORTED_TYPE, UNSUPPORTED_TYPE);
@@ -64,16 +52,16 @@ template <bool _async_call>
 static void decx::dot::_dev_vector_dot_caller(decx::_GPU_Vector* A, decx::_GPU_Vector* B, de::DecxNumber* res, de::DH* handle, const uint32_t _fp16_accu, const uint32_t _stream_id)
 {
     if (A->Type() == de::_DATA_TYPES_FLAGS_::_FP32_) {
-        _SELECTED_CALL_P3_(decx::dot::dev_vector_dot_fp32, A, B, res);
+        decx::dot::dev_vector_dot_fp32(A, B, res);
     }
     else if (A->Type() == de::_DATA_TYPES_FLAGS_::_FP16_) {
-        _SELECTED_CALL_P4_(decx::dot::dev_vector_dot_fp16, A, B, res, _fp16_accu);
+        decx::dot::dev_vector_dot_fp16(A, B, res, _fp16_accu);
     }
     else if (A->Type() == de::_DATA_TYPES_FLAGS_::_FP64_) {
-        _SELECTED_CALL_P3_(decx::dot::dev_vector_dot_fp64, A, B, res);
+        decx::dot::dev_vector_dot_fp64(A, B, res);
     }
     else if (A->Type() == de::_DATA_TYPES_FLAGS_::_COMPLEX_F32_) {
-        _SELECTED_CALL_P3_(decx::dot::dev_vector_dot_cplxf, A, B, res);
+        decx::dot::dev_vector_dot_cplxf(A, B, res);
     }
     else {
         decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_UNSUPPORTED_TYPE, UNSUPPORTED_TYPE);

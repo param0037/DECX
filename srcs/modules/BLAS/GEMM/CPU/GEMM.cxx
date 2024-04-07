@@ -14,54 +14,6 @@
 
 
 _DECX_API_
-void decx::cpu::GEMM_AB_Raw_API(decx::_Matrix* _A, decx::_Matrix* _B, decx::_Matrix* _dst, de::DH* handle)
-{
-    decx::err::Success<false>(handle);
-
-    switch (_A->Type())
-    {
-    case de::_DATA_TYPES_FLAGS_::_FP32_:
-        decx::cpu::GEMM_fp32<false>(_A, _B, _dst, handle);
-        break;
-
-    case de::_DATA_TYPES_FLAGS_::_FP64_:
-        decx::cpu::GEMM_64b<false, false>(_A, _B, _dst, handle);
-        break;
-
-    case de::_DATA_TYPES_FLAGS_::_COMPLEX_F32_:
-        decx::cpu::GEMM_64b<true, false>(_A, _B, _dst, handle);
-        break;
-    default:
-        break;
-    }
-}
-
-
-_DECX_API_
-void decx::cpu::GEMM_ABC_Raw_API(decx::_Matrix* _A, decx::_Matrix* _B, decx::_Matrix* _C, decx::_Matrix* _dst, de::DH* handle)
-{
-    decx::err::Success<false>(handle);
-
-    switch (_A->Type())
-    {
-    case de::_DATA_TYPES_FLAGS_::_FP32_:
-        decx::cpu::GEMM_fp32_ABC<false>(_A, _B, _C, _dst, handle);
-        break;
-
-    case de::_DATA_TYPES_FLAGS_::_FP64_:
-        decx::cpu::GEMM_64b_ABC<false, false>(_A, _B, _C, _dst, handle);
-        break;
-
-    case de::_DATA_TYPES_FLAGS_::_COMPLEX_F32_:
-        decx::cpu::GEMM_64b_ABC<true, false>(_A, _B, _C, _dst, handle);
-        break;
-    default:
-        break;
-    }
-}
-
-
-_DECX_API_
 de::DH de::cpu::GEMM(de::Matrix& A, de::Matrix& B, de::Matrix& dst)
 {
     de::DH handle;
@@ -138,35 +90,4 @@ de::DH de::cpu::GEMM(de::Matrix& A, de::Matrix& B, de::Matrix& C, de::Matrix& ds
     }
 
     return handle;
-}
-
-
-
-
-_DECX_API_ void
-de::cpu::GEMM_Async(de::Matrix& A, de::Matrix& B, de::Matrix& dst, de::DecxStream& S)
-{
-    de::DH handle;
-
-    decx::_Matrix* _A = dynamic_cast<decx::_Matrix*>(&A);
-    decx::_Matrix* _B = dynamic_cast<decx::_Matrix*>(&B);
-    decx::_Matrix* _dst = dynamic_cast<decx::_Matrix*>(&dst);
-
-    decx::async::register_async_task(S.Get_ID(), decx::cpu::GEMM_AB_Raw_API, _A, _B, _dst,
-        S.Get_last_handle());
-}
-
-
-_DECX_API_ void
-de::cpu::GEMM_Async(de::Matrix& A, de::Matrix& B, de::Matrix& C, de::Matrix& dst, de::DecxStream& S)
-{
-    de::DH handle;
-
-    decx::_Matrix* _A = dynamic_cast<decx::_Matrix*>(&A);
-    decx::_Matrix* _B = dynamic_cast<decx::_Matrix*>(&B);
-    decx::_Matrix* _C = dynamic_cast<decx::_Matrix*>(&C);
-    decx::_Matrix* _dst = dynamic_cast<decx::_Matrix*>(&dst);
-
-    decx::async::register_async_task(S.Get_ID(), decx::cpu::GEMM_ABC_Raw_API, _A, _B, _C, _dst,
-        S.Get_last_handle());
 }

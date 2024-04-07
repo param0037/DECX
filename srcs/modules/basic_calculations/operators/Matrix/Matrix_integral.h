@@ -16,8 +16,8 @@
 #include "../../../classes/GPU_Matrix.h"
 #include "../../scan/CUDA/scan.cuh"
 #include "../../scan/CUDA/scan_caller.h"
-#include "../../../../Async Engine/DecxStream/DecxStream.h"
-#include "../../../../Async Engine/Async_task_threadpool/Async_Engine.h"
+//#include "../../../../Async Engine/DecxStream/DecxStream.h"
+//#include "../../../../Async Engine/Async_task_threadpool/Async_Engine.h"
 
 
 namespace decx
@@ -586,12 +586,6 @@ namespace de
 
 
         _DECX_API_ de::DH Integral(de::GPU_Matrix& src, de::GPU_Matrix& dst, const int scan2D_mode, const int scan_calc_mode);
-
-
-        _DECX_API_ de::DH Integral_Async(de::Matrix& src, de::Matrix& dst, const int scan2D_mode, const int scan_calc_mode, de::DecxStream& S);
-
-
-        _DECX_API_ de::DH Integral_Async(de::GPU_Matrix& src, de::GPU_Matrix& dst, const int scan2D_mode, const int scan_calc_mode, de::DecxStream& S);
     }
 }
 

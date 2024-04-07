@@ -12,7 +12,7 @@ function printf_info()
     echo "         -m Build the project(s), specify which project to be built"
     echo "         -all Clean, configure or build all the projects"
     echo "project_names : "
-    echo "         Async, core_CPU(CUDA), BLAS_CPU(CUDA), DSP_CPU(CUDA), CV_CPU(CUDA), NN_CPU)CUDA)"
+    echo "         core_CPU(CUDA), BLAS_CPU(CUDA), DSP_CPU(CUDA), CV_CPU(CUDA), NN_CPU)CUDA)"
 }
 
 
@@ -46,7 +46,6 @@ function clean_all()
     clean_single "CV_CUDA"
     clean_single "NN_CPU"
     clean_single "NN_CUDA"
-    clean_single "Async"
 
     cd $PROJECT_PATH_BUILD
 
@@ -75,7 +74,6 @@ function config_single()
 
 function config_all()
 {
-    config_single "Async"
     config_single "core_CPU"
     config_single "core_CUDA"
     config_single "BLAS_CPU"
@@ -123,7 +121,6 @@ function build_all()
     build_single "CV_CUDA"
     build_single "NN_CPU"
     build_single "NN_CUDA"
-    build_single "Async"
 
     cd $PROJECT_PATH_BUILD
 

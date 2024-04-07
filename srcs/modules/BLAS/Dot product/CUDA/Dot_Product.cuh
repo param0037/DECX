@@ -15,7 +15,6 @@
 #include "../../../classes/Vector.h"
 #include "../../../classes/Matrix.h"
 #include "../../../classes/GPU_Vector.h"
-#include "../../../../Async Engine/DecxStream/DecxStream.h"
 #include "../../../classes/DecxNumber.h"
 #include "../../basic_process/type_statistics/Matrix_reduce.h"
 
@@ -27,8 +26,6 @@ namespace de
         _DECX_API_ de::DH Dot_product(de::Vector& A, de::Vector& B, de::DecxNumber& res, const uint32_t _fp16_accu);
 
         _DECX_API_ de::DH Dot_product(de::GPU_Vector& A, de::GPU_Vector& B, de::DecxNumber& res, const uint32_t _fp16_accu);
-
-        _DECX_API_ de::DH Dot_product_Async(de::Vector& A, de::Vector& B, de::DecxNumber* res, const uint32_t _fp16_accu, de::DecxStream& S);
     }
 
     namespace cuda

@@ -135,5 +135,4 @@ decx::gemm::CPUK::_sort_ST_MatB_fp32_L8(float* __restrict     srcB,
 }
 
 
-
 #endif

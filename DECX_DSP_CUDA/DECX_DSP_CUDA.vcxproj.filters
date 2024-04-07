@@ -41,47 +41,20 @@
     <Filter Include="源文件\convolution\sliding_window">
       <UniqueIdentifier>{a59f4eea-1606-4500-8e99-ba7fb7eca271}</UniqueIdentifier>
     </Filter>
-    <Filter Include="源文件\convolution\sliding_window\fp16">
-      <UniqueIdentifier>{019ef296-c8d2-4281-94e5-0dc87e3926a4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\convolution\sliding_window\fp32">
-      <UniqueIdentifier>{ae674709-796e-4d25-bb03-1df3dc3ddabc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\convolution\sliding_window\uint8">
-      <UniqueIdentifier>{c6bf72cc-30a7-48d7-b5ed-afc040ca5aaf}</UniqueIdentifier>
-    </Filter>
     <Filter Include="源文件\signal\FFT\3D">
       <UniqueIdentifier>{649a5a3d-2f6e-4dc2-8d12-b8166058c7d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\convolution\sliding_window\fp32">
+      <UniqueIdentifier>{44694a0c-8524-4769-aad5-19f7585bac77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\convolution\sliding_window\uint8">
+      <UniqueIdentifier>{e52f28a8-cf6f-4494-ba7a-61e3a7532b59}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="for_properties.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\sliding_window\fp16\Conv2_fp16_kernels.cu">
-      <Filter>源文件\convolution\sliding_window\fp16</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\sliding_window\fp16\Conv2_fp16_kernels_accurate.cu">
-      <Filter>源文件\convolution\sliding_window\fp16</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\sliding_window\fp32\Conv2_fp32_kernels.cu">
-      <Filter>源文件\convolution\sliding_window\fp32</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\sliding_window\uint8\Conv2_uint8_kernels.cu">
-      <Filter>源文件\convolution\sliding_window\uint8</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\sliding_window\Filter2.cu">
-      <Filter>源文件\convolution\sliding_window</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\sliding_window\Filter2_on_GPU.cu">
-      <Filter>源文件\convolution\sliding_window</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\sliding_window\Filter2D_multi_channel.cu">
-      <Filter>源文件\convolution\sliding_window</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\sliding_window\Filter2D_multi_channel_on_GPU.cu">
-      <Filter>源文件\convolution\sliding_window</Filter>
-    </CudaCompile>
     <CudaCompile Include="..\srcs\modules\DSP\filters\CUDA\low_pass.cu">
       <Filter>源文件\filters</Filter>
     </CudaCompile>
@@ -183,6 +156,24 @@
     </CudaCompile>
     <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\1D\FFT1D_cplxf32.cu">
       <Filter>源文件\signal\FFT\1D</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\sliding_window\filter2D.cu">
+      <Filter>源文件\convolution\sliding_window</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\sliding_window\fp32\filter2D_fp32_kernel.cu">
+      <Filter>源文件\convolution\sliding_window\fp32</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\sliding_window\cuda_filter2D_planner.cu">
+      <Filter>源文件\convolution\sliding_window</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\sliding_window\fp32\filter2D_fp32_caller.cu">
+      <Filter>源文件\convolution\sliding_window\fp32</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\sliding_window\uint8\filter2D_uint8_kernel.cu">
+      <Filter>源文件\convolution\sliding_window\uint8</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\sliding_window\uint8\filter2D_uint8_caller.cu">
+      <Filter>源文件\convolution\sliding_window\uint8</Filter>
     </CudaCompile>
   </ItemGroup>
 </Project>

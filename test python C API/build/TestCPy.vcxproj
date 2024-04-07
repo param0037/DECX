@@ -1,0 +1,325 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+  </PropertyGroup>
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="MinSizeRel|x64">
+      <Configuration>MinSizeRel</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RelWithDebInfo|x64">
+      <Configuration>RelWithDebInfo</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{26147515-1534-39F9-B18F-CA32437ADC57}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
+    <Platform>x64</Platform>
+    <ProjectName>TestCPy</ProjectName>
+    <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">E:\DECX_world\bin\x64\Debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">TestCPy.dir\Debug\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">TestCPy</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.dll</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">E:\DECX_world\bin\x64\Release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">TestCPy.dir\Release\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">TestCPy</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.dll</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">E:\DECX_world\bin\x64\MinSizeRel\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">TestCPy.dir\MinSizeRel\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">TestCPy</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">.dll</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">E:\DECX_world\bin\x64\RelWithDebInfo\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">TestCPy.dir\RelWithDebInfo\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">TestCPy</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">.dll</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</GenerateManifest>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>E:\DECX_world\3rdparty\Python\3.7\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>
+      </ExceptionHandling>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <UseFullPaths>false</UseFullPaths>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;_DECX_CPU_PARTS_;_DECX_CORE_CPU_;_C_EXPORT_ENABLED_=1;_CPP_EXPORT_ENABLED_=1;CMAKE_INTDIR="Debug";TestCPy_EXPORTS</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;_DECX_CPU_PARTS_;_DECX_CORE_CPU_;_C_EXPORT_ENABLED_=1;_CPP_EXPORT_ENABLED_=1;CMAKE_INTDIR=\"Debug\";TestCPy_EXPORTS</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>E:\DECX_world\3rdparty\Python\3.7\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>E:\DECX_world\3rdparty\Python\3.7\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>python3.lib;python37.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>E:/DECX_world/bin/x64/Release;E:/DECX_world/bin/x64/Release/$(Configuration);E:/DECX_world/3rdparty/Python/3.7/libs/Windows;E:/DECX_world/3rdparty/Python/3.7/libs/Windows/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>E:/DECX_world/bin/x64/Debug/TestCPy.lib</ImportLibrary>
+      <ProgramDataBaseFile>E:/DECX_world/bin/x64/Debug/TestCPy.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>E:\DECX_world\3rdparty\Python\3.7\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ExceptionHandling>
+      </ExceptionHandling>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <UseFullPaths>false</UseFullPaths>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_DECX_CPU_PARTS_;_DECX_CORE_CPU_;_C_EXPORT_ENABLED_=1;_CPP_EXPORT_ENABLED_=1;CMAKE_INTDIR="Release";TestCPy_EXPORTS</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_DECX_CPU_PARTS_;_DECX_CORE_CPU_;_C_EXPORT_ENABLED_=1;_CPP_EXPORT_ENABLED_=1;CMAKE_INTDIR=\"Release\";TestCPy_EXPORTS</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>E:\DECX_world\3rdparty\Python\3.7\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>E:\DECX_world\3rdparty\Python\3.7\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>python3.lib;python37.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>E:/DECX_world/bin/x64/Release;E:/DECX_world/bin/x64/Release/$(Configuration);E:/DECX_world/3rdparty/Python/3.7/libs/Windows;E:/DECX_world/3rdparty/Python/3.7/libs/Windows/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>E:/DECX_world/bin/x64/Release/TestCPy.lib</ImportLibrary>
+      <ProgramDataBaseFile>E:/DECX_world/bin/x64/Release/TestCPy.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>E:\DECX_world\3rdparty\Python\3.7\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ExceptionHandling>
+      </ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <Optimization>MinSpace</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <UseFullPaths>false</UseFullPaths>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_DECX_CPU_PARTS_;_DECX_CORE_CPU_;_C_EXPORT_ENABLED_=1;_CPP_EXPORT_ENABLED_=1;CMAKE_INTDIR="MinSizeRel";TestCPy_EXPORTS</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_DECX_CPU_PARTS_;_DECX_CORE_CPU_;_C_EXPORT_ENABLED_=1;_CPP_EXPORT_ENABLED_=1;CMAKE_INTDIR=\"MinSizeRel\";TestCPy_EXPORTS</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>E:\DECX_world\3rdparty\Python\3.7\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>E:\DECX_world\3rdparty\Python\3.7\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>python3.lib;python37.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>E:/DECX_world/bin/x64/Release;E:/DECX_world/bin/x64/Release/$(Configuration);E:/DECX_world/3rdparty/Python/3.7/libs/Windows;E:/DECX_world/3rdparty/Python/3.7/libs/Windows/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>E:/DECX_world/bin/x64/MinSizeRel/TestCPy.lib</ImportLibrary>
+      <ProgramDataBaseFile>E:/DECX_world/bin/x64/MinSizeRel/TestCPy.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>E:\DECX_world\3rdparty\Python\3.7\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>
+      </ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <UseFullPaths>false</UseFullPaths>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_DECX_CPU_PARTS_;_DECX_CORE_CPU_;_C_EXPORT_ENABLED_=1;_CPP_EXPORT_ENABLED_=1;CMAKE_INTDIR="RelWithDebInfo";TestCPy_EXPORTS</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_DECX_CPU_PARTS_;_DECX_CORE_CPU_;_C_EXPORT_ENABLED_=1;_CPP_EXPORT_ENABLED_=1;CMAKE_INTDIR=\"RelWithDebInfo\";TestCPy_EXPORTS</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>E:\DECX_world\3rdparty\Python\3.7\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>E:\DECX_world\3rdparty\Python\3.7\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>python3.lib;python37.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>E:/DECX_world/bin/x64/Release;E:/DECX_world/bin/x64/Release/$(Configuration);E:/DECX_world/3rdparty/Python/3.7/libs/Windows;E:/DECX_world/3rdparty/Python/3.7/libs/Windows/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>E:/DECX_world/bin/x64/RelWithDebInfo/TestCPy.lib</ImportLibrary>
+      <ProgramDataBaseFile>E:/DECX_world/bin/x64/RelWithDebInfo/TestCPy.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="E:\DECX_world\test python C API\CMakeLists.txt">
+      <UseUtf8Encoding>Always</UseUtf8Encoding>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule E:/DECX_world/test python C API/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+D:\cmake\bin\cmake.exe "-SE:/DECX_world/test python C API" "-BE:/DECX_world/test python C API/build" --check-stamp-file "E:/DECX_world/test python C API/build/CMakeFiles/generate.stamp"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\cmake\share\cmake-3.24\Modules\CMakeCCompiler.cmake.in;D:\cmake\share\cmake-3.24\Modules\CMakeCCompilerABI.c;D:\cmake\share\cmake-3.24\Modules\CMakeCInformation.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeCommonLanguageInclude.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeCompilerIdDetection.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeDetermineCCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeDetermineCompileFeatures.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeDetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeDetermineCompilerABI.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeDetermineCompilerId.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeDetermineRCCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeDetermineSystem.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeFindBinUtils.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeGenericSystem.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeInitializeConfigs.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeLanguageInformation.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeParseImplicitIncludeInfo.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeParseImplicitLinkInfo.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeParseLibraryArchitecture.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeRCCompiler.cmake.in;D:\cmake\share\cmake-3.24\Modules\CMakeRCInformation.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeSystem.cmake.in;D:\cmake\share\cmake-3.24\Modules\CMakeSystemSpecificInformation.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeSystemSpecificInitialize.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeTestCCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeTestCompilerCommon.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeTestRCCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\ADSP-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\ARMCC-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\ARMClang-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\AppleClang-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\Borland-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\Bruce-C-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\CMakeCommonCompilerMacros.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\Clang-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\Clang-DetermineCompilerInternal.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\Compaq-C-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\Cray-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\Embarcadero-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\Fujitsu-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\FujitsuClang-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\GHS-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\GNU-C-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\HP-C-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\IAR-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\IBMCPP-C-DetermineVersionInternal.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\IBMClang-C-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\Intel-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\IntelLLVM-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\LCC-C-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\MSVC-C.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\MSVC-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\MSVC.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\NVHPC-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\NVIDIA-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\OpenWatcom-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\PGI-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\PathScale-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\SCO-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\SDCC-C-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\SunPro-C-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\TI-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\TinyCC-C-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\VisualAge-C-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\Watcom-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\XL-C-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\XLClang-C-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\zOS-C-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\CompilerId\VS-10.vcxproj.in;D:\cmake\share\cmake-3.24\Modules\Internal\FeatureTesting.cmake;D:\cmake\share\cmake-3.24\Modules\Platform\Windows-MSVC-C.cmake;D:\cmake\share\cmake-3.24\Modules\Platform\Windows-MSVC.cmake;D:\cmake\share\cmake-3.24\Modules\Platform\Windows.cmake;D:\cmake\share\cmake-3.24\Modules\Platform\WindowsPaths.cmake;E:\DECX_world\test python C API\build\CMakeFiles\3.24.0\CMakeCCompiler.cmake;E:\DECX_world\test python C API\build\CMakeFiles\3.24.0\CMakeRCCompiler.cmake;E:\DECX_world\test python C API\build\CMakeFiles\3.24.0\CMakeSystem.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">E:\DECX_world\test python C API\build\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule E:/DECX_world/test python C API/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+D:\cmake\bin\cmake.exe "-SE:/DECX_world/test python C API" "-BE:/DECX_world/test python C API/build" --check-stamp-file "E:/DECX_world/test python C API/build/CMakeFiles/generate.stamp"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\cmake\share\cmake-3.24\Modules\CMakeCCompiler.cmake.in;D:\cmake\share\cmake-3.24\Modules\CMakeCCompilerABI.c;D:\cmake\share\cmake-3.24\Modules\CMakeCInformation.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeCommonLanguageInclude.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeCompilerIdDetection.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeDetermineCCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeDetermineCompileFeatures.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeDetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeDetermineCompilerABI.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeDetermineCompilerId.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeDetermineRCCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeDetermineSystem.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeFindBinUtils.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeGenericSystem.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeInitializeConfigs.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeLanguageInformation.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeParseImplicitIncludeInfo.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeParseImplicitLinkInfo.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeParseLibraryArchitecture.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeRCCompiler.cmake.in;D:\cmake\share\cmake-3.24\Modules\CMakeRCInformation.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeSystem.cmake.in;D:\cmake\share\cmake-3.24\Modules\CMakeSystemSpecificInformation.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeSystemSpecificInitialize.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeTestCCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeTestCompilerCommon.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeTestRCCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\ADSP-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\ARMCC-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\ARMClang-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\AppleClang-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\Borland-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\Bruce-C-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\CMakeCommonCompilerMacros.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\Clang-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\Clang-DetermineCompilerInternal.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\Compaq-C-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\Cray-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\Embarcadero-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\Fujitsu-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\FujitsuClang-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\GHS-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\GNU-C-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\HP-C-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\IAR-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\IBMCPP-C-DetermineVersionInternal.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\IBMClang-C-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\Intel-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\IntelLLVM-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\LCC-C-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\MSVC-C.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\MSVC-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\MSVC.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\NVHPC-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\NVIDIA-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\OpenWatcom-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\PGI-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\PathScale-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\SCO-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\SDCC-C-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\SunPro-C-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\TI-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\TinyCC-C-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\VisualAge-C-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\Watcom-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\XL-C-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\XLClang-C-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\zOS-C-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\CompilerId\VS-10.vcxproj.in;D:\cmake\share\cmake-3.24\Modules\Internal\FeatureTesting.cmake;D:\cmake\share\cmake-3.24\Modules\Platform\Windows-MSVC-C.cmake;D:\cmake\share\cmake-3.24\Modules\Platform\Windows-MSVC.cmake;D:\cmake\share\cmake-3.24\Modules\Platform\Windows.cmake;D:\cmake\share\cmake-3.24\Modules\Platform\WindowsPaths.cmake;E:\DECX_world\test python C API\build\CMakeFiles\3.24.0\CMakeCCompiler.cmake;E:\DECX_world\test python C API\build\CMakeFiles\3.24.0\CMakeRCCompiler.cmake;E:\DECX_world\test python C API\build\CMakeFiles\3.24.0\CMakeSystem.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">E:\DECX_world\test python C API\build\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule E:/DECX_world/test python C API/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+D:\cmake\bin\cmake.exe "-SE:/DECX_world/test python C API" "-BE:/DECX_world/test python C API/build" --check-stamp-file "E:/DECX_world/test python C API/build/CMakeFiles/generate.stamp"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\cmake\share\cmake-3.24\Modules\CMakeCCompiler.cmake.in;D:\cmake\share\cmake-3.24\Modules\CMakeCCompilerABI.c;D:\cmake\share\cmake-3.24\Modules\CMakeCInformation.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeCommonLanguageInclude.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeCompilerIdDetection.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeDetermineCCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeDetermineCompileFeatures.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeDetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeDetermineCompilerABI.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeDetermineCompilerId.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeDetermineRCCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeDetermineSystem.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeFindBinUtils.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeGenericSystem.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeInitializeConfigs.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeLanguageInformation.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeParseImplicitIncludeInfo.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeParseImplicitLinkInfo.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeParseLibraryArchitecture.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeRCCompiler.cmake.in;D:\cmake\share\cmake-3.24\Modules\CMakeRCInformation.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeSystem.cmake.in;D:\cmake\share\cmake-3.24\Modules\CMakeSystemSpecificInformation.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeSystemSpecificInitialize.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeTestCCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeTestCompilerCommon.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeTestRCCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\ADSP-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\ARMCC-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\ARMClang-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\AppleClang-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\Borland-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\Bruce-C-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\CMakeCommonCompilerMacros.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\Clang-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\Clang-DetermineCompilerInternal.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\Compaq-C-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\Cray-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\Embarcadero-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\Fujitsu-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\FujitsuClang-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\GHS-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\GNU-C-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\HP-C-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\IAR-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\IBMCPP-C-DetermineVersionInternal.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\IBMClang-C-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\Intel-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\IntelLLVM-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\LCC-C-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\MSVC-C.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\MSVC-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\MSVC.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\NVHPC-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\NVIDIA-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\OpenWatcom-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\PGI-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\PathScale-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\SCO-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\SDCC-C-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\SunPro-C-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\TI-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\TinyCC-C-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\VisualAge-C-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\Watcom-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\XL-C-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\XLClang-C-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\zOS-C-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\CompilerId\VS-10.vcxproj.in;D:\cmake\share\cmake-3.24\Modules\Internal\FeatureTesting.cmake;D:\cmake\share\cmake-3.24\Modules\Platform\Windows-MSVC-C.cmake;D:\cmake\share\cmake-3.24\Modules\Platform\Windows-MSVC.cmake;D:\cmake\share\cmake-3.24\Modules\Platform\Windows.cmake;D:\cmake\share\cmake-3.24\Modules\Platform\WindowsPaths.cmake;E:\DECX_world\test python C API\build\CMakeFiles\3.24.0\CMakeCCompiler.cmake;E:\DECX_world\test python C API\build\CMakeFiles\3.24.0\CMakeRCCompiler.cmake;E:\DECX_world\test python C API\build\CMakeFiles\3.24.0\CMakeSystem.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">E:\DECX_world\test python C API\build\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule E:/DECX_world/test python C API/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+D:\cmake\bin\cmake.exe "-SE:/DECX_world/test python C API" "-BE:/DECX_world/test python C API/build" --check-stamp-file "E:/DECX_world/test python C API/build/CMakeFiles/generate.stamp"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\cmake\share\cmake-3.24\Modules\CMakeCCompiler.cmake.in;D:\cmake\share\cmake-3.24\Modules\CMakeCCompilerABI.c;D:\cmake\share\cmake-3.24\Modules\CMakeCInformation.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeCommonLanguageInclude.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeCompilerIdDetection.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeDetermineCCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeDetermineCompileFeatures.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeDetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeDetermineCompilerABI.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeDetermineCompilerId.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeDetermineRCCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeDetermineSystem.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeFindBinUtils.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeGenericSystem.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeInitializeConfigs.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeLanguageInformation.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeParseImplicitIncludeInfo.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeParseImplicitLinkInfo.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeParseLibraryArchitecture.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeRCCompiler.cmake.in;D:\cmake\share\cmake-3.24\Modules\CMakeRCInformation.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeSystem.cmake.in;D:\cmake\share\cmake-3.24\Modules\CMakeSystemSpecificInformation.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeSystemSpecificInitialize.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeTestCCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeTestCompilerCommon.cmake;D:\cmake\share\cmake-3.24\Modules\CMakeTestRCCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\ADSP-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\ARMCC-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\ARMClang-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\AppleClang-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\Borland-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\Bruce-C-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\CMakeCommonCompilerMacros.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\Clang-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\Clang-DetermineCompilerInternal.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\Compaq-C-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\Cray-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\Embarcadero-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\Fujitsu-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\FujitsuClang-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\GHS-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\GNU-C-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\HP-C-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\IAR-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\IBMCPP-C-DetermineVersionInternal.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\IBMClang-C-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\Intel-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\IntelLLVM-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\LCC-C-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\MSVC-C.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\MSVC-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\MSVC.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\NVHPC-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\NVIDIA-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\OpenWatcom-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\PGI-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\PathScale-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\SCO-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\SDCC-C-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\SunPro-C-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\TI-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\TinyCC-C-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\VisualAge-C-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\Watcom-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\XL-C-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\XLClang-C-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\Compiler\zOS-C-DetermineCompiler.cmake;D:\cmake\share\cmake-3.24\Modules\CompilerId\VS-10.vcxproj.in;D:\cmake\share\cmake-3.24\Modules\Internal\FeatureTesting.cmake;D:\cmake\share\cmake-3.24\Modules\Platform\Windows-MSVC-C.cmake;D:\cmake\share\cmake-3.24\Modules\Platform\Windows-MSVC.cmake;D:\cmake\share\cmake-3.24\Modules\Platform\Windows.cmake;D:\cmake\share\cmake-3.24\Modules\Platform\WindowsPaths.cmake;E:\DECX_world\test python C API\build\CMakeFiles\3.24.0\CMakeCCompiler.cmake;E:\DECX_world\test python C API\build\CMakeFiles\3.24.0\CMakeRCCompiler.cmake;E:\DECX_world\test python C API\build\CMakeFiles\3.24.0\CMakeSystem.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">E:\DECX_world\test python C API\build\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="E:\DECX_world\test python C API\test.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="E:\DECX_world\test python C API\build\ZERO_CHECK.vcxproj">
+      <Project>{448CA976-642B-3C74-91C9-F27B9423A79F}</Project>
+      <Name>ZERO_CHECK</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

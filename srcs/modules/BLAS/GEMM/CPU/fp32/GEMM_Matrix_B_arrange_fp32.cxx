@@ -11,7 +11,6 @@
 #include "GEMM_Matrix_B_arrange_fp32.h"
 
 
-
 void decx::gemm::CPUK::arrange_MatB_fp32_caller(float*                      srcB, 
                                                 float*                      dstB, 
                                                 const uint                  WsrcB,

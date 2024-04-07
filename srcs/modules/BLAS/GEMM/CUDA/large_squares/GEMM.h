@@ -42,21 +42,4 @@ namespace de
 }
 
 
-
-namespace decx {
-    namespace cuda {
-        _DECX_API_ void GEMM_AB_Raw_API(decx::_Matrix* A, decx::_Matrix* B, decx::_Matrix* dst, de::DH* handle);
-
-
-        _DECX_API_ void GEMM_ABC_Raw_API(decx::_Matrix* A, decx::_Matrix* B, decx::_Matrix* C, decx::_Matrix* dst, de::DH* handle);
-
-
-        _DECX_API_ void dev_GEMM_AB_Raw_API(decx::_GPU_Matrix* A, decx::_GPU_Matrix* B, decx::_GPU_Matrix* dst, const int flag, de::DH* handle);
-
-
-        _DECX_API_ void dev_GEMM_ABC_Raw_API(decx::_GPU_Matrix* A, decx::_GPU_Matrix* B, decx::_GPU_Matrix* C, decx::_GPU_Matrix* dst, const int flag, de::DH* handle);
-    }
-}
-
-
 #endif

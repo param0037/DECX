@@ -27,14 +27,12 @@
     <CudaCompile Include="..\srcs\modules\BLAS\basic_process\transpose\CUDA\transpose_kernels_dense.cu" />
     <CudaCompile Include="..\srcs\modules\classes\classes_util.cu" />
     <CudaCompile Include="..\srcs\modules\DSP\convolution\conv_utils.cu" />
-    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\sliding_window\Filter2.cu" />
-    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\sliding_window\Filter2D_multi_channel.cu" />
-    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\sliding_window\Filter2D_multi_channel_on_GPU.cu" />
-    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\sliding_window\Filter2_on_GPU.cu" />
-    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\sliding_window\fp16\Conv2_fp16_kernels.cu" />
-    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\sliding_window\fp16\Conv2_fp16_kernels_accurate.cu" />
-    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\sliding_window\fp32\Conv2_fp32_kernels.cu" />
-    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\sliding_window\uint8\Conv2_uint8_kernels.cu" />
+    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\sliding_window\cuda_filter2D_planner.cu" />
+    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\sliding_window\filter2D.cu" />
+    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\sliding_window\fp32\filter2D_fp32_caller.cu" />
+    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\sliding_window\fp32\filter2D_fp32_kernel.cu" />
+    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\sliding_window\uint8\filter2D_uint8_caller.cu" />
+    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\sliding_window\uint8\filter2D_uint8_kernel.cu" />
     <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\1D\CUDA_FFT1D_planner.cu" />
     <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\1D\FFT1D.cu" />
     <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\1D\FFT1D_cplxf32.cu" />
@@ -197,7 +195,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalLibraryDirectories>../bin/$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>cudart_static.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;DECX_core_CUDA.lib;DECX_core_CPU.lib;DECX_Async_Engine.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>cudart_static.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;DECX_core_CUDA.lib;DECX_core_CPU.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <CudaCompile>
       <CodeGeneration>compute_75,sm_75</CodeGeneration>

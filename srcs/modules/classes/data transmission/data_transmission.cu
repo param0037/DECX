@@ -275,21 +275,6 @@ de::Memcpy(de::Vector& __host, de::GPU_Vector& __device, const uint64_t start_sr
 }
 
 
-_DECX_API_ de::DH
-de::Memcpy_Async(de::Vector& __host, de::GPU_Vector& __device, const uint64_t start, const uint64_t cpy_len,
-    const int _memcpy_flag, de::DecxStream& S)
-{
-    de::DH handle;
-
-    decx::_Vector* _host_vec = dynamic_cast<decx::_Vector*>(&__host);
-    decx::_GPU_Vector* _device_vec = dynamic_cast<decx::_GPU_Vector*>(&__device);
-
-    //decx::bp::Memcpy_Vec<true>(_host_vec, _device_vec, start, cpy_len, _memcpy_flag, &handle, S.Get_ID());
-
-    return handle;
-}
-
-
 
 _DECX_API_ de::DH
 de::Memcpy(de::Matrix& __host, de::GPU_Matrix& __device, const de::Point2D start_src, const de::Point2D start_dst, const de::Point2D cpy_size,
@@ -313,28 +298,6 @@ de::Memcpy(de::Matrix& __host, de::GPU_Matrix& __device, const de::Point2D start
 
 
 _DECX_API_ de::DH
-de::Memcpy_Async(de::Matrix& __host, de::GPU_Matrix& __device, const de::Point2D start_src, const de::Point2D start_dst, const de::Point2D cpy_size,
-    const int _memcpy_flag, de::DecxStream& S)
-{
-    de::DH handle;
-
-    if (!decx::cuda::_is_CUDA_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CUDA_not_init,
-            CUDA_NOT_INIT);
-        return handle;
-    }
-
-    decx::_Matrix* _host_mat = dynamic_cast<decx::_Matrix*>(&__host);
-    decx::_GPU_Matrix* _device_mat = dynamic_cast<decx::_GPU_Matrix*>(&__device);
-
-    decx::bp::Memcpy_Mat<true>(_host_mat, _device_mat, start_src, start_dst, cpy_size, _memcpy_flag, &handle, S.Get_ID());
-
-    return handle;
-}
-
-
-
-_DECX_API_ de::DH
 de::Memcpy(de::Tensor& __host, de::GPU_Tensor& __device, const de::Point3D start_src, const de::Point3D start_dst, 
     const de::Point3D cpy_size, const int _memcpy_flag)
 {
@@ -347,23 +310,6 @@ de::Memcpy(de::Tensor& __host, de::GPU_Tensor& __device, const de::Point3D start
 
     return handle;
 }
-
-
-_DECX_API_ de::DH
-de::Memcpy_Async(de::Tensor& __host, de::GPU_Tensor& __device, const de::Point3D start, const de::Point3D cpy_size,
-    const int _memcpy_flag, de::DecxStream& S)
-{
-    de::DH handle;
-
-    decx::_Tensor* _host_tensor = dynamic_cast<decx::_Tensor*>(&__host);
-    decx::_GPU_Tensor* _device_tensor = dynamic_cast<decx::_GPU_Tensor*>(&__device);
-
-    //decx::bp::Memcpy_Tens<true>(_host_tensor, _device_tensor, start, cpy_size, _memcpy_flag, &handle, S.Get_ID());
-
-    return handle;
-}
-
-
 
 
 template void decx::bp::Memcpy_Vec<true>(decx::_Vector*, decx::_GPU_Vector*, const uint64_t, const uint64_t, const uint64_t, const int, de::DH*, const uint32_t);

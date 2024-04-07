@@ -54,6 +54,10 @@ namespace decx
             _THREAD_FUNCTION_
             void GEMM_ABC_fp32_flexWH(const float* A, const float* B, const float* C, float* dst, const uint pitchA, const uint pitchB, const uint pitchdst,
                 const uint pitchC, const uint _linear, const uint2 proc_dims);
+
+
+            /*_THREAD_FUNCTION_
+                void */
         }
     }
 }

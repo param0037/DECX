@@ -13,14 +13,13 @@ if "%action%"=="" (
     echo "         m Build the project(s), specify which project to be built"
     echo "         all Clean, configure or build all the projects"
     echo "project_names : "
-    echo "         Async, core_CPU(CUDA), BLAS_CPU(CUDA), DSP_CPU(CUDA), CV_CPU(CUDA), NN_CPU)CUDA)"
+    echo "         core_CPU(CUDA), BLAS_CPU(CUDA), DSP_CPU(CUDA), CV_CPU(CUDA), NN_CPU)CUDA)"
 )
 
 if %action%==c (
     if %target_name% neq all (
         call clear.cmd %target_name%
     ) else if %target_name%==all (
-        call clear.cmd Async
         call clear.cmd core_CPU
         call clear.cmd core_CUDA
         call clear.cmd BLAS_CPU
@@ -38,7 +37,6 @@ if %action%==c (
     if %target_name% neq all (
         call config.cmd %target_name%
     ) else if %target_name%==all (
-        call config.cmd Async
         call config.cmd core_CPU
         call config.cmd core_CUDA
         call config.cmd BLAS_CPU
@@ -56,7 +54,6 @@ if %action%==c (
     if %target_name% neq all (
         call make.cmd %target_name%
     ) else if %target_name%==all (
-        call make.cmd Async
         call make.cmd core_CPU
         call make.cmd core_CUDA
         call make.cmd BLAS_CPU

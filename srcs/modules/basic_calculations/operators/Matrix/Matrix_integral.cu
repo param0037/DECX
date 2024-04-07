@@ -25,15 +25,15 @@ void decx::scan::Integral2D(decx::_Matrix* src, decx::_Matrix* dst, const int sc
         switch (src->Type())
         {
         case de::_DATA_TYPES_FLAGS_::_FP32_:
-            _SELECTED_CALL_(decx::calc::cuda_matrix_integral_fp32<false>, src, dst, scan_calc_mode);
+            decx::calc::cuda_matrix_integral_fp32<false>(src, dst, scan_calc_mode);
             break;
 
         case de::_DATA_TYPES_FLAGS_::_FP16_:
-            _SELECTED_CALL_(decx::calc::cuda_matrix_integral_fp16<false>, src, dst, scan_calc_mode);
+            decx::calc::cuda_matrix_integral_fp16<false>(src, dst, scan_calc_mode);
             break;
 
         case de::_DATA_TYPES_FLAGS_::_UINT8_:
-            _SELECTED_CALL_(decx::calc::cuda_matrix_integral_uint8_i32<false>, src, dst, scan_calc_mode);
+            decx::calc::cuda_matrix_integral_uint8_i32<false>(src, dst, scan_calc_mode);
             break;
 
         default:
@@ -45,15 +45,15 @@ void decx::scan::Integral2D(decx::_Matrix* src, decx::_Matrix* dst, const int sc
         switch (src->Type())
         {
         case de::_DATA_TYPES_FLAGS_::_FP32_:
-            _SELECTED_CALL_(decx::calc::cuda_matrix_integral_v_fp32, src, dst, scan_calc_mode);
+            decx::calc::cuda_matrix_integral_v_fp32(src, dst, scan_calc_mode);
             break;
 
         case de::_DATA_TYPES_FLAGS_::_FP16_:
-            _SELECTED_CALL_(decx::calc::cuda_matrix_integral_v_fp16, src, dst, scan_calc_mode);
+            decx::calc::cuda_matrix_integral_v_fp16(src, dst, scan_calc_mode);
             break;
 
         case de::_DATA_TYPES_FLAGS_::_UINT8_:
-            _SELECTED_CALL_(decx::calc::cuda_matrix_integral_v_uint8_i32, src, dst, scan_calc_mode);
+            decx::calc::cuda_matrix_integral_v_uint8_i32(src, dst, scan_calc_mode);
             break;
 
         default:
@@ -65,15 +65,15 @@ void decx::scan::Integral2D(decx::_Matrix* src, decx::_Matrix* dst, const int sc
         switch (src->Type())
         {
         case de::_DATA_TYPES_FLAGS_::_FP32_:
-            _SELECTED_CALL_(decx::calc::cuda_matrix_integral_fp32<true>, src, dst, scan_calc_mode);
+            decx::calc::cuda_matrix_integral_fp32<true>(src, dst, scan_calc_mode);
             break;
 
         case de::_DATA_TYPES_FLAGS_::_FP16_:
-            _SELECTED_CALL_(decx::calc::cuda_matrix_integral_fp16<true>, src, dst, scan_calc_mode);
+            decx::calc::cuda_matrix_integral_fp16<true>(src, dst, scan_calc_mode);
             break;
 
         case de::_DATA_TYPES_FLAGS_::_UINT8_:
-            _SELECTED_CALL_(decx::calc::cuda_matrix_integral_uint8_i32<true>, src, dst, scan_calc_mode);
+            decx::calc::cuda_matrix_integral_uint8_i32<true>(src, dst, scan_calc_mode);
             break;
 
         default:
@@ -91,15 +91,15 @@ void decx::scan::dev_Integral2D(decx::_GPU_Matrix* src, decx::_GPU_Matrix* dst, 
         switch (src->Type())
         {
         case de::_DATA_TYPES_FLAGS_::_FP32_:
-            _SELECTED_CALL_(decx::calc::cuda_matrix_dev_integral_fp32<false>, src, dst, scan_calc_mode);
+            decx::calc::cuda_matrix_dev_integral_fp32<false>(src, dst, scan_calc_mode);
             break;
 
         case de::_DATA_TYPES_FLAGS_::_FP16_:
-            _SELECTED_CALL_(decx::calc::cuda_matrix_dev_integral_fp16<false>, src, dst, scan_calc_mode);
+            decx::calc::cuda_matrix_dev_integral_fp16<false>(src, dst, scan_calc_mode);
             break;
 
         case de::_DATA_TYPES_FLAGS_::_UINT8_:
-            _SELECTED_CALL_(decx::calc::cuda_matrix_dev_integral_uint8_i32<false>, src, dst, scan_calc_mode);
+            decx::calc::cuda_matrix_dev_integral_uint8_i32<false>(src, dst, scan_calc_mode);
             break;
 
         default:
@@ -111,15 +111,15 @@ void decx::scan::dev_Integral2D(decx::_GPU_Matrix* src, decx::_GPU_Matrix* dst, 
         switch (src->Type())
         {
         case de::_DATA_TYPES_FLAGS_::_FP32_:
-            _SELECTED_CALL_(decx::calc::cuda_matrix_dev_integral_v_fp32, src, dst, scan_calc_mode);
+            decx::calc::cuda_matrix_dev_integral_v_fp32(src, dst, scan_calc_mode);
             break;
 
         case de::_DATA_TYPES_FLAGS_::_FP16_:
-            _SELECTED_CALL_(decx::calc::cuda_matrix_dev_integral_v_fp16, src, dst, scan_calc_mode);
+            decx::calc::cuda_matrix_dev_integral_v_fp16(src, dst, scan_calc_mode);
             break;
 
         case de::_DATA_TYPES_FLAGS_::_UINT8_:
-            _SELECTED_CALL_(decx::calc::cuda_matrix_dev_integral_v_uint8_i32, src, dst, scan_calc_mode);
+            decx::calc::cuda_matrix_dev_integral_v_uint8_i32(src, dst, scan_calc_mode);
             break;
 
         default:
@@ -131,15 +131,15 @@ void decx::scan::dev_Integral2D(decx::_GPU_Matrix* src, decx::_GPU_Matrix* dst, 
         switch (src->Type())
         {
         case de::_DATA_TYPES_FLAGS_::_FP32_:
-            _SELECTED_CALL_(decx::calc::cuda_matrix_dev_integral_fp32<true>, src, dst, scan_calc_mode);
+            decx::calc::cuda_matrix_dev_integral_fp32<true>(src, dst, scan_calc_mode);
             break;
 
         case de::_DATA_TYPES_FLAGS_::_FP16_:
-            _SELECTED_CALL_(decx::calc::cuda_matrix_dev_integral_fp16<true>, src, dst, scan_calc_mode);
+            decx::calc::cuda_matrix_dev_integral_fp16<true>(src, dst, scan_calc_mode);
             break;
 
         case de::_DATA_TYPES_FLAGS_::_UINT8_:
-            _SELECTED_CALL_(decx::calc::cuda_matrix_dev_integral_uint8_i32<true>, src, dst, scan_calc_mode);
+            decx::calc::cuda_matrix_dev_integral_uint8_i32<true>(src, dst, scan_calc_mode);
             break;
 
         default:
@@ -187,42 +187,6 @@ de::DH de::cuda::Integral(de::GPU_Matrix& src, de::GPU_Matrix& dst, const int sc
 }
 
 
-_DECX_API_
-de::DH de::cuda::Integral_Async(de::Matrix& src, de::Matrix& dst, const int scan2D_mode, const int scan_calc_mode, de::DecxStream& S)
-{
-    de::DH handle;
-
-    if (!decx::cuda::_is_CUDA_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
-        return handle;
-    }
-
-    decx::_Matrix* _src = dynamic_cast<decx::_Matrix*>(&src);
-    decx::_Matrix* _dst = dynamic_cast<decx::_Matrix*>(&dst);
-
-    decx::scan::Integral2D<true>(_src, _dst, scan2D_mode, scan_calc_mode, &handle, S.Get_ID());
-
-    return handle;
-}
-
-
-_DECX_API_
-de::DH de::cuda::Integral_Async(de::GPU_Matrix& src, de::GPU_Matrix& dst, const int scan2D_mode, const int scan_calc_mode, de::DecxStream& S)
-{
-    de::DH handle;
-
-    if (!decx::cuda::_is_CUDA_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
-        return handle;
-    }
-
-    decx::_GPU_Matrix* _src = dynamic_cast<decx::_GPU_Matrix*>(&src);
-    decx::_GPU_Matrix* _dst = dynamic_cast<decx::_GPU_Matrix*>(&dst);
-
-    decx::scan::dev_Integral2D<true>(_src, _dst, scan2D_mode, scan_calc_mode, &handle, S.Get_ID());
-
-    return handle;
-}
 
 #ifdef _SELECTED_CALL_
 #undef _SELECTED_CALL_

@@ -37,12 +37,6 @@
     <Filter Include="源文件\GEMM\fp32">
       <UniqueIdentifier>{03d4ccee-f1cd-4259-a016-dee863129084}</UniqueIdentifier>
     </Filter>
-    <Filter Include="源文件\GEMM\fp64">
-      <UniqueIdentifier>{9c945054-3283-471e-a61b-cbfee1da5a05}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\GEMM\cpl32">
-      <UniqueIdentifier>{ed2aa8cd-e4f6-4275-93d6-d31bcc89e3f8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="源文件\GEMM\64b">
       <UniqueIdentifier>{24410503-1aff-4bfa-8619-2b0255e7bab7}</UniqueIdentifier>
     </Filter>

@@ -138,12 +138,20 @@ namespace utils
         __device__ __inline__ float4
         __fmaf_v4_v1_v4(const float4 a, const float b, const float4 c)
         {
-            float4 res;
-            res.x = __fmaf_rn(a.x, b, c.x);
-            res.y = __fmaf_rn(a.y, b, c.y);
-            res.z = __fmaf_rn(a.z, b, c.z);
-            res.w = __fmaf_rn(a.w, b, c.w);
-            return res;
+            return { __fmaf_rn(a.x, b, c.x),
+                    __fmaf_rn(a.y, b, c.y),
+                    __fmaf_rn(a.z, b, c.z),
+                    __fmaf_rn(a.w, b, c.w) };
+        }
+
+
+        __device__ __inline__ float4
+        __fmaf_v4_v1_v4_u8(const uchar4 a, const float b, const float4 c)
+        {
+            return { __fmaf_rn(__int2float_rn(a.x), b, c.x),
+                    __fmaf_rn(__int2float_rn(a.y), b, c.y),
+                    __fmaf_rn(__int2float_rn(a.z), b, c.z),
+                    __fmaf_rn(__int2float_rn(a.w), b, c.w) };
         }
 
 

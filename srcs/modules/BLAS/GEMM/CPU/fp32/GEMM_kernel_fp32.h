@@ -58,7 +58,6 @@ namespace decx
 }
 
 
-
 _THREAD_CALL_
 static void decx::gemm::CPUK::GEMM_AB_fp32_Loop_fixed(const float* A, const float* B, float* dst, decx::_C_MM_* __restrict _MMC)
 {

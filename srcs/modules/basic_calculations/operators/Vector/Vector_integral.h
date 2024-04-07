@@ -14,8 +14,6 @@
 
 #include "../../../classes/Vector.h"
 #include "../../../classes/GPU_Vector.h"
-#include "../../../../Async Engine/DecxStream/DecxStream.h"
-#include "../../../../Async Engine/Async_task_threadpool/Async_Engine.h"
 
 #ifdef _DECX_CUDA_PARTS_
 #include "../../scan/CUDA/scan.cuh"
@@ -260,12 +258,6 @@ namespace de
 
 
         _DECX_API_ de::DH Integral(de::GPU_Vector& src, de::GPU_Vector& dst, const int scan_mode);
-
-
-        _DECX_API_ de::DH Integral_Async(de::Vector& src, de::Vector& dst, const int scan_mode, de::DecxStream& S);
-
-
-        _DECX_API_ de::DH Integral_Async(de::GPU_Vector& src, de::GPU_Vector& dst, const int scan_mode, de::DecxStream& S);
     }
 }
 
