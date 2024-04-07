@@ -1,3 +1,0 @@
-E:/DECX_world/test python C API/build/CMakeFiles/TestCPy.dir
-E:/DECX_world/test python C API/build/CMakeFiles/ALL_BUILD.dir
-E:/DECX_world/test python C API/build/CMakeFiles/ZERO_CHECK.dir
