@@ -1,3 +1,0 @@
-E:/DECX_world/Python/build/CMakeFiles/decx.dir
-E:/DECX_world/Python/build/CMakeFiles/ALL_BUILD.dir
-E:/DECX_world/Python/build/CMakeFiles/ZERO_CHECK.dir

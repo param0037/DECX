@@ -27,12 +27,12 @@ namespace decx
     * @param WsrcB : the pitch of matrix B (in float)
     * @param WtmpB : the pitch of chache B (in float)
     */
-    static void _sort_ST_MatB_fp64(double* __restrict   srcB, 
-                            double* __restrict   dstB,
-                            const uint          eff_L_len,
-                            const uint          lane_num,
-                            const uint          WsrcB,
-                            const uint          WtmpB);
+    static void _sort_ST_MatB_fp64(const double* __restrict srcB, 
+                            double* __restrict dstB,
+                            const uint32_t eff_L_len,
+                            const uint32_t lane_num,
+                            const uint32_t WsrcB,
+                            const uint32_t WtmpB);
 
 
     _THREAD_FUNCTION_
@@ -42,12 +42,12 @@ namespace decx
     * @param WsrcB : the pitch of matrix B (in float)
     * @param WtmpB : the pitch of chache B (in float)
     */
-    static void _sort_ST_MatB_fp64_L8(double* __restrict   srcB, 
-                               double* __restrict   dstB,
-                               const uint          eff_L_len,
-                               const uint          lane_num,
-                               const uint          WsrcB,
-                               const uint          WtmpB);
+    static void _sort_ST_MatB_fp64_L8(const double* __restrict srcB, 
+                               double* __restrict dstB,
+                               const uint32_t eff_L_len,
+                               const uint32_t lane_num,
+                               const uint32_t WsrcB,
+                               const uint32_t WtmpB);
 
 
     /**
@@ -56,25 +56,21 @@ namespace decx
     * @param WsrcB : the pitch of matrix B (in float)
     * @param WtmpB : the pitch of chache B (in float)
     */
-    void arrange_MatB_fp64_caller(double*                      srcB, 
-                                  double*                      dstB, 
-                                  const uint                  WsrcB,
-                                  const uint                  WtmpB,
-                                  const uint                  _eff_L_len,
-                                  const bool                  is_L8,
-                                  decx::utils::_thr_2D*       t2D,
-                                  decx::utils::frag_manager*  f_mgr);
+    void arrange_MatB_fp64_caller(const double* srcB, double* dstB, 
+                                  const uint32_t WsrcB, const uint32_t WtmpB,
+                                  const uint32_t _eff_L_len, const bool is_L8,
+                                  decx::utils::_thr_2D* t2D, decx::utils::frag_manager* f_mgr);
 }
 
 
 
 _THREAD_FUNCTION_
-static void decx::_sort_ST_MatB_fp64(double* __restrict     srcB, 
+static void decx::_sort_ST_MatB_fp64(const double* __restrict     srcB, 
                               double* __restrict     dstB,
-                              const uint             eff_L_len,
-                              const uint             lane_num,
-                              const uint             WsrcB,
-                              const uint             WtmpB)
+                              const uint32_t             eff_L_len,
+                              const uint32_t             lane_num,
+                              const uint32_t             WsrcB,
+                              const uint32_t             WtmpB)
 {
     size_t dex_src = 0, dex_dst = 0, tmp_dex_src = 0, tmp_dex_dst = 0;
 
@@ -96,12 +92,12 @@ static void decx::_sort_ST_MatB_fp64(double* __restrict     srcB,
 
 
 _THREAD_FUNCTION_
-static void decx::_sort_ST_MatB_fp64_L8(double* __restrict     srcB, 
+static void decx::_sort_ST_MatB_fp64_L8(const double* __restrict     srcB, 
                                  double* __restrict     dstB,
-                                 const uint            eff_L_len,
-                                 const uint            lane_num,
-                                 const uint            WsrcB,
-                                 const uint            WtmpB)
+                                 const uint32_t            eff_L_len,
+                                 const uint32_t            lane_num,
+                                 const uint32_t            WsrcB,
+                                 const uint32_t            WtmpB)
 {
     size_t dex_src = 0, dex_dst = 0, tmp_dex_src = 0, tmp_dex_dst = 0;
 

@@ -29,3 +29,4 @@ DECX_NN_CPU/build/
 DECX_NN_CPU/x64/
 DECX_NN_CUDA/build/
 DECX_NN_CUDA/x64/
+Python/build/
