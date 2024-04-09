@@ -48,7 +48,7 @@ static void decx::dsp::filter2D_fp32(decx::_GPU_Matrix* src,
     }
 
     decx::dsp::cuda_Filter2D_planner<float> _planner;
-    _planner.plan(&src->get_layout(), &kernel->get_layout(), _extend_method, S, handle);
+    _planner.plan(&src->get_layout(), &kernel->get_layout(), _extend_method, de::_FP32_, S, handle);
     Check_Runtime_Error(handle);
 
     const uint2 _req_dst_dims = _planner.dst_dims_req();
@@ -89,7 +89,7 @@ static void decx::dsp::filter2D_u8(decx::_GPU_Matrix* src,
     }
 
     decx::dsp::cuda_Filter2D_planner<uint8_t> _planner;
-    _planner.plan(&src->get_layout(), &kernel->get_layout(), _extend_method, S, handle);
+    _planner.plan(&src->get_layout(), &kernel->get_layout(), _extend_method, _output_type, S, handle);
     Check_Runtime_Error(handle);
 
     const uint2 _req_dst_dims = _planner.dst_dims_req();
@@ -122,7 +122,7 @@ _DECX_API_ de::DH de::dsp::cuda::Filter2D(de::GPU_Matrix& src, de::GPU_Matrix& k
         break;
 
     case de::_DATA_TYPES_FLAGS_::_UINT8_:
-        decx::dsp::filter2D_u8(_src, _kernel, _dst, _extend_method, de::_FP32_, &handle);
+        decx::dsp::filter2D_u8(_src, _kernel, _dst, _extend_method, de::_UINT8_, &handle);
         break;
 
     default:

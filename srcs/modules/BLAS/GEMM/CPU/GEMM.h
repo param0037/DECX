@@ -15,7 +15,6 @@
 #include "../../../classes/Matrix.h"
 
 
-
 namespace de
 {
     namespace cpu {

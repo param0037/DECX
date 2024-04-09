@@ -27,16 +27,15 @@ namespace decx
 {
     namespace conv 
     {
-        template <bool _print>
         static void _conv2_fp64_SK_NB(decx::_MatrixArray* src, decx::_Matrix* kernel, decx::_MatrixArray* dst, de::DH* handle);
 
-        template <bool _print>
+
         static void _conv2_fp64_SK_BC(decx::_MatrixArray* src, decx::_Matrix* kernel, decx::_MatrixArray* dst, de::DH* handle);
     }
 }
 
 
-template <bool _print>
+
 static void decx::conv::_conv2_fp64_SK_NB(decx::_MatrixArray* src, decx::_Matrix* kernel, decx::_MatrixArray* dst, de::DH* handle)
 {
     uint2 tmp_src_dims = make_uint2(decx::utils::ceil<uint>(src->Width() + kernel->Width() - 1, _MATRIX_ALIGN_8B_) * _MATRIX_ALIGN_8B_,
@@ -69,7 +68,7 @@ static void decx::conv::_conv2_fp64_SK_NB(decx::_MatrixArray* src, decx::_Matrix
 }
 
 
-template <bool _print>
+
 static void decx::conv::_conv2_fp64_SK_BC(decx::_MatrixArray* src, decx::_Matrix* kernel, decx::_MatrixArray* dst, de::DH* handle)
 {
     decx::PtrInfo<double> tmp_ker;

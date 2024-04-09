@@ -32,24 +32,4 @@ namespace de
 
 
 
-
-namespace decx
-{
-    namespace cpu
-    {
-        _DECX_API_ void Filter2D_Raw_API(decx::_Matrix* _src, decx::_Matrix* _kernel, decx::_Matrix* _dst,
-            const int flag, const de::_DATA_TYPES_FLAGS_ _output_type, de::DH* handle);
-
-
-        _DECX_API_ void Filter2D_single_channel_Raw_API(decx::_MatrixArray* _src, decx::_Matrix* _kernel, decx::_MatrixArray* _dst,
-            const int flag, de::DH* handle);
-
-
-        _DECX_API_ void Filter2D_multi_channel_Raw_API(decx::_MatrixArray* _src, decx::_MatrixArray* _kernel, decx::_MatrixArray* _dst,
-            const int flag, de::DH* handle);
-    }
-}
-
-
-
 #endif

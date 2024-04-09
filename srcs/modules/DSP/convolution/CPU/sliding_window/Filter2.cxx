@@ -133,23 +133,21 @@ namespace decx
 {
     namespace conv 
     {
-        template <bool _print>
         void Conv2_single_channel_fp32(decx::_MatrixArray* _src, decx::_Matrix* _kernel, decx::_MatrixArray* _dst, const int flag, de::DH* handle);
 
-        template <bool _print>
+
         void Conv2_multi_channel_fp32(decx::_MatrixArray* _src, decx::_MatrixArray* _kernel, decx::_MatrixArray* _dst, const int flag, de::DH* handle);
 
-        template <bool _print>
+
         void Conv2_single_channel_fp64(decx::_MatrixArray* _src, decx::_Matrix* _kernel, decx::_MatrixArray* _dst, const int flag, de::DH* handle);
 
-        template <bool _print>
+
         void Conv2_multi_channel_fp64(decx::_MatrixArray* _src, decx::_MatrixArray* _kernel, decx::_MatrixArray* _dst, const int flag, de::DH* handle);
     }
 }
 
 
 
-template <bool _print>
 void decx::conv::Conv2_single_channel_fp32(decx::_MatrixArray* _src, decx::_Matrix* _kernel, decx::_MatrixArray* _dst, const int flag, de::DH *handle)
 {
     if (!decx::cpu::_is_CPU_init()) {
@@ -162,12 +160,12 @@ void decx::conv::Conv2_single_channel_fp32(decx::_MatrixArray* _src, decx::_Matr
     {
     case de::extend_label::_EXTEND_NONE_:
         _dst->re_construct(_src->Type(), _src->Width() - _kernel->Width() + 1, _src->Height() - _kernel->Height() + 1, _src->Array_num());
-        decx::conv::_conv2_fp32_SK_NB<_print>(_src, _kernel, _dst, handle);
+        decx::conv::_conv2_fp32_SK_NB(_src, _kernel, _dst, handle);
         break;
 
     case de::extend_label::_EXTEND_CONSTANT_:
         _dst->re_construct(_src->Type(), _src->Width(), _src->Height(), _src->Array_num());
-        decx::conv::_conv2_fp32_SK_BC<_print>(_src, _kernel, _dst, handle);
+        decx::conv::_conv2_fp32_SK_BC(_src, _kernel, _dst, handle);
         break;
 
     default:
@@ -177,19 +175,18 @@ void decx::conv::Conv2_single_channel_fp32(decx::_MatrixArray* _src, decx::_Matr
 
 
 
-template <bool _print>
 void decx::conv::Conv2_multi_channel_fp32(decx::_MatrixArray* _src, decx::_MatrixArray* _kernel, decx::_MatrixArray* _dst, const int flag, de::DH* handle)
 {
     switch (flag)
     {
     case de::extend_label::_EXTEND_NONE_:
         _dst->re_construct(_src->Type(), _src->Width() - _kernel->Width() + 1, _src->Height() - _kernel->Height() + 1, _src->Array_num());
-        decx::conv::_conv2_fp32_MK_NB<_print>(_src, _kernel, _dst, handle);
+        decx::conv::_conv2_fp32_MK_NB(_src, _kernel, _dst, handle);
         break;
 
     case de::extend_label::_EXTEND_CONSTANT_:
         _dst->re_construct(_src->Type(), _src->Width(), _src->Height(), _src->Array_num());
-        decx::conv::_conv2_fp32_MK_BC<_print>(_src, _kernel, _dst, handle);
+        decx::conv::_conv2_fp32_MK_BC(_src, _kernel, _dst, handle);
         break;
 
     default:
@@ -198,7 +195,7 @@ void decx::conv::Conv2_multi_channel_fp32(decx::_MatrixArray* _src, decx::_Matri
 }
 
 
-template <bool _print>
+
 void decx::conv::Conv2_single_channel_fp64(decx::_MatrixArray* _src, decx::_Matrix* _kernel, decx::_MatrixArray* _dst, const int flag, de::DH* handle)
 {
     if (!decx::cpu::_is_CPU_init()) {
@@ -211,12 +208,12 @@ void decx::conv::Conv2_single_channel_fp64(decx::_MatrixArray* _src, decx::_Matr
     {
     case de::extend_label::_EXTEND_NONE_:
         _dst->re_construct(_src->Type(), _src->Width() - _kernel->Width() + 1, _src->Height() - _kernel->Height() + 1, _src->Array_num());
-        decx::conv::_conv2_fp64_SK_NB<_print>(_src, _kernel, _dst, handle);
+        decx::conv::_conv2_fp64_SK_NB(_src, _kernel, _dst, handle);
         break;
 
     case de::extend_label::_EXTEND_CONSTANT_:
         _dst->re_construct(_src->Type(), _src->Width(), _src->Height(), _src->Array_num());
-        decx::conv::_conv2_fp64_SK_BC<_print>(_src, _kernel, _dst, handle);
+        decx::conv::_conv2_fp64_SK_BC(_src, _kernel, _dst, handle);
         break;
 
     default:
@@ -225,7 +222,7 @@ void decx::conv::Conv2_single_channel_fp64(decx::_MatrixArray* _src, decx::_Matr
 }
 
 
-template <bool _print>
+
 void decx::conv::Conv2_multi_channel_fp64(decx::_MatrixArray* _src, decx::_MatrixArray* _kernel, decx::_MatrixArray* _dst, const int flag, de::DH* handle)
 {
     if (!decx::cpu::_is_CPU_init()) {
@@ -238,12 +235,12 @@ void decx::conv::Conv2_multi_channel_fp64(decx::_MatrixArray* _src, decx::_Matri
     {
     case de::extend_label::_EXTEND_NONE_:
         _dst->re_construct(_src->Type(), _src->Width() - _kernel->Width() + 1, _src->Height() - _kernel->Height() + 1, _src->Array_num());
-        decx::conv::_conv2_fp64_MK_NB<_print>(_src, _kernel, _dst, handle);
+        decx::conv::_conv2_fp64_MK_NB(_src, _kernel, _dst, handle);
         break;
 
     case de::extend_label::_EXTEND_CONSTANT_:
         _dst->re_construct(_src->Type(), _src->Width(), _src->Height(), _src->Array_num());
-        decx::conv::_conv2_fp64_MK_BC<_print>(_src, _kernel, _dst, handle);
+        decx::conv::_conv2_fp64_MK_BC(_src, _kernel, _dst, handle);
         break;
 
     default:
@@ -292,35 +289,6 @@ de::cpu::Filter2D(de::Matrix& src, de::Matrix& kernel, de::Matrix& dst, const in
 
 
 
-_DECX_API_ void
-decx::cpu::Filter2D_Raw_API(decx::_Matrix* _src, decx::_Matrix* _kernel, decx::_Matrix* _dst, const int flag, const de::_DATA_TYPES_FLAGS_ _output_type, de::DH* handle)
-{
-    if (!decx::cpu::_is_CPU_init()) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_CPU_not_init,
-            CPU_NOT_INIT);
-        return;
-    }
-
-    switch (_src->Type())
-    {
-    case de::_DATA_TYPES_FLAGS_::_FP32_:
-        decx::conv::Filter2D_fp32<false>(_src, _kernel, _dst, flag, handle);
-        break;
-
-    case de::_DATA_TYPES_FLAGS_::_FP64_:
-        decx::conv::Filter2D_fp64<false>(_src, _kernel, _dst, flag, handle);
-        break;
-
-    case de::_DATA_TYPES_FLAGS_::_UINT8_:
-        decx::conv::Filter2D_uint8<false>(_src, _kernel, _dst, flag, handle, _output_type);
-        break;
-    default:
-        break;
-    }
-}
-
-
-
 _DECX_API_ de::DH 
 de::cpu::Filter2D_single_channel(de::MatrixArray& src, de::Matrix& kernel, de::MatrixArray& dst, const int flag)
 {
@@ -339,11 +307,11 @@ de::cpu::Filter2D_single_channel(de::MatrixArray& src, de::Matrix& kernel, de::M
     switch (_src->Type())
     {
     case de::_DATA_TYPES_FLAGS_::_FP32_:
-        decx::conv::Conv2_single_channel_fp32<true>(_src, _kernel, _dst, flag, &handle);
+        decx::conv::Conv2_single_channel_fp32(_src, _kernel, _dst, flag, &handle);
         break;
 
     case de::_DATA_TYPES_FLAGS_::_FP64_:
-        decx::conv::Conv2_single_channel_fp64<true>(_src, _kernel, _dst, flag, &handle);
+        decx::conv::Conv2_single_channel_fp64(_src, _kernel, _dst, flag, &handle);
         break;
     default:
         break;
@@ -353,30 +321,6 @@ de::cpu::Filter2D_single_channel(de::MatrixArray& src, de::Matrix& kernel, de::M
     return handle;
 }
 
-
-
-_DECX_API_ void
-decx::cpu::Filter2D_single_channel_Raw_API(decx::_MatrixArray* _src, decx::_Matrix* _kernel, decx::_MatrixArray* _dst, const int flag, de::DH* handle)
-{
-    if (!decx::cpu::_is_CPU_init()) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_CPU_not_init,
-            CPU_NOT_INIT);
-        return;
-    }
-
-    switch (_src->Type())
-    {
-    case de::_DATA_TYPES_FLAGS_::_FP32_:
-        decx::conv::Conv2_single_channel_fp32<false>(_src, _kernel, _dst, flag, handle);
-        break;
-
-    case de::_DATA_TYPES_FLAGS_::_FP64_:
-        decx::conv::Conv2_single_channel_fp64<false>(_src, _kernel, _dst, flag, handle);
-        break;
-    default:
-        break;
-    }
-}
 
 
 
@@ -398,11 +342,11 @@ de::cpu::Filter2D_multi_channel(de::MatrixArray& src, de::MatrixArray& kernel, d
     switch (_src->Type())
     {
     case de::_DATA_TYPES_FLAGS_::_FP32_:
-        decx::conv::Conv2_multi_channel_fp32<true>(_src, _kernel, _dst, flag, &handle);
+        decx::conv::Conv2_multi_channel_fp32(_src, _kernel, _dst, flag, &handle);
         break;
 
     case de::_DATA_TYPES_FLAGS_::_FP64_:
-        decx::conv::Conv2_multi_channel_fp64<true>(_src, _kernel, _dst, flag, &handle);
+        decx::conv::Conv2_multi_channel_fp64(_src, _kernel, _dst, flag, &handle);
         break;
     default:
         break;
@@ -410,29 +354,4 @@ de::cpu::Filter2D_multi_channel(de::MatrixArray& src, de::MatrixArray& kernel, d
 
     decx::err::Success(&handle);
     return handle;
-}
-
-
-
-_DECX_API_ void
-decx::cpu::Filter2D_multi_channel_Raw_API(decx::_MatrixArray* _src, decx::_MatrixArray* _kernel, decx::_MatrixArray* _dst, const int flag, de::DH* handle)
-{
-    if (!decx::cpu::_is_CPU_init()) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_CPU_not_init,
-            CPU_NOT_INIT);
-        return;
-    }
-
-    switch (_src->Type())
-    {
-    case de::_DATA_TYPES_FLAGS_::_FP32_:
-        decx::conv::Conv2_multi_channel_fp32<false>(_src, _kernel, _dst, flag, handle);
-        break;
-
-    case de::_DATA_TYPES_FLAGS_::_FP64_:
-        decx::conv::Conv2_multi_channel_fp64<false>(_src, _kernel, _dst, flag, handle);
-        break;
-    default:
-        break;
-    }
 }

@@ -23,9 +23,14 @@
 
 namespace decx
 {
-    namespace dsp {
+    namespace dsp 
+    {
         template <typename _data_type>
         class cuda_Filter2D_planner;
+
+
+        typedef void(*_cu_F2_U8_Kcaller) (const decx::dsp::cuda_Filter2D_planner<uint8_t>*, const double*,
+            const void*, void*, const uint32_t pitchdst_v1, decx::cuda_stream* S);
     }
 }
 
@@ -45,12 +50,24 @@ private:
 
     dim3 _block, _grid;
 
+    de::_DATA_TYPES_FLAGS_ _output_type;
+
+public:
+    template <uint8_t _ext_w>
+    static void _cu_Filter2D_NB_u8_x_caller(const decx::dsp::cuda_Filter2D_planner<uint8_t>* _fake_this, const double* src, 
+        const void* kernel, void* dst, const uint32_t pitchdst_v1, decx::cuda_stream* S);
+
+    template <uint8_t _ext_w>
+    static void _cu_Filter2D_BC_u8_x_caller(const decx::dsp::cuda_Filter2D_planner<uint8_t>* _fake_this, const double* src, 
+        const void* kernel, void* dst, const uint32_t pitchdst_v1, decx::cuda_stream* S);
+
+
 public:
     cuda_Filter2D_planner() {}
 
 
     void _CRSR_ plan(const decx::_matrix_layout* src_layout, const decx::_matrix_layout* _kernel_layout,
-        const de::extend_label _method, decx::cuda_stream* S, de::DH* handle);
+        const de::extend_label _method, const de::_DATA_TYPES_FLAGS_ output_type, decx::cuda_stream* S, de::DH* handle);
 
 
     uint2 dst_dims_req() const;

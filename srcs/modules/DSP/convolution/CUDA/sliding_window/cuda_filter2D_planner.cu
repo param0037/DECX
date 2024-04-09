@@ -15,6 +15,7 @@ template <typename _data_type> _CRSR_ void
 decx::dsp::cuda_Filter2D_planner<_data_type>::plan(const decx::_matrix_layout* src_layout, 
                                                    const decx::_matrix_layout* kernel_layout,
                                                    const de::extend_label _method, 
+                                                   const de::_DATA_TYPES_FLAGS_ output_type,
                                                    decx::cuda_stream* S,
                                                    de::DH* handle)
 {
@@ -22,6 +23,8 @@ decx::dsp::cuda_Filter2D_planner<_data_type>::plan(const decx::_matrix_layout* s
     this->_kernel_layout = kernel_layout;
 
     this->_conv_border_method = _method;
+
+    this->_output_type = output_type;
 
     if (this->_conv_border_method == de::extend_label::_EXTEND_NONE_) {
         this->_dst_dims = make_uint2(this->_src_layout->width - this->_kernel_layout->width + 1, 
@@ -46,10 +49,10 @@ decx::dsp::cuda_Filter2D_planner<_data_type>::plan(const decx::_matrix_layout* s
 }
 
 template void decx::dsp::cuda_Filter2D_planner<float>::plan(const decx::_matrix_layout*, const decx::_matrix_layout*,
-    const de::extend_label, decx::cuda_stream*, de::DH*);
+    const de::extend_label, const de::_DATA_TYPES_FLAGS_, decx::cuda_stream*, de::DH*);
 
 template void decx::dsp::cuda_Filter2D_planner<uint8_t>::plan(const decx::_matrix_layout*, const decx::_matrix_layout*,
-    const de::extend_label, decx::cuda_stream*, de::DH*);
+    const de::extend_label, const de::_DATA_TYPES_FLAGS_, decx::cuda_stream*, de::DH*);
 
 
 template <typename _data_type>

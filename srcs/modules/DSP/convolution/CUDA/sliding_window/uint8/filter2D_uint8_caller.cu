@@ -12,6 +12,118 @@
 #include "../filter2D_kernel.cuh"
 
 
+template <> template <uint8_t _ext_w> 
+void decx::dsp::cuda_Filter2D_planner<uint8_t>::
+_cu_Filter2D_NB_u8_x_caller(const decx::dsp::cuda_Filter2D_planner<uint8_t>* _fake_this,
+                            const double* src, 
+                            const void* kernel,
+                            void* dst, 
+                            const uint32_t pitchdst_v1, 
+                            decx::cuda_stream* S)
+{
+    switch (_fake_this->_output_type)
+    {
+    case de::_DATA_TYPES_FLAGS_::_FP32_:
+        decx::dsp::GPUK::cu_filter2D_NB_u8_Kfp32_fp32<_ext_w> << <_fake_this->_grid, _fake_this->_block, 
+                                                              0, S->get_raw_stream_ref() >> > (
+            src,
+            (float*)kernel,
+            (float4*)dst,
+            _fake_this->_src_layout->pitch / 8,
+            pitchdst_v1 / 8,
+            make_uint3(_fake_this->_kernel_layout->width, 
+                       _fake_this->_kernel_layout->height, 
+                       _fake_this->_kernel_layout->pitch),
+            _fake_this->_dst_dims);
+        break;
+
+    case de::_DATA_TYPES_FLAGS_::_UINT8_:
+        decx::dsp::GPUK::cu_filter2D_NB_u8_Kfp32_u8<_ext_w> << <_fake_this->_grid, _fake_this->_block,
+                                                            0, S->get_raw_stream_ref() >> > (
+            src,
+            (float*)kernel,
+            (double*)dst,
+            _fake_this->_src_layout->pitch / 8,
+            pitchdst_v1 / 8,
+            make_uint3(_fake_this->_kernel_layout->width, 
+                       _fake_this->_kernel_layout->height, 
+                       _fake_this->_kernel_layout->pitch),
+            _fake_this->_dst_dims);
+        break;
+
+    default:
+        break;
+    }
+}
+
+
+
+template <> template <uint8_t _ext_w> 
+void decx::dsp::cuda_Filter2D_planner<uint8_t>::
+_cu_Filter2D_BC_u8_x_caller(const decx::dsp::cuda_Filter2D_planner<uint8_t>* _fake_this,
+                            const double* src, 
+                            const void* kernel,
+                            void* dst, 
+                            const uint32_t pitchdst_v1, 
+                            decx::cuda_stream* S)
+{
+    switch (_fake_this->_output_type)
+    {
+    case de::_DATA_TYPES_FLAGS_::_FP32_:
+        decx::dsp::GPUK::cu_filter2D_BC_u8_Kfp32_fp32<_ext_w> << <_fake_this->_grid, _fake_this->_block, 
+                                                                  0, S->get_raw_stream_ref() >> > (
+            src,
+            (float*)kernel,
+            (float4*)dst,
+            _fake_this->_ext_src._dims.x / 8,
+            pitchdst_v1 / 8,
+            make_uint3(_fake_this->_kernel_layout->width, 
+                       _fake_this->_kernel_layout->height, 
+                       _fake_this->_kernel_layout->pitch),
+            _fake_this->_dst_dims);
+        break;
+
+    case de::_DATA_TYPES_FLAGS_::_UINT8_:
+        decx::dsp::GPUK::cu_filter2D_BC_u8_Kfp32_u8<_ext_w> << <_fake_this->_grid, _fake_this->_block, 
+                                                                0, S->get_raw_stream_ref() >> > (
+            src,
+            (float*)kernel,
+            (double*)dst,
+            _fake_this->_ext_src._dims.x / 8,
+            pitchdst_v1 / 8,
+            make_uint3(_fake_this->_kernel_layout->width, 
+                       _fake_this->_kernel_layout->height, 
+                       _fake_this->_kernel_layout->pitch),
+            _fake_this->_dst_dims);
+        break;
+
+    default:
+        break;
+    }
+}
+
+
+
+namespace decx
+{
+namespace dsp {
+    static decx::dsp::_cu_F2_U8_Kcaller _cu_F2_U8_Kcallers[2][4] = { 
+        {
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_NB_u8_x_caller<8>,
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_NB_u8_x_caller<16>,
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_NB_u8_x_caller<24>,
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_NB_u8_x_caller<32>,
+        }, {
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_BC_u8_x_caller<8>,
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_BC_u8_x_caller<16>,
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_BC_u8_x_caller<24>,
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_BC_u8_x_caller<32>,
+        }
+    };
+}
+}
+
+
 template <> void
 decx::dsp::cuda_Filter2D_planner<uint8_t>::run(decx::_GPU_Matrix* src, decx::_GPU_Matrix* kernel,
     decx::_GPU_Matrix* dst, decx::cuda_stream* S, de::DH* handle)
@@ -27,24 +139,14 @@ decx::dsp::cuda_Filter2D_planner<uint8_t>::run(decx::_GPU_Matrix* src, decx::_GP
             cudaMemcpyDeviceToDevice,
             S->get_raw_stream_ref()));
         
-        decx::dsp::GPUK::cu_filter2D_BC_u8_fp32<32> << <this->_grid, this->_block, 0, S->get_raw_stream_ref() >> > (
-            (double*)_ext_src._ptr.ptr,
-            (float*)kernel->Mat.ptr,
-            (float4*)dst->Mat.ptr,
-            this->_ext_src._dims.x / 8,
-            dst->get_layout().pitch / 8,
-            make_uint3(kernel->Width(), kernel->Height(), kernel->get_layout().pitch),
-            this->_dst_dims);
+        decx::dsp::cuda_Filter2D_planner<uint8_t>::
+            _cu_Filter2D_BC_u8_x_caller<32>(this, (double*)_ext_src._ptr.ptr, kernel->Mat.ptr, dst->Mat.ptr,
+            dst->get_layout().pitch, S);
     }
     else
     {
-        decx::dsp::GPUK::cu_filter2D_NB_u8_fp32<32> << <this->_grid, this->_block, 0, S->get_raw_stream_ref() >> > (
-            (double*)src->Mat.ptr,
-            (float*)kernel->Mat.ptr,
-            (float4*)dst->Mat.ptr,
-            this->_src_layout->pitch / 8,
-            dst->get_layout().pitch / 8,
-            make_uint3(kernel->Width(), kernel->Height(), kernel->get_layout().pitch),
-            this->_dst_dims);
+        decx::dsp::cuda_Filter2D_planner<uint8_t>::
+            _cu_Filter2D_NB_u8_x_caller<32>(this, (double*)src->Mat.ptr, kernel->Mat.ptr, dst->Mat.ptr,
+            dst->get_layout().pitch, S);
     }
 }

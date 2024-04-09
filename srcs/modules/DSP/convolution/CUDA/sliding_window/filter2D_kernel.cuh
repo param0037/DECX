@@ -35,22 +35,22 @@ namespace dsp {
         // ------------------------------------------------- UINT8 -------------------------------------------------
 
         template <uint32_t _ext_w> __global__ 
-        void cu_filter2D_NB_u8_fp32(const double* __restrict src, const float* __restrict kernel, float4* __restrict dst,
+        void cu_filter2D_NB_u8_Kfp32_fp32(const double* __restrict src, const float* __restrict kernel, float4* __restrict dst,
             const uint32_t pitchsrc_v8, const uint32_t pitchdst_v8, const uint3 kernel_dims, const uint2 conv_area);
 
 
         template <uint32_t _ext_w> __global__ 
-        void cu_filter2D_BC_u8_fp32(const double* __restrict src, const float* __restrict kernel, float4* __restrict dst,
+        void cu_filter2D_BC_u8_Kfp32_fp32(const double* __restrict src, const float* __restrict kernel, float4* __restrict dst,
             const uint32_t pitchsrc_v8, const uint32_t pitchdst_v8, const uint3 kernel_dims, const uint2 conv_area);
 
 
         template <uint32_t _ext_w> __global__ 
-        void cu_filter2D_NB_u8_u8(const double* __restrict src, const float* __restrict kernel, double* __restrict dst,
+        void cu_filter2D_NB_u8_Kfp32_u8(const double* __restrict src, const float* __restrict kernel, double* __restrict dst,
             const uint32_t pitchsrc_v8, const uint32_t pitchdst_v8, const uint3 kernel_dims, const uint2 conv_area);
 
 
         template <uint32_t _ext_w> __global__ 
-        void cu_filter2D_BC_u8_u8(const double* __restrict src, const float* __restrict kernel, double* __restrict dst,
+        void cu_filter2D_BC_u8_Kfp32_u8(const double* __restrict src, const float* __restrict kernel, double* __restrict dst,
             const uint32_t pitchsrc_v8, const uint32_t pitchdst_v8, const uint3 kernel_dims, const uint2 conv_area);
     }
 }
