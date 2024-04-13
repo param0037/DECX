@@ -52,13 +52,11 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     message(STATUS "Building on Windows")
     target_link_libraries(DECX_BLAS_CUDA DECX_core_CPU.lib)
     target_link_libraries(DECX_BLAS_CUDA DECX_core_CUDA.lib)
-    target_link_libraries(DECX_BLAS_CUDA DECX_Async_Engine.lib)
 
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     message(STATUS "Building on Linux")
     target_link_libraries(DECX_BLAS_CUDA DECX_core_CPU.so)
     target_link_libraries(DECX_BLAS_CUDA DECX_core_CUDA.so)
-    target_link_libraries(DECX_BLAS_CUDA DECX_Async_Engine.so)
     
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     message(STATUS "Building on macOS. Failed, not supported!")

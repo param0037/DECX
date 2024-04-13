@@ -10,7 +10,6 @@
 
 #include "../cuda_Filter2D_planner.cuh"
 #include "../filter2D_kernel.cuh"
-#include "../../../../../../cooperators/resources_manager/decx_resource.h"
 
 
 //decx::dsp::cuda_Filter2D_planner<uint8_t>* decx::dsp::_cuda_filter2D_u8 = NULL;

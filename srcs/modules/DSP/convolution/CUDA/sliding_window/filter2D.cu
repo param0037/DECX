@@ -54,8 +54,6 @@ static void decx::dsp::filter2D_fp32(decx::_GPU_Matrix* src,
     }
 
     if (decx::dsp::_cuda_filter2D_fp32._res_ptr == NULL) {
-        /*decx::dsp::_cuda_filter2D_fp32 = new decx::dsp::cuda_Filter2D_planner<float>;
-        decx::ResourceCheckIn((void**)(&decx::dsp::_cuda_filter2D_fp32), 5);*/
         decx::dsp::_cuda_filter2D_fp32.RegisterResource(new decx::dsp::cuda_Filter2D_planner<float>, 5,
             &decx::dsp::cuda_Filter2D_planner<float>::release);
     }
@@ -84,10 +82,7 @@ static void decx::dsp::filter2D_fp32(decx::_GPU_Matrix* src,
     E->detach();
 
     decx::dsp::_cuda_filter2D_fp32.unlock();
-
-    //_planner.release();
 }
-
 
 
 static void decx::dsp::filter2D_u8(decx::_GPU_Matrix* src, 
@@ -119,8 +114,6 @@ static void decx::dsp::filter2D_u8(decx::_GPU_Matrix* src,
     }
 
     if (decx::dsp::_cuda_filter2D_u8._res_ptr == NULL) {
-        /*decx::dsp::_cuda_filter2D_u8 = new decx::dsp::cuda_Filter2D_planner<uint8_t>;
-        decx::ResourceCheckIn((void**)(&decx::dsp::_cuda_filter2D_u8), 5);*/
         decx::dsp::_cuda_filter2D_u8.RegisterResource(new decx::dsp::cuda_Filter2D_planner<uint8_t>, 5,
             &decx::dsp::cuda_Filter2D_planner<uint8_t>::release);
     }
@@ -149,8 +142,6 @@ static void decx::dsp::filter2D_u8(decx::_GPU_Matrix* src,
     E->detach();
 
     decx::dsp::_cuda_filter2D_u8.unlock();
-
-    //_planner.release();
 }
 
 
@@ -179,4 +170,3 @@ _DECX_API_ de::DH de::dsp::cuda::Filter2D(de::GPU_Matrix& src, de::GPU_Matrix& k
 
     return handle;
 }
-
