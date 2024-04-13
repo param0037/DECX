@@ -120,8 +120,6 @@ _DECX_API_ de::DH de::dsp::cpu::FFT(de::Tensor& src, de::Tensor& dst)
 }
 
 
-
-
 _DECX_API_ de::DH de::dsp::cpu::IFFT(de::Tensor& src, de::Tensor& dst, const de::_DATA_TYPES_FLAGS_ _output_type)
 {
     de::DH handle;

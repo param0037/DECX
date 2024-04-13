@@ -8,6 +8,22 @@
 *   More information please visit https://github.com/param0037/DECX
 */
 
+/*
+* Header for resource manager.
+* 
+* In DECX, many algorithms need to be planned ahead, i.e. FFT, Im2col, filter, etc.
+* To prevent repeated planning whenever the alogrithm being executed, the planned 
+* results will be stored as global variables. However, the problem is, once the algorithm
+* being called once, the planned results will never be released, until the end of the 
+* program. To solve this, resource manager is used. Each planned result mentioned
+* above is regarded as a resource and managed by the resource manager thread running
+* by library (lib)DECX_core_CPU.
+* 
+* For each resource, the attribute _lifespan controls its exsisting time after the last
+* used. If the resource is not being used and it exceeds its lifespan, the manager will
+* call the deconstructor callback of the resource and then delete it.
+*/
+
 #ifndef _DECX_RESOURCE_H_
 #define _DECX_RESOURCE_H_
 
