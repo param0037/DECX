@@ -143,7 +143,7 @@ namespace decx {
 #ifdef _DECX_CORE_CPU_
 namespace decx
 {
-    _DECX_API_ extern decx::ThreadPool thread_pool;        // shared variable
+    _DECX_API_ extern decx::ThreadPool* thread_pool;        // shared variable
 }
 #endif
 

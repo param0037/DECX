@@ -107,5 +107,5 @@ template void decx::dsp::fft::cpu_FFT2D_planner<float>::Inverse<double>(decx::_M
 template void decx::dsp::fft::cpu_FFT2D_planner<float>::Inverse<uint8_t>(decx::_Matrix*, decx::_Matrix*, decx::utils::_thread_arrange_1D*) const;
 
 
-decx::dsp::fft::cpu_FFT2D_planner<float>* decx::dsp::fft::cpu_FFT2D_cplxf32_planner;
-decx::dsp::fft::cpu_FFT2D_planner<float>* decx::dsp::fft::cpu_IFFT2D_cplxf32_planner;
+decx::ResourceHandle decx::dsp::fft::cpu_FFT2D_cplxf32_planner;
+decx::ResourceHandle decx::dsp::fft::cpu_IFFT2D_cplxf32_planner;

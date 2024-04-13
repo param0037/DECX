@@ -61,7 +61,6 @@
     <CudaCompile Include="..\srcs\modules\DSP\filters\CUDA\low_pass.cu" />
     <CudaCompile Include="..\srcs\modules\DSP\filters\CUDA\windows.cu" />
     <CudaCompile Include="..\srcs\modules\DSP\generators\CUDA\zeros.cu" />
-    <CudaCompile Include="..\srcs\modules\DSP\pre_post_proc_CUDA_DSPModule.cu" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

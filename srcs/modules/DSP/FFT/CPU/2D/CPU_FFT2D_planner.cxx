@@ -11,18 +11,18 @@
 #include "CPU_FFT2D_planner.h"
 
 //
-//template <typename _type_in>
-//decx::dsp::fft::cpu_FFT2D_planner<_type_in>::cpu_FFT2D_planner(const uint2 signal_dims, de::DH* handle)
+//template <typename _data_type>
+//decx::dsp::fft::cpu_FFT2D_planner<_data_type>::cpu_FFT2D_planner(const uint2 signal_dims, de::DH* handle)
 //{
 //    this->_signal_dims = signal_dims;
 //
-//    constexpr uint8_t _alignment = std::is_same_v<_type_in, float> ? 4 : 2;
+//    constexpr uint8_t _alignment = std::is_same_v<_data_type, float> ? 4 : 2;
 //
 //    // Get the smallest allocation size (the minimum size that is able to cover all the alignments)
 //    const uint2 _aligned_dims = make_uint2(decx::utils::ceil<uint32_t>(signal_dims.x, _alignment) * _alignment,
 //                                           decx::utils::ceil<uint32_t>(signal_dims.y, _alignment) * _alignment);
 //
-//    const uint64_t _alloc_size = max(_aligned_dims.x * signal_dims.y, signal_dims.x * _aligned_dims.y) * sizeof(_type_in) * 2;
+//    const uint64_t _alloc_size = max(_aligned_dims.x * signal_dims.y, signal_dims.x * _aligned_dims.y) * sizeof(_data_type) * 2;
 //    
 //    //decx::PtrInfo<void> _tmp1, _tmp2;
 //    if (decx::alloc::_host_virtual_page_malloc(&this->_tmp1, _alloc_size)) {
@@ -151,8 +151,8 @@ template void decx::dsp::fft::cpu_FFT2D_planner<float>::plan<uint8_t>(const decx
 
 
 
-template <typename _type_in>
-void* decx::dsp::fft::cpu_FFT2D_planner<_type_in>::get_tmp1_ptr() const
+template <typename _data_type>
+void* decx::dsp::fft::cpu_FFT2D_planner<_data_type>::get_tmp1_ptr() const
 {
     return this->_tmp1.ptr;
 }
@@ -160,8 +160,8 @@ void* decx::dsp::fft::cpu_FFT2D_planner<_type_in>::get_tmp1_ptr() const
 template void* decx::dsp::fft::cpu_FFT2D_planner<float>::get_tmp1_ptr() const;
 
 
-template <typename _type_in>
-void* decx::dsp::fft::cpu_FFT2D_planner<_type_in>::get_tmp2_ptr() const
+template <typename _data_type>
+void* decx::dsp::fft::cpu_FFT2D_planner<_data_type>::get_tmp2_ptr() const
 {
     return this->_tmp2.ptr;
 }
@@ -170,8 +170,8 @@ template void* decx::dsp::fft::cpu_FFT2D_planner<float>::get_tmp2_ptr() const;
 
 
 
-template <typename _type_in>
-uint2 decx::dsp::fft::cpu_FFT2D_planner<_type_in>::get_signal_dims() const
+template <typename _data_type>
+uint2 decx::dsp::fft::cpu_FFT2D_planner<_data_type>::get_signal_dims() const
 {
     return this->_signal_dims;
 }
@@ -188,8 +188,8 @@ const decx::dsp::fft::cpu_FFT1D_smaller<_data_type>* decx::dsp::fft::cpu_FFT2D_p
 template const decx::dsp::fft::cpu_FFT1D_smaller<float>* decx::dsp::fft::cpu_FFT2D_planner<float>::get_FFTH_info() const;
 
 
-template <typename _type_in>
-const decx::dsp::fft::cpu_FFT1D_smaller<_type_in>* decx::dsp::fft::cpu_FFT2D_planner<_type_in>::get_FFTV_info() const
+template <typename _data_type>
+const decx::dsp::fft::cpu_FFT1D_smaller<_data_type>* decx::dsp::fft::cpu_FFT2D_planner<_data_type>::get_FFTV_info() const
 {
     return &this->_FFT_V;
 }
@@ -197,8 +197,8 @@ const decx::dsp::fft::cpu_FFT1D_smaller<_type_in>* decx::dsp::fft::cpu_FFT2D_pla
 template const decx::dsp::fft::cpu_FFT1D_smaller<float>* decx::dsp::fft::cpu_FFT2D_planner<float>::get_FFTV_info() const;
 
 
-template <typename _type_in>
-const decx::utils::frag_manager* decx::dsp::fft::cpu_FFT2D_planner<_type_in>::get_thread_dist_H() const
+template <typename _data_type>
+const decx::utils::frag_manager* decx::dsp::fft::cpu_FFT2D_planner<_data_type>::get_thread_dist_H() const
 {
     return &this->_thread_dist_FFTH;
 }
@@ -206,8 +206,8 @@ const decx::utils::frag_manager* decx::dsp::fft::cpu_FFT2D_planner<_type_in>::ge
 template const decx::utils::frag_manager* decx::dsp::fft::cpu_FFT2D_planner<float>::get_thread_dist_H() const;
 
 
-template <typename _type_in>
-const decx::utils::frag_manager* decx::dsp::fft::cpu_FFT2D_planner<_type_in>::get_thread_dist_V() const
+template <typename _data_type>
+const decx::utils::frag_manager* decx::dsp::fft::cpu_FFT2D_planner<_data_type>::get_thread_dist_V() const
 {
     return &this->_thread_dist_FFTV;
 }
@@ -216,8 +216,8 @@ template const decx::utils::frag_manager* decx::dsp::fft::cpu_FFT2D_planner<floa
 
 
 
-template <typename _type_in>
-const decx::dsp::fft::FKT1D_fp32* decx::dsp::fft::cpu_FFT2D_planner<_type_in>::get_tile_ptr(const uint32_t _id) const
+template <typename _data_type>
+const decx::dsp::fft::FKT1D_fp32* decx::dsp::fft::cpu_FFT2D_planner<_data_type>::get_tile_ptr(const uint32_t _id) const
 {
     return this->_tiles.get_const_ptr(_id);
 }
@@ -225,24 +225,24 @@ const decx::dsp::fft::FKT1D_fp32* decx::dsp::fft::cpu_FFT2D_planner<_type_in>::g
 template const decx::dsp::fft::FKT1D_fp32* decx::dsp::fft::cpu_FFT2D_planner<float>::get_tile_ptr(const uint32_t _id) const;
 
 
-template <typename _type_in>
-void decx::dsp::fft::cpu_FFT2D_planner<_type_in>::release_buffers()
+template <typename _data_type>
+void decx::dsp::fft::cpu_FFT2D_planner<_data_type>::release_buffers(decx::dsp::fft::cpu_FFT2D_planner<_data_type>* _fake_this)
 {
-    decx::alloc::_host_virtual_page_dealloc(&this->_tmp1);
-    decx::alloc::_host_virtual_page_dealloc(&this->_tmp2);
+    decx::alloc::_host_virtual_page_dealloc(&_fake_this->_tmp1);
+    decx::alloc::_host_virtual_page_dealloc(&_fake_this->_tmp2);
 
-    for (uint32_t i = 0; i < this->_tiles.size(); ++i) {
-        this->_tiles[i].release();
+    for (uint32_t i = 0; i < _fake_this->_tiles.size(); ++i) {
+        _fake_this->_tiles[i].release();
     }
 }
 
-template void decx::dsp::fft::cpu_FFT2D_planner<float>::release_buffers();
+template void decx::dsp::fft::cpu_FFT2D_planner<float>::release_buffers(decx::dsp::fft::cpu_FFT2D_planner<float>*);
 
 
-template <typename _type_in>
-decx::dsp::fft::cpu_FFT2D_planner<_type_in>::~cpu_FFT2D_planner()
+template <typename _data_type>
+decx::dsp::fft::cpu_FFT2D_planner<_data_type>::~cpu_FFT2D_planner()
 {
-    this->release_buffers();
+    decx::dsp::fft::cpu_FFT2D_planner<_data_type>::release_buffers(this);
 }
 
 template decx::dsp::fft::cpu_FFT2D_planner<float>::~cpu_FFT2D_planner(); 

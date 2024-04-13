@@ -13,9 +13,9 @@
 
 #include "../../FFT_commons.h"
 #include "../../../../classes/GPU_Matrix.h"
-
 #include "../../../../core/cudaStream_management/cudaEvent_queue.h"
 #include "../../../../core/cudaStream_management/cudaStream_queue.h"
+#include "../../../../core/resources_manager/decx_resource.h"
 
 
 
@@ -122,7 +122,7 @@ public:
     void Inverse(decx::_GPU_Matrix* src, decx::_GPU_Matrix* dst, decx::cuda_stream* S) const;
 
 
-    void release_buffers();
+    static void release_buffers(decx::dsp::fft::_cuda_FFT2D_planner<_data_type>* _fake_this);
 
 
     ~_cuda_FFT2D_planner();
@@ -133,8 +133,8 @@ namespace decx
 {
     namespace dsp {
         namespace fft {
-            extern decx::dsp::fft::_cuda_FFT2D_planner<float>* cuda_FFT2D_cplxf32_planner;
-            extern decx::dsp::fft::_cuda_FFT2D_planner<float>* cuda_IFFT2D_cplxf32_planner;
+            extern decx::ResourceHandle cuda_FFT2D_cplxf32_planner;
+            extern decx::ResourceHandle cuda_IFFT2D_cplxf32_planner;
         }
     }
 }

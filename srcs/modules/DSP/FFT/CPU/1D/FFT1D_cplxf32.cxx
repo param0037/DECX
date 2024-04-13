@@ -114,5 +114,5 @@ template void decx::dsp::fft::cpu_FFT1D_planner<float>::Inverse<float>(decx::_Ve
 template void decx::dsp::fft::cpu_FFT1D_planner<float>::Inverse<double>(decx::_Vector*, decx::_Vector*, decx::utils::_thread_arrange_1D*) const;
 
 
-decx::dsp::fft::cpu_FFT1D_planner<float>* decx::dsp::fft::cpu_FFT1D_cplxf32_planner;
-decx::dsp::fft::cpu_FFT1D_planner<float>* decx::dsp::fft::cpu_IFFT1D_cplxf32_planner;
+decx::ResourceHandle decx::dsp::fft::cpu_FFT1D_cplxf32_planner;
+decx::ResourceHandle decx::dsp::fft::cpu_IFFT1D_cplxf32_planner;

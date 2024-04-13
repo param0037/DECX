@@ -34,15 +34,24 @@ static void decx::dsp::fft::FFT2D_caller_cplxf(decx::_Matrix* src, decx::_Matrix
 {
     decx::utils::_thread_arrange_1D t1D(decx::cpu::_get_permitted_concurrency());
 
-    if (decx::dsp::fft::cpu_FFT2D_cplxf32_planner == NULL) {
-        decx::dsp::fft::cpu_FFT2D_cplxf32_planner = new decx::dsp::fft::cpu_FFT2D_planner<float>;
+    if (decx::dsp::fft::cpu_FFT2D_cplxf32_planner._res_ptr == NULL) {
+        decx::dsp::fft::cpu_FFT2D_cplxf32_planner.RegisterResource(new decx::dsp::fft::cpu_FFT2D_planner<float>,
+            5, &decx::dsp::fft::cpu_FFT2D_planner<float>::release_buffers);
     }
-    if (decx::dsp::fft::cpu_FFT2D_cplxf32_planner->changed(&src->get_layout(), &dst->get_layout(), t1D.total_thread)) {
-        decx::dsp::fft::cpu_FFT2D_cplxf32_planner->plan<double>(&src->get_layout(), &dst->get_layout(), &t1D, handle);
+
+    decx::dsp::fft::cpu_FFT2D_cplxf32_planner.lock();
+
+    decx::dsp::fft::cpu_FFT2D_planner<float>* _planner =
+        decx::dsp::fft::cpu_FFT2D_cplxf32_planner.get_resource_raw_ptr<decx::dsp::fft::cpu_FFT2D_planner<float>>();
+
+    if (_planner->changed(&src->get_layout(), &dst->get_layout(), t1D.total_thread)) {
+        _planner->plan<double>(&src->get_layout(), &dst->get_layout(), &t1D, handle);
         Check_Runtime_Error(handle);
     }
 
-    decx::dsp::fft::cpu_FFT2D_cplxf32_planner->Forward<_type_in>(src, dst, &t1D);
+    _planner->Forward<_type_in>(src, dst, &t1D);
+
+    decx::dsp::fft::cpu_FFT2D_cplxf32_planner.unlock();
 }
 
 
@@ -52,15 +61,24 @@ static void decx::dsp::fft::IFFT2D_caller_cplxf(decx::_Matrix* src, decx::_Matri
 {
     decx::utils::_thread_arrange_1D t1D(decx::cpu::_get_permitted_concurrency());
     
-    if (decx::dsp::fft::cpu_IFFT2D_cplxf32_planner == NULL) {
-        decx::dsp::fft::cpu_IFFT2D_cplxf32_planner = new decx::dsp::fft::cpu_FFT2D_planner<float>;
+    if (decx::dsp::fft::cpu_IFFT2D_cplxf32_planner._res_ptr == NULL) {
+        decx::dsp::fft::cpu_IFFT2D_cplxf32_planner.RegisterResource(new decx::dsp::fft::cpu_FFT2D_planner<float>,
+            5, &decx::dsp::fft::cpu_FFT2D_planner<float>::release_buffers);
     }
-    if (decx::dsp::fft::cpu_IFFT2D_cplxf32_planner->changed(&src->get_layout(), &dst->get_layout(), t1D.total_thread)) {
-        decx::dsp::fft::cpu_IFFT2D_cplxf32_planner->plan<_type_out>(&src->get_layout(), &dst->get_layout(), &t1D, handle);
+
+    decx::dsp::fft::cpu_IFFT2D_cplxf32_planner.lock();
+
+    decx::dsp::fft::cpu_FFT2D_planner<float>* _planner =
+        decx::dsp::fft::cpu_IFFT2D_cplxf32_planner.get_resource_raw_ptr<decx::dsp::fft::cpu_FFT2D_planner<float>>();
+
+    if (_planner->changed(&src->get_layout(), &dst->get_layout(), t1D.total_thread)) {
+        _planner->plan<_type_out>(&src->get_layout(), &dst->get_layout(), &t1D, handle);
         Check_Runtime_Error(handle);
     }
 
-    decx::dsp::fft::cpu_IFFT2D_cplxf32_planner->Inverse<_type_out>(src, dst, &t1D);
+    _planner->Inverse<_type_out>(src, dst, &t1D);
+
+    decx::dsp::fft::cpu_IFFT2D_cplxf32_planner.unlock();
 }
 
 
@@ -122,26 +140,4 @@ _DECX_API_ de::DH de::dsp::cpu::IFFT(de::Matrix& src, de::Matrix& dst, const de:
     }
 
     return handle;
-}
-
-
-
-void decx::dsp::InitFFT2Resources()
-{
-    decx::dsp::fft::cpu_FFT2D_cplxf32_planner = NULL;
-    decx::dsp::fft::cpu_IFFT2D_cplxf32_planner = NULL;
-}
-
-
-
-void decx::dsp::FreeFFT2Resources()
-{
-    if (decx::dsp::fft::cpu_FFT2D_cplxf32_planner != NULL) {
-        decx::dsp::fft::cpu_FFT2D_cplxf32_planner->release_buffers();
-        delete decx::dsp::fft::cpu_FFT2D_cplxf32_planner;
-    }
-    if (decx::dsp::fft::cpu_IFFT2D_cplxf32_planner != NULL) {
-        decx::dsp::fft::cpu_IFFT2D_cplxf32_planner->release_buffers();
-        delete decx::dsp::fft::cpu_IFFT2D_cplxf32_planner;
-    }
 }

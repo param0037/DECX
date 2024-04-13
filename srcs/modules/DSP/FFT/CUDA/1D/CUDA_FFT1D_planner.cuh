@@ -16,6 +16,7 @@
 #include "../2D/FFT2D_config.cuh"
 #include "../../../../classes/Vector.h"
 #include "../../../../classes/GPU_Vector.h"
+#include "../../../../core/resources_manager/decx_resource.h"
 
 
 namespace decx
@@ -44,9 +45,6 @@ private:
 
 
     void _CRSR_ _plan_group_radixes(de::DH* handle, decx::cuda_stream* S);
-
-
-    //uint64_t _calc_max_required_tmp_size();
 
 
 public:
@@ -79,17 +77,23 @@ public:
 
 
     uint32_t get_larger_FFT_lengths(const uint8_t _id) const;
+
+
+    static void release(decx::dsp::fft::_cuda_FFT1D_planner<_data_type>* _fake_this);
+
+
+    ~_cuda_FFT1D_planner();
 };
 
 
 namespace decx
 {
-    namespace dsp {
-        namespace fft {
-            extern decx::dsp::fft::_cuda_FFT1D_planner<float>* cuda_FFT1D_cplxf32_planner;
-            extern decx::dsp::fft::_cuda_FFT1D_planner<float>* cuda_IFFT1D_cplxf32_planner;
-        }
+namespace dsp {
+    namespace fft {
+        extern decx::ResourceHandle cuda_FFT1D_cplxf32_planner;
+        extern decx::ResourceHandle cuda_IFFT1D_cplxf32_planner;
     }
+}
 }
 
 

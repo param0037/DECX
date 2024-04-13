@@ -30,23 +30,30 @@ namespace dsp {
 }
 
 
-
 template <typename _type_in>
 static void decx::dsp::fft::FFT3D_caller_cplxf(decx::_Tensor* src, decx::_Tensor* dst, de::DH* handle)
 {
     decx::utils::_thread_arrange_1D t1D(decx::cpu::_get_permitted_concurrency());
 
-    if (decx::dsp::fft::FFT3D_cplxf32_planner == NULL) {
-        decx::dsp::fft::FFT3D_cplxf32_planner = new decx::dsp::fft::cpu_FFT3D_planner<float>;
+    if (decx::dsp::fft::FFT3D_cplxf32_planner._res_ptr == NULL) {
+        decx::dsp::fft::FFT3D_cplxf32_planner.RegisterResource(new decx::dsp::fft::cpu_FFT3D_planner<float>,
+            5, &decx::dsp::fft::cpu_FFT3D_planner<float>::release);
     }
-    if (decx::dsp::fft::FFT3D_cplxf32_planner->changed(&src->get_layout(), &dst->get_layout(), t1D.total_thread)) {
-        decx::dsp::fft::FFT3D_cplxf32_planner->plan<double>(&t1D, &src->get_layout(), &dst->get_layout(), handle);
+
+    decx::dsp::fft::FFT3D_cplxf32_planner.lock();
+
+    decx::dsp::fft::cpu_FFT3D_planner<float>* _planner =
+        decx::dsp::fft::FFT3D_cplxf32_planner.get_resource_raw_ptr<decx::dsp::fft::cpu_FFT3D_planner<float>>();
+
+    if (_planner->changed(&src->get_layout(), &dst->get_layout(), t1D.total_thread)) {
+        _planner->plan<double>(&t1D, &src->get_layout(), &dst->get_layout(), handle);
         Check_Runtime_Error(handle);
     }
 
-    decx::dsp::fft::FFT3D_cplxf32_planner->Forward<_type_in>(src, dst);
-}
+    _planner->Forward<_type_in>(src, dst);
 
+    decx::dsp::fft::FFT3D_cplxf32_planner.unlock();
+}
 
 
 template <typename _type_out>
@@ -54,15 +61,24 @@ static void decx::dsp::fft::IFFT3D_caller_cplxf(decx::_Tensor* src, decx::_Tenso
 {
     decx::utils::_thread_arrange_1D t1D(decx::cpu::_get_permitted_concurrency());
 
-    if (decx::dsp::fft::IFFT3D_cplxf32_planner == NULL) {
-        decx::dsp::fft::IFFT3D_cplxf32_planner = new decx::dsp::fft::cpu_FFT3D_planner<float>;
+    if (decx::dsp::fft::IFFT3D_cplxf32_planner._res_ptr == NULL) {
+        decx::dsp::fft::IFFT3D_cplxf32_planner.RegisterResource(new decx::dsp::fft::cpu_FFT3D_planner<float>,
+            5, &decx::dsp::fft::cpu_FFT3D_planner<float>::release);
     }
-    if (decx::dsp::fft::IFFT3D_cplxf32_planner->changed(&src->get_layout(), &dst->get_layout(), t1D.total_thread)) {
-        decx::dsp::fft::IFFT3D_cplxf32_planner->plan<_type_out>(&t1D, &src->get_layout(), &dst->get_layout(), handle);
+
+    decx::dsp::fft::IFFT3D_cplxf32_planner.lock();
+
+    decx::dsp::fft::cpu_FFT3D_planner<float>* _planner =
+        decx::dsp::fft::IFFT3D_cplxf32_planner.get_resource_raw_ptr<decx::dsp::fft::cpu_FFT3D_planner<float>>();
+
+    if (_planner->changed(&src->get_layout(), &dst->get_layout(), t1D.total_thread)) {
+        _planner->plan<_type_out>(&t1D, &src->get_layout(), &dst->get_layout(), handle);
         Check_Runtime_Error(handle);
     }
 
-    decx::dsp::fft::IFFT3D_cplxf32_planner->Inverse<_type_out>(src, dst);
+    _planner->Inverse<_type_out>(src, dst);
+
+    decx::dsp::fft::IFFT3D_cplxf32_planner.unlock();
 }
 
 
@@ -140,26 +156,4 @@ _DECX_API_ de::DH de::dsp::cpu::IFFT(de::Tensor& src, de::Tensor& dst, const de:
     }
 
     return handle;
-}
-
-
-
-void decx::dsp::InitFFT3Resources()
-{
-    decx::dsp::fft::FFT3D_cplxf32_planner = NULL;
-    decx::dsp::fft::IFFT3D_cplxf32_planner = NULL;
-}
-
-
-
-void decx::dsp::FreeFFT3Resources()
-{
-    if (decx::dsp::fft::FFT3D_cplxf32_planner != NULL) {
-        decx::dsp::fft::FFT3D_cplxf32_planner->release();
-        delete decx::dsp::fft::FFT3D_cplxf32_planner;
-    }
-    if (decx::dsp::fft::IFFT3D_cplxf32_planner != NULL) {
-        decx::dsp::fft::IFFT3D_cplxf32_planner->release();
-        delete decx::dsp::fft::IFFT3D_cplxf32_planner;
-    }
 }

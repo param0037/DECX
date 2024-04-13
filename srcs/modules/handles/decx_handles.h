@@ -169,6 +169,7 @@ namespace decx
 #define FFT_ERROR_LENGTH                            "error: Each dim should be able to be separated by 2, 3 and 5\n"
 #define ALLOC_FAIL                                  "error: Fail to allocate memory on RAM\n"
 #define DEV_ALLOC_FAIL                              "error: Fail to allocate memory on device\n"
+#define CU_FILTER2D_KERNEL_OVERRANGED               "error: The kernel width is too large\n"
 #define MAT_DIM_NOT_MATCH                           "error: Dim(s) is(are) not equal to each other\n"
 #define MEANINGLESS_FLAG                            "error: This flag is meaningless in current context\n"
 #define CUDA_STREAM_ACCESS_FAIL                     "error: Fail to access cuda stream\n"

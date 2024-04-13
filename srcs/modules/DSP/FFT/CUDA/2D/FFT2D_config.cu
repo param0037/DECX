@@ -10,26 +10,6 @@
 
 #include "FFT2D_config.cuh"
 
-//
-//template <typename _type_in> _CRSR_
-//decx::dsp::fft::_cuda_FFT2D_planner<_type_in>::_cuda_FFT2D_planner(const uint2 signal_dims, de::DH* handle)
-//{
-//    this->_signal_dims = signal_dims;
-//
-//    constexpr uint8_t _alignment = 8 / sizeof(_type_in);
-//    this->_buffer_dims = make_uint2(decx::utils::align<uint32_t>(signal_dims.x, _alignment),
-//        decx::utils::align<uint32_t>(signal_dims.y, _alignment));
-//
-//    // Allocate buffers in device
-//    if (decx::alloc::_device_malloc(&this->_tmp1, this->_buffer_dims.x * this->_buffer_dims.y * sizeof(_type_in) * 2) || 
-//        decx::alloc::_device_malloc(&this->_tmp2, this->_buffer_dims.x * this->_buffer_dims.y * sizeof(_type_in) * 2)) {
-//        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_CUDA_ALLOCATION, DEV_ALLOC_FAIL);
-//        return;
-//    }
-//}
-//
-//template decx::dsp::fft::_cuda_FFT2D_planner<float>::_cuda_FFT2D_planner(const uint2 signal_dims, de::DH* handle);
-
 
 template <typename _data_type>
 bool decx::dsp::fft::_cuda_FFT2D_planner<_data_type>::changed(const uint2 signal_dims, 
@@ -154,20 +134,20 @@ template uint2 decx::dsp::fft::_cuda_FFT2D_planner<float>::get_buffer_dims() con
 
 
 
-template <typename _type_in>
-void decx::dsp::fft::_cuda_FFT2D_planner<_type_in>::release_buffers()
+template <typename _data_type>
+void decx::dsp::fft::_cuda_FFT2D_planner<_data_type>::release_buffers(decx::dsp::fft::_cuda_FFT2D_planner<_data_type>* _fake_this)
 {
-    decx::alloc::_device_dealloc(&this->_tmp1);
-    decx::alloc::_device_dealloc(&this->_tmp2);
+    decx::alloc::_device_dealloc(&_fake_this->_tmp1);
+    decx::alloc::_device_dealloc(&_fake_this->_tmp2);
 }
 
-template void decx::dsp::fft::_cuda_FFT2D_planner<float>::release_buffers();
+template void decx::dsp::fft::_cuda_FFT2D_planner<float>::release_buffers(decx::dsp::fft::_cuda_FFT2D_planner<float>*);
 
 
-template <typename _type_in>
-decx::dsp::fft::_cuda_FFT2D_planner<_type_in>::~_cuda_FFT2D_planner()
+template <typename _data_type>
+decx::dsp::fft::_cuda_FFT2D_planner<_data_type>::~_cuda_FFT2D_planner()
 {
-    this->release_buffers();
+    decx::dsp::fft::_cuda_FFT2D_planner<_data_type>::release_buffers(this);
 }
 
 template decx::dsp::fft::_cuda_FFT2D_planner<float>::~_cuda_FFT2D_planner();

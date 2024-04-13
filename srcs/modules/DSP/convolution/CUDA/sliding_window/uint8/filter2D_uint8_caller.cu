@@ -10,9 +10,14 @@
 
 #include "../cuda_Filter2D_planner.cuh"
 #include "../filter2D_kernel.cuh"
+#include "../../../../../../cooperators/resources_manager/decx_resource.h"
 
 
-template <> template <uint8_t _ext_w> 
+//decx::dsp::cuda_Filter2D_planner<uint8_t>* decx::dsp::_cuda_filter2D_u8 = NULL;
+decx::ResourceHandle decx::dsp::_cuda_filter2D_u8;
+
+
+template <> template <uint32_t _ext_w> 
 void decx::dsp::cuda_Filter2D_planner<uint8_t>::
 _cu_Filter2D_NB_u8_x_caller(const decx::dsp::cuda_Filter2D_planner<uint8_t>* _fake_this,
                             const double* src, 
@@ -58,7 +63,7 @@ _cu_Filter2D_NB_u8_x_caller(const decx::dsp::cuda_Filter2D_planner<uint8_t>* _fa
 
 
 
-template <> template <uint8_t _ext_w> 
+template <> template <uint32_t _ext_w> 
 void decx::dsp::cuda_Filter2D_planner<uint8_t>::
 _cu_Filter2D_BC_u8_x_caller(const decx::dsp::cuda_Filter2D_planner<uint8_t>* _fake_this,
                             const double* src, 
@@ -107,17 +112,73 @@ _cu_Filter2D_BC_u8_x_caller(const decx::dsp::cuda_Filter2D_planner<uint8_t>* _fa
 namespace decx
 {
 namespace dsp {
-    static decx::dsp::_cu_F2_U8_Kcaller _cu_F2_U8_Kcallers[2][4] = { 
+    decx::dsp::_cu_F2_U8_Kcaller _cu_F2_U8_Kcallers[2][32] = {
         {
             &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_NB_u8_x_caller<8>,
             &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_NB_u8_x_caller<16>,
             &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_NB_u8_x_caller<24>,
             &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_NB_u8_x_caller<32>,
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_NB_u8_x_caller<40>,
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_NB_u8_x_caller<48>,
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_NB_u8_x_caller<56>,
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_NB_u8_x_caller<64>,
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_NB_u8_x_caller<72>,
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_NB_u8_x_caller<80>,
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_NB_u8_x_caller<88>,
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_NB_u8_x_caller<96>,
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_NB_u8_x_caller<104>,
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_NB_u8_x_caller<112>,
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_NB_u8_x_caller<120>,
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_NB_u8_x_caller<128>,
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_NB_u8_x_caller<136>,
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_NB_u8_x_caller<144>,
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_NB_u8_x_caller<152>,
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_NB_u8_x_caller<160>,
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_NB_u8_x_caller<168>,
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_NB_u8_x_caller<176>,
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_NB_u8_x_caller<184>,
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_NB_u8_x_caller<192>,
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_NB_u8_x_caller<200>,
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_NB_u8_x_caller<208>,
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_NB_u8_x_caller<216>,
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_NB_u8_x_caller<224>,
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_NB_u8_x_caller<232>,
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_NB_u8_x_caller<240>,
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_NB_u8_x_caller<248>,
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_NB_u8_x_caller<256>,
         }, {
             &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_BC_u8_x_caller<8>,
             &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_BC_u8_x_caller<16>,
             &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_BC_u8_x_caller<24>,
             &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_BC_u8_x_caller<32>,
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_BC_u8_x_caller<40>,
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_BC_u8_x_caller<48>,
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_BC_u8_x_caller<56>,
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_BC_u8_x_caller<64>,
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_BC_u8_x_caller<72>,
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_BC_u8_x_caller<80>,
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_BC_u8_x_caller<88>,
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_BC_u8_x_caller<96>,
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_BC_u8_x_caller<104>,
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_BC_u8_x_caller<112>,
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_BC_u8_x_caller<120>,
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_BC_u8_x_caller<128>,
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_BC_u8_x_caller<136>,
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_BC_u8_x_caller<144>,
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_BC_u8_x_caller<152>,
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_BC_u8_x_caller<160>,
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_BC_u8_x_caller<168>,
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_BC_u8_x_caller<176>,
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_BC_u8_x_caller<184>,
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_BC_u8_x_caller<192>,
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_BC_u8_x_caller<200>,
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_BC_u8_x_caller<208>,
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_BC_u8_x_caller<216>,
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_BC_u8_x_caller<224>,
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_BC_u8_x_caller<232>,
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_BC_u8_x_caller<240>,
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_BC_u8_x_caller<248>,
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::_cu_Filter2D_BC_u8_x_caller<256>,
         }
     };
 }
@@ -138,15 +199,17 @@ decx::dsp::cuda_Filter2D_planner<uint8_t>::run(decx::_GPU_Matrix* src, decx::_GP
             this->_src_layout->height,
             cudaMemcpyDeviceToDevice,
             S->get_raw_stream_ref()));
-        
-        decx::dsp::cuda_Filter2D_planner<uint8_t>::
-            _cu_Filter2D_BC_u8_x_caller<32>(this, (double*)_ext_src._ptr.ptr, kernel->Mat.ptr, dst->Mat.ptr,
+
+        decx::dsp::_cu_F2_U8_Kcaller _kernel_ptr = decx::dsp::_cu_F2_U8_Kcallers[1][(this->_kernel_layout->width - 2) / 8];
+
+        _kernel_ptr(this, (double*)_ext_src._ptr.ptr, kernel->Mat.ptr, dst->Mat.ptr,
             dst->get_layout().pitch, S);
     }
     else
     {
-        decx::dsp::cuda_Filter2D_planner<uint8_t>::
-            _cu_Filter2D_NB_u8_x_caller<32>(this, (double*)src->Mat.ptr, kernel->Mat.ptr, dst->Mat.ptr,
+        decx::dsp::_cu_F2_U8_Kcaller _kernel_ptr = decx::dsp::_cu_F2_U8_Kcallers[0][(this->_kernel_layout->width - 2) / 8];
+
+        _kernel_ptr(this, (double*)src->Mat.ptr, kernel->Mat.ptr, dst->Mat.ptr,
             dst->get_layout().pitch, S);
     }
 }

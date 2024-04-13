@@ -14,13 +14,14 @@
 
 #include "../1D/CPU_FFT1D_planner.h"
 #include "../../../../classes/Matrix.h"
+#include "../../../../core/resources_manager/decx_resource.h"
 
 
 namespace decx
 {
 namespace dsp {
     namespace fft {
-        template <typename _type_in>
+        template <typename _data_type>
         class cpu_FFT2D_planner;
     }
 }
@@ -60,9 +61,6 @@ public:
     cpu_FFT2D_planner() {}
 
 
-    //CRSR_ cpu_FFT2D_planner(de::DH* handle);
-
-
     bool changed(const decx::_matrix_layout* src_layout, const decx::_matrix_layout* dst_layout,
         const uint32_t concurrency) const;
 
@@ -87,7 +85,7 @@ public:
     const decx::utils::frag_manager* get_thread_dist_V() const;
 
 
-    void release_buffers();
+    static void release_buffers(decx::dsp::fft::cpu_FFT2D_planner<_data_type>* _fake_this);
 
 
     const decx::dsp::fft::FKT1D_fp32* get_tile_ptr(const uint32_t _id) const;
@@ -100,7 +98,7 @@ public:
     }
 
     
-    template <typename _type_in>
+    template <typename _data_type>
     void Forward(decx::_Matrix* src, decx::_Matrix* dst, decx::utils::_thread_arrange_1D* t1D) const;
 
     template <typename _type_out>
@@ -115,8 +113,8 @@ namespace decx
 {
     namespace dsp {
         namespace fft {
-            extern decx::dsp::fft::cpu_FFT2D_planner<float>* cpu_FFT2D_cplxf32_planner;
-            extern decx::dsp::fft::cpu_FFT2D_planner<float>* cpu_IFFT2D_cplxf32_planner;
+            extern decx::ResourceHandle cpu_FFT2D_cplxf32_planner;
+            extern decx::ResourceHandle cpu_IFFT2D_cplxf32_planner;
         }
     }
 }

@@ -19,6 +19,7 @@
 #include "../../../../core/utils/Fixed_Length_Array.h"
 #include "../CPU_FFT_defs.h"
 #include "../../../../classes/Vector.h"
+#include "../../../../core/resources_manager/decx_resource.h"
 
 
 namespace decx
@@ -101,8 +102,6 @@ class decx::dsp::fft::cpu_FFT1D_planner
 {
 private:
     uint64_t _signal_length;
-    //uint64_t _prev_FFT_radix_fact_sum;
-    //uint64_t _next_FFT_radix;
 
     decx::PtrInfo<void> _tmp1, _tmp2;
     decx::alloc::MIF<void> _MIF1, _MIF2;
@@ -132,8 +131,6 @@ public:
     std::vector<decx::dsp::fft::FKI1D> _outer_kernel_info;
     cpu_FFT1D_planner() {}
 
-
-    //cpu_FFT1D_planner(const uint64_t signal_length);
     
     bool changed(const uint64_t signal_len, const uint32_t concurrency) const;
 
@@ -171,15 +168,7 @@ public:
     void* get_tmp2_ptr() const;
 
 
-    void release_buffers();
-
-
-    // template <typename _type_ptr>
-    // const _type_ptr* get_W_table() const
-    // {
-    //     return this->_W_table._get_table_ptr<_type_ptr>();
-    //     //return NULL;
-    // }
+    static void release_buffers(decx::dsp::fft::cpu_FFT1D_planner<_data_type>* _fake_this);
 
 
     ~cpu_FFT1D_planner();
@@ -238,8 +227,8 @@ namespace decx
 {
     namespace dsp {
         namespace fft {
-            extern decx::dsp::fft::cpu_FFT1D_planner<float>* cpu_FFT1D_cplxf32_planner;
-            extern decx::dsp::fft::cpu_FFT1D_planner<float>* cpu_IFFT1D_cplxf32_planner;
+            extern decx::ResourceHandle cpu_FFT1D_cplxf32_planner;
+            extern decx::ResourceHandle cpu_IFFT1D_cplxf32_planner;
         }
     }
 }

@@ -15,7 +15,7 @@
 
 #ifdef _DECX_CORE_CPU_
 
-_DECX_API_ decx::ThreadPool decx::thread_pool(std::thread::hardware_concurrency(), true);
+_DECX_API_ decx::ThreadPool* decx::thread_pool;
 
 decx::logging_config decx::LogConf;
 

@@ -161,5 +161,5 @@ template void _CRSR_ decx::dsp::fft::cpu_FFT3D_planner<float>::Inverse<double>(d
 template void _CRSR_ decx::dsp::fft::cpu_FFT3D_planner<float>::Inverse<uint8_t>(decx::_Tensor*, decx::_Tensor*) const;
 
 
-decx::dsp::fft::cpu_FFT3D_planner<float> *decx::dsp::fft::FFT3D_cplxf32_planner;
-decx::dsp::fft::cpu_FFT3D_planner<float> *decx::dsp::fft::IFFT3D_cplxf32_planner;
+decx::ResourceHandle decx::dsp::fft::FFT3D_cplxf32_planner;
+decx::ResourceHandle decx::dsp::fft::IFFT3D_cplxf32_planner;

@@ -17,8 +17,8 @@
 #include "../../../../core/cudaStream_management/cudaEvent_queue.h"
 #include "../../../../core/cudaStream_management/cudaStream_queue.h"
 #include "../../../../classes/Tensor.h"
-
 #include "../../../../classes/GPU_Tensor.h"
+#include "../../../../core/resources_manager/decx_resource.h"
 
 
 namespace decx
@@ -116,9 +116,6 @@ public:
     _cuda_FFT3D_planner() {}
 
 
-    //_CRSR_ _cuda_FFT3D_planner(const uint3 signal_dims);
-
-
     void _CRSR_ plan(const decx::_tensor_layout* _src_layout, const decx::_tensor_layout* _dst_layout,
         de::DH* handle, decx::cuda_stream* S);
 
@@ -134,7 +131,7 @@ public:
     bool changed(const decx::_tensor_layout* src_layout, const decx::_tensor_layout* dst_layout) const;
 
 
-    void release();
+    static void release(decx::dsp::fft::_cuda_FFT3D_planner<_data_type>* _fake_this);
 
 
     ~_cuda_FFT3D_planner();
@@ -145,8 +142,8 @@ namespace decx
 {
     namespace dsp {
         namespace fft {
-            extern decx::dsp::fft::_cuda_FFT3D_planner<float>* cuda_FFT3D_cplxf32_planner;
-            extern decx::dsp::fft::_cuda_FFT3D_planner<float>* cuda_IFFT3D_cplxf32_planner;
+            extern decx::ResourceHandle cuda_FFT3D_cplxf32_planner;
+            extern decx::ResourceHandle cuda_IFFT3D_cplxf32_planner;
         }
     }
 }

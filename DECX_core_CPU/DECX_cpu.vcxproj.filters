@@ -97,6 +97,9 @@
     <Filter Include="源文件\core\utils">
       <UniqueIdentifier>{fc6a51de-cd24-4e5b-99aa-af56c2a61ddb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\resources_manager">
+      <UniqueIdentifier>{fcd4818b-ea09-406c-afe1-a5097ea904d0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -265,6 +268,15 @@
     </ClCompile>
     <ClCompile Include="..\srcs\modules\core\utils\fragment_arangement.cxx">
       <Filter>源文件\core\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\core\pre_post_proc_CPUcoreModule.cxx">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\core\resources_manager\decx_resource.cxx">
+      <Filter>源文件\resources_manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\core\resources_manager\ResMgr.cxx">
+      <Filter>源文件\resources_manager</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

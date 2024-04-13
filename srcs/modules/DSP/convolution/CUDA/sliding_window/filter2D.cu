@@ -47,14 +47,34 @@ static void decx::dsp::filter2D_fp32(decx::_GPU_Matrix* src,
         return;
     }
 
-    decx::dsp::cuda_Filter2D_planner<float> _planner;
-    _planner.plan(&src->get_layout(), &kernel->get_layout(), _extend_method, de::_FP32_, S, handle);
-    Check_Runtime_Error(handle);
+    if (!decx::dsp::cuda_Filter2D_planner<float>::validate_kerW(kernel->Width())) {
+        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ConvBadKernel,
+            CU_FILTER2D_KERNEL_OVERRANGED);
+        return;
+    }
 
-    const uint2 _req_dst_dims = _planner.dst_dims_req();
+    if (decx::dsp::_cuda_filter2D_fp32._res_ptr == NULL) {
+        /*decx::dsp::_cuda_filter2D_fp32 = new decx::dsp::cuda_Filter2D_planner<float>;
+        decx::ResourceCheckIn((void**)(&decx::dsp::_cuda_filter2D_fp32), 5);*/
+        decx::dsp::_cuda_filter2D_fp32.RegisterResource(new decx::dsp::cuda_Filter2D_planner<float>, 5,
+            &decx::dsp::cuda_Filter2D_planner<float>::release);
+    }
+
+    decx::dsp::_cuda_filter2D_fp32.lock();
+
+    decx::dsp::cuda_Filter2D_planner<float>* _planner =
+        decx::dsp::_cuda_filter2D_fp32.get_resource_raw_ptr<decx::dsp::cuda_Filter2D_planner<float>>();
+
+    if (_planner->changed(&src->get_layout(), &kernel->get_layout(),
+        _extend_method, de::_FP32_)) {
+        _planner->plan(&src->get_layout(), &kernel->get_layout(), _extend_method, de::_FP32_, S, handle);
+        Check_Runtime_Error(handle);
+    }
+
+    const uint2 _req_dst_dims = _planner->dst_dims_req();
     dst->re_construct(src->Type(), _req_dst_dims.x, _req_dst_dims.y, S);
 
-    _planner.run(src, kernel, dst, S, handle);
+    _planner->run(src, kernel, dst, S, handle);
     Check_Runtime_Error(handle);
 
     E->event_record(S);
@@ -62,6 +82,10 @@ static void decx::dsp::filter2D_fp32(decx::_GPU_Matrix* src,
 
     S->detach();
     E->detach();
+
+    decx::dsp::_cuda_filter2D_fp32.unlock();
+
+    //_planner.release();
 }
 
 
@@ -88,14 +112,34 @@ static void decx::dsp::filter2D_u8(decx::_GPU_Matrix* src,
         return;
     }
 
-    decx::dsp::cuda_Filter2D_planner<uint8_t> _planner;
-    _planner.plan(&src->get_layout(), &kernel->get_layout(), _extend_method, _output_type, S, handle);
-    Check_Runtime_Error(handle);
+    if (!decx::dsp::cuda_Filter2D_planner<uint8_t>::validate_kerW(kernel->Width())) {
+        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ConvBadKernel,
+            CU_FILTER2D_KERNEL_OVERRANGED);
+        return;
+    }
 
-    const uint2 _req_dst_dims = _planner.dst_dims_req();
-    dst->re_construct(_output_type, _req_dst_dims.x, _req_dst_dims.y, S);
+    if (decx::dsp::_cuda_filter2D_u8._res_ptr == NULL) {
+        /*decx::dsp::_cuda_filter2D_u8 = new decx::dsp::cuda_Filter2D_planner<uint8_t>;
+        decx::ResourceCheckIn((void**)(&decx::dsp::_cuda_filter2D_u8), 5);*/
+        decx::dsp::_cuda_filter2D_u8.RegisterResource(new decx::dsp::cuda_Filter2D_planner<uint8_t>, 5,
+            &decx::dsp::cuda_Filter2D_planner<uint8_t>::release);
+    }
 
-    _planner.run(src, kernel, dst, S, handle);
+    decx::dsp::_cuda_filter2D_u8.lock();
+
+    decx::dsp::cuda_Filter2D_planner<uint8_t>* _planner =
+        decx::dsp::_cuda_filter2D_u8.get_resource_raw_ptr<decx::dsp::cuda_Filter2D_planner<uint8_t>>();
+
+    if (_planner->changed(&src->get_layout(), &kernel->get_layout(),
+        _extend_method, _output_type)) {
+        _planner->plan(&src->get_layout(), &kernel->get_layout(), _extend_method, _output_type, S, handle);
+        Check_Runtime_Error(handle);
+    }
+
+    const uint2 _req_dst_dims = _planner->dst_dims_req();
+    dst->re_construct(src->Type(), _req_dst_dims.x, _req_dst_dims.y, S);
+
+    _planner->run(src, kernel, dst, S, handle);
     Check_Runtime_Error(handle);
 
     E->event_record(S);
@@ -103,6 +147,10 @@ static void decx::dsp::filter2D_u8(decx::_GPU_Matrix* src,
 
     S->detach();
     E->detach();
+
+    decx::dsp::_cuda_filter2D_u8.unlock();
+
+    //_planner.release();
 }
 
 
@@ -131,3 +179,4 @@ _DECX_API_ de::DH de::dsp::cuda::Filter2D(de::GPU_Matrix& src, de::GPU_Matrix& k
 
     return handle;
 }
+

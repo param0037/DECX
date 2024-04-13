@@ -44,7 +44,6 @@ namespace GPUK {
                 _kernel_row_ptr[i], accu[1]._arrf[3]);
         }
     }
-
 }
 }
 }
@@ -140,19 +139,6 @@ decx::dsp::GPUK::cu_filter2D_NB_u8_Kfp32_fp32(const double* __restrict src,
         dst[dex_dst * 2 + 1] = _accu[1]._vf;
     }
 }
-
-
-template __global__ void decx::dsp::GPUK::cu_filter2D_NB_u8_Kfp32_fp32<32>(const double* __restrict, const float* __restrict,
-    float4* __restrict, const uint32_t, const uint32_t, const uint3, const uint2);
-
-template __global__ void decx::dsp::GPUK::cu_filter2D_NB_u8_Kfp32_fp32<24>(const double* __restrict, const float* __restrict,
-    float4* __restrict, const uint32_t, const uint32_t, const uint3, const uint2);
-
-template __global__ void decx::dsp::GPUK::cu_filter2D_NB_u8_Kfp32_fp32<16>(const double* __restrict, const float* __restrict,
-    float4* __restrict, const uint32_t, const uint32_t, const uint3, const uint2);
-
-template __global__ void decx::dsp::GPUK::cu_filter2D_NB_u8_Kfp32_fp32<8>(const double* __restrict, const float* __restrict,
-    float4* __restrict, const uint32_t, const uint32_t, const uint3, const uint2);
 
 
 
@@ -254,19 +240,6 @@ decx::dsp::GPUK::cu_filter2D_NB_u8_Kfp32_u8(const double* __restrict src,
     }
 }
 
-template __global__ void decx::dsp::GPUK::cu_filter2D_NB_u8_Kfp32_u8<32>(const double* __restrict, const float* __restrict,
-    double* __restrict, const uint32_t, const uint32_t, const uint3, const uint2);
-
-template __global__ void decx::dsp::GPUK::cu_filter2D_NB_u8_Kfp32_u8<24>(const double* __restrict, const float* __restrict,
-    double* __restrict, const uint32_t, const uint32_t, const uint3, const uint2);
-
-template __global__ void decx::dsp::GPUK::cu_filter2D_NB_u8_Kfp32_u8<16>(const double* __restrict, const float* __restrict,
-    double* __restrict, const uint32_t, const uint32_t, const uint3, const uint2);
-
-template __global__ void decx::dsp::GPUK::cu_filter2D_NB_u8_Kfp32_u8<8>(const double* __restrict, const float* __restrict,
-    double* __restrict, const uint32_t, const uint32_t, const uint3, const uint2);
-
-
 
 template <uint32_t _ext_w> __global__ void 
 decx::dsp::GPUK::cu_filter2D_BC_u8_Kfp32_fp32(const double* __restrict src,
@@ -359,20 +332,6 @@ decx::dsp::GPUK::cu_filter2D_BC_u8_Kfp32_fp32(const double* __restrict src,
         dst[dex_dst * 2 + 1] = _accu[1]._vf;
     }
 }
-
-template __global__ void decx::dsp::GPUK::cu_filter2D_BC_u8_Kfp32_fp32<32>(const double* __restrict, const float* __restrict,
-    float4* __restrict, const uint32_t, const uint32_t, const uint3, const uint2);
-
-template __global__ void decx::dsp::GPUK::cu_filter2D_BC_u8_Kfp32_fp32<24>(const double* __restrict, const float* __restrict,
-    float4* __restrict, const uint32_t, const uint32_t, const uint3, const uint2);
-
-template __global__ void decx::dsp::GPUK::cu_filter2D_BC_u8_Kfp32_fp32<16>(const double* __restrict, const float* __restrict,
-    float4* __restrict, const uint32_t, const uint32_t, const uint3, const uint2);
-
-template __global__ void decx::dsp::GPUK::cu_filter2D_BC_u8_Kfp32_fp32<8>(const double* __restrict, const float* __restrict,
-    float4* __restrict, const uint32_t, const uint32_t, const uint3, const uint2);
-
-
 
 
 template <uint32_t _ext_w> __global__ void 
@@ -475,15 +434,135 @@ decx::dsp::GPUK::cu_filter2D_BC_u8_Kfp32_u8(const double* __restrict src,
     }
 }
 
-template __global__ void decx::dsp::GPUK::cu_filter2D_BC_u8_Kfp32_u8<32>(const double* __restrict, const float* __restrict,
-    double* __restrict, const uint32_t, const uint32_t, const uint3, const uint2);
 
-template __global__ void decx::dsp::GPUK::cu_filter2D_BC_u8_Kfp32_u8<24>(const double* __restrict, const float* __restrict,
-    double* __restrict, const uint32_t, const uint32_t, const uint3, const uint2);
+_CU_FILTER2D_SPEC_(cu_filter2D_NB_u8_Kfp32_fp32, double, float, float4, 8);
+_CU_FILTER2D_SPEC_(cu_filter2D_NB_u8_Kfp32_fp32, double, float, float4, 16);
+_CU_FILTER2D_SPEC_(cu_filter2D_NB_u8_Kfp32_fp32, double, float, float4, 24);
+_CU_FILTER2D_SPEC_(cu_filter2D_NB_u8_Kfp32_fp32, double, float, float4, 32);
+_CU_FILTER2D_SPEC_(cu_filter2D_NB_u8_Kfp32_fp32, double, float, float4, 40);
+_CU_FILTER2D_SPEC_(cu_filter2D_NB_u8_Kfp32_fp32, double, float, float4, 48);
+_CU_FILTER2D_SPEC_(cu_filter2D_NB_u8_Kfp32_fp32, double, float, float4, 56);
+_CU_FILTER2D_SPEC_(cu_filter2D_NB_u8_Kfp32_fp32, double, float, float4, 64);
+_CU_FILTER2D_SPEC_(cu_filter2D_NB_u8_Kfp32_fp32, double, float, float4, 72);
+_CU_FILTER2D_SPEC_(cu_filter2D_NB_u8_Kfp32_fp32, double, float, float4, 80);
+_CU_FILTER2D_SPEC_(cu_filter2D_NB_u8_Kfp32_fp32, double, float, float4, 88);
+_CU_FILTER2D_SPEC_(cu_filter2D_NB_u8_Kfp32_fp32, double, float, float4, 96);
+_CU_FILTER2D_SPEC_(cu_filter2D_NB_u8_Kfp32_fp32, double, float, float4, 104);
+_CU_FILTER2D_SPEC_(cu_filter2D_NB_u8_Kfp32_fp32, double, float, float4, 112);
+_CU_FILTER2D_SPEC_(cu_filter2D_NB_u8_Kfp32_fp32, double, float, float4, 120);
+_CU_FILTER2D_SPEC_(cu_filter2D_NB_u8_Kfp32_fp32, double, float, float4, 128);
+_CU_FILTER2D_SPEC_(cu_filter2D_NB_u8_Kfp32_fp32, double, float, float4, 136);
+_CU_FILTER2D_SPEC_(cu_filter2D_NB_u8_Kfp32_fp32, double, float, float4, 144);
+_CU_FILTER2D_SPEC_(cu_filter2D_NB_u8_Kfp32_fp32, double, float, float4, 152);
+_CU_FILTER2D_SPEC_(cu_filter2D_NB_u8_Kfp32_fp32, double, float, float4, 160);
+_CU_FILTER2D_SPEC_(cu_filter2D_NB_u8_Kfp32_fp32, double, float, float4, 168);
+_CU_FILTER2D_SPEC_(cu_filter2D_NB_u8_Kfp32_fp32, double, float, float4, 176);
+_CU_FILTER2D_SPEC_(cu_filter2D_NB_u8_Kfp32_fp32, double, float, float4, 184);
+_CU_FILTER2D_SPEC_(cu_filter2D_NB_u8_Kfp32_fp32, double, float, float4, 192);
+_CU_FILTER2D_SPEC_(cu_filter2D_NB_u8_Kfp32_fp32, double, float, float4, 200);
+_CU_FILTER2D_SPEC_(cu_filter2D_NB_u8_Kfp32_fp32, double, float, float4, 208);
+_CU_FILTER2D_SPEC_(cu_filter2D_NB_u8_Kfp32_fp32, double, float, float4, 216);
+_CU_FILTER2D_SPEC_(cu_filter2D_NB_u8_Kfp32_fp32, double, float, float4, 224);
+_CU_FILTER2D_SPEC_(cu_filter2D_NB_u8_Kfp32_fp32, double, float, float4, 232);
+_CU_FILTER2D_SPEC_(cu_filter2D_NB_u8_Kfp32_fp32, double, float, float4, 240);
+_CU_FILTER2D_SPEC_(cu_filter2D_NB_u8_Kfp32_fp32, double, float, float4, 248);
+_CU_FILTER2D_SPEC_(cu_filter2D_NB_u8_Kfp32_fp32, double, float, float4, 256);
 
-template __global__ void decx::dsp::GPUK::cu_filter2D_BC_u8_Kfp32_u8<16>(const double* __restrict, const float* __restrict,
-    double* __restrict, const uint32_t, const uint32_t, const uint3, const uint2);
+_CU_FILTER2D_SPEC_(cu_filter2D_NB_u8_Kfp32_u8, double, float, double, 8);
+_CU_FILTER2D_SPEC_(cu_filter2D_NB_u8_Kfp32_u8, double, float, double, 16);
+_CU_FILTER2D_SPEC_(cu_filter2D_NB_u8_Kfp32_u8, double, float, double, 24);
+_CU_FILTER2D_SPEC_(cu_filter2D_NB_u8_Kfp32_u8, double, float, double, 32);
+_CU_FILTER2D_SPEC_(cu_filter2D_NB_u8_Kfp32_u8, double, float, double, 40);
+_CU_FILTER2D_SPEC_(cu_filter2D_NB_u8_Kfp32_u8, double, float, double, 48);
+_CU_FILTER2D_SPEC_(cu_filter2D_NB_u8_Kfp32_u8, double, float, double, 56);
+_CU_FILTER2D_SPEC_(cu_filter2D_NB_u8_Kfp32_u8, double, float, double, 64);
+_CU_FILTER2D_SPEC_(cu_filter2D_NB_u8_Kfp32_u8, double, float, double, 72);
+_CU_FILTER2D_SPEC_(cu_filter2D_NB_u8_Kfp32_u8, double, float, double, 80);
+_CU_FILTER2D_SPEC_(cu_filter2D_NB_u8_Kfp32_u8, double, float, double, 88);
+_CU_FILTER2D_SPEC_(cu_filter2D_NB_u8_Kfp32_u8, double, float, double, 96);
+_CU_FILTER2D_SPEC_(cu_filter2D_NB_u8_Kfp32_u8, double, float, double, 104);
+_CU_FILTER2D_SPEC_(cu_filter2D_NB_u8_Kfp32_u8, double, float, double, 112);
+_CU_FILTER2D_SPEC_(cu_filter2D_NB_u8_Kfp32_u8, double, float, double, 120);
+_CU_FILTER2D_SPEC_(cu_filter2D_NB_u8_Kfp32_u8, double, float, double, 128);
+_CU_FILTER2D_SPEC_(cu_filter2D_NB_u8_Kfp32_u8, double, float, double, 136);
+_CU_FILTER2D_SPEC_(cu_filter2D_NB_u8_Kfp32_u8, double, float, double, 144);
+_CU_FILTER2D_SPEC_(cu_filter2D_NB_u8_Kfp32_u8, double, float, double, 152);
+_CU_FILTER2D_SPEC_(cu_filter2D_NB_u8_Kfp32_u8, double, float, double, 160);
+_CU_FILTER2D_SPEC_(cu_filter2D_NB_u8_Kfp32_u8, double, float, double, 168);
+_CU_FILTER2D_SPEC_(cu_filter2D_NB_u8_Kfp32_u8, double, float, double, 176);
+_CU_FILTER2D_SPEC_(cu_filter2D_NB_u8_Kfp32_u8, double, float, double, 184);
+_CU_FILTER2D_SPEC_(cu_filter2D_NB_u8_Kfp32_u8, double, float, double, 192);
+_CU_FILTER2D_SPEC_(cu_filter2D_NB_u8_Kfp32_u8, double, float, double, 200);
+_CU_FILTER2D_SPEC_(cu_filter2D_NB_u8_Kfp32_u8, double, float, double, 208);
+_CU_FILTER2D_SPEC_(cu_filter2D_NB_u8_Kfp32_u8, double, float, double, 216);
+_CU_FILTER2D_SPEC_(cu_filter2D_NB_u8_Kfp32_u8, double, float, double, 224);
+_CU_FILTER2D_SPEC_(cu_filter2D_NB_u8_Kfp32_u8, double, float, double, 232);
+_CU_FILTER2D_SPEC_(cu_filter2D_NB_u8_Kfp32_u8, double, float, double, 240);
+_CU_FILTER2D_SPEC_(cu_filter2D_NB_u8_Kfp32_u8, double, float, double, 248);
+_CU_FILTER2D_SPEC_(cu_filter2D_NB_u8_Kfp32_u8, double, float, double, 256);
 
-template __global__ void decx::dsp::GPUK::cu_filter2D_BC_u8_Kfp32_u8<8>(const double* __restrict, const float* __restrict,
-    double* __restrict, const uint32_t, const uint32_t, const uint3, const uint2);
+_CU_FILTER2D_SPEC_(cu_filter2D_BC_u8_Kfp32_fp32, double, float, float4, 8);
+_CU_FILTER2D_SPEC_(cu_filter2D_BC_u8_Kfp32_fp32, double, float, float4, 16);
+_CU_FILTER2D_SPEC_(cu_filter2D_BC_u8_Kfp32_fp32, double, float, float4, 24);
+_CU_FILTER2D_SPEC_(cu_filter2D_BC_u8_Kfp32_fp32, double, float, float4, 32);
+_CU_FILTER2D_SPEC_(cu_filter2D_BC_u8_Kfp32_fp32, double, float, float4, 40);
+_CU_FILTER2D_SPEC_(cu_filter2D_BC_u8_Kfp32_fp32, double, float, float4, 48);
+_CU_FILTER2D_SPEC_(cu_filter2D_BC_u8_Kfp32_fp32, double, float, float4, 56);
+_CU_FILTER2D_SPEC_(cu_filter2D_BC_u8_Kfp32_fp32, double, float, float4, 64);
+_CU_FILTER2D_SPEC_(cu_filter2D_BC_u8_Kfp32_fp32, double, float, float4, 72);
+_CU_FILTER2D_SPEC_(cu_filter2D_BC_u8_Kfp32_fp32, double, float, float4, 80);
+_CU_FILTER2D_SPEC_(cu_filter2D_BC_u8_Kfp32_fp32, double, float, float4, 88);
+_CU_FILTER2D_SPEC_(cu_filter2D_BC_u8_Kfp32_fp32, double, float, float4, 96);
+_CU_FILTER2D_SPEC_(cu_filter2D_BC_u8_Kfp32_fp32, double, float, float4, 104);
+_CU_FILTER2D_SPEC_(cu_filter2D_BC_u8_Kfp32_fp32, double, float, float4, 112);
+_CU_FILTER2D_SPEC_(cu_filter2D_BC_u8_Kfp32_fp32, double, float, float4, 120);
+_CU_FILTER2D_SPEC_(cu_filter2D_BC_u8_Kfp32_fp32, double, float, float4, 128);
+_CU_FILTER2D_SPEC_(cu_filter2D_BC_u8_Kfp32_fp32, double, float, float4, 136);
+_CU_FILTER2D_SPEC_(cu_filter2D_BC_u8_Kfp32_fp32, double, float, float4, 144);
+_CU_FILTER2D_SPEC_(cu_filter2D_BC_u8_Kfp32_fp32, double, float, float4, 152);
+_CU_FILTER2D_SPEC_(cu_filter2D_BC_u8_Kfp32_fp32, double, float, float4, 160);
+_CU_FILTER2D_SPEC_(cu_filter2D_BC_u8_Kfp32_fp32, double, float, float4, 168);
+_CU_FILTER2D_SPEC_(cu_filter2D_BC_u8_Kfp32_fp32, double, float, float4, 176);
+_CU_FILTER2D_SPEC_(cu_filter2D_BC_u8_Kfp32_fp32, double, float, float4, 184);
+_CU_FILTER2D_SPEC_(cu_filter2D_BC_u8_Kfp32_fp32, double, float, float4, 192);
+_CU_FILTER2D_SPEC_(cu_filter2D_BC_u8_Kfp32_fp32, double, float, float4, 200);
+_CU_FILTER2D_SPEC_(cu_filter2D_BC_u8_Kfp32_fp32, double, float, float4, 208);
+_CU_FILTER2D_SPEC_(cu_filter2D_BC_u8_Kfp32_fp32, double, float, float4, 216);
+_CU_FILTER2D_SPEC_(cu_filter2D_BC_u8_Kfp32_fp32, double, float, float4, 224);
+_CU_FILTER2D_SPEC_(cu_filter2D_BC_u8_Kfp32_fp32, double, float, float4, 232);
+_CU_FILTER2D_SPEC_(cu_filter2D_BC_u8_Kfp32_fp32, double, float, float4, 240);
+_CU_FILTER2D_SPEC_(cu_filter2D_BC_u8_Kfp32_fp32, double, float, float4, 248);
+_CU_FILTER2D_SPEC_(cu_filter2D_BC_u8_Kfp32_fp32, double, float, float4, 256);
 
+_CU_FILTER2D_SPEC_(cu_filter2D_BC_u8_Kfp32_u8, double, float, double, 8);
+_CU_FILTER2D_SPEC_(cu_filter2D_BC_u8_Kfp32_u8, double, float, double, 16);
+_CU_FILTER2D_SPEC_(cu_filter2D_BC_u8_Kfp32_u8, double, float, double, 24);
+_CU_FILTER2D_SPEC_(cu_filter2D_BC_u8_Kfp32_u8, double, float, double, 32);
+_CU_FILTER2D_SPEC_(cu_filter2D_BC_u8_Kfp32_u8, double, float, double, 40);
+_CU_FILTER2D_SPEC_(cu_filter2D_BC_u8_Kfp32_u8, double, float, double, 48);
+_CU_FILTER2D_SPEC_(cu_filter2D_BC_u8_Kfp32_u8, double, float, double, 56);
+_CU_FILTER2D_SPEC_(cu_filter2D_BC_u8_Kfp32_u8, double, float, double, 64);
+_CU_FILTER2D_SPEC_(cu_filter2D_BC_u8_Kfp32_u8, double, float, double, 72);
+_CU_FILTER2D_SPEC_(cu_filter2D_BC_u8_Kfp32_u8, double, float, double, 80);
+_CU_FILTER2D_SPEC_(cu_filter2D_BC_u8_Kfp32_u8, double, float, double, 88);
+_CU_FILTER2D_SPEC_(cu_filter2D_BC_u8_Kfp32_u8, double, float, double, 96);
+_CU_FILTER2D_SPEC_(cu_filter2D_BC_u8_Kfp32_u8, double, float, double, 104);
+_CU_FILTER2D_SPEC_(cu_filter2D_BC_u8_Kfp32_u8, double, float, double, 112);
+_CU_FILTER2D_SPEC_(cu_filter2D_BC_u8_Kfp32_u8, double, float, double, 120);
+_CU_FILTER2D_SPEC_(cu_filter2D_BC_u8_Kfp32_u8, double, float, double, 128);
+_CU_FILTER2D_SPEC_(cu_filter2D_BC_u8_Kfp32_u8, double, float, double, 136);
+_CU_FILTER2D_SPEC_(cu_filter2D_BC_u8_Kfp32_u8, double, float, double, 144);
+_CU_FILTER2D_SPEC_(cu_filter2D_BC_u8_Kfp32_u8, double, float, double, 152);
+_CU_FILTER2D_SPEC_(cu_filter2D_BC_u8_Kfp32_u8, double, float, double, 160);
+_CU_FILTER2D_SPEC_(cu_filter2D_BC_u8_Kfp32_u8, double, float, double, 168);
+_CU_FILTER2D_SPEC_(cu_filter2D_BC_u8_Kfp32_u8, double, float, double, 176);
+_CU_FILTER2D_SPEC_(cu_filter2D_BC_u8_Kfp32_u8, double, float, double, 184);
+_CU_FILTER2D_SPEC_(cu_filter2D_BC_u8_Kfp32_u8, double, float, double, 192);
+_CU_FILTER2D_SPEC_(cu_filter2D_BC_u8_Kfp32_u8, double, float, double, 200);
+_CU_FILTER2D_SPEC_(cu_filter2D_BC_u8_Kfp32_u8, double, float, double, 208);
+_CU_FILTER2D_SPEC_(cu_filter2D_BC_u8_Kfp32_u8, double, float, double, 216);
+_CU_FILTER2D_SPEC_(cu_filter2D_BC_u8_Kfp32_u8, double, float, double, 224);
+_CU_FILTER2D_SPEC_(cu_filter2D_BC_u8_Kfp32_u8, double, float, double, 232);
+_CU_FILTER2D_SPEC_(cu_filter2D_BC_u8_Kfp32_u8, double, float, double, 240);
+_CU_FILTER2D_SPEC_(cu_filter2D_BC_u8_Kfp32_u8, double, float, double, 248);
+_CU_FILTER2D_SPEC_(cu_filter2D_BC_u8_Kfp32_u8, double, float, double, 256);

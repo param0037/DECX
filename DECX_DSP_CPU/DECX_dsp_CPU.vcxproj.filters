@@ -207,9 +207,6 @@
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\3D\FFT3D_cplxf32.cxx">
       <Filter>源文件\fft\3D</Filter>
     </ClCompile>
-    <ClCompile Include="..\srcs\modules\DSP\pre_post_proc_CPU_DSPModule.cxx">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\2D\FFT2D_cplxf32.cxx">
       <Filter>源文件\fft\2D</Filter>
     </ClCompile>

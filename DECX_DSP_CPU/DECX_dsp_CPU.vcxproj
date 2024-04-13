@@ -62,7 +62,6 @@
     <ClCompile Include="..\srcs\modules\DSP\generators\CPU\distributions_exec.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\generators\CPU\random.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\generators\CPU\zeros.cxx" />
-    <ClCompile Include="..\srcs\modules\DSP\pre_post_proc_CPU_DSPModule.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\regional\regional_comparision\CPU\fp32\rcp2_CCOEFF_fp32_exec.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\regional\regional_comparision\CPU\fp32\rcp2_SQDIFF_fp32_exec.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\regional\regional_comparision\CPU\rcp2.cxx" />

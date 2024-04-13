@@ -187,7 +187,7 @@ decx::ThreadPool::~ThreadPool() {
 
 _DECX_API_ decx::ThreadTaskQueue* decx::cpu::_get_task_queue_(const uint64_t _idx)
 {
-    return &(decx::thread_pool._task_schd[_idx]);
+    return &(decx::thread_pool->_task_schd[_idx]);
 }
 
 
@@ -195,7 +195,7 @@ _DECX_API_ decx::ThreadTaskQueue* decx::cpu::_get_task_queue_(const uint64_t _id
 _DECX_API_ uint64_t decx::cpu::_get_optimal_thread_id_()
 {
     uint64_t res_id;
-    decx::thread_pool._find_task_queue_id(&res_id);
+    decx::thread_pool->_find_task_queue_id(&res_id);
     return res_id;
 }
 
@@ -203,7 +203,7 @@ _DECX_API_ uint64_t decx::cpu::_get_optimal_thread_id_()
 _DECX_API_ uint64_t decx::cpu::_get_optimal_thread_id_ranged_(const uint2 range)
 {
     uint64_t res_id;
-    decx::thread_pool._find_task_queue_id_ranged(&res_id, range);
+    decx::thread_pool->_find_task_queue_id_ranged(&res_id, range);
     return res_id;
 }
 
@@ -211,5 +211,5 @@ _DECX_API_ uint64_t decx::cpu::_get_optimal_thread_id_ranged_(const uint2 range)
 
 _DECX_API_ uint64_t decx::cpu::_get_current_thread_num_()
 {
-    return decx::thread_pool.current_thread_num;
+    return decx::thread_pool->current_thread_num;
 }

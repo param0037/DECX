@@ -38,21 +38,30 @@ static void decx::dsp::fft::_FFT2D_caller_cplxf(decx::_GPU_Matrix* src, decx::_G
     decx::cuda_event* E;
     E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
 
-    if (decx::dsp::fft::cuda_FFT2D_cplxf32_planner == NULL) {
-        decx::dsp::fft::cuda_FFT2D_cplxf32_planner = new decx::dsp::fft::_cuda_FFT2D_planner<float>;
+    if (decx::dsp::fft::cuda_FFT2D_cplxf32_planner._res_ptr == NULL) {
+        decx::dsp::fft::cuda_FFT2D_cplxf32_planner.RegisterResource(new decx::dsp::fft::_cuda_FFT2D_planner<float>,
+            5, &decx::dsp::fft::_cuda_FFT2D_planner<float>::release_buffers);
     }
-    if (decx::dsp::fft::cuda_FFT2D_cplxf32_planner->changed(make_uint2(src->Width(), src->Height()), src->Pitch(), dst->Pitch())) {
-        decx::dsp::fft::cuda_FFT2D_cplxf32_planner->plan(make_uint2(src->Width(), src->Height()), src->Pitch(), dst->Pitch(), handle);
+
+    decx::dsp::fft::cuda_FFT2D_cplxf32_planner.lock();
+
+    decx::dsp::fft::_cuda_FFT2D_planner<float>* _planner =
+        decx::dsp::fft::cuda_FFT2D_cplxf32_planner.get_resource_raw_ptr< decx::dsp::fft::_cuda_FFT2D_planner<float>>();
+
+    if (_planner->changed(make_uint2(src->Width(), src->Height()), src->Pitch(), dst->Pitch())) {
+        _planner->plan(make_uint2(src->Width(), src->Height()), src->Pitch(), dst->Pitch(), handle);
         Check_Runtime_Error(handle);
     }
 
-    decx::dsp::fft::cuda_FFT2D_cplxf32_planner->Forward<_type_in>(src, dst, S);
+    _planner->Forward<_type_in>(src, dst, S);
     
     E->event_record(S);
     E->synchronize();
 
     S->detach();
     E->detach();
+
+    decx::dsp::fft::cuda_FFT2D_cplxf32_planner.unlock();
 }
 
 
@@ -65,21 +74,30 @@ static void decx::dsp::fft::_IFFT2D_caller_cplxf(decx::_GPU_Matrix* src, decx::_
     decx::cuda_event* E;
     E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
 
-    if (decx::dsp::fft::cuda_IFFT2D_cplxf32_planner == NULL) {
-        decx::dsp::fft::cuda_IFFT2D_cplxf32_planner = new decx::dsp::fft::_cuda_FFT2D_planner<float>;
+    if (decx::dsp::fft::cuda_IFFT2D_cplxf32_planner._res_ptr == NULL) {
+        decx::dsp::fft::cuda_IFFT2D_cplxf32_planner.RegisterResource(new decx::dsp::fft::_cuda_FFT2D_planner<float>,
+            5, &decx::dsp::fft::_cuda_FFT2D_planner<float>::release_buffers);
     }
-    if (decx::dsp::fft::cuda_IFFT2D_cplxf32_planner->changed(make_uint2(src->Width(), src->Height()), src->Pitch(), dst->Pitch())) {
-        decx::dsp::fft::cuda_IFFT2D_cplxf32_planner->plan(make_uint2(src->Width(), src->Height()), src->Pitch(), dst->Pitch(), handle);
+
+    decx::dsp::fft::cuda_IFFT2D_cplxf32_planner.lock();
+
+    decx::dsp::fft::_cuda_FFT2D_planner<float>* _planner =
+        decx::dsp::fft::cuda_IFFT2D_cplxf32_planner.get_resource_raw_ptr< decx::dsp::fft::_cuda_FFT2D_planner<float>>();
+
+    if (_planner->changed(make_uint2(src->Width(), src->Height()), src->Pitch(), dst->Pitch())) {
+        _planner->plan(make_uint2(src->Width(), src->Height()), src->Pitch(), dst->Pitch(), handle);
         Check_Runtime_Error(handle);
     }
 
-    decx::dsp::fft::cuda_IFFT2D_cplxf32_planner->Inverse<_type_out>(src, dst, S);
+    _planner->Inverse<_type_out>(src, dst, S);
     
     E->event_record(S);
     E->synchronize();
 
     S->detach();
     E->detach();
+
+    decx::dsp::fft::cuda_IFFT2D_cplxf32_planner.unlock();
 }
 
 
@@ -140,21 +158,3 @@ _DECX_API_ de::DH de::dsp::cuda::IFFT(de::GPU_Matrix& src, de::GPU_Matrix& dst, 
     return handle;
 }
 
-
-void decx::dsp::InitCUDA_FFT2D_Resources()
-{
-    decx::dsp::fft::cuda_FFT2D_cplxf32_planner = NULL;
-    decx::dsp::fft::cuda_IFFT2D_cplxf32_planner = NULL;
-}
-
-
-
-void decx::dsp::FreeCUDA_FFT2D_Resources()
-{
-    if (decx::dsp::fft::cuda_FFT2D_cplxf32_planner != NULL) {
-        delete decx::dsp::fft::cuda_FFT2D_cplxf32_planner;
-    }
-    if (decx::dsp::fft::cuda_IFFT2D_cplxf32_planner != NULL) {
-        delete decx::dsp::fft::cuda_IFFT2D_cplxf32_planner;
-    }
-}

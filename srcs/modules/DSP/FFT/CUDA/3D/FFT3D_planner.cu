@@ -12,8 +12,8 @@
 
 
 //
-//template <typename _type_in> _CRSR_
-//decx::dsp::fft::_cuda_FFT3D_planner<_type_in>::_cuda_FFT3D_planner(const uint3 signal_dims)
+//template <typename _data_type> _CRSR_
+//decx::dsp::fft::_cuda_FFT3D_planner<_data_type>::_cuda_FFT3D_planner(const uint3 signal_dims)
 //{
 //    this->_signal_dims = signal_dims;
 //}
@@ -22,8 +22,8 @@
 
 
 
-template <typename _type_in> _CRSR_
-void decx::dsp::fft::_cuda_FFT3D_planner<_type_in>::plan(const decx::_tensor_layout* _src_layout, 
+template <typename _data_type> _CRSR_
+void decx::dsp::fft::_cuda_FFT3D_planner<_data_type>::plan(const decx::_tensor_layout* _src_layout, 
                                                          const decx::_tensor_layout* _dst_layout,
                                                          de::DH* handle, decx::cuda_stream* S)
 {
@@ -34,7 +34,7 @@ void decx::dsp::fft::_cuda_FFT3D_planner<_type_in>::plan(const decx::_tensor_lay
     this->_input_typesize = _src_layout->_single_element_size;
     this->_output_typesize = _dst_layout->_single_element_size;
 
-    constexpr uint8_t _alignment = 8 / sizeof(_type_in);
+    constexpr uint8_t _alignment = 8 / sizeof(_data_type);
 
     this->_FFT_H.plan(this->_signal_dims.z);
     this->_FFT_D.plan(this->_signal_dims.x);
@@ -69,8 +69,8 @@ void decx::dsp::fft::_cuda_FFT3D_planner<_type_in>::plan(const decx::_tensor_lay
                     this->_FFT_D._pitchtmp * this->_FFT_D.get_signal_len());
 
     const uint64_t alloc_size = max(max(_alloc_sizes.x, _alloc_sizes.y), _alloc_sizes.z);
-    if (decx::alloc::_device_malloc(&this->_tmp1, alloc_size * sizeof(_type_in) * 2, true, S) ||
-        decx::alloc::_device_malloc(&this->_tmp2, alloc_size * sizeof(_type_in) * 2, true, S)) {
+    if (decx::alloc::_device_malloc(&this->_tmp1, alloc_size * sizeof(_data_type) * 2, true, S) ||
+        decx::alloc::_device_malloc(&this->_tmp2, alloc_size * sizeof(_data_type) * 2, true, S)) {
         decx::err::handle_error_info_modify<true>(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION, ALLOC_FAIL);
         return;
     }
@@ -81,8 +81,8 @@ template _CRSR_ void decx::dsp::fft::_cuda_FFT3D_planner<float>::plan(const decx
 
 
 
-template <typename _type_in> const decx::dsp::fft::_FFT2D_1way_config* 
-decx::dsp::fft::_cuda_FFT3D_planner<_type_in>::get_FFT_info(const decx::dsp::fft::FFT_directions _dir) const
+template <typename _data_type> const decx::dsp::fft::_FFT2D_1way_config* 
+decx::dsp::fft::_cuda_FFT3D_planner<_data_type>::get_FFT_info(const decx::dsp::fft::FFT_directions _dir) const
 {
     switch (_dir)
     {
@@ -104,8 +104,8 @@ template const decx::dsp::fft::_FFT2D_1way_config*
 decx::dsp::fft::_cuda_FFT3D_planner<float>::get_FFT_info(const FFT_directions) const;
 
 
-template <typename _type_in> const decx::dsp::fft::_cuda_FFT3D_mid_config* 
-decx::dsp::fft::_cuda_FFT3D_planner<_type_in>::get_midFFT_info() const
+template <typename _data_type> const decx::dsp::fft::_cuda_FFT3D_mid_config* 
+decx::dsp::fft::_cuda_FFT3D_planner<_data_type>::get_midFFT_info() const
 {
     return &this->_FFT_W;
 }
@@ -129,21 +129,20 @@ bool decx::dsp::fft::_cuda_FFT3D_planner<_data_type>::changed(const decx::_tenso
 template bool decx::dsp::fft::_cuda_FFT3D_planner<float>::changed(const decx::_tensor_layout*, const decx::_tensor_layout*) const;
 
 
-
-template <typename _type_in>
-void decx::dsp::fft::_cuda_FFT3D_planner<_type_in>::release()
+template <typename _data_type>
+void decx::dsp::fft::_cuda_FFT3D_planner<_data_type>::release(decx::dsp::fft::_cuda_FFT3D_planner<_data_type>* _fake_this)
 {
-    decx::alloc::_device_dealloc(&this->_tmp1);
-    decx::alloc::_device_dealloc(&this->_tmp2);
+    decx::alloc::_device_dealloc(&_fake_this->_tmp1);
+    decx::alloc::_device_dealloc(&_fake_this->_tmp2);
 }
 
-template void decx::dsp::fft::_cuda_FFT3D_planner<float>::release();
+template void decx::dsp::fft::_cuda_FFT3D_planner<float>::release(decx::dsp::fft::_cuda_FFT3D_planner<float>*);
 
 
-template <typename _type_in>
-decx::dsp::fft::_cuda_FFT3D_planner<_type_in>::~_cuda_FFT3D_planner()
+template <typename _data_type>
+decx::dsp::fft::_cuda_FFT3D_planner<_data_type>::~_cuda_FFT3D_planner()
 {
-    this->release();
+    decx::dsp::fft::_cuda_FFT3D_planner<_data_type>::release(this);
 }
 
 template decx::dsp::fft::_cuda_FFT3D_planner<float>::~_cuda_FFT3D_planner();

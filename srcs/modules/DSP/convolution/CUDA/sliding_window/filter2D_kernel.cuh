@@ -16,6 +16,7 @@
 #include "../../../../../core/utils/decx_cuda_math_functions.cuh"
 #include "../cuda_filter2D_planner.cuh"
 
+
 namespace decx
 {
 namespace dsp {
@@ -55,6 +56,11 @@ namespace dsp {
     }
 }
 }
+
+
+#define _CU_FILTER2D_SPEC_(funcname, type1, type2, type3, templ_val)                                                \
+    template __global__ void decx::dsp::GPUK::funcname<templ_val>(const type1* __restrict, const type2* __restrict, \
+    type3* __restrict, const uint32_t, const uint32_t, const uint3, const uint2)                                    \
 
 
 #endif

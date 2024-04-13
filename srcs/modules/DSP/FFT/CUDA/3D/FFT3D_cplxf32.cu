@@ -134,5 +134,5 @@ template void decx::dsp::fft::_cuda_FFT3D_planner<float>::Inverse<de::CPf>(decx:
 template void decx::dsp::fft::_cuda_FFT3D_planner<float>::Inverse<uint8_t>(decx::_GPU_Tensor*, decx::_GPU_Tensor*, decx::cuda_stream*) const;
 
 
-decx::dsp::fft::_cuda_FFT3D_planner<float>* decx::dsp::fft::cuda_FFT3D_cplxf32_planner;
-decx::dsp::fft::_cuda_FFT3D_planner<float>* decx::dsp::fft::cuda_IFFT3D_cplxf32_planner;
+decx::ResourceHandle decx::dsp::fft::cuda_FFT3D_cplxf32_planner;
+decx::ResourceHandle decx::dsp::fft::cuda_IFFT3D_cplxf32_planner;

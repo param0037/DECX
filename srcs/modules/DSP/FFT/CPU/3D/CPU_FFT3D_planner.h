@@ -18,17 +18,18 @@
 #include "../2D/CPU_FFT2D_planner.h"
 #include "../../../../classes/Tensor.h"
 #include "FFT3D_kernel_utils.h"
+#include "../../../../core/resources_manager/decx_resource.h"
 
 
 namespace decx
 {
 namespace dsp {
     namespace fft {
-        template <typename _type_in>
+        template <typename _data_type>
         class cpu_FFT3D_planner;
 
 
-        template <typename _type_in>
+        template <typename _data_type>
         struct cpu_FFT3D_subproc;
     }
 }
@@ -102,9 +103,6 @@ public:
     cpu_FFT3D_planner() {}
 
 
-    //_CRSR_ cpu_FFT3D_planner(const uint3 signal_dims, de::DH* handle);
-
-
     _CRSR_ template <typename _type_out>
     void plan(decx::utils::_thread_arrange_1D* t1D, 
         const decx::_tensor_layout* src_layout, const decx::_tensor_layout* dst_layout, de::DH* handle);
@@ -127,7 +125,7 @@ public:
         const uint32_t concurrency) const;
 
 
-    void release();
+    static void release(decx::dsp::fft::cpu_FFT3D_planner<_data_type>* _fake_this);
 
 
     ~cpu_FFT3D_planner();
@@ -149,8 +147,8 @@ namespace decx
 {
     namespace dsp {
         namespace fft {
-            extern decx::dsp::fft::cpu_FFT3D_planner<float>* FFT3D_cplxf32_planner;
-            extern decx::dsp::fft::cpu_FFT3D_planner<float>* IFFT3D_cplxf32_planner;
+            extern decx::ResourceHandle FFT3D_cplxf32_planner;
+            extern decx::ResourceHandle IFFT3D_cplxf32_planner;
         }
     }
 }

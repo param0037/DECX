@@ -215,6 +215,9 @@
     <ClCompile Include="..\srcs\modules\core\memory_management\MemBlock.cxx" />
     <ClCompile Include="..\srcs\modules\core\memory_management\MemChunk_Hv.cxx" />
     <ClCompile Include="..\srcs\modules\core\memory_management\MemoryPool_Hv.cxx" />
+    <ClCompile Include="..\srcs\modules\core\pre_post_proc_CPUcoreModule.cxx" />
+    <ClCompile Include="..\srcs\modules\core\resources_manager\decx_resource.cxx" />
+    <ClCompile Include="..\srcs\modules\core\resources_manager\ResMgr.cxx" />
     <ClCompile Include="..\srcs\modules\core\thread_management\task_queue.cxx" />
     <ClCompile Include="..\srcs\modules\core\thread_management\thread_pool.cxx" />
     <ClCompile Include="..\srcs\modules\core\utils\fragment_arangement.cxx" />

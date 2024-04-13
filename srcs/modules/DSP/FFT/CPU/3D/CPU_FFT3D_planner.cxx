@@ -116,8 +116,8 @@ template void decx::dsp::fft::cpu_FFT3D_planner<float>::plan<uint8_t>(decx::util
 
 
 
-template <typename _type_in>
-void _CRSR_ decx::dsp::fft::cpu_FFT3D_planner<_type_in>::allocate_buffers(de::DH* handle) 
+template <typename _data_type>
+void _CRSR_ decx::dsp::fft::cpu_FFT3D_planner<_data_type>::allocate_buffers(de::DH* handle) 
 {
     const uint32_t _FFTD_2D_reqH = this->_signal_dims.y * this->_signal_dims.z;
     const uint32_t _FFTW_2D_reqH = this->_signal_dims.x * this->_signal_dims.z;
@@ -128,8 +128,8 @@ void _CRSR_ decx::dsp::fft::cpu_FFT3D_planner<_type_in>::allocate_buffers(de::DH
                                           (uint64_t)this->_aligned_proc_dims.y * (uint64_t)_FFTW_2D_reqH),
                                           (uint64_t)this->_aligned_proc_dims.z * (uint64_t)_FFTH_2D_reqH);
 
-    if (decx::alloc::_host_virtual_page_malloc(&this->_tmp1, _buffer_size * sizeof(_type_in) * 2) ||
-        decx::alloc::_host_virtual_page_malloc(&this->_tmp2, _buffer_size * sizeof(_type_in) * 2))
+    if (decx::alloc::_host_virtual_page_malloc(&this->_tmp1, _buffer_size * sizeof(_data_type) * 2) ||
+        decx::alloc::_host_virtual_page_malloc(&this->_tmp2, _buffer_size * sizeof(_data_type) * 2))
     {
         decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION, ALLOC_FAIL);
         return;
@@ -150,8 +150,8 @@ void _CRSR_ decx::dsp::fft::cpu_FFT3D_planner<_type_in>::allocate_buffers(de::DH
 template void _CRSR_ decx::dsp::fft::cpu_FFT3D_planner<float>::allocate_buffers(de::DH*);
 
 
-template <typename _type_in> const decx::dsp::fft::cpu_FFT3D_subproc<_type_in>*
-decx::dsp::fft::cpu_FFT3D_planner<_type_in>::get_subproc(const decx::dsp::fft::FFT_directions proc_dir) const
+template <typename _data_type> const decx::dsp::fft::cpu_FFT3D_subproc<_data_type>*
+decx::dsp::fft::cpu_FFT3D_planner<_data_type>::get_subproc(const decx::dsp::fft::FFT_directions proc_dir) const
 {
     switch (proc_dir)
     {
@@ -174,8 +174,8 @@ template const decx::dsp::fft::cpu_FFT3D_subproc<float>*
 decx::dsp::fft::cpu_FFT3D_planner<float>::get_subproc(const decx::dsp::fft::FFT_directions) const;
 
 
-template <typename _type_in> const
-decx::dsp::fft::FKT1D_fp32* decx::dsp::fft::cpu_FFT3D_planner<_type_in>::get_tile_ptr(const uint32_t _id) const
+template <typename _data_type> const
+decx::dsp::fft::FKT1D_fp32* decx::dsp::fft::cpu_FFT3D_planner<_data_type>::get_tile_ptr(const uint32_t _id) const
 {
     return this->_tiles.get_const_ptr(_id);
 }
@@ -199,8 +199,8 @@ bool decx::dsp::fft::cpu_FFT3D_planner<_data_type>::changed(const decx::_tensor_
 template bool decx::dsp::fft::cpu_FFT3D_planner<float>::changed(const decx::_tensor_layout*, const decx::_tensor_layout* , const uint32_t) const;
 
 
-template <typename _type_in>
-void* decx::dsp::fft::cpu_FFT3D_planner<_type_in>::get_tmp1_ptr() const
+template <typename _data_type>
+void* decx::dsp::fft::cpu_FFT3D_planner<_data_type>::get_tmp1_ptr() const
 {
     return this->_tmp1.ptr;
 }
@@ -208,8 +208,8 @@ void* decx::dsp::fft::cpu_FFT3D_planner<_type_in>::get_tmp1_ptr() const
 template void* decx::dsp::fft::cpu_FFT3D_planner<float>::get_tmp1_ptr() const;
 
 
-template <typename _type_in>
-void* decx::dsp::fft::cpu_FFT3D_planner<_type_in>::get_tmp2_ptr() const
+template <typename _data_type>
+void* decx::dsp::fft::cpu_FFT3D_planner<_data_type>::get_tmp2_ptr() const
 {
     return this->_tmp2.ptr;
 }
@@ -219,25 +219,24 @@ template void* decx::dsp::fft::cpu_FFT3D_planner<float>::get_tmp2_ptr() const;
 
 
 
-template <typename _type_in>
-void decx::dsp::fft::cpu_FFT3D_planner<_type_in>::release()
+template <typename _data_type>
+void decx::dsp::fft::cpu_FFT3D_planner<_data_type>::release(decx::dsp::fft::cpu_FFT3D_planner<_data_type>* _fake_this)
 {
-    decx::alloc::_host_virtual_page_dealloc(&this->_tmp1);
-    decx::alloc::_host_virtual_page_dealloc(&this->_tmp2);
+    decx::alloc::_host_virtual_page_dealloc(&_fake_this->_tmp1);
+    decx::alloc::_host_virtual_page_dealloc(&_fake_this->_tmp2);
 
-    for (uint32_t i = 0; i < this->_tiles.size(); ++i) {
-        this->_tiles[i].release();
+    for (uint32_t i = 0; i < _fake_this->_tiles.size(); ++i) {
+        _fake_this->_tiles[i].release();
     }
 }
 
-template void decx::dsp::fft::cpu_FFT3D_planner<float>::release();
+template void decx::dsp::fft::cpu_FFT3D_planner<float>::release(decx::dsp::fft::cpu_FFT3D_planner<float>*);
 
 
-template <typename _type_in>
-decx::dsp::fft::cpu_FFT3D_planner<_type_in>::~cpu_FFT3D_planner()
+template <typename _data_type>
+decx::dsp::fft::cpu_FFT3D_planner<_data_type>::~cpu_FFT3D_planner()
 {
-    this->release();
+    decx::dsp::fft::cpu_FFT3D_planner<_data_type>::release(this);
 }
 
 template decx::dsp::fft::cpu_FFT3D_planner<float>::~cpu_FFT3D_planner();
-

@@ -15,6 +15,7 @@
 #include "../../../../core/basic.h"
 #include "../../../../classes/GPU_Matrix.h"
 #include "../../../../BLAS/basic_process/extension/extend_flags.h"
+#include "../../../../core/resources_manager/decx_resource.h"
 
 
 #define _CU_FILTER2D_FP32_BLOCK_X_ _WARP_SIZE_
@@ -30,7 +31,21 @@ namespace decx
 
 
         typedef void(*_cu_F2_U8_Kcaller) (const decx::dsp::cuda_Filter2D_planner<uint8_t>*, const double*,
-            const void*, void*, const uint32_t pitchdst_v1, decx::cuda_stream* S);
+            const void*, void*, const uint32_t, decx::cuda_stream*);
+        typedef void(*_cu_F2_FP32_Kcaller) (const decx::dsp::cuda_Filter2D_planner<float>*, const float4*,
+            const float*, float4*, const uint32_t, decx::cuda_stream*);
+
+        extern decx::dsp::_cu_F2_U8_Kcaller _cu_F2_U8_Kcallers[2][32];
+
+
+        extern decx::dsp::_cu_F2_FP32_Kcaller _cu_F2_FP32_Kcallers[32];
+
+
+        /*extern decx::dsp::cuda_Filter2D_planner<float>* _cuda_filter2D_fp32;
+        extern decx::dsp::cuda_Filter2D_planner<uint8_t>* _cuda_filter2D_u8;*/
+
+        extern decx::ResourceHandle _cuda_filter2D_fp32;
+        extern decx::ResourceHandle _cuda_filter2D_u8;
     }
 }
 
@@ -53,17 +68,27 @@ private:
     de::_DATA_TYPES_FLAGS_ _output_type;
 
 public:
-    template <uint8_t _ext_w>
+    template <uint32_t _ext_w>
+    static void _cu_Filter2D_fp32_caller(const decx::dsp::cuda_Filter2D_planner<float>* _fake_this, const float4* src,
+        const float* kernel, float4* dst, const uint32_t pitchdst_v1, decx::cuda_stream* S);
+
+
+    template <uint32_t _ext_w>
     static void _cu_Filter2D_NB_u8_x_caller(const decx::dsp::cuda_Filter2D_planner<uint8_t>* _fake_this, const double* src, 
         const void* kernel, void* dst, const uint32_t pitchdst_v1, decx::cuda_stream* S);
 
-    template <uint8_t _ext_w>
+
+    template <uint32_t _ext_w>
     static void _cu_Filter2D_BC_u8_x_caller(const decx::dsp::cuda_Filter2D_planner<uint8_t>* _fake_this, const double* src, 
         const void* kernel, void* dst, const uint32_t pitchdst_v1, decx::cuda_stream* S);
 
 
 public:
-    cuda_Filter2D_planner() {}
+    cuda_Filter2D_planner();
+
+
+    bool changed(const decx::_matrix_layout* src_layout, const decx::_matrix_layout* kernel_layout, const de::extend_label extend_method,
+        const de::_DATA_TYPES_FLAGS_ output_type) const;
 
 
     void _CRSR_ plan(const decx::_matrix_layout* src_layout, const decx::_matrix_layout* _kernel_layout,
@@ -75,7 +100,24 @@ public:
 
     void _CRSR_ run(decx::_GPU_Matrix* src, decx::_GPU_Matrix* kernel, decx::_GPU_Matrix* dst,
         decx::cuda_stream* S, de::DH* handle);
+
+
+    static bool validate_kerW(const uint32_t kerW);
+
+
+    static void release(decx::dsp::cuda_Filter2D_planner<_data_type>* _fake_this);
+
+
+    ~cuda_Filter2D_planner();
 };
+
+
+namespace decx
+{
+    namespace dsp {
+        void Release_CU_Filter2D_Resource();
+    }
+}
 
 
 #endif

@@ -13,8 +13,8 @@
 
 
 //
-//template <typename _type_in>
-//decx::dsp::fft::cpu_FFT1D_planner<_type_in>::cpu_FFT1D_planner(const uint64_t signal_length)
+//template <typename _data_type>
+//decx::dsp::fft::cpu_FFT1D_planner<_data_type>::cpu_FFT1D_planner(const uint64_t signal_length)
 //{
 //    this->_signal_length = signal_length;
 //}
@@ -23,8 +23,8 @@
 ////template decx::dsp::fft::cpu_FFT1D_planner<double>::cpu_FFT1D_planner(const uint64_t signal_length);
 
 
-template <typename _type_in>
-uint64_t decx::dsp::fft::cpu_FFT1D_planner<_type_in>::get_signal_len() const
+template <typename _data_type>
+uint64_t decx::dsp::fft::cpu_FFT1D_planner<_data_type>::get_signal_len() const
 {
     return this->_signal_length;
 }
@@ -33,8 +33,8 @@ template uint64_t decx::dsp::fft::cpu_FFT1D_planner<float>::get_signal_len() con
 //template uint64_t decx::dsp::fft::cpu_FFT1D_planner<double>::get_signal_len() const;
 
 
-template <typename _type_in>
-void decx::dsp::fft::cpu_FFT1D_planner<_type_in>::set_signal_length(const uint64_t signal_length)
+template <typename _data_type>
+void decx::dsp::fft::cpu_FFT1D_planner<_data_type>::set_signal_length(const uint64_t signal_length)
 {
     this->_signal_length = signal_length;
 }
@@ -44,8 +44,8 @@ template void decx::dsp::fft::cpu_FFT1D_planner<float>::set_signal_length(const 
 
 
 
-template <typename _type_in>
-void decx::dsp::fft::cpu_FFT1D_planner<_type_in>::_apart_for_smaller_FFTs(de::DH* handle)
+template <typename _data_type>
+void decx::dsp::fft::cpu_FFT1D_planner<_data_type>::_apart_for_smaller_FFTs(de::DH* handle)
 {
     uint64_t _load_equal_target = 0;
     uint32_t _frag_num = 2;
@@ -182,8 +182,8 @@ template bool decx::dsp::fft::cpu_FFT1D_planner<float>::changed(const uint64_t, 
 
 
 
-template <typename _type_in>
-const decx::dsp::fft::FKT1D_fp32* decx::dsp::fft::cpu_FFT1D_planner<_type_in>::get_tile_ptr(const uint32_t _thread_id) const
+template <typename _data_type>
+const decx::dsp::fft::FKT1D_fp32* decx::dsp::fft::cpu_FFT1D_planner<_data_type>::get_tile_ptr(const uint32_t _thread_id) const
 {
     return &this->_tiles[_thread_id];
 }
@@ -192,8 +192,8 @@ template const decx::dsp::fft::FKT1D_fp32* decx::dsp::fft::cpu_FFT1D_planner<flo
 //template void* decx::dsp::fft::cpu_FFT1D_planner<double>::get_tile_ptr(const uint32_t _thread_id) const;
 
 
-template <typename _type_in>
-void* decx::dsp::fft::cpu_FFT1D_planner<_type_in>::get_tmp1_ptr() const
+template <typename _data_type>
+void* decx::dsp::fft::cpu_FFT1D_planner<_data_type>::get_tmp1_ptr() const
 {
     return this->_tmp1.ptr;
 }
@@ -202,32 +202,30 @@ template void* decx::dsp::fft::cpu_FFT1D_planner<float>::get_tmp1_ptr() const;
 //template void* decx::dsp::fft::cpu_FFT1D_planner<double>::get_tmp1_ptr() const;
 
 
-template <typename _type_in>
-void decx::dsp::fft::cpu_FFT1D_planner<_type_in>::release_buffers()
+template <typename _data_type>
+void decx::dsp::fft::cpu_FFT1D_planner<_data_type>::release_buffers(decx::dsp::fft::cpu_FFT1D_planner<_data_type>* _fake_this)
 {
-    for (uint32_t i = 0; i < this->_tiles.size(); ++i) {
-        this->_tiles[i].release();
+    for (uint32_t i = 0; i < _fake_this->_tiles.size(); ++i) {
+        _fake_this->_tiles[i].release();
     }
 
-    for (uint32_t i = 0; i < this->_smaller_FFTs.size(); ++i) {
-        this->_smaller_FFTs[i].~cpu_FFT1D_smaller();
+    for (uint32_t i = 0; i < _fake_this->_smaller_FFTs.size(); ++i) {
+        _fake_this->_smaller_FFTs[i].~cpu_FFT1D_smaller();
     }
 
-    //this->_W_table._release();
-
-    decx::alloc::_host_virtual_page_dealloc(&this->_tmp1);
-    decx::alloc::_host_virtual_page_dealloc(&this->_tmp2);
+    decx::alloc::_host_virtual_page_dealloc(&_fake_this->_tmp1);
+    decx::alloc::_host_virtual_page_dealloc(&_fake_this->_tmp2);
 }
 
-template void decx::dsp::fft::cpu_FFT1D_planner<float>::release_buffers();
-//template void decx::dsp::fft::cpu_FFT1D_planner<double>::release_buffers();
+template void decx::dsp::fft::cpu_FFT1D_planner<float>::release_buffers(decx::dsp::fft::cpu_FFT1D_planner<float>*);
+//template void decx::dsp::fft::cpu_FFT1D_planner<double>::release_buffers(decx::dsp::fft::cpu_FFT1D_planner<double>*);
 
 
 
-template <typename _type_in>
-decx::dsp::fft::cpu_FFT1D_planner<_type_in>::~cpu_FFT1D_planner()
+template <typename _data_type>
+decx::dsp::fft::cpu_FFT1D_planner<_data_type>::~cpu_FFT1D_planner()
 {
-    this->release_buffers();
+    decx::dsp::fft::cpu_FFT1D_planner<_data_type>::release_buffers(this);
 }
 
 template decx::dsp::fft::cpu_FFT1D_planner<float>::~cpu_FFT1D_planner();
@@ -235,8 +233,8 @@ template decx::dsp::fft::cpu_FFT1D_planner<float>::~cpu_FFT1D_planner();
 
 
 
-template <typename _type_in>
-void* decx::dsp::fft::cpu_FFT1D_planner<_type_in>::get_tmp2_ptr() const
+template <typename _data_type>
+void* decx::dsp::fft::cpu_FFT1D_planner<_data_type>::get_tmp2_ptr() const
 {
     return this->_tmp2.ptr;
 }
@@ -246,8 +244,8 @@ template void* decx::dsp::fft::cpu_FFT1D_planner<float>::get_tmp2_ptr() const;
 
 
 
-template <typename _type_in>
-const decx::dsp::fft::cpu_FFT1D_smaller<_type_in>* decx::dsp::fft::cpu_FFT1D_planner<_type_in>::get_smaller_FFT_info_ptr(const uint32_t _order) const
+template <typename _data_type>
+const decx::dsp::fft::cpu_FFT1D_smaller<_data_type>* decx::dsp::fft::cpu_FFT1D_planner<_data_type>::get_smaller_FFT_info_ptr(const uint32_t _order) const
 {
     //return &this->_smaller_FFTs[_order];
     return this->_smaller_FFTs.get_const_ptr(_order);
@@ -257,8 +255,8 @@ template const decx::dsp::fft::cpu_FFT1D_smaller<float>* decx::dsp::fft::cpu_FFT
 //template const decx::dsp::fft::cpu_FFT1D_smaller<double>* decx::dsp::fft::cpu_FFT1D_planner<double>::get_smaller_FFT_info_ptr(const uint32_t) const;
 
 
-template <typename _type_in>
-const decx::dsp::fft::FKI1D* decx::dsp::fft::cpu_FFT1D_planner<_type_in>::get_outer_kernel_info(const uint32_t _order) const
+template <typename _data_type>
+const decx::dsp::fft::FKI1D* decx::dsp::fft::cpu_FFT1D_planner<_data_type>::get_outer_kernel_info(const uint32_t _order) const
 {
     return &this->_outer_kernel_info[_order];
 }
@@ -268,8 +266,8 @@ template const decx::dsp::fft::FKI1D* decx::dsp::fft::cpu_FFT1D_planner<float>::
 
 
 
-template <typename _type_in>
-uint32_t decx::dsp::fft::cpu_FFT1D_planner<_type_in>::get_kernel_call_num() const
+template <typename _data_type>
+uint32_t decx::dsp::fft::cpu_FFT1D_planner<_data_type>::get_kernel_call_num() const
 {
     return this->_smaller_FFTs.effective_size();
 }
@@ -279,8 +277,8 @@ template uint32_t decx::dsp::fft::cpu_FFT1D_planner<float>::get_kernel_call_num(
 
 
 
-template <typename _type_in>
-void decx::dsp::fft::cpu_FFT1D_planner<_type_in>::_allocate_spaces(de::DH* handle)
+template <typename _data_type>
+void decx::dsp::fft::cpu_FFT1D_planner<_data_type>::_allocate_spaces(de::DH* handle)
 {
     this->_tiles.resize(this->_permitted_concurrency);
 
@@ -288,9 +286,6 @@ void decx::dsp::fft::cpu_FFT1D_planner<_type_in>::_allocate_spaces(de::DH* handl
         this->_tiles[i].allocate_tile(_MAX_TILING_CPU_FFT_, handle);
         Check_Runtime_Error(handle);
     }
-
-    //this->_W_table._alloc_table(this->_signal_length, handle);
-    Check_Runtime_Error(handle);
 
     const uint64_t _tmp_alloc_size = decx::utils::ceil<uint64_t>(this->_signal_length, 4) * 4 * sizeof(double);
     if (decx::alloc::_host_virtual_page_malloc(&this->_tmp1, _tmp_alloc_size) ||
@@ -304,8 +299,8 @@ void decx::dsp::fft::cpu_FFT1D_planner<_type_in>::_allocate_spaces(de::DH* handl
 
 // smaller FFTs
 
-template <typename _type_in>
-decx::dsp::fft::cpu_FFT1D_smaller<_type_in>::cpu_FFT1D_smaller(const uint32_t signal_length, de::DH* handle)
+template <typename _data_type>
+decx::dsp::fft::cpu_FFT1D_smaller<_data_type>::cpu_FFT1D_smaller(const uint32_t signal_length, de::DH* handle)
 {
     this->_signal_length = signal_length;
     this->_W_table._alloc_table(this->_signal_length, handle);
@@ -315,8 +310,8 @@ template decx::dsp::fft::cpu_FFT1D_smaller<float>::cpu_FFT1D_smaller(const uint3
 //template decx::dsp::fft::cpu_FFT1D_smaller<double>::cpu_FFT1D_smaller(const uint32_t signal_length);
 
 
-template <typename _type_in>
-void decx::dsp::fft::cpu_FFT1D_smaller<_type_in>::set_length(const uint32_t signal_length, de::DH* handle)
+template <typename _data_type>
+void decx::dsp::fft::cpu_FFT1D_smaller<_data_type>::set_length(const uint32_t signal_length, de::DH* handle)
 {
     this->_signal_length = signal_length;
     this->_W_table._alloc_table(this->_signal_length, handle);
@@ -326,8 +321,8 @@ template void decx::dsp::fft::cpu_FFT1D_smaller<float>::set_length(const uint32_
 //template void decx::dsp::fft::cpu_FFT1D_smaller<double>::set_length(const uint32_t signal_length, de::DH* handle);
 
 
-template <typename _type_in>
-void decx::dsp::fft::cpu_FFT1D_smaller<_type_in>::plan(decx::utils::_thr_1D* t1D)
+template <typename _data_type>
+void decx::dsp::fft::cpu_FFT1D_smaller<_data_type>::plan(decx::utils::_thr_1D* t1D)
 {
     decx::dsp::fft::_radix_apart<false>(this->_signal_length, &this->_radixes);
     
@@ -347,8 +342,8 @@ template void decx::dsp::fft::cpu_FFT1D_smaller<float>::plan(decx::utils::_thr_1
 //template void decx::dsp::fft::cpu_FFT1D_smaller<double>::plan(decx::utils::_thr_1D* t1D);
 
 
-template <typename _type_in>
-uint32_t decx::dsp::fft::cpu_FFT1D_smaller<_type_in>::get_signal_len() const
+template <typename _data_type>
+uint32_t decx::dsp::fft::cpu_FFT1D_smaller<_data_type>::get_signal_len() const
 {
     return this->_signal_length;
 }
@@ -358,8 +353,8 @@ template uint32_t decx::dsp::fft::cpu_FFT1D_smaller<float>::get_signal_len() con
 
 
 
-template <typename _type_in>
-uint32_t decx::dsp::fft::cpu_FFT1D_smaller<_type_in>::get_kernel_call_num() const
+template <typename _data_type>
+uint32_t decx::dsp::fft::cpu_FFT1D_smaller<_data_type>::get_kernel_call_num() const
 {
     return this->_radixes.size();
 }
@@ -368,8 +363,8 @@ template uint32_t decx::dsp::fft::cpu_FFT1D_smaller<float>::get_kernel_call_num(
 //template uint32_t decx::dsp::fft::cpu_FFT1D_smaller<double>::get_signal_len() const;
 
 
-template <typename _type_in>
-const decx::utils::frag_manager* decx::dsp::fft::cpu_FFT1D_smaller<_type_in>::get_thread_patching() const
+template <typename _data_type>
+const decx::utils::frag_manager* decx::dsp::fft::cpu_FFT1D_smaller<_data_type>::get_thread_patching() const
 {
     return &this->_thread_dispatch;
 }
@@ -379,8 +374,8 @@ template const decx::utils::frag_manager* decx::dsp::fft::cpu_FFT1D_smaller<floa
 
 
 
-template <typename _type_in>
-decx::utils::frag_manager* decx::dsp::fft::cpu_FFT1D_smaller<_type_in>::get_thread_patching_modify()
+template <typename _data_type>
+decx::utils::frag_manager* decx::dsp::fft::cpu_FFT1D_smaller<_data_type>::get_thread_patching_modify()
 {
     return &this->_thread_dispatch;
 }
@@ -389,8 +384,8 @@ template decx::utils::frag_manager* decx::dsp::fft::cpu_FFT1D_smaller<float>::ge
 //template decx::utils::frag_manager* decx::dsp::fft::cpu_FFT1D_smaller<double>::get_thread_patching();
 
 
-template <typename _type_in>
-decx::dsp::fft::cpu_FFT1D_smaller<_type_in>::~cpu_FFT1D_smaller()
+template <typename _data_type>
+decx::dsp::fft::cpu_FFT1D_smaller<_data_type>::~cpu_FFT1D_smaller()
 {
     this->_W_table._release();
 }
@@ -400,8 +395,8 @@ template decx::dsp::fft::cpu_FFT1D_smaller<float>::~cpu_FFT1D_smaller();
 
 
 
-template <typename _type_in>
-const decx::dsp::fft::FKI1D* decx::dsp::fft::cpu_FFT1D_smaller<_type_in>::get_kernel_info_ptr(const uint32_t _id) const
+template <typename _data_type>
+const decx::dsp::fft::FKI1D* decx::dsp::fft::cpu_FFT1D_smaller<_data_type>::get_kernel_info_ptr(const uint32_t _id) const
 {
     return &this->_kernel_infos[_id];
 }

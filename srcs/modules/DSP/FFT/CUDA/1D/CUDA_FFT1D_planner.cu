@@ -103,11 +103,32 @@ decx::dsp::fft::_cuda_FFT1D_planner<float>::get_FFT2D_planner() const;
 //decx::dsp::fft::_cuda_FFT1D_planner<double>::get_FFT2D_planner() const;
 
 
-template <typename _type_in>
-uint32_t decx::dsp::fft::_cuda_FFT1D_planner<_type_in>::get_larger_FFT_lengths(const uint8_t _id) const
+template <typename _data_type>
+uint32_t decx::dsp::fft::_cuda_FFT1D_planner<_data_type>::get_larger_FFT_lengths(const uint8_t _id) const
 {
     return this->_large_FFT_lengths[_id];
 }
 
 template uint32_t decx::dsp::fft::_cuda_FFT1D_planner<float>::get_larger_FFT_lengths(const uint8_t) const;
 //template uint32_t decx::dsp::fft::_cuda_FFT1D_planner<double>::get_larger_FFT_lengths(const uint8_t) const;
+
+
+template <typename _data_type>
+void decx::dsp::fft::_cuda_FFT1D_planner<_data_type>::release(decx::dsp::fft::_cuda_FFT1D_planner<_data_type>* _fake_this)
+{
+    decx::alloc::_device_dealloc(&_fake_this->_tmp1);
+    decx::alloc::_device_dealloc(&_fake_this->_tmp2);
+}
+
+template void decx::dsp::fft::_cuda_FFT1D_planner<float>::release(decx::dsp::fft::_cuda_FFT1D_planner<float>*);
+//template void decx::dsp::fft::_cuda_FFT1D_planner<float>::release(decx::dsp::fft::_cuda_FFT1D_planner<float>*);
+
+
+template <typename _data_type>
+decx::dsp::fft::_cuda_FFT1D_planner<_data_type>::~_cuda_FFT1D_planner()
+{
+    decx::dsp::fft::_cuda_FFT1D_planner<_data_type>::release(this);
+}
+
+template decx::dsp::fft::_cuda_FFT1D_planner<float>::~_cuda_FFT1D_planner();
+//template decx::dsp::fft::_cuda_FFT1D_planner<float>::~_cuda_FFT1D_planner();

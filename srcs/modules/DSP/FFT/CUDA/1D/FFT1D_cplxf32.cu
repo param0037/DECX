@@ -10,8 +10,6 @@
 
 #include "../../../../core/basic.h"
 #include "CUDA_FFT1D_planner.cuh"
-
-
 #include "FFT1D_1st_kernels_dense.cuh"
 #include "../2D/FFT2D_kernels.cuh"
 #include "../../../../BLAS/basic_process/transpose/CUDA/transpose_kernels.cuh"
@@ -154,5 +152,5 @@ template void decx::dsp::fft::_cuda_FFT1D_planner<float>::Inverse<float>(decx::_
 template void decx::dsp::fft::_cuda_FFT1D_planner<float>::Inverse<de::CPf>(decx::_GPU_Vector*, decx::_GPU_Vector*, decx::cuda_stream*) const;
 
 
-decx::dsp::fft::_cuda_FFT1D_planner<float>* decx::dsp::fft::cuda_FFT1D_cplxf32_planner;
-decx::dsp::fft::_cuda_FFT1D_planner<float>* decx::dsp::fft::cuda_IFFT1D_cplxf32_planner;
+decx::ResourceHandle decx::dsp::fft::cuda_FFT1D_cplxf32_planner;
+decx::ResourceHandle decx::dsp::fft::cuda_IFFT1D_cplxf32_planner;

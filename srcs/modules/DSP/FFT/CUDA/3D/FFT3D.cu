@@ -10,14 +10,12 @@
 
 
 #include "../../../../core/basic.h"
-
 #include "../2D/FFT2D_kernels.cuh"
 #include "../../../../core/utils/double_buffer.h"
 #include "../../../../BLAS/basic_process/transpose/CUDA/transpose_kernels.cuh"
 #include "FFT3D_planner.cuh"
 #include "../2D/FFT2D_1way_kernel_callers.cuh"
 #include "FFT3D_MidProc_caller.cuh"
-
 #include "../CUDA_FFTs.cuh"
 
 
@@ -45,21 +43,29 @@ static void decx::dsp::fft::_FFT3D_caller_cplxf(decx::_GPU_Tensor* src, decx::_G
     decx::cuda_event* E;
     E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
 
-    if (decx::dsp::fft::cuda_FFT3D_cplxf32_planner == NULL) {
-        decx::dsp::fft::cuda_FFT3D_cplxf32_planner = new decx::dsp::fft::_cuda_FFT3D_planner<float>;
+    if (decx::dsp::fft::cuda_FFT3D_cplxf32_planner._res_ptr == NULL) {
+        decx::dsp::fft::cuda_FFT3D_cplxf32_planner.RegisterResource(new decx::dsp::fft::_cuda_FFT3D_planner<float>,
+            5, &decx::dsp::fft::_cuda_FFT3D_planner<float>::release);
     }
-    if (decx::dsp::fft::cuda_FFT3D_cplxf32_planner->changed(&src->get_layout(), &dst->get_layout())) {
-        decx::dsp::fft::cuda_FFT3D_cplxf32_planner->plan(&src->get_layout(), &dst->get_layout(), handle, S);
+
+    decx::dsp::fft::cuda_FFT3D_cplxf32_planner.lock();
+    decx::dsp::fft::_cuda_FFT3D_planner<float>* _planner =
+        decx::dsp::fft::cuda_FFT3D_cplxf32_planner.get_resource_raw_ptr<decx::dsp::fft::_cuda_FFT3D_planner<float>>();
+
+    if (_planner->changed(&src->get_layout(), &dst->get_layout())) {
+        _planner->plan(&src->get_layout(), &dst->get_layout(), handle, S);
         Check_Runtime_Error(handle);
     }
 
-    decx::dsp::fft::cuda_FFT3D_cplxf32_planner->Forward<_type_in>(src, dst, S);
+    _planner->Forward<_type_in>(src, dst, S);
 
     E->event_record(S);
     E->synchronize();
 
     S->detach();
     E->detach();
+
+    decx::dsp::fft::cuda_FFT3D_cplxf32_planner.unlock();
 }
 
 
@@ -72,21 +78,29 @@ static void decx::dsp::fft::_IFFT3D_caller_cplxf(decx::_GPU_Tensor* src, decx::_
     decx::cuda_event* E;
     E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
 
-    if (decx::dsp::fft::cuda_IFFT3D_cplxf32_planner == NULL) {
-        decx::dsp::fft::cuda_IFFT3D_cplxf32_planner = new decx::dsp::fft::_cuda_FFT3D_planner<float>;
+    if (decx::dsp::fft::cuda_IFFT3D_cplxf32_planner._res_ptr == NULL) {
+        decx::dsp::fft::cuda_IFFT3D_cplxf32_planner.RegisterResource(new decx::dsp::fft::_cuda_FFT3D_planner<float>,
+            5, &decx::dsp::fft::_cuda_FFT3D_planner<float>::release);
     }
-    if (decx::dsp::fft::cuda_IFFT3D_cplxf32_planner->changed(&src->get_layout(), &dst->get_layout())) {
-        decx::dsp::fft::cuda_IFFT3D_cplxf32_planner->plan(&src->get_layout(), &dst->get_layout(), handle, S);
+
+    decx::dsp::fft::cuda_IFFT3D_cplxf32_planner.lock();
+    decx::dsp::fft::_cuda_FFT3D_planner<float>* _planner =
+        decx::dsp::fft::cuda_IFFT3D_cplxf32_planner.get_resource_raw_ptr<decx::dsp::fft::_cuda_FFT3D_planner<float>>();
+
+    if (_planner->changed(&src->get_layout(), &dst->get_layout())) {
+        _planner->plan(&src->get_layout(), &dst->get_layout(), handle, S);
         Check_Runtime_Error(handle);
     }
 
-    decx::dsp::fft::cuda_IFFT3D_cplxf32_planner->Inverse<_type_out>(src, dst, S);
+    _planner->Inverse<_type_out>(src, dst, S);
 
     E->event_record(S);
     E->synchronize();
 
     S->detach();
     E->detach();
+
+    decx::dsp::fft::cuda_IFFT3D_cplxf32_planner.unlock();
 }
 
 
@@ -161,24 +175,4 @@ _DECX_API_ de::DH de::dsp::cuda::IFFT(de::GPU_Tensor& src, de::GPU_Tensor& dst, 
     }
 
     return handle;
-}
-
-
-void decx::dsp::InitCUDA_FFT3D_Resources()
-{
-    decx::dsp::fft::cuda_FFT3D_cplxf32_planner = NULL;
-    decx::dsp::fft::cuda_IFFT3D_cplxf32_planner = NULL;
-}
-
-
-void decx::dsp::FreeCUDA_FFT3D_Resources()
-{
-    if (decx::dsp::fft::cuda_FFT3D_cplxf32_planner != NULL) {
-        decx::dsp::fft::cuda_FFT3D_cplxf32_planner->release();
-        delete decx::dsp::fft::cuda_FFT3D_cplxf32_planner;
-    }
-    if (decx::dsp::fft::cuda_IFFT3D_cplxf32_planner != NULL) {
-        decx::dsp::fft::cuda_IFFT3D_cplxf32_planner->release();
-        delete decx::dsp::fft::cuda_IFFT3D_cplxf32_planner;
-    }
 }
