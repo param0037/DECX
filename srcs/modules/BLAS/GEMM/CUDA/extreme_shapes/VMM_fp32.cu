@@ -57,8 +57,10 @@ decx::GPUK::cu_vec_m_mat_fp32(const float* __restrict       vec_src,
 
     __syncwarp(0xffffffff);
 
-    decx::reduce::GPUK::cu_warp_reduce<double, 32, 4>(decx::utils::cuda::__float_add2, &tmp1, &tmp3);
-    decx::reduce::GPUK::cu_warp_reduce<double, 32, 4>(decx::utils::cuda::__float_add2, &tmp2, &tmp4);
+    decx::reduce::GPUK::cu_warp_reduce<double, 32, 4>(
+        (decx::utils::cuda::cu_math_ops<double>*)&decx::utils::cuda::__float_add2, &tmp1, &tmp3);
+    decx::reduce::GPUK::cu_warp_reduce<double, 32, 4>(
+        (decx::utils::cuda::cu_math_ops<double>*)&decx::utils::cuda::__float_add2, &tmp2, &tmp4);
 
     __syncthreads();
 

@@ -25,12 +25,13 @@ namespace de
         _FP64_              = 3,
         _FP16_              = 4,
         _COMPLEX_F32_       = 5,
-        _UINT8_             = 6,
-        _UCHAR3_            = 7,
-        _UCHAR4_            = 8,
-        _VECTOR3F_          = 9,
-        _VECTOR4F_          = 10,
-        _UINT64_            = 11
+        _COMPLEX_F64_       = 6,
+        _UINT8_             = 7,
+        _UCHAR3_            = 8,
+        _UCHAR4_            = 9,
+        _VECTOR3F_          = 10,
+        _VECTOR4F_          = 11,
+        _UINT64_            = 12
     };
 
 
@@ -115,6 +116,8 @@ static uint8_t decx::core::_size_mapping(const de::_DATA_TYPES_FLAGS_ type) {
         __byte = _SIZE_FLOAT16_;                break;
     case de::_DATA_TYPES_FLAGS_::_COMPLEX_F32_:
         __byte = _SIZE_COMPLEX_F32_;            break;
+    case de::_DATA_TYPES_FLAGS_::_COMPLEX_F64_:
+        __byte = _SIZE_VECTOR4_FP32_;           break;
     case de::_DATA_TYPES_FLAGS_::_UINT8_:
         __byte = _SIZE_UINT8_;                  break;
     case de::_DATA_TYPES_FLAGS_::_UCHAR3_:

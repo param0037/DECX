@@ -102,8 +102,8 @@ void decx::bp::GPUK::cu_transpose2D_b8_for_FFT(const double2* src,
             if ((tidy << 3) + i < dst_dims.x) { 
                 _regs[i]._vd = src[dex + pitchsrc_v2 * i]; 
 
-                W2._arrcplxf2[0].dev_construct_with_phase(__fdividef(__fmul_rn(Two_Pi, (tidx << 1) * ((tidy << 3) + i)), (dst_dims.x * dst_dims.y)));
-                W2._arrcplxf2[1].dev_construct_with_phase(__fdividef(__fmul_rn(Two_Pi, ((tidx << 1) + 1) * ((tidy << 3) + i)), (dst_dims.x * dst_dims.y)));
+                W2._arrcplxf2[0].construct_with_phase(__fdividef(__fmul_rn(Two_Pi, (tidx << 1) * ((tidy << 3) + i)), (dst_dims.x * dst_dims.y)));
+                W2._arrcplxf2[1].construct_with_phase(__fdividef(__fmul_rn(Two_Pi, ((tidx << 1) + 1) * ((tidy << 3) + i)), (dst_dims.x * dst_dims.y)));
                 _regs[i]._vf = decx::dsp::fft::GPUK::_complex_mul2_fp32(_regs[i]._vf, W2._vf);
             }
         }
@@ -144,6 +144,62 @@ void decx::bp::GPUK::cu_transpose2D_b8_for_FFT(const double2* src,
         }
     }
 }
+
+
+__global__
+void decx::bp::GPUK::cu_transpose2D_b16_for_FFT(const double2* src,
+                                               double2 *dst, 
+                                               const uint32_t pitchsrc_v1,        // in double2 (de::CPd x1)
+                                               const uint32_t pitchdst_v1,        // in double2 (de::CPd x1)
+                                               const uint2 dst_dims)   // in de::CPd
+{
+    uint32_t tidx = threadIdx.x + blockIdx.x * blockDim.x;
+    uint32_t tidy = threadIdx.y + blockIdx.y * blockDim.y;
+
+    uint64_t dex = (tidy << 2) * pitchsrc_v1 + tidx;
+
+    __shared__ double2 _buffer[32][32 + 1];
+    de::CPd W;
+    decx::utils::_cuda_vec128 _regs[4];
+
+    for (uint8_t i = 0; i < 4; ++i) {
+        _regs[i]._vd = decx::utils::vec2_set1_fp64(0.0);
+    }
+    // Load source data to registers
+    if (tidx < pitchsrc_v1) {
+        for (uint8_t i = 0; i < 4; ++i) {
+            if ((tidy << 2) + i < dst_dims.x) { 
+                _regs[i]._vd = src[dex + pitchsrc_v1 * i]; 
+
+                W.construct_with_phase(__ddiv_rn(__dmul_rn(Two_Pi, tidx * ((tidy << 2) + i)), (dst_dims.x * dst_dims.y)));
+                _regs[i]._cplxd = decx::dsp::fft::GPUK::_complex_mul_fp64(_regs[i]._cplxd, W);
+            }
+        }
+    }
+
+    _buffer[threadIdx.x][threadIdx.y * 4] = _regs[0]._vd;
+    _buffer[threadIdx.x][threadIdx.y * 4 + 1] = _regs[1]._vd;
+    _buffer[threadIdx.x][threadIdx.y * 4 + 2] = _regs[2]._vd;
+    _buffer[threadIdx.x][threadIdx.y * 4 + 3] = _regs[3]._vd;
+
+    __syncthreads();
+
+    for (uint8_t i = 0; i < 4; ++i) {
+        _regs[i]._vd = _buffer[threadIdx.y * 4 + i][threadIdx.x];
+    }
+
+    tidx = threadIdx.x + blockIdx.y * blockDim.x;
+    tidy = threadIdx.y + blockIdx.x * blockDim.y;
+
+    dex = tidy * 4 * pitchdst_v1 + tidx;
+
+    if (tidx < pitchdst_v1) {
+        for (uint8_t i = 0; i < 4; ++i) {
+            if (tidy * 4 + i < dst_dims.y) { dst[dex + pitchdst_v1 * i] = _regs[i]._vd; }
+        }
+    }
+}
+
 #endif
 
 

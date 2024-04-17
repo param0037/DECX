@@ -8,7 +8,7 @@
 *   More information please visit https://github.com/param0037/DECX
 */
 
-#include "FFT2D_kernels.cuh"
+#include "../FFT2D_kernels.cuh"
 
 
 // [32 * 2, 8] = [64, 8]
@@ -319,16 +319,16 @@ decx::dsp::fft::GPUK::cu_FFT2_R5_C2C_cplxf(const float4* __restrict src,
     }
 
     const float _frac = __fdividef(_warp_loc_id, _kernel_info._warp_proc_len);
-    W.dev_construct_with_phase(__fmul_rn(Two_Pi, _frac));
+    W.construct_with_phase(__fmul_rn(Two_Pi, _frac));
     recv[1]._vf = decx::dsp::fft::GPUK::_complex_2mul1_fp32(recv[1]._vf, W);
 
-    W.dev_construct_with_phase(__fmul_rn(Four_Pi, _frac));
+    W.construct_with_phase(__fmul_rn(Four_Pi, _frac));
     recv[2]._vf = decx::dsp::fft::GPUK::_complex_2mul1_fp32(recv[2]._vf, W);
 
-    W.dev_construct_with_phase(__fmul_rn(Six_Pi, _frac));
+    W.construct_with_phase(__fmul_rn(Six_Pi, _frac));
     recv[3]._vf = decx::dsp::fft::GPUK::_complex_2mul1_fp32(recv[3]._vf, W);
 
-    W.dev_construct_with_phase(__fmul_rn(Eight_Pi, _frac));
+    W.construct_with_phase(__fmul_rn(Eight_Pi, _frac));
     recv[4]._vf = decx::dsp::fft::GPUK::_complex_2mul1_fp32(recv[4]._vf, W);
 
     _FFT_domain_dex = (tidy / _kernel_info._store_pitch) * _kernel_info._warp_proc_len + _warp_loc_id;
@@ -336,10 +336,20 @@ decx::dsp::fft::GPUK::cu_FFT2_R5_C2C_cplxf(const float4* __restrict src,
     if (tidy < _Bops_num && tidx < _pitchdst_v2) 
     {
         for (uint8_t i = 0; i < 2; ++i) {
-            res._arrcplxf2[i].real = __fadd_rn(__fadd_rn(recv[0]._arrcplxf2[i].real, recv[1]._arrcplxf2[i].real) +
+            /*res._arrcplxf2[i].real = __fadd_rn(__fadd_rn(recv[0]._arrcplxf2[i].real, recv[1]._arrcplxf2[i].real) +
                 recv[2]._arrcplxf2[i].real, __fadd_rn(recv[3]._arrcplxf2[i].real, recv[4]._arrcplxf2[i].real));
             res._arrcplxf2[i].image = __fadd_rn(__fadd_rn(recv[0]._arrcplxf2[i].image, recv[1]._arrcplxf2[i].image) +
-                recv[2]._arrcplxf2[i].image, __fadd_rn(recv[3]._arrcplxf2[i].image, recv[4]._arrcplxf2[i].image));
+                recv[2]._arrcplxf2[i].image, __fadd_rn(recv[3]._arrcplxf2[i].image, recv[4]._arrcplxf2[i].image));*/
+
+            res._arrcplxf2[i].real = __fadd_rn(recv[0]._arrcplxf2[i].real, recv[1]._arrcplxf2[i].real);
+            res._arrcplxf2[i].real = __fadd_rn(res._arrcplxf2[i].real, recv[2]._arrcplxf2[i].real);
+            res._arrcplxf2[i].real = __fadd_rn(res._arrcplxf2[i].real, recv[3]._arrcplxf2[i].real);
+            res._arrcplxf2[i].real = __fadd_rn(res._arrcplxf2[i].real, recv[4]._arrcplxf2[i].real);
+
+            res._arrcplxf2[i].image = __fadd_rn(recv[0]._arrcplxf2[i].image, recv[1]._arrcplxf2[i].image);
+            res._arrcplxf2[i].image = __fadd_rn(res._arrcplxf2[i].image, recv[2]._arrcplxf2[i].image);
+            res._arrcplxf2[i].image = __fadd_rn(res._arrcplxf2[i].image, recv[3]._arrcplxf2[i].image);
+            res._arrcplxf2[i].image = __fadd_rn(res._arrcplxf2[i].image, recv[4]._arrcplxf2[i].image);
         }
         if (_conj) { res = decx::dsp::fft::GPUK::_complex4_conjugate_fp32(res); }
         dst[_FFT_domain_dex * _pitchdst_v2 + tidx] = res._vf;
@@ -419,16 +429,16 @@ decx::dsp::fft::GPUK::cu_FFT2_R5_C2R_cplxf_u8(const float4* __restrict src,
     }
 
     const float _frac = __fdividef(_warp_loc_id, _kernel_info._warp_proc_len);
-    W.dev_construct_with_phase(__fmul_rn(Two_Pi, _frac));
+    W.construct_with_phase(__fmul_rn(Two_Pi, _frac));
     recv[1]._vf = decx::dsp::fft::GPUK::_complex_2mul1_fp32(recv[1]._vf, W);
 
-    W.dev_construct_with_phase(__fmul_rn(Four_Pi, _frac));
+    W.construct_with_phase(__fmul_rn(Four_Pi, _frac));
     recv[2]._vf = decx::dsp::fft::GPUK::_complex_2mul1_fp32(recv[2]._vf, W);
 
-    W.dev_construct_with_phase(__fmul_rn(Six_Pi, _frac));
+    W.construct_with_phase(__fmul_rn(Six_Pi, _frac));
     recv[3]._vf = decx::dsp::fft::GPUK::_complex_2mul1_fp32(recv[3]._vf, W);
 
-    W.dev_construct_with_phase(__fmul_rn(Eight_Pi, _frac));
+    W.construct_with_phase(__fmul_rn(Eight_Pi, _frac));
     recv[4]._vf = decx::dsp::fft::GPUK::_complex_2mul1_fp32(recv[4]._vf, W);
 
     _FFT_domain_dex = (tidy / _kernel_info._store_pitch) * _kernel_info._warp_proc_len + _warp_loc_id;
@@ -516,16 +526,16 @@ decx::dsp::fft::GPUK::cu_FFT2_R5_C2R_cplxf_fp32(const float4* __restrict src,
     }
 
     const float _frac = __fdividef(_warp_loc_id, _kernel_info._warp_proc_len);
-    W.dev_construct_with_phase(__fmul_rn(Two_Pi, _frac));
+    W.construct_with_phase(__fmul_rn(Two_Pi, _frac));
     recv[1]._vf = decx::dsp::fft::GPUK::_complex_2mul1_fp32(recv[1]._vf, W);
 
-    W.dev_construct_with_phase(__fmul_rn(Four_Pi, _frac));
+    W.construct_with_phase(__fmul_rn(Four_Pi, _frac));
     recv[2]._vf = decx::dsp::fft::GPUK::_complex_2mul1_fp32(recv[2]._vf, W);
 
-    W.dev_construct_with_phase(__fmul_rn(Six_Pi, _frac));
+    W.construct_with_phase(__fmul_rn(Six_Pi, _frac));
     recv[3]._vf = decx::dsp::fft::GPUK::_complex_2mul1_fp32(recv[3]._vf, W);
 
-    W.dev_construct_with_phase(__fmul_rn(Eight_Pi, _frac));
+    W.construct_with_phase(__fmul_rn(Eight_Pi, _frac));
     recv[4]._vf = decx::dsp::fft::GPUK::_complex_2mul1_fp32(recv[4]._vf, W);
 
     _FFT_domain_dex = (tidy / _kernel_info._store_pitch) * _kernel_info._warp_proc_len + _warp_loc_id;

@@ -63,76 +63,67 @@ namespace fft {
 }
 }
 }
+
 __device__ static de::CPf 
 decx::dsp::fft::GPUK::_complex_mul_fp32(const de::CPf a, const de::CPf b)
 {
-    de::CPf res;
-    res.real = __fsub_rn(__fmul_rn(a.real, b.real), __fmul_rn(a.image, b.image));
-    res.image = __fadd_rn(__fmul_rn(a.real, b.image), __fmul_rn(a.image, b.real));
-    return res;
+    return { __fsub_rn(__fmul_rn(a.real, b.real), __fmul_rn(a.image, b.image)),
+             __fadd_rn(__fmul_rn(a.real, b.image), __fmul_rn(a.image, b.real)) };
 }
 
 
 __device__ static float4 
 decx::dsp::fft::GPUK::_complex_mul2_fp32(const float4 a, const float4 b)
 {
-    return make_float4(__fsub_rn(__fmul_rn(a.x, b.x), __fmul_rn(a.y, b.y)),
-                       __fadd_rn(__fmul_rn(a.x, b.y), __fmul_rn(a.y, b.x)),
-                       __fsub_rn(__fmul_rn(a.z, b.z), __fmul_rn(a.w, b.w)),
-                       __fadd_rn(__fmul_rn(a.z, b.w), __fmul_rn(a.w, b.z)));
+    return { __fsub_rn(__fmul_rn(a.x, b.x), __fmul_rn(a.y, b.y)),
+             __fadd_rn(__fmul_rn(a.x, b.y), __fmul_rn(a.y, b.x)),
+             __fsub_rn(__fmul_rn(a.z, b.z), __fmul_rn(a.w, b.w)),
+             __fadd_rn(__fmul_rn(a.z, b.w), __fmul_rn(a.w, b.z)) };
 }
 
 
 __device__ static float4
 decx::dsp::fft::GPUK::_complex_2mul1_fp32(const float4 a, const de::CPf b)
 {
-    return make_float4(__fsub_rn(__fmul_rn(a.x, b.real), __fmul_rn(a.y, b.image)),
-                       __fadd_rn(__fmul_rn(a.x, b.image), __fmul_rn(a.y, b.real)),
-                       __fsub_rn(__fmul_rn(a.z, b.real), __fmul_rn(a.w, b.image)),
-                       __fadd_rn(__fmul_rn(a.z, b.image), __fmul_rn(a.w, b.real)));
+    return { __fsub_rn(__fmul_rn(a.x, b.real), __fmul_rn(a.y, b.image)),
+             __fadd_rn(__fmul_rn(a.x, b.image), __fmul_rn(a.y, b.real)),
+             __fsub_rn(__fmul_rn(a.z, b.real), __fmul_rn(a.w, b.image)),
+             __fadd_rn(__fmul_rn(a.z, b.image), __fmul_rn(a.w, b.real)) };
 }
 
 
 __device__ __inline__ de::CPf 
 decx::dsp::fft::GPUK::_complex_fma_fp32(const de::CPf a, const de::CPf b, const de::CPf c)
 {
-    de::CPf res;
-    res.real = __fsub_rn(fmaf(a.real, b.real, c.real), __fmul_rn(a.image, b.image));
-    res.image = __fadd_rn(fmaf(a.real, b.image, c.image), __fmul_rn(a.image, b.real));
-    return res;
+    return { __fsub_rn(__fmaf_rn(a.real, b.real, c.real), __fmul_rn(a.image, b.image)),
+             __fadd_rn(__fmaf_rn(a.real, b.image, c.image), __fmul_rn(a.image, b.real)) };
 }
-
 
 
 __device__ __inline__ float
 decx::dsp::fft::GPUK::_complex_fma_preserve_R(const de::CPf a, const de::CPf b, const de::CPf c)
 {
-    float res;
-    res = __fsub_rn(fmaf(a.real, b.real, c.real), __fmul_rn(a.image, b.image));
-    return res;
+    return __fsub_rn(__fmaf_rn(a.real, b.real, c.real), __fmul_rn(a.image, b.image));
 }
-
 
 
 __device__ __inline__ float4 
 decx::dsp::fft::GPUK::_complex_fma2_fp32(const float4 a, const float4 b, const float4 c)
 {
-    return make_float4(__fsub_rn(fmaf(a.x, b.x, c.x), __fmul_rn(a.y, b.y)),
-                       __fadd_rn(fmaf(a.x, b.y, c.y), __fmul_rn(a.y, b.x)),
-                       __fsub_rn(fmaf(a.z, b.z, c.z), __fmul_rn(a.w, b.w)),
-                       __fadd_rn(fmaf(a.z, b.w, c.w), __fmul_rn(a.w, b.z)));
+    return { __fsub_rn(__fmaf_rn(a.x, b.x, c.x), __fmul_rn(a.y, b.y)),
+             __fadd_rn(__fmaf_rn(a.x, b.y, c.y), __fmul_rn(a.y, b.x)),
+             __fsub_rn(__fmaf_rn(a.z, b.z, c.z), __fmul_rn(a.w, b.w)),
+             __fadd_rn(__fmaf_rn(a.z, b.w, c.w), __fmul_rn(a.w, b.z)) };
 }
 
 
 __device__ __inline__ float4
 decx::dsp::fft::GPUK::_complex_fma2(const float4 a, const float4 b, const float4 c)
 {
-    float4 res;
-    res.x = __fsub_rn(fmaf(a.x, b.x, c.x), __fmul_rn(a.y, b.y));
-    res.y = __fadd_rn(fmaf(a.x, b.y, c.y), __fmul_rn(a.y, b.x));
-    res.z = __fsub_rn(fmaf(a.z, b.z, c.z), __fmul_rn(a.w, b.w));
-    res.w = __fadd_rn(fmaf(a.z, b.w, c.w), __fmul_rn(a.w, b.z));
-    return res;
+    return { __fsub_rn(__fmaf_rn(a.x, b.x, c.x), __fmul_rn(a.y, b.y)),
+             __fadd_rn(__fmaf_rn(a.x, b.y, c.y), __fmul_rn(a.y, b.x)),
+             __fsub_rn(__fmaf_rn(a.z, b.z, c.z), __fmul_rn(a.w, b.w)),
+             __fadd_rn(__fmaf_rn(a.z, b.w, c.w), __fmul_rn(a.w, b.z)) };
 }
 
 
@@ -140,10 +131,10 @@ __device__ __inline__ float4
 decx::dsp::fft::GPUK::_complex_2fma1(const float4 a, const de::CPf b, const float4 c)
 {
     float4 res;
-    res.x = __fsub_rn(fmaf(a.x, b.real, c.x), __fmul_rn(a.y, b.image));     // real 1
-    res.y = __fadd_rn(fmaf(a.x, b.image, c.y), __fmul_rn(a.y, b.real));     // image 1
-    res.z = __fsub_rn(fmaf(a.z, b.real, c.z), __fmul_rn(a.w, b.image));     // real 2
-    res.w = __fadd_rn(fmaf(a.z, b.image, c.w), __fmul_rn(a.w, b.real));     // image 2
+    res.x = __fsub_rn(__fmaf_rn(a.x, b.real, c.x), __fmul_rn(a.y, b.image));     // real 1
+    res.y = __fadd_rn(__fmaf_rn(a.x, b.image, c.y), __fmul_rn(a.y, b.real));     // image 1
+    res.z = __fsub_rn(__fmaf_rn(a.z, b.real, c.z), __fmul_rn(a.w, b.image));     // real 2
+    res.w = __fadd_rn(__fmaf_rn(a.z, b.image, c.w), __fmul_rn(a.w, b.real));     // image 2
     return res;
 }
 
@@ -151,10 +142,10 @@ decx::dsp::fft::GPUK::_complex_2fma1(const float4 a, const de::CPf b, const floa
 __device__ __inline__ float4
 decx::dsp::fft::GPUK::_complex_2fma1_fp32(const float4 a, const de::CPf b, const float4 c)
 {
-    return make_float4(__fsub_rn(fmaf(a.x, b.real, c.x), __fmul_rn(a.y, b.image)),
-                       __fadd_rn(fmaf(a.x, b.image, c.y), __fmul_rn(a.y, b.real)),
-                       __fsub_rn(fmaf(a.z, b.real, c.z), __fmul_rn(a.w, b.image)),
-                       __fadd_rn(fmaf(a.z, b.image, c.w), __fmul_rn(a.w, b.real)));
+    return make_float4(__fsub_rn(__fmaf_rn(a.x, b.real, c.x), __fmul_rn(a.y, b.image)),
+                       __fadd_rn(__fmaf_rn(a.x, b.image, c.y), __fmul_rn(a.y, b.real)),
+                       __fsub_rn(__fmaf_rn(a.z, b.real, c.z), __fmul_rn(a.w, b.image)),
+                       __fadd_rn(__fmaf_rn(a.z, b.image, c.w), __fmul_rn(a.w, b.real)));
 }
 
 

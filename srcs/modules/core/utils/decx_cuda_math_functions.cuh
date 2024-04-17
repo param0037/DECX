@@ -46,72 +46,98 @@ namespace utils
         __device__ __inline__ float4
         __float_div4_1(const float4& numer_vec4, const float deno)
         {
-            return make_float4(__fdividef(numer_vec4.x, deno),
-                               __fdividef(numer_vec4.y, deno),
-                               __fdividef(numer_vec4.z, deno),
-                               __fdividef(numer_vec4.w, deno));
+            return { __fdividef(numer_vec4.x, deno),
+                     __fdividef(numer_vec4.y, deno),
+                     __fdividef(numer_vec4.z, deno),
+                     __fdividef(numer_vec4.w, deno) };
         }
 
 
         __device__ __inline__ float2
-        __float_div2_1(const float2& numer_vec4, const float deno)
+        __float_div2_1(const float2& numer_vec2, const float deno)
         {
-            return make_float2(__fdividef(numer_vec4.x, deno),
-                               __fdividef(numer_vec4.y, deno));
+            return { __fdividef(numer_vec2.x, deno),
+                     __fdividef(numer_vec2.y, deno) };
         }
 
-        __device__ __inline__ double
-        __float_add2(const double a, const double b)
+        __device__ __inline__ double2
+        __double_div2_1(const double2& numer_vec2, const double deno)
         {
-            float2 res;
-            res.x = __fadd_rn(((float2*)&a)->x, ((float2*)&b)->x);
-            res.y = __fadd_rn(((float2*)&a)->y, ((float2*)&b)->y);
-            return *((double*)&res);
+            return { __ddiv_rn(numer_vec2.x, deno),
+                     __ddiv_rn(numer_vec2.y, deno) };
+        }
+
+        __device__ __inline__ float2
+        __float_add2(const float2 a, const float2 b)
+        {
+            return { __fadd_rn(a.x, b.x),
+                     __fadd_rn(a.y, b.y) };
+        }
+
+
+        __device__ __inline__ double2
+        __double_add2(const double2 a, const double2 b)
+        {
+            return { __dadd_rn(a.x, b.x),
+                     __dadd_rn(a.y, b.y) };
+        }
+
+
+        __device__ __inline__ double2
+        __double_sub2(const double2 a, const double2 b)
+        {
+            return { __dsub_rn(a.x, b.x),
+                     __dsub_rn(a.y, b.y) };
         }
 
 
         __device__ __inline__ float4
         __float_add4(const float4& a, const float4& b)
         {
-            return make_float4(__fadd_rn(a.x, b.x), __fadd_rn(a.y, b.y),
-                               __fadd_rn(a.z, b.z), __fadd_rn(a.w, b.w));
+            return { __fadd_rn(a.x, b.x), __fadd_rn(a.y, b.y),
+                     __fadd_rn(a.z, b.z), __fadd_rn(a.w, b.w) };
         }
 
 
         __device__ __inline__ float4
         __float_sub4(const float4& a, const float4& b)
         {
-            return make_float4(__fsub_rn(a.x, b.x), __fsub_rn(a.y, b.y),
-                               __fsub_rn(a.z, b.z), __fsub_rn(a.w, b.w));
+            return { __fsub_rn(a.x, b.x), __fsub_rn(a.y, b.y),
+                     __fsub_rn(a.z, b.z), __fsub_rn(a.w, b.w) };
         }
 
 
         __device__ __inline__ float2
         __float_sub2(const float2& a, const float2& b)
         {
-            return make_float2(__fsub_rn(a.x, b.x), __fsub_rn(a.y, b.y));
+            return { __fsub_rn(a.x, b.x), __fsub_rn(a.y, b.y) };
         }
 
 
         __device__ __inline__ float4
         __float_mul4(const float4& a, const float4& b)
         {
-            return make_float4(__fmul_rn(a.x, b.x),
-                               __fmul_rn(a.y, b.y),
-                               __fmul_rn(a.z, b.z),
-                               __fmul_rn(a.w, b.w));
+            return { __fmul_rn(a.x, b.x),
+                     __fmul_rn(a.y, b.y),
+                     __fmul_rn(a.z, b.z),
+                     __fmul_rn(a.w, b.w) };
         }
 
 
-        __device__ __inline__ decx::utils::_cuda_vec128
-        __float_mul4_1(const decx::utils::_cuda_vec128& a, const float b)
+        __device__ __inline__ float4
+        __float_mul4_1(const float4& a, const float b)
         {
-            decx::utils::_cuda_vec128 res;
+            /*decx::utils::_cuda_vec128 res;
             res._vf.x = __fmul_rn(a._vf.x, b);
             res._vf.y = __fmul_rn(a._vf.y, b);
             res._vf.z = __fmul_rn(a._vf.z, b);
             res._vf.w = __fmul_rn(a._vf.w, b);
-            return res;
+            return res;*/
+
+            return { __fmul_rn(a.x, b),
+                     __fmul_rn(a.y, b),
+                     __fmul_rn(a.z, b),
+                     __fmul_rn(a.w, b) };
         }
 
 

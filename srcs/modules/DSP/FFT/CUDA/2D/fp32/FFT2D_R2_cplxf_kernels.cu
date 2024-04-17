@@ -8,7 +8,7 @@
 *   More information please visit https://github.com/param0037/DECX
 */
 
-#include "FFT2D_kernels.cuh"
+#include "../FFT2D_kernels.cuh"
 
 
 // [32 * 2, 8] = [64, 8]
@@ -186,7 +186,7 @@ decx::dsp::fft::GPUK::cu_FFT2_R2_C2C_cplxf(const float4* __restrict src,
         }
     }
 
-    W._cplxf32.dev_construct_with_phase(__fmul_rn(Two_Pi, __fdividef((float)warp_loc_id, (float)_kernel_info._warp_proc_len)));
+    W._cplxf32.construct_with_phase(__fmul_rn(Two_Pi, __fdividef((float)warp_loc_id, (float)_kernel_info._warp_proc_len)));
     recv[1]._vf = decx::dsp::fft::GPUK::_complex_2mul1_fp32(recv[1]._vf, W._cplxf32);
 
     _FFT_domain_dex = (tidy / _kernel_info._store_pitch) * _kernel_info._warp_proc_len + warp_loc_id;
@@ -241,7 +241,7 @@ decx::dsp::fft::GPUK::cu_FFT2_R2_C2R_cplxf_u8(const float4* __restrict src,
         }
     }
 
-    W.dev_construct_with_phase(__fmul_rn(Two_Pi, __fdividef((float)_warp_loc_id, (float)_kernel_info._warp_proc_len)));
+    W.construct_with_phase(__fmul_rn(Two_Pi, __fdividef((float)_warp_loc_id, (float)_kernel_info._warp_proc_len)));
     recv[1]._vf = decx::dsp::fft::GPUK::_complex_2mul1_fp32(recv[1]._vf, W);
 
     _FFT_domain_dex = (tidy / _kernel_info._store_pitch) * _kernel_info._warp_proc_len + _warp_loc_id;
@@ -290,7 +290,7 @@ decx::dsp::fft::GPUK::cu_FFT2_R2_C2R_cplxf_fp32(const float4* __restrict src,
         }
     }
 
-    W.dev_construct_with_phase(__fmul_rn(Two_Pi, __fdividef((float)_warp_loc_id, (float)_kernel_info._warp_proc_len)));
+    W.construct_with_phase(__fmul_rn(Two_Pi, __fdividef((float)_warp_loc_id, (float)_kernel_info._warp_proc_len)));
     recv[1]._vf = decx::dsp::fft::GPUK::_complex_2mul1_fp32(recv[1]._vf, W);
 
     _FFT_domain_dex = (tidy / _kernel_info._store_pitch) * _kernel_info._warp_proc_len + _warp_loc_id;

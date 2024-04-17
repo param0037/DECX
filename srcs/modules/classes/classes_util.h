@@ -94,21 +94,50 @@ namespace de
     };
 
 
-#ifdef _DECX_CUDA_PARTS_
-    typedef struct __align__(4) complex_h
+
+    typedef struct __align__(16) _DECX_API_ complex_d
     {
-        ushort real, image;
+        double real, image;
 
+#ifdef _DECX_CUDA_PARTS_
         __host__ __device__
-        complex_h(const ushort Freal, const ushort Fimage);
-
-
-        __device__ void dev_construct_with_phase(const __half angle);
-
-
-        __host__ __device__ complex_h();
-    }CPh;
 #endif
+        complex_d(const double Freal, const double Fimage)
+        {
+            this->real = Freal;
+            this->image = Fimage;
+        }
+
+#ifdef _DECX_CUDA_PARTS_
+        __device__
+#endif
+        void construct_with_phase(const double angle)
+        {
+            this->real = cos(angle);
+            this->image = sin(angle);
+        }
+
+
+#ifdef _DECX_CUDA_PARTS_
+        __host__ __device__ __inline__
+#endif
+        de::complex_d& operator=(const de::complex_d& __src) {
+#ifdef _DECX_CUDA_PARTS_
+            *((float4*)this) = *((float4*)&__src);
+#else
+            this->real = __src.real;
+            this->image = __src.image;
+#endif
+            return *this;
+        }
+
+
+#ifdef _DECX_CUDA_PARTS_
+        __host__ __device__
+#endif
+            complex_d() { this->real = 0; this->image = 0; }
+    }CPd;
+
 
 
     typedef struct __align__(8) _DECX_API_ complex_f
@@ -126,28 +155,29 @@ namespace de
 
 
 #ifdef _DECX_CUDA_PARTS_
-        __device__ void dev_construct_with_phase(const float angle)
-        {
-            this->real = __cosf(angle);
-            this->image = __sinf(angle);
-        }
+        __device__ 
 #endif
-
-
         void construct_with_phase(const float angle)
         {
+#ifdef _DECX_CUDA_PARTS_
+            this->real = __cosf(angle);
+            this->image = __sinf(angle);
+#else
             this->real = cosf(angle);
             this->image = sinf(angle);
+#endif
         }
 
 
 #ifdef _DECX_CUDA_PARTS_
         __host__ __device__ __inline__
+#endif
         de::complex_f& operator=(const de::complex_f & __src) {
-            *((float2*)this) = *((float2*)&__src);
+            *((double*)this) = *((double*)&__src);
             return *this;
         }
 
+#ifdef _DECX_CUDA_PARTS_
         __host__ __device__ 
 #endif
         complex_f() 

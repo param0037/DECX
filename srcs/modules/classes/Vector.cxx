@@ -54,7 +54,6 @@ void decx::_Vector::alloc_data_space()
 
 
 
-
 void decx::_Vector::re_alloc_data_space(const uint32_t _pre_store_type)
 {
     if (decx::alloc::_host_virtual_page_realloc(&this->Vec, this->total_bytes)) {
@@ -64,7 +63,6 @@ void decx::_Vector::re_alloc_data_space(const uint32_t _pre_store_type)
         return;
     }
 }
-
 
 
 void decx::_Vector::construct(const de::_DATA_TYPES_FLAGS_ _type, size_t length)
@@ -157,6 +155,14 @@ de::CPf* decx::_Vector::ptr_cpl32(size_t index)
     de::CPf* _ptr = reinterpret_cast<de::CPf*>(this->Vec.ptr);
     return _ptr + index;
 }
+
+
+de::CPd* decx::_Vector::ptr_cpl64(size_t index)
+{
+    de::CPd* _ptr = reinterpret_cast<de::CPd*>(this->Vec.ptr);
+    return _ptr + index;
+}
+
 
 uint8_t* decx::_Vector::ptr_uint8(size_t index)
 {

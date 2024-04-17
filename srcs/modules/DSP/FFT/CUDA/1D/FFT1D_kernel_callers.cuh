@@ -20,6 +20,7 @@ namespace decx
 namespace dsp {
 namespace fft 
 {
+    // ------------------------------------------------------ float ------------------------------------------------------
     /**
     * @brief : The function accepts pointer of double buffer, and sets tmp1 as the first priority.
     */
@@ -30,6 +31,20 @@ namespace fft
 
     template <bool _div, bool _conj, typename _type_out>
     void FFT1D_partition_cplxf_end_caller(decx::utils::double_buffer_manager* _double_buffer, void* dst,
+        const decx::dsp::fft::_FFT2D_1way_config* _FFT_info, decx::cuda_stream* S);
+
+    // ------------------------------------------------------ double ------------------------------------------------------
+
+    /**
+    * @brief : The function accepts pointer of double buffer, and sets tmp1 as the first priority.
+    */
+    template <typename _type_in, bool _div>
+    void FFT1D_partition_cplxd_1st_caller(const void* src, decx::utils::double_buffer_manager* _double_buffer,
+        const decx::dsp::fft::_FFT2D_1way_config* _FFT_info, decx::cuda_stream* S, const uint64_t _signal_len_total = 0);
+
+
+    template <bool _div, bool _conj, typename _type_out>
+    void FFT1D_partition_cplxd_end_caller(decx::utils::double_buffer_manager* _double_buffer, void* dst,
         const decx::dsp::fft::_FFT2D_1way_config* _FFT_info, decx::cuda_stream* S);
 }
 }

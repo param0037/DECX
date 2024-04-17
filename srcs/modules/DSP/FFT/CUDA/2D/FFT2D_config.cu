@@ -22,6 +22,7 @@ bool decx::dsp::fft::_cuda_FFT2D_planner<_data_type>::changed(const uint2 signal
 }
 
 template bool decx::dsp::fft::_cuda_FFT2D_planner<float>::changed(const uint2, const uint32_t, const uint32_t) const;
+template bool decx::dsp::fft::_cuda_FFT2D_planner<double>::changed(const uint2, const uint32_t, const uint32_t) const;
 
 
 
@@ -33,7 +34,8 @@ void decx::dsp::fft::_cuda_FFT2D_planner<_type_in>::plan(const uint2 signal_dims
 {
     this->_signal_dims = signal_dims;
 
-    constexpr uint8_t _alignment = 8 / sizeof(_type_in);
+    //constexpr uint8_t _alignment = 8 / sizeof(_type_in);
+    constexpr uint8_t _alignment = 128 / sizeof(_type_in);
     this->_buffer_dims = make_uint2(decx::utils::align<uint32_t>(signal_dims.x, _alignment),
         decx::utils::align<uint32_t>(signal_dims.y, _alignment));
 
@@ -57,6 +59,7 @@ void decx::dsp::fft::_cuda_FFT2D_planner<_type_in>::plan(const uint2 signal_dims
 }
 
 template void decx::dsp::fft::_cuda_FFT2D_planner<float>::plan(const uint2, const uint32_t, const uint32_t, de::DH*);
+template void decx::dsp::fft::_cuda_FFT2D_planner<double>::plan(const uint2, const uint32_t, const uint32_t, de::DH*);
 
 
 uint32_t decx::dsp::fft::_FFT2D_1way_config::get_radix(const uint32_t _index) const
@@ -122,6 +125,8 @@ decx::dsp::fft::_cuda_FFT2D_planner<_data_type>::get_FFT_info(const decx::dsp::f
 
 template const decx::dsp::fft::_FFT2D_1way_config* 
 decx::dsp::fft::_cuda_FFT2D_planner<float>::get_FFT_info(const decx::dsp::fft::FFT_directions) const;
+template const decx::dsp::fft::_FFT2D_1way_config*
+decx::dsp::fft::_cuda_FFT2D_planner<double>::get_FFT_info(const decx::dsp::fft::FFT_directions) const;
 
 
 template <typename _type_in>
@@ -131,6 +136,7 @@ uint2 decx::dsp::fft::_cuda_FFT2D_planner<_type_in>::get_buffer_dims() const
 }
 
 template uint2 decx::dsp::fft::_cuda_FFT2D_planner<float>::get_buffer_dims() const;
+template uint2 decx::dsp::fft::_cuda_FFT2D_planner<double>::get_buffer_dims() const;
 
 
 
@@ -142,6 +148,7 @@ void decx::dsp::fft::_cuda_FFT2D_planner<_data_type>::release_buffers(decx::dsp:
 }
 
 template void decx::dsp::fft::_cuda_FFT2D_planner<float>::release_buffers(decx::dsp::fft::_cuda_FFT2D_planner<float>*);
+template void decx::dsp::fft::_cuda_FFT2D_planner<double>::release_buffers(decx::dsp::fft::_cuda_FFT2D_planner<double>*);
 
 
 template <typename _data_type>
@@ -151,3 +158,4 @@ decx::dsp::fft::_cuda_FFT2D_planner<_data_type>::~_cuda_FFT2D_planner()
 }
 
 template decx::dsp::fft::_cuda_FFT2D_planner<float>::~_cuda_FFT2D_planner();
+template decx::dsp::fft::_cuda_FFT2D_planner<double>::~_cuda_FFT2D_planner();

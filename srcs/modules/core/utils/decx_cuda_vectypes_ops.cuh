@@ -22,29 +22,25 @@ namespace decx
     namespace utils {
         union __align__(16) _cuda_vec128
         {
-            float4 _vf;
-            double2 _vd;
-            int4 _vi;
-            uint4 _vui;
+            float4      _vf;
+            double2     _vd;
+            int4        _vi;
+            uint4       _vui;
 #if __ABOVE_SM_53
-            __half2 _arrh2[4];
-            __half _arrh[8];
+            __half2     _arrh2[4];
+            __half      _arrh[8];
 #endif
-            float2 _arrf2[2];
-
-            uchar4 _arru8_4[4];
-
-            uint16_t _arrs[8];
-
-            float _arrf[4];
-            double _arrd[2];
-            int32_t _arri[4];
-            uint32_t _arrui[4];
-            uint64_t _arrull[2];
-
-            uint8_t _arru8[16];
-
-            de::CPf _arrcplxf2[2];
+            float2      _arrf2[2];
+            uchar4      _arru8_4[4];
+            uint16_t    _arrs[8];
+            float       _arrf[4];
+            double      _arrd[2];
+            int32_t     _arri[4];
+            uint32_t    _arrui[4];
+            uint64_t    _arrull[2];
+            uint8_t     _arru8[16];
+            de::CPf     _arrcplxf2[2];
+            de::CPd     _cplxd;
 
             __host__ __device__ _cuda_vec128() {}
 
@@ -65,18 +61,18 @@ namespace decx
 
         union __align__(8) _cuda_vec64
         {
-            float2 _vf2;
-            int2 _vi2;
-            uint2 _vui2;
-            double _fp64;
-            uint64_t _ull;
-            __half _v_half4[4];
-            __half2 _v_h2_2[2];
-            uint8_t _v_uint8[8];
-
-            float _arrf[2];
-
-            de::CPf _cplxf32;
+            float2      _vf2;
+            int2        _vi2;
+            uint2       _vui2;
+            double      _fp64;
+            uint64_t    _ull;
+#if __ABOVE_SM_53
+            __half      _v_half4[4];
+            __half2     _v_h2_2[2];
+#endif
+            uint8_t     _v_uint8[8];
+            float       _arrf[2];
+            de::CPf     _cplxf32;
 
             __host__ __device__ _cuda_vec64() {}
 
@@ -85,13 +81,6 @@ namespace decx
             {
                 this->_fp64 = _in._fp64;
             }
-
-
-            /*__host__ __device__ decx::utils::_cuda_vec64& operator=(const decx::utils::_cuda_vec64& _in) 
-            {
-                this->_fp64 = _in._fp64;
-                return *this;
-            }*/
 
 
             __host__ __device__ decx::utils::_cuda_vec64& operator=(const decx::utils::_cuda_vec64& __src)

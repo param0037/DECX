@@ -50,6 +50,7 @@ namespace de
         virtual double*             ptr_fp64(size_t index)  = 0;
         virtual de::Half*           ptr_fp16(size_t index)  = 0;
         virtual de::CPf*            ptr_cpl32(size_t index) = 0;
+        virtual de::CPd*            ptr_cpl64(size_t index) = 0;
         virtual uint8_t*            ptr_uint8(size_t index) = 0;
         virtual de::Vector4f*       ptr_vec4f(size_t index) = 0;
 
@@ -129,6 +130,7 @@ namespace decx
         virtual double*          ptr_fp64(size_t index);
         virtual de::Half*        ptr_fp16(size_t index);
         virtual de::CPf*         ptr_cpl32(size_t index);
+        virtual de::CPd*         ptr_cpl64(size_t index);
         virtual uint8_t*         ptr_uint8(size_t index);
         virtual de::Vector4f*    ptr_vec4f(size_t index);
 

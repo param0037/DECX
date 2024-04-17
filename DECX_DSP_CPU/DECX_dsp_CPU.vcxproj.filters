@@ -64,6 +64,9 @@
     <Filter Include="源文件\fft\3D">
       <UniqueIdentifier>{96046837-bdf9-478f-8849-d523b397a593}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\fft\1D\fp32">
+      <UniqueIdentifier>{d97a3473-cbcf-44dd-afa8-6474fba35575}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\srcs\modules\DSP\complex\cpl32_extract.cxx">
@@ -162,22 +165,10 @@
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\FFT1D.cxx">
       <Filter>源文件\fft\1D</Filter>
     </ClCompile>
-    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\FFT1D_R4_kernels.cxx">
-      <Filter>源文件\fft\1D</Filter>
-    </ClCompile>
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\kernel_callers.cxx">
       <Filter>源文件\fft\1D</Filter>
     </ClCompile>
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\FFT1D_kernel_utils.cxx">
-      <Filter>源文件\fft\1D</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\FFT1D_R3_kernels.cxx">
-      <Filter>源文件\fft\1D</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\FFT1D_R5_kernels.cxx">
-      <Filter>源文件\fft\1D</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\FFT1D_R2_kernels.cxx">
       <Filter>源文件\fft\1D</Filter>
     </ClCompile>
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\2D\CPU_FFT2D_planner.cxx">
@@ -210,8 +201,20 @@
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\2D\FFT2D_cplxf32.cxx">
       <Filter>源文件\fft\2D</Filter>
     </ClCompile>
-    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\FFT1D_cplxf32.cxx">
-      <Filter>源文件\fft\1D</Filter>
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\fp32\FFT1D_R3_cplxf_kernels.cxx">
+      <Filter>源文件\fft\1D\fp32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\fp32\FFT1D_R4_cplxf_kernels.cxx">
+      <Filter>源文件\fft\1D\fp32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\fp32\FFT1D_R5_cplxf_kernels.cxx">
+      <Filter>源文件\fft\1D\fp32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\fp32\FFT1D_cplxf32.cxx">
+      <Filter>源文件\fft\1D\fp32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\fp32\FFT1D_R2_cplxf_kernels.cxx">
+      <Filter>源文件\fft\1D\fp32</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

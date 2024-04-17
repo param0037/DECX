@@ -8,7 +8,7 @@
 *   More information please visit https://github.com/param0037/DECX
 */
 
-#include "FFT3D_kernels.cuh"
+#include "../FFT3D_kernels.cuh"
 
 
 template <bool _div> __global__ void 
@@ -129,13 +129,13 @@ decx::dsp::fft::GPUK::cu_FFT3_R4_C2C_cplxf(const float4* __restrict src,
 
     const uint32_t warp_loc_id = (tidy % _Bops_num) % _kernel_info._store_pitch;
 
-    W._cplxf32.dev_construct_with_phase(__fmul_rn(Two_Pi, __fdividef((float)warp_loc_id, (float)_kernel_info._warp_proc_len)));
+    W._cplxf32.construct_with_phase(__fmul_rn(Two_Pi, __fdividef((float)warp_loc_id, (float)_kernel_info._warp_proc_len)));
     recv[1]._vf = decx::dsp::fft::GPUK::_complex_2mul1_fp32(recv[1]._vf, W._cplxf32);
 
-    W._cplxf32.dev_construct_with_phase(__fmul_rn(Four_Pi, __fdividef((float)warp_loc_id, (float)_kernel_info._warp_proc_len)));
+    W._cplxf32.construct_with_phase(__fmul_rn(Four_Pi, __fdividef((float)warp_loc_id, (float)_kernel_info._warp_proc_len)));
     recv[2]._vf = decx::dsp::fft::GPUK::_complex_2mul1_fp32(recv[2]._vf, W._cplxf32);
 
-    W._cplxf32.dev_construct_with_phase(__fmul_rn(Six_Pi, __fdividef((float)warp_loc_id, (float)_kernel_info._warp_proc_len)));
+    W._cplxf32.construct_with_phase(__fmul_rn(Six_Pi, __fdividef((float)warp_loc_id, (float)_kernel_info._warp_proc_len)));
     recv[3]._vf = decx::dsp::fft::GPUK::_complex_2mul1_fp32(recv[3]._vf, W._cplxf32);
 
     _FFT_dex_loc = ((tidy % _Bops_num) / _kernel_info._store_pitch) * _kernel_info._warp_proc_len + warp_loc_id 

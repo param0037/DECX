@@ -78,7 +78,7 @@ public:
 
     uint32_t get_larger_FFT_lengths(const uint8_t _id) const;
 
-
+    
     static void release(decx::dsp::fft::_cuda_FFT1D_planner<_data_type>* _fake_this);
 
 
@@ -92,6 +92,9 @@ namespace dsp {
     namespace fft {
         extern decx::ResourceHandle cuda_FFT1D_cplxf32_planner;
         extern decx::ResourceHandle cuda_IFFT1D_cplxf32_planner;
+
+        extern decx::ResourceHandle cuda_FFT1D_cplxf64_planner;
+        extern decx::ResourceHandle cuda_IFFT1D_cplxf64_planner;
     }
 }
 }

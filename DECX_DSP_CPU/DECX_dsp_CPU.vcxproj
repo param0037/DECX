@@ -40,12 +40,12 @@
     <ClCompile Include="..\srcs\modules\DSP\convolution\CPU\sliding_window\uint8\conv2_uint8_exec.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\CPU_FFT1D_planner.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\FFT1D.cxx" />
-    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\FFT1D_cplxf32.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\FFT1D_kernel_utils.cxx" />
-    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\FFT1D_R2_kernels.cxx" />
-    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\FFT1D_R3_kernels.cxx" />
-    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\FFT1D_R4_kernels.cxx" />
-    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\FFT1D_R5_kernels.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\fp32\FFT1D_cplxf32.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\fp32\FFT1D_R2_cplxf_kernels.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\fp32\FFT1D_R3_cplxf_kernels.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\fp32\FFT1D_R4_cplxf_kernels.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\fp32\FFT1D_R5_cplxf_kernels.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\kernel_callers.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\2D\CPU_FFT2D_planner.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\2D\FFT2D.cxx" />

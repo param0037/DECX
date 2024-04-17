@@ -53,6 +53,21 @@
     <Filter Include="源文件\convolution\sliding_window\fp64">
       <UniqueIdentifier>{c6cadb55-fc9a-48c2-a6c7-fb834c30549f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\signal\FFT\3D\fp32">
+      <UniqueIdentifier>{dc3386f7-c832-4384-8b9a-ae66e1a47d05}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\signal\FFT\2D\fp32">
+      <UniqueIdentifier>{2801f6e6-41b3-4463-9b40-a06ba39ea5d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\signal\FFT\1D\fp32">
+      <UniqueIdentifier>{ccea64b4-9600-49fe-8a4f-e0c7aee0cc4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\signal\FFT\1D\fp64">
+      <UniqueIdentifier>{536bf807-e913-403b-b6d7-975b82e07ce2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\signal\FFT\2D\fp64">
+      <UniqueIdentifier>{c0607367-31e3-44d3-89af-76b5e93f248e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="for_properties.cpp" />
@@ -94,36 +109,6 @@
     <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\1D\CUDA_FFT1D_planner.cu">
       <Filter>源文件\signal\FFT\1D</Filter>
     </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\1D\FFT1D_kernel_callers.cu">
-      <Filter>源文件\signal\FFT\1D</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\1D\FFT1D_R2_1st_dense.cu">
-      <Filter>源文件\signal\FFT\1D</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\1D\FFT1D_R3_1st_dense.cu">
-      <Filter>源文件\signal\FFT\1D</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\1D\FFT1D_R4_1st_dense.cu">
-      <Filter>源文件\signal\FFT\1D</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\1D\FFT1D_R5_1st_dense.cu">
-      <Filter>源文件\signal\FFT\1D</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\2D\FFT2D_R2_kernels.cu">
-      <Filter>源文件\signal\FFT\2D</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\2D\FFT2D_R3_kernels.cu">
-      <Filter>源文件\signal\FFT\2D</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\2D\FFT2D_R4_kernels.cu">
-      <Filter>源文件\signal\FFT\2D</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\2D\FFT2D_R5_kernels.cu">
-      <Filter>源文件\signal\FFT\2D</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\2D\FFT2D_1way_kernel_callers.cu">
-      <Filter>源文件\signal\FFT\2D</Filter>
-    </CudaCompile>
     <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\2D\FFT2D_config.cu">
       <Filter>源文件\signal\FFT\2D</Filter>
     </CudaCompile>
@@ -132,30 +117,6 @@
     </CudaCompile>
     <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\3D\FFT3D.cu">
       <Filter>源文件\signal\FFT\3D</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\3D\FFT3D_R4_kernels.cu">
-      <Filter>源文件\signal\FFT\3D</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\3D\FFT3D_MidProc_caller.cu">
-      <Filter>源文件\signal\FFT\3D</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\3D\FFT3D_R3_kernels.cu">
-      <Filter>源文件\signal\FFT\3D</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\3D\FFT3D_R2_kernels.cu">
-      <Filter>源文件\signal\FFT\3D</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\3D\FFT3D_R5_kernels.cu">
-      <Filter>源文件\signal\FFT\3D</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\3D\FFT3D_cplxf32.cu">
-      <Filter>源文件\signal\FFT\3D</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\2D\FFT2D_cplxf32.cu">
-      <Filter>源文件\signal\FFT\2D</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\1D\FFT1D_cplxf32.cu">
-      <Filter>源文件\signal\FFT\1D</Filter>
     </CudaCompile>
     <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\sliding_window\filter2D.cu">
       <Filter>源文件\convolution\sliding_window</Filter>
@@ -174,6 +135,78 @@
     </CudaCompile>
     <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\sliding_window\uint8\filter2D_uint8_caller.cu">
       <Filter>源文件\convolution\sliding_window\uint8</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\3D\fp32\FFT3D_R3_cplxf_kernels.cu">
+      <Filter>源文件\signal\FFT\3D\fp32</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\3D\fp32\FFT3D_R4_cplxf_kernels.cu">
+      <Filter>源文件\signal\FFT\3D\fp32</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\3D\fp32\FFT3D_R5_cplxf_kernels.cu">
+      <Filter>源文件\signal\FFT\3D\fp32</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\3D\fp32\FFT3D_cplxf32.cu">
+      <Filter>源文件\signal\FFT\3D\fp32</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\3D\fp32\FFT3D_MidProc_caller.cu">
+      <Filter>源文件\signal\FFT\3D\fp32</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\3D\fp32\FFT3D_R2_cplxf_kernels.cu">
+      <Filter>源文件\signal\FFT\3D\fp32</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\2D\fp32\FFT2D_cplxf32.cu">
+      <Filter>源文件\signal\FFT\2D\fp32</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\2D\fp32\FFT2D_R2_cplxf_kernels.cu">
+      <Filter>源文件\signal\FFT\2D\fp32</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\2D\fp32\FFT2D_R3_cplxf_kernels.cu">
+      <Filter>源文件\signal\FFT\2D\fp32</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\2D\fp32\FFT2D_R4_cplxf_kernels.cu">
+      <Filter>源文件\signal\FFT\2D\fp32</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\2D\fp32\FFT2D_R5_cplxf_kernels.cu">
+      <Filter>源文件\signal\FFT\2D\fp32</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\2D\fp32\FFT2D_1way_kernel_callers_cplxf.cu">
+      <Filter>源文件\signal\FFT\2D\fp32</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\1D\fp32\FFT1D_R2_cplxf_1st_dense.cu">
+      <Filter>源文件\signal\FFT\1D\fp32</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\1D\fp32\FFT1D_R3_cplxf_1st_dense.cu">
+      <Filter>源文件\signal\FFT\1D\fp32</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\1D\fp32\FFT1D_R4_cplxf_1st_dense.cu">
+      <Filter>源文件\signal\FFT\1D\fp32</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\1D\fp32\FFT1D_R5_cplxf_1st_dense.cu">
+      <Filter>源文件\signal\FFT\1D\fp32</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\1D\fp32\FFT1D_cplxf32.cu">
+      <Filter>源文件\signal\FFT\1D\fp32</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\1D\fp64\FFT1D_R2_cplxd_1st_dense.cu">
+      <Filter>源文件\signal\FFT\1D\fp64</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\1D\fp64\FFT1D_R3_cplxd_1st_dense.cu">
+      <Filter>源文件\signal\FFT\1D\fp64</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\1D\fp64\FFT1D_R4_cplxd_1st_dense.cu">
+      <Filter>源文件\signal\FFT\1D\fp64</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\1D\fp64\FFT1D_R5_cplxd_1st_dense.cu">
+      <Filter>源文件\signal\FFT\1D\fp64</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\1D\FFT1D_kernel_callers.cu">
+      <Filter>源文件\signal\FFT\1D</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\2D\fp64\FFT2D_R2_cplxd_kernels.cu">
+      <Filter>源文件\signal\FFT\2D\fp64</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\1D\fp64\FFT1D_cplxd64.cu">
+      <Filter>源文件\signal\FFT\1D\fp64</Filter>
     </CudaCompile>
   </ItemGroup>
 </Project>

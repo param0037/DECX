@@ -32,9 +32,10 @@
 #include "../../core/cudaStream_management/cudaEvent_queue.h"
 #include "../../core/cudaStream_management/cudaStream_queue.h"
 #include "../CUDA_cpf32.cuh"
+#include "../CUDA_cpd64.cuh"
 
-#define _FFT2D_END_ false, true, de::CPf
-#define _FFT1D_END_ _FFT2D_END_
+#define _FFT2D_END_(_cplx_type) false, true, _cplx_type
+#define _FFT1D_END_(_cplx_type) _FFT2D_END_(_cplx_type)
 #define _IFFT2D_END_(_type_out) true, false, _type_out
 #define _IFFT1D_END_(_type_out) false, false, _type_out
 

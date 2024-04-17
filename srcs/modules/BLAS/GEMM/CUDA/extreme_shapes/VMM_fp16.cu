@@ -113,8 +113,8 @@ decx::GPUK::cu_vec_m_mat_fp16_L1(const __half* __restrict     vec_src,
     tmp2._arrf2[0] = __half22float2(tmp3._arrh2[2]);
     tmp2._arrf2[1] = __half22float2(tmp3._arrh2[3]);
 
-    tmp1 = decx::utils::cuda::__float_mul4_1(tmp1, _vec_val);
-    tmp2 = decx::utils::cuda::__float_mul4_1(tmp2, _vec_val);
+    tmp1._vf = decx::utils::cuda::__float_mul4_1(tmp1._vf, _vec_val);
+    tmp2._vf = decx::utils::cuda::__float_mul4_1(tmp2._vf, _vec_val);
 
     __syncwarp(0xffffffff);
 
@@ -245,8 +245,8 @@ decx::GPUK::cu_vec_m_mat_fp16_L2(const __half* __restrict       vec_src,
     tmp2._arrf2[0] = __half22float2(tmp3._arrh2[2]);
     tmp2._arrf2[1] = __half22float2(tmp3._arrh2[3]);
 
-    tmp1 = decx::utils::cuda::__float_mul4_1(tmp1, _vec_val);
-    tmp2 = decx::utils::cuda::__float_mul4_1(tmp2, _vec_val);
+    tmp1._vf = decx::utils::cuda::__float_mul4_1(tmp1._vf, _vec_val);
+    tmp2._vf = decx::utils::cuda::__float_mul4_1(tmp2._vf, _vec_val);
 
     __syncwarp(0xffffffff);
 

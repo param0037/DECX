@@ -108,8 +108,10 @@ decx::dot::GPUK::cu_block_dot2D_1way_v_fp32(const float4 * __restrict    A,
 
     __syncwarp(0xffffffff);
 
-    decx::reduce::GPUK::cu_warp_reduce<double, 32, 4>(decx::utils::cuda::__float_add2, &tmp1, &tmp3);
-    decx::reduce::GPUK::cu_warp_reduce<double, 32, 4>(decx::utils::cuda::__float_add2, &tmp2, &tmp4);
+    decx::reduce::GPUK::cu_warp_reduce<double, 32, 4>(
+        (decx::utils::cuda::cu_math_ops<double>*)&decx::utils::cuda::__float_add2, &tmp1, &tmp3);
+    decx::reduce::GPUK::cu_warp_reduce<double, 32, 4>(
+        (decx::utils::cuda::cu_math_ops<double>*)&decx::utils::cuda::__float_add2, &tmp2, &tmp4);
 
     __syncthreads();
 

@@ -8,7 +8,7 @@
 *   More information please visit https://github.com/param0037/DECX
 */
 
-#include "FFT1D_kernels.h"
+#include "../FFT1D_kernels.h"
 
 
 

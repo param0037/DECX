@@ -16,12 +16,12 @@ void decx::dsp::fft::_cuda_FFT1D_planner<_data_type>::plan(const uint64_t signal
 {
     this->_signal_length = signal_length;
     decx::dsp::fft::_radix_apart<true>(this->_signal_length, &this->_all_radixes);
-
+    
     this->_plan_group_radixes(handle, S);
 }
 
 template void decx::dsp::fft::_cuda_FFT1D_planner<float>::plan(const uint64_t, de::DH*, decx::cuda_stream*);
-//template void decx::dsp::fft::_cuda_FFT1D_planner<double>::plan(const uint64_t, de::DH*, decx::cuda_stream*);
+template void decx::dsp::fft::_cuda_FFT1D_planner<double>::plan(const uint64_t, de::DH*, decx::cuda_stream*);
 
 
 template <typename _data_type>
@@ -31,6 +31,7 @@ bool decx::dsp::fft::_cuda_FFT1D_planner<_data_type>::changed(const uint64_t sig
 }
 
 template bool decx::dsp::fft::_cuda_FFT1D_planner<float>::changed(const uint64_t) const;
+template bool decx::dsp::fft::_cuda_FFT1D_planner<double>::changed(const uint64_t) const;
 
 
 // Method 1 : combined
@@ -38,7 +39,7 @@ template <typename _type_in>
 void decx::dsp::fft::_cuda_FFT1D_planner<_type_in>::_plan_group_radixes(de::DH* handle, decx::cuda_stream* S)
 {
     const uint32_t _halved_target = (uint32_t)sqrt(this->_signal_length);
-    const uint8_t _alignment = 8 / sizeof(_type_in);
+    //const uint8_t _alignment = 8 / sizeof(_type_in);
 
     uint32_t _larger_FFT_size = 1, i = 0;
     while (1)
@@ -69,14 +70,15 @@ void decx::dsp::fft::_cuda_FFT1D_planner<_type_in>::_plan_group_radixes(de::DH* 
 
     this->_large_FFT_lengths[0] = _min_exceeded;
     this->_large_FFT_lengths[1] = this->_signal_length / _min_exceeded;
-
+    
     this->_FFT2D_layout.plan(make_uint2(this->_large_FFT_lengths[1], this->_large_FFT_lengths[0]),
         this->_large_FFT_lengths[1], this->_large_FFT_lengths[0], handle);
+    
     Check_Runtime_Error(handle);
 }
 
 template void decx::dsp::fft::_cuda_FFT1D_planner<float>::_plan_group_radixes(de::DH*, decx::cuda_stream*);
-//template void decx::dsp::fft::_cuda_FFT1D_planner<double>::_plan_group_radixes(de::DH*, decx::cuda_stream*);
+template void decx::dsp::fft::_cuda_FFT1D_planner<double>::_plan_group_radixes(de::DH*, decx::cuda_stream*);
 
 
 template <typename _type_in>
@@ -86,7 +88,7 @@ uint64_t decx::dsp::fft::_cuda_FFT1D_planner<_type_in>::get_signal_length() cons
 }
 
 template uint64_t decx::dsp::fft::_cuda_FFT1D_planner<float>::get_signal_length() const;
-//template uint64_t decx::dsp::fft::_cuda_FFT1D_planner<double>::get_signal_length() const;
+template uint64_t decx::dsp::fft::_cuda_FFT1D_planner<double>::get_signal_length() const;
 
 
 template <typename _type_in>
@@ -99,8 +101,8 @@ decx::dsp::fft::_cuda_FFT1D_planner<_type_in>::get_FFT2D_planner() const
 template const decx::dsp::fft::_cuda_FFT2D_planner<float>*
 decx::dsp::fft::_cuda_FFT1D_planner<float>::get_FFT2D_planner() const;
 
-//template const decx::dsp::fft::_cuda_FFT2D_planner<double>*
-//decx::dsp::fft::_cuda_FFT1D_planner<double>::get_FFT2D_planner() const;
+template const decx::dsp::fft::_cuda_FFT2D_planner<double>*
+decx::dsp::fft::_cuda_FFT1D_planner<double>::get_FFT2D_planner() const;
 
 
 template <typename _data_type>
@@ -110,7 +112,7 @@ uint32_t decx::dsp::fft::_cuda_FFT1D_planner<_data_type>::get_larger_FFT_lengths
 }
 
 template uint32_t decx::dsp::fft::_cuda_FFT1D_planner<float>::get_larger_FFT_lengths(const uint8_t) const;
-//template uint32_t decx::dsp::fft::_cuda_FFT1D_planner<double>::get_larger_FFT_lengths(const uint8_t) const;
+template uint32_t decx::dsp::fft::_cuda_FFT1D_planner<double>::get_larger_FFT_lengths(const uint8_t) const;
 
 
 template <typename _data_type>
@@ -121,7 +123,7 @@ void decx::dsp::fft::_cuda_FFT1D_planner<_data_type>::release(decx::dsp::fft::_c
 }
 
 template void decx::dsp::fft::_cuda_FFT1D_planner<float>::release(decx::dsp::fft::_cuda_FFT1D_planner<float>*);
-//template void decx::dsp::fft::_cuda_FFT1D_planner<float>::release(decx::dsp::fft::_cuda_FFT1D_planner<float>*);
+template void decx::dsp::fft::_cuda_FFT1D_planner<double>::release(decx::dsp::fft::_cuda_FFT1D_planner<double>*);
 
 
 template <typename _data_type>
@@ -131,4 +133,4 @@ decx::dsp::fft::_cuda_FFT1D_planner<_data_type>::~_cuda_FFT1D_planner()
 }
 
 template decx::dsp::fft::_cuda_FFT1D_planner<float>::~_cuda_FFT1D_planner();
-//template decx::dsp::fft::_cuda_FFT1D_planner<float>::~_cuda_FFT1D_planner();
+template decx::dsp::fft::_cuda_FFT1D_planner<double>::~_cuda_FFT1D_planner();

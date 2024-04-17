@@ -9,7 +9,7 @@
 */
 
 
-#include "FFT1D_kernels.h"
+#include "../FFT1D_kernels.h"
 
 
 

@@ -8,7 +8,7 @@
 *   More information please visit https://github.com/param0037/DECX
 */
 
-#include "FFT1D_1st_kernels_dense.cuh"
+#include "../FFT1D_1st_kernels_dense.cuh"
 
 
 // [32 * 2, 8] = [64, 8]
@@ -103,11 +103,11 @@ decx::dsp::fft::GPUK::cu_FFT2D_R4_1st_cplxf_C2C_dense(const float2* __restrict s
     if (tidy < _Bops_num && tidx < _pitchdst)
     {
         // Calculate the first and third output
-        tmp1._fp64 = decx::utils::cuda::__float_add2(recv[0]._fp64, recv[2]._fp64);
-        tmp2._fp64 = decx::utils::cuda::__float_add2(recv[1]._fp64, recv[3]._fp64);
+        tmp1._vf2 = decx::utils::cuda::__float_add2(recv[0]._vf2, recv[2]._vf2);
+        tmp2._vf2 = decx::utils::cuda::__float_add2(recv[1]._vf2, recv[3]._vf2);
 
         // Store the first output
-        res._fp64 = decx::utils::cuda::__float_add2(tmp1._fp64, tmp2._fp64);
+        res._vf2 = decx::utils::cuda::__float_add2(tmp1._vf2, tmp2._vf2);
         dst[_FFT_domain_dex * _pitchdst + tidx] = res._vf2;
         _FFT_domain_dex += 2;
 
@@ -171,13 +171,13 @@ decx::dsp::fft::GPUK::cu_FFT2D_R4_end_cplxf_C2C_dense(const float2* __restrict s
         }
     }
 
-    W._cplxf32.dev_construct_with_phase(__fmul_rn(Two_Pi, __fdividef((float)warp_loc_id, (float)_kernel_info._warp_proc_len)));
+    W._cplxf32.construct_with_phase(__fmul_rn(Two_Pi, __fdividef((float)warp_loc_id, (float)_kernel_info._warp_proc_len)));
     recv[1]._cplxf32 = decx::dsp::fft::GPUK::_complex_mul_fp32(recv[1]._cplxf32, W._cplxf32);
 
-    W._cplxf32.dev_construct_with_phase(__fmul_rn(Four_Pi, __fdividef((float)warp_loc_id, (float)_kernel_info._warp_proc_len)));
+    W._cplxf32.construct_with_phase(__fmul_rn(Four_Pi, __fdividef((float)warp_loc_id, (float)_kernel_info._warp_proc_len)));
     recv[2]._cplxf32 = decx::dsp::fft::GPUK::_complex_mul_fp32(recv[2]._cplxf32, W._cplxf32);
 
-    W._cplxf32.dev_construct_with_phase(__fmul_rn(Six_Pi, __fdividef((float)warp_loc_id, (float)_kernel_info._warp_proc_len)));
+    W._cplxf32.construct_with_phase(__fmul_rn(Six_Pi, __fdividef((float)warp_loc_id, (float)_kernel_info._warp_proc_len)));
     recv[3]._cplxf32 = decx::dsp::fft::GPUK::_complex_mul_fp32(recv[3]._cplxf32, W._cplxf32);
 
     _FFT_domain_dex = (tidy / _kernel_info._store_pitch) * _kernel_info._warp_proc_len + warp_loc_id;
@@ -185,11 +185,11 @@ decx::dsp::fft::GPUK::cu_FFT2D_R4_end_cplxf_C2C_dense(const float2* __restrict s
     if (tidy < _Bops_num && tidx < _pitchdst)
     {
         // Calculate the first and third output
-        tmp1._fp64 = decx::utils::cuda::__float_add2(recv[0]._fp64, recv[2]._fp64);
-        tmp2._fp64 = decx::utils::cuda::__float_add2(recv[1]._fp64, recv[3]._fp64);
+        tmp1._vf2 = decx::utils::cuda::__float_add2(recv[0]._vf2, recv[2]._vf2);
+        tmp2._vf2 = decx::utils::cuda::__float_add2(recv[1]._vf2, recv[3]._vf2);
 
         // Store the first output
-        res._fp64 = decx::utils::cuda::__float_add2(tmp1._fp64, tmp2._fp64);
+        res._vf2 = decx::utils::cuda::__float_add2(tmp1._vf2, tmp2._vf2);
         if (_conj) { res._cplxf32 = decx::dsp::fft::GPUK::_complex_conjugate_fp32(res._cplxf32); }
         dst[_FFT_domain_dex * _pitchdst + tidx] = res._vf2;
         _FFT_domain_dex += (_kernel_info._store_pitch << 1);
@@ -257,13 +257,13 @@ decx::dsp::fft::GPUK::cu_FFT2D_R4_end_cplxf_C2R_dense(const float2* __restrict s
         }
     }
 
-    W.dev_construct_with_phase(__fmul_rn(Two_Pi, __fdividef((float)_warp_loc_id, (float)_kernel_info._warp_proc_len)));
+    W.construct_with_phase(__fmul_rn(Two_Pi, __fdividef((float)_warp_loc_id, (float)_kernel_info._warp_proc_len)));
     recv[1]._cplxf32 = decx::dsp::fft::GPUK::_complex_mul_fp32(recv[1]._cplxf32, W);
 
-    W.dev_construct_with_phase(__fmul_rn(Four_Pi, __fdividef((float)_warp_loc_id, (float)_kernel_info._warp_proc_len)));
+    W.construct_with_phase(__fmul_rn(Four_Pi, __fdividef((float)_warp_loc_id, (float)_kernel_info._warp_proc_len)));
     recv[2]._cplxf32 = decx::dsp::fft::GPUK::_complex_mul_fp32(recv[2]._cplxf32, W);
 
-    W.dev_construct_with_phase(__fmul_rn(Six_Pi, __fdividef((float)_warp_loc_id, (float)_kernel_info._warp_proc_len)));
+    W.construct_with_phase(__fmul_rn(Six_Pi, __fdividef((float)_warp_loc_id, (float)_kernel_info._warp_proc_len)));
     recv[3]._cplxf32 = decx::dsp::fft::GPUK::_complex_mul_fp32(recv[3]._cplxf32, W);
 
     _FFT_domain_dex = (tidy / _kernel_info._store_pitch) * _kernel_info._warp_proc_len + _warp_loc_id;
@@ -271,8 +271,8 @@ decx::dsp::fft::GPUK::cu_FFT2D_R4_end_cplxf_C2R_dense(const float2* __restrict s
     if (tidy < _Bops_num && tidx < _pitchdst)
     {
         // Calculate the first and third output
-        tmp1._fp64 = decx::utils::cuda::__float_add2(recv[0]._fp64, recv[2]._fp64);
-        tmp2._fp64 = decx::utils::cuda::__float_add2(recv[1]._fp64, recv[3]._fp64);
+        tmp1._vf2 = decx::utils::cuda::__float_add2(recv[0]._vf2, recv[2]._vf2);
+        tmp2._vf2 = decx::utils::cuda::__float_add2(recv[1]._vf2, recv[3]._vf2);
 
         // Store the first output
         res = __fadd_rn(tmp1._vf2.x, tmp2._vf2.x);

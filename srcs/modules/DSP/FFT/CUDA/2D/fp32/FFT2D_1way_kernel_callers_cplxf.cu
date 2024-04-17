@@ -8,7 +8,7 @@
 *   More information please visit https://github.com/param0037/DECX
 */
 
-#include "FFT2D_1way_kernel_callers.cuh"
+#include "../FFT2D_1way_kernel_callers.cuh"
 
 
 
@@ -117,5 +117,5 @@ template void decx::dsp::fft::FFT2D_C2C_cplxf_1way_caller<_IFFT2D_END_(uint8_t)>
 template void decx::dsp::fft::FFT2D_C2C_cplxf_1way_caller<_IFFT2D_END_(float)>(decx::utils::double_buffer_manager*,
     const decx::dsp::fft::_FFT2D_1way_config*, decx::cuda_stream*);
 
-template void decx::dsp::fft::FFT2D_C2C_cplxf_1way_caller<_FFT2D_END_>(decx::utils::double_buffer_manager*,
+template void decx::dsp::fft::FFT2D_C2C_cplxf_1way_caller<_FFT2D_END_(de::CPf)>(decx::utils::double_buffer_manager*,
     const decx::dsp::fft::_FFT2D_1way_config*, decx::cuda_stream*);

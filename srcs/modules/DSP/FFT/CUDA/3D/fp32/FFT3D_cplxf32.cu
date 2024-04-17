@@ -8,14 +8,13 @@
 *   More information please visit https://github.com/param0037/DECX
 */
 
-#include "../../../../core/basic.h"
-
-#include "../2D/FFT2D_kernels.cuh"
-#include "../../../../core/utils/double_buffer.h"
-#include "../../../../BLAS/basic_process/transpose/CUDA/transpose_kernels.cuh"
-#include "FFT3D_planner.cuh"
-#include "../2D/FFT2D_1way_kernel_callers.cuh"
-#include "FFT3D_MidProc_caller.cuh"
+#include "../../../../../core/basic.h"
+#include "../../2D/FFT2D_kernels.cuh"
+#include "../../../../../core/utils/double_buffer.h"
+#include "../../../../../BLAS/basic_process/transpose/CUDA/transpose_kernels.cuh"
+#include "../FFT3D_planner.cuh"
+#include "../../2D/FFT2D_1way_kernel_callers.cuh"
+#include "../FFT3D_MidProc_caller.cuh"
 
 
 template <>
@@ -54,7 +53,7 @@ void decx::dsp::fft::_cuda_FFT3D_planner<float>::Forward(decx::_GPU_Tensor* src,
                              S);
     double_buffer.update_states();
     
-    decx::dsp::fft::FFT2D_C2C_cplxf_1way_caller<_FFT2D_END_>(&double_buffer, _along_D, S);
+    decx::dsp::fft::FFT2D_C2C_cplxf_1way_caller<_FFT2D_END_(de::CPf)>(&double_buffer, _along_D, S);
 
     decx::bp::transpose2D_b8(double_buffer.get_leading_ptr<double2>(), 
                              (double2*)dst->Tens.ptr,

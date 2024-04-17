@@ -8,7 +8,7 @@
 *   More information please visit https://github.com/param0037/DECX
 */
 
-#include "FFT1D_1st_kernels_dense.cuh"
+#include "../FFT1D_1st_kernels_dense.cuh"
 
 
 __global__ void 
@@ -209,16 +209,16 @@ decx::dsp::fft::GPUK::cu_FFT2D_R5_end_cplxf_C2C_dense(const float2* __restrict s
     }
 
     const float _frac = __fdividef(_warp_loc_id, _kernel_info._warp_proc_len);
-    W.dev_construct_with_phase(__fmul_rn(Two_Pi, _frac));
+    W.construct_with_phase(__fmul_rn(Two_Pi, _frac));
     recv[1]._cplxf32 = decx::dsp::fft::GPUK::_complex_mul_fp32(recv[1]._cplxf32, W);
 
-    W.dev_construct_with_phase(__fmul_rn(Four_Pi, _frac));
+    W.construct_with_phase(__fmul_rn(Four_Pi, _frac));
     recv[2]._cplxf32 = decx::dsp::fft::GPUK::_complex_mul_fp32(recv[2]._cplxf32, W);
 
-    W.dev_construct_with_phase(__fmul_rn(Six_Pi, _frac));
+    W.construct_with_phase(__fmul_rn(Six_Pi, _frac));
     recv[3]._cplxf32 = decx::dsp::fft::GPUK::_complex_mul_fp32(recv[3]._cplxf32, W);
 
-    W.dev_construct_with_phase(__fmul_rn(Eight_Pi, _frac));
+    W.construct_with_phase(__fmul_rn(Eight_Pi, _frac));
     recv[4]._cplxf32 = decx::dsp::fft::GPUK::_complex_mul_fp32(recv[4]._cplxf32, W);
 
     _FFT_domain_dex = (tidy / _kernel_info._store_pitch) * _kernel_info._warp_proc_len + _warp_loc_id;
@@ -309,16 +309,16 @@ decx::dsp::fft::GPUK::cu_FFT2D_R5_end_cplxf_C2R_dense(const float2* __restrict s
     }
 
     const float _frac = __fdividef(_warp_loc_id, _kernel_info._warp_proc_len);
-    W.dev_construct_with_phase(__fmul_rn(Two_Pi, _frac));
+    W.construct_with_phase(__fmul_rn(Two_Pi, _frac));
     recv[1]._cplxf32 = decx::dsp::fft::GPUK::_complex_mul_fp32(recv[1]._cplxf32, W);
 
-    W.dev_construct_with_phase(__fmul_rn(Four_Pi, _frac));
+    W.construct_with_phase(__fmul_rn(Four_Pi, _frac));
     recv[2]._cplxf32 = decx::dsp::fft::GPUK::_complex_mul_fp32(recv[2]._cplxf32, W);
 
-    W.dev_construct_with_phase(__fmul_rn(Six_Pi, _frac));
+    W.construct_with_phase(__fmul_rn(Six_Pi, _frac));
     recv[3]._cplxf32 = decx::dsp::fft::GPUK::_complex_mul_fp32(recv[3]._cplxf32, W);
 
-    W.dev_construct_with_phase(__fmul_rn(Eight_Pi, _frac));
+    W.construct_with_phase(__fmul_rn(Eight_Pi, _frac));
     recv[4]._cplxf32 = decx::dsp::fft::GPUK::_complex_mul_fp32(recv[4]._cplxf32, W);
 
     _FFT_domain_dex = (tidy / _kernel_info._store_pitch) * _kernel_info._warp_proc_len + _warp_loc_id;

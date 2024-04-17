@@ -419,4 +419,130 @@ decx::dsp::fft::IFFT2D_C2R_caller_cplxf_fp32(const float4* __restrict src,
 }
 
 
+namespace decx
+{
+namespace dsp {
+namespace fft {
+    namespace GPUK 
+    {
+        //// ------------------------------------------------ Radix-2 ------------------------------------------------
+        //__global__ void cu_FFT2_R2_1st_R2C_cplxd(const double2* __restrict src, double4* __restrict dst,
+        //    const uint32_t _signal_len, const uint32_t _pitchsrc_v1, const uint32_t _putchdst_v1);
+
+
+        //__global__ void cu_FFT2_R2_1st_R2C_uc8_cplxd(const ushort* __restrict src, double4* __restrict dst,
+        //    const uint32_t _signal_len, const uint32_t _pitchsrc_v1, const uint32_t _putchdst_v1);
+
+
+        //template <bool _div> __global__ void
+        //    cu_FFT2_R2_1st_C2C_cplxd(const double4* __restrict src, double4* __restrict dst,
+        //        const uint32_t _signal_len, const uint32_t _pitchsrc_v1, const uint32_t _putchdst_v1, const uint64_t _div_length = 0);
+
+
+        //template <bool _conj> __global__ void
+        //    cu_FFT2_R2_C2C_cplxd(const double4* __restrict, double4* __restrict dst,
+        //        const decx::dsp::fft::FKI_4_2DK _kernel_info, const uint32_t _pitchsrc_v1, const uint32_t _pitchdst_v1);
+
+
+        //__global__ void
+        //cu_FFT2_R2_C2R_cplxd_u8(const double4* __restrict, uchar2* __restrict dst,
+        //    const decx::dsp::fft::FKI_4_2DK _kernel_info, const uint32_t _pitchsrc_v1, const uint32_t _pitchdst_v1);
+
+
+        //__global__ void
+        //cu_FFT2_R2_C2R_cplxd_fp32(const double4* __restrict, double2* __restrict dst,
+        //    const decx::dsp::fft::FKI_4_2DK _kernel_info, const uint32_t _pitchsrc_v1, const uint32_t _pitchdst_v1);
+
+
+        //// ------------------------------------------------ Radix-3 ------------------------------------------------
+        //__global__ void cu_FFT2_R3_1st_R2C_cplxd(const double2* __restrict src, double4* __restrict dst,
+        //    const uint32_t _signal_len, const uint32_t _pitchsrc_v1, const uint32_t _putchdst_v1);
+
+
+        //__global__ void cu_FFT2_R3_1st_R2C_uc8_cplxd(const ushort* __restrict src, double4* __restrict dst,
+        //    const uint32_t _signal_len, const uint32_t _pitchsrc_v1, const uint32_t _putchdst_v1);
+
+
+        //template <bool _div> __global__ void
+        //    cu_FFT2_R3_1st_C2C_cplxd(const double4* __restrict src, double4* __restrict dst,
+        //        const uint32_t _signal_len, const uint32_t _pitchsrc_v1, const uint32_t _putchdst_v1, const uint64_t _div_length = 0);
+
+
+        //template <bool _conj> __global__ void
+        //    cu_FFT2_R3_C2C_cplxd(const double4* __restrict, double4* __restrict dst,
+        //        const decx::dsp::fft::FKI_4_2DK _kernel_info, const uint32_t _pitchsrc_v1, const uint32_t _pitchdst_v1);
+
+
+        //__global__ void
+        //cu_FFT2_R3_C2R_cplxd_u8(const double4* __restrict, uchar2* __restrict dst,
+        //    const decx::dsp::fft::FKI_4_2DK _kernel_info, const uint32_t _pitchsrc_v1, const uint32_t _pitchdst_v1);
+
+
+        //__global__ void
+        //cu_FFT2_R3_C2R_cplxd_fp32(const double4* __restrict, double2* __restrict dst,
+        //    const decx::dsp::fft::FKI_4_2DK _kernel_info, const uint32_t _pitchsrc_v1, const uint32_t _pitchdst_v1);
+
+        //// ------------------------------------------------ Radix-4 ------------------------------------------------
+        //__global__ void cu_FFT2_R4_1st_R2C_cplxd(const double2* __restrict src, double4* __restrict dst,
+        //    const uint32_t _signal_len, const uint32_t _pitchsrc_v1, const uint32_t _putchdst_v1);
+
+
+        //__global__ void cu_FFT2_R4_1st_R2C_uc8_cplxd(const ushort* __restrict src, double4* __restrict dst,
+        //    const uint32_t _signal_len, const uint32_t _pitchsrc_v1, const uint32_t _putchdst_v1);
+
+
+        //template <bool _div> __global__ void 
+        //cu_FFT2_R4_1st_C2C_cplxd(const double4* __restrict src, double4* __restrict dst,
+        //    const uint32_t _signal_len, const uint32_t _pitchsrc_v1, const uint32_t _putchdst_v1, const uint64_t _div_length = 0);
+
+
+        //template <bool _conj> __global__ void
+        //cu_FFT2_R4_C2C_cplxd(const double4* __restrict, double4* __restrict dst,
+        //    const decx::dsp::fft::FKI_4_2DK _kernel_info, const uint32_t _pitchsrc_v1, const uint32_t _pitchdst_v1);
+
+
+        //__global__ void
+        //cu_FFT2_R4_C2R_cplxd_u8(const double4* __restrict, uchar2* __restrict dst,
+        //    const decx::dsp::fft::FKI_4_2DK _kernel_info, const uint32_t _pitchsrc_v1, const uint32_t _pitchdst_v1);
+
+
+        //__global__ void
+        //cu_FFT2_R4_C2R_cplxd_fp32(const double4* __restrict, double2* __restrict dst,
+        //    const decx::dsp::fft::FKI_4_2DK _kernel_info, const uint32_t _pitchsrc_v1, const uint32_t _pitchdst_v1);
+
+
+        //// ------------------------------------------------ Radix-5 ------------------------------------------------
+        //__global__ void cu_FFT2_R5_1st_R2C_cplxd(const double2* __restrict src, double4* __restrict dst,
+        //    const uint32_t _signal_len, const uint32_t _pitchsrc_v1, const uint32_t _pitchdst_v1);
+
+
+        //__global__ void cu_FFT2_R5_1st_R2C_uc8_cplxd(const ushort* __restrict src, double4* __restrict dst,
+        //    const uint32_t _signal_len, const uint32_t _pitchsrc_v1, const uint32_t _pitchdst_v1);
+
+
+        //template <bool _div> __global__ void 
+        //cu_FFT2_R5_1st_C2C_cplxd(const double4* __restrict src, double4* __restrict dst,
+        //    const uint32_t _signal_len, const uint32_t _pitchsrc_v1, const uint32_t _putchdst_v1, const uint64_t _div_length = 0);
+
+
+        //template <bool _conj> __global__ void
+        //cu_FFT2_R5_C2C_cplxd(const double4* __restrict, double4* __restrict dst,
+        //    const decx::dsp::fft::FKI_4_2DK _kernel_info, const uint32_t _pitchsrc_v1, const uint32_t _pitchdst_v1);
+
+
+        //__global__ void
+        //cu_FFT2_R5_C2R_cplxd_u8(const double4* __restrict, uchar2* __restrict dst,
+        //    const decx::dsp::fft::FKI_4_2DK _kernel_info, const uint32_t _pitchsrc_v1, const uint32_t _pitchdst_v1);
+
+
+        //__global__ void
+        //cu_FFT2_R5_C2R_cplxd_fp32(const double4* __restrict, double2* __restrict dst,
+        //    const decx::dsp::fft::FKI_4_2DK _kernel_info, const uint32_t _pitchsrc_v1, const uint32_t _pitchdst_v1);
+    }
+    }
+}
+}
+
+
+
 #endif

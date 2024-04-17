@@ -9,7 +9,7 @@
 */
 
 
-#include "FFT3D_MidProc_caller.cuh"
+#include "../FFT3D_MidProc_caller.cuh"
 
 
 template <bool _div>

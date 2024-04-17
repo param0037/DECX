@@ -8,13 +8,13 @@
 *   More information please visit https://github.com/param0037/DECX
 */
 
-#include "../../../../core/basic.h"
-#include "CUDA_FFT1D_planner.cuh"
-#include "FFT1D_1st_kernels_dense.cuh"
-#include "../2D/FFT2D_kernels.cuh"
-#include "../../../../BLAS/basic_process/transpose/CUDA/transpose_kernels.cuh"
-#include "FFT1D_kernel_callers.cuh"
-#include "../2D/FFT2D_1way_kernel_callers.cuh"
+#include "../../../../../core/basic.h"
+#include "../CUDA_FFT1D_planner.cuh"
+#include "../FFT1D_1st_kernels_dense.cuh"
+#include "../../2D/FFT2D_kernels.cuh"
+#include "../../../../../BLAS/basic_process/transpose/CUDA/transpose_kernels.cuh"
+#include "../FFT1D_kernel_callers.cuh"
+#include "../../2D/FFT2D_1way_kernel_callers.cuh"
 
 
 template <>
@@ -42,7 +42,7 @@ void decx::dsp::fft::_cuda_FFT1D_planner<float>::Forward(decx::_Vector* src, dec
 
     _double_buffer.update_states();
 
-    decx::dsp::fft::FFT1D_partition_cplxf_end_caller<_FFT1D_END_>(&_double_buffer, NULL,
+    decx::dsp::fft::FFT1D_partition_cplxf_end_caller<_FFT1D_END_(de::CPf)>(&_double_buffer, NULL,
         _formal_FFT2D_ptr->get_FFT_info(decx::dsp::fft::_FFT_AlongW),
         S);
 
@@ -77,7 +77,7 @@ void decx::dsp::fft::_cuda_FFT1D_planner<float>::Forward(decx::_GPU_Vector* src,
 
     _double_buffer.update_states();
 
-    decx::dsp::fft::FFT1D_partition_cplxf_end_caller<_FFT1D_END_>(&_double_buffer, dst->Vec.ptr,
+    decx::dsp::fft::FFT1D_partition_cplxf_end_caller<_FFT1D_END_(de::CPf)>(&_double_buffer, dst->Vec.ptr,
         _formal_FFT2D_ptr->get_FFT_info(decx::dsp::fft::_FFT_AlongW),
         S);
 }

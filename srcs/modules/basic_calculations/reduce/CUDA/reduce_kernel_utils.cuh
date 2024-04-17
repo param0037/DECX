@@ -31,7 +31,7 @@ namespace reduce
     {
         template <typename _Ty, uint16_t reduce_length, uint16_t _parallel_lane = 1>
         //the result is stored under the 0th thread of a warp
-        __device__ __inline__ void cu_warp_reduce(decx::utils::cuda::cu_math_ops<_Ty>& _op, const void* _src, void* _dst)
+        __device__ __inline__ void cu_warp_reduce(decx::utils::cuda::cu_math_ops<_Ty>* _op, const void* _src, void* _dst)
         {
             _Ty tmp;
             _Ty accu = *((_Ty*)_src);
@@ -39,7 +39,7 @@ namespace reduce
 #pragma unroll 
             for (int16_t i = _lane_reduce_len / 2; i > 0; i >>= 1) {
                 tmp = __shfl_down_sync(0xffffffff, accu, i, _lane_reduce_len);
-                accu = _op(tmp, accu);
+                accu = (*_op)(tmp, accu);
             }
             *((_Ty*)_dst) = accu;
         }
