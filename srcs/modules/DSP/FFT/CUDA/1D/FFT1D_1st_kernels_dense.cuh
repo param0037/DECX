@@ -419,81 +419,81 @@ namespace fft {
     namespace GPUK 
     {
         // R2C 1st
-        __global__ void cu_FFT2D_R5_1st_cplxd_R2C_dense(const double* __restrict src, double2* __restrict dst,
+        __global__ void cu_FFT2D_R5_1st_cplxd_R2C(const double* __restrict src, double2* __restrict dst,
             const uint32_t _signal_len, const uint32_t _pitchsrc, const uint32_t _pitchdst);
 
 
-        __global__ void cu_FFT2D_R4_1st_cplxd_R2C_dense(const double* __restrict src, double2* __restrict dst,
+        __global__ void cu_FFT2D_R4_1st_cplxd_R2C(const double* __restrict src, double2* __restrict dst,
             const uint32_t _signal_len, const uint32_t _pitchsrc, const uint32_t _pitchdst);
 
 
-        __global__ void cu_FFT2D_R3_1st_cplxd_R2C_dense(const double* __restrict src, double2* __restrict dst,
+        __global__ void cu_FFT2D_R3_1st_cplxd_R2C(const double* __restrict src, double2* __restrict dst,
             const uint32_t _signal_len, const uint32_t _pitchsrc, const uint32_t _pitchdst);
 
 
-        __global__ void cu_FFT2D_R2_1st_cplxd_R2C_dense(const double* __restrict src, double2* __restrict dst,
+        __global__ void cu_FFT2D_R2_1st_cplxd_R2C(const double* __restrict src, double2* __restrict dst,
             const uint32_t _signal_len, const uint32_t _pitchsrc, const uint32_t _pitchdst);
 
 
         // C2C 1st
         template <bool _div>
-        __global__ void cu_FFT2D_R5_1st_cplxd_C2C_dense(const double2* __restrict src, double2* __restrict dst,
+        __global__ void cu_FFT2D_R5_1st_cplxd_C2C(const double2* __restrict src, double2* __restrict dst,
             const uint32_t _signal_len, const uint32_t _pitchsrc, const uint32_t _pitchdst, const uint64_t _div_len);
 
 
         template <bool _div>
-        __global__ void cu_FFT2D_R4_1st_cplxd_C2C_dense(const double2* __restrict src, double2* __restrict dst,
+        __global__ void cu_FFT2D_R4_1st_cplxd_C2C(const double2* __restrict src, double2* __restrict dst,
             const uint32_t _signal_len, const uint32_t _pitchsrc, const uint32_t _pitchdst, const uint64_t _div_len);
 
 
         template <bool _div>
-        __global__ void cu_FFT2D_R3_1st_cplxd_C2C_dense(const double2* __restrict src, double2* __restrict dst,
+        __global__ void cu_FFT2D_R3_1st_cplxd_C2C(const double2* __restrict src, double2* __restrict dst,
             const uint32_t _signal_len, const uint32_t _pitchsrc, const uint32_t _pitchdst, const uint64_t _div_len);
 
 
         template <bool _div>
-        __global__ void cu_FFT2D_R2_1st_cplxd_C2C_dense(const double2* __restrict src, double2* __restrict dst,
+        __global__ void cu_FFT2D_R2_1st_cplxd_C2C(const double2* __restrict src, double2* __restrict dst,
             const uint32_t _signal_len, const uint32_t _pitchsrc, const uint32_t _pitchdst, const uint64_t _div_len);
 
         // C2C end
         template <bool _conj>
-        __global__ void cu_FFT2D_R5_end_cplxd_C2C_dense(const double2* __restrict src, double2* __restrict dst,
+        __global__ void cu_FFT2D_R5_end_cplxd_C2C(const double2* __restrict src, double2* __restrict dst,
             const decx::dsp::fft::FKI_4_2DK _kernel_info, const uint32_t _pitchsrc, const uint32_t _pitchdst);
 
 
         template <bool _conj>
-        __global__ void cu_FFT2D_R4_end_cplxd_C2C_dense(const double2* __restrict src, double2* __restrict dst,
+        __global__ void cu_FFT2D_R4_end_cplxd_C2C(const double2* __restrict src, double2* __restrict dst,
             const decx::dsp::fft::FKI_4_2DK _kernel_info, const uint32_t _pitchsrc, const uint32_t _pitchdst);
 
 
         template <bool _conj>
-        __global__ void cu_FFT2D_R3_end_cplxd_C2C_dense(const double2* __restrict src, double2* __restrict dst,
+        __global__ void cu_FFT2D_R3_end_cplxd_C2C(const double2* __restrict src, double2* __restrict dst,
             const decx::dsp::fft::FKI_4_2DK _kernel_info, const uint32_t _pitchsrc, const uint32_t _pitchdst);
 
 
         template <bool _conj>
-        __global__ void cu_FFT2D_R2_end_cplxd_C2C_dense(const double2* __restrict src, double2* __restrict dst,
+        __global__ void cu_FFT2D_R2_end_cplxd_C2C(const double2* __restrict src, double2* __restrict dst,
             const decx::dsp::fft::FKI_4_2DK _kernel_info, const uint32_t _pitchsrc, const uint32_t _pitchdst);
 
 
         // C2R end
-        __global__ void cu_FFT2D_R5_end_cplxd_C2R_dense(const double2* __restrict src, double* __restrict dst,
+        __global__ void cu_FFT2D_R5_end_cplxd_C2R(const double2* __restrict src, double* __restrict dst,
             const decx::dsp::fft::FKI_4_2DK _kernel_info, const uint32_t _pitchsrc, const uint32_t _pitchdst);
 
 
-        __global__ void cu_FFT2D_R4_end_cplxd_C2R_dense(const double2* __restrict src, double* __restrict dst,
+        __global__ void cu_FFT2D_R4_end_cplxd_C2R(const double2* __restrict src, double* __restrict dst,
             const decx::dsp::fft::FKI_4_2DK _kernel_info, const uint32_t _pitchsrc, const uint32_t _pitchdst);
 
 
-        __global__ void cu_FFT2D_R3_end_cplxd_C2R_dense(const double2* __restrict src, double* __restrict dst,
+        __global__ void cu_FFT2D_R3_end_cplxd_C2R(const double2* __restrict src, double* __restrict dst,
             const decx::dsp::fft::FKI_4_2DK _kernel_info, const uint32_t _pitchsrc, const uint32_t _pitchdst);
 
 
-        __global__ void cu_FFT2D_R2_end_cplxd_C2R_dense(const double2* __restrict src, double* __restrict dst,
+        __global__ void cu_FFT2D_R2_end_cplxd_C2R(const double2* __restrict src, double* __restrict dst,
             const decx::dsp::fft::FKI_4_2DK _kernel_info, const uint32_t _pitchsrc, const uint32_t _pitchdst);
     }
 
-    static void FFT1D_1st_R2C_caller_cplxd_dense(const double* __restrict src, double2* __restrict dst,
+    static void FFT2D_1st_R2C_caller_cplxd(const double* __restrict src, double2* __restrict dst,
         const uint8_t _radix, const uint32_t _signal_len, const uint32_t _pitchsrc, const uint32_t _pitchdst,
         decx::cuda_stream* S);
 
@@ -520,7 +520,7 @@ namespace fft {
 
 // Copy to the buffer with aligned pitch (ensuring coalsecing memory access)
 static void 
-decx::dsp::fft::FFT1D_1st_R2C_caller_cplxd_dense(const double* __restrict src, 
+decx::dsp::fft::FFT2D_1st_R2C_caller_cplxd(const double* __restrict src, 
                                                  double2* __restrict dst,
                                                  const uint8_t _radix, 
                                                  const uint32_t _signal_len, 
@@ -535,22 +535,22 @@ decx::dsp::fft::FFT1D_1st_R2C_caller_cplxd_dense(const double* __restrict src,
     switch (_radix)
     {
     case 5:
-        decx::dsp::fft::GPUK::cu_FFT2D_R5_1st_cplxd_R2C_dense << <_grid, _block, 0, S->get_raw_stream_ref() >> > (
+        decx::dsp::fft::GPUK::cu_FFT2D_R5_1st_cplxd_R2C << <_grid, _block, 0, S->get_raw_stream_ref() >> > (
             src, dst, _signal_len, _pitchsrc, _pitchdst);
         break;
 
     case 4:
-        decx::dsp::fft::GPUK::cu_FFT2D_R4_1st_cplxd_R2C_dense << <_grid, _block, 0, S->get_raw_stream_ref() >> > (
+        decx::dsp::fft::GPUK::cu_FFT2D_R4_1st_cplxd_R2C << <_grid, _block, 0, S->get_raw_stream_ref() >> > (
             src, dst, _signal_len, _pitchsrc, _pitchdst);
         break;
 
     case 3:
-        decx::dsp::fft::GPUK::cu_FFT2D_R3_1st_cplxd_R2C_dense << <_grid, _block, 0, S->get_raw_stream_ref() >> > (
+        decx::dsp::fft::GPUK::cu_FFT2D_R3_1st_cplxd_R2C << <_grid, _block, 0, S->get_raw_stream_ref() >> > (
             src, dst, _signal_len, _pitchsrc, _pitchdst);
         break;
 
     case 2:
-        decx::dsp::fft::GPUK::cu_FFT2D_R2_1st_cplxd_R2C_dense << <_grid, _block, 0, S->get_raw_stream_ref() >> > (
+        decx::dsp::fft::GPUK::cu_FFT2D_R2_1st_cplxd_R2C << <_grid, _block, 0, S->get_raw_stream_ref() >> > (
             src, dst, _signal_len, _pitchsrc, _pitchdst);
         break;
     default:
@@ -577,22 +577,22 @@ decx::dsp::fft::FFT2D_1st_C2C_caller_cplxd(const double2* __restrict src,
     switch (_radix)
     {
     case 5:
-        decx::dsp::fft::GPUK::cu_FFT2D_R5_1st_cplxd_C2C_dense<_div> << <_grid, _block, 0, S->get_raw_stream_ref() >> > (
+        decx::dsp::fft::GPUK::cu_FFT2D_R5_1st_cplxd_C2C<_div> << <_grid, _block, 0, S->get_raw_stream_ref() >> > (
             src, dst, _signal_len_fractioned, _pitchsrc, _pitchdst, _signal_len_total);
         break;
 
     case 4:
-        decx::dsp::fft::GPUK::cu_FFT2D_R4_1st_cplxd_C2C_dense<_div> << <_grid, _block, 0, S->get_raw_stream_ref() >> > (
+        decx::dsp::fft::GPUK::cu_FFT2D_R4_1st_cplxd_C2C<_div> << <_grid, _block, 0, S->get_raw_stream_ref() >> > (
             src, dst, _signal_len_fractioned, _pitchsrc, _pitchdst, _signal_len_total);
         break;
 
     case 3:
-        decx::dsp::fft::GPUK::cu_FFT2D_R3_1st_cplxd_C2C_dense<_div> << <_grid, _block, 0, S->get_raw_stream_ref() >> > (
+        decx::dsp::fft::GPUK::cu_FFT2D_R3_1st_cplxd_C2C<_div> << <_grid, _block, 0, S->get_raw_stream_ref() >> > (
             src, dst, _signal_len_fractioned, _pitchsrc, _pitchdst, _signal_len_total);
         break;
 
     case 2:
-        decx::dsp::fft::GPUK::cu_FFT2D_R2_1st_cplxd_C2C_dense<_div> << <_grid, _block, 0, S->get_raw_stream_ref() >> > (
+        decx::dsp::fft::GPUK::cu_FFT2D_R2_1st_cplxd_C2C<_div> << <_grid, _block, 0, S->get_raw_stream_ref() >> > (
             src, dst, _signal_len_fractioned, _pitchsrc, _pitchdst, _signal_len_total);
         break;
     default:
@@ -617,22 +617,22 @@ decx::dsp::fft::FFT2D_C2C_caller_cplxd(const double2* __restrict src,
     switch (_radix)
     {
     case 5:
-        decx::dsp::fft::GPUK::cu_FFT2D_R5_end_cplxd_C2C_dense<_conj> << <_grid, _block, 0, S->get_raw_stream_ref() >> > (
+        decx::dsp::fft::GPUK::cu_FFT2D_R5_end_cplxd_C2C<_conj> << <_grid, _block, 0, S->get_raw_stream_ref() >> > (
             src, dst, *_kernel_info, _pitchsrc_v1, _pitchdst_v1);
         break;
 
     case 4:
-        decx::dsp::fft::GPUK::cu_FFT2D_R4_end_cplxd_C2C_dense<_conj> << <_grid, _block, 0, S->get_raw_stream_ref() >> > (
+        decx::dsp::fft::GPUK::cu_FFT2D_R4_end_cplxd_C2C<_conj> << <_grid, _block, 0, S->get_raw_stream_ref() >> > (
             src, dst, *_kernel_info, _pitchsrc_v1, _pitchdst_v1);
         break;
 
     case 3:
-        decx::dsp::fft::GPUK::cu_FFT2D_R3_end_cplxd_C2C_dense<_conj> << <_grid, _block, 0, S->get_raw_stream_ref() >> > (
+        decx::dsp::fft::GPUK::cu_FFT2D_R3_end_cplxd_C2C<_conj> << <_grid, _block, 0, S->get_raw_stream_ref() >> > (
             src, dst, *_kernel_info, _pitchsrc_v1, _pitchdst_v1);
         break;
 
     case 2:
-        decx::dsp::fft::GPUK::cu_FFT2D_R2_end_cplxd_C2C_dense<_conj> << <_grid, _block, 0, S->get_raw_stream_ref() >> > (
+        decx::dsp::fft::GPUK::cu_FFT2D_R2_end_cplxd_C2C<_conj> << <_grid, _block, 0, S->get_raw_stream_ref() >> > (
             src, dst, *_kernel_info, _pitchsrc_v1, _pitchdst_v1);
         break;
     default:
@@ -658,29 +658,28 @@ decx::dsp::fft::FFT2D_end_C2R_caller_cplxd(const double2* __restrict src,
     switch (_radix)
     {
     case 5:
-        decx::dsp::fft::GPUK::cu_FFT2D_R5_end_cplxd_C2R_dense << <_grid, _block, 0, S->get_raw_stream_ref() >> > (
+        decx::dsp::fft::GPUK::cu_FFT2D_R5_end_cplxd_C2R << <_grid, _block, 0, S->get_raw_stream_ref() >> > (
             src, dst, *_kernel_info, _pitchsrc, _pitchdst);
         break;
 
     case 4:
-        decx::dsp::fft::GPUK::cu_FFT2D_R4_end_cplxd_C2R_dense << <_grid, _block, 0, S->get_raw_stream_ref() >> > (
+        decx::dsp::fft::GPUK::cu_FFT2D_R4_end_cplxd_C2R << <_grid, _block, 0, S->get_raw_stream_ref() >> > (
             src, dst, *_kernel_info, _pitchsrc, _pitchdst);
         break;
 
     case 3:
-        decx::dsp::fft::GPUK::cu_FFT2D_R3_end_cplxd_C2R_dense << <_grid, _block, 0, S->get_raw_stream_ref() >> > (
+        decx::dsp::fft::GPUK::cu_FFT2D_R3_end_cplxd_C2R << <_grid, _block, 0, S->get_raw_stream_ref() >> > (
             src, dst, *_kernel_info, _pitchsrc, _pitchdst);
         break;
 
     case 2:
-        decx::dsp::fft::GPUK::cu_FFT2D_R2_end_cplxd_C2R_dense << <_grid, _block, 0, S->get_raw_stream_ref() >> > (
+        decx::dsp::fft::GPUK::cu_FFT2D_R2_end_cplxd_C2R << <_grid, _block, 0, S->get_raw_stream_ref() >> > (
             src, dst, *_kernel_info, _pitchsrc, _pitchdst);
         break;
     default:
         break;
     }
 }
-
 
 
 #endif

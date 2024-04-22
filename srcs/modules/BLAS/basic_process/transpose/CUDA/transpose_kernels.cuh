@@ -31,6 +31,10 @@ namespace bp
         __global__ void cu_transpose2D_b8(const double2* __restrict src, double2* __restrict dst, 
             const uint32_t pitchsrc_v2, const uint32_t pitchdst_v2, const uint2 proc_dim_dst);
 
+        __global__ void cu_transpose2D_b16(const double2* __restrict src, double2* __restrict dst,
+            const uint32_t pitchsrc_v1, const uint32_t pitchdst_v1, const uint2 proc_dim_dst);
+
+
 #ifdef _DECX_DSP_CUDA_
         // [32, 8] .* [2, 8] = [64, 64]
         __global__ void cu_transpose2D_b8_for_FFT(const double2* __restrict src, double2* __restrict dst,
@@ -38,7 +42,7 @@ namespace bp
 
         // [32, 8] .* [1, 4] = [32, 32]
         __global__ void cu_transpose2D_b16_for_FFT(const double2* __restrict src, double2* __restrict dst,
-            const uint32_t pitchsrc_v2, const uint32_t pitchdst_v2, const uint2 proc_dim_dst);
+            const uint32_t pitchsrc_v1, const uint32_t pitchdst_v1, const uint2 proc_dim_dst);
 #endif
 
 
@@ -54,6 +58,10 @@ namespace bp
 
     static void transpose2D_b8(const double2* src, double2* dst, const uint2 proc_dims_dst,
         const uint32_t pitchsrc, const uint32_t pitchdst, decx::cuda_stream* S);
+
+    static void transpose2D_b16(const double2* src, double2* dst, const uint2 proc_dims_dst,
+        const uint32_t pitchsrc, const uint32_t pitchdst, decx::cuda_stream* S);
+
 
 #ifdef _DECX_DSP_CUDA_
     static void transpose2D_b8_for_FFT(const double2* src, double2* dst, const uint2 proc_dims_dst,
@@ -106,6 +114,24 @@ decx::bp::transpose2D_b8(const double2* src,
 
     decx::bp::GPUK::cu_transpose2D_b8 << <transp_grid_0, transp_thread_0, 0, S->get_raw_stream_ref() >> > (
         src, dst, pitchsrc / 2, pitchdst / 2, proc_dims_dst);
+}
+
+
+
+static void 
+decx::bp::transpose2D_b16(const double2* src, 
+                         double2* dst, 
+                         const uint2 proc_dims_dst,
+                         const uint32_t pitchsrc, 
+                         const uint32_t pitchdst, 
+                         decx::cuda_stream* S)
+{
+    dim3 transp_thread_0(32, 8);
+    dim3 transp_grid_0(decx::utils::ceil<uint>(proc_dims_dst.y, 32),
+        decx::utils::ceil<uint>(proc_dims_dst.x, 32));
+
+    decx::bp::GPUK::cu_transpose2D_b16 << <transp_grid_0, transp_thread_0, 0, S->get_raw_stream_ref() >> > (
+        src, dst, pitchsrc, pitchdst, proc_dims_dst);
 }
 
 

@@ -121,7 +121,7 @@ decx::dsp::fft::FFT1D_partition_cplxd_1st_caller(const void* src,
                                                  const uint64_t _signal_len_total)
 {
     if (std::is_same<_type_in, double>::value){
-        decx::dsp::fft::FFT1D_1st_R2C_caller_cplxd_dense(src ? (double*)src : _double_buffer->get_buffer2<double>(),
+        decx::dsp::fft::FFT2D_1st_R2C_caller_cplxd(src ? (double*)src : _double_buffer->get_buffer2<double>(),
                                                          _double_buffer->get_buffer1<double2>(),
                                                          _FFT_info->get_radix(0),   _FFT_info->get_signal_len(),
                                                          _FFT_info->_pitchsrc,      _FFT_info->_pitchtmp, S);

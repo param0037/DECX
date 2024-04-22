@@ -13,7 +13,7 @@
 
 // [32 * 2, 8] = [64, 8]
 __global__ void 
-decx::dsp::fft::GPUK::cu_FFT2D_R2_1st_cplxd_R2C_dense(const double* __restrict src,
+decx::dsp::fft::GPUK::cu_FFT2D_R2_1st_cplxd_R2C(const double* __restrict src,
                                                       double2* __restrict dst,
                                                       const uint32_t _signal_len,
                                                       const uint32_t _pitchsrc_v2,
@@ -55,7 +55,7 @@ decx::dsp::fft::GPUK::cu_FFT2D_R2_1st_cplxd_R2C_dense(const double* __restrict s
 
 
 template<bool _div> __global__ void 
-decx::dsp::fft::GPUK::cu_FFT2D_R2_1st_cplxd_C2C_dense(const double2* __restrict src,
+decx::dsp::fft::GPUK::cu_FFT2D_R2_1st_cplxd_C2C(const double2* __restrict src,
                                                double2* __restrict dst,
                                                const uint32_t _signal_len,
                                                const uint32_t _pitchsrc,
@@ -97,16 +97,16 @@ decx::dsp::fft::GPUK::cu_FFT2D_R2_1st_cplxd_C2C_dense(const double2* __restrict 
 }
 
 
-template __global__ void decx::dsp::fft::GPUK::cu_FFT2D_R2_1st_cplxd_C2C_dense<true>(const double2* __restrict, double2* __restrict,
+template __global__ void decx::dsp::fft::GPUK::cu_FFT2D_R2_1st_cplxd_C2C<true>(const double2* __restrict, double2* __restrict,
     const uint32_t, const uint32_t, const uint32_t, const uint64_t);
 
-template __global__ void decx::dsp::fft::GPUK::cu_FFT2D_R2_1st_cplxd_C2C_dense<false>(const double2* __restrict, double2* __restrict,
+template __global__ void decx::dsp::fft::GPUK::cu_FFT2D_R2_1st_cplxd_C2C<false>(const double2* __restrict, double2* __restrict,
     const uint32_t, const uint32_t, const uint32_t, const uint64_t);
 
 
 
 __global__ void 
-decx::dsp::fft::GPUK::cu_FFT2D_R2_end_cplxd_C2R_dense(const double2* __restrict src,
+decx::dsp::fft::GPUK::cu_FFT2D_R2_end_cplxd_C2R(const double2* __restrict src,
                                               double* __restrict dst,
                                               const decx::dsp::fft::FKI_4_2DK _kernel_info,
                                               const uint32_t _pitchsrc_v1,
@@ -152,7 +152,7 @@ decx::dsp::fft::GPUK::cu_FFT2D_R2_end_cplxd_C2R_dense(const double2* __restrict 
 
 
 template <bool _conj> __global__ void 
-decx::dsp::fft::GPUK::cu_FFT2D_R2_end_cplxd_C2C_dense(const double2* __restrict src,
+decx::dsp::fft::GPUK::cu_FFT2D_R2_end_cplxd_C2C(const double2* __restrict src,
                                                       double2* __restrict dst,
                                                       const decx::dsp::fft::FKI_4_2DK _kernel_info,
                                                       const uint32_t _pitchsrc_v1,
@@ -200,8 +200,8 @@ decx::dsp::fft::GPUK::cu_FFT2D_R2_end_cplxd_C2C_dense(const double2* __restrict 
     }
 }
 
-template __global__ void decx::dsp::fft::GPUK::cu_FFT2D_R2_end_cplxd_C2C_dense<true>(const double2* __restrict, double2* __restrict,
+template __global__ void decx::dsp::fft::GPUK::cu_FFT2D_R2_end_cplxd_C2C<true>(const double2* __restrict, double2* __restrict,
     const decx::dsp::fft::FKI_4_2DK, const uint32_t, const uint32_t);
 
-template __global__ void decx::dsp::fft::GPUK::cu_FFT2D_R2_end_cplxd_C2C_dense<false>(const double2* __restrict, double2* __restrict,
+template __global__ void decx::dsp::fft::GPUK::cu_FFT2D_R2_end_cplxd_C2C<false>(const double2* __restrict, double2* __restrict,
     const decx::dsp::fft::FKI_4_2DK, const uint32_t, const uint32_t);

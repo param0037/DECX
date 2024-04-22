@@ -59,6 +59,7 @@ namespace de {
         virtual double*     ptr_fp64(const int row, const int col)  = 0;
         virtual int*        ptr_int32(const int row, const int col) = 0;
         virtual de::CPf*    ptr_cpl32(const int row, const int col) = 0;
+        virtual de::CPd*    ptr_cpl64(const int row, const int col) = 0;
         virtual de::Half*   ptr_fp16(const int row, const int col)  = 0;
         virtual uint8_t*    ptr_uint8(const int row, const int col) = 0;
         
@@ -192,6 +193,7 @@ namespace decx
         virtual double*     ptr_fp64(const int row, const int col);
         virtual int*        ptr_int32(const int row, const int col);
         virtual de::CPf*    ptr_cpl32(const int row, const int col);
+        virtual de::CPd*    ptr_cpl64(const int row, const int col);
         virtual de::Half*   ptr_fp16(const int row, const int col);
         virtual uint8_t*    ptr_uint8(const int row, const int col);
 

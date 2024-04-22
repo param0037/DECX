@@ -54,7 +54,8 @@
     <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\2D\fp32\FFT2D_R3_cplxf_kernels.cu" />
     <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\2D\fp32\FFT2D_R4_cplxf_kernels.cu" />
     <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\2D\fp32\FFT2D_R5_cplxf_kernels.cu" />
-    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\2D\fp64\FFT2D_R2_cplxd_kernels.cu" />
+    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\2D\fp64\FFT2D_1way_kernel_callers_cplxd.cu" />
+    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\2D\fp64\FFT2D_cplxd64.cu" />
     <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\3D\FFT3D.cu" />
     <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\3D\FFT3D_planner.cu" />
     <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\3D\fp32\FFT3D_cplxf32.cu" />

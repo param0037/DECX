@@ -25,6 +25,14 @@ namespace fft
 
     template <typename _type_out> _CRSR_
     static void _IFFT2D_caller_cplxf(decx::_GPU_Matrix* src, decx::_GPU_Matrix* dst, de::DH* handle);
+
+
+    template <typename _type_in> _CRSR_
+    static void _FFT2D_caller_cplxd(decx::_GPU_Matrix* src, decx::_GPU_Matrix* dst, de::DH* handle);
+
+
+    template <typename _type_out> _CRSR_
+    static void _IFFT2D_caller_cplxd(decx::_GPU_Matrix* src, decx::_GPU_Matrix* dst, de::DH* handle);
 }
 }
 }
@@ -66,6 +74,42 @@ static void decx::dsp::fft::_FFT2D_caller_cplxf(decx::_GPU_Matrix* src, decx::_G
 
 
 
+template <typename _type_in> _CRSR_
+static void decx::dsp::fft::_FFT2D_caller_cplxd(decx::_GPU_Matrix* src, decx::_GPU_Matrix* dst, de::DH* handle)
+{
+    decx::cuda_stream* S;
+    S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
+    decx::cuda_event* E;
+    E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
+
+    if (decx::dsp::fft::cuda_FFT2D_cplxd64_planner._res_ptr == NULL) {
+        decx::dsp::fft::cuda_FFT2D_cplxd64_planner.RegisterResource(new decx::dsp::fft::_cuda_FFT2D_planner<double>,
+            5, &decx::dsp::fft::_cuda_FFT2D_planner<double>::release_buffers);
+    }
+
+    decx::dsp::fft::cuda_FFT2D_cplxd64_planner.lock();
+
+    decx::dsp::fft::_cuda_FFT2D_planner<double>* _planner =
+        decx::dsp::fft::cuda_FFT2D_cplxd64_planner.get_resource_raw_ptr< decx::dsp::fft::_cuda_FFT2D_planner<double>>();
+
+    if (_planner->changed(make_uint2(src->Width(), src->Height()), src->Pitch(), dst->Pitch())) {
+        _planner->plan(make_uint2(src->Width(), src->Height()), src->Pitch(), dst->Pitch(), handle);
+        Check_Runtime_Error(handle);
+    }
+
+    _planner->Forward<_type_in>(src, dst, S);
+
+    E->event_record(S);
+    E->synchronize();
+
+    S->detach();
+    E->detach();
+
+    decx::dsp::fft::cuda_FFT2D_cplxd64_planner.unlock();
+}
+
+
+
 template <typename _type_out> _CRSR_
 static void decx::dsp::fft::_IFFT2D_caller_cplxf(decx::_GPU_Matrix* src, decx::_GPU_Matrix* dst, de::DH* handle)
 {
@@ -102,6 +146,42 @@ static void decx::dsp::fft::_IFFT2D_caller_cplxf(decx::_GPU_Matrix* src, decx::_
 
 
 
+template <typename _type_out> _CRSR_
+static void decx::dsp::fft::_IFFT2D_caller_cplxd(decx::_GPU_Matrix* src, decx::_GPU_Matrix* dst, de::DH* handle)
+{
+    decx::cuda_stream* S;
+    S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
+    decx::cuda_event* E;
+    E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
+
+    if (decx::dsp::fft::cuda_IFFT2D_cplxd64_planner._res_ptr == NULL) {
+        decx::dsp::fft::cuda_IFFT2D_cplxd64_planner.RegisterResource(new decx::dsp::fft::_cuda_FFT2D_planner<double>,
+            5, &decx::dsp::fft::_cuda_FFT2D_planner<double>::release_buffers);
+    }
+
+    decx::dsp::fft::cuda_IFFT2D_cplxd64_planner.lock();
+
+    decx::dsp::fft::_cuda_FFT2D_planner<double>* _planner =
+        decx::dsp::fft::cuda_IFFT2D_cplxd64_planner.get_resource_raw_ptr< decx::dsp::fft::_cuda_FFT2D_planner<double>>();
+
+    if (_planner->changed(make_uint2(src->Width(), src->Height()), src->Pitch(), dst->Pitch())) {
+        _planner->plan(make_uint2(src->Width(), src->Height()), src->Pitch(), dst->Pitch(), handle);
+        Check_Runtime_Error(handle);
+    }
+
+    _planner->Inverse<_type_out>(src, dst, S);
+
+    E->event_record(S);
+    E->synchronize();
+
+    S->detach();
+    E->detach();
+
+    decx::dsp::fft::cuda_IFFT2D_cplxd64_planner.unlock();
+}
+
+
+
 _DECX_API_ de::DH de::dsp::cuda::FFT(de::GPU_Matrix& src, de::GPU_Matrix& dst)
 {
     de::DH handle;
@@ -121,6 +201,14 @@ _DECX_API_ de::DH de::dsp::cuda::FFT(de::GPU_Matrix& src, de::GPU_Matrix& dst)
 
     case de::_DATA_TYPES_FLAGS_::_COMPLEX_F32_:
         decx::dsp::fft::_FFT2D_caller_cplxf<de::CPf>(_src, _dst, &handle);
+        break;
+
+    case de::_DATA_TYPES_FLAGS_::_FP64_:
+        decx::dsp::fft::_FFT2D_caller_cplxd<double>(_src, _dst, &handle);
+        break;
+
+    case de::_DATA_TYPES_FLAGS_::_COMPLEX_F64_:
+        decx::dsp::fft::_FFT2D_caller_cplxd<de::CPd>(_src, _dst, &handle);
         break;
 
     default:
@@ -152,6 +240,14 @@ _DECX_API_ de::DH de::dsp::cuda::IFFT(de::GPU_Matrix& src, de::GPU_Matrix& dst, 
 
     case de::_DATA_TYPES_FLAGS_::_UINT8_:
         decx::dsp::fft::_IFFT2D_caller_cplxf<uint8_t>(_src, _dst, &handle);
+        break;
+
+    case de::_DATA_TYPES_FLAGS_::_FP64_:
+        decx::dsp::fft::_IFFT2D_caller_cplxd<double>(_src, _dst, &handle);
+        break;
+
+    case de::_DATA_TYPES_FLAGS_::_COMPLEX_F64_:
+        decx::dsp::fft::_IFFT2D_caller_cplxd<de::CPd>(_src, _dst, &handle);
         break;
     }
     

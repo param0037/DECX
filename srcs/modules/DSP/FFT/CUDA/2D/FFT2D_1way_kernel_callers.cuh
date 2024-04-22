@@ -13,6 +13,7 @@
 
 
 #include "FFT2D_kernels.cuh"
+#include "../1D/FFT1D_1st_kernels_dense.cuh"
 
 
 namespace decx
@@ -27,6 +28,16 @@ namespace fft
 
     template <bool _div, bool _conj, typename _type_out>
     void FFT2D_C2C_cplxf_1way_caller(decx::utils::double_buffer_manager* _double_buffer,
+        const decx::dsp::fft::_FFT2D_1way_config* _FFT_info, decx::cuda_stream* S);
+
+
+    template <typename _type_in, bool _div>
+    void FFT2D_cplxd_1st_1way_caller(const void* src, decx::utils::double_buffer_manager* _double_buffer,
+        const decx::dsp::fft::_FFT2D_1way_config* _FFT_info, decx::cuda_stream* S);
+
+
+    template <bool _div, bool _conj, typename _type_out>
+    void FFT2D_C2C_cplxd_1way_caller(decx::utils::double_buffer_manager* _double_buffer,
         const decx::dsp::fft::_FFT2D_1way_config* _FFT_info, decx::cuda_stream* S);
 }
 }

@@ -135,6 +135,9 @@ namespace decx
         namespace fft {
             extern decx::ResourceHandle cuda_FFT2D_cplxf32_planner;
             extern decx::ResourceHandle cuda_IFFT2D_cplxf32_planner;
+
+            extern decx::ResourceHandle cuda_FFT2D_cplxd64_planner;
+            extern decx::ResourceHandle cuda_IFFT2D_cplxd64_planner;
         }
     }
 }

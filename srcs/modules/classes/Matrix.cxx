@@ -200,6 +200,13 @@ de::CPf* decx::_Matrix::ptr_cpl32(const int row, const int col)
 }
 
 
+de::CPd* decx::_Matrix::ptr_cpl64(const int row, const int col)
+{
+    de::CPd* __ptr = reinterpret_cast<de::CPd*>(this->Mat.ptr);
+    return __ptr + this->_layout.pitch * (size_t)row + (size_t)col;
+}
+
+
 de::Half* decx::_Matrix::ptr_fp16(const int row, const int col)
 {
     de::Half* __ptr = reinterpret_cast<de::Half*>(this->Mat.ptr);

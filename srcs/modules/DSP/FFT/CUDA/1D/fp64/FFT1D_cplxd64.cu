@@ -58,6 +58,37 @@ template void decx::dsp::fft::_cuda_FFT1D_planner<double>::Forward<de::CPd>(decx
 
 
 template <>
+template <typename _type_in>
+void decx::dsp::fft::_cuda_FFT1D_planner<double>::Forward(decx::_GPU_Vector* src, decx::_GPU_Vector* dst, decx::cuda_stream* S) const
+{
+    const decx::dsp::fft::_cuda_FFT2D_planner<double>* _formal_FFT2D_ptr = this->get_FFT2D_planner();
+    decx::utils::double_buffer_manager _double_buffer(_formal_FFT2D_ptr->get_tmp1_ptr<void>(),
+                                                      _formal_FFT2D_ptr->get_tmp2_ptr<void>());
+
+    decx::dsp::fft::FFT1D_partition_cplxd_1st_caller<_type_in, false>(src->Vec.ptr, &_double_buffer,
+        _formal_FFT2D_ptr->get_FFT_info(decx::dsp::fft::_FFT_AlongH),
+        S);
+
+    decx::bp::transpose2D_b16_for_FFT(_double_buffer.get_leading_ptr<double2>(),
+                                     _double_buffer.get_lagging_ptr<double2>(),
+                                     make_uint2(this->get_larger_FFT_lengths(0), this->get_larger_FFT_lengths(1)),
+                                     _formal_FFT2D_ptr->get_buffer_dims().x,
+                                     _formal_FFT2D_ptr->get_buffer_dims().y, S);
+
+    _double_buffer.update_states();
+
+    decx::dsp::fft::FFT1D_partition_cplxd_end_caller<_FFT1D_END_(de::CPd)>(&_double_buffer, dst->Vec.ptr,
+        _formal_FFT2D_ptr->get_FFT_info(decx::dsp::fft::_FFT_AlongW),
+        S);
+}
+
+template void decx::dsp::fft::_cuda_FFT1D_planner<double>::Forward<double>(decx::_GPU_Vector*, decx::_GPU_Vector*, decx::cuda_stream*) const;
+template void decx::dsp::fft::_cuda_FFT1D_planner<double>::Forward<de::CPd>(decx::_GPU_Vector*, decx::_GPU_Vector*, decx::cuda_stream*) const;
+
+
+
+
+template <>
 template <typename _type_out>
 void decx::dsp::fft::_cuda_FFT1D_planner<double>::Inverse(decx::_Vector* src, decx::_Vector* dst, decx::cuda_stream* S) const
 {
@@ -91,6 +122,34 @@ void decx::dsp::fft::_cuda_FFT1D_planner<double>::Inverse(decx::_Vector* src, de
 template void decx::dsp::fft::_cuda_FFT1D_planner<double>::Inverse<double>(decx::_Vector*, decx::_Vector*, decx::cuda_stream*) const;
 template void decx::dsp::fft::_cuda_FFT1D_planner<double>::Inverse<de::CPd>(decx::_Vector*, decx::_Vector*, decx::cuda_stream*) const;
 
+
+template <>
+template <typename _type_out>
+void decx::dsp::fft::_cuda_FFT1D_planner<double>::Inverse(decx::_GPU_Vector* src, decx::_GPU_Vector* dst, decx::cuda_stream* S) const
+{
+    const decx::dsp::fft::_cuda_FFT2D_planner<double>* _formal_FFT2D_ptr = this->get_FFT2D_planner();
+    decx::utils::double_buffer_manager _double_buffer(_formal_FFT2D_ptr->get_tmp1_ptr<void>(),
+                                                      _formal_FFT2D_ptr->get_tmp2_ptr<void>());
+
+    decx::dsp::fft::FFT1D_partition_cplxd_1st_caller<de::CPd, true>(src->Vec.ptr, &_double_buffer,
+        _formal_FFT2D_ptr->get_FFT_info(decx::dsp::fft::_FFT_AlongH),
+        S, this->get_signal_length());
+
+    decx::bp::transpose2D_b16_for_FFT(_double_buffer.get_leading_ptr<double2>(),
+                                     _double_buffer.get_lagging_ptr<double2>(),
+                                     make_uint2(this->get_larger_FFT_lengths(0), this->get_larger_FFT_lengths(1)),
+                                     _formal_FFT2D_ptr->get_buffer_dims().x,
+                                     _formal_FFT2D_ptr->get_buffer_dims().y, S);
+
+    _double_buffer.update_states();
+
+    decx::dsp::fft::FFT1D_partition_cplxd_end_caller<_IFFT1D_END_(_type_out)>(&_double_buffer, dst->Vec.ptr,
+        _formal_FFT2D_ptr->get_FFT_info(decx::dsp::fft::_FFT_AlongW),
+        S);
+}
+
+template void decx::dsp::fft::_cuda_FFT1D_planner<double>::Inverse<double>(decx::_GPU_Vector*, decx::_GPU_Vector*, decx::cuda_stream*) const;
+template void decx::dsp::fft::_cuda_FFT1D_planner<double>::Inverse<de::CPd>(decx::_GPU_Vector*, decx::_GPU_Vector*, decx::cuda_stream*) const;
 
 
 decx::ResourceHandle decx::dsp::fft::cuda_FFT1D_cplxf64_planner;
