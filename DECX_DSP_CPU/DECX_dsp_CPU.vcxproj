@@ -46,7 +46,13 @@
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\fp32\FFT1D_R3_cplxf_kernels.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\fp32\FFT1D_R4_cplxf_kernels.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\fp32\FFT1D_R5_cplxf_kernels.cxx" />
-    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\kernel_callers.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\fp32\kernel_callers_cplxf.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\fp64\FFT1D_cplxd64.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\fp64\FFT1D_R2_cplxd_kernels.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\fp64\FFT1D_R3_cplxd_kernels.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\fp64\FFT1D_R4_cplxd_kernels.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\fp64\FFT1D_R5_cplxd_kernels.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\fp64\kernel_callers_cplxd.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\2D\CPU_FFT2D_planner.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\2D\FFT2D.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\2D\FFT2D_cplxf32.cxx" />
@@ -191,7 +197,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;DECXDSPCPU_EXPORTS;_WINDOWS;_USRDLL;_DECX_DSP_CPU_;_DECX_CPU_PARTS_;_C_EXPORT_ENABLED_=1;_CPP_EXPORT_ENABLED_=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;DECXDSPCPU_EXPORTS;_WINDOWS;_USRDLL;_DECX_DSP_CPU_;_DECX_CPU_PARTS_;_SIMD_VER_=AVX256;_C_EXPORT_ENABLED_=1;_CPP_EXPORT_ENABLED_=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>

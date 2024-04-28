@@ -67,6 +67,9 @@
     <Filter Include="源文件\fft\1D\fp32">
       <UniqueIdentifier>{d97a3473-cbcf-44dd-afa8-6474fba35575}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\fft\1D\fp64">
+      <UniqueIdentifier>{f9fbde7e-3af6-4504-965a-2c82e34c381f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\srcs\modules\DSP\complex\cpl32_extract.cxx">
@@ -165,9 +168,6 @@
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\FFT1D.cxx">
       <Filter>源文件\fft\1D</Filter>
     </ClCompile>
-    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\kernel_callers.cxx">
-      <Filter>源文件\fft\1D</Filter>
-    </ClCompile>
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\FFT1D_kernel_utils.cxx">
       <Filter>源文件\fft\1D</Filter>
     </ClCompile>
@@ -215,6 +215,27 @@
     </ClCompile>
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\fp32\FFT1D_R2_cplxf_kernels.cxx">
       <Filter>源文件\fft\1D\fp32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\fp64\FFT1D_R2_cplxd_kernels.cxx">
+      <Filter>源文件\fft\1D\fp64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\fp64\FFT1D_R3_cplxd_kernels.cxx">
+      <Filter>源文件\fft\1D\fp64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\fp64\FFT1D_R4_cplxd_kernels.cxx">
+      <Filter>源文件\fft\1D\fp64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\fp64\FFT1D_cplxd64.cxx">
+      <Filter>源文件\fft\1D\fp64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\fp32\kernel_callers_cplxf.cxx">
+      <Filter>源文件\fft\1D\fp32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\fp64\kernel_callers_cplxd.cxx">
+      <Filter>源文件\fft\1D\fp64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\fp64\FFT1D_R5_cplxd_kernels.cxx">
+      <Filter>源文件\fft\1D\fp64</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

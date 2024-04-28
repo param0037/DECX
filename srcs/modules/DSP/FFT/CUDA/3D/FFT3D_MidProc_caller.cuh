@@ -25,6 +25,11 @@ namespace dsp {
         template <bool _div>
         void FFT3D_cplxf_1st_1way_caller(decx::utils::double_buffer_manager* _double_buffer,
             const decx::dsp::fft::_cuda_FFT3D_mid_config* _FFT_info, decx::cuda_stream* S);
+
+
+        template <bool _div>
+        void FFT3D_cplxd_1st_1way_caller(decx::utils::double_buffer_manager* _double_buffer,
+            const decx::dsp::fft::_cuda_FFT3D_mid_config* _FFT_info, decx::cuda_stream* S);
     }
 }
 }

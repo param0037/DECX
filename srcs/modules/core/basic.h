@@ -32,7 +32,7 @@ namespace decx {
 
 #endif
 
-
+#define _SHADOW_ATTRIBUTE_(__actual_type) __actual_type*
 
 // thread cores
 #ifdef _MSC_VER

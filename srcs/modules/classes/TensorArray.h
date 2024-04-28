@@ -27,6 +27,10 @@ namespace de
 #endif 
         TensorArray
     {
+    protected:
+        _SHADOW_ATTRIBUTE_(void**) _exp_data_ptr;
+        _SHADOW_ATTRIBUTE_(decx::_tensor_layout) _exp_tensor_dscr;
+
     public:
         TensorArray() {}
 
@@ -43,11 +47,11 @@ namespace de
         virtual uint32_t TensorNum() const = 0;
 
 
-        virtual float* ptr_fp32(const int x, const int y, const int z, const int tensor_id) = 0;
+        /*virtual float* ptr_fp32(const int x, const int y, const int z, const int tensor_id) = 0;
         virtual int* ptr_int32(const int x, const int y, const int z, const int tensor_id) = 0;
         virtual de::Half* ptr_fp16(const int x, const int y, const int z, const int tensor_id) = 0;
         virtual double* ptr_fp64(const int x, const int y, const int z, const int tensor_id) = 0;
-        virtual uint8_t* ptr_uint8(const int x, const int y, const int z, const int tensor_id) = 0;
+        virtual uint8_t* ptr_uint8(const int x, const int y, const int z, const int tensor_id) = 0;*/
 
 
         virtual de::TensorArray& SoftCopy(de::TensorArray& src) = 0;
@@ -172,11 +176,11 @@ namespace decx
         virtual uint32_t TensorNum() const;
 
 
-        virtual float* ptr_fp32(const int x, const int y, const int z, const int tensor_id);
+        /*virtual float* ptr_fp32(const int x, const int y, const int z, const int tensor_id);
         virtual int* ptr_int32(const int x, const int y, const int z, const int tensor_id);
         virtual de::Half* ptr_fp16(const int x, const int y, const int z, const int tensor_id);
         virtual double* ptr_fp64(const int x, const int y, const int z, const int tensor_id);
-        virtual uint8_t* ptr_uint8(const int x, const int y, const int z, const int tensor_id);
+        virtual uint8_t* ptr_uint8(const int x, const int y, const int z, const int tensor_id);*/
 
 
         virtual de::TensorArray& SoftCopy(de::TensorArray& src);

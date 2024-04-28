@@ -31,8 +31,12 @@ namespace de
 #endif 
         MatrixArray
     {
+    protected:
+        _SHADOW_ATTRIBUTE_(void**) _exp_data_ptr;
+        _SHADOW_ATTRIBUTE_(decx::_matrix_layout) _exp_matrix_dscr;
+
     public:
-        uint ArrayNumber;        
+        uint ArrayNumber;
 
 
         virtual uint Width() const = 0;
@@ -44,12 +48,12 @@ namespace de
         virtual uint MatrixNumber() const = 0;
 
 
-        virtual float*      ptr_fp32(const uint row, const uint col, const uint _seq) = 0;
+        /*virtual float*      ptr_fp32(const uint row, const uint col, const uint _seq) = 0;
         virtual double*     ptr_fp64(const uint row, const uint col, const uint _seq) = 0;
         virtual int*        ptr_int32(const uint row, const uint col, const uint _seq) = 0;
         virtual de::CPf*    ptr_cpl32(const uint row, const uint col, const uint _seq) = 0;
         virtual de::Half*   ptr_fp16(const uint row, const uint col, const uint _seq) = 0;
-        virtual uint8_t*    ptr_uint8(const uint row, const uint col, const uint _seq) = 0;
+        virtual uint8_t*    ptr_uint8(const uint row, const uint col, const uint _seq) = 0;*/
 
 
         virtual de::MatrixArray& SoftCopy(de::MatrixArray& src) = 0;
@@ -142,12 +146,12 @@ namespace decx
         virtual uint32_t MatrixNumber() const;
 
 
-        virtual float*      ptr_fp32(const uint row, const uint col, const uint _seq);
+        /*virtual float*      ptr_fp32(const uint row, const uint col, const uint _seq);
         virtual double*     ptr_fp64(const uint row, const uint col, const uint _seq);
         virtual int*        ptr_int32(const uint row, const uint col, const uint _seq);
         virtual de::CPf*    ptr_cpl32(const uint row, const uint col, const uint _seq);
         virtual de::Half*   ptr_fp16(const uint row, const uint col, const uint _seq);
-        virtual uint8_t*    ptr_uint8(const uint row, const uint col, const uint _seq);
+        virtual uint8_t*    ptr_uint8(const uint row, const uint col, const uint _seq);*/
 
 
         virtual de::MatrixArray& SoftCopy(de::MatrixArray& src);

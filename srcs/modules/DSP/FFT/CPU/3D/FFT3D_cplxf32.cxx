@@ -22,7 +22,7 @@ void _CRSR_ decx::dsp::fft::cpu_FFT3D_planner<float>::Forward(decx::_Tensor* src
 
     // FFT along depth
     decx::dsp::fft::_FFT3D_H_entire_rows_cplxf<_type_in, false>((const _type_in*)src->Tens.ptr,
-        (double*)this->get_tmp1_ptr(),
+        (de::CPf*)this->get_tmp1_ptr(),
         this,
         &t1D,
         decx::dsp::fft::FFT_directions::_FFT_AlongD);
@@ -36,8 +36,8 @@ void _CRSR_ decx::dsp::fft::cpu_FFT3D_planner<float>::Forward(decx::_Tensor* src
         &t1D);
 
     // FFT along width
-    decx::dsp::fft::_FFT3D_H_entire_rows_cplxf<double, false>((double*)this->get_tmp2_ptr(), 
-        (double*)this->get_tmp1_ptr(), 
+    decx::dsp::fft::_FFT3D_H_entire_rows_cplxf<de::CPf, false>((de::CPf*)this->get_tmp2_ptr(), 
+        (de::CPf*)this->get_tmp1_ptr(), 
         this,
         &t1D, 
         decx::dsp::fft::FFT_directions::_FFT_AlongW);
@@ -58,8 +58,8 @@ void _CRSR_ decx::dsp::fft::cpu_FFT3D_planner<float>::Forward(decx::_Tensor* src
                                    &this->_transp_config, 
                                    &t1D);
     
-    decx::dsp::fft::_FFT3D_H_entire_rows_cplxf<double, true>((double*)this->get_tmp1_ptr(),
-        (double*)this->get_tmp2_ptr(),
+    decx::dsp::fft::_FFT3D_H_entire_rows_cplxf<de::CPf, true>((de::CPf*)this->get_tmp1_ptr(),
+        (de::CPf*)this->get_tmp2_ptr(),
         this,
         &t1D,
         decx::dsp::fft::FFT_directions::_FFT_AlongH);
@@ -73,7 +73,7 @@ void _CRSR_ decx::dsp::fft::cpu_FFT3D_planner<float>::Forward(decx::_Tensor* src
 }
 
 template void _CRSR_ decx::dsp::fft::cpu_FFT3D_planner<float>::Forward<float>(decx::_Tensor*, decx::_Tensor*) const;
-template void _CRSR_ decx::dsp::fft::cpu_FFT3D_planner<float>::Forward<double>(decx::_Tensor*, decx::_Tensor*) const;
+template void _CRSR_ decx::dsp::fft::cpu_FFT3D_planner<float>::Forward<de::CPf>(decx::_Tensor*, decx::_Tensor*) const;
 template void _CRSR_ decx::dsp::fft::cpu_FFT3D_planner<float>::Forward<uint8_t>(decx::_Tensor*, decx::_Tensor*) const;
 
 
@@ -84,8 +84,8 @@ void _CRSR_ decx::dsp::fft::cpu_FFT3D_planner<float>::Inverse(decx::_Tensor* src
     decx::utils::_thread_arrange_1D t1D(decx::cpu::_get_permitted_concurrency());
 
     // FFT along depth
-    decx::dsp::fft::_IFFT3D_H_entire_rows_cplxf<double>((const double*)src->Tens.ptr,
-        (double*)this->get_tmp1_ptr(),
+    decx::dsp::fft::_IFFT3D_H_entire_rows_cplxf<de::CPf>((const de::CPf*)src->Tens.ptr,
+        (de::CPf*)this->get_tmp1_ptr(),
         this,
         &t1D,
         decx::dsp::fft::FFT_directions::_FFT_AlongD);
@@ -99,8 +99,8 @@ void _CRSR_ decx::dsp::fft::cpu_FFT3D_planner<float>::Inverse(decx::_Tensor* src
         &t1D);
 
     // FFT along width
-    decx::dsp::fft::_IFFT3D_H_entire_rows_cplxf<double>((double*)this->get_tmp2_ptr(), 
-        (double*)this->get_tmp1_ptr(), 
+    decx::dsp::fft::_IFFT3D_H_entire_rows_cplxf<de::CPf>((de::CPf*)this->get_tmp2_ptr(), 
+        (de::CPf*)this->get_tmp1_ptr(), 
         this,
         &t1D, 
         decx::dsp::fft::FFT_directions::_FFT_AlongW);
@@ -121,7 +121,7 @@ void _CRSR_ decx::dsp::fft::cpu_FFT3D_planner<float>::Inverse(decx::_Tensor* src
                                    &this->_transp_config, 
                                    &t1D);
     
-    decx::dsp::fft::_IFFT3D_H_entire_rows_cplxf<_type_out>((double*)this->get_tmp1_ptr(),
+    decx::dsp::fft::_IFFT3D_H_entire_rows_cplxf<_type_out>((de::CPf*)this->get_tmp1_ptr(),
         (_type_out*)this->get_tmp2_ptr(),
         this,
         &t1D,
@@ -157,7 +157,7 @@ void _CRSR_ decx::dsp::fft::cpu_FFT3D_planner<float>::Inverse(decx::_Tensor* src
 }
 
 template void _CRSR_ decx::dsp::fft::cpu_FFT3D_planner<float>::Inverse<float>(decx::_Tensor*, decx::_Tensor*) const;
-template void _CRSR_ decx::dsp::fft::cpu_FFT3D_planner<float>::Inverse<double>(decx::_Tensor*, decx::_Tensor*) const;
+template void _CRSR_ decx::dsp::fft::cpu_FFT3D_planner<float>::Inverse<de::CPf>(decx::_Tensor*, decx::_Tensor*) const;
 template void _CRSR_ decx::dsp::fft::cpu_FFT3D_planner<float>::Inverse<uint8_t>(decx::_Tensor*, decx::_Tensor*) const;
 
 

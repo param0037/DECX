@@ -147,6 +147,8 @@ void decx::_Matrix::release()
 
 decx::_Matrix::_Matrix()
 {
+    this->_exp_data_ptr = &this->Mat.ptr;
+    this->_matrix_dscr = &this->_layout;
     this->_attribute_assign(de::_DATA_TYPES_FLAGS_::_VOID_, 0, 0);
     this->_init = false;
 }
@@ -156,6 +158,8 @@ decx::_Matrix::_Matrix()
 decx::_Matrix::_Matrix(const de::_DATA_TYPES_FLAGS_ type, const uint32_t _width, const uint32_t _height,
     de::_DATA_FORMATS_ format)
 {
+    this->_exp_data_ptr = &this->Mat.ptr;
+    this->_matrix_dscr = &this->_layout;
     this->construct(type, _width, _height, format);
 }
 
@@ -171,54 +175,54 @@ uint32_t decx::_Matrix::Height() const
     return this->_layout.height;
 }
 
-
-float* decx::_Matrix::ptr_fp32(const int row, const int col)
-{
-    float* __ptr = reinterpret_cast<float*>(this->Mat.ptr);
-    return __ptr + this->_layout.pitch * (size_t)row + (size_t)col;
-}
-
-
-double* decx::_Matrix::ptr_fp64(const int row, const int col)
-{
-    double* __ptr = reinterpret_cast<double*>(this->Mat.ptr);
-    return __ptr + this->_layout.pitch * (size_t)row + (size_t)col;
-}
-
-
-int* decx::_Matrix::ptr_int32(const int row, const int col)
-{
-    int* __ptr = reinterpret_cast<int*>(this->Mat.ptr);
-    return __ptr + this->_layout.pitch * (size_t)row + (size_t)col;
-}
-
-
-de::CPf* decx::_Matrix::ptr_cpl32(const int row, const int col)
-{
-    de::CPf* __ptr = reinterpret_cast<de::CPf*>(this->Mat.ptr);
-    return __ptr + this->_layout.pitch * (size_t)row + (size_t)col;
-}
-
-
-de::CPd* decx::_Matrix::ptr_cpl64(const int row, const int col)
-{
-    de::CPd* __ptr = reinterpret_cast<de::CPd*>(this->Mat.ptr);
-    return __ptr + this->_layout.pitch * (size_t)row + (size_t)col;
-}
-
-
-de::Half* decx::_Matrix::ptr_fp16(const int row, const int col)
-{
-    de::Half* __ptr = reinterpret_cast<de::Half*>(this->Mat.ptr);
-    return __ptr + this->_layout.pitch * (size_t)row + (size_t)col;
-}
-
-
-uint8_t* decx::_Matrix::ptr_uint8(const int row, const int col)
-{
-    uint8_t* __ptr = reinterpret_cast<uint8_t*>(this->Mat.ptr);
-    return __ptr + this->_layout.pitch * (size_t)row + (size_t)col;
-}
+//
+//float* decx::_Matrix::ptr_fp32(const int row, const int col)
+//{
+//    float* __ptr = reinterpret_cast<float*>(this->Mat.ptr);
+//    return __ptr + this->_layout.pitch * (size_t)row + (size_t)col;
+//}
+//
+//
+//double* decx::_Matrix::ptr_fp64(const int row, const int col)
+//{
+//    double* __ptr = reinterpret_cast<double*>(this->Mat.ptr);
+//    return __ptr + this->_layout.pitch * (size_t)row + (size_t)col;
+//}
+//
+//
+//int* decx::_Matrix::ptr_int32(const int row, const int col)
+//{
+//    int* __ptr = reinterpret_cast<int*>(this->Mat.ptr);
+//    return __ptr + this->_layout.pitch * (size_t)row + (size_t)col;
+//}
+//
+//
+//de::CPf* decx::_Matrix::ptr_cpl32(const int row, const int col)
+//{
+//    de::CPf* __ptr = reinterpret_cast<de::CPf*>(this->Mat.ptr);
+//    return __ptr + this->_layout.pitch * (size_t)row + (size_t)col;
+//}
+//
+//
+//de::CPd* decx::_Matrix::ptr_cpl64(const int row, const int col)
+//{
+//    de::CPd* __ptr = reinterpret_cast<de::CPd*>(this->Mat.ptr);
+//    return __ptr + this->_layout.pitch * (size_t)row + (size_t)col;
+//}
+//
+//
+//de::Half* decx::_Matrix::ptr_fp16(const int row, const int col)
+//{
+//    de::Half* __ptr = reinterpret_cast<de::Half*>(this->Mat.ptr);
+//    return __ptr + this->_layout.pitch * (size_t)row + (size_t)col;
+//}
+//
+//
+//uint8_t* decx::_Matrix::ptr_uint8(const int row, const int col)
+//{
+//    uint8_t* __ptr = reinterpret_cast<uint8_t*>(this->Mat.ptr);
+//    return __ptr + this->_layout.pitch * (size_t)row + (size_t)col;
+//}
 
 
 decx::_Matrix::~_Matrix()

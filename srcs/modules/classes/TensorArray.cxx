@@ -30,7 +30,6 @@ void decx::_TensorArray::_attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, c
 
 
 
-
 uint decx::_TensorArray::Width() const
 {
     return this->_layout.width;
@@ -97,7 +96,6 @@ void decx::_TensorArray::re_alloc_data_space()
 
 
 
-
 void decx::_TensorArray::construct(const de::_DATA_TYPES_FLAGS_ _type, const uint _width, const uint _height, const uint _depth, const uint _tensor_num)
 {
     this->_attribute_assign(_type, _width, _height, _depth, _tensor_num);
@@ -138,6 +136,9 @@ void decx::_TensorArray::re_construct(const de::_DATA_TYPES_FLAGS_ _type, const 
 
 decx::_TensorArray::_TensorArray()
 {
+    this->_exp_data_ptr = &this->TensptrArr.ptr;
+    this->_exp_tensor_dscr = &this->_layout;
+
     this->_attribute_assign(de::_DATA_TYPES_FLAGS_::_VOID_, 0, 0, 0, 0);
 }
 
@@ -146,6 +147,9 @@ decx::_TensorArray::_TensorArray()
 
 decx::_TensorArray::_TensorArray(const de::_DATA_TYPES_FLAGS_ _type, const uint _width, const uint _height, const uint _depth, const uint _tensor_num)
 {
+    this->_exp_data_ptr = &this->TensptrArr.ptr;
+    this->_exp_tensor_dscr = &this->_layout;
+    
     this->_attribute_assign(_type, _width, _height, _depth, _tensor_num);
 
     this->alloc_data_space();
@@ -179,48 +183,48 @@ de::TensorArray* de::CreateTensorArrayPtr(const de::_DATA_TYPES_FLAGS_ _type, co
 #endif
 
 
-
-float* decx::_TensorArray::ptr_fp32(const int x, const int y, const int z, const int tensor_id)
-{
-    float* _ptr = reinterpret_cast<float*>(this->TensptrArr.ptr[tensor_id]);
-    return (_ptr +
-        ((size_t)x * this->_layout.dp_x_wp + (size_t)y * (size_t)this->_layout.dpitch + (size_t)z));
-}
-
-
-int* decx::_TensorArray::ptr_int32(const int x, const int y, const int z, const int tensor_id)
-{
-    int* _ptr = reinterpret_cast<int*>(this->TensptrArr.ptr[tensor_id]);
-    return (_ptr +
-        ((size_t)x * this->_layout.dp_x_wp + (size_t)y * (size_t)this->_layout.dpitch + (size_t)z));
-}
-
-
-
-de::Half* decx::_TensorArray::ptr_fp16(const int x, const int y, const int z, const int tensor_id)
-{
-    de::Half* _ptr = reinterpret_cast<de::Half*>(this->TensptrArr.ptr[tensor_id]);
-    return (_ptr +
-        ((size_t)x * this->_layout.dp_x_wp + (size_t)y * (size_t)this->_layout.dpitch + (size_t)z));
-}
-
-
-
-double* decx::_TensorArray::ptr_fp64(const int x, const int y, const int z, const int tensor_id)
-{
-    double* _ptr = reinterpret_cast<double*>(this->TensptrArr.ptr[tensor_id]);
-    return (_ptr +
-        ((size_t)x * this->_layout.dp_x_wp + (size_t)y * (size_t)this->_layout.dpitch + (size_t)z));
-}
-
-
-
-uint8_t* decx::_TensorArray::ptr_uint8(const int x, const int y, const int z, const int tensor_id)
-{
-    uint8_t* _ptr = reinterpret_cast<uint8_t*>(this->TensptrArr.ptr[tensor_id]);
-    return (_ptr +
-        ((size_t)x * this->_layout.dp_x_wp + (size_t)y * (size_t)this->_layout.dpitch + (size_t)z));
-}
+//
+//float* decx::_TensorArray::ptr_fp32(const int x, const int y, const int z, const int tensor_id)
+//{
+//    float* _ptr = reinterpret_cast<float*>(this->TensptrArr.ptr[tensor_id]);
+//    return (_ptr +
+//        ((size_t)x * this->_layout.dp_x_wp + (size_t)y * (size_t)this->_layout.dpitch + (size_t)z));
+//}
+//
+//
+//int* decx::_TensorArray::ptr_int32(const int x, const int y, const int z, const int tensor_id)
+//{
+//    int* _ptr = reinterpret_cast<int*>(this->TensptrArr.ptr[tensor_id]);
+//    return (_ptr +
+//        ((size_t)x * this->_layout.dp_x_wp + (size_t)y * (size_t)this->_layout.dpitch + (size_t)z));
+//}
+//
+//
+//
+//de::Half* decx::_TensorArray::ptr_fp16(const int x, const int y, const int z, const int tensor_id)
+//{
+//    de::Half* _ptr = reinterpret_cast<de::Half*>(this->TensptrArr.ptr[tensor_id]);
+//    return (_ptr +
+//        ((size_t)x * this->_layout.dp_x_wp + (size_t)y * (size_t)this->_layout.dpitch + (size_t)z));
+//}
+//
+//
+//
+//double* decx::_TensorArray::ptr_fp64(const int x, const int y, const int z, const int tensor_id)
+//{
+//    double* _ptr = reinterpret_cast<double*>(this->TensptrArr.ptr[tensor_id]);
+//    return (_ptr +
+//        ((size_t)x * this->_layout.dp_x_wp + (size_t)y * (size_t)this->_layout.dpitch + (size_t)z));
+//}
+//
+//
+//
+//uint8_t* decx::_TensorArray::ptr_uint8(const int x, const int y, const int z, const int tensor_id)
+//{
+//    uint8_t* _ptr = reinterpret_cast<uint8_t*>(this->TensptrArr.ptr[tensor_id]);
+//    return (_ptr +
+//        ((size_t)x * this->_layout.dp_x_wp + (size_t)y * (size_t)this->_layout.dpitch + (size_t)z));
+//}
 
 
 

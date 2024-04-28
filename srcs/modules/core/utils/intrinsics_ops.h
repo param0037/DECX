@@ -40,6 +40,8 @@ namespace decx
 
                 float _arrf[4];
                 int32_t _arri[4];
+                double _arrd[2];
+                uint64_t _arrull[2];
             }_mmv128;
 
 
@@ -48,8 +50,12 @@ namespace decx
                 __m256d _vd;
                 __m256i _vi;
 
+                __m128 _vf2[2];
+                __m128d _vd2[2];
+
                 float _arrf[8];
                 double _arrd[4];
+                uint64_t _arrull[4];
             }_mmv256;
 
 

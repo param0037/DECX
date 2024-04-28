@@ -79,6 +79,9 @@ void decx::dsp::fft::_cuda_FFT3D_planner<_data_type>::plan(const decx::_tensor_l
 template _CRSR_ void decx::dsp::fft::_cuda_FFT3D_planner<float>::plan(const decx::_tensor_layout*,
     const decx::_tensor_layout*, de::DH*, decx::cuda_stream*);
 
+template _CRSR_ void decx::dsp::fft::_cuda_FFT3D_planner<double>::plan(const decx::_tensor_layout*,
+    const decx::_tensor_layout*, de::DH*, decx::cuda_stream*);
+
 
 
 template <typename _data_type> const decx::dsp::fft::_FFT2D_1way_config* 
@@ -103,6 +106,9 @@ decx::dsp::fft::_cuda_FFT3D_planner<_data_type>::get_FFT_info(const decx::dsp::f
 template const decx::dsp::fft::_FFT2D_1way_config*
 decx::dsp::fft::_cuda_FFT3D_planner<float>::get_FFT_info(const FFT_directions) const;
 
+template const decx::dsp::fft::_FFT2D_1way_config*
+decx::dsp::fft::_cuda_FFT3D_planner<double>::get_FFT_info(const FFT_directions) const;
+
 
 template <typename _data_type> const decx::dsp::fft::_cuda_FFT3D_mid_config* 
 decx::dsp::fft::_cuda_FFT3D_planner<_data_type>::get_midFFT_info() const
@@ -112,6 +118,9 @@ decx::dsp::fft::_cuda_FFT3D_planner<_data_type>::get_midFFT_info() const
 
 template const decx::dsp::fft::_cuda_FFT3D_mid_config*
 decx::dsp::fft::_cuda_FFT3D_planner<float>::get_midFFT_info() const;
+
+template const decx::dsp::fft::_cuda_FFT3D_mid_config*
+decx::dsp::fft::_cuda_FFT3D_planner<double>::get_midFFT_info() const;
 
 
 
@@ -127,6 +136,7 @@ bool decx::dsp::fft::_cuda_FFT3D_planner<_data_type>::changed(const decx::_tenso
 }
 
 template bool decx::dsp::fft::_cuda_FFT3D_planner<float>::changed(const decx::_tensor_layout*, const decx::_tensor_layout*) const;
+template bool decx::dsp::fft::_cuda_FFT3D_planner<double>::changed(const decx::_tensor_layout*, const decx::_tensor_layout*) const;
 
 
 template <typename _data_type>
@@ -137,6 +147,7 @@ void decx::dsp::fft::_cuda_FFT3D_planner<_data_type>::release(decx::dsp::fft::_c
 }
 
 template void decx::dsp::fft::_cuda_FFT3D_planner<float>::release(decx::dsp::fft::_cuda_FFT3D_planner<float>*);
+template void decx::dsp::fft::_cuda_FFT3D_planner<double>::release(decx::dsp::fft::_cuda_FFT3D_planner<double>*);
 
 
 template <typename _data_type>
@@ -146,3 +157,4 @@ decx::dsp::fft::_cuda_FFT3D_planner<_data_type>::~_cuda_FFT3D_planner()
 }
 
 template decx::dsp::fft::_cuda_FFT3D_planner<float>::~_cuda_FFT3D_planner();
+template decx::dsp::fft::_cuda_FFT3D_planner<double>::~_cuda_FFT3D_planner();

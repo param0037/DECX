@@ -105,7 +105,7 @@ _CRSR_ void decx::dsp::fft::cpu_FFT3D_planner<_data_type>::plan(decx::utils::_th
     this->template plan_transpose_configs<_type_out>();
 }
 
-template void decx::dsp::fft::cpu_FFT3D_planner<float>::plan<double>(decx::utils::_thread_arrange_1D*,
+template void decx::dsp::fft::cpu_FFT3D_planner<float>::plan<de::CPf>(decx::utils::_thread_arrange_1D*,
     const decx::_tensor_layout*, const decx::_tensor_layout*, de::DH*);
 
 template void decx::dsp::fft::cpu_FFT3D_planner<float>::plan<float>(decx::utils::_thread_arrange_1D*,
@@ -142,7 +142,7 @@ void _CRSR_ decx::dsp::fft::cpu_FFT3D_planner<_data_type>::allocate_buffers(de::
     this->_tiles.define_capacity(_concurrency);
     for (uint32_t i = 0; i < _concurrency; ++i) {
         this->_tiles.emplace_back();
-        this->_tiles[i].allocate_tile(_tile_frag_pitch, handle);
+        this->_tiles[i].allocate_tile<_data_type>(_tile_frag_pitch, handle);
         Check_Runtime_Error(handle);
     }
 }

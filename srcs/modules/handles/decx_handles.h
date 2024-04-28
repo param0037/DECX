@@ -230,6 +230,18 @@ namespace de
         }
     }DH;
 }
+
+
+namespace decx
+{
+#ifdef _DECX_CORE_CPU_
+    extern de::DH _last_error;
+#endif
+}
+
+namespace de {
+    _DECX_API_ de::DH* GetLastError();
+}
 #endif      // #ifdef __cplusplus
 
 

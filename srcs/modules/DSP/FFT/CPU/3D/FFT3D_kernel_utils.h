@@ -38,13 +38,13 @@ namespace fft {
 
 
         template <bool is_IFFT>
-        static void load_entire_row_transpose_cplxf_zip(const double* __restrict src_head_ptr, decx::utils::double_buffer_manager* __restrict _double_buffer,
+        static void load_entire_row_transpose_cplxf_zip(const de::CPf* __restrict src_head_ptr, decx::utils::double_buffer_manager* __restrict _double_buffer,
             const decx::dsp::fft::FKT1D_fp32* _tiles, const uint32_t _load_len_v4, const uint32_t _pitch_src, const decx::utils::unpitched_frac_mapping<uint32_t>* zip_info,
             const uint32_t _start_dex, const uint32_t signal_len, const uint8_t _load_H = 4);
 
 
         template <bool _conj>
-        static void store_entire_row_transpose_cplxf_zip(decx::utils::double_buffer_manager* __restrict _double_buffer, double* __restrict dst_head_ptr,
+        static void store_entire_row_transpose_cplxf_zip(decx::utils::double_buffer_manager* __restrict _double_buffer, de::CPf* __restrict dst_head_ptr,
             const decx::dsp::fft::FKT1D_fp32* _tiles, const uint32_t _load_len_v4, const uint32_t _pitch_src, const decx::utils::unpitched_frac_mapping<uint32_t>* zip_info,
             const uint32_t _start_dex, const uint8_t _load_H = 4);
 
@@ -151,7 +151,7 @@ load_entire_row_transpose_u8_fp32_zip(const uint8_t* __restrict src_head_ptr,
 
 
 template <bool _IFFT> static void decx::dsp::fft::CPUK::
-load_entire_row_transpose_cplxf_zip(const double* __restrict src_head_ptr, 
+load_entire_row_transpose_cplxf_zip(const de::CPf* __restrict src_head_ptr, 
                                     decx::utils::double_buffer_manager* __restrict  _double_buffer,
                                     const decx::dsp::fft::FKT1D_fp32*               _tiles, 
                                     const uint32_t                                  _load_len_v4, 
@@ -172,7 +172,7 @@ load_entire_row_transpose_cplxf_zip(const double* __restrict src_head_ptr,
         {
             const uint32_t _phyaddr_H = zip_info->_is_Level2 ? zip_info->get_phyaddr_L2(_start_dex + i) :
                                                                zip_info->get_phyaddr_L1(_start_dex + i);
-            _src_row_ptr = src_head_ptr + _phyaddr_H * _pitch_src;
+            _src_row_ptr = (double*)src_head_ptr + _phyaddr_H * _pitch_src;
             _dst_row_ptr = _double_buffer->get_lagging_ptr<double>() + i * _tiles->_tile_row_pitch;
 
             for (uint32_t j = 0; j < _load_len_v4; ++j) {
@@ -198,7 +198,7 @@ load_entire_row_transpose_cplxf_zip(const double* __restrict src_head_ptr,
 
 template <bool _conj> static void
 decx::dsp::fft::CPUK::store_entire_row_transpose_cplxf_zip(decx::utils::double_buffer_manager* __restrict _double_buffer, 
-                                                       double* __restrict dst_head_ptr,
+                                                       de::CPf* __restrict dst_head_ptr,
                                                        const decx::dsp::fft::FKT1D_fp32* _tiles,
                                                        const uint32_t _load_len_v4, 
                                                        const uint32_t _pitch_dst, 
@@ -222,7 +222,7 @@ decx::dsp::fft::CPUK::store_entire_row_transpose_cplxf_zip(decx::utils::double_b
             const uint32_t _phyaddr_H = zip_info->_is_Level2 ? zip_info->get_phyaddr_L2(_start_dex + i) :
                                                                zip_info->get_phyaddr_L1(_start_dex + i);
 
-            _dst_row_ptr = dst_head_ptr + _phyaddr_H * _pitch_dst;
+            _dst_row_ptr = (double*)dst_head_ptr + _phyaddr_H * _pitch_dst;
 
             for (uint32_t j = 0; j < _load_len_v4; ++j)
             {

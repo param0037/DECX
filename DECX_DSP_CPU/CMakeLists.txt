@@ -19,6 +19,7 @@ add_compile_definitions(_DECX_CPU_PARTS_)
 add_compile_definitions(_DECX_DSP_CPU_)
 add_compile_definitions(_C_EXPORT_ENABLED_=1)
 add_compile_definitions(_CPP_EXPORT_ENABLED_=1)
+add_compile_definitions(_SIMD_VER_=AVX256)
 
 
 include_directories(${SDL_PATH}/include ${SDL_IMAGE_PATH}/include)

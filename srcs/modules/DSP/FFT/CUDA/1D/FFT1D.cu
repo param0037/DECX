@@ -397,134 +397,118 @@ static void decx::dsp::fft::_IFFT1D_cplxf64(decx::_Vector* src, decx::_Vector* d
 
 
 
-_DECX_API_ de::DH de::dsp::cuda::FFT(de::GPU_Vector& src, de::GPU_Vector& dst)
+_DECX_API_ void de::dsp::cuda::FFT(de::GPU_Vector& src, de::GPU_Vector& dst)
 {
-    de::DH handle;
-
     decx::_GPU_Vector* _src = dynamic_cast<decx::_GPU_Vector*>(&src);
     decx::_GPU_Vector* _dst = dynamic_cast<decx::_GPU_Vector*>(&dst);
 
     switch (_src->Type())
     {
     case de::_DATA_TYPES_FLAGS_::_FP32_:
-        decx::dsp::fft::_FFT1D_cplxf32_on_GPU<float>(_src, _dst, &handle);
+        decx::dsp::fft::_FFT1D_cplxf32_on_GPU<float>(_src, _dst, de::GetLastError());
         break;
 
     case de::_DATA_TYPES_FLAGS_::_COMPLEX_F32_:
-        decx::dsp::fft::_FFT1D_cplxf32_on_GPU<de::CPf>(_src, _dst, &handle);
+        decx::dsp::fft::_FFT1D_cplxf32_on_GPU<de::CPf>(_src, _dst, de::GetLastError());
         break;
 
     case de::_DATA_TYPES_FLAGS_::_FP64_:
-        decx::dsp::fft::_FFT1D_cplxf64_on_GPU<double>(_src, _dst, &handle);
+        decx::dsp::fft::_FFT1D_cplxf64_on_GPU<double>(_src, _dst, de::GetLastError());
         break;
 
     case de::_DATA_TYPES_FLAGS_::_COMPLEX_F64_:
-        decx::dsp::fft::_FFT1D_cplxf64_on_GPU<de::CPd>(_src, _dst, &handle);
+        decx::dsp::fft::_FFT1D_cplxf64_on_GPU<de::CPd>(_src, _dst, de::GetLastError());
         break;
     default:
         break;
     }
-
-    return handle;
 }
 
 
 
-_DECX_API_ de::DH de::dsp::cuda::FFT(de::Vector& src, de::Vector& dst)
+_DECX_API_ void de::dsp::cuda::FFT(de::Vector& src, de::Vector& dst)
 {
-    de::DH handle;
-
     decx::_Vector* _src = dynamic_cast<decx::_Vector*>(&src);
     decx::_Vector* _dst = dynamic_cast<decx::_Vector*>(&dst);
 
     switch (_src->Type())
     {
     case de::_DATA_TYPES_FLAGS_::_FP32_:
-        decx::dsp::fft::_FFT1D_cplxf32<float>(_src, _dst, &handle);
+        decx::dsp::fft::_FFT1D_cplxf32<float>(_src, _dst, de::GetLastError());
         break;
 
     case de::_DATA_TYPES_FLAGS_::_COMPLEX_F32_:
-        decx::dsp::fft::_FFT1D_cplxf32<de::CPf>(_src, _dst, &handle);
+        decx::dsp::fft::_FFT1D_cplxf32<de::CPf>(_src, _dst, de::GetLastError());
         break;
 
     case de::_DATA_TYPES_FLAGS_::_FP64_:
-        decx::dsp::fft::_FFT1D_cplxf64<double>(_src, _dst, &handle);
+        decx::dsp::fft::_FFT1D_cplxf64<double>(_src, _dst, de::GetLastError());
         break;
 
     case de::_DATA_TYPES_FLAGS_::_COMPLEX_F64_:
-        decx::dsp::fft::_FFT1D_cplxf64<de::CPd>(_src, _dst, &handle);
+        decx::dsp::fft::_FFT1D_cplxf64<de::CPd>(_src, _dst, de::GetLastError());
         break;
     default:
         break;
     }
-
-    return handle;
 }
 
 
 
 
-_DECX_API_ de::DH de::dsp::cuda::IFFT(de::GPU_Vector& src, de::GPU_Vector& dst, const de::_DATA_TYPES_FLAGS_ _type_out)
+_DECX_API_ void de::dsp::cuda::IFFT(de::GPU_Vector& src, de::GPU_Vector& dst, const de::_DATA_TYPES_FLAGS_ _type_out)
 {
-    de::DH handle;
-
     decx::_GPU_Vector* _src = dynamic_cast<decx::_GPU_Vector*>(&src);
     decx::_GPU_Vector* _dst = dynamic_cast<decx::_GPU_Vector*>(&dst);
 
     switch (_type_out)
     {
     case de::_DATA_TYPES_FLAGS_::_FP32_:
-        decx::dsp::fft::_IFFT1D_cplxf32_on_GPU<float>(_src, _dst, &handle);
+        decx::dsp::fft::_IFFT1D_cplxf32_on_GPU<float>(_src, _dst, de::GetLastError());
         break;
 
     case de::_DATA_TYPES_FLAGS_::_COMPLEX_F32_:
-        decx::dsp::fft::_IFFT1D_cplxf32_on_GPU<de::CPf>(_src, _dst, &handle);
+        decx::dsp::fft::_IFFT1D_cplxf32_on_GPU<de::CPf>(_src, _dst, de::GetLastError());
         break;
 
     case de::_DATA_TYPES_FLAGS_::_FP64_:
-        decx::dsp::fft::_IFFT1D_cplxf64_on_GPU<double>(_src, _dst, &handle);
+        decx::dsp::fft::_IFFT1D_cplxf64_on_GPU<double>(_src, _dst, de::GetLastError());
         break;
 
     case de::_DATA_TYPES_FLAGS_::_COMPLEX_F64_:
-        decx::dsp::fft::_IFFT1D_cplxf64_on_GPU<de::CPd>(_src, _dst, &handle);
+        decx::dsp::fft::_IFFT1D_cplxf64_on_GPU<de::CPd>(_src, _dst, de::GetLastError());
         break;
     default:
         break;
     }
-
-    return handle;
 }
 
 
 
 
-_DECX_API_ de::DH de::dsp::cuda::IFFT(de::Vector& src, de::Vector& dst, const de::_DATA_TYPES_FLAGS_ _type_out)
+_DECX_API_ void de::dsp::cuda::IFFT(de::Vector& src, de::Vector& dst, const de::_DATA_TYPES_FLAGS_ _type_out)
 {
-    de::DH handle;
-
     decx::_Vector* _src = dynamic_cast<decx::_Vector*>(&src);
     decx::_Vector* _dst = dynamic_cast<decx::_Vector*>(&dst);
 
     switch (_type_out)
     {
     case de::_DATA_TYPES_FLAGS_::_FP32_:
-        decx::dsp::fft::_IFFT1D_cplxf32<float>(_src, _dst, &handle);
+        decx::dsp::fft::_IFFT1D_cplxf32<float>(_src, _dst, de::GetLastError());
         break;
 
     case de::_DATA_TYPES_FLAGS_::_COMPLEX_F32_:
-        decx::dsp::fft::_IFFT1D_cplxf32<de::CPf>(_src, _dst, &handle);
+        decx::dsp::fft::_IFFT1D_cplxf32<de::CPf>(_src, _dst, de::GetLastError());
         break;
 
     case de::_DATA_TYPES_FLAGS_::_FP64_:
-        decx::dsp::fft::_IFFT1D_cplxf64<double>(_src, _dst, &handle);
+        decx::dsp::fft::_IFFT1D_cplxf64<double>(_src, _dst, de::GetLastError());
         break;
 
     case de::_DATA_TYPES_FLAGS_::_COMPLEX_F64_:
-        decx::dsp::fft::_IFFT1D_cplxf64<de::CPd>(_src, _dst, &handle);
+        decx::dsp::fft::_IFFT1D_cplxf64<de::CPd>(_src, _dst, de::GetLastError());
         break;
     default:
         break;
     }
-
-    return handle;
 }

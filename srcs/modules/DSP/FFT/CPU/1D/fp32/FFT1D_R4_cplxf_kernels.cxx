@@ -14,7 +14,7 @@
 
 _THREAD_CALL_ void
 decx::dsp::fft::CPUK::_FFT1D_R4_cplxf32_1st_R2C(const float* __restrict     src, 
-                                                double* __restrict          dst, 
+                                                de::CPf* __restrict          dst, 
                                                 const uint32_t              signal_length)
 {
     __m128 recv_P0, recv_P1, recv_P2, recv_P3;
@@ -34,7 +34,7 @@ decx::dsp::fft::CPUK::_FFT1D_R4_cplxf32_1st_R2C(const float* __restrict     src,
         tmp._vf = _mm256_castps128_ps256(_mm_add_ps(_mm_add_ps(recv_P0, recv_P1), _mm_add_ps(recv_P2, recv_P3)));
         res._vf = _mm256_permutevar8x32_ps(tmp._vf, _mm256_setr_epi32(0, 4, 1, 5, 2, 6, 3, 7));
         // Store the first output of the butterfly operation
-        _mm256_store_pd(dst + (i << 4), res._vd);
+        _mm256_store_pd((double*)(dst + (i << 4)), res._vd);
 
         // Calculate the second output
         // [R0, R1, R2, R3, I0, I1, I2, I3]
@@ -42,26 +42,26 @@ decx::dsp::fft::CPUK::_FFT1D_R4_cplxf32_1st_R2C(const float* __restrict     src,
                                          _mm256_castps128_ps256(_mm_sub_ps(recv_P1, recv_P3)), 0x20);
         res._vf = _mm256_permutevar8x32_ps(tmp._vf, _mm256_setr_epi32(0, 4, 1, 5, 2, 6, 3, 7));
         // Store the second output
-        _mm256_store_pd(dst + (i << 4) + 4, res._vd);
+        _mm256_store_pd((double*)(dst + (i << 4) + 4), res._vd);
         // Store the fourth output
         // Reverse the signs of the imaginary parts of the four parallel complexes
         res._vi = _mm256_xor_si256(res._vi, 
                                    _mm256_setr_epi32(0, 0x80000000, 0, 0x80000000, 0, 0x80000000, 0, 0x80000000));
-        _mm256_store_pd(dst + (i << 4) + 12, res._vd);
+        _mm256_store_pd((double*)(dst + (i << 4) + 12), res._vd);
 
         // Calculate the third output
         tmp._vf = _mm256_castps128_ps256(_mm_add_ps(_mm_sub_ps(recv_P0, recv_P1), _mm_sub_ps(recv_P2, recv_P3)));
         res._vf = _mm256_permutevar8x32_ps(tmp._vf, _mm256_setr_epi32(0, 4, 1, 5, 2, 6, 3, 7));
         // Store the third output of the butterfly operation
-        _mm256_store_pd(dst + (i << 4) + 8, res._vd);
+        _mm256_store_pd((double*)(dst + (i << 4) + 8), res._vd);
     }
 }
 
 
 
 _THREAD_CALL_ void
-decx::dsp::fft::CPUK::_FFT1D_R4_cplxf32_1st_C2C(const double* __restrict     src, 
-                                                double* __restrict          dst, 
+decx::dsp::fft::CPUK::_FFT1D_R4_cplxf32_1st_C2C(const de::CPf* __restrict     src, 
+                                                de::CPf* __restrict          dst, 
                                                 const uint32_t              signal_length)
 {
     __m256 recv_P0, recv_P1, recv_P2, recv_P3;
@@ -72,20 +72,20 @@ decx::dsp::fft::CPUK::_FFT1D_R4_cplxf32_1st_C2C(const double* __restrict     src
 
     for (uint32_t i = 0; i < total_Bcalc_num; ++i) 
     {
-        recv_P0 = _mm256_castpd_ps(_mm256_load_pd(src + (i << 2)));
-        recv_P1 = _mm256_castpd_ps(_mm256_load_pd(src + ((i + total_Bcalc_num) << 2)));
-        recv_P2 = _mm256_castpd_ps(_mm256_load_pd(src + ((i + (total_Bcalc_num << 1)) << 2)));
-        recv_P3 = _mm256_castpd_ps(_mm256_load_pd(src + ((i + total_Bcalc_num * 3) << 2)));
+        recv_P0 = _mm256_castpd_ps(_mm256_load_pd((double*)(src + (i << 2))));
+        recv_P1 = _mm256_castpd_ps(_mm256_load_pd((double*)(src + ((i + total_Bcalc_num) << 2))));
+        recv_P2 = _mm256_castpd_ps(_mm256_load_pd((double*)(src + ((i + (total_Bcalc_num << 1)) << 2))));
+        recv_P3 = _mm256_castpd_ps(_mm256_load_pd((double*)(src + ((i + total_Bcalc_num * 3) << 2))));
 
         // Calculate the first and third output
         tmp1._vf = _mm256_add_ps(recv_P0, recv_P2);
         tmp2._vf = _mm256_add_ps(recv_P1, recv_P3);
         // Store the first output
         res._vf = _mm256_add_ps(tmp1._vf, tmp2._vf);
-        _mm256_store_pd(dst + (i << 4), res._vd);
+        _mm256_store_pd((double*)(dst + (i << 4)), res._vd);
         // Store the third output
         res._vf = _mm256_sub_ps(tmp1._vf, tmp2._vf);
-        _mm256_store_pd(dst + (i << 4) + 8, res._vd);
+        _mm256_store_pd((double*)(dst + (i << 4) + 8), res._vd);
 
         // Calculate the second and the fourth output
         tmp1._vi = _mm256_xor_si256(_mm256_castps_si256(_mm256_permute_ps(recv_P1, 0b10110001)),
@@ -97,19 +97,19 @@ decx::dsp::fft::CPUK::_FFT1D_R4_cplxf32_1st_C2C(const double* __restrict     src
         res._vf = _mm256_sub_ps(recv_P0, recv_P2);
         tmp1._vf = _mm256_add_ps(res._vf, tmp2._vf);
         // Store the second output
-        _mm256_store_pd(dst + (i << 4) + 4, tmp1._vd);
+        _mm256_store_pd((double*)(dst + (i << 4) + 4), tmp1._vd);
         tmp1._vf = _mm256_sub_ps(res._vf, tmp2._vf);
         // Store the fourth output
-        _mm256_store_pd(dst + (i << 4) + 12, tmp1._vd);
+        _mm256_store_pd((double*)(dst + (i << 4) + 12), tmp1._vd);
     }
 }
 
 
 
 _THREAD_FUNCTION_ void
-decx::dsp::fft::CPUK::_FFT1D_R4_cplxf32_mid_C2C(const double* __restrict        src, 
-                                                double* __restrict              dst, 
-                                                const double* __restrict        _W_table, 
+decx::dsp::fft::CPUK::_FFT1D_R4_cplxf32_mid_C2C(const de::CPf* __restrict        src, 
+                                                de::CPf* __restrict              dst, 
+                                                const de::CPf* __restrict        _W_table, 
                                                 const decx::dsp::fft::FKI1D*    _kernel_info)
 {
     __m256 recv_P0, recv_P1, recv_P2, recv_P3;
@@ -127,14 +127,14 @@ decx::dsp::fft::CPUK::_FFT1D_R4_cplxf32_mid_C2C(const double* __restrict        
 
     for (uint32_t i = 0; i < total_Bcalc_num; ++i)
     {
-        recv_P0 = _mm256_castpd_ps(_mm256_load_pd(src + (i << 2)));
-        recv_P1 = _mm256_castpd_ps(_mm256_load_pd(src + ((i + total_Bcalc_num) << 2)));
-        recv_P2 = _mm256_castpd_ps(_mm256_load_pd(src + ((i + (total_Bcalc_num << 1)) << 2)));
-        recv_P3 = _mm256_castpd_ps(_mm256_load_pd(src + ((i + total_Bcalc_num * 3) << 2)));
+        recv_P0 = _mm256_castpd_ps(_mm256_load_pd((double*)(src + (i << 2))));
+        recv_P1 = _mm256_castpd_ps(_mm256_load_pd((double*)(src + ((i + total_Bcalc_num) << 2))));
+        recv_P2 = _mm256_castpd_ps(_mm256_load_pd((double*)(src + ((i + (total_Bcalc_num << 1)) << 2))));
+        recv_P3 = _mm256_castpd_ps(_mm256_load_pd((double*)(src + ((i + total_Bcalc_num * 3) << 2))));
 
         warp_loc_id = i % _kernel_info->_store_pitch;
 
-        W._vd = _mm256_i32gather_pd(_W_table, _mm_setr_epi32(0, 
+        W._vd = _mm256_i32gather_pd((double*)_W_table, _mm_setr_epi32(0, 
                                                              _scale * warp_loc_id, 
                                                              _scale * warp_loc_id * 2, 
                                                              _scale * warp_loc_id * 3), 8);
@@ -150,10 +150,10 @@ decx::dsp::fft::CPUK::_FFT1D_R4_cplxf32_mid_C2C(const double* __restrict        
         tmp2._vf = _mm256_add_ps(recv_P1, recv_P3);
         // Store the first output
         res._vf = _mm256_add_ps(tmp1._vf, tmp2._vf);
-        _mm256_store_pd(dst + (dex << 2), res._vd);
+        _mm256_store_pd((double*)(dst + (dex << 2)), res._vd);
         // Store the third output
         res._vf = _mm256_sub_ps(tmp1._vf, tmp2._vf);
-        _mm256_store_pd(dst + ((dex + (_kernel_info->_store_pitch << 1)) << 2), res._vd);
+        _mm256_store_pd((double*)(dst + ((dex + (_kernel_info->_store_pitch << 1)) << 2)), res._vd);
 
         // Calculate the second and the fourth output
         tmp1._vi = _mm256_xor_si256(_mm256_castps_si256(_mm256_permute_ps(recv_P1, 0b10110001)),
@@ -165,9 +165,9 @@ decx::dsp::fft::CPUK::_FFT1D_R4_cplxf32_mid_C2C(const double* __restrict        
         res._vf = _mm256_sub_ps(recv_P0, recv_P2);
         tmp1._vf = _mm256_add_ps(res._vf, tmp2._vf);
         // Store the second output
-        _mm256_store_pd(dst + ((dex + _kernel_info->_store_pitch) << 2), tmp1._vd);
+        _mm256_store_pd((double*)(dst + ((dex + _kernel_info->_store_pitch) << 2)), tmp1._vd);
         tmp1._vf = _mm256_sub_ps(res._vf, tmp2._vf);
         // Store the fourth output
-        _mm256_store_pd(dst + ((dex + _kernel_info->_store_pitch * 3) << 2), tmp1._vd);
+        _mm256_store_pd((double*)(dst + ((dex + _kernel_info->_store_pitch * 3) << 2)), tmp1._vd);
     }
 }

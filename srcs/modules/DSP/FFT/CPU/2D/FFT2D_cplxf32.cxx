@@ -22,7 +22,7 @@ void decx::dsp::fft::cpu_FFT2D_planner<float>::Forward(decx::_Matrix* src,
 {
     // Horizontal FFT
     decx::dsp::fft::_FFT2D_H_entire_rows_cplxf<_type_in, false>((_type_in*)src->Mat.ptr,                             
-                                                                (double*)this->get_tmp1_ptr(), 
+                                                                (de::CPf*)this->get_tmp1_ptr(), 
                                                                 this,                                            
                                                                 src->Pitch(), 
                                                                 decx::utils::ceil<uint32_t>(src->Width(), 4) * 4,   
@@ -35,7 +35,7 @@ void decx::dsp::fft::cpu_FFT2D_planner<float>::Forward(decx::_Matrix* src,
                                    &this->_transpose_config_1st,                              
                                    t1D);
     // Horizontal FFT
-    decx::dsp::fft::_FFT2D_H_entire_rows_cplxf<double, true>((double*)this->get_tmp2_ptr(),         (double*)this->get_tmp1_ptr(), 
+    decx::dsp::fft::_FFT2D_H_entire_rows_cplxf<de::CPf, true>((de::CPf*)this->get_tmp2_ptr(),       (de::CPf*)this->get_tmp1_ptr(), 
                                                this,                                                decx::utils::ceil<uint32_t>(src->Height(), 4) * 4,  
                                                decx::utils::ceil<uint32_t>(src->Height(), 4) * 4,   t1D, false);
     // Transpose
@@ -45,7 +45,7 @@ void decx::dsp::fft::cpu_FFT2D_planner<float>::Forward(decx::_Matrix* src,
 }
 
 template void decx::dsp::fft::cpu_FFT2D_planner<float>::Forward<float>(decx::_Matrix*, decx::_Matrix*, decx::utils::_thread_arrange_1D*) const;
-template void decx::dsp::fft::cpu_FFT2D_planner<float>::Forward<double>(decx::_Matrix*, decx::_Matrix*, decx::utils::_thread_arrange_1D*) const;
+template void decx::dsp::fft::cpu_FFT2D_planner<float>::Forward<de::CPf>(decx::_Matrix*, decx::_Matrix*, decx::utils::_thread_arrange_1D*) const;
 template void decx::dsp::fft::cpu_FFT2D_planner<float>::Forward<uint8_t>(decx::_Matrix*, decx::_Matrix*, decx::utils::_thread_arrange_1D*) const;
 
 
@@ -57,8 +57,8 @@ void decx::dsp::fft::cpu_FFT2D_planner<float>::Inverse(decx::_Matrix* src,
                                                        decx::utils::_thread_arrange_1D* t1D) const
 {
     // Horizontal FFT
-    decx::dsp::fft::_IFFT2D_H_entire_rows_cplxf<double>((double*)src->Mat.ptr,                
-                                                        (double*)this->get_tmp1_ptr(), 
+    decx::dsp::fft::_IFFT2D_H_entire_rows_cplxf<de::CPf>((de::CPf*)src->Mat.ptr,                
+                                                        (de::CPf*)this->get_tmp1_ptr(), 
                                                         this,                                            
                                                         src->Pitch(), 
                                                         decx::utils::ceil<uint32_t>(src->Width(), 4) * 4,    
@@ -74,7 +74,7 @@ void decx::dsp::fft::cpu_FFT2D_planner<float>::Inverse(decx::_Matrix* src,
                                    
     // Horizontal FFT
     const uint8_t _STG_alignment = decx::dsp::fft::cpu_FFT2D_planner<float>::get_alignment_FFT_last_dimension<_type_out>();
-    decx::dsp::fft::_IFFT2D_H_entire_rows_cplxf<_type_out>((double*)this->get_tmp2_ptr(),       
+    decx::dsp::fft::_IFFT2D_H_entire_rows_cplxf<_type_out>((de::CPf*)this->get_tmp2_ptr(),       
                                                            (_type_out*)this->get_tmp1_ptr(), 
                                                            this,                                            
                                                            decx::utils::ceil<uint32_t>(src->Height(), 4) * 4,  
@@ -85,7 +85,7 @@ void decx::dsp::fft::cpu_FFT2D_planner<float>::Inverse(decx::_Matrix* src,
     const decx::bp::_cpu_transpose_config<sizeof(_type_out)>* _transp_config_2nd_ptr =
         reinterpret_cast<const decx::bp::_cpu_transpose_config<sizeof(_type_out)>*>(&this->_transpose_config_2nd);
 
-    if constexpr (std::is_same_v<_type_out, double>){
+    if constexpr (std::is_same_v<_type_out, de::CPf>){
         decx::bp::transpose_2x2_caller((double*)this->get_tmp1_ptr(),                     (double*)dst->Mat.ptr,
                                        decx::utils::ceil<uint32_t>(src->Height(), 4) * 4,  dst->Pitch(), 
                                        _transp_config_2nd_ptr, t1D);
@@ -103,7 +103,7 @@ void decx::dsp::fft::cpu_FFT2D_planner<float>::Inverse(decx::_Matrix* src,
 }
 
 template void decx::dsp::fft::cpu_FFT2D_planner<float>::Inverse<float>(decx::_Matrix*, decx::_Matrix*, decx::utils::_thread_arrange_1D*) const;
-template void decx::dsp::fft::cpu_FFT2D_planner<float>::Inverse<double>(decx::_Matrix*, decx::_Matrix*, decx::utils::_thread_arrange_1D*) const;
+template void decx::dsp::fft::cpu_FFT2D_planner<float>::Inverse<de::CPf>(decx::_Matrix*, decx::_Matrix*, decx::utils::_thread_arrange_1D*) const;
 template void decx::dsp::fft::cpu_FFT2D_planner<float>::Inverse<uint8_t>(decx::_Matrix*, decx::_Matrix*, decx::utils::_thread_arrange_1D*) const;
 
 

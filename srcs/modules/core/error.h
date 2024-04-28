@@ -23,13 +23,13 @@
 // APIs from DECX_core_CPU
 namespace decx
 {
-    _DECX_API_ bool Get_enable_log_print();
+    /*_DECX_API_ bool Get_enable_log_print();
 
 
     _DECX_API_ bool Get_ignore_successful_print();
 
 
-    _DECX_API_ bool Get_ignore_warnings();
+    _DECX_API_ bool Get_ignore_warnings();*/
 }
 
 
@@ -108,205 +108,17 @@ namespace decx
 {
     namespace err
     {
-        /*template <bool _print = true>
-        static void CUDA_Not_init(de::DH* handle)
-        {
-            if (_print) {
-                if (decx::Get_enable_log_print()) {
-                    
-                }
-            }
-            decx::utils::decx_strcpy<100>(handle->error_string, CUDA_NOT_INIT);
-            handle->error_type = decx::DECX_error_types::DECX_FAIL_not_init;
-        }
-
-
-        template <bool _print = true>
-        static void CPU_Not_init(de::DH* handle)
-        {
-            if (_print) {
-                if (decx::Get_enable_log_print()) {
-                    Print_Error_Message(4, CPU_NOT_INIT);
-                }
-            }
-            decx::utils::decx_strcpy<100>(handle->error_string, CPU_NOT_INIT);
-            handle->error_type = decx::DECX_error_types::DECX_FAIL_not_init;
-        }*/
-
-        /*template <bool _print = true>
-        static void FFT_Error_length(de::DH* handle)
-        {
-            if (_print) {
-                if (decx::Get_enable_log_print()) {
-                    Print_Error_Message(4, FFT_ERROR_LENGTH);
-                }
-            }
-            decx::utils::decx_strcpy<100>(handle->error_string, FFT_ERROR_LENGTH);
-            handle->error_type = decx::DECX_error_types::DECX_FAIL_FFT_error_length;
-        }
-
-        template <bool _print = true>
-        static void AllocateFailure(de::DH* handle)
-        {
-            if (_print) {
-                if (decx::Get_enable_log_print()) {
-                    
-                }
-            }
-            decx::utils::decx_strcpy<100>(handle->error_string, ALLOC_FAIL);
-            handle->error_type = decx::DECX_error_types::DECX_FAIL_ALLOCATION;
-        }*/
-
-        /*template <bool _print = true>
-        static void InvalidParam(de::DH* handle)
-        {
-            if (_print) {
-                if (decx::Get_enable_log_print()) {
-                    Print_Error_Message(4, INVALID_PARAM);
-                }
-            }
-            decx::utils::decx_strcpy<100>(handle->error_string, INVALID_PARAM);
-            handle->error_type = decx::DECX_error_types::DECX_FAIL_INVALID_PARAM;
-        }
-
-
-        template <bool _print = true>
-        static void MeaningLessFlag(de::DH* handle)
-        {
-            if (_print) {
-                if (decx::Get_enable_log_print()) {
-                    
-                }
-            }
-            decx::utils::decx_strcpy<100>(handle->error_string, MEANINGLESS_FLAG);
-            handle->error_type = decx::DECX_error_types::DECX_FAIL_INVALID_PARAM;
-        }*/
-
-
-        /*template <bool _print = true>
-        static void device_AllocateFailure(de::DH* handle)
-        {
-            if (_print) {
-                if (decx::Get_enable_log_print()) {
-                    Print_Error_Message(4, DEV_ALLOC_FAIL);
-                }
-            }
-            decx::utils::decx_strcpy<100>(handle->error_string, DEV_ALLOC_FAIL);
-            handle->error_type = decx::DECX_error_types::DECX_FAIL_ALLOCATION;
-        }
-
-        template <bool _print = true>
-        static void Mat_Dim_Not_Matching(de::DH* handle)
-        {
-            if (_print) {
-                if (decx::Get_enable_log_print()) {
-                    Print_Error_Message(4, MAT_DIM_NOT_MATCH);
-                }
-            }
-            decx::utils::decx_strcpy<100>(handle->error_string, MAT_DIM_NOT_MATCH);
-            handle->error_type = decx::DECX_error_types::DECX_FAIL_DimsNotMatching;
-        }
-
-        template <bool _print = true>
-        static void CUDA_Stream_access_fail(de::DH* handle)
-        {
-            if (_print) {
-                if (decx::Get_enable_log_print()) {
-                    
-                }
-            }
-            decx::utils::decx_strcpy<100>(handle->error_string, CUDA_STREAM_ACCESS_FAIL);
-            handle->error_type = decx::DECX_error_types::DECX_FAIL_CUDA_STREAM;
-        }
-
-        template <bool _print = true>
-        static void CUDA_Event_access_fail(de::DH* handle)
-        {
-            if (_print) {
-                if (decx::Get_enable_log_print()) {
-                    
-                }
-            }
-            decx::utils::decx_strcpy<100>(handle->error_string, CUDA_EVENT_ACCESS_FAIL);
-            handle->error_type = decx::DECX_error_types::DECX_FAIL_CUDA_EVENT;
-        }*/
-
         template <bool _sync = true>
         static void Success(de::DH* handle)
         {
             if (_sync) {
-                if ((!decx::Get_ignore_successful_print()) && decx::Get_enable_log_print()) {
+                /*if ((!decx::Get_ignore_successful_print()) && decx::Get_enable_log_print()) {
                     Print_Error_Message(0x0E, SUCCESS);
-                }
+                }*/
             }
             decx::utils::decx_strcpy<100>(handle->error_string, SUCCESS);
             handle->error_type = decx::DECX_error_types::DECX_SUCCESS;
         }
-
-        /*template <bool _sync = true>
-        static void ClassNotInit(de::DH* handle)
-        {
-            if (_sync) {
-                if (decx::Get_enable_log_print()) {
-                    Print_Error_Message(0x0E, CLASS_NOT_INIT);
-                }
-            }
-            decx::utils::decx_strcpy<100>(handle->error_string, CLASS_NOT_INIT);
-            handle->error_type = decx::DECX_error_types::DECX_FAIL_CLASS_NOT_INIT;
-        }*/
-
-
-        /*template <bool _sync = true>
-        static void TypeError_NotMatch(de::DH* handle)
-        {
-            if (_sync) {
-                if ((!decx::Get_ignore_successful_print()) && decx::Get_enable_log_print()) {
-                    
-                }
-            }
-            decx::utils::decx_strcpy<100>(handle->error_string, TYPE_ERROR_NOT_MATCH);
-            handle->error_type = decx::DECX_error_types::DECX_FAIL_TYPE_MOT_MATCH;
-        }*/
-
-
-        /*template <bool _sync = true>
-        static void ImageLoadFailed(de::DH* handle)
-        {
-            if (_sync) {
-                if ((!decx::Get_ignore_successful_print()) && decx::Get_enable_log_print()) {
-                    Print_Error_Message(4, IMAGE_LOAD_FAIL);
-                }
-            }
-            decx::utils::decx_strcpy<100>(handle->error_string, IMAGE_LOAD_FAIL);
-            handle->error_type = decx::DECX_error_types::DECX_FAIL_IMAGE_LOAD_FAILED;
-        }
-
-
-        template <bool _sync = true>
-        static void Memcpy_overranged(de::DH* handle)
-        {
-            if (_sync) {
-                if ((!decx::Get_ignore_successful_print()) && decx::Get_enable_log_print()) {
-                    Print_Error_Message(4, MEMCPY_OVERRANGED);
-                }
-            }
-            decx::utils::decx_strcpy<100>(handle->error_string, MEMCPY_OVERRANGED);
-            handle->error_type = decx::DECX_error_types::DECX_FAIL_MEMCPY_OVERRANGED;
-        }
-
-
-        template <bool _sync = true>
-        static void Unsupported_Type(de::DH* handle)
-        {
-            if (_sync) {
-                if ((!decx::Get_ignore_successful_print()) && decx::Get_enable_log_print()) {
-                    Print_Error_Message(4, UNSUPPORTED_TYPE);
-                }
-            }
-            decx::utils::decx_strcpy<100>(handle->error_string, UNSUPPORTED_TYPE);
-            handle->error_type = decx::DECX_error_types::DECX_FAIL_UNSUPPORTED_TYPE;
-        }*/
-
 
         template <bool _print_to_console = false, int _console_color = 4>
         static void handle_error_info_modify(de::DH* handle, decx::DECX_error_types _error_type, const char* _err_statement) 
@@ -327,9 +139,9 @@ namespace decx
     {
         static void CPU_Hyper_Threading(de::DH* handle)
         {
-            if (!decx::Get_ignore_warnings()) {
+            /*if (!decx::Get_ignore_warnings()) {
                 Print_Error_Message(6, CPU_HYPER_THREADING);
-            }
+            }*/
             decx::utils::decx_strcpy<100>(handle->error_string, CPU_HYPER_THREADING);
             handle->error_type = decx::DECX_error_types::DECX_SUCCESS;
         }
@@ -339,9 +151,9 @@ namespace decx
         static void Memcpy_different_types(de::DH* handle)
         {
             if (_sync) {
-                if ((!decx::Get_ignore_warnings()) && decx::Get_enable_log_print()) {
+                /*if ((!decx::Get_ignore_warnings()) && decx::Get_enable_log_print()) {
                     Print_Error_Message(0x0E, MEMCPY_DIFFERENT_DATA_TYPE);
-                }
+                }*/
             }
             decx::utils::decx_strcpy<100>(handle->error_string, MEMCPY_DIFFERENT_DATA_TYPE);
             handle->error_type = decx::DECX_error_types::MEMCPY_DIFFERENT_TYPES;

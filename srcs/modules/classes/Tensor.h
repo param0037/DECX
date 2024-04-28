@@ -26,51 +26,6 @@
 #define _TENSOR_ALIGN_DEPTH_16B_ 1
 
 
-namespace de
-{
-    /** �� channel_adjcent �ķ�ʽ�洢���� channel �������ճ�8����, CPU�˿�����__m256��GPU�˿�����float2
-    * �����ֽڵ� half ���ʹճ��ı���,GPU�˿��Դճ�ż���� half2, �� double �Ȱ��ֽڵ��������ʹճ�ż��*/
-    class 
-#if _CPP_EXPORT_ENABLED_
-        _DECX_API_
-#endif
-        Tensor
-    {
-    public:
-        Tensor() {}
-
-
-        virtual uint32_t Width() const = 0;
-
-
-        virtual uint32_t Height() const = 0;
-
-
-        virtual uint32_t Depth() const = 0;
-
-
-        virtual float*              ptr_fp32(const int x, const int y, const int z)  = 0;
-        virtual int*                ptr_int32(const int x, const int y, const int z) = 0;
-        virtual double*             ptr_fp64(const int x, const int y, const int z)  = 0;
-        virtual de::Half*           ptr_fp16(const int x, const int y, const int z)  = 0;
-        virtual de::CPf*            ptr_cpl32(const int x, const int y, const int z) = 0;
-        virtual uint8_t*            ptr_uint8(const int x, const int y, const int z) = 0;
-        virtual de::Vector4f*       ptr_vec4f(const int x, const int y, const int z) = 0;
-
-
-        virtual de::Tensor& SoftCopy(de::Tensor& src) = 0;
-
-
-        virtual void release() = 0;
-
-
-        virtual de::_DATA_TYPES_FLAGS_ Type() const = 0;
-
-
-        virtual void Reinterpret(const de::_DATA_TYPES_FLAGS_ _new_type) = 0;
-    };
-}
-
 
 namespace decx
 {
@@ -124,6 +79,59 @@ public:
 
     void _attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, const uint32_t _width, const uint32_t _height, const uint32_t _depth);
 };
+
+
+
+namespace de
+{
+    /** �� channel_adjcent �ķ�ʽ�洢���� channel �������ճ�8����, CPU�˿�����__m256��GPU�˿�����float2
+    * �����ֽڵ� half ���ʹճ��ı���,GPU�˿��Դճ�ż���� half2, �� double �Ȱ��ֽڵ��������ʹճ�ż��*/
+    class 
+#if _CPP_EXPORT_ENABLED_
+        _DECX_API_
+#endif
+        Tensor
+    {
+    protected:
+        _SHADOW_ATTRIBUTE_(void*) _exp_data_ptr;
+        _SHADOW_ATTRIBUTE_(decx::_tensor_layout) _exp_tensor_dscr;
+
+    public:
+        Tensor() {}
+
+
+        virtual uint32_t Width() const = 0;
+
+
+        virtual uint32_t Height() const = 0;
+
+
+        virtual uint32_t Depth() const = 0;
+
+
+        /*virtual float*              ptr_fp32(const int x, const int y, const int z)  = 0;
+        virtual int*                ptr_int32(const int x, const int y, const int z) = 0;
+        virtual double*             ptr_fp64(const int x, const int y, const int z)  = 0;
+        virtual de::Half*           ptr_fp16(const int x, const int y, const int z)  = 0;
+        virtual de::CPf*            ptr_cpl32(const int x, const int y, const int z) = 0;
+        virtual de::CPd*            ptr_cpl64(const int x, const int y, const int z) = 0;
+        virtual uint8_t*            ptr_uint8(const int x, const int y, const int z) = 0;
+        virtual de::Vector4f*       ptr_vec4f(const int x, const int y, const int z) = 0;*/
+
+
+        virtual de::Tensor& SoftCopy(de::Tensor& src) = 0;
+
+
+        virtual void release() = 0;
+
+
+        virtual de::_DATA_TYPES_FLAGS_ Type() const = 0;
+
+
+        virtual void Reinterpret(const de::_DATA_TYPES_FLAGS_ _new_type) = 0;
+    };
+}
+
 
 
 /**
@@ -188,13 +196,14 @@ namespace decx
         _Tensor(const de::_DATA_TYPES_FLAGS_ _type, const uint32_t _width, const uint32_t _height, const uint32_t _depth);
 
 
-        virtual float*              ptr_fp32(const int x, const int y, const int z);
+        /*virtual float*              ptr_fp32(const int x, const int y, const int z);
         virtual int*                ptr_int32(const int x, const int y, const int z);
         virtual double*             ptr_fp64(const int x, const int y, const int z);
         virtual de::Half*           ptr_fp16(const int x, const int y, const int z);
         virtual de::CPf*            ptr_cpl32(const int x, const int y, const int z);
+        virtual de::CPd*            ptr_cpl64(const int x, const int y, const int z);
         virtual uint8_t*            ptr_uint8(const int x, const int y, const int z);
-        virtual de::Vector4f*       ptr_vec4f(const int x, const int y, const int z);
+        virtual de::Vector4f*       ptr_vec4f(const int x, const int y, const int z);*/
 
 
         virtual uint32_t Width() const;

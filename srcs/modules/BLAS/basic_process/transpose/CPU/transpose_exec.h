@@ -271,6 +271,12 @@ decx::bp::CPUK::block8x8_transpose_u8(uint64_t _regs0[8], uint64_t _regs1[8])
 }
 
 
+#define _AVX_MM256_TRANSPOSE_2X2_(src2, dst2) {                 \
+    dst2[0] = _mm256_permute2f128_pd(src2[0], src2[1], 0x20);   \
+    dst2[1] = _mm256_permute2f128_pd(src2[0], src2[1], 0x31);   \
+}                                                               \
+
+
 
 template <uint8_t _element_byte>
 struct decx::bp::_cpu_transpose_config

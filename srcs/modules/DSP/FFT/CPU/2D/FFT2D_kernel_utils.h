@@ -39,12 +39,12 @@ namespace fft {
 
 
         template <bool _IFFT>
-        static void load_entire_row_transpose_cplxf(const double* __restrict src, decx::utils::double_buffer_manager* __restrict _double_buffer,
+        static void load_entire_row_transpose_cplxf(const de::CPf* __restrict src, decx::utils::double_buffer_manager* __restrict _double_buffer,
             const decx::dsp::fft::FKT1D_fp32* _tiles, const uint32_t _load_len_v4, const uint32_t _pitch_src, const uint8_t _load_H = 4, const uint32_t _signal_length = 0);
 
 
         template <bool _conj>
-        static void store_entire_row_transpose_cplxf(decx::utils::double_buffer_manager* __restrict _double_buffer, double* __restrict dst,
+        static void store_entire_row_transpose_cplxf(decx::utils::double_buffer_manager* __restrict _double_buffer, de::CPf* __restrict dst,
             const decx::dsp::fft::FKT1D_fp32* _tiles, const uint32_t _load_len_v4, const uint32_t _pitch_src, const uint8_t _load_H = 4);
 
 
@@ -117,7 +117,7 @@ decx::dsp::fft::CPUK::load_entire_row_transpose_u8_fp32(const float* __restrict 
 
 
 template <bool _IFFT> static void 
-decx::dsp::fft::CPUK::load_entire_row_transpose_cplxf(const double* __restrict                          src, 
+decx::dsp::fft::CPUK::load_entire_row_transpose_cplxf(const de::CPf* __restrict                          src, 
                                                       decx::utils::double_buffer_manager* __restrict    _double_buffer,
                                                       const decx::dsp::fft::FKT1D_fp32*                 _tiles, 
                                                       const uint32_t                                    _load_len_v4, 
@@ -125,7 +125,7 @@ decx::dsp::fft::CPUK::load_entire_row_transpose_cplxf(const double* __restrict  
                                                       const uint8_t                                     _load_H,
                                                       const uint32_t                                    _signal_length)
 {
-    const double* _src_row_ptr = src;
+    const double* _src_row_ptr = (double*)src;
     double* _dst_row_ptr = _double_buffer->get_lagging_ptr<double>();
 
     decx::utils::simd::xmm256_reg _reg;
@@ -151,7 +151,7 @@ decx::dsp::fft::CPUK::load_entire_row_transpose_cplxf(const double* __restrict  
 
 template <bool _conj> static void
 decx::dsp::fft::CPUK::store_entire_row_transpose_cplxf(decx::utils::double_buffer_manager* __restrict _double_buffer, 
-                                                       double* __restrict dst,
+                                                       de::CPf* __restrict dst,
                                                        const decx::dsp::fft::FKT1D_fp32* _tiles,
                                                        const uint32_t _load_len_v4, 
                                                        const uint32_t _pitch_dst, 
@@ -161,7 +161,7 @@ decx::dsp::fft::CPUK::store_entire_row_transpose_cplxf(decx::utils::double_buffe
     _tiles->_inblock_transpose_vecAdj_2_VecDist_cplxf(_double_buffer);
 
     const double* _src_row_ptr = _double_buffer->get_leading_ptr<double>();
-    double* _dst_row_ptr = dst;
+    double* _dst_row_ptr = (double*)dst;
 
     decx::utils::simd::xmm256_reg _reg;
 

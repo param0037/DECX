@@ -17,14 +17,7 @@
 
 _DECX_API_ decx::ThreadPool* decx::thread_pool;
 
-decx::logging_config decx::LogConf;
-
 decx::cpuInfo decx::cpI;
-#endif
 
-#ifdef _DECX_ASYNC_CORE_
-// Only when user start to add DecxStream, the async_stream_pool starts to run
-#include "../../Async Engine/Async_task_threadpool/Async_Engine.h"
-
-decx::async::Async_Engine decx::async::async_engine;
+de::DH decx::_last_error;
 #endif

@@ -68,6 +68,9 @@
     <Filter Include="源文件\signal\FFT\2D\fp64">
       <UniqueIdentifier>{95d54fda-6963-4ee7-9230-d6e3f719e36a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\signal\FFT\3D\fp64">
+      <UniqueIdentifier>{957b0a0c-07c3-4007-950c-ea94fdb7dbce}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="for_properties.cpp" />
@@ -148,9 +151,6 @@
     <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\3D\fp32\FFT3D_cplxf32.cu">
       <Filter>源文件\signal\FFT\3D\fp32</Filter>
     </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\3D\fp32\FFT3D_MidProc_caller.cu">
-      <Filter>源文件\signal\FFT\3D\fp32</Filter>
-    </CudaCompile>
     <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\3D\fp32\FFT3D_R2_cplxf_kernels.cu">
       <Filter>源文件\signal\FFT\3D\fp32</Filter>
     </CudaCompile>
@@ -210,6 +210,24 @@
     </CudaCompile>
     <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\2D\fp64\FFT2D_cplxd64.cu">
       <Filter>源文件\signal\FFT\2D\fp64</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\3D\FFT3D_MidProc_caller.cu">
+      <Filter>源文件\signal\FFT\3D</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\3D\fp64\FFT3D_R2_cplxd_kernels.cu">
+      <Filter>源文件\signal\FFT\3D\fp64</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\3D\fp64\FFT3D_R3_cplxd_kernels.cu">
+      <Filter>源文件\signal\FFT\3D\fp64</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\3D\fp64\FFT3D_R4_cplxd_kernels.cu">
+      <Filter>源文件\signal\FFT\3D\fp64</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\3D\fp64\FFT3D_R5_cplxd_kernels.cu">
+      <Filter>源文件\signal\FFT\3D\fp64</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\3D\fp64\FFT3D_cplxd64.cu">
+      <Filter>源文件\signal\FFT\3D\fp64</Filter>
     </CudaCompile>
   </ItemGroup>
 </Project>

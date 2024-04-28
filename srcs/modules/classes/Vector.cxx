@@ -92,19 +92,17 @@ void decx::_Vector::re_construct(const de::_DATA_TYPES_FLAGS_ _type, size_t leng
 }
 
 
-
-
 decx::_Vector::_Vector()
 {
+    this->_exp_data_ptr = &this->Vec.ptr;
     this->_attribute_assign(de::_DATA_TYPES_FLAGS_::_VOID_, 0);
     this->_init = false;
 }
 
 
-
-
 decx::_Vector::_Vector(const de::_DATA_TYPES_FLAGS_ _type, size_t length)
 {
+    this->_exp_data_ptr = &this->Vec.ptr;
     this->_attribute_assign(_type, length);
 
     this->alloc_data_space();
@@ -117,65 +115,65 @@ size_t decx::_Vector::Len() const
     return this->length;
 }
 
-
-float* decx::_Vector::ptr_fp32(size_t index)
-{
-    float* _ptr = reinterpret_cast<float*>(this->Vec.ptr);
-    return _ptr + index;
-}
-
-int* decx::_Vector::ptr_int32(size_t index)
-{
-    int* _ptr = reinterpret_cast<int*>(this->Vec.ptr);
-    return _ptr + index;
-}
-
-
-uint64_t* decx::_Vector::ptr_uint64(size_t index)
-{
-    uint64_t* _ptr = reinterpret_cast<uint64_t*>(this->Vec.ptr);
-    return _ptr + index;
-}
-
-
-double* decx::_Vector::ptr_fp64(size_t index)
-{
-    double* _ptr = reinterpret_cast<double*>(this->Vec.ptr);
-    return _ptr + index;
-}
-
-de::Half* decx::_Vector::ptr_fp16(size_t index)
-{
-    de::Half* _ptr = reinterpret_cast<de::Half*>(this->Vec.ptr);
-    return _ptr + index;
-}
-
-de::CPf* decx::_Vector::ptr_cpl32(size_t index)
-{
-    de::CPf* _ptr = reinterpret_cast<de::CPf*>(this->Vec.ptr);
-    return _ptr + index;
-}
-
-
-de::CPd* decx::_Vector::ptr_cpl64(size_t index)
-{
-    de::CPd* _ptr = reinterpret_cast<de::CPd*>(this->Vec.ptr);
-    return _ptr + index;
-}
-
-
-uint8_t* decx::_Vector::ptr_uint8(size_t index)
-{
-    uint8_t* _ptr = reinterpret_cast<uint8_t*>(this->Vec.ptr);
-    return _ptr + index;
-}
-
-
-de::Vector4f* decx::_Vector::ptr_vec4f(size_t index)
-{
-    de::Vector4f* _ptr = reinterpret_cast<de::Vector4f*>(this->Vec.ptr);
-    return _ptr + index;
-}
+//
+//float* decx::_Vector::ptr_fp32(size_t index)
+//{
+//    float* _ptr = reinterpret_cast<float*>(this->Vec.ptr);
+//    return _ptr + index;
+//}
+//
+//int* decx::_Vector::ptr_int32(size_t index)
+//{
+//    int* _ptr = reinterpret_cast<int*>(this->Vec.ptr);
+//    return _ptr + index;
+//}
+//
+//
+//uint64_t* decx::_Vector::ptr_uint64(size_t index)
+//{
+//    uint64_t* _ptr = reinterpret_cast<uint64_t*>(this->Vec.ptr);
+//    return _ptr + index;
+//}
+//
+//
+//double* decx::_Vector::ptr_fp64(size_t index)
+//{
+//    double* _ptr = reinterpret_cast<double*>(this->Vec.ptr);
+//    return _ptr + index;
+//}
+//
+//de::Half* decx::_Vector::ptr_fp16(size_t index)
+//{
+//    de::Half* _ptr = reinterpret_cast<de::Half*>(this->Vec.ptr);
+//    return _ptr + index;
+//}
+//
+//de::CPf* decx::_Vector::ptr_cpl32(size_t index)
+//{
+//    de::CPf* _ptr = reinterpret_cast<de::CPf*>(this->Vec.ptr);
+//    return _ptr + index;
+//}
+//
+//
+//de::CPd* decx::_Vector::ptr_cpl64(size_t index)
+//{
+//    de::CPd* _ptr = reinterpret_cast<de::CPd*>(this->Vec.ptr);
+//    return _ptr + index;
+//}
+//
+//
+//uint8_t* decx::_Vector::ptr_uint8(size_t index)
+//{
+//    uint8_t* _ptr = reinterpret_cast<uint8_t*>(this->Vec.ptr);
+//    return _ptr + index;
+//}
+//
+//
+//de::Vector4f* decx::_Vector::ptr_vec4f(size_t index)
+//{
+//    de::Vector4f* _ptr = reinterpret_cast<de::Vector4f*>(this->Vec.ptr);
+//    return _ptr + index;
+//}
 
 
 #if _CPP_EXPORT_ENABLED_

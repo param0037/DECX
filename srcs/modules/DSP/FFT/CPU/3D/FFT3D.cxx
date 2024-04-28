@@ -46,7 +46,7 @@ static void decx::dsp::fft::FFT3D_caller_cplxf(decx::_Tensor* src, decx::_Tensor
         decx::dsp::fft::FFT3D_cplxf32_planner.get_resource_raw_ptr<decx::dsp::fft::cpu_FFT3D_planner<float>>();
 
     if (_planner->changed(&src->get_layout(), &dst->get_layout(), t1D.total_thread)) {
-        _planner->plan<double>(&t1D, &src->get_layout(), &dst->get_layout(), handle);
+        _planner->plan<_type_in>(&t1D, &src->get_layout(), &dst->get_layout(), handle);
         Check_Runtime_Error(handle);
     }
 
@@ -107,7 +107,7 @@ _DECX_API_ de::DH de::dsp::cpu::FFT(de::Tensor& src, de::Tensor& dst)
         break;
 
     case de::_DATA_TYPES_FLAGS_::_COMPLEX_F32_:
-        decx::dsp::fft::FFT3D_caller_cplxf<double>(_src, _dst, &handle);
+        decx::dsp::fft::FFT3D_caller_cplxf<de::CPf>(_src, _dst, &handle);
         break;
 
     default:
@@ -136,7 +136,7 @@ _DECX_API_ de::DH de::dsp::cpu::IFFT(de::Tensor& src, de::Tensor& dst, const de:
     switch (_output_type)
     {
     case de::_DATA_TYPES_FLAGS_::_COMPLEX_F32_:
-        decx::dsp::fft::IFFT3D_caller_cplxf<double>(_src, _dst, &handle);
+        decx::dsp::fft::IFFT3D_caller_cplxf<de::CPf>(_src, _dst, &handle);
         break;
 
     case de::_DATA_TYPES_FLAGS_::_FP32_:

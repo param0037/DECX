@@ -56,8 +56,8 @@ void decx::_tensor_layout::_attribute_assign(const de::_DATA_TYPES_FLAGS_ _type,
         break;
     }
 
-    this->wpitch = decx::utils::ceil<uint>(_width, _alignment_W) * _alignment_W;
-    this->dpitch = decx::utils::ceil<uint>(_depth, _alignment) * _alignment;
+    this->wpitch = decx::utils::ceil<uint32_t>(_width, _alignment_W) * _alignment_W;
+    this->dpitch = decx::utils::ceil<uint32_t>(_depth, _alignment) * _alignment;
 
     this->dp_x_wp = static_cast<uint64_t>(this->dpitch) * static_cast<uint64_t>(this->wpitch);
 

@@ -21,8 +21,16 @@ namespace dsp {
         void FFT1D_caller(decx::_Vector* src, decx::_Vector* dst, de::DH* handle);
 
 
+        template <typename _type_in>
+        void FFT1D_caller_cplxd(decx::_Vector* src, decx::_Vector* dst, de::DH* handle);
+
+
         template <typename _type_out>
         void IFFT1D_caller(decx::_Vector* src, decx::_Vector* dst, de::DH* handle);
+
+
+        template <typename _type_out>
+        void IFFT1D_caller_cplxd(decx::_Vector* src, decx::_Vector* dst, de::DH* handle);
     }
 }
 }
@@ -53,6 +61,33 @@ void decx::dsp::fft::FFT1D_caller(decx::_Vector* src, decx::_Vector* dst, de::DH
 }
 
 
+
+template <typename _type_in>
+void decx::dsp::fft::FFT1D_caller_cplxd(decx::_Vector* src, decx::_Vector* dst, de::DH* handle)
+{
+    decx::utils::_thr_1D t1D(decx::cpu::_get_permitted_concurrency());
+    
+    if (decx::dsp::fft::cpu_FFT1D_cplxd64_planner._res_ptr == NULL) {
+        decx::dsp::fft::cpu_FFT1D_cplxd64_planner.RegisterResource(new decx::dsp::fft::cpu_FFT1D_planner<double>,
+            5, &decx::dsp::fft::cpu_FFT1D_planner<double>::release_buffers);
+    }
+    decx::dsp::fft::cpu_FFT1D_cplxd64_planner.lock();
+
+    decx::dsp::fft::cpu_FFT1D_planner<double>* _planner =
+        decx::dsp::fft::cpu_FFT1D_cplxd64_planner.get_resource_raw_ptr<decx::dsp::fft::cpu_FFT1D_planner<double>>();
+
+    if (_planner->changed(src->Len(), t1D.total_thread)) {
+        _planner->plan(src->Len(), &t1D, handle);
+        Check_Runtime_Error(handle);
+    }
+
+    _planner->Forward<_type_in>(src, dst, &t1D);
+
+    decx::dsp::fft::cpu_FFT1D_cplxd64_planner.unlock();
+}
+
+
+
 template <typename _type_out>
 void decx::dsp::fft::IFFT1D_caller(decx::_Vector* src, decx::_Vector* dst, de::DH* handle)
 {
@@ -80,6 +115,34 @@ void decx::dsp::fft::IFFT1D_caller(decx::_Vector* src, decx::_Vector* dst, de::D
 
 
 
+
+template <typename _type_out>
+void decx::dsp::fft::IFFT1D_caller_cplxd(decx::_Vector* src, decx::_Vector* dst, de::DH* handle)
+{
+    decx::utils::_thr_1D t1D(decx::cpu::_get_permitted_concurrency());
+
+    if (decx::dsp::fft::cpu_IFFT1D_cplxd64_planner._res_ptr == NULL) {
+        decx::dsp::fft::cpu_IFFT1D_cplxd64_planner.RegisterResource(new decx::dsp::fft::cpu_FFT1D_planner<double>,
+            5, &decx::dsp::fft::cpu_FFT1D_planner<double>::release_buffers);
+    }
+
+    decx::dsp::fft::cpu_IFFT1D_cplxd64_planner.lock();
+
+    decx::dsp::fft::cpu_FFT1D_planner<double>* _planner =
+        decx::dsp::fft::cpu_IFFT1D_cplxd64_planner.get_resource_raw_ptr<decx::dsp::fft::cpu_FFT1D_planner<double>>();
+
+    if (_planner->changed(src->Len(), t1D.total_thread)) {
+        _planner->plan(src->Len(), &t1D, handle);
+        Check_Runtime_Error(handle);
+    }
+
+    _planner->Inverse<_type_out>(src, dst, &t1D);
+
+    decx::dsp::fft::cpu_IFFT1D_cplxd64_planner.unlock();
+}
+
+
+
 _DECX_API_ de::DH de::dsp::cpu::FFT(de::Vector& src, de::Vector& dst)
 {
     de::DH handle;
@@ -99,7 +162,15 @@ _DECX_API_ de::DH de::dsp::cpu::FFT(de::Vector& src, de::Vector& dst)
         break;
 
     case de::_DATA_TYPES_FLAGS_::_COMPLEX_F32_:
-        decx::dsp::fft::FFT1D_caller<double>(_src, _dst, &handle);
+        decx::dsp::fft::FFT1D_caller<de::CPf>(_src, _dst, &handle);
+        break;
+
+    case de::_DATA_TYPES_FLAGS_::_FP64_:
+        decx::dsp::fft::FFT1D_caller_cplxd<double>(_src, _dst, &handle);
+        break;
+
+    case de::_DATA_TYPES_FLAGS_::_COMPLEX_F64_:
+        decx::dsp::fft::FFT1D_caller_cplxd<de::CPd>(_src, _dst, &handle);
         break;
 
     default:
@@ -132,7 +203,15 @@ _DECX_API_ de::DH de::dsp::cpu::IFFT(de::Vector& src, de::Vector& dst, const de:
         break;
 
     case de::_DATA_TYPES_FLAGS_::_COMPLEX_F32_:
-        decx::dsp::fft::IFFT1D_caller<double>(_src, _dst, &handle);
+        decx::dsp::fft::IFFT1D_caller<de::CPf>(_src, _dst, &handle);
+        break;
+
+    case de::_DATA_TYPES_FLAGS_::_FP64_:
+        decx::dsp::fft::IFFT1D_caller_cplxd<double>(_src, _dst, &handle);
+        break;
+
+    case de::_DATA_TYPES_FLAGS_::_COMPLEX_F64_:
+        decx::dsp::fft::IFFT1D_caller_cplxd<de::CPd>(_src, _dst, &handle);
         break;
 
     default:

@@ -111,7 +111,7 @@ de::tf::cpu::Vec_transform(de::Vector& src, de::Vector& dst, de::Matrix& transfo
 
         decx::_Mat4x4f _tf_mat4_by_4;
         for (int i = 0; i < 4; ++i) {
-            _tf_mat4_by_4._row[i] = _mm_load_ps(_transform_matrix->ptr_fp32(i, 0));
+            _tf_mat4_by_4._row[i] = _mm_load_ps((float*)_transform_matrix->Mat.ptr + i * _transform_matrix->Pitch());
         }
 
         decx::mat::_mat4x4_transpose_fp32(&_tf_mat4_by_4);      // transpose the 4_by_4 matrix

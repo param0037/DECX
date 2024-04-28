@@ -23,24 +23,24 @@ namespace dsp {
         namespace CPUK 
         {
             template <typename _type_in, bool _conj> _THREAD_FUNCTION_ void 
-            _FFT2D_smaller_4rows_cplxf(const _type_in* __restrict src, double* __restrict dst, const decx::dsp::fft::FKT1D_fp32* _tiles, 
+            _FFT2D_smaller_4rows_cplxf(const _type_in* __restrict src, de::CPf* __restrict dst, const decx::dsp::fft::FKT1D_fp32* _tiles, 
                 const uint32_t _pitch_src, const uint32_t _pitch_dst, const uint32_t _proc_H_r1, 
                 const decx::dsp::fft::cpu_FFT1D_smaller<float>* _FFT_info);
 
 
             template <typename _type_out> _THREAD_FUNCTION_ void 
-            _IFFT2D_smaller_4rows_cplxf(const double* __restrict src, _type_out* __restrict dst, const decx::dsp::fft::FKT1D_fp32* _tiles, 
+            _IFFT2D_smaller_4rows_cplxf(const de::CPf* __restrict src, _type_out* __restrict dst, const decx::dsp::fft::FKT1D_fp32* _tiles, 
                 const uint32_t _pitch_src, const uint32_t _pitch_dst, const uint32_t _proc_H_r1, 
                 const decx::dsp::fft::cpu_FFT1D_smaller<float>* _FFT_info);
         }
 
         template <typename _type_in, bool _conj>
-        void _FFT2D_H_entire_rows_cplxf(const _type_in* __restrict src, double* __restrict dst, const decx::dsp::fft::cpu_FFT2D_planner<float>* planner,
+        void _FFT2D_H_entire_rows_cplxf(const _type_in* __restrict src, de::CPf* __restrict dst, const decx::dsp::fft::cpu_FFT2D_planner<float>* planner,
             const uint32_t pitch_src, const uint32_t pitch_dst, decx::utils::_thread_arrange_1D* t1D, bool _is_FFTH);
 
 
         template <typename _type_out>
-        void _IFFT2D_H_entire_rows_cplxf(const double* __restrict src, _type_out* __restrict dst, const decx::dsp::fft::cpu_FFT2D_planner<float>* planner,
+        void _IFFT2D_H_entire_rows_cplxf(const de::CPf* __restrict src, _type_out* __restrict dst, const decx::dsp::fft::cpu_FFT2D_planner<float>* planner,
             const uint32_t pitch_src, const uint32_t pitch_dst, decx::utils::_thread_arrange_1D* t1D, bool _is_FFTH);
     }
 }

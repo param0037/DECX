@@ -26,14 +26,14 @@
 namespace decx
 {
 #if defined(_DECX_CORE_CUDA_) || defined(_DECX_CORE_CPU_)
-    struct logging_config
+    /*struct logging_config
     {
         bool _enable_log_print;
         bool _ignore_successful_print;
         bool _ignore_warnings;
 
         logging_config();
-    };
+    };*/
 #endif
 }
 
@@ -109,7 +109,7 @@ namespace decx
 
 #if defined(_DECX_CORE_CPU_)
     extern decx::cpuInfo cpI;
-    extern decx::logging_config LogConf;
+    //extern decx::logging_config LogConf;
 #endif
 }
 
@@ -124,28 +124,28 @@ namespace de
     _DECX_API_ void InitCPUInfo();
 
     namespace cpu {
-        _DECX_API_ de::DH DecxSetThreadingNum(const size_t _thread_num);
+        _DECX_API_ void DecxSetThreadingNum(const size_t _thread_num);
     }
 #endif
 
     // Realized by DECX_allocations
-    _DECX_API_ void DecxEnableLogPrint();
+    //_DECX_API_ void DecxEnableLogPrint();
 
 
-    // Realized by DECX_allocations
-    _DECX_API_ void DecxDisableLogPrint();
+    //// Realized by DECX_allocations
+    //_DECX_API_ void DecxDisableLogPrint();
 
 
-    _DECX_API_ void DecxEnableWarningPrint();
+    //_DECX_API_ void DecxEnableWarningPrint();
 
 
-    _DECX_API_ void DecxDisableWarningPrint();
+    //_DECX_API_ void DecxDisableWarningPrint();
 
 
-    _DECX_API_ void DecxEnableSuccessfulPrint();
+    //_DECX_API_ void DecxEnableSuccessfulPrint();
 
 
-    _DECX_API_ void DecxDisableSuccessfulPrint();
+    //_DECX_API_ void DecxDisableSuccessfulPrint();
 }
 
 

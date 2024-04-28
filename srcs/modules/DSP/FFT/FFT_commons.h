@@ -24,6 +24,7 @@
 #include "../../core/utils/fragment_arrangment.h"
 #include "../../core/thread_management/thread_arrange.h"
 #include "../../core/utils/intrinsics_ops.h"
+#include "CPU/CPU_FFT_defs.h"
 #endif
 
 //

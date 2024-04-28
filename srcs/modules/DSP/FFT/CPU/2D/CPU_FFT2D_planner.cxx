@@ -132,14 +132,14 @@ void decx::dsp::fft::cpu_FFT2D_planner<_data_type>::plan(const decx::_matrix_lay
 
     for (uint32_t i = 0; i < _alloc_tiles_num; ++i) {
         this->_tiles.emplace_back();
-        this->_tiles[i].allocate_tile(_tile_frag_pitch, handle);
+        this->_tiles[i].allocate_tile<_data_type>(_tile_frag_pitch, handle);
         Check_Runtime_Error(handle);
     }
 
     this->plan_transpose_configs<_type_out>();
 }
 
-template void decx::dsp::fft::cpu_FFT2D_planner<float>::plan<double>(const decx::_matrix_layout*,
+template void decx::dsp::fft::cpu_FFT2D_planner<float>::plan<de::CPf>(const decx::_matrix_layout*,
     const decx::_matrix_layout*, decx::utils::_thread_arrange_1D*, de::DH*);
 
 template void decx::dsp::fft::cpu_FFT2D_planner<float>::plan<float>(const decx::_matrix_layout*,

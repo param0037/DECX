@@ -33,55 +33,6 @@
 * ensure the utilization of __m128 and __m256, as well as multi threads
 */
 #ifdef __cplusplus
-namespace de {
-    class 
-#if _CPP_EXPORT_ENABLED_
-        _DECX_API_
-#endif
-        Matrix
-    {
-    public:
-        Matrix() {}
-
-
-        virtual uint32_t Width() const = 0;
-
-
-        virtual uint32_t Height() const = 0;
-
-
-
-        /* return the reference of the element in the matrix, which locates on specific row and colume
-        * \params row -> where the element locates on row
-        * \params col -> where the element locates on colume
-        */
-        virtual float*      ptr_fp32(const int row, const int col)  = 0;
-        virtual double*     ptr_fp64(const int row, const int col)  = 0;
-        virtual int*        ptr_int32(const int row, const int col) = 0;
-        virtual de::CPf*    ptr_cpl32(const int row, const int col) = 0;
-        virtual de::CPd*    ptr_cpl64(const int row, const int col) = 0;
-        virtual de::Half*   ptr_fp16(const int row, const int col)  = 0;
-        virtual uint8_t*    ptr_uint8(const int row, const int col) = 0;
-        
-        virtual void release() = 0;
-
-
-        virtual de::Matrix& SoftCopy(de::Matrix& src) = 0;
-
-
-        virtual de::_DATA_TYPES_FLAGS_ Type() const = 0;
-
-
-        virtual void Reinterpret(const de::_DATA_TYPES_FLAGS_ _new_type) = 0;
-
-
-        virtual de::_DATA_FORMATS_ Format() const = 0;
-
-
-        ~Matrix() {}
-    };
-}
-
 
 
 namespace decx
@@ -117,6 +68,60 @@ public:
     void _attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, const uint32_t _width, const uint32_t _height);
 };
 
+
+
+namespace de {
+    class 
+#if _CPP_EXPORT_ENABLED_
+        _DECX_API_
+#endif
+        Matrix
+    {
+    protected:
+        _SHADOW_ATTRIBUTE_(void*) _exp_data_ptr;
+        _SHADOW_ATTRIBUTE_(decx::_matrix_layout) _matrix_dscr;
+
+    public:
+        Matrix() {}
+
+
+        virtual uint32_t Width() const = 0;
+
+
+        virtual uint32_t Height() const = 0;
+
+
+
+        /* return the reference of the element in the matrix, which locates on specific row and colume
+        * \params row -> where the element locates on row
+        * \params col -> where the element locates on colume
+        */
+        /*virtual float*      ptr_fp32(const int row, const int col)  = 0;
+        virtual double*     ptr_fp64(const int row, const int col)  = 0;
+        virtual int*        ptr_int32(const int row, const int col) = 0;
+        virtual de::CPf*    ptr_cpl32(const int row, const int col) = 0;
+        virtual de::CPd*    ptr_cpl64(const int row, const int col) = 0;
+        virtual de::Half*   ptr_fp16(const int row, const int col)  = 0;
+        virtual uint8_t*    ptr_uint8(const int row, const int col) = 0;*/
+        
+        virtual void release() = 0;
+
+
+        virtual de::Matrix& SoftCopy(de::Matrix& src) = 0;
+
+
+        virtual de::_DATA_TYPES_FLAGS_ Type() const = 0;
+
+
+        virtual void Reinterpret(const de::_DATA_TYPES_FLAGS_ _new_type) = 0;
+
+
+        virtual de::_DATA_FORMATS_ Format() const = 0;
+
+
+        ~Matrix() {}
+    };
+}
 
 
 /**
@@ -189,13 +194,13 @@ namespace decx
 
 
 
-        virtual float*      ptr_fp32(const int row, const int col);
+        /*virtual float*      ptr_fp32(const int row, const int col);
         virtual double*     ptr_fp64(const int row, const int col);
         virtual int*        ptr_int32(const int row, const int col);
         virtual de::CPf*    ptr_cpl32(const int row, const int col);
         virtual de::CPd*    ptr_cpl64(const int row, const int col);
         virtual de::Half*   ptr_fp16(const int row, const int col);
-        virtual uint8_t*    ptr_uint8(const int row, const int col);
+        virtual uint8_t*    ptr_uint8(const int row, const int col);*/
 
 
         virtual void release();

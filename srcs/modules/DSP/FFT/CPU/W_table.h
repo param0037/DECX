@@ -12,6 +12,7 @@
 #define _W_TABLE_H_
 
 #include "../FFT_commons.h"
+#include "../../../classes/classes_util.h"
 
 
 namespace decx
@@ -45,7 +46,11 @@ namespace fft
     }
 
     namespace CPUK {
-        /*_THREAD_FUNCTION_*/ void _W_table_gen_cplxf(double* __restrict _W_table, const uint32_t _proc_len_v4,
+        _THREAD_FUNCTION_ void _W_table_gen_cplxf(double* __restrict _W_table, const uint32_t _proc_len_v4,
+            const uint64_t _signal_length, const uint64_t _index_start);
+
+
+        _THREAD_FUNCTION_ void _W_table_gen_cplxd(de::CPd* __restrict _W_table, const uint32_t _proc_len_v2,
             const uint64_t _signal_length, const uint64_t _index_start);
     }
 

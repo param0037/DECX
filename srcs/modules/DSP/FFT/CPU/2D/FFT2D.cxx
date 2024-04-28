@@ -45,7 +45,7 @@ static void decx::dsp::fft::FFT2D_caller_cplxf(decx::_Matrix* src, decx::_Matrix
         decx::dsp::fft::cpu_FFT2D_cplxf32_planner.get_resource_raw_ptr<decx::dsp::fft::cpu_FFT2D_planner<float>>();
 
     if (_planner->changed(&src->get_layout(), &dst->get_layout(), t1D.total_thread)) {
-        _planner->plan<double>(&src->get_layout(), &dst->get_layout(), &t1D, handle);
+        _planner->plan<_type_in>(&src->get_layout(), &dst->get_layout(), &t1D, handle);
         Check_Runtime_Error(handle);
     }
 
@@ -102,7 +102,7 @@ _DECX_API_ de::DH de::dsp::cpu::FFT(de::Matrix& src, de::Matrix& dst)
         break;
 
     case de::_DATA_TYPES_FLAGS_::_COMPLEX_F32_:
-        decx::dsp::fft::FFT2D_caller_cplxf<double>(_src, _dst, &handle);
+        decx::dsp::fft::FFT2D_caller_cplxf<de::CPf>(_src, _dst, &handle);
         break;
 
     default:
@@ -132,7 +132,7 @@ _DECX_API_ de::DH de::dsp::cpu::IFFT(de::Matrix& src, de::Matrix& dst, const de:
         break;
 
     case de::_DATA_TYPES_FLAGS_::_COMPLEX_F32_:
-        decx::dsp::fft::IFFT2D_caller_cplxf<double>(_src, _dst, &handle);
+        decx::dsp::fft::IFFT2D_caller_cplxf<de::CPf>(_src, _dst, &handle);
         break;
 
     default:

@@ -194,11 +194,11 @@ struct decx::dsp::fft::CPU_FFT1D_Intermediate_Twd
     uint64_t _signal_length;
 
 
-    CPU_FFT1D_Intermediate_Twd(const uint64_t _signal_len, const uint32_t _first_FFT_len)
+    CPU_FFT1D_Intermediate_Twd(const uint64_t _signal_len, const uint32_t _first_FFT_len, const uint32_t _next_FFT_len = 1)
     {
         this->_signal_length = _signal_len;
         this->_previous_fact_sum = _first_FFT_len;
-        this->_next_FFT_len = 1;
+        this->_next_FFT_len = _next_FFT_len;
     }
 
 
@@ -229,6 +229,9 @@ namespace decx
         namespace fft {
             extern decx::ResourceHandle cpu_FFT1D_cplxf32_planner;
             extern decx::ResourceHandle cpu_IFFT1D_cplxf32_planner;
+
+            extern decx::ResourceHandle cpu_FFT1D_cplxd64_planner;
+            extern decx::ResourceHandle cpu_IFFT1D_cplxd64_planner;
         }
     }
 }

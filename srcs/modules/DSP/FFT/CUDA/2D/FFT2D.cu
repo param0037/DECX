@@ -182,75 +182,66 @@ static void decx::dsp::fft::_IFFT2D_caller_cplxd(decx::_GPU_Matrix* src, decx::_
 
 
 
-_DECX_API_ de::DH de::dsp::cuda::FFT(de::GPU_Matrix& src, de::GPU_Matrix& dst)
+_DECX_API_ void de::dsp::cuda::FFT(de::GPU_Matrix& src, de::GPU_Matrix& dst)
 {
-    de::DH handle;
-
     decx::_GPU_Matrix* _src = dynamic_cast<decx::_GPU_Matrix*>(&src);
     decx::_GPU_Matrix* _dst = dynamic_cast<decx::_GPU_Matrix*>(&dst);
 
     switch (_src->Type())
     {
     case de::_DATA_TYPES_FLAGS_::_FP32_:
-        decx::dsp::fft::_FFT2D_caller_cplxf<float>(_src, _dst, &handle);
+        decx::dsp::fft::_FFT2D_caller_cplxf<float>(_src, _dst, de::GetLastError());
         break;
 
     case de::_DATA_TYPES_FLAGS_::_UINT8_:
-        decx::dsp::fft::_FFT2D_caller_cplxf<uint8_t>(_src, _dst, &handle);
+        decx::dsp::fft::_FFT2D_caller_cplxf<uint8_t>(_src, _dst, de::GetLastError());
         break;
 
     case de::_DATA_TYPES_FLAGS_::_COMPLEX_F32_:
-        decx::dsp::fft::_FFT2D_caller_cplxf<de::CPf>(_src, _dst, &handle);
+        decx::dsp::fft::_FFT2D_caller_cplxf<de::CPf>(_src, _dst, de::GetLastError());
         break;
 
     case de::_DATA_TYPES_FLAGS_::_FP64_:
-        decx::dsp::fft::_FFT2D_caller_cplxd<double>(_src, _dst, &handle);
+        decx::dsp::fft::_FFT2D_caller_cplxd<double>(_src, _dst, de::GetLastError());
         break;
 
     case de::_DATA_TYPES_FLAGS_::_COMPLEX_F64_:
-        decx::dsp::fft::_FFT2D_caller_cplxd<de::CPd>(_src, _dst, &handle);
+        decx::dsp::fft::_FFT2D_caller_cplxd<de::CPd>(_src, _dst, de::GetLastError());
         break;
 
     default:
         break;
     }
-    
-
-    return handle;
 }
 
 
 
-_DECX_API_ de::DH de::dsp::cuda::IFFT(de::GPU_Matrix& src, de::GPU_Matrix& dst, const de::_DATA_TYPES_FLAGS_ type_out)
+_DECX_API_ void de::dsp::cuda::IFFT(de::GPU_Matrix& src, de::GPU_Matrix& dst, const de::_DATA_TYPES_FLAGS_ type_out)
 {
-    de::DH handle;
-
     decx::_GPU_Matrix* _src = dynamic_cast<decx::_GPU_Matrix*>(&src);
     decx::_GPU_Matrix* _dst = dynamic_cast<decx::_GPU_Matrix*>(&dst);
 
     switch (type_out) 
     {
     case de::_DATA_TYPES_FLAGS_::_COMPLEX_F32_:
-        decx::dsp::fft::_IFFT2D_caller_cplxf<de::CPf>(_src, _dst, &handle);
+        decx::dsp::fft::_IFFT2D_caller_cplxf<de::CPf>(_src, _dst, de::GetLastError());
         break;
 
     case de::_DATA_TYPES_FLAGS_::_FP32_:
-        decx::dsp::fft::_IFFT2D_caller_cplxf<float>(_src, _dst, &handle);
+        decx::dsp::fft::_IFFT2D_caller_cplxf<float>(_src, _dst, de::GetLastError());
         break;
 
     case de::_DATA_TYPES_FLAGS_::_UINT8_:
-        decx::dsp::fft::_IFFT2D_caller_cplxf<uint8_t>(_src, _dst, &handle);
+        decx::dsp::fft::_IFFT2D_caller_cplxf<uint8_t>(_src, _dst, de::GetLastError());
         break;
 
     case de::_DATA_TYPES_FLAGS_::_FP64_:
-        decx::dsp::fft::_IFFT2D_caller_cplxd<double>(_src, _dst, &handle);
+        decx::dsp::fft::_IFFT2D_caller_cplxd<double>(_src, _dst, de::GetLastError());
         break;
 
     case de::_DATA_TYPES_FLAGS_::_COMPLEX_F64_:
-        decx::dsp::fft::_IFFT2D_caller_cplxd<de::CPd>(_src, _dst, &handle);
+        decx::dsp::fft::_IFFT2D_caller_cplxd<de::CPd>(_src, _dst, de::GetLastError());
         break;
     }
-    
-    return handle;
 }
 

@@ -24,7 +24,7 @@ void decx::dsp::fft::FFT2D_cplxf_1st_1way_caller(const void* src,
                                                    _FFT_info->_pitchsrc / 2,    _FFT_info->_pitchtmp / 2, S);
     }
     else if (std::is_same<_type_in, uint8_t>::value) {
-        decx::dsp::fft::FFT2D_1st_R2C_caller_uc8_cplxf((ushort*)src,                _double_buffer->get_buffer1<float4>(),
+        decx::dsp::fft::FFT2D_1st_R2C_caller_uc8_cplxf((ushort*)src,            _double_buffer->get_buffer1<float4>(),
                                                    _FFT_info->get_radix(0),     _FFT_info->get_signal_len(),
                                                    _FFT_info->_pitchsrc / 2,    _FFT_info->_pitchtmp / 2, S);
     }
