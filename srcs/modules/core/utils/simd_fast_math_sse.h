@@ -16,6 +16,13 @@
 #include "decx_utils_macros.h"
 #include "../vector_defines.h"
 
+/*
+* DO NOT use when requiring very exact precision ! For example,
+* large signal FFT (N >= 1024)
+*/
+extern "C" __m128 __vectorcall fast_mm_cos_ps(__m128 __x);
+extern "C" __m128 __vectorcall fast_mm_sin_ps(__m128 __x);
+
 
 namespace decx
 {
@@ -93,62 +100,15 @@ inline __m128 decx::utils::simd::_mm_atan2_ps(const __m128 __y, const __m128 __x
 }
 
 
-inline __m128 decx::utils::simd::_mm_cos_ps(const __m128 __x)
+__m128 decx::utils::simd::_mm_cos_ps(__m128 __x)
 {
-    const __m128i _full_period_num = _mm_cvtps_epi32(_mm_div_ps(__x, _mm_set1_ps(3.1415926f)));
-    // The normalized input Xs [-Pi, Pi]
-    const __m128 _normed = _mm_sub_ps(__x, _mm_mul_ps(_mm_cvtepi32_ps(_full_period_num), _mm_set1_ps(3.1415926f)));
-    
-    const __m128 _x_sqrt = _mm_mul_ps(_normed, _normed);
-    __m128 _x_term = _mm_div_ps(_x_sqrt, _mm_set1_ps(2));
-    __m128 _res = _mm_sub_ps(_mm_set1_ps(1), _x_term);
-
-    _x_term = _mm_mul_ps(_x_term, _mm_div_ps(_x_sqrt, _mm_set1_ps(12)));
-    _res = _mm_add_ps(_res, _x_term);
-
-    _x_term = _mm_mul_ps(_x_term, _mm_div_ps(_x_sqrt, _mm_set1_ps(30)));
-    _res = _mm_sub_ps(_res, _x_term);
-
-    _x_term = _mm_mul_ps(_x_term, _mm_div_ps(_x_sqrt, _mm_set1_ps(56)));
-    _res = _mm_add_ps(_res, _x_term);
-
-    _x_term = _mm_mul_ps(_x_term, _mm_div_ps(_x_sqrt, _mm_set1_ps(90)));
-    _res = _mm_sub_ps(_res, _x_term);
-
-    // Odd or even
-    __m128i _mask_shfl = _mm_slli_epi32(_mm_and_si128(_full_period_num, _mm_set1_epi32(0x01)), 31);
-    return _mm_xor_ps(_res, _mm_castsi128_ps(_mask_shfl));
+    return fast_mm_cos_ps(__x);
 }
 
 
-
-
-inline __m128 decx::utils::simd::_mm_sin_ps(const __m128 __x)
+__m128 decx::utils::simd::_mm_sin_ps(__m128 __x)
 {
-    const __m128 _shitfed = _mm_sub_ps(__x, _mm_set1_ps(1.5707963));
-    const __m128i _full_period_num = _mm_cvtps_epi32(_mm_div_ps(_shitfed, _mm_set1_ps(3.1415926f)));
-    // The normalized input Xs [-Pi, Pi]
-    const __m128 _normed = _mm_sub_ps(_shitfed, _mm_mul_ps(_mm_cvtepi32_ps(_full_period_num), _mm_set1_ps(3.1415926f)));
-    
-    const __m128 _x_sqrt = _mm_mul_ps(_normed, _normed);
-    __m128 _x_term = _mm_div_ps(_x_sqrt, _mm_set1_ps(2));
-    __m128 _res = _mm_sub_ps(_mm_set1_ps(1), _x_term);
-
-    _x_term = _mm_mul_ps(_x_term, _mm_div_ps(_x_sqrt, _mm_set1_ps(12)));
-    _res = _mm_add_ps(_res, _x_term);
-
-    _x_term = _mm_mul_ps(_x_term, _mm_div_ps(_x_sqrt, _mm_set1_ps(30)));
-    _res = _mm_sub_ps(_res, _x_term);
-
-    _x_term = _mm_mul_ps(_x_term, _mm_div_ps(_x_sqrt, _mm_set1_ps(56)));
-    _res = _mm_add_ps(_res, _x_term);
-
-    _x_term = _mm_mul_ps(_x_term, _mm_div_ps(_x_sqrt, _mm_set1_ps(90)));
-    _res = _mm_sub_ps(_res, _x_term);
-
-    // Odd or even
-    __m128i _mask_shfl = _mm_slli_epi32(_mm_and_si128(_full_period_num, _mm_set1_epi32(0x01)), 31);
-    return _mm_xor_ps(_res, _mm_castsi128_ps(_mask_shfl));
+    return fast_mm_sin_ps(__x);
 }
 
 #endif      // #ifdef _DECX_CPU_PARTS_

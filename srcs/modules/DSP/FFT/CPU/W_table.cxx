@@ -17,19 +17,18 @@ _THREAD_FUNCTION_ void decx::dsp::fft::CPUK::_W_table_gen_cplxf(double* __restri
                                                                 const uint64_t          _signal_length, 
                                                                 const uint64_t          _index_start)
 {
-    decx::utils::simd::xmm128_reg _real_v4, _image_v4;
+    decx::utils::simd::xmm128_reg _real_v4, _image_v4, angle_v4;
     decx::utils::simd::xmm256_reg _res;
 
     uint32_t _base_dex = _index_start;
 
     for (uint32_t i = 0; i < _proc_len_v4; ++i) {
-        _real_v4._vf = _mm_setr_ps(_base_dex, _base_dex + 1, _base_dex + 2, _base_dex + 3);
-        _image_v4._vf = _real_v4._vf;
+        angle_v4._vf = _mm_setr_ps(_base_dex, _base_dex + 1, _base_dex + 2, _base_dex + 3);
 
-        _real_v4._vf = _mm_mul_ps(_mm_div_ps(_real_v4._vf, _mm_set1_ps(_signal_length)), _mm_set1_ps(Two_Pi));
-        _image_v4._vf = _mm_mul_ps(_mm_div_ps(_image_v4._vf, _mm_set1_ps(_signal_length)), _mm_set1_ps(Two_Pi));
-        _real_v4._vf = _mm_cos_ps(_real_v4._vf);
-        _image_v4._vf = _mm_sin_ps(_image_v4._vf);
+        angle_v4._vf = _mm_mul_ps(_mm_div_ps(angle_v4._vf, _mm_set1_ps(_signal_length)), _mm_set1_ps(Two_Pi));
+        
+        _real_v4._vf = _mm_cos_ps(angle_v4._vf);
+        _image_v4._vf = _mm_sin_ps(angle_v4._vf);
 
         _res._vf = _mm256_permute2f128_ps(_mm256_castps128_ps256(_real_v4._vf), _mm256_castps128_ps256(_image_v4._vf), 0b00100000);
         _res._vf = _mm256_permutevar8x32_ps(_res._vf, _mm256_setr_epi32(0, 4, 1, 5, 2, 6, 3, 7));
@@ -76,7 +75,7 @@ _W_table_gen_cplxd(de::CPd* __restrict      _W_table,
 template <typename _data_type>
 void decx::dsp::fft::Rotational_Factors_Table<_data_type>::_alloc_table_from_scratch(const uint64_t _len, de::DH *handle)
 {
-    constexpr uint32_t alignment = /*256 / (sizeof(_data_type) * 8 * 2)*/_CPU_FFT_PROC_ALIGN_(_data_type);
+    constexpr uint32_t alignment = _CPU_FFT_PROC_ALIGN_(_data_type);
 
     this->_actual_len = _len;
     this->_alloc_len = decx::utils::align<uint64_t>(_len, alignment);
@@ -93,7 +92,7 @@ template void decx::dsp::fft::Rotational_Factors_Table<double>::_alloc_table_fro
 template <typename _data_type>
 void decx::dsp::fft::Rotational_Factors_Table<_data_type>::_realloc_table(const uint64_t _new_len, de::DH* handle)
 {
-    constexpr uint32_t alignment = /*256 / (sizeof(_data_type) * 8 * 2)*/_CPU_FFT_PROC_ALIGN_(_data_type);
+    constexpr uint32_t alignment = _CPU_FFT_PROC_ALIGN_(_data_type);
     const uint64_t new_alloc_len = decx::utils::align<uint64_t>(_new_len, alignment);
     
     if (new_alloc_len > this->_alloc_len) {

@@ -70,6 +70,9 @@
     <Filter Include="源文件\fft\1D\fp64">
       <UniqueIdentifier>{f9fbde7e-3af6-4504-965a-2c82e34c381f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\utils">
+      <UniqueIdentifier>{09e2589a-3ee1-4fe3-b6ea-9a1603fa66ee}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\srcs\modules\DSP\complex\cpl32_extract.cxx">
@@ -237,5 +240,10 @@
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\fp64\FFT1D_R5_cplxd_kernels.cxx">
       <Filter>源文件\fft\1D\fp64</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <MASM Include="..\srcs\modules\core\utils\SSE_fast_math_masm.asm">
+      <Filter>源文件\utils</Filter>
+    </MASM>
   </ItemGroup>
 </Project>

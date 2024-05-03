@@ -64,12 +64,9 @@ decx::vis::CPUK::Sobel_XY_uint8(const uint8_t* __restrict  src,
             }
             tmp._vf = _mm256_cvtepi32_ps(_mm256_cvtepi16_epi32(accuY._vi));
             tmp1._vf = _mm256_cvtepi32_ps(_mm256_cvtepi16_epi32(accuX._vi));
-#ifdef _MSC_VER
-            RADv8_fp32._vf = _mm256_atan2_ps(tmp._vf, tmp1._vf);
-#endif
-#ifdef __GNUC__
+
             RADv8_fp32._vf = decx::utils::simd::_mm256_atan2_ps(tmp._vf, tmp1._vf);
-#endif
+
             Gv8_fp32._vf = _mm256_fmadd_ps(tmp._vf, tmp._vf, _mm256_mul_ps(tmp1._vf, tmp1._vf));
 
             _mm256_storeu_ps(G + dex_G + 1 + WG, Gv8_fp32._vf);
