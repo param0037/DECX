@@ -8,7 +8,7 @@
 *   More information please visit https://github.com/param0037/DECX
 */
 
-#include "FFT2D.h"
+#include "../FFT.h"
 #include "CPU_FFT2D_planner.h"
 
 
@@ -26,7 +26,6 @@ namespace dsp {
     }
 }
 }
-
 
 
 template <typename _type_in>
@@ -55,7 +54,6 @@ static void decx::dsp::fft::FFT2D_caller_cplxf(decx::_Matrix* src, decx::_Matrix
 }
 
 
-
 template <typename _type_out>
 static void decx::dsp::fft::IFFT2D_caller_cplxf(decx::_Matrix* src, decx::_Matrix* dst, de::DH* handle)
 {
@@ -82,11 +80,9 @@ static void decx::dsp::fft::IFFT2D_caller_cplxf(decx::_Matrix* src, decx::_Matri
 }
 
 
-
-
-_DECX_API_ de::DH de::dsp::cpu::FFT(de::Matrix& src, de::Matrix& dst)
+_DECX_API_ void de::dsp::cpu::FFT(de::Matrix& src, de::Matrix& dst)
 {
-    de::DH handle;
+    de::ResetLastError();
 
     decx::_Matrix* _src = dynamic_cast<decx::_Matrix*>(&src);
     decx::_Matrix* _dst = dynamic_cast<decx::_Matrix*>(&dst);
@@ -94,29 +90,26 @@ _DECX_API_ de::DH de::dsp::cpu::FFT(de::Matrix& src, de::Matrix& dst)
     switch (_src->Type())
     {
     case de::_DATA_TYPES_FLAGS_::_FP32_:
-        decx::dsp::fft::FFT2D_caller_cplxf<float>(_src, _dst, &handle);
+        decx::dsp::fft::FFT2D_caller_cplxf<float>(_src, _dst, de::GetLastError());
         break;
 
     case de::_DATA_TYPES_FLAGS_::_UINT8_:
-        decx::dsp::fft::FFT2D_caller_cplxf<uint8_t>(_src, _dst, &handle);
+        decx::dsp::fft::FFT2D_caller_cplxf<uint8_t>(_src, _dst, de::GetLastError());
         break;
 
     case de::_DATA_TYPES_FLAGS_::_COMPLEX_F32_:
-        decx::dsp::fft::FFT2D_caller_cplxf<de::CPf>(_src, _dst, &handle);
+        decx::dsp::fft::FFT2D_caller_cplxf<de::CPf>(_src, _dst, de::GetLastError());
         break;
 
     default:
         break;
     }
-
-    return handle;
 }
 
 
-
-_DECX_API_ de::DH de::dsp::cpu::IFFT(de::Matrix& src, de::Matrix& dst, const de::_DATA_TYPES_FLAGS_ _output_type)
+_DECX_API_ void de::dsp::cpu::IFFT(de::Matrix& src, de::Matrix& dst, const de::_DATA_TYPES_FLAGS_ _output_type)
 {
-    de::DH handle;
+    de::ResetLastError();
 
     decx::_Matrix* _src = dynamic_cast<decx::_Matrix*>(&src);
     decx::_Matrix* _dst = dynamic_cast<decx::_Matrix*>(&dst);
@@ -124,20 +117,18 @@ _DECX_API_ de::DH de::dsp::cpu::IFFT(de::Matrix& src, de::Matrix& dst, const de:
     switch (_output_type)
     {
     case de::_DATA_TYPES_FLAGS_::_FP32_:
-        decx::dsp::fft::IFFT2D_caller_cplxf<float>(_src, _dst, &handle);
+        decx::dsp::fft::IFFT2D_caller_cplxf<float>(_src, _dst, de::GetLastError());
         break;
 
     case de::_DATA_TYPES_FLAGS_::_UINT8_:
-        decx::dsp::fft::IFFT2D_caller_cplxf<uint8_t>(_src, _dst, &handle);
+        decx::dsp::fft::IFFT2D_caller_cplxf<uint8_t>(_src, _dst, de::GetLastError());
         break;
 
     case de::_DATA_TYPES_FLAGS_::_COMPLEX_F32_:
-        decx::dsp::fft::IFFT2D_caller_cplxf<de::CPf>(_src, _dst, &handle);
+        decx::dsp::fft::IFFT2D_caller_cplxf<de::CPf>(_src, _dst, de::GetLastError());
         break;
 
     default:
         break;
     }
-
-    return handle;
 }

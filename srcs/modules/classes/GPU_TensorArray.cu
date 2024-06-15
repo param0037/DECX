@@ -314,7 +314,7 @@ _DECX_API_ de::DH de::cuda::PinMemory(de::TensorArray& src)
     cudaError_t _err = cudaHostRegister(_src->TensArr.ptr, _src->get_total_bytes(), cudaHostRegisterPortable);
     if (_err != cudaSuccess) {
         if (_err == cudaErrorHostMemoryAlreadyRegistered) {
-            decx::err::handle_error_info_modify<true, 4>(&handle, decx::DECX_error_types::DECX_FAIL_HOST_MEM_REGISTERED, HOST_MEM_REGISTERED);
+            decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_HOST_MEM_REGISTERED, HOST_MEM_REGISTERED);
         }
         else {
             checkCudaErrors(_err);
@@ -334,7 +334,7 @@ _DECX_API_ de::DH de::cuda::UnpinMemory(de::TensorArray& src)
 
     if (_err != cudaSuccess) {
         if (_err == cudaErrorHostMemoryNotRegistered) {
-            decx::err::handle_error_info_modify<true, 4>(&handle, decx::DECX_error_types::DECX_FAIL_HOST_MEM_UNREGISTERED, HOST_MEM_UNREGISTERED);
+            decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_HOST_MEM_UNREGISTERED, HOST_MEM_UNREGISTERED);
         }
         else {
             checkCudaErrors(_err);

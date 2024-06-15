@@ -61,13 +61,13 @@ namespace gemm {
 
 
 
-_THREAD_FUNCTION_
-static void decx::gemm::CPUK::_sort_ST_MatB_fp32(const float* __restrict     srcB, 
-                              float* __restrict     dstB,
-                              const uint32_t            eff_L_len,
-                              const uint32_t            lane_num,
-                              const uint32_t            WsrcB,
-                              const uint32_t            WtmpB)
+_THREAD_FUNCTION_ static void decx::gemm::CPUK::
+_sort_ST_MatB_fp32(const float* __restrict   srcB, 
+                   float* __restrict         dstB,
+                   const uint32_t            eff_L_len,
+                   const uint32_t            lane_num,
+                   const uint32_t            WsrcB,
+                   const uint32_t            WtmpB)
 {
     uint64_t dex_src = 0, dex_dst = 0, tmp_dex_src = 0, tmp_dex_dst = 0;
 
@@ -88,13 +88,13 @@ static void decx::gemm::CPUK::_sort_ST_MatB_fp32(const float* __restrict     src
 }
 
 
-_THREAD_FUNCTION_ static void 
-decx::gemm::CPUK::_sort_ST_MatB_fp32_L8(const float* __restrict     srcB, 
-                                        float* __restrict     dstB,
-                                        const uint32_t            eff_L_len,
-                                        const uint32_t            lane_num,
-                                        const uint32_t            WsrcB,
-                                        const uint32_t            WtmpB)
+_THREAD_FUNCTION_ static void decx::gemm::CPUK::
+_sort_ST_MatB_fp32_L8(const float* __restrict   srcB, 
+                      float* __restrict         dstB,
+                      const uint32_t            eff_L_len,
+                      const uint32_t            lane_num,
+                      const uint32_t            WsrcB,
+                      const uint32_t            WtmpB)
 {
     uint64_t dex_src = 0, dex_dst = 0, tmp_dex_src = 0, tmp_dex_dst = 0;
 

@@ -20,4 +20,5 @@ _DECX_API_ decx::ThreadPool* decx::thread_pool;
 decx::cpuInfo decx::cpI;
 
 de::DH decx::_last_error;
+
 #endif

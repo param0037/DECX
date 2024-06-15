@@ -25,7 +25,7 @@ namespace decx
     * @param proc_wB : The width of matrix B, in __m256 * 2
     * @param __linear : _A->width == _B->height, in __m256
     */
-    static void GEMM_AB_fp32_caller_16x(float* A, float* B, float* dst, const uint pitchA, const uint pitchB,
+    static void GEMM_AB_fp32_caller_16x(const float* A, const float* B, float* dst, const uint pitchA, const uint pitchB,
         const uint pitchdst, const uint2 proc_dims, const uint linear_len, decx::utils::_thr_2D *t2D);
 
 
@@ -36,13 +36,13 @@ namespace decx
     * @param proc_wB : The width of matrix B, in __m256 * 2
     * @param __linear : _A->width == _B->height, in __m256
     */
-    static void GEMM_AB_fp32_caller_8x(float* A, float* B, float* dst, float* extra_dst, const uint pitchA, const uint pitchB,
+    static void GEMM_AB_fp32_caller_8x(const float* A, const float* B, float* dst, float* extra_dst, const uint pitchA, const uint pitchB,
         const uint pitchdst, const uint pitch_ext_dst, const uint2 proc_dims, const uint linear_len, decx::utils::_thr_2D *t2D);
 }
 
 
 
-static void decx::GEMM_AB_fp32_caller_16x(float* A,                         float* B, 
+static void decx::GEMM_AB_fp32_caller_16x(const float* A,                   const float* B, 
                                           float* dst,                       
                                           const uint pitchA,                const uint pitchB,
                                           const uint pitchdst,              const uint2 proc_dims,            
@@ -54,14 +54,15 @@ static void decx::GEMM_AB_fp32_caller_16x(float* A,                         floa
     decx::utils::frag_manager_gen(&f_mgr_H, proc_dims.y, t2D->thread_h);
     decx::utils::frag_manager_gen(&f_mgr_W, proc_dims.x, t2D->thread_w);
     uint proc_w = f_mgr_W.is_left ? f_mgr_W.frag_left_over : f_mgr_W.frag_len;
-    float* A_local_ptr = NULL, * B_local_ptr = NULL,* dst_local_ptr = NULL;
+    const float* A_local_ptr = NULL, * B_local_ptr = NULL;
+    float *dst_local_ptr = NULL;
 
     if (f_mgr_H.is_left || f_mgr_W.is_left) {
         for (int i = 0; i < t2D->thread_h - 1; ++i) {
             for (int j = 0; j < t2D->thread_w - 1; ++j) 
             {
-                A_local_ptr = DECX_PTR_SHF_XY<float, float>(A, i * f_mgr_H.frag_len, 0, pitchA);
-                B_local_ptr = DECX_PTR_SHF_XY<float, float>(B, j * f_mgr_W.frag_len, 0, pitchB);
+                A_local_ptr = DECX_PTR_SHF_XY<const float, const float>(A, i * f_mgr_H.frag_len, 0, pitchA);
+                B_local_ptr = DECX_PTR_SHF_XY<const float, const float>(B, j * f_mgr_W.frag_len, 0, pitchB);
                 dst_local_ptr = DECX_PTR_SHF_XY<float, float>(dst, i * f_mgr_H.frag_len, j * f_mgr_W.frag_len * 16, pitchdst);
 
                 t2D->_async_thread[_L_thr_dex] = decx::cpu::register_task_default( decx::gemm::CPUK::GEMM_AB_fp32_flexWH,
@@ -71,8 +72,8 @@ static void decx::GEMM_AB_fp32_caller_16x(float* A,                         floa
 
                 ++_L_thr_dex;
             }
-            A_local_ptr = DECX_PTR_SHF_XY<float, float>(A, i * f_mgr_H.frag_len, 0, pitchA);
-            B_local_ptr = DECX_PTR_SHF_XY<float, float>(B, (t2D->thread_w - 1) * f_mgr_W.frag_len, 0, pitchB);
+            A_local_ptr = DECX_PTR_SHF_XY<const float, const float>(A, i * f_mgr_H.frag_len, 0, pitchA);
+            B_local_ptr = DECX_PTR_SHF_XY<const float, const float>(B, (t2D->thread_w - 1) * f_mgr_W.frag_len, 0, pitchB);
             dst_local_ptr = DECX_PTR_SHF_XY<float, float>(dst, i * f_mgr_H.frag_len, (t2D->thread_w - 1) * f_mgr_W.frag_len * 16, pitchdst);
 
             t2D->_async_thread[_L_thr_dex] = decx::cpu::register_task_default( decx::gemm::CPUK::GEMM_AB_fp32_flexWH,
@@ -85,8 +86,8 @@ static void decx::GEMM_AB_fp32_caller_16x(float* A,                         floa
         uint proc_h = f_mgr_H.is_left ? f_mgr_H.frag_left_over : f_mgr_H.frag_len;
         for (int j = 0; j < t2D->thread_w - 1; ++j)
         {
-            A_local_ptr = DECX_PTR_SHF_XY<float, float>(A, (t2D->thread_h - 1) * f_mgr_H.frag_len, 0, pitchA);
-            B_local_ptr = DECX_PTR_SHF_XY<float, float>(B, j * f_mgr_W.frag_len, 0, pitchB);
+            A_local_ptr = DECX_PTR_SHF_XY<const float, const float>(A, (t2D->thread_h - 1) * f_mgr_H.frag_len, 0, pitchA);
+            B_local_ptr = DECX_PTR_SHF_XY<const float, const float>(B, j * f_mgr_W.frag_len, 0, pitchB);
             dst_local_ptr = DECX_PTR_SHF_XY<float, float>(dst, (t2D->thread_h - 1) * f_mgr_H.frag_len, j * f_mgr_W.frag_len * 16, pitchdst);
 
             t2D->_async_thread[_L_thr_dex] = decx::cpu::register_task_default( decx::gemm::CPUK::GEMM_AB_fp32_flexWH,
@@ -96,8 +97,8 @@ static void decx::GEMM_AB_fp32_caller_16x(float* A,                         floa
 
             ++_L_thr_dex;
         }
-        A_local_ptr = DECX_PTR_SHF_XY<float, float>(A, (t2D->thread_h - 1) * f_mgr_H.frag_len, 0, pitchA);
-        B_local_ptr = DECX_PTR_SHF_XY<float, float>(B, (t2D->thread_w - 1) * f_mgr_W.frag_len, 0, pitchB);
+        A_local_ptr = DECX_PTR_SHF_XY<const float, const float>(A, (t2D->thread_h - 1) * f_mgr_H.frag_len, 0, pitchA);
+        B_local_ptr = DECX_PTR_SHF_XY<const float, const float>(B, (t2D->thread_w - 1) * f_mgr_W.frag_len, 0, pitchB);
         dst_local_ptr = DECX_PTR_SHF_XY<float, float>(dst, (t2D->thread_h - 1) * f_mgr_H.frag_len, (t2D->thread_w - 1) * f_mgr_W.frag_len * 16, pitchdst);
 
         t2D->_async_thread[_L_thr_dex] = decx::cpu::register_task_default( decx::gemm::CPUK::GEMM_AB_fp32_flexWH,
@@ -109,8 +110,8 @@ static void decx::GEMM_AB_fp32_caller_16x(float* A,                         floa
         for (int i = 0; i < t2D->thread_h; ++i) {
             for (int j = 0; j < t2D->thread_w; ++j)
             {
-                A_local_ptr = DECX_PTR_SHF_XY<float, float>(A, i * f_mgr_H.frag_len, 0, pitchA);
-                B_local_ptr = DECX_PTR_SHF_XY<float, float>(B, j * f_mgr_W.frag_len, 0, pitchB);
+                A_local_ptr = DECX_PTR_SHF_XY<const float, const float>(A, i * f_mgr_H.frag_len, 0, pitchA);
+                B_local_ptr = DECX_PTR_SHF_XY<const float, const float>(B, j * f_mgr_W.frag_len, 0, pitchB);
                 dst_local_ptr = DECX_PTR_SHF_XY<float, float>(dst, i * f_mgr_H.frag_len, j * f_mgr_W.frag_len * 16, pitchdst);
 
                 t2D->_async_thread[_L_thr_dex] = decx::cpu::register_task_default( decx::gemm::CPUK::GEMM_AB_fp32_AllFixed,
@@ -128,7 +129,7 @@ static void decx::GEMM_AB_fp32_caller_16x(float* A,                         floa
 
 
 
-static void decx::GEMM_AB_fp32_caller_8x(float* A,                         float* B, 
+static void decx::GEMM_AB_fp32_caller_8x(const float* A,                   const float* B, 
                                          float* dst,                       float* extra_dst,
                                          const uint pitchA,                const uint pitchB,
                                          const uint pitchdst,              const uint pitch_ext_dst,
@@ -141,13 +142,14 @@ static void decx::GEMM_AB_fp32_caller_8x(float* A,                         float
     decx::utils::frag_manager_gen(&f_mgr_W, proc_dims.x, t2D->thread_w);
     uint proc_w = f_mgr_W.is_left ? f_mgr_W.frag_left_over : f_mgr_W.frag_len;
 
-    float* A_local_ptr = NULL, * B_local_ptr = NULL,* dst_local_ptr = NULL;
+    const float* A_local_ptr = NULL, * B_local_ptr = NULL;
+    float * dst_local_ptr = NULL;
 
     for (int i = 0; i < t2D->thread_h - 1; ++i) {
         for (int j = 0; j < t2D->thread_w - 1; ++j)
         {
-            A_local_ptr = DECX_PTR_SHF_XY<float, float>(A, i * f_mgr_H.frag_len, 0, pitchA);
-            B_local_ptr = DECX_PTR_SHF_XY<float, float>(B, j * f_mgr_W.frag_len, 0, pitchB);
+            A_local_ptr = DECX_PTR_SHF_XY<const float, const float>(A, i * f_mgr_H.frag_len, 0, pitchA);
+            B_local_ptr = DECX_PTR_SHF_XY<const float, const float>(B, j * f_mgr_W.frag_len, 0, pitchB);
             dst_local_ptr = DECX_PTR_SHF_XY<float, float>(dst, i * f_mgr_H.frag_len, j * f_mgr_W.frag_len * 16, pitchdst);
 
             t2D->_async_thread[_L_thr_dex] = decx::cpu::register_task_default( decx::gemm::CPUK::GEMM_AB_fp32_flexWH,
@@ -158,8 +160,8 @@ static void decx::GEMM_AB_fp32_caller_8x(float* A,                         float
             ++_L_thr_dex;
         }
 
-        A_local_ptr = DECX_PTR_SHF_XY<float, float>(A, i * f_mgr_H.frag_len, 0, pitchA);
-        B_local_ptr = DECX_PTR_SHF_XY<float, float>(B, (t2D->thread_w - 1) * f_mgr_W.frag_len, 0, pitchB);
+        A_local_ptr = DECX_PTR_SHF_XY<const float, const float>(A, i * f_mgr_H.frag_len, 0, pitchA);
+        B_local_ptr = DECX_PTR_SHF_XY<const float, const float>(B, (t2D->thread_w - 1) * f_mgr_W.frag_len, 0, pitchB);
         dst_local_ptr = DECX_PTR_SHF_XY<float, float>(extra_dst, i * f_mgr_H.frag_len, 0, pitch_ext_dst);
 
         t2D->_async_thread[_L_thr_dex] = decx::cpu::register_task_default( decx::gemm::CPUK::GEMM_AB_fp32_flexWH,
@@ -172,8 +174,8 @@ static void decx::GEMM_AB_fp32_caller_8x(float* A,                         float
     uint proc_h = f_mgr_H.is_left ? f_mgr_H.frag_left_over : f_mgr_H.frag_len;
     for (int j = 0; j < t2D->thread_w - 1; ++j)
     {
-        A_local_ptr = DECX_PTR_SHF_XY<float, float>(A, (t2D->thread_h - 1) * f_mgr_H.frag_len, 0, pitchA);
-        B_local_ptr = DECX_PTR_SHF_XY<float, float>(B, j * f_mgr_W.frag_len, 0, pitchB);
+        A_local_ptr = DECX_PTR_SHF_XY<const float, const float>(A, (t2D->thread_h - 1) * f_mgr_H.frag_len, 0, pitchA);
+        B_local_ptr = DECX_PTR_SHF_XY<const float, const float>(B, j * f_mgr_W.frag_len, 0, pitchB);
         dst_local_ptr = DECX_PTR_SHF_XY<float, float>(dst, (t2D->thread_h - 1) * f_mgr_H.frag_len, j * f_mgr_W.frag_len * 16, pitchdst);
 
         t2D->_async_thread[_L_thr_dex] = decx::cpu::register_task_default( decx::gemm::CPUK::GEMM_AB_fp32_flexWH,
@@ -184,8 +186,8 @@ static void decx::GEMM_AB_fp32_caller_8x(float* A,                         float
         ++_L_thr_dex;
     }
 
-    A_local_ptr = DECX_PTR_SHF_XY<float, float>(A, (t2D->thread_h - 1) * f_mgr_H.frag_len, 0, pitchA);
-    B_local_ptr = DECX_PTR_SHF_XY<float, float>(B, (t2D->thread_w - 1) * f_mgr_W.frag_len, 0, pitchB);
+    A_local_ptr = DECX_PTR_SHF_XY<const float, const float>(A, (t2D->thread_h - 1) * f_mgr_H.frag_len, 0, pitchA);
+    B_local_ptr = DECX_PTR_SHF_XY<const float, const float>(B, (t2D->thread_w - 1) * f_mgr_W.frag_len, 0, pitchB);
     dst_local_ptr = DECX_PTR_SHF_XY<float, float>(extra_dst, (t2D->thread_h - 1) * f_mgr_H.frag_len, 0, pitch_ext_dst);
 
     t2D->_async_thread[_L_thr_dex] = decx::cpu::register_task_default( decx::gemm::CPUK::GEMM_AB_fp32_flexWH,

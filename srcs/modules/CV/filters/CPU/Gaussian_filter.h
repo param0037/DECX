@@ -26,18 +26,14 @@ namespace decx
 {
     namespace vis
     {
-        template <bool _print>
         static void _gaussian_uint8_NB(decx::_Matrix* src, decx::vis::gaussian_kernel1D *kernel_H, decx::vis::gaussian_kernel1D *kernel_V, decx::_Matrix* dst, 
             de::DH* handle);
 
 
-
-        template <bool _print>
         static void _gaussian_uint8_BC_zero(decx::_Matrix* src, decx::vis::gaussian_kernel1D *kernel_H, decx::vis::gaussian_kernel1D *kernel_V, decx::_Matrix* dst, 
             de::DH* handle);
 
 
-        template <bool _print>
         static void _gaussian_uint8_BC_reflect(decx::_Matrix* src, decx::vis::gaussian_kernel1D *kernel_H, decx::vis::gaussian_kernel1D *kernel_V, decx::_Matrix* dst, 
             de::DH* handle);
     }
@@ -45,7 +41,6 @@ namespace decx
 
 
 
-template <bool _print>
 static void decx::vis::_gaussian_uint8_NB(decx::_Matrix* src, decx::vis::gaussian_kernel1D* kernel_H, decx::vis::gaussian_kernel1D* kernel_V, decx::_Matrix* dst,
     de::DH* handle)
 {
@@ -87,8 +82,6 @@ static void decx::vis::_gaussian_uint8_NB(decx::_Matrix* src, decx::vis::gaussia
 
 
 
-
-template <bool _print>
 static void decx::vis::_gaussian_uint8_BC_zero(decx::_Matrix* src, decx::vis::gaussian_kernel1D* kernel_H, decx::vis::gaussian_kernel1D* kernel_V, decx::_Matrix* dst,
     de::DH* handle)
 {
@@ -147,8 +140,6 @@ static void decx::vis::_gaussian_uint8_BC_zero(decx::_Matrix* src, decx::vis::ga
 
 
 
-
-template <bool _print>
 static void decx::vis::_gaussian_uint8_BC_reflect(decx::_Matrix* src, decx::vis::gaussian_kernel1D* kernel_H, decx::vis::gaussian_kernel1D* kernel_V, decx::_Matrix* dst,
     de::DH* handle)
 {
@@ -171,7 +162,7 @@ static void decx::vis::_gaussian_uint8_BC_reflect(decx::_Matrix* src, decx::vis:
     }
 
     uint8_t* start_place_src = DECX_PTR_SHF_XY<uint8_t, uint8_t>(tmp_src.ptr, 0, kernel_H->_ker_length / 2, tmp_src_dims.x);
-    decx::bp::_extend_LR_reflect_b8_2D<_print>((uint8_t*)src->Mat.ptr, tmp_src.ptr, make_uint2(kernel_H->_ker_length / 2, kernel_H->_ker_length / 2),
+    decx::bp::_extend_LR_reflect_b8_2D((uint8_t*)src->Mat.ptr, tmp_src.ptr, make_uint2(kernel_H->_ker_length / 2, kernel_H->_ker_length / 2),
         src->Pitch(), tmp_src_dims.x, src->Width(), src->Height(), handle);
 
     const uint conc_thr = (uint)decx::cpu::_get_permitted_concurrency();
@@ -209,20 +200,16 @@ static void decx::vis::_gaussian_uint8_BC_reflect(decx::_Matrix* src, decx::vis:
 namespace decx
 {
     namespace vis {
-        template <bool _print>
         static void _Gaussian_filter_uint8_organisor(decx::_Matrix* src, decx::_Matrix* dst, const uint2 neighbor_dims, const float2 sigmaXY,
             const uint2 centerXY, de::DH* handle, const bool _is_central, const int border_type);
 
 
-
-        template <bool _print>
         static void _Gaussian_filter_uchar4_organisor(decx::_Matrix* src, decx::_Matrix* dst, const uint2 neighbor_dims, const float2 sigmaXY,
             const uint2 centerXY, de::DH* handle, const bool _is_central, const int border_type);
     }
 }
 
 
-template <bool _print>
 static void 
 decx::vis::_Gaussian_filter_uint8_organisor(decx::_Matrix* src, decx::_Matrix* dst, const uint2 neighbor_dims, const float2 sigmaXY,
     const uint2 centerXY, de::DH* handle, const bool _is_central, const int border_type)
@@ -236,17 +223,17 @@ decx::vis::_Gaussian_filter_uint8_organisor(decx::_Matrix* src, decx::_Matrix* d
     {
     case de::extend_label::_EXTEND_NONE_:
         dst->re_construct(src->Type(), src->Width() - neighbor_dims.x + 1, src->Height() - neighbor_dims.y + 1);
-        decx::vis::_gaussian_uint8_NB<_print>(src, &kernel_H, &kernel_V, dst, handle);
+        decx::vis::_gaussian_uint8_NB(src, &kernel_H, &kernel_V, dst, handle);
         break;
 
     case de::extend_label::_EXTEND_CONSTANT_:
         dst->re_construct(src->Type(), src->Width(), src->Height());
-        decx::vis::_gaussian_uint8_BC_zero<_print>(src, &kernel_H, &kernel_V, dst, handle);
+        decx::vis::_gaussian_uint8_BC_zero(src, &kernel_H, &kernel_V, dst, handle);
         break;
 
     case de::extend_label::_EXTEND_REFLECT_:
         dst->re_construct(src->Type(), src->Width(), src->Height());
-        decx::vis::_gaussian_uint8_BC_reflect<_print>(src, &kernel_H, &kernel_V, dst, handle);
+        decx::vis::_gaussian_uint8_BC_reflect(src, &kernel_H, &kernel_V, dst, handle);
         break;
     default:
         break;
@@ -259,27 +246,20 @@ decx::vis::_Gaussian_filter_uint8_organisor(decx::_Matrix* src, decx::_Matrix* d
 namespace decx
 {
     namespace vis {
-        template <bool _print>
         static void _gaussian_uchar4_NB(decx::_Matrix* src, decx::vis::gaussian_kernel1D* kernel_H, decx::vis::gaussian_kernel1D* kernel_V, decx::_Matrix* dst,
             de::DH* handle);
 
 
-
-        template <bool _print>
         static void _gaussian_uchar4_BC_zero(decx::_Matrix* src, decx::vis::gaussian_kernel1D* kernel_H, decx::vis::gaussian_kernel1D* kernel_V, decx::_Matrix* dst,
             de::DH* handle);
 
 
-        template <bool _print>
         static void _gaussian_uchar4_BC_reflect(decx::_Matrix* src, decx::vis::gaussian_kernel1D* kernel_H, decx::vis::gaussian_kernel1D* kernel_V, decx::_Matrix* dst,
             de::DH* handle);
     }
 }
 
 
-
-
-template <bool _print>
 static void decx::vis::_gaussian_uchar4_NB(decx::_Matrix* src, decx::vis::gaussian_kernel1D* kernel_H, decx::vis::gaussian_kernel1D* kernel_V, decx::_Matrix* dst,
     de::DH* handle)
 {
@@ -321,8 +301,6 @@ static void decx::vis::_gaussian_uchar4_NB(decx::_Matrix* src, decx::vis::gaussi
 
 
 
-
-template <bool _print>
 static void decx::vis::_gaussian_uchar4_BC_zero(decx::_Matrix* src, decx::vis::gaussian_kernel1D* kernel_H, decx::vis::gaussian_kernel1D* kernel_V, decx::_Matrix* dst,
     de::DH* handle)
 {
@@ -381,9 +359,6 @@ static void decx::vis::_gaussian_uchar4_BC_zero(decx::_Matrix* src, decx::vis::g
 
 
 
-
-
-template <bool _print>
 static void decx::vis::_gaussian_uchar4_BC_reflect(decx::_Matrix* src, decx::vis::gaussian_kernel1D* kernel_H, decx::vis::gaussian_kernel1D* kernel_V, decx::_Matrix* dst,
     de::DH* handle)
 {
@@ -407,7 +382,7 @@ static void decx::vis::_gaussian_uchar4_BC_reflect(decx::_Matrix* src, decx::vis
     }
 
     float* start_place_src = DECX_PTR_SHF_XY<float, float>(tmp_src.ptr, 0, kernel_H->_ker_length / 2, tmp_src_dims.x);
-    decx::bp::_extend_LR_reflect_b32_2D<_print>((float*)src->Mat.ptr, tmp_src.ptr, make_uint2(kernel_H->_ker_length / 2, kernel_H->_ker_length / 2),
+    decx::bp::_extend_LR_reflect_b32_2D((float*)src->Mat.ptr, tmp_src.ptr, make_uint2(kernel_H->_ker_length / 2, kernel_H->_ker_length / 2),
         src->Pitch(), tmp_src_dims.x, src->Width(), src->Height(), handle);
 
     const uint conc_thr = (uint)decx::cpu::_get_permitted_concurrency();
@@ -443,8 +418,6 @@ static void decx::vis::_gaussian_uchar4_BC_reflect(decx::_Matrix* src, decx::vis
 
 
 
-
-template <bool _print>
 static void 
 decx::vis::_Gaussian_filter_uchar4_organisor(decx::_Matrix* src, decx::_Matrix* dst, const uint2 neighbor_dims, const float2 sigmaXY,
     const uint2 centerXY, de::DH* handle, const bool _is_central, const int border_type)
@@ -460,19 +433,19 @@ decx::vis::_Gaussian_filter_uchar4_organisor(decx::_Matrix* src, decx::_Matrix* 
     {
     case de::extend_label::_EXTEND_NONE_:
         dst->re_construct(src->Type(), src->Width() - neighbor_dims.x + 1, src->Height() - neighbor_dims.y + 1);
-        decx::vis::_gaussian_uchar4_NB<_print>(src, &kernel_H, &kernel_V, dst, handle);
+        decx::vis::_gaussian_uchar4_NB(src, &kernel_H, &kernel_V, dst, handle);
         break;
 
     case de::extend_label::_EXTEND_CONSTANT_:
         
         dst->re_construct(src->Type(), src->Width(), src->Height());
         
-        decx::vis::_gaussian_uchar4_BC_zero<_print>(src, &kernel_H, &kernel_V, dst, handle);
+        decx::vis::_gaussian_uchar4_BC_zero(src, &kernel_H, &kernel_V, dst, handle);
         break;
 
     case de::extend_label::_EXTEND_REFLECT_:
         dst->re_construct(src->Type(), src->Width(), src->Height());
-        decx::vis::_gaussian_uchar4_BC_reflect<_print>(src, &kernel_H, &kernel_V, dst, handle);
+        decx::vis::_gaussian_uchar4_BC_reflect(src, &kernel_H, &kernel_V, dst, handle);
         break;
     default:
         break;
@@ -486,7 +459,7 @@ namespace de
     namespace vis {
         namespace cpu 
         {
-            _DECX_API_ de::DH Gaussian_Filter(de::Matrix& src, de::Matrix& dst, const de::Point2D neighbor_dims,
+            _DECX_API_ void Gaussian_Filter(de::Matrix& src, de::Matrix& dst, const de::Point2D neighbor_dims,
                 const de::Point2D_f sigmaXY, 
                 const int border_type, 
                 const bool _is_central = true, 

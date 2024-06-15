@@ -13,7 +13,7 @@
 #include "extend_reflect_exec_params.h"
 
 
-template <bool _print>
+
 void decx::bp::_extend_constant_b32_1D(const float* src, float* dst, const float _val,
     const uint32_t _left, const uint32_t _right, const size_t _length_src, const size_t _actual_Lsrc, de::DH* handle)
 {
@@ -23,16 +23,7 @@ void decx::bp::_extend_constant_b32_1D(const float* src, float* dst, const float
     decx::bp::CPUK::_extend_constant1D_b32(src, dst, _val, &b_rfct, _actual_Lsrc, _length_src / 8);
 }
 
-template void decx::bp::_extend_constant_b32_1D<true>(const float* src, float* dst, const float _val,
-    const uint32_t _left, const uint32_t _right, const size_t _length_src, const size_t _actual_Lsrc, de::DH* handle);
 
-template void decx::bp::_extend_constant_b32_1D<false>(const float* src, float* dst, const float _val,
-    const uint32_t _left, const uint32_t _right, const size_t _length_src, const size_t _actual_Lsrc, de::DH* handle);
-
-
-
-
-template <bool _print>
 void decx::bp::_extend_constant_b64_1D(const double* src, double* dst, const double _val, const uint32_t _left, const uint32_t _right,
     const size_t _length_src, const size_t _actual_Lsrc, de::DH* handle)
 {
@@ -43,17 +34,7 @@ void decx::bp::_extend_constant_b64_1D(const double* src, double* dst, const dou
 }
 
 
-template void decx::bp::_extend_constant_b64_1D<true>(const double* src, double* dst, const double _val, const uint32_t _left, const uint32_t _right,
-    const size_t _length_src, const size_t _actual_Lsrc, de::DH* handle);
 
-
-template void decx::bp::_extend_constant_b64_1D<false>(const double* src, double* dst, const double _val, const uint32_t _left, const uint32_t _right,
-    const size_t _length_src, const size_t _actual_Lsrc, de::DH* handle);
-
-
-
-
-template <bool _print>
 void decx::bp::_extend_constant_b8_1D(const uint8_t* src, uint8_t* dst, const uint8_t val, const uint32_t _left, const uint32_t _right,
     const size_t _length_src, const size_t _actual_Lsrc, de::DH* handle)
 {
@@ -64,17 +45,6 @@ void decx::bp::_extend_constant_b8_1D(const uint8_t* src, uint8_t* dst, const ui
 }
 
 
-template void decx::bp::_extend_constant_b8_1D<true>(const uint8_t* src, uint8_t* dst, const uint8_t val, const uint32_t _left, const uint32_t _right,
-    const size_t _length_src, const size_t _actual_Lsrc, de::DH* handle);
-
-
-template void decx::bp::_extend_constant_b8_1D<false>(const uint8_t* src, uint8_t* dst, const uint8_t val, const uint32_t _left, const uint32_t _right,
-    const size_t _length_src, const size_t _actual_Lsrc, de::DH* handle);
-
-
-
-
-template <bool _print>
 void decx::bp::_extend_constant_b16_1D(const uint16_t* src, uint16_t* dst, const uint16_t val, const uint32_t _left, const uint32_t _right,
     const size_t _length_src, const size_t _actual_Lsrc, de::DH* handle)
 {
@@ -85,17 +55,7 @@ void decx::bp::_extend_constant_b16_1D(const uint16_t* src, uint16_t* dst, const
 }
 
 
-template void decx::bp::_extend_constant_b16_1D<true>(const uint16_t* src, uint16_t* dst, const uint16_t val, const uint32_t _left, const uint32_t _right,
-    const size_t _length_src, const size_t _actual_Lsrc, de::DH* handle);
 
-
-template void decx::bp::_extend_constant_b16_1D<false>(const uint16_t* src, uint16_t* dst, const uint16_t val, const uint32_t _left, const uint32_t _right,
-    const size_t _length_src, const size_t _actual_Lsrc, de::DH* handle);
-
-
-
-
-template <bool _print>
 void decx::bp::_extend_constant_b32_2D(const float* src, float* dst, const float _val, const uint4 _ext,
     const uint32_t Wsrc, const uint32_t Wdst, const uint32_t _actual_Wsrc, const uint32_t Hsrc, de::DH* handle)
 {
@@ -113,17 +73,7 @@ void decx::bp::_extend_constant_b32_2D(const float* src, float* dst, const float
 }
 
 
-template void decx::bp::_extend_constant_b32_2D<true>(const float* src, float* dst, const float _val, const uint4 _ext,
-    const uint32_t Wsrc, const uint32_t Wdst, const uint32_t _actual_Wsrc, const uint32_t Hsrc, de::DH* handle);
 
-
-template void decx::bp::_extend_constant_b32_2D<false>(const float* src, float* dst, const float _val, const uint4 _ext,
-    const uint32_t Wsrc, const uint32_t Wdst, const uint32_t _actual_Wsrc, const uint32_t Hsrc, de::DH* handle);
-
-
-
-
-template <bool _print>
 void decx::bp::_extend_constant_b64_2D(const double* src, double* dst, const double _val, const uint4 _ext,
     const uint32_t Wsrc, const uint32_t Wdst, const uint32_t _actual_Wsrc, const uint32_t Hsrc, de::DH* handle)
 {
@@ -140,16 +90,7 @@ void decx::bp::_extend_constant_b64_2D(const double* src, double* dst, const dou
 }
 
 
-template void decx::bp::_extend_constant_b64_2D<true>(const double* src, double* dst, const double _val, const uint4 _ext,
-    const uint32_t Wsrc, const uint32_t Wdst, const uint32_t _actual_Wsrc, const uint32_t Hsrc, de::DH* handle);
 
-template void decx::bp::_extend_constant_b64_2D<false>(const double* src, double* dst, const double _val, const uint4 _ext,
-    const uint32_t Wsrc, const uint32_t Wdst, const uint32_t _actual_Wsrc, const uint32_t Hsrc, de::DH* handle);
-
-
-
-
-template <bool _print>
 void decx::bp::_extend_constant_b8_2D(const uint8_t* src, uint8_t* dst, const uint8_t _val, const uint4 _ext,
     const uint32_t Wsrc, const uint32_t Wdst, const uint32_t _actual_Wsrc, const uint32_t Hsrc, de::DH* handle)
 {
@@ -166,16 +107,7 @@ void decx::bp::_extend_constant_b8_2D(const uint8_t* src, uint8_t* dst, const ui
     decx::bp::CPUK::_extend_V_constant2D_m256((float*)dst, _mm256_castsi256_ps(_v_val), _ext.z, _ext.w, Hsrc, Wdst / 4);
 }
 
-template void decx::bp::_extend_constant_b8_2D<true>(const uint8_t* src, uint8_t* dst, const uint8_t _val, const uint4 _ext,
-    const uint32_t Wsrc, const uint32_t Wdst, const uint32_t _actual_Wsrc, const uint32_t Hsrc, de::DH* handle);
 
-template void decx::bp::_extend_constant_b8_2D<false>(const uint8_t* src, uint8_t* dst, const uint8_t _val, const uint4 _ext,
-    const uint32_t Wsrc, const uint32_t Wdst, const uint32_t _actual_Wsrc, const uint32_t Hsrc, de::DH* handle);
-
-
-
-
-template <bool _print>
 void decx::bp::_extend_constant_b16_2D(const uint16_t* src, uint16_t* dst, const uint16_t _val, const uint4 _ext,
     const uint32_t Wsrc, const uint32_t Wdst, const uint32_t _actual_Wsrc, const uint32_t Hsrc, de::DH* handle)
 {
@@ -191,12 +123,3 @@ void decx::bp::_extend_constant_b16_2D(const uint16_t* src, uint16_t* dst, const
     const __m256i _v_val = _mm256_set1_epi16(_val);
     decx::bp::CPUK::_extend_V_constant2D_m256((float*)dst, _mm256_castsi256_ps(_v_val), _ext.z, _ext.w, Hsrc, Wdst / 2);
 }
-
-
-template void decx::bp::_extend_constant_b16_2D<true>(const uint16_t* src, uint16_t* dst, const uint16_t _val, const uint4 _ext,
-    const uint32_t Wsrc, const uint32_t Wdst, const uint32_t _actual_Wsrc, const uint32_t Hsrc, de::DH* handle);
-
-
-
-template void decx::bp::_extend_constant_b16_2D<false>(const uint16_t* src, uint16_t* dst, const uint16_t _val, const uint4 _ext,
-    const uint32_t Wsrc, const uint32_t Wdst, const uint32_t _actual_Wsrc, const uint32_t Hsrc, de::DH* handle);

@@ -13,7 +13,6 @@
 #include "extend_reflect_exec_params.h"
 
 
-template <bool _print>
 void decx::bp::_extend_reflect_b32_1D(const float* src, float* dst, const uint32_t _left, const uint32_t _right,
     const size_t _length_src, const size_t _actual_Lsrc, de::DH* handle)
 {
@@ -22,7 +21,7 @@ void decx::bp::_extend_reflect_b32_1D(const float* src, float* dst, const uint32
 
     decx::PtrInfo<float> buffer;
     if (decx::alloc::_host_virtual_page_malloc(&buffer, decx::bp::e_rfct_exep_get_buffer_len(&b_rfct) * sizeof(float))) {
-        decx::err::handle_error_info_modify<_print>(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION,
+        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION,
             ALLOC_FAIL);
         return;
     }
@@ -33,15 +32,7 @@ void decx::bp::_extend_reflect_b32_1D(const float* src, float* dst, const uint32
 }
 
 
-template void decx::bp::_extend_reflect_b32_1D<true>(const float* src, float* dst, const uint32_t _left, const uint32_t _right,
-    const size_t _length_src, const size_t _actual_Lsrc, de::DH* handle);
 
-
-template void decx::bp::_extend_reflect_b32_1D<false>(const float* src, float* dst, const uint32_t _left, const uint32_t _right,
-    const size_t _length_src, const size_t _actual_Lsrc, de::DH* handle);
-
-
-template <bool _print>
 void decx::bp::_extend_reflect_b64_1D(const double* src, double* dst, const uint32_t _left, const uint32_t _right,
     const size_t _length_src, const size_t _actual_Lsrc, de::DH* handle)
 {
@@ -50,7 +41,7 @@ void decx::bp::_extend_reflect_b64_1D(const double* src, double* dst, const uint
 
     decx::PtrInfo<double> buffer;
     if (decx::alloc::_host_virtual_page_malloc(&buffer, decx::bp::e_rfct_exep_get_buffer_len(&b_rfct) * sizeof(double))) {
-        decx::err::handle_error_info_modify<_print>(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION,
+        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION,
             ALLOC_FAIL);
         return;
     }
@@ -60,14 +51,8 @@ void decx::bp::_extend_reflect_b64_1D(const double* src, double* dst, const uint
     decx::alloc::_host_virtual_page_dealloc(&buffer);
 }
 
-template void decx::bp::_extend_reflect_b64_1D<true>(const double* src, double* dst, const uint32_t _left, const uint32_t _right,
-    const size_t _length_src, const size_t _actual_Lsrc, de::DH* handle);
-
-template void decx::bp::_extend_reflect_b64_1D<false>(const double* src, double* dst, const uint32_t _left, const uint32_t _right,
-    const size_t _length_src, const size_t _actual_Lsrc, de::DH* handle);
 
 
-template <bool _print>
 void decx::bp::_extend_reflect_b8_1D(const uint8_t* src, uint8_t* dst, const uint32_t _left, const uint32_t _right,
     const size_t _length_src, const size_t _actual_Lsrc, de::DH* handle)
 {
@@ -76,7 +61,7 @@ void decx::bp::_extend_reflect_b8_1D(const uint8_t* src, uint8_t* dst, const uin
 
     decx::PtrInfo<uint8_t> buffer;
     if (decx::alloc::_host_virtual_page_malloc(&buffer, decx::bp::e_rfct_exep_get_buffer_len(&b_rfct) * sizeof(uint8_t))) {
-        decx::err::handle_error_info_modify<_print>(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION,
+        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION,
             ALLOC_FAIL);
         return;
     }
@@ -87,15 +72,6 @@ void decx::bp::_extend_reflect_b8_1D(const uint8_t* src, uint8_t* dst, const uin
 }
 
 
-template void decx::bp::_extend_reflect_b8_1D<true>(const uint8_t* src, uint8_t* dst, const uint32_t _left, const uint32_t _right,
-    const size_t _length_src, const size_t _actual_Lsrc, de::DH* handle);
-
-template void decx::bp::_extend_reflect_b8_1D<false>(const uint8_t* src, uint8_t* dst, const uint32_t _left, const uint32_t _right,
-    const size_t _length_src, const size_t _actual_Lsrc, de::DH* handle);
-
-
-
-template <bool _print>
 void decx::bp::_extend_reflect_b16_1D(const uint16_t* src, uint16_t* dst, const uint32_t _left, const uint32_t _right,
     const size_t _length_src, const size_t _actual_Lsrc, de::DH* handle)
 {
@@ -104,7 +80,7 @@ void decx::bp::_extend_reflect_b16_1D(const uint16_t* src, uint16_t* dst, const 
 
     decx::PtrInfo<uint16_t> buffer;
     if (decx::alloc::_host_virtual_page_malloc(&buffer, decx::bp::e_rfct_exep_get_buffer_len(&b_rfct) * sizeof(uint16_t))) {
-        decx::err::handle_error_info_modify<_print>(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION,
+        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION,
             ALLOC_FAIL);
         return;
     }
@@ -115,15 +91,6 @@ void decx::bp::_extend_reflect_b16_1D(const uint16_t* src, uint16_t* dst, const 
 }
 
 
-template _DECX_API_ void decx::bp::_extend_reflect_b16_1D<true>(const uint16_t* src, uint16_t* dst, const uint32_t _left, const uint32_t _right,
-    const size_t _length_src, const size_t _actual_Lsrc, de::DH* handle);
-
-
-template _DECX_API_ void decx::bp::_extend_reflect_b16_1D<false>(const uint16_t* src, uint16_t* dst, const uint32_t _left, const uint32_t _right,
-    const size_t _length_src, const size_t _actual_Lsrc, de::DH* handle);
-
-
-template <bool _print>
 void decx::bp::_extend_reflect_b32_2D(const float* src, float* dst, const uint4 _ext,
     const uint32_t Wsrc, const uint32_t Wdst, const uint32_t _actual_Wsrc, const uint32_t Hsrc, de::DH* handle)
 {
@@ -132,7 +99,7 @@ void decx::bp::_extend_reflect_b32_2D(const float* src, float* dst, const uint4 
 
     decx::PtrInfo<float> buffer;
     if (decx::alloc::_host_virtual_page_malloc(&buffer, decx::bp::e_rfct_exep_get_buffer_len(&b_rfct) * sizeof(float))) {
-        decx::err::handle_error_info_modify<_print>(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION, ALLOC_FAIL);
+        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION, ALLOC_FAIL);
         return;
     }
 
@@ -148,17 +115,6 @@ void decx::bp::_extend_reflect_b32_2D(const float* src, float* dst, const uint4 
 }
 
 
-template _DECX_API_ void decx::bp::_extend_reflect_b32_2D<true>(const float* src, float* dst, const uint4 _ext,
-    const uint32_t Wsrc, const uint32_t Wdst, const uint32_t _actual_Wsrc, const uint32_t Hsrc, de::DH* handle);
-
-
-template _DECX_API_ void decx::bp::_extend_reflect_b32_2D<false>(const float* src, float* dst, const uint4 _ext,
-    const uint32_t Wsrc, const uint32_t Wdst, const uint32_t _actual_Wsrc, const uint32_t Hsrc, de::DH* handle);
-
-
-
-
-template <bool _print>
 void decx::bp::_extend_LR_reflect_b32_2D(const float* src, float* dst, const uint2 _ext,
     const uint32_t Wsrc, const uint32_t Wdst, const uint32_t _actual_Wsrc, const uint32_t Hsrc, de::DH* handle)
 {
@@ -167,7 +123,7 @@ void decx::bp::_extend_LR_reflect_b32_2D(const float* src, float* dst, const uin
 
     decx::PtrInfo<float> buffer;
     if (decx::alloc::_host_virtual_page_malloc(&buffer, decx::bp::e_rfct_exep_get_buffer_len(&b_rfct) * sizeof(float))) {
-        decx::err::handle_error_info_modify<_print>(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION,
+        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION,
             ALLOC_FAIL);
     }
 
@@ -178,16 +134,6 @@ void decx::bp::_extend_LR_reflect_b32_2D(const float* src, float* dst, const uin
 }
 
 
-template _DECX_API_ void decx::bp::_extend_LR_reflect_b32_2D<true>(const float* src, float* dst, const uint2 _ext,
-    const uint32_t Wsrc, const uint32_t Wdst, const uint32_t _actual_Wsrc, const uint32_t Hsrc, de::DH* handle);
-
-
-template _DECX_API_ void decx::bp::_extend_LR_reflect_b32_2D<false>(const float* src, float* dst, const uint2 _ext,
-    const uint32_t Wsrc, const uint32_t Wdst, const uint32_t _actual_Wsrc, const uint32_t Hsrc, de::DH* handle);
-
-
-
-
 void decx::bp::_extend_TB_reflect_b32_2D(float* src, const uint2 _ext,
     const uint32_t Wsrc, const uint32_t Hsrc)
 {
@@ -196,8 +142,6 @@ void decx::bp::_extend_TB_reflect_b32_2D(float* src, const uint2 _ext,
 
 
 
-
-template <bool _print>
 void decx::bp::_extend_reflect_b64_2D(const double* src, double* dst, const uint4 _ext,
     const uint32_t Wsrc, const uint32_t Wdst, const uint32_t _actual_Wsrc, const uint32_t Hsrc, de::DH* handle)
 {
@@ -220,15 +164,7 @@ void decx::bp::_extend_reflect_b64_2D(const double* src, double* dst, const uint
 }
 
 
-template void decx::bp::_extend_reflect_b64_2D<true>(const double* src, double* dst, const uint4 _ext,
-    const uint32_t Wsrc, const uint32_t Wdst, const uint32_t _actual_Wsrc, const uint32_t Hsrc, de::DH* handle);
 
-template void decx::bp::_extend_reflect_b64_2D<false>(const double* src, double* dst, const uint4 _ext,
-    const uint32_t Wsrc, const uint32_t Wdst, const uint32_t _actual_Wsrc, const uint32_t Hsrc, de::DH* handle);
-
-
-
-template <bool _print>
 void decx::bp::_extend_reflect_b8_2D(const uint8_t* src, uint8_t* dst, const uint4 _ext,
     const uint32_t Wsrc, const uint32_t Wdst, const uint32_t _actual_Wsrc, const uint32_t Hsrc, de::DH* handle)
 {
@@ -253,18 +189,6 @@ void decx::bp::_extend_reflect_b8_2D(const uint8_t* src, uint8_t* dst, const uin
 }
 
 
-template _DECX_API_ void decx::bp::_extend_reflect_b8_2D<true>(const uint8_t* src, uint8_t* dst, const uint4 _ext,
-    const uint32_t Wsrc, const uint32_t Wdst, const uint32_t _actual_Wsrc, const uint32_t Hsrc, de::DH* handle);
-
-
-template _DECX_API_ void decx::bp::_extend_reflect_b8_2D<false>(const uint8_t* src, uint8_t* dst, const uint4 _ext,
-    const uint32_t Wsrc, const uint32_t Wdst, const uint32_t _actual_Wsrc, const uint32_t Hsrc, de::DH* handle);
-
-
-
-
-
-template <bool _print>
 void decx::bp::_extend_LR_reflect_b8_2D(const uint8_t* src, uint8_t* dst, const uint2 _ext,
     const uint32_t Wsrc, const uint32_t Wdst, const uint32_t _actual_Wsrc, const uint32_t Hsrc, de::DH* handle)
 {
@@ -273,7 +197,7 @@ void decx::bp::_extend_LR_reflect_b8_2D(const uint8_t* src, uint8_t* dst, const 
 
     decx::PtrInfo<uint8_t> buffer;
     if (decx::alloc::_host_virtual_page_malloc(&buffer, decx::bp::e_rfct_exep_get_buffer_len(&b_rfct) * sizeof(uint8_t))) {
-        decx::err::handle_error_info_modify<_print>(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION,
+        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION,
             ALLOC_FAIL);
         return;
     }
@@ -286,18 +210,6 @@ void decx::bp::_extend_LR_reflect_b8_2D(const uint8_t* src, uint8_t* dst, const 
 }
 
 
-template void _DECX_API_ decx::bp::_extend_LR_reflect_b8_2D<true>(const uint8_t* src, uint8_t* dst, const uint2 _ext,
-    const uint32_t Wsrc, const uint32_t Wdst, const uint32_t _actual_Wsrc, const uint32_t Hsrc, de::DH* handle);
-
-
-template void _DECX_API_ decx::bp::_extend_LR_reflect_b8_2D<false>(const uint8_t* src, uint8_t* dst, const uint2 _ext,
-    const uint32_t Wsrc, const uint32_t Wdst, const uint32_t _actual_Wsrc, const uint32_t Hsrc, de::DH* handle);
-
-
-
-
-
-template <bool _print>
 void decx::bp::_extend_reflect_b16_2D(const uint16_t* src, uint16_t* dst, const uint4 _ext,
     const uint32_t Wsrc, const uint32_t Wdst, const uint32_t _actual_Wsrc, const uint32_t Hsrc, de::DH* handle)
 {
@@ -306,7 +218,7 @@ void decx::bp::_extend_reflect_b16_2D(const uint16_t* src, uint16_t* dst, const 
 
     decx::PtrInfo<uint16_t> buffer;
     if (decx::alloc::_host_virtual_page_malloc(&buffer, decx::bp::e_rfct_exep_get_buffer_len(&b_rfct) * sizeof(uint16_t))) {
-        decx::err::handle_error_info_modify<_print>(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION,
+        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION,
             ALLOC_FAIL);
         return;
     }
@@ -320,11 +232,3 @@ void decx::bp::_extend_reflect_b16_2D(const uint16_t* src, uint16_t* dst, const 
 
     decx::alloc::_host_virtual_page_dealloc(&buffer);
 }
-
-
-template void decx::bp::_extend_reflect_b16_2D<true>(const uint16_t* src, uint16_t* dst, const uint4 _ext,
-    const uint32_t Wsrc, const uint32_t Wdst, const uint32_t _actual_Wsrc, const uint32_t Hsrc, de::DH* handle);
-
-
-template void decx::bp::_extend_reflect_b16_2D<false>(const uint16_t* src, uint16_t* dst, const uint4 _ext,
-    const uint32_t Wsrc, const uint32_t Wdst, const uint32_t _actual_Wsrc, const uint32_t Hsrc, de::DH* handle);

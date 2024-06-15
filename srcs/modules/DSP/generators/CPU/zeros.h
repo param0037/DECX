@@ -20,15 +20,15 @@
 
 namespace de
 {
-    namespace gen {
+    namespace dsp {
         namespace cpu {
-            _DECX_API_ de::DH Zeros(de::Vector& src);
+            _DECX_API_ void Zeros(de::Vector& src);
 
 
-            _DECX_API_ de::DH Zeros(de::Matrix& src);
+            _DECX_API_ void Zeros(de::Matrix& src);
 
 
-            _DECX_API_ de::DH Zeros(de::Tensor& src);
+            _DECX_API_ void Zeros(de::Tensor& src);
         }
     }
 }

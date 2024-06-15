@@ -9,7 +9,7 @@
 */
 
 
-#include "../FFT1D.h"
+#include "../../FFT.h"
 #include "../CPU_FFT1D_planner.h"
 #include "../FFT1D_kernels.h"
 #include "../FFT1D_kernel_utils.h"

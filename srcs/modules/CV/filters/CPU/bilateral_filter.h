@@ -32,14 +32,12 @@ namespace decx
         * @param Wsrc : Pitch of source matrix, in its element (uint8_t)
         * @param Wsrc : Pitch of destinated matrix, in its element (uint8_t)
         */
-        template <bool _print>
         static void _bilateral_uint8_organiser(const double* src, double* dst, const float2 sigmas,
             const uint2 proc_dim, const uint2 ker_dims, const uint Wsrc,
             const uint Wdst, decx::utils::_thr_1D* t1D, decx::utils::frag_manager* f_mgr,
             de::DH *handle);
 
 
-        template <bool _print>
         static void _bilateral_uchar4_organiser(const float* src, float* dst, const float2 sigmas,
             const uint2 proc_dim, const uint2 ker_dims, const uint Wsrc,
             const uint Wdst, decx::utils::_thr_1D* t1D, decx::utils::frag_manager* f_mgr,
@@ -48,8 +46,6 @@ namespace decx
 }
 
 
-
-template <bool _print>
 void decx::vis::_bilateral_uint8_organiser(const double*                      src, 
                                            double*                            dst,
                                            const float2                       sigmas,       // .x -> sigma space; .y -> sigma color
@@ -98,9 +94,6 @@ void decx::vis::_bilateral_uint8_organiser(const double*                      sr
 
 
 
-
-
-template <bool _print>
 void decx::vis::_bilateral_uchar4_organiser(const float*                      src, 
                                            float*                             dst,
                                            const float2                       sigmas,       // .x -> sigma space; .y -> sigma color
@@ -153,29 +146,20 @@ namespace decx
 {
     namespace vis
     {
-        template <bool _print>
         static void _bilateral_uint8_NB(decx::_Matrix* src, decx::_Matrix* dst, const uint2 neighbor_dims, const float2 sigmas_raw, de::DH* handle);
 
 
-
-        template <bool _print>
         static void _bilateral_uint8_BC(decx::_Matrix* src, decx::_Matrix* dst, const uint2 neighbor_dims, const float2 sigmas_raw, de::DH* handle, const int border_type);
 
 
-
-        template <bool _print>
         static void _bilateral_uchar4_NB(decx::_Matrix* src, decx::_Matrix* dst, const uint2 neighbor_dims, const float2 sigmas_raw, de::DH* handle);
 
 
-
-        template <bool _print>
         static void _bilateral_uchar4_BC(decx::_Matrix* src, decx::_Matrix* dst, const uint2 neighbor_dims, const float2 sigmas_raw, de::DH* handle, const int border_type);
     }
 }
 
 
-
-template <bool _print>
 static void decx::vis::_bilateral_uint8_NB(decx::_Matrix* src, decx::_Matrix* dst, const uint2 neighbor_dims, const float2 sigmas_raw, de::DH* handle)
 {
     const uint conc_thr = (uint)decx::cpu::_get_permitted_concurrency();
@@ -186,7 +170,7 @@ static void decx::vis::_bilateral_uint8_NB(decx::_Matrix* src, decx::_Matrix* ds
     }
     decx::utils::_thr_1D t1D(conc_thr);
 
-    decx::vis::_bilateral_uint8_organiser<_print>((double*)src->Mat.ptr, 
+    decx::vis::_bilateral_uint8_organiser((double*)src->Mat.ptr, 
                                           (double*)dst->Mat.ptr,
                                           make_float2(powf(sigmas_raw.x, 2) * 2, powf(sigmas_raw.y, 2) * 2),
                                           make_uint2(dst->Pitch(), dst->Height()), 
@@ -196,9 +180,7 @@ static void decx::vis::_bilateral_uint8_NB(decx::_Matrix* src, decx::_Matrix* ds
 }
 
 
-
-
-template <bool _print> static void 
+static void 
 decx::vis::_bilateral_uchar4_NB(decx::_Matrix* src, decx::_Matrix* dst, const uint2 neighbor_dims, const float2 sigmas_raw, de::DH* handle)
 {
     const uint conc_thr = (uint)decx::cpu::_get_permitted_concurrency();
@@ -209,7 +191,7 @@ decx::vis::_bilateral_uchar4_NB(decx::_Matrix* src, decx::_Matrix* dst, const ui
     }
     decx::utils::_thr_1D t1D(conc_thr);
 
-    decx::vis::_bilateral_uchar4_organiser<_print>((float*)src->Mat.ptr, 
+    decx::vis::_bilateral_uchar4_organiser((float*)src->Mat.ptr, 
                                           (float*)dst->Mat.ptr,
                                           make_float2(powf(sigmas_raw.x, 2) * 2, powf(sigmas_raw.y, 2) * 2),
                                           make_uint2(dst->Pitch(), dst->Height()), 
@@ -220,8 +202,6 @@ decx::vis::_bilateral_uchar4_NB(decx::_Matrix* src, decx::_Matrix* dst, const ui
 
 
 
-
-template <bool _print>
 static void decx::vis::_bilateral_uint8_BC(decx::_Matrix* src, decx::_Matrix* dst, const uint2 neighbor_dims, const float2 sigmas_raw, 
     de::DH* handle, const int border_type)
 {
@@ -243,7 +223,7 @@ static void decx::vis::_bilateral_uint8_BC(decx::_Matrix* src, decx::_Matrix* ds
             (uint8_t*)src->Mat.ptr, start_place_src, src->Pitch(), tmp_src_dims.x, make_uint2(src->Width(), src->Height()));
         break;
     case (de::extend_label::_EXTEND_REFLECT_):
-        decx::bp::_extend_reflect_b8_2D<_print>((uint8_t*)src->Mat.ptr, tmp_src.ptr,
+        decx::bp::_extend_reflect_b8_2D((uint8_t*)src->Mat.ptr, tmp_src.ptr,
             make_uint4(neighbor_dims.x / 2, neighbor_dims.x / 2, neighbor_dims.y / 2, neighbor_dims.y / 2),
             src->Pitch(), tmp_src_dims.x, src->Width(), src->Height(), handle);
         break;
@@ -251,7 +231,7 @@ static void decx::vis::_bilateral_uint8_BC(decx::_Matrix* src, decx::_Matrix* ds
         break;
     }
 
-    const uint conc_thr = (uint)decx::cpu::_get_permitted_concurrency();
+    const uint32_t conc_thr = (uint32_t)decx::cpu::_get_permitted_concurrency();
     decx::utils::frag_manager* f_mgr = NULL;
     decx::_thread_dispatch_for_conv2(&f_mgr, dst->Height(), conc_thr, _BLOCKED_CONV2_UINT8_H_, dst->Pitch() / 8);
     if (f_mgr == NULL) {
@@ -259,7 +239,7 @@ static void decx::vis::_bilateral_uint8_BC(decx::_Matrix* src, decx::_Matrix* ds
     }
     decx::utils::_thr_1D t1D(conc_thr);
 
-    decx::vis::_bilateral_uint8_organiser<_print>((double*)tmp_src.ptr, (double*)dst->Mat.ptr,
+    decx::vis::_bilateral_uint8_organiser((double*)tmp_src.ptr, (double*)dst->Mat.ptr,
                                                    make_float2(powf(sigmas_raw.x, 2) * 2, powf(sigmas_raw.y, 2) * 2),
                                                    make_uint2(dst->Pitch(), dst->Height()), 
                                                    neighbor_dims,
@@ -272,9 +252,6 @@ static void decx::vis::_bilateral_uint8_BC(decx::_Matrix* src, decx::_Matrix* ds
 
 
 
-
-
-template <bool _print>
 static void decx::vis::_bilateral_uchar4_BC(decx::_Matrix* src, decx::_Matrix* dst, const uint2 neighbor_dims, const float2 sigmas_raw, 
     de::DH* handle, const int border_type)
 {
@@ -296,7 +273,7 @@ static void decx::vis::_bilateral_uchar4_BC(decx::_Matrix* src, decx::_Matrix* d
             (float*)src->Mat.ptr, start_place_src, src->Pitch(), tmp_src_dims.x, make_uint2(src->Width(), src->Height()));
         break;
     case (de::extend_label::_EXTEND_REFLECT_):
-        decx::bp::_extend_reflect_b32_2D<_print>((float*)src->Mat.ptr, tmp_src.ptr,
+        decx::bp::_extend_reflect_b32_2D((float*)src->Mat.ptr, tmp_src.ptr,
             make_uint4(neighbor_dims.x / 2, neighbor_dims.x / 2, neighbor_dims.y / 2, neighbor_dims.y / 2),
             src->Pitch(), tmp_src_dims.x, src->Width(), src->Height(), handle);
         break;
@@ -313,7 +290,7 @@ static void decx::vis::_bilateral_uchar4_BC(decx::_Matrix* src, decx::_Matrix* d
     }
     decx::utils::_thr_1D t1D(conc_thr);
 
-    decx::vis::_bilateral_uchar4_organiser<_print>((float*)tmp_src.ptr, (float*)dst->Mat.ptr,
+    decx::vis::_bilateral_uchar4_organiser((float*)tmp_src.ptr, (float*)dst->Mat.ptr,
                                                    make_float2(powf(sigmas_raw.x, 2) * 2, powf(sigmas_raw.y, 2) * 2),
                                                    make_uint2(dst->Pitch(), dst->Height()), 
                                                    neighbor_dims,
@@ -331,7 +308,7 @@ namespace de
 {
     namespace vis {
         namespace cpu {
-            _DECX_API_ de::DH Bilateral_Filter(de::Matrix& src, de::Matrix& dst, const de::Point2D neighbor_dims,
+            _DECX_API_ void Bilateral_Filter(de::Matrix& src, de::Matrix& dst, const de::Point2D neighbor_dims,
                 const float sigma_space, const float sigma_color, const int border_type);
         }
     }

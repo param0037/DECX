@@ -11,15 +11,16 @@
 #include "random.h"
 
 
-_DECX_API_ de::DH 
-de::gen::cpu::RandomGaussian(de::Matrix& src, const float mean, const float sigma, de::Point2D_d clipping_range, 
+_DECX_API_ void
+de::dsp::cpu::RandomGaussian(de::Matrix& src, const float mean, const float sigma, de::Point2D_d clipping_range, 
     const uint32_t resolution, const int data_type)
 {
-    de::DH handle;
+    de::ResetLastError();
+
     if (!decx::cpu::_is_CPU_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CPU_not_init,
+        decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_CPU_not_init,
             CPU_NOT_INIT);
-        return handle;
+        return;
     }
 
     decx::_Matrix* _src = dynamic_cast<decx::_Matrix*>(&src);
@@ -34,7 +35,4 @@ de::gen::cpu::RandomGaussian(de::Matrix& src, const float mean, const float sigm
     default:
         break;
     }
-
-    decx::err::Success<true>(&handle);
-    return handle;
 }

@@ -21,12 +21,12 @@
 namespace de
 {
 namespace cpu {
-	_DECX_API_ de::DH Extend(de::Vector& src, de::Vector& dst, const uint32_t left, const uint32_t right,
+	_DECX_API_ void Extend(de::Vector& src, de::Vector& dst, const uint32_t left, const uint32_t right,
 		const int border_type, void* val);
 
 
 
-	_DECX_API_ de::DH Extend(de::Matrix& src, de::Matrix& dst, const uint32_t left, const uint32_t right,
+	_DECX_API_ void Extend(de::Matrix& src, de::Matrix& dst, const uint32_t left, const uint32_t right,
 		const uint32_t top, const uint32_t bottom, const int border_type, void* val);
 }
 }

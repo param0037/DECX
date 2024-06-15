@@ -196,6 +196,7 @@
     <ClCompile Include="..\srcs\modules\BLAS\basic_process\type_statistics\CPU\summation.cxx" />
     <ClCompile Include="..\srcs\modules\BLAS\Dot product\CPU\fp32\dot_fp32.cxx" />
     <ClCompile Include="..\srcs\modules\BLAS\Dot product\CPU\fp32\dot_fp32_exec.cxx" />
+    <ClCompile Include="..\srcs\modules\BLAS\GEMM\CPU\64b\GEMM_64b_caller.cxx" />
     <ClCompile Include="..\srcs\modules\BLAS\GEMM\CPU\64b\GEMM_ABC_kernel_64b.cxx" />
     <ClCompile Include="..\srcs\modules\BLAS\GEMM\CPU\64b\GEMM_kernel_64b.cxx" />
     <ClCompile Include="..\srcs\modules\BLAS\GEMM\CPU\64b\GEMM_Matrix_B_arrange_64b.cxx" />

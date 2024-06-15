@@ -8,7 +8,7 @@
 *   More information please visit https://github.com/param0037/DECX
 */
 
-#include "../2D/FFT2D.h"
+#include "../FFT.h"
 #include "CPU_FFT1D_planner.h"
 #include "FFT1D_kernels.h"
 
@@ -114,8 +114,6 @@ void decx::dsp::fft::IFFT1D_caller(decx::_Vector* src, decx::_Vector* dst, de::D
 }
 
 
-
-
 template <typename _type_out>
 void decx::dsp::fft::IFFT1D_caller_cplxd(decx::_Vector* src, decx::_Vector* dst, de::DH* handle)
 {
@@ -143,14 +141,14 @@ void decx::dsp::fft::IFFT1D_caller_cplxd(decx::_Vector* src, decx::_Vector* dst,
 
 
 
-_DECX_API_ de::DH de::dsp::cpu::FFT(de::Vector& src, de::Vector& dst)
+_DECX_API_ void de::dsp::cpu::FFT(de::Vector& src, de::Vector& dst)
 {
-    de::DH handle;
+    de::ResetLastError();
 
     if (!decx::cpu::_is_CPU_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CPU_not_init, 
+        decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_CPU_not_init, 
             CPU_NOT_INIT);
-        return handle;
+        return;
     }
 
     decx::_Vector* _src = dynamic_cast<decx::_Vector*>(&src);
@@ -158,40 +156,38 @@ _DECX_API_ de::DH de::dsp::cpu::FFT(de::Vector& src, de::Vector& dst)
 
     switch (_src->Type()) {
     case de::_DATA_TYPES_FLAGS_::_FP32_:
-        decx::dsp::fft::FFT1D_caller<float>(_src, _dst, &handle);
+        decx::dsp::fft::FFT1D_caller<float>(_src, _dst, de::GetLastError());
         break;
 
     case de::_DATA_TYPES_FLAGS_::_COMPLEX_F32_:
-        decx::dsp::fft::FFT1D_caller<de::CPf>(_src, _dst, &handle);
+        decx::dsp::fft::FFT1D_caller<de::CPf>(_src, _dst, de::GetLastError());
         break;
 
     case de::_DATA_TYPES_FLAGS_::_FP64_:
-        decx::dsp::fft::FFT1D_caller_cplxd<double>(_src, _dst, &handle);
+        decx::dsp::fft::FFT1D_caller_cplxd<double>(_src, _dst, de::GetLastError());
         break;
 
     case de::_DATA_TYPES_FLAGS_::_COMPLEX_F64_:
-        decx::dsp::fft::FFT1D_caller_cplxd<de::CPd>(_src, _dst, &handle);
+        decx::dsp::fft::FFT1D_caller_cplxd<de::CPd>(_src, _dst, de::GetLastError());
         break;
 
     default:
-        decx::err::handle_error_info_modify<true, 4>(&handle, decx::DECX_error_types::DECX_FAIL_ErrorFlag, 
+        decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_ErrorFlag, 
             MEANINGLESS_FLAG);
         break;
     }
-
-    return handle;
 }
 
 
 
-_DECX_API_ de::DH de::dsp::cpu::IFFT(de::Vector& src, de::Vector& dst, const de::_DATA_TYPES_FLAGS_ _output_type)
+_DECX_API_ void de::dsp::cpu::IFFT(de::Vector& src, de::Vector& dst, const de::_DATA_TYPES_FLAGS_ _output_type)
 {
-    de::DH handle;
+    de::ResetLastError();
 
     if (!decx::cpu::_is_CPU_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CPU_not_init,
+        decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_CPU_not_init,
             CPU_NOT_INIT);
-        return handle;
+        return;
     }
 
     decx::_Vector* _src = dynamic_cast<decx::_Vector*>(&src);
@@ -199,27 +195,24 @@ _DECX_API_ de::DH de::dsp::cpu::IFFT(de::Vector& src, de::Vector& dst, const de:
 
     switch (_output_type) {
     case de::_DATA_TYPES_FLAGS_::_FP32_:
-        decx::dsp::fft::IFFT1D_caller<float>(_src, _dst, &handle);
+        decx::dsp::fft::IFFT1D_caller<float>(_src, _dst, de::GetLastError());
         break;
 
     case de::_DATA_TYPES_FLAGS_::_COMPLEX_F32_:
-        decx::dsp::fft::IFFT1D_caller<de::CPf>(_src, _dst, &handle);
+        decx::dsp::fft::IFFT1D_caller<de::CPf>(_src, _dst, de::GetLastError());
         break;
 
     case de::_DATA_TYPES_FLAGS_::_FP64_:
-        decx::dsp::fft::IFFT1D_caller_cplxd<double>(_src, _dst, &handle);
+        decx::dsp::fft::IFFT1D_caller_cplxd<double>(_src, _dst, de::GetLastError());
         break;
 
     case de::_DATA_TYPES_FLAGS_::_COMPLEX_F64_:
-        decx::dsp::fft::IFFT1D_caller_cplxd<de::CPd>(_src, _dst, &handle);
+        decx::dsp::fft::IFFT1D_caller_cplxd<de::CPd>(_src, _dst, de::GetLastError());
         break;
 
     default:
-        decx::err::handle_error_info_modify<true, 4>(&handle, decx::DECX_error_types::DECX_FAIL_ErrorFlag, 
+        decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_ErrorFlag, 
             MEANINGLESS_FLAG);
         break;
     }
-
-    return handle;
 }
-

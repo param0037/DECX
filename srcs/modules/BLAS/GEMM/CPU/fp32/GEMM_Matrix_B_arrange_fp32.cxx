@@ -18,11 +18,12 @@ arrange_MatB_fp32_caller(const float*                srcB,
                          const uint32_t              WtmpB,
                          const uint32_t              _eff_L_len,
                          const bool                  is_L8,
-                         decx::utils::_thr_2D*       t2D,
+                         decx::utils::_thr_2D*       t2D,           // t2D is treated as t1D in this case
                          decx::utils::frag_manager*  f_mgr)
 {
     const float* local_ptr_src = srcB;
     float* local_ptr_dst = dstB;
+
     if (f_mgr->is_left) {
         for (int i = 0; i < t2D->total_thread - 1; ++i) {
             t2D->_async_thread[i] = decx::cpu::register_task_default(decx::gemm::CPUK::_sort_ST_MatB_fp32,
@@ -62,4 +63,3 @@ arrange_MatB_fp32_caller(const float*                srcB,
 
     t2D->__sync_all_threads();
 }
-

@@ -324,6 +324,9 @@
     <ClCompile Include="..\srcs\modules\BLAS\GEMM\CPU\cpu_GEMM_general_config.cxx">
       <Filter>源文件\GEMM</Filter>
     </ClCompile>
+    <ClCompile Include="..\srcs\modules\BLAS\GEMM\CPU\64b\GEMM_64b_caller.cxx">
+      <Filter>源文件\GEMM\64b</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\srcs\modules\basic_calculations\operators\Add_exec.h">

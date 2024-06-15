@@ -36,7 +36,7 @@ static void decx::dot::matrix_dot2D_1way_fp32_selector(decx::_Matrix* A, decx::_
         decx::dot::matrix_dot_1way_fp32<false>(A, B, dst);
     }
     else {
-        decx::err::handle_error_info_modify<true, _CONSOLE_COLOR_RED_>(handle,
+        decx::err::handle_error_info_modify(handle,
             decx::DECX_error_types::DECX_FAIL_ErrorFlag, MEANINGLESS_FLAG);
     }
 }
@@ -53,7 +53,7 @@ static void decx::dot::matrix_dot2D_1way_fp16_selector(decx::_Matrix* A, decx::_
         decx::dot::matrix_dot_1way_fp16<false>(A, B, dst, _fp16_accu);
     }
     else {
-        decx::err::handle_error_info_modify<true, _CONSOLE_COLOR_RED_>(handle,
+        decx::err::handle_error_info_modify(handle,
             decx::DECX_error_types::DECX_FAIL_ErrorFlag, MEANINGLESS_FLAG);
     }
 }

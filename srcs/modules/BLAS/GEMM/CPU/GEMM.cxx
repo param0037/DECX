@@ -14,17 +14,15 @@
 
 
 _DECX_API_
-de::DH de::cpu::GEMM(de::Matrix& A, de::Matrix& B, de::Matrix& dst)
+void de::cpu::GEMM(de::Matrix& A, de::Matrix& B, de::Matrix& dst)
 {
-    de::DH handle;
+    de::ResetLastError();
 
     if (!decx::cpu::_is_CPU_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CPU_not_init,
+        decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_CPU_not_init,
             CPU_NOT_INIT);
-        return handle;
+        return;
     }
-
-    decx::err::Success<true>(&handle);
 
     decx::_Matrix* _A = dynamic_cast<decx::_Matrix*>(&A);
     decx::_Matrix* _B = dynamic_cast<decx::_Matrix*>(&B);
@@ -33,38 +31,33 @@ de::DH de::cpu::GEMM(de::Matrix& A, de::Matrix& B, de::Matrix& dst)
     switch (_A->Type())
     {
     case de::_DATA_TYPES_FLAGS_::_FP32_:
-        decx::cpu::GEMM_fp32(_A, _B, _dst, &handle);
+        decx::cpu::GEMM_fp32(_A, _B, _dst, de::GetLastError());
         break;
 
     case de::_DATA_TYPES_FLAGS_::_FP64_:
-        decx::cpu::GEMM_64b<false>(_A, _B, _dst, &handle);
+        decx::cpu::GEMM_64b<false>(_A, _B, _dst, de::GetLastError());
         break;
 
     case de::_DATA_TYPES_FLAGS_::_COMPLEX_F32_:
-        decx::cpu::GEMM_64b<true>(_A, _B, _dst, &handle);
+        decx::cpu::GEMM_64b<true>(_A, _B, _dst, de::GetLastError());
         break;
     default:
         break;
     }
-
-    return handle;
 }
 
 
 
 _DECX_API_
-de::DH de::cpu::GEMM(de::Matrix& A, de::Matrix& B, de::Matrix& C, de::Matrix& dst)
+void de::cpu::GEMM(de::Matrix& A, de::Matrix& B, de::Matrix& C, de::Matrix& dst)
 {
-    de::DH handle;
+    de::ResetLastError();
 
     if (!decx::cpu::_is_CPU_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CPU_not_init,
+        decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_CPU_not_init,
             CPU_NOT_INIT);
-        return handle;
+        return;
     }
-
-
-    decx::err::Success(&handle);
 
     decx::_Matrix* _A = dynamic_cast<decx::_Matrix*>(&A);
     decx::_Matrix* _B = dynamic_cast<decx::_Matrix*>(&B);
@@ -74,19 +67,17 @@ de::DH de::cpu::GEMM(de::Matrix& A, de::Matrix& B, de::Matrix& C, de::Matrix& ds
     switch (_A->Type())
     {
     case de::_DATA_TYPES_FLAGS_::_FP32_:
-        decx::cpu::GEMM_fp32_ABC(_A, _B, _C, _dst, &handle);
+        decx::cpu::GEMM_fp32_ABC(_A, _B, _C, _dst, de::GetLastError());
         break;
 
     case de::_DATA_TYPES_FLAGS_::_FP64_:
-        decx::cpu::GEMM_64b_ABC<false>(_A, _B, _C, _dst, &handle);
+        decx::cpu::GEMM_64b_ABC<false>(_A, _B, _C, _dst, de::GetLastError());
         break;
 
     case de::_DATA_TYPES_FLAGS_::_COMPLEX_F32_:
-        decx::cpu::GEMM_64b_ABC<true>(_A, _B, _C, _dst, &handle);
+        decx::cpu::GEMM_64b_ABC<true>(_A, _B, _C, _dst, de::GetLastError());
         break;
     default:
         break;
     }
-
-    return handle;
 }

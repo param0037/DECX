@@ -19,9 +19,9 @@
 
 namespace de
 {
-    namespace gen {
+    namespace dsp {
         namespace cpu {
-            _DECX_API_ de::DH RandomGaussian(de::Matrix& src, const float mean, const float sigma, de::Point2D_d clipping_range, 
+            _DECX_API_ void RandomGaussian(de::Matrix& src, const float mean, const float sigma, de::Point2D_d clipping_range, 
                 const uint32_t resolution, const int data_type);
         }
     }

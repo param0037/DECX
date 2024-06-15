@@ -8,7 +8,7 @@
 *   More information please visit https://github.com/param0037/DECX
 */
 
-#include "../2D/FFT2D.h"
+#include "../FFT.h"
 #include "../../FFT_commons.h"
 #include "CPU_FFT3D_planner.h"
 #include "FFT3D_kernels.h"
@@ -83,14 +83,14 @@ static void decx::dsp::fft::IFFT3D_caller_cplxf(decx::_Tensor* src, decx::_Tenso
 
 
 
-_DECX_API_ de::DH de::dsp::cpu::FFT(de::Tensor& src, de::Tensor& dst)
+_DECX_API_ void de::dsp::cpu::FFT(de::Tensor& src, de::Tensor& dst)
 {
-    de::DH handle;
+    de::ResetLastError();
 
     if (!decx::cpu::_is_CPU_init()) {
-        decx::err::handle_error_info_modify<true>(&handle, decx::DECX_error_types::DECX_FAIL_CPU_not_init, 
+        decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_CPU_not_init, 
             CPU_NOT_INIT);
-        return handle;
+        return;
     }
 
     decx::_Tensor* _src = dynamic_cast<decx::_Tensor*>(&src);
@@ -99,35 +99,33 @@ _DECX_API_ de::DH de::dsp::cpu::FFT(de::Tensor& src, de::Tensor& dst)
     switch (_src->Type())
     {
     case de::_DATA_TYPES_FLAGS_::_FP32_:
-        decx::dsp::fft::FFT3D_caller_cplxf<float>(_src, _dst, &handle);
+        decx::dsp::fft::FFT3D_caller_cplxf<float>(_src, _dst, de::GetLastError());
         break;
 
     case de::_DATA_TYPES_FLAGS_::_UINT8_:
-        decx::dsp::fft::FFT3D_caller_cplxf<uint8_t>(_src, _dst, &handle);
+        decx::dsp::fft::FFT3D_caller_cplxf<uint8_t>(_src, _dst, de::GetLastError());
         break;
 
     case de::_DATA_TYPES_FLAGS_::_COMPLEX_F32_:
-        decx::dsp::fft::FFT3D_caller_cplxf<de::CPf>(_src, _dst, &handle);
+        decx::dsp::fft::FFT3D_caller_cplxf<de::CPf>(_src, _dst, de::GetLastError());
         break;
 
     default:
-        decx::err::handle_error_info_modify<true>(&handle, decx::DECX_error_types::DECX_FAIL_UNSUPPORTED_TYPE,
+        decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_UNSUPPORTED_TYPE,
             UNSUPPORTED_TYPE);
         break;
     }
-
-    return handle;
 }
 
 
-_DECX_API_ de::DH de::dsp::cpu::IFFT(de::Tensor& src, de::Tensor& dst, const de::_DATA_TYPES_FLAGS_ _output_type)
+_DECX_API_ void de::dsp::cpu::IFFT(de::Tensor& src, de::Tensor& dst, const de::_DATA_TYPES_FLAGS_ _output_type)
 {
-    de::DH handle;
+    de::ResetLastError();
 
     if (!decx::cpu::_is_CPU_init()) {
-        decx::err::handle_error_info_modify<true>(&handle, decx::DECX_error_types::DECX_FAIL_CPU_not_init,
+        decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_CPU_not_init,
             CPU_NOT_INIT);
-        return handle;
+        return;
     }
 
     decx::_Tensor* _src = dynamic_cast<decx::_Tensor*>(&src);
@@ -136,22 +134,20 @@ _DECX_API_ de::DH de::dsp::cpu::IFFT(de::Tensor& src, de::Tensor& dst, const de:
     switch (_output_type)
     {
     case de::_DATA_TYPES_FLAGS_::_COMPLEX_F32_:
-        decx::dsp::fft::IFFT3D_caller_cplxf<de::CPf>(_src, _dst, &handle);
+        decx::dsp::fft::IFFT3D_caller_cplxf<de::CPf>(_src, _dst, de::GetLastError());
         break;
 
     case de::_DATA_TYPES_FLAGS_::_FP32_:
-        decx::dsp::fft::IFFT3D_caller_cplxf<float>(_src, _dst, &handle);
+        decx::dsp::fft::IFFT3D_caller_cplxf<float>(_src, _dst, de::GetLastError());
         break;
 
     case de::_DATA_TYPES_FLAGS_::_UINT8_:
-        decx::dsp::fft::IFFT3D_caller_cplxf<uint8_t>(_src, _dst, &handle);
+        decx::dsp::fft::IFFT3D_caller_cplxf<uint8_t>(_src, _dst, de::GetLastError());
         break;
 
     default:
-        decx::err::handle_error_info_modify<true>(&handle, decx::DECX_error_types::DECX_FAIL_UNSUPPORTED_TYPE,
+        decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_UNSUPPORTED_TYPE,
             UNSUPPORTED_TYPE);
         break;
     }
-
-    return handle;
 }

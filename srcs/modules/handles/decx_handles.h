@@ -241,6 +241,8 @@ namespace decx
 
 namespace de {
     _DECX_API_ de::DH* GetLastError();
+
+    _DECX_API_ void ResetLastError();
 }
 #endif      // #ifdef __cplusplus
 

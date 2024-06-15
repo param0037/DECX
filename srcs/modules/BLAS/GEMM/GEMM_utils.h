@@ -37,7 +37,7 @@ namespace decx
     class cpu_GEMM_general_config
     {
     private:
-        const decx::_matrix_layout* _layout_A, *_layout_B;
+        const decx::_matrix_layout* _layout_A, *_layout_B, *_layout_C;
         uint32_t _concurrency;
 
         uint2 _thread_dist;
@@ -47,7 +47,7 @@ namespace decx
         uint2 _arranged_B_dims;
         uint32_t _pitch_extdst;
 
-        decx::PtrInfo<float> _arranged_B, _extra_dst;
+        decx::PtrInfo<void> _arranged_B, _extra_dst;
 
     public:
         cpu_GEMM_general_config() {
@@ -63,13 +63,22 @@ namespace decx
             const decx::_matrix_layout* layout_B) const;
 
 
+        _CRSR_ static void Validate(de::DH* handle, const decx::_matrix_layout* layout_A,
+            const decx::_matrix_layout* layout_B, const decx::_matrix_layout* layout_C = NULL);
+
+
+        template <bool _is_cpl>
         void Run(decx::_Matrix* _A, decx::_Matrix* _B, decx::_Matrix* _dst);
+
+        template <bool _is_cpl>
+        void Run(decx::_Matrix* _A, decx::_Matrix* _B, decx::_Matrix* _C, decx::_Matrix* _dst);
 
 
         static void release_buffers(decx::cpu_GEMM_general_config<_data_type>* _fake_this);
     };
 
     extern decx::ResourceHandle _cpu_GEMM_fp32_mgr;
+    extern decx::ResourceHandle _cpu_GEMM_b64_mgr;
 
 
     typedef struct GEMM_AB_configs

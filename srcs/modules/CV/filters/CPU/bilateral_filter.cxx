@@ -12,15 +12,16 @@
 #include "bilateral_filter.h"
 
 
-_DECX_API_ de::DH 
+_DECX_API_ void 
 de::vis::cpu::Bilateral_Filter(de::Matrix& src, de::Matrix& dst, const de::Point2D neighbor_dims,
     const float sigma_space, const float sigma_color, const int border_type)
 {
-    de::DH handle;
+    de::ResetLastError();
+
     if (!decx::cpu::_is_CPU_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CPU_not_init,
+        decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_CPU_not_init,
             CPU_NOT_INIT);
-        return handle;
+        return;
     }
 
     decx::_Matrix* _src = dynamic_cast<decx::_Matrix*>(&src);
@@ -32,13 +33,13 @@ de::vis::cpu::Bilateral_Filter(de::Matrix& src, de::Matrix& dst, const de::Point
         if (border_type == de::extend_label::_EXTEND_NONE_) 
         {
             _dst->re_construct(_src->Type(), _src->Width() - neighbor_dims.x + 1, _src->Height() - neighbor_dims.y + 1);
-            decx::vis::_bilateral_uint8_NB<true>(_src, _dst, make_uint2(neighbor_dims.x, neighbor_dims.y),
-                make_float2(sigma_space, sigma_color), &handle);
+            decx::vis::_bilateral_uint8_NB(_src, _dst, make_uint2(neighbor_dims.x, neighbor_dims.y),
+                make_float2(sigma_space, sigma_color), de::GetLastError());
         }
         else {
             _dst->re_construct(_src->Type(), _src->Width(), _src->Height());
-            decx::vis::_bilateral_uint8_BC<true>(_src, _dst, make_uint2(neighbor_dims.x, neighbor_dims.y),
-                make_float2(sigma_space, sigma_color), &handle, border_type);
+            decx::vis::_bilateral_uint8_BC(_src, _dst, make_uint2(neighbor_dims.x, neighbor_dims.y),
+                make_float2(sigma_space, sigma_color), de::GetLastError(), border_type);
         }
         break;
 
@@ -46,20 +47,17 @@ de::vis::cpu::Bilateral_Filter(de::Matrix& src, de::Matrix& dst, const de::Point
         if (border_type == de::extend_label::_EXTEND_NONE_) 
         {
             _dst->re_construct(_src->Type(), _src->Width() - neighbor_dims.x + 1, _src->Height() - neighbor_dims.y + 1);
-            decx::vis::_bilateral_uchar4_NB<true>(_src, _dst, make_uint2(neighbor_dims.x, neighbor_dims.y),
-                make_float2(sigma_space, sigma_color), &handle);
+            decx::vis::_bilateral_uchar4_NB(_src, _dst, make_uint2(neighbor_dims.x, neighbor_dims.y),
+                make_float2(sigma_space, sigma_color), de::GetLastError());
         }
         else {
             _dst->re_construct(_src->Type(), _src->Width(), _src->Height());
-            decx::vis::_bilateral_uchar4_BC<true>(_src, _dst, make_uint2(neighbor_dims.x, neighbor_dims.y),
-                make_float2(sigma_space, sigma_color), &handle, border_type);
+            decx::vis::_bilateral_uchar4_BC(_src, _dst, make_uint2(neighbor_dims.x, neighbor_dims.y),
+                make_float2(sigma_space, sigma_color), de::GetLastError(), border_type);
         }
         break;
 
     default:
         break;
     }
-    
-    
-    return handle;
 }

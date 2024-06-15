@@ -65,3 +65,9 @@ _DECX_API_ de::DH* de::GetLastError()
 {
     return &decx::_last_error;
 }
+
+
+_DECX_API_ void de::ResetLastError()
+{
+    decx::err::Success(&decx::_last_error);
+}
