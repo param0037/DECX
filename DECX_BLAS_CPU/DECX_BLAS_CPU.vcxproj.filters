@@ -318,6 +318,12 @@
     <ClCompile Include="..\srcs\modules\basic_calculations\operators\Maprange_exec.cxx">
       <Filter>源文件\basic_calculations\operators</Filter>
     </ClCompile>
+    <ClCompile Include="..\srcs\modules\BLAS\GEMM\CPU\fp32\GEMM_fp32_caller.cxx">
+      <Filter>源文件\GEMM\fp32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\BLAS\GEMM\CPU\cpu_GEMM_general_config.cxx">
+      <Filter>源文件\GEMM</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\srcs\modules\basic_calculations\operators\Add_exec.h">

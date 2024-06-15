@@ -65,7 +65,16 @@ namespace decx
             uint thread_h, thread_w;
             std::future<void>* _async_thread;
 
-            _thread_arrange_2D(const uint _thread_h, const uint _thread_w, std::future<void>* __async_thread)
+
+            _thread_arrange_2D() {
+                this->total_thread = 0;
+                this->thread_h = 0;
+                this->thread_w = 0;
+                this->_async_thread = 0;
+            }
+
+
+            _thread_arrange_2D(const uint32_t _thread_h, const uint32_t _thread_w, std::future<void>* __async_thread)
             {
                 this->thread_h = _thread_h;
                 this->thread_w = _thread_w;
@@ -73,7 +82,15 @@ namespace decx
                 this->total_thread = _thread_h * _thread_w;
             }
 
-            _thread_arrange_2D(const uint _thread_h, const uint _thread_w)
+            _thread_arrange_2D(const uint32_t _thread_h, const uint32_t _thread_w)
+            {
+                this->thread_h = _thread_h;
+                this->thread_w = _thread_w;
+                this->total_thread = _thread_h * _thread_w;
+                this->_async_thread = new std::future<void>[this->total_thread];
+            }
+
+            void reshape(const uint32_t _thread_h, const uint32_t _thread_w)
             {
                 this->thread_h = _thread_h;
                 this->thread_w = _thread_w;
@@ -96,6 +113,17 @@ namespace decx
                 for (int i = _range.x; i < _range.y; ++i) {
                     this->_async_thread[i].get();
                 }
+            }
+
+
+            decx::utils::_thread_arrange_2D& operator=(const decx::utils::_thread_arrange_2D& src)
+            {
+                this->thread_h = src.thread_h;
+                this->thread_w = src.thread_w;
+                this->total_thread = src.total_thread;
+                this->_async_thread = src._async_thread;
+
+                return *this;
             }
 
 

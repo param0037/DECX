@@ -65,28 +65,28 @@ namespace dsp
 {
 	namespace cuda
 	{
-		_DECX_API_ de::DH FFT(de::Vector& src, de::Vector& dst);
+		_DECX_API_ void FFT(de::Vector& src, de::Vector& dst);
 
 
-		_DECX_API_ de::DH FFT(de::GPU_Vector& src, de::GPU_Vector& dst);
+		_DECX_API_ void FFT(de::GPU_Vector& src, de::GPU_Vector& dst);
 
 
-		_DECX_API_ de::DH IFFT(de::Vector& src, de::Vector& dst, const de::_DATA_TYPES_FLAGS_ _type_out);
+		_DECX_API_ void IFFT(de::Vector& src, de::Vector& dst, const de::_DATA_TYPES_FLAGS_ _type_out);
 
 
-		_DECX_API_ de::DH IFFT(de::GPU_Vector& src, de::GPU_Vector& dst, const de::_DATA_TYPES_FLAGS_ _type_out);
+		_DECX_API_ void IFFT(de::GPU_Vector& src, de::GPU_Vector& dst, const de::_DATA_TYPES_FLAGS_ _type_out);
 
 
-		_DECX_API_ de::DH FFT(de::GPU_Matrix& src, de::GPU_Matrix& dst);
+		_DECX_API_ void FFT(de::GPU_Matrix& src, de::GPU_Matrix& dst);
 
 
-		_DECX_API_ de::DH IFFT(de::GPU_Matrix& src, de::GPU_Matrix& dst, const de::_DATA_TYPES_FLAGS_ type_out);
+		_DECX_API_ void IFFT(de::GPU_Matrix& src, de::GPU_Matrix& dst, const de::_DATA_TYPES_FLAGS_ type_out);
 
 
-		_DECX_API_ de::DH FFT(de::GPU_Tensor& src, de::GPU_Tensor& dst);
+		_DECX_API_ void FFT(de::GPU_Tensor& src, de::GPU_Tensor& dst);
 
 
-		_DECX_API_ de::DH IFFT(de::GPU_Tensor& src, de::GPU_Tensor& dst, const de::_DATA_TYPES_FLAGS_ type_out);
+		_DECX_API_ void IFFT(de::GPU_Tensor& src, de::GPU_Tensor& dst, const de::_DATA_TYPES_FLAGS_ type_out);
 	}
 }
 }

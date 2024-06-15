@@ -36,7 +36,7 @@ namespace decx
     */
     template <typename T>
     static _THREAD_GENERAL_ void _general_copy2D_BC(const T* __restrict src, T* __restrict dst, const uint2 start, const uint2 end,
-        const uint Wsrc, const uint Wdst);
+        const uint32_t Wsrc, const uint32_t Wdst);
 
 
     /*
@@ -45,7 +45,7 @@ namespace decx
     * @param Wdst : pitch of dst, in its own element
     */
     template <typename T> _THREAD_GENERAL_
-    static void _cpy2D_plane(const T* __restrict src, T* dst, const uint Wsrc, const uint Wdst, const uint2 cpy_area);
+    static void _cpy2D_plane(const T* __restrict src, T* dst, const uint32_t Wsrc, const uint32_t Wdst, const uint2 cpy_area);
 
 
     /*
@@ -54,7 +54,7 @@ namespace decx
     * @param Wdst : pitch of dst, in its own element
     */
     template <typename _T_ele>
-    static void _cpy2D_anybit_caller(_T_ele* src, _T_ele* dst, const uint Wsrc, const uint Wdst, const uint2 cpy_area);
+    static void _cpy2D_anybit_caller(_T_ele* src, _T_ele* dst, const uint32_t Wsrc, const uint32_t Wdst, const uint2 cpy_area);
 }
 
 
@@ -67,8 +67,8 @@ _THREAD_GENERAL_ void decx::_general_copy2D_BC(const T* __restrict           src
                                                T* __restrict           dst, 
                                                const uint2             start, 
                                                const uint2             end, 
-                                               const uint              Wsrc, 
-                                               const uint              Wdst)
+                                               const uint32_t              Wsrc, 
+                                               const uint32_t              Wdst)
 {
     // ~.x : width; ~.y : height
     uint2 copy_dim = make_uint2(end.y - start.y, end.x - start.x);
@@ -82,9 +82,9 @@ _THREAD_GENERAL_ void decx::_general_copy2D_BC(const T* __restrict           src
 
 
 template <typename T> _THREAD_GENERAL_
-void decx::_cpy2D_plane(const T* __restrict src, T* __restrict dst, const uint Wsrc, const uint Wdst, const uint2 cpy_area)
+void decx::_cpy2D_plane(const T* __restrict src, T* __restrict dst, const uint32_t Wsrc, const uint32_t Wdst, const uint2 cpy_area)
 {
-    size_t r_dex_src = 0, r_dex_dst = 0;
+    uint64_t  r_dex_src = 0, r_dex_dst = 0;
 
     for (int i = 0; i < cpy_area.y; ++i) {
         memcpy(dst + r_dex_dst, src + r_dex_src, cpy_area.x * sizeof(T));
@@ -95,41 +95,29 @@ void decx::_cpy2D_plane(const T* __restrict src, T* __restrict dst, const uint W
 
 
 template <typename _T_ele>
-static void decx::_cpy2D_anybit_caller(_T_ele* src, _T_ele* dst, const uint Wsrc, const uint Wdst, const uint2 cpy_area)
+static void decx::_cpy2D_anybit_caller(_T_ele* src, _T_ele* dst, const uint32_t Wsrc, const uint32_t Wdst, const uint2 cpy_area)
 {
-    const uint conc_thr = (uint)decx::cpu::_get_permitted_concurrency();
+    const uint32_t conc_thr = (uint32_t)decx::cpu::_get_permitted_concurrency();
     decx::utils::frag_manager f_mgr;
     decx::utils::frag_manager_gen(&f_mgr, cpy_area.y, conc_thr);
 
-    std::future<void>* fut = new std::future<void>[conc_thr];
+    decx::utils::_thread_arrange_1D t1D(conc_thr);
     
-    if (f_mgr.frag_left_over != 0) {
-        _T_ele* tmp_src = src, * tmp_dst = dst;
-        for (int i = 0; i < conc_thr - 1; ++i) {
-            fut[i] = decx::cpu::register_task_default(decx::_cpy2D_plane<_T_ele>,
-                tmp_src, tmp_dst, Wsrc, Wdst, make_uint2(cpy_area.x, f_mgr.frag_len));
-            
-            tmp_src += (size_t)Wsrc * (size_t)f_mgr.frag_len;
-            tmp_dst += (size_t)Wdst * (size_t)f_mgr.frag_len;
-        }
-        fut[conc_thr - 1] = decx::cpu::register_task_default(decx::_cpy2D_plane<_T_ele>,
-            tmp_src, tmp_dst, Wsrc, Wdst, make_uint2(cpy_area.x, f_mgr.frag_left_over));
+    _T_ele* tmp_src = src, * tmp_dst = dst;
+    for (int i = 0; i < conc_thr - 1; ++i) {
+        t1D._async_thread[i] = decx::cpu::register_task_default(decx::_cpy2D_plane<_T_ele>,
+            tmp_src, tmp_dst, Wsrc, Wdst, make_uint2(cpy_area.x, f_mgr.frag_len));
+
+        tmp_src += (uint64_t)Wsrc * (uint64_t)f_mgr.frag_len;
+        tmp_dst += (uint64_t)Wdst * (uint64_t)f_mgr.frag_len;
     }
-    else {
-        _T_ele* tmp_src = src, * tmp_dst = dst;
-        for (int i = 0; i < conc_thr; ++i) {
-            fut[i] = decx::cpu::register_task_default(decx::_cpy2D_plane<_T_ele>,
-                tmp_src, tmp_dst, Wsrc, Wdst, make_uint2(cpy_area.x, f_mgr.frag_len));
-            
-            tmp_src += (size_t)Wsrc * (size_t)f_mgr.frag_len;
-            tmp_dst += (size_t)Wdst * (size_t)f_mgr.frag_len;
-        }
-    }
+    const uint32_t _L = f_mgr.is_left ? f_mgr.frag_left_over : f_mgr.frag_len;
+    t1D._async_thread[conc_thr - 1] = decx::cpu::register_task_default(decx::_cpy2D_plane<_T_ele>,
+        tmp_src, tmp_dst, Wsrc, Wdst, make_uint2(cpy_area.x, _L));
 
     for (int i = 0; i < conc_thr; ++i) {
-        fut[i].get();
+        t1D._async_thread[i].get();
     }
-    delete[] fut;
 }
 
 
@@ -142,7 +130,7 @@ namespace decx
     * @param Wsrc : pitch of src, in its own element
     * @param Wdst : pitch of dst, in its own element
     */
-    void _cpy2D_plane_array(const float* src, float* dst, const uint Wsrc, const uint Wdst, const uint2 cpy_area);
+    void _cpy2D_plane_array(const float* src, float* dst, const uint32_t Wsrc, const uint32_t Wdst, const uint2 cpy_area);
 
 
     /*
@@ -151,7 +139,7 @@ namespace decx
     * @param Wdst : pitch of dst, in its own element
     */
     template <typename _T_ele>
-    static void _cpy2D_PA_32bit_caller(_T_ele* src, _T_ele* dst, const uint Wsrc, const uint Wdst, const uint2 cpy_area);
+    static void _cpy2D_PA_32bit_caller(_T_ele* src, _T_ele* dst, const uint32_t Wsrc, const uint32_t Wdst, const uint2 cpy_area);
 }
 
 

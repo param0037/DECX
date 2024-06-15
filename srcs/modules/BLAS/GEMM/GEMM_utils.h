@@ -12,6 +12,10 @@
 #define _GEMM_UTILS_H_
 
 #include "../../core/basic.h"
+#include "../../classes/Matrix.h"
+#include "../../core/thread_management/thread_arrange.h"
+#include "../../core/utils/fragment_arrangment.h"
+#include "../../core/resources_manager/decx_resource.h"
 
 
 #define GEMM_BlockDim 16
@@ -27,9 +31,47 @@ namespace de
 
 
 #ifdef _DECX_BLAS_CPU_
-
 namespace decx
 {
+    template <typename _data_type>
+    class cpu_GEMM_general_config
+    {
+    private:
+        const decx::_matrix_layout* _layout_A, *_layout_B;
+        uint32_t _concurrency;
+
+        uint2 _thread_dist;
+        decx::utils::_thread_arrange_2D _t2D;
+        decx::utils::frag_manager _f_mgr_sort_B, _pre_f_mgrW;
+        uint32_t _L;
+        uint2 _arranged_B_dims;
+        uint32_t _pitch_extdst;
+
+        decx::PtrInfo<float> _arranged_B, _extra_dst;
+
+    public:
+        cpu_GEMM_general_config() {
+            memset(this, 0, sizeof(cpu_GEMM_general_config<_data_type>));
+        }
+
+
+        _CRSR_ void Config(const uint32_t parallel, const decx::_matrix_layout* layout_A, 
+            const decx::_matrix_layout* layout_B, de::DH *handle);
+
+
+        bool Changed(const uint32_t parallel, const decx::_matrix_layout* layout_A,
+            const decx::_matrix_layout* layout_B) const;
+
+
+        void Run(decx::_Matrix* _A, decx::_Matrix* _B, decx::_Matrix* _dst);
+
+
+        static void release_buffers(decx::cpu_GEMM_general_config<_data_type>* _fake_this);
+    };
+
+    extern decx::ResourceHandle _cpu_GEMM_fp32_mgr;
+
+
     typedef struct GEMM_AB_configs
     {
         uint _pitchA, _pitchB, _pitchdst, _pitchC, _linear;
@@ -38,12 +80,12 @@ namespace decx
         GEMM_AB_configs() {}
 
 
-        GEMM_AB_configs(const uint pitchA, 
-                        const uint pitchB, 
-                        const uint pitchdst, 
-                        const uint linear, 
+        GEMM_AB_configs(const uint32_t pitchA, 
+                        const uint32_t pitchB, 
+                        const uint32_t pitchdst, 
+                        const uint32_t linear, 
                         const uint2 proc_dims, 
-                        const uint pitchC = 0) :
+                        const uint32_t pitchC = 0) :
             _pitchA(pitchA),
             _pitchB(pitchB),
             _pitchdst(pitchdst),

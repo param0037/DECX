@@ -18,6 +18,10 @@ namespace de
 {
     class _DECX_API_ TensorArray
     {
+    protected:
+        _SHADOW_ATTRIBUTE_(void**) _exp_data_ptr;
+        _SHADOW_ATTRIBUTE_(de::TensorLayout) _exp_tensor_dscr;
+
     public:
         TensorArray() {}
 
@@ -34,11 +38,18 @@ namespace de
         virtual uint TensorNum() const = 0;
 
 
-        virtual float* ptr_fp32(const int x, const int y, const int z, const int tensor_id) = 0;
+        /*virtual float* ptr_fp32(const int x, const int y, const int z, const int tensor_id) = 0;
         virtual int* ptr_int32(const int x, const int y, const int z, const int tensor_id) = 0;
         virtual de::Half* ptr_fp16(const int x, const int y, const int z, const int tensor_id) = 0;
         virtual double* ptr_fp64(const int x, const int y, const int z, const int tensor_id) = 0;
-        virtual uint8_t* ptr_uint8(const int x, const int y, const int z, const int tensor_id) = 0;
+        virtual uint8_t* ptr_uint8(const int x, const int y, const int z, const int tensor_id) = 0;*/
+
+
+        template <typename _ptr_type>
+        _ptr_type* ptr(const int x, const int y, const int z, const int tensor_id)
+        {
+            return ((_ptr_type*)(*this->_exp_data_ptr)[tensor_id]) + x * this->_exp_tensor_dscr->dp_x_wp + y * this->_exp_tensor_dscr->dpitch + z;
+        }
 
 
         virtual de::TensorArray& SoftCopy(de::TensorArray& src) = 0;

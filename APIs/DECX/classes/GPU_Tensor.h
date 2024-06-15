@@ -12,7 +12,7 @@
 #ifndef _GPU_TENSOR_H_
 #define _GPU_TENSOR_H_
 
-#include "tensor.h"
+#include "Tensor.h"
 
 namespace de
 {

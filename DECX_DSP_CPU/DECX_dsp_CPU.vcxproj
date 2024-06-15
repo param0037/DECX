@@ -76,9 +76,8 @@
     <ClCompile Include="..\srcs\modules\DSP\regional\regional_comparision\CPU\utils\template_configurations.cxx" />
   </ItemGroup>
   <ItemGroup>
-    <MASM Include="..\srcs\modules\core\utils\SSE_fast_math_masm.asm">
+    <MASM Include="..\srcs\modules\core\utils\decx_SVML_x86.asm">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
-      <FileType>Document</FileType>
     </MASM>
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -204,12 +203,13 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;DECXDSPCPU_EXPORTS;_WINDOWS;_USRDLL;_DECX_DSP_CPU_;_DECX_CPU_PARTS_;_SIMD_VER_=AVX256;_C_EXPORT_ENABLED_=1;_CPP_EXPORT_ENABLED_=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;DECXDSPCPU_EXPORTS;_WINDOWS;_USRDLL;_DECX_DSP_CPU_;_DECX_CPU_PARTS_;_SIMD_VER_=AVX256;_C_EXPORT_ENABLED_=1;_CPP_EXPORT_ENABLED_=1;__x86_64__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -220,6 +220,9 @@
       <AdditionalLibraryDirectories>E:\DECX_world\bin\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>DECX_core_CPU.lib;DECX_BLAS_CPU.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <MASM>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+    </MASM>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

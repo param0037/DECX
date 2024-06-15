@@ -20,18 +20,6 @@
 #endif
 
 
-// APIs from DECX_core_CPU
-namespace decx
-{
-    /*_DECX_API_ bool Get_enable_log_print();
-
-
-    _DECX_API_ bool Get_ignore_successful_print();
-
-
-    _DECX_API_ bool Get_ignore_warnings();*/
-}
-
 
 #ifdef Windows
 #define SetConsoleColor(_color_flag)    \
@@ -56,7 +44,7 @@ namespace decx
 #define Print_Error_Message(_color, _statement)     \
 {                                                   \
     SetConsoleColor(_color);                        \
-    printf(_statement);                             \
+    printf("%s", _statement);                       \
     ResetConsoleColor;                              \
 }
 
@@ -104,6 +92,7 @@ void check(T result, char const* const func, const char* const file, int const l
 #endif
 
 
+#ifdef __cplusplus
 namespace decx
 {
     namespace err
@@ -111,11 +100,6 @@ namespace decx
         template <bool _sync = true>
         static void Success(de::DH* handle)
         {
-            if (_sync) {
-                /*if ((!decx::Get_ignore_successful_print()) && decx::Get_enable_log_print()) {
-                    Print_Error_Message(0x0E, SUCCESS);
-                }*/
-            }
             decx::utils::decx_strcpy<100>(handle->error_string, SUCCESS);
             handle->error_type = decx::DECX_error_types::DECX_SUCCESS;
         }
@@ -139,9 +123,6 @@ namespace decx
     {
         static void CPU_Hyper_Threading(de::DH* handle)
         {
-            /*if (!decx::Get_ignore_warnings()) {
-                Print_Error_Message(6, CPU_HYPER_THREADING);
-            }*/
             decx::utils::decx_strcpy<100>(handle->error_string, CPU_HYPER_THREADING);
             handle->error_type = decx::DECX_error_types::DECX_SUCCESS;
         }
@@ -150,17 +131,11 @@ namespace decx
         template <bool _sync = true>
         static void Memcpy_different_types(de::DH* handle)
         {
-            if (_sync) {
-                /*if ((!decx::Get_ignore_warnings()) && decx::Get_enable_log_print()) {
-                    Print_Error_Message(0x0E, MEMCPY_DIFFERENT_DATA_TYPE);
-                }*/
-            }
             decx::utils::decx_strcpy<100>(handle->error_string, MEMCPY_DIFFERENT_DATA_TYPE);
             handle->error_type = decx::DECX_error_types::MEMCPY_DIFFERENT_TYPES;
         }
-
     }
 }
-
+#endif
 
 #endif

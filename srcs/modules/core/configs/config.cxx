@@ -23,8 +23,8 @@ decx::cpuInfo::cpuInfo()
 _DECX_API_ void de::InitCPUInfo()
 {
     decx::cpI.is_init = true;
-    decx::cpI.cpu_concurrency = std::thread::hardware_concurrency();
-    decx::cpI._hardware_concurrency = std::thread::hardware_concurrency();
+    _decx_get_CPU_info(&decx::cpI._hardware_info);
+    decx::cpI.cpu_concurrency = decx::cpI._hardware_info._hardware_concurrency;
 }
 
 
@@ -32,7 +32,7 @@ _DECX_API_ void de::cpu::DecxSetThreadingNum(const size_t _thread_num)
 {
     decx::cpI.cpu_concurrency = decx::utils::clamp_min<size_t>(_thread_num, 1);
     de::DH handle;
-    if (_thread_num > decx::cpI._hardware_concurrency) {
+    if (_thread_num > decx::cpI._hardware_info._hardware_concurrency) {
         decx::warn::CPU_Hyper_Threading(de::GetLastError());
     }
     else {
@@ -57,9 +57,8 @@ _DECX_API_ uint64_t decx::cpu::_get_permitted_concurrency()
 
 _DECX_API_ uint64_t decx::cpu::_get_hardware_concurrency()
 {
-    return decx::cpI._hardware_concurrency;
+    return decx::cpI._hardware_info._hardware_concurrency;
 }
-
 
 
 _DECX_API_ de::DH* de::GetLastError()

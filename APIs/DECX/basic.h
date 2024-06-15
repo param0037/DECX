@@ -31,6 +31,9 @@ typedef unsigned char uchar;
 typedef unsigned int uint;
 
 
+#define _SHADOW_ATTRIBUTE_(__actual_type) __actual_type*
+
+
 #if defined(WIN64) || defined(_WIN64) || defined(_WIN64_) || defined(WIN32)
 #define Windows
 #endif
@@ -50,7 +53,7 @@ typedef unsigned int uint;
 
 #ifdef Linux
 #define _DECX_API_ __attribute__((visibility("default")))
-#define __align__(n) __attribute__(align(n))
+#define __align__(n) __attribute__((aligned(n)))
 #endif
 
 #ifdef __cplusplus
@@ -85,7 +88,7 @@ namespace de
 	}
 
 	namespace cpu {
-		_DECX_API_ de::DH DecxSetThreadingNum(const size_t _thread_num);
+		_DECX_API_ void DecxSetThreadingNum(const uint64_t _thread_num);
 	}
 }
 
@@ -93,23 +96,23 @@ namespace de
 namespace de
 {
 	// Realized by DECX_allocations
-	_DECX_API_ void DecxEnableLogPrint();
+	//_DECX_API_ void DecxEnableLogPrint();
 
 
-	// Realized by DECX_allocations
-	_DECX_API_ void DecxDisableLogPrint();
+	//// Realized by DECX_allocations
+	//_DECX_API_ void DecxDisableLogPrint();
 
 
-	_DECX_API_ void DecxEnableWarningPrint();
+	//_DECX_API_ void DecxEnableWarningPrint();
 
 
-	_DECX_API_ void DecxDisableWarningPrint();
+	//_DECX_API_ void DecxDisableWarningPrint();
 
 
-	_DECX_API_ void DecxEnableSuccessfulPrint();
+	//_DECX_API_ void DecxEnableSuccessfulPrint();
 
 
-	_DECX_API_ void DecxDisableSuccessfulPrint();
+	//_DECX_API_ void DecxDisableSuccessfulPrint();
 }
 
 
@@ -152,9 +155,22 @@ namespace de
 #endif
 
 #ifdef _C_CONTEXT_
-typedef char int8_t;
-typedef int int32_t;
-typedef unsigned int uint32_t;
+typedef char				int8_t;
+typedef unsigned char		uint8_t;
+typedef int					int32_t;
+typedef unsigned int		uint32_t;
+typedef unsigned long long	uint64_t;
+
+
+typedef struct DECX_Handle_t
+{
+	// indicates the type index of error
+	int error_type;
+
+	// describes the error statements
+	char error_string[100];
+}DECX_Handle;
+
 #endif
 
 #endif

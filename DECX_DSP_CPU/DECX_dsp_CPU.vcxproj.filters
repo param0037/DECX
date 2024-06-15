@@ -242,7 +242,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <MASM Include="..\srcs\modules\core\utils\SSE_fast_math_masm.asm">
+    <MASM Include="..\srcs\modules\core\utils\decx_SVML_x86.asm">
       <Filter>源文件\utils</Filter>
     </MASM>
   </ItemGroup>

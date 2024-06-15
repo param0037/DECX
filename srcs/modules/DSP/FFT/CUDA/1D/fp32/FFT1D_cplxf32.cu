@@ -24,7 +24,7 @@ void decx::dsp::fft::_cuda_FFT1D_planner<float>::Forward(decx::_Vector* src, dec
     const decx::dsp::fft::_cuda_FFT2D_planner<float>* _formal_FFT2D_ptr = this->get_FFT2D_planner();
     decx::utils::double_buffer_manager _double_buffer(_formal_FFT2D_ptr->get_tmp1_ptr<void>(),
                                                       _formal_FFT2D_ptr->get_tmp2_ptr<void>());
-
+    
     checkCudaErrors(cudaMemcpyAsync(_double_buffer.get_buffer2<void>(), 
         src->Vec.ptr, 
         src->Len() * sizeof(_type_in),

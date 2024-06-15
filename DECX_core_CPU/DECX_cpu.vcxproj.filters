@@ -100,6 +100,9 @@
     <Filter Include="源文件\resources_manager">
       <UniqueIdentifier>{fcd4818b-ea09-406c-afe1-a5097ea904d0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\core\configs\x86_64">
+      <UniqueIdentifier>{50bad2ca-4b79-4b88-9691-9ff3d7e8602c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -278,5 +281,13 @@
     <ClCompile Include="..\srcs\modules\core\resources_manager\ResMgr.cxx">
       <Filter>源文件\resources_manager</Filter>
     </ClCompile>
+    <ClCompile Include="..\srcs\modules\core\configs\x86_64\decx_CPUID_x86.c">
+      <Filter>源文件\core\configs\x86_64</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <MASM Include="..\srcs\modules\core\configs\x86_64\cpuid_call_x86_64.asm">
+      <Filter>源文件\core\configs\x86_64</Filter>
+    </MASM>
   </ItemGroup>
 </Project>

@@ -23,20 +23,20 @@ namespace de
     {
         namespace cuda
         {
-            _DECX_API_ de::DH NLM_RGB(de::Matrix& src, de::Matrix& dst, uint search_window_size, uint template_window_size, float h);
+            _DECX_API_ de::DH NLM_RGB(de::Matrix& src, de::Matrix& dst, uint32_t search_window_size, uint32_t template_window_size, float h);
 
 
             /**
             * @param search_window_size : radius
             * @param template_window_size : radius
             */
-            _DECX_API_ de::DH NLM_RGB_keep_alpha(de::Matrix& src, de::Matrix& dst, uint search_window_radius, uint template_window_radius, float h);
+            _DECX_API_ de::DH NLM_RGB_keep_alpha(de::Matrix& src, de::Matrix& dst, uint32_t search_window_radius, uint32_t template_window_radius, float h);
 
 
-            _DECX_API_ de::DH NLM_RGB_keep_alpha(de::Matrix& src, de::Matrix& dst, uint search_window_radius, uint template_window_radius, float h);
+            _DECX_API_ de::DH NLM_RGB_keep_alpha(de::Matrix& src, de::Matrix& dst, uint32_t search_window_radius, uint32_t template_window_radius, float h);
 
 
-            _DECX_API_ de::DH NLM_Gray(de::Matrix& src, de::Matrix& dst, uint search_window_radius, uint template_window_radius, float h);
+            _DECX_API_ de::DH NLM_Gray(de::Matrix& src, de::Matrix& dst, uint32_t search_window_radius, uint32_t template_window_radius, float h);
         }
     }
 }

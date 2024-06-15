@@ -14,28 +14,13 @@
 
 
 #include "../basic.h"
+#include "decx_CPUID.h"
 
 
 #ifdef _DECX_CORE_CUDA_
 #include "../cudaStream_management/cudaStream_queue.h"
 #include "../cudaStream_management/cudaEvent_queue.h"
 #endif
-
-
-
-namespace decx
-{
-#if defined(_DECX_CORE_CUDA_) || defined(_DECX_CORE_CPU_)
-    /*struct logging_config
-    {
-        bool _enable_log_print;
-        bool _ignore_successful_print;
-        bool _ignore_warnings;
-
-        logging_config();
-    };*/
-#endif
-}
 
 
 #ifdef _DECX_CUDA_PARTS_
@@ -67,7 +52,7 @@ namespace decx
     typedef struct cpuInfo
     {
         size_t cpu_concurrency;
-        size_t _hardware_concurrency;
+        decx_CPUINFO _hardware_info;
         bool is_init;
 
         cpuInfo();
@@ -109,7 +94,6 @@ namespace decx
 
 #if defined(_DECX_CORE_CPU_)
     extern decx::cpuInfo cpI;
-    //extern decx::logging_config LogConf;
 #endif
 }
 
@@ -127,27 +111,6 @@ namespace de
         _DECX_API_ void DecxSetThreadingNum(const size_t _thread_num);
     }
 #endif
-
-    // Realized by DECX_allocations
-    //_DECX_API_ void DecxEnableLogPrint();
-
-
-    //// Realized by DECX_allocations
-    //_DECX_API_ void DecxDisableLogPrint();
-
-
-    //_DECX_API_ void DecxEnableWarningPrint();
-
-
-    //_DECX_API_ void DecxDisableWarningPrint();
-
-
-    //_DECX_API_ void DecxEnableSuccessfulPrint();
-
-
-    //_DECX_API_ void DecxDisableSuccessfulPrint();
 }
-
-
 
 #endif

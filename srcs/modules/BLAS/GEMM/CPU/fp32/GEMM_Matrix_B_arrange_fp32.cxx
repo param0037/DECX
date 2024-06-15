@@ -62,3 +62,4 @@ arrange_MatB_fp32_caller(const float*                srcB,
 
     t2D->__sync_all_threads();
 }
+

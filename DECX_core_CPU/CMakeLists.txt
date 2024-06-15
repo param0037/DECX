@@ -12,7 +12,16 @@ file(GLOB_RECURSE CLASS "${DECX_WORLD_ABS_DIR}/srcs/modules/classes/*.cxx")
 file(GLOB_RECURSE CORE "${DECX_WORLD_ABS_DIR}/srcs/modules/core/*.cxx")
 
 #set(CXX_FLAGS -mFMA -mAVX2 -mAVX)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native")
+if(CMAKE_CROSSCOMPILING)
+    add_compile_definitions(__aarch64__)
+    message("Host=aarch64")
+    set(LIBRARY_OUTPUT_PATH ${DECX_WORLD_ABS_DIR}/bin/aarch64)
+else()
+    add_compile_definitions(__x86_64__)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native")
+    message("Host=x86_64")
+    set(LIBRARY_OUTPUT_PATH ${DECX_WORLD_ABS_DIR}/bin/x64)
+endif()
 # add_compile_definitions(_DECX_CPU_CODES_)
 add_compile_definitions(_DECX_CPU_PARTS_)
 add_compile_definitions(_DECX_CORE_CPU_)
@@ -20,13 +29,12 @@ add_compile_definitions(_C_EXPORT_ENABLED_=1)
 add_compile_definitions(_CPP_EXPORT_ENABLED_=1)
 
 
-include_directories(${SDL_PATH}/include ${SDL_IMAGE_PATH}/include)
+#include_directories(${SDL_PATH}/include ${SDL_IMAGE_PATH}/include)
 
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE release CACHE STRING "Build Type" FORCE)
 endif()
 
-set(LIBRARY_OUTPUT_PATH ${DECX_WORLD_ABS_DIR}/bin/x64)
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     link_directories(${DECX_WORLD_ABS_DIR}/bin/x64/Release)

@@ -11,7 +11,6 @@
 #ifndef _BASIC_H_
 #define _BASIC_H_
 
-
 #include "include.h"
 #include "error.h"
 #include "../handles/decx_handles.h"
@@ -20,16 +19,6 @@
 
 #if defined(_DECX_CORE_CUDA_)
 #define CONSTANT_MEM_SIZE 0x10000 / 8
-/**
-* extern constant memory can be only compiled when generate relocatable device code
-* is enabled
-* 1. using Visual Studio : properties -> CUDA C/C++ -> generate relocatable device code -> Yes
-* 2. using nvcc command line : -rdc=true
-*/
-namespace decx {
-    //extern __constant__ uchar Const_Mem[];
-}
-
 #endif
 
 #define _SHADOW_ATTRIBUTE_(__actual_type) __actual_type*

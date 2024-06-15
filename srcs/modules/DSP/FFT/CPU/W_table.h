@@ -14,6 +14,22 @@
 #include "../FFT_commons.h"
 #include "../../../classes/classes_util.h"
 
+//
+//extern "C"
+//{
+//    struct _cossin_vec4_pair
+//    {
+//        __m128 _cos_val;
+//        __m128 _sin_val;
+//    };
+//
+//    _cossin_vec4_pair gen_cos_sin(__m128 angle_v4);
+//
+//
+//    _cossin_vec4_pair __vectorcall _mm_cos_sin_pair_CORDIC_40_ps(__m128 angle_v4);
+//}
+extern "C" __m128 __vectorcall __cos_fp32x4(__m128);
+extern "C" __m128 __vectorcall __sin_fp32x4(__m128);
 
 namespace decx
 {

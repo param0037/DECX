@@ -174,4 +174,15 @@ namespace de
 }
 
 
+namespace de
+{
+	namespace dsp {
+		namespace cuda {
+			_DECX_API_ de::DH Filter2D(de::GPU_Matrix& src, de::GPU_Matrix& kernel, de::GPU_Matrix& dst,
+				const de::extend_label _extend_method);
+		}
+	}
+}
+
+
 #endif

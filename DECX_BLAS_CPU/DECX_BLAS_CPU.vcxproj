@@ -129,7 +129,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;_DECX_CPU_PARTS_;_DECX_BLAS_CPU_;_C_EXPORT_ENABLED_=1;_CPP_EXPORT_ENABLED_=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;_DECX_CPU_PARTS_;_DECX_BLAS_CPU_;_C_EXPORT_ENABLED_=1;_CPP_EXPORT_ENABLED_=1;__x86_64__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
@@ -199,7 +199,9 @@
     <ClCompile Include="..\srcs\modules\BLAS\GEMM\CPU\64b\GEMM_ABC_kernel_64b.cxx" />
     <ClCompile Include="..\srcs\modules\BLAS\GEMM\CPU\64b\GEMM_kernel_64b.cxx" />
     <ClCompile Include="..\srcs\modules\BLAS\GEMM\CPU\64b\GEMM_Matrix_B_arrange_64b.cxx" />
+    <ClCompile Include="..\srcs\modules\BLAS\GEMM\CPU\cpu_GEMM_general_config.cxx" />
     <ClCompile Include="..\srcs\modules\BLAS\GEMM\CPU\fp32\GEMM_ABC_kernel_fp32.cxx" />
+    <ClCompile Include="..\srcs\modules\BLAS\GEMM\CPU\fp32\GEMM_fp32_caller.cxx" />
     <ClCompile Include="..\srcs\modules\BLAS\GEMM\CPU\fp32\GEMM_kernel_fp32.cxx" />
     <ClCompile Include="..\srcs\modules\BLAS\GEMM\CPU\fp32\GEMM_Matrix_B_arrange_fp32.cxx" />
     <ClCompile Include="..\srcs\modules\BLAS\GEMM\CPU\GEMM.cxx" />

@@ -55,6 +55,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.props" />
   </ImportGroup>
   <ImportGroup Label="Shared">
   </ImportGroup>
@@ -141,7 +142,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;DECXCPU_EXPORTS;_WINDOWS;_USRDLL;_DECX_CPU_PARTS_;_DECX_CORE_CPU_;_C_EXPORT_ENABLED_=1;_CPP_EXPORT_ENABLED_=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;DECXCPU_EXPORTS;_WINDOWS;_USRDLL;_DECX_CPU_PARTS_;_DECX_CORE_CPU_;_C_EXPORT_ENABLED_=1;_CPP_EXPORT_ENABLED_=1;__x86_64__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -211,6 +212,7 @@
     <ClCompile Include="..\srcs\modules\core\allocators\_deallocator.cxx" />
     <ClCompile Include="..\srcs\modules\core\allocators\_memset.cxx" />
     <ClCompile Include="..\srcs\modules\core\configs\config.cxx" />
+    <ClCompile Include="..\srcs\modules\core\configs\x86_64\decx_CPUID_x86.c" />
     <ClCompile Include="..\srcs\modules\core\global_vars.cxx" />
     <ClCompile Include="..\srcs\modules\core\memory_management\MemBlock.cxx" />
     <ClCompile Include="..\srcs\modules\core\memory_management\MemChunk_Hv.cxx" />
@@ -222,7 +224,13 @@
     <ClCompile Include="..\srcs\modules\core\thread_management\thread_pool.cxx" />
     <ClCompile Include="..\srcs\modules\core\utils\fragment_arangement.cxx" />
   </ItemGroup>
+  <ItemGroup>
+    <MASM Include="..\srcs\modules\core\configs\x86_64\cpuid_call_x86_64.asm">
+      <FileType>Document</FileType>
+    </MASM>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.targets" />
   </ImportGroup>
 </Project>

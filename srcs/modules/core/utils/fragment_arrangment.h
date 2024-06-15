@@ -176,7 +176,7 @@ namespace decx
          *
          * @return The return value is a uint2 structure, of which x and y are propotional to proc_dims
          */
-        void thread2D_arrangement_advisor_for_GEMM(uint2* thr_arrange, const uint32_t total_thr_num, const uint2 proc_dims);
+        void thread2D_arrangement_advisor(uint2* thr_arrange, const uint32_t total_thr_num, const uint2 proc_dims);
     }
 }
 

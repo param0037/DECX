@@ -24,7 +24,6 @@ de::DH de::cpu::GEMM(de::Matrix& A, de::Matrix& B, de::Matrix& dst)
         return handle;
     }
 
-
     decx::err::Success<true>(&handle);
 
     decx::_Matrix* _A = dynamic_cast<decx::_Matrix*>(&A);
@@ -34,15 +33,15 @@ de::DH de::cpu::GEMM(de::Matrix& A, de::Matrix& B, de::Matrix& dst)
     switch (_A->Type())
     {
     case de::_DATA_TYPES_FLAGS_::_FP32_:
-        decx::cpu::GEMM_fp32<true>(_A, _B, _dst, &handle);
+        decx::cpu::GEMM_fp32(_A, _B, _dst, &handle);
         break;
 
     case de::_DATA_TYPES_FLAGS_::_FP64_:
-        decx::cpu::GEMM_64b<false, true>(_A, _B, _dst, &handle);
+        decx::cpu::GEMM_64b<false>(_A, _B, _dst, &handle);
         break;
 
     case de::_DATA_TYPES_FLAGS_::_COMPLEX_F32_:
-        decx::cpu::GEMM_64b<true, true>(_A, _B, _dst, &handle);
+        decx::cpu::GEMM_64b<true>(_A, _B, _dst, &handle);
         break;
     default:
         break;
@@ -75,15 +74,15 @@ de::DH de::cpu::GEMM(de::Matrix& A, de::Matrix& B, de::Matrix& C, de::Matrix& ds
     switch (_A->Type())
     {
     case de::_DATA_TYPES_FLAGS_::_FP32_:
-        decx::cpu::GEMM_fp32_ABC<true>(_A, _B, _C, _dst, &handle);
+        decx::cpu::GEMM_fp32_ABC(_A, _B, _C, _dst, &handle);
         break;
 
     case de::_DATA_TYPES_FLAGS_::_FP64_:
-        decx::cpu::GEMM_64b_ABC<false, true>(_A, _B, _C, _dst, &handle);
+        decx::cpu::GEMM_64b_ABC<false>(_A, _B, _C, _dst, &handle);
         break;
 
     case de::_DATA_TYPES_FLAGS_::_COMPLEX_F32_:
-        decx::cpu::GEMM_64b_ABC<true, true>(_A, _B, _C, _dst, &handle);
+        decx::cpu::GEMM_64b_ABC<true>(_A, _B, _C, _dst, &handle);
         break;
     default:
         break;

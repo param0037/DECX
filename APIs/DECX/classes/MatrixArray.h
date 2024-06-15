@@ -7,8 +7,6 @@
 *	2021.04.16
 */
 
-#pragma once
-
 #ifndef _MATRIXARRAY_H_
 #define _MATRIXARRAY_H_
 
@@ -24,6 +22,10 @@ namespace de
 	*/
     class _DECX_API_ MatrixArray
     {
+    protected:
+        _SHADOW_ATTRIBUTE_(void**) _exp_data_ptr;
+        _SHADOW_ATTRIBUTE_(de::MatrixLayout) _exp_matrix_dscr;
+
     public:
         uint ArrayNumber;
 
@@ -37,12 +39,18 @@ namespace de
         virtual uint MatrixNumber() const = 0;
 
 
-        virtual float* ptr_fp32(const uint row, const uint col, const uint _seq) = 0;
+        /*virtual float* ptr_fp32(const uint row, const uint col, const uint _seq) = 0;
         virtual double* ptr_fp64(const uint row, const uint col, const uint _seq) = 0;
         virtual int* ptr_int32(const uint row, const uint col, const uint _seq) = 0;
         virtual de::CPf* ptr_cpl32(const uint row, const uint col, const uint _seq) = 0;
         virtual de::Half* ptr_fp16(const uint row, const uint col, const uint _seq) = 0;
-        virtual uint8_t* ptr_uint8(const uint row, const uint col, const uint _seq) = 0;
+        virtual uint8_t* ptr_uint8(const uint row, const uint col, const uint _seq) = 0;*/
+
+        template <typename _ptr_type>
+        _ptr_type* ptr(const uint row, const uint col, const uint _seq)
+        {
+            return ((_ptr_type*)(*this->_exp_data_ptr)[_seq]) + this->_exp_matrix_dscr->pitch * row + col;
+        }
 
 
         virtual de::MatrixArray& SoftCopy(de::MatrixArray& src) = 0;

@@ -12,23 +12,29 @@
 #include "W_table.h"
 
 
-_THREAD_FUNCTION_ void decx::dsp::fft::CPUK::_W_table_gen_cplxf(double* __restrict      _W_table, 
-                                                                const uint32_t          _proc_len_v4,
-                                                                const uint64_t          _signal_length, 
-                                                                const uint64_t          _index_start)
+__m128 _mm_cos_ps_taylor(__m128 angle);
+__m128 _mm_sin_ps_taylor(__m128 angle);
+
+
+_THREAD_FUNCTION_ void decx::dsp::fft::CPUK::
+_W_table_gen_cplxf(double* __restrict      _W_table, 
+                   const uint32_t          _proc_len_v4,
+                   const uint64_t          _signal_length, 
+                   const uint64_t          _index_start)
 {
     decx::utils::simd::xmm128_reg _real_v4, _image_v4, angle_v4;
     decx::utils::simd::xmm256_reg _res;
 
     uint32_t _base_dex = _index_start;
+    
 
     for (uint32_t i = 0; i < _proc_len_v4; ++i) {
         angle_v4._vf = _mm_setr_ps(_base_dex, _base_dex + 1, _base_dex + 2, _base_dex + 3);
 
         angle_v4._vf = _mm_mul_ps(_mm_div_ps(angle_v4._vf, _mm_set1_ps(_signal_length)), _mm_set1_ps(Two_Pi));
         
-        _real_v4._vf = _mm_cos_ps(angle_v4._vf);
-        _image_v4._vf = _mm_sin_ps(angle_v4._vf);
+        _real_v4._vf = __cos_fp32x4(angle_v4._vf);
+        _image_v4._vf = _mm_sin_ps_taylor(angle_v4._vf);
 
         _res._vf = _mm256_permute2f128_ps(_mm256_castps128_ps256(_real_v4._vf), _mm256_castps128_ps256(_image_v4._vf), 0b00100000);
         _res._vf = _mm256_permutevar8x32_ps(_res._vf, _mm256_setr_epi32(0, 4, 1, 5, 2, 6, 3, 7));

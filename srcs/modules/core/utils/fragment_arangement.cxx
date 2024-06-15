@@ -183,9 +183,9 @@ uint2 decx::find_closest_factors_by_ratio_pow2(const uint32_t x, const uint2 pai
 
 
 
-void decx::utils::thread2D_arrangement_advisor_for_GEMM(uint2*              thr_arrange, 
-                                                        const uint32_t      total_thr_num, 
-                                                        const uint2         proc_dims)
+void decx::utils::thread2D_arrangement_advisor(uint2*              thr_arrange, 
+                                               const uint32_t      total_thr_num, 
+                                               const uint2         proc_dims)
 {
     // approximately a square, arrange the same number of threads noth on width and height if possible
     const float ratio = decx::_get_ratio_grater_than_one(proc_dims.x, proc_dims.y);

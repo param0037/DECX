@@ -20,7 +20,6 @@
 #define DECX_VISION
 
 
-
 #ifdef BasicClasses
 #include "DECX/classes/Vector.h"
 #include "DECX/classes/Matrix.h"
@@ -52,7 +51,7 @@
 #endif
 
 
-#include "DECX/DSP/fft/FFT.h"
+#include "DECX/DSP/FFT/FFT.h"
 #include "DECX/DSP/filters/filters.h"
 #include "DECX/DSP/generators.h"
 

@@ -30,11 +30,25 @@ namespace de
 			real = Freal;
 			image = Fimage;
 		}
-			complex_f() {}
+
+		complex_f() {}
 	}CPf;
 
 
-	__align__(8) struct Point2D
+	typedef struct __align__(16) complex_d
+	{
+		double real, image;
+
+		complex_d(const double Freal, const double Fimage) {
+			this->real = Freal;
+			this->image = Fimage;
+		}
+
+		complex_d() { this->real = 0; this->image = 0; }
+	}CPd;
+
+
+	struct __align__(8) Point2D
 	{
 		int32_t x, y;
 
@@ -46,7 +60,7 @@ namespace de
 	};
 
 
-	__align__(16) struct Point3D
+	struct __align__(16) Point3D
 	{
 		int32_t x, y, z;
 
@@ -58,7 +72,7 @@ namespace de
 	};
 
 
-	__align__(8) struct Point2D_f
+	struct __align__(8) Point2D_f
 	{
 		float x, y;
 		Point2D_f(const float _x, const float _y) { x = _x; y = _y; }
@@ -66,7 +80,7 @@ namespace de
 	};
 
 
-	__align__(16) struct Point2D_d
+    struct __align__(16) Point2D_d
 	{
 		double x, y;
 		Point2D_d(const double _x, const double _y) { x = _x; y = _y; }
@@ -74,14 +88,14 @@ namespace de
 	};
 
 
-	__align__(4) struct uchar4
+    struct __align__(4) uchar4
 	{
 		uint8_t x, y, z, w;
 	};
 
 	namespace vis
 	{
-		__align__(4) struct Pixel
+		struct __align__(4) Pixel
 		{
 			uint8_t r, g, b, alpha;
 		};
@@ -128,6 +142,32 @@ namespace de
 		Fp16_Accurate_L3 = 2,
 	};
 }
+#endif
+
+
+#ifdef _C_CONTEXT_
+typedef struct __align__(8) DECX_Point2D_t
+{
+	int32_t x, y;
+}DECX_Point2D;
+
+
+typedef struct __align__(8) DECX_Point2D_f_t
+{
+	float x, y;
+}DECX_Point2D_f;
+
+
+typedef struct __align__(16) DECX_Point2D_d_t
+{
+	double x, y;
+}DECX_Point2D_d;
+
+
+typedef struct __align__(8) DECX_Complex_f_t
+{
+	float _real, _image;
+}DECX_CPf;
 #endif
 
 #endif

@@ -13,11 +13,10 @@
 #define _INCLUDE_H_
 
 #include "configuration.h"
-
 #include "compile_params.h"
 
+#ifdef __cplusplus
 // STL
-//#include <iostream>
 #include <vector>
 #include <thread>
 #include <cmath>
@@ -26,8 +25,6 @@
 #include <functional>
 #include <condition_variable>
 #include <future>
-
-
 
 
 #ifdef _DECX_CUDA_PARTS_
@@ -40,18 +37,15 @@
 #include <cuda_fp16.h>
 #include <cuda_runtime_api.h>
 //#include <thrust/extrema.h>
+#endif
 
 #else
 
-#include <cstring>
 #include <stdlib.h>
 #include <malloc.h>
 #include <time.h>
 
 #endif
-
-
-//#include "../../../bin/x64/"
 
 // Windows
 
@@ -61,13 +55,27 @@
 //#include <...>
 #endif
 
-// SSE
+// SIMD instructions (SSE, AVX2, AVX512, NEON)
+#if defined(__x86_64__)
+/**
+ * Develop in Visual studio, these x86 SIMD files are accessible
+ * even using a <> to include.
+*/
 #include <immintrin.h>
 #include <mmintrin.h>
 #ifndef __GNUC__
 #include <intrin.h>
 #endif
 #include <xmmintrin.h>
+#elif defined(__aarch64__)
+/**
+ * Develop in x86 platform but cross compile to arm. Hence, arm_neon.h is
+ * invisible since it's in NDK include library. The error signs on the 
+ * editor are quite annoying. So, include the arm_neon.h downloaded in
+ * the project directory.
+*/
+#include "../../extern/arm/arm_neon.h"
+#endif
 
 //#ifdef _DECX_CUDA_PARTS_
 //// CUDA thrust

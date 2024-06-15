@@ -27,16 +27,16 @@ namespace decx
 {
     namespace cpu
     {
-        template <bool _is_cpl, bool _sync>
+        template <bool _is_cpl>
         static void GEMM_64b(decx::_Matrix* A, decx::_Matrix* B, decx::_Matrix* dst, de::DH *handle);
 
-        template <bool _is_cpl, bool _sync>
+        template <bool _is_cpl>
         static void GEMM_64b_ABC(decx::_Matrix* A, decx::_Matrix* B, decx::_Matrix* C, decx::_Matrix* dst, de::DH *handle);
     }
 }
 
 
-template <bool _is_cpl, bool _sync>
+template <bool _is_cpl>
 void decx::cpu::GEMM_64b(decx::_Matrix* _A, decx::_Matrix* _B, decx::_Matrix* _dst, de::DH* handle)
 {
     decx::PtrInfo<double> arranged_B, extra_dst;
@@ -50,7 +50,7 @@ void decx::cpu::GEMM_64b(decx::_Matrix* _A, decx::_Matrix* _B, decx::_Matrix* _d
             ALLOC_FAIL);
     }
 
-    const uint thr_num = (uint)decx::cpu::_get_permitted_concurrency();
+    const uint thr_num = (uint32_t)decx::cpu::_get_permitted_concurrency();
 
     decx::utils::_thr_2D t2D(3, 4);
     decx::utils::frag_manager f_mgr_sort_B, pre_f_mgrW;
@@ -101,7 +101,7 @@ void decx::cpu::GEMM_64b(decx::_Matrix* _A, decx::_Matrix* _B, decx::_Matrix* _d
 }
 
 
-template <bool _is_cpl, bool _sync>
+template <bool _is_cpl>
 void decx::cpu::GEMM_64b_ABC(decx::_Matrix* _A, decx::_Matrix* _B, decx::_Matrix* _C, decx::_Matrix* _dst, de::DH* handle)
 {
     decx::PtrInfo<double> arranged_B, extra_dst;
