@@ -64,7 +64,7 @@ namespace dsp {
 
 /*
 * On my device, the efficiency improvement is not significant to complete the 
-* extra time of cudaMemcpy2DAsync(D2D). Hence I turned it off.
+* extra time of cudaMemcpy2DAsync(D2D). Thus it's turned off.
 */
 #define _CUDA_FFT3D_restrict_coalesce_ 0
 

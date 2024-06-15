@@ -34,6 +34,8 @@ namespace decx
             const void*, void*, const uint32_t, decx::cuda_stream*);
         typedef void(*_cu_F2_FP32_Kcaller) (const decx::dsp::cuda_Filter2D_planner<float>*, const float4*,
             const float*, float4*, const uint32_t, decx::cuda_stream*);
+        typedef void(*_cu_F2_FP64_Kcaller) (const decx::dsp::cuda_Filter2D_planner<double>*, const double2*,
+            const double*, double2*, const uint32_t, decx::cuda_stream*);
 
         extern decx::dsp::_cu_F2_U8_Kcaller _cu_F2_U8_Kcallers[2][32];
 
@@ -45,6 +47,7 @@ namespace decx
         extern decx::dsp::cuda_Filter2D_planner<uint8_t>* _cuda_filter2D_u8;*/
 
         extern decx::ResourceHandle _cuda_filter2D_fp32;
+        extern decx::ResourceHandle _cuda_filter2D_fp64;
         extern decx::ResourceHandle _cuda_filter2D_u8;
     }
 }
@@ -71,6 +74,11 @@ public:
     template <uint32_t _ext_w>
     static void _cu_Filter2D_fp32_caller(const decx::dsp::cuda_Filter2D_planner<float>* _fake_this, const float4* src,
         const float* kernel, float4* dst, const uint32_t pitchdst_v1, decx::cuda_stream* S);
+
+
+    template <uint32_t _ext_w>
+    static void _cu_Filter2D_fp64_caller(const decx::dsp::cuda_Filter2D_planner<double>* _fake_this, const double2* src,
+        const double* kernel, double2* dst, const uint32_t pitchdst_v1, decx::cuda_stream* S);
 
 
     template <uint32_t _ext_w>

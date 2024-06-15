@@ -171,6 +171,14 @@ namespace utils
         }
 
 
+        __device__ __inline__ double2
+        __fma_v2_v1_v2(const double2 a, const double b, const double2 c)
+        {
+            return { __fma_rn(a.x, b, c.x),
+                     __fma_rn(a.y, b, c.y)};
+        }
+
+
         __device__ __inline__ float4
         __fmaf_v4_v1_v4_u8(const uchar4 a, const float b, const float4 c)
         {

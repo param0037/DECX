@@ -19,6 +19,7 @@ decx::dsp::cuda_Filter2D_planner<_data_type>::cuda_Filter2D_planner()
 
 template decx::dsp::cuda_Filter2D_planner<float>::cuda_Filter2D_planner();
 template decx::dsp::cuda_Filter2D_planner<uint8_t>::cuda_Filter2D_planner();
+template decx::dsp::cuda_Filter2D_planner<double>::cuda_Filter2D_planner();
 
 
 template <typename _data_type> _CRSR_ void 
@@ -64,6 +65,9 @@ template void decx::dsp::cuda_Filter2D_planner<float>::plan(const decx::_matrix_
 template void decx::dsp::cuda_Filter2D_planner<uint8_t>::plan(const decx::_matrix_layout*, const decx::_matrix_layout*,
     const de::extend_label, const de::_DATA_TYPES_FLAGS_, decx::cuda_stream*, de::DH*);
 
+template void decx::dsp::cuda_Filter2D_planner<double>::plan(const decx::_matrix_layout*, const decx::_matrix_layout*,
+    const de::extend_label, const de::_DATA_TYPES_FLAGS_, decx::cuda_stream*, de::DH*);
+
 
 template <typename _data_type>
 bool decx::dsp::cuda_Filter2D_planner<_data_type>::changed(const decx::_matrix_layout* src_layout, const decx::_matrix_layout* kernel_layout,
@@ -88,6 +92,9 @@ template bool decx::dsp::cuda_Filter2D_planner<float>::changed(const decx::_matr
 template bool decx::dsp::cuda_Filter2D_planner<uint8_t>::changed(const decx::_matrix_layout*, const decx::_matrix_layout*,
     const de::extend_label, const de::_DATA_TYPES_FLAGS_) const;
 
+template bool decx::dsp::cuda_Filter2D_planner<double>::changed(const decx::_matrix_layout*, const decx::_matrix_layout*,
+    const de::extend_label, const de::_DATA_TYPES_FLAGS_) const;
+
 
 template <typename _data_type>
 uint2 decx::dsp::cuda_Filter2D_planner<_data_type>::dst_dims_req() const
@@ -97,6 +104,7 @@ uint2 decx::dsp::cuda_Filter2D_planner<_data_type>::dst_dims_req() const
 
 template uint2 decx::dsp::cuda_Filter2D_planner<float>::dst_dims_req() const;
 template uint2 decx::dsp::cuda_Filter2D_planner<uint8_t>::dst_dims_req() const;
+template uint2 decx::dsp::cuda_Filter2D_planner<double>::dst_dims_req() const;
 
 
 template <typename _data_type> bool decx::dsp::cuda_Filter2D_planner<_data_type>::
@@ -109,7 +117,7 @@ validate_kerW(const uint32_t kerW)
 
 template bool decx::dsp::cuda_Filter2D_planner<float>::validate_kerW(const uint32_t);
 template bool decx::dsp::cuda_Filter2D_planner<uint8_t>::validate_kerW(const uint32_t);
-//template bool decx::dsp::cuda_Filter2D_planner<double>::validate_kerW(const uint32_t);
+template bool decx::dsp::cuda_Filter2D_planner<double>::validate_kerW(const uint32_t);
 
 
 template <typename _data_type>
@@ -122,6 +130,7 @@ void decx::dsp::cuda_Filter2D_planner<_data_type>::release(decx::dsp::cuda_Filte
 
 template void decx::dsp::cuda_Filter2D_planner<float>::release(decx::dsp::cuda_Filter2D_planner<float>*);
 template void decx::dsp::cuda_Filter2D_planner<uint8_t>::release(decx::dsp::cuda_Filter2D_planner<uint8_t>*);
+template void decx::dsp::cuda_Filter2D_planner<double>::release(decx::dsp::cuda_Filter2D_planner<double>*);
 
 
 template <typename _data_type>
@@ -132,6 +141,7 @@ decx::dsp::cuda_Filter2D_planner<_data_type>::~cuda_Filter2D_planner()
 
 template decx::dsp::cuda_Filter2D_planner<float>::~cuda_Filter2D_planner();
 template decx::dsp::cuda_Filter2D_planner<uint8_t>::~cuda_Filter2D_planner();
+template decx::dsp::cuda_Filter2D_planner<double>::~cuda_Filter2D_planner();
 
 //
 //void decx::dsp::Release_CU_Filter2D_Resource()

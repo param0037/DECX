@@ -12,7 +12,6 @@
 #include "../filter2D_kernel.cuh"
 
 
-//decx::dsp::cuda_Filter2D_planner<float>* decx::dsp::_cuda_filter2D_fp32 = NULL;
 decx::ResourceHandle decx::dsp::_cuda_filter2D_fp32;
 
 
@@ -35,7 +34,7 @@ _cu_Filter2D_fp32_caller(const decx::dsp::cuda_Filter2D_planner<float>* _fake_th
             cudaMemcpyDeviceToDevice,
             S->get_raw_stream_ref()));
         
-        decx::dsp::GPUK::cu_filter2D_BC_fp32<32> << <_fake_this->_grid, _fake_this->_block, 
+        decx::dsp::GPUK::cu_filter2D_BC_fp32<_ext_w> << <_fake_this->_grid, _fake_this->_block, 
                                                     0, S->get_raw_stream_ref() >> > (
             (float4*)_fake_this->_ext_src._ptr.ptr,
             (float*)kernel,
@@ -49,7 +48,7 @@ _cu_Filter2D_fp32_caller(const decx::dsp::cuda_Filter2D_planner<float>* _fake_th
     }
     else
     {
-        decx::dsp::GPUK::cu_filter2D_NB_fp32<32> << <_fake_this->_grid, _fake_this->_block, 
+        decx::dsp::GPUK::cu_filter2D_NB_fp32<_ext_w> << <_fake_this->_grid, _fake_this->_block, 
                                                     0, S->get_raw_stream_ref() >> > (
             (float4*)src,
             (float*)kernel,

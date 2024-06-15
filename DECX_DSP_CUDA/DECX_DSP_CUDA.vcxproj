@@ -31,6 +31,8 @@
     <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\sliding_window\filter2D.cu" />
     <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\sliding_window\fp32\filter2D_fp32_caller.cu" />
     <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\sliding_window\fp32\filter2D_fp32_kernel.cu" />
+    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\sliding_window\fp64\filter2D_fp64_caller.cu" />
+    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\sliding_window\fp64\filter2D_fp64_kernel.cu" />
     <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\sliding_window\uint8\filter2D_uint8_caller.cu" />
     <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\sliding_window\uint8\filter2D_uint8_kernel.cu" />
     <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\1D\CUDA_FFT1D_planner.cu" />

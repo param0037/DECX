@@ -185,7 +185,7 @@ static void decx::dsp::fft::_IFFT3D_caller_cplxd(decx::_GPU_Tensor* src, decx::_
 _DECX_API_ void de::dsp::cuda::FFT(de::GPU_Tensor& src, de::GPU_Tensor& dst)
 {
     if (!decx::cuda::_is_CUDA_init()) {
-        decx::err::handle_error_info_modify<true>(de::GetLastError(), 
+        decx::err::handle_error_info_modify(de::GetLastError(), 
             decx::DECX_error_types::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
         return;
     }
@@ -216,7 +216,7 @@ _DECX_API_ void de::dsp::cuda::FFT(de::GPU_Tensor& src, de::GPU_Tensor& dst)
         break;
 
     default:
-        decx::err::handle_error_info_modify<true>(de::GetLastError(),
+        decx::err::handle_error_info_modify(de::GetLastError(),
             decx::DECX_error_types::DECX_FAIL_UNSUPPORTED_TYPE,
             UNSUPPORTED_TYPE);
         break;
@@ -228,7 +228,7 @@ _DECX_API_ void de::dsp::cuda::FFT(de::GPU_Tensor& src, de::GPU_Tensor& dst)
 _DECX_API_ void de::dsp::cuda::IFFT(de::GPU_Tensor& src, de::GPU_Tensor& dst, const de::_DATA_TYPES_FLAGS_ type_out)
 {
     if (!decx::cuda::_is_CUDA_init()) {
-        decx::err::handle_error_info_modify<true>(de::GetLastError(),
+        decx::err::handle_error_info_modify(de::GetLastError(),
             decx::DECX_error_types::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
         return;
     }
@@ -259,7 +259,7 @@ _DECX_API_ void de::dsp::cuda::IFFT(de::GPU_Tensor& src, de::GPU_Tensor& dst, co
         break;
 
     default:
-        decx::err::handle_error_info_modify<true>(de::GetLastError(),
+        decx::err::handle_error_info_modify(de::GetLastError(),
             decx::DECX_error_types::DECX_FAIL_UNSUPPORTED_TYPE,
             UNSUPPORTED_TYPE);
         break;

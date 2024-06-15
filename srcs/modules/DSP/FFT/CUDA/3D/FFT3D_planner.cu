@@ -71,7 +71,7 @@ void decx::dsp::fft::_cuda_FFT3D_planner<_data_type>::plan(const decx::_tensor_l
     const uint64_t alloc_size = max(max(_alloc_sizes.x, _alloc_sizes.y), _alloc_sizes.z);
     if (decx::alloc::_device_malloc(&this->_tmp1, alloc_size * sizeof(_data_type) * 2, true, S) ||
         decx::alloc::_device_malloc(&this->_tmp2, alloc_size * sizeof(_data_type) * 2, true, S)) {
-        decx::err::handle_error_info_modify<true>(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION, ALLOC_FAIL);
+        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION, ALLOC_FAIL);
         return;
     }
 }

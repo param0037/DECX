@@ -302,8 +302,6 @@ static void decx::vis::_bilateral_uchar4_BC(decx::_Matrix* src, decx::_Matrix* d
 }
 
 
-
-
 namespace de
 {
     namespace vis {

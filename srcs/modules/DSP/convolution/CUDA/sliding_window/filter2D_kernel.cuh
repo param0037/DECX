@@ -33,6 +33,17 @@ namespace dsp {
         void cu_filter2D_BC_fp32(const float4* __restrict src, const float* __restrict kernel, float4* __restrict dst,
             const uint32_t pitchsrc_v4, const uint32_t pitchdst_v4, const uint3 kernel_dims, const uint2 conv_area);
 
+        // ------------------------------------------------- FP64 -------------------------------------------------
+
+        template <uint32_t _ext_w> __global__ 
+        void cu_filter2D_NB_fp64(const double2* __restrict src, const double* __restrict kernel, double2* __restrict dst,
+            const uint32_t pitchsrc_v4, const uint32_t pitchdst_v4, const uint3 kernel_dims, const uint2 conv_area);
+
+
+        template <uint32_t _ext_w> __global__ 
+        void cu_filter2D_BC_fp64(const double2* __restrict src, const double* __restrict kernel, double2* __restrict dst,
+            const uint32_t pitchsrc_v4, const uint32_t pitchdst_v4, const uint3 kernel_dims, const uint2 conv_area);
+
         // ------------------------------------------------- UINT8 -------------------------------------------------
 
         template <uint32_t _ext_w> __global__ 
