@@ -26,7 +26,7 @@ _cu_Filter2D_fp64_caller(const decx::dsp::cuda_Filter2D_planner<double>* _fake_t
 {
     if (_fake_this->_conv_border_method != de::extend_label::_EXTEND_NONE_) 
     {
-        /*checkCudaErrors(cudaMemcpy2DAsync((double*)_fake_this->_ext_src._ptr.ptr + (_fake_this->_kernel_layout->width >> 1),
+        checkCudaErrors(cudaMemcpy2DAsync((double*)_fake_this->_ext_src._ptr.ptr + (_fake_this->_kernel_layout->width >> 1),
             _fake_this->_ext_src._dims.x * sizeof(double),
             src,
             _fake_this->_src_layout->pitch * sizeof(double),
@@ -45,7 +45,7 @@ _cu_Filter2D_fp64_caller(const decx::dsp::cuda_Filter2D_planner<double>* _fake_t
             make_uint3(_fake_this->_kernel_layout->width, 
                        _fake_this->_kernel_layout->height, 
                        _fake_this->_kernel_layout->pitch),
-            _fake_this->_dst_dims);*/
+            _fake_this->_dst_dims);
     }
     else {
         decx::dsp::GPUK::cu_filter2D_NB_fp64<_ext_w> << <_fake_this->_grid, _fake_this->_block, 

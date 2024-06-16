@@ -12,7 +12,6 @@
 #include "../filter2D_kernel.cuh"
 
 
-//decx::dsp::cuda_Filter2D_planner<uint8_t>* decx::dsp::_cuda_filter2D_u8 = NULL;
 decx::ResourceHandle decx::dsp::_cuda_filter2D_u8;
 
 
