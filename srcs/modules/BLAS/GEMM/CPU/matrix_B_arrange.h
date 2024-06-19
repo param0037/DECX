@@ -8,23 +8,21 @@
 *   More information please visit https://github.com/param0037/DECX
 */
 
-#ifndef _CPU_GEMM_H_
-#define _CPU_GEMM_H_
-
+#ifndef _MATRIX_B_ARRANGE_H_
+#define _MATRIX_B_ARRANGE_H_
 
 #include "../../../classes/Matrix.h"
+#include "../GEMM_utils.h"
+#include "../../../core/thread_management/thread_arrange.h"
+#include "../../../core/thread_management/thread_pool.h"
 
 
-namespace de
+namespace decx
 {
-    namespace cpu {
-        _DECX_API_ void GEMM(de::Matrix& A, de::Matrix& B, de::Matrix& dst);
-
-
-        _DECX_API_ void GEMM(de::Matrix& A, de::Matrix& B, de::Matrix& C, de::Matrix& dst);
+    namespace blas {
+        void matrix_B_arrange_fp32(const float* src, float* dst, const uint32_t pitchsrc_v1,
+            const uint32_t pitchdst_v8, const decx::utils::frag_manager* _fmgr_WH, decx::utils::_thr_2D* t2D);
     }
 }
-
-
 
 #endif

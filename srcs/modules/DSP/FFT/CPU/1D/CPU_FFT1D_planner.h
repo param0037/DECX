@@ -34,9 +34,6 @@ namespace fft
 
     template <typename _type_in>
     class cpu_FFT1D_smaller;
-
-
-    //class _Inner_FFT1D_thread_param;
 }
 }
 }
@@ -227,11 +224,11 @@ namespace decx
 {
     namespace dsp {
         namespace fft {
-            extern decx::ResourceHandle cpu_FFT1D_cplxf32_planner;
-            extern decx::ResourceHandle cpu_IFFT1D_cplxf32_planner;
+            extern decx::ResourceHandle g_cpu_FFT1D_cplxf32_planner;
+            extern decx::ResourceHandle g_cpu_IFFT1D_cplxf32_planner;
 
-            extern decx::ResourceHandle cpu_FFT1D_cplxd64_planner;
-            extern decx::ResourceHandle cpu_IFFT1D_cplxd64_planner;
+            extern decx::ResourceHandle g_cpu_FFT1D_cplxd64_planner;
+            extern decx::ResourceHandle g_cpu_IFFT1D_cplxd64_planner;
         }
     }
 }

@@ -131,6 +131,7 @@ struct decx::utils::frag_manager
     uint32_t frag_num;              // How many fragments should generate
     uint32_t frag_len;              // The length of each fragment
     uint32_t frag_left_over;        // The length of the leftover fragment (if left)
+    uint32_t last_frag_len;         // The length of the very last fragment
 };
 
 

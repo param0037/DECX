@@ -16,16 +16,19 @@ bool decx::utils::frag_manager_gen(decx::utils::frag_manager* src, const uint64_
     src->total = _tot;
     src->frag_num = _frag_num;
     src->is_left = _tot % _frag_num;
+    bool res;
     if (src->is_left) {
         src->frag_len = _tot / _frag_num;
         src->frag_left_over = _tot - (_frag_num - 1) * src->frag_len;
-        return false;
+        res = false;
     }
     else {
         src->frag_len = _tot / _frag_num;
         src->frag_left_over = 0;
-        return true;
+        res = true;
     }
+    src->last_frag_len = src->is_left ? src->frag_left_over : src->frag_len;
+    return res;
 }
 
 
@@ -34,18 +37,21 @@ bool decx::utils::frag_manager_gen_from_fragLen(decx::utils::frag_manager* src, 
 {
     src->total = _tot;
     src->frag_len = _frag_len;
+    bool res;
     if (_tot % _frag_len) {     // is left
         src->is_left = true;
         src->frag_num = _tot / _frag_len + 1;
         src->frag_left_over = _tot % _frag_len;
-        return false;
+        res = false;
     }
     else {
         src->is_left = false;
         src->frag_num = _tot / _frag_len;
         src->frag_left_over = _tot % _frag_len;
-        return true;
+        res = true;
     }
+    src->last_frag_len = src->is_left ? src->frag_left_over : src->frag_len;
+    return res;
 }
 
 
@@ -55,12 +61,13 @@ bool decx::utils::frag_manager_gen_Nx(decx::utils::frag_manager* src, const uint
 {
     src->total = _tot;
     src->frag_num = _frag_num;
+    bool res;
     if (_tot % N) {
         src->is_left = true;
         uint32_t new_tot = _tot / N;
         src->frag_len = new_tot / _frag_num * N;
         src->frag_left_over = _tot - (_frag_num - 1) * src->frag_len;
-        return false;
+        res = false;
     }
     else {
         uint32_t new_tot = _tot / N;
@@ -68,15 +75,17 @@ bool decx::utils::frag_manager_gen_Nx(decx::utils::frag_manager* src, const uint
             src->is_left = true;
             src->frag_len = new_tot / _frag_num * N;
             src->frag_left_over = _tot - (_frag_num - 1) * src->frag_len;
-            return false;
+            res = false;
         }
         else {
             src->is_left = false;
             src->frag_len = _tot / _frag_num;
             src->frag_left_over = 0;
-            return true;
+            res = true;
         }
     }
+    src->last_frag_len = src->is_left ? src->frag_left_over : src->frag_len;
+    return res;
 }
 
 
@@ -84,7 +93,7 @@ bool decx::utils::frag_manager_gen_Nx(decx::utils::frag_manager* src, const uint
 // --------------------------- 2D --------------------------------------
 
 
-float decx::_get_ratio_grater_than_one(const uint X, const uint Y)
+float decx::_get_ratio_grater_than_one(const uint32_t X, const uint32_t Y)
 {
     if (X > Y) {
         return ((float)X / (float)Y);
@@ -96,12 +105,12 @@ float decx::_get_ratio_grater_than_one(const uint X, const uint Y)
 
 
 
-uint decx::_get_mid_factors_pow2(const uint x)
+uint32_t decx::_get_mid_factors_pow2(const uint32_t x)
 {
     float expect_fac = sqrtf((float)x);
-    uint pow = decx::utils::_GetHighest_abd(expect_fac);
-    uint fac_R = 1 << pow;
-    uint fac_L = 1 << (pow - 1);
+    uint32_t pow = decx::utils::_GetHighest_abd(expect_fac);
+    uint32_t fac_R = 1 << pow;
+    uint32_t fac_L = 1 << (pow - 1);
     if (expect_fac - fac_L > fac_R - expect_fac) {
         return fac_R;
     }
@@ -112,10 +121,10 @@ uint decx::_get_mid_factors_pow2(const uint x)
 
 
 
-uint2 decx::find_closest_factors_by_ratio(const uint x, const uint2 pair)
+uint2 decx::find_closest_factors_by_ratio(const uint32_t x, const uint2 pair)
 {
-    uint start_inc = (uint)sqrtf(x * (float)pair.y / (float)pair.x);
-    uint start_dec = start_inc, closest_res;
+    uint32_t start_inc = (uint32_t)sqrtf(x * (float)pair.y / (float)pair.x);
+    uint32_t start_dec = start_inc, closest_res;
     while (true) {
         if (x % start_inc) { ++start_inc; }
         else {
@@ -134,9 +143,9 @@ uint2 decx::find_closest_factors_by_ratio(const uint x, const uint2 pair)
 
 
 
-uint decx::_fit_factor_to_no_reminder_inc(const uint __base, const uint __devided)
+uint32_t decx::_fit_factor_to_no_reminder_inc(const uint32_t __base, const uint32_t __devided)
 {
-    uint base = __base + 1;
+    uint32_t base = __base + 1;
     while (base < __devided)
     {
         if (__devided % base == 0) {

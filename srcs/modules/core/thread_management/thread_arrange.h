@@ -70,7 +70,7 @@ namespace decx
                 this->total_thread = 0;
                 this->thread_h = 0;
                 this->thread_w = 0;
-                this->_async_thread = 0;
+                this->_async_thread = NULL;
             }
 
 
@@ -95,7 +95,12 @@ namespace decx
                 this->thread_h = _thread_h;
                 this->thread_w = _thread_w;
                 this->total_thread = _thread_h * _thread_w;
-                this->_async_thread = new std::future<void>[this->total_thread];
+                if (_thread_h * _thread_w != this->total_thread) {
+                    if (this->_async_thread != NULL) {
+                        delete[] this->_async_thread;
+                    }
+                    this->_async_thread = new std::future<void>[this->total_thread];
+                }
             }
 
             void __sync_all_threads() {
@@ -128,7 +133,9 @@ namespace decx
 
 
             ~_thread_arrange_2D() {
-                delete[] this->_async_thread;
+                if (this->_async_thread != NULL) {
+                    delete[] this->_async_thread;
+                }
             }
         }_thr_2D;
     }

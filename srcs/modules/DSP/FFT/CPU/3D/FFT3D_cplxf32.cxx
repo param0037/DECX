@@ -9,7 +9,7 @@
 */
 
 #include "CPU_FFT3D_planner.h"
-#include "../2D/FFT2D.h"
+#include "../FFT.h"
 #include "../../FFT_commons.h"
 #include "FFT3D_kernels.h"
 

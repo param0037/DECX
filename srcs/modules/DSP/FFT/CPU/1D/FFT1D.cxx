@@ -41,14 +41,14 @@ void decx::dsp::fft::FFT1D_caller(decx::_Vector* src, decx::_Vector* dst, de::DH
 {
     decx::utils::_thr_1D t1D(decx::cpu::_get_permitted_concurrency());
 
-    if (decx::dsp::fft::cpu_FFT1D_cplxf32_planner._res_ptr == NULL) {
-        decx::dsp::fft::cpu_FFT1D_cplxf32_planner.RegisterResource(new decx::dsp::fft::cpu_FFT1D_planner<float>,
+    if (decx::dsp::fft::g_cpu_FFT1D_cplxf32_planner._res_ptr == NULL) {
+        decx::dsp::fft::g_cpu_FFT1D_cplxf32_planner.RegisterResource(new decx::dsp::fft::cpu_FFT1D_planner<float>,
             5, &decx::dsp::fft::cpu_FFT1D_planner<float>::release_buffers);
     }
-    decx::dsp::fft::cpu_FFT1D_cplxf32_planner.lock();
+    decx::dsp::fft::g_cpu_FFT1D_cplxf32_planner.lock();
 
     decx::dsp::fft::cpu_FFT1D_planner<float>* _planner =
-        decx::dsp::fft::cpu_FFT1D_cplxf32_planner.get_resource_raw_ptr<decx::dsp::fft::cpu_FFT1D_planner<float>>();
+        decx::dsp::fft::g_cpu_FFT1D_cplxf32_planner.get_resource_raw_ptr<decx::dsp::fft::cpu_FFT1D_planner<float>>();
 
     if (_planner->changed(src->Len(), t1D.total_thread)) {
         _planner->plan(src->Len(), &t1D, handle);
@@ -57,7 +57,7 @@ void decx::dsp::fft::FFT1D_caller(decx::_Vector* src, decx::_Vector* dst, de::DH
 
     _planner->Forward<_type_in>(src, dst, &t1D);
 
-    decx::dsp::fft::cpu_FFT1D_cplxf32_planner.unlock();
+    decx::dsp::fft::g_cpu_FFT1D_cplxf32_planner.unlock();
 }
 
 
@@ -67,14 +67,14 @@ void decx::dsp::fft::FFT1D_caller_cplxd(decx::_Vector* src, decx::_Vector* dst, 
 {
     decx::utils::_thr_1D t1D(decx::cpu::_get_permitted_concurrency());
     
-    if (decx::dsp::fft::cpu_FFT1D_cplxd64_planner._res_ptr == NULL) {
-        decx::dsp::fft::cpu_FFT1D_cplxd64_planner.RegisterResource(new decx::dsp::fft::cpu_FFT1D_planner<double>,
+    if (decx::dsp::fft::g_cpu_FFT1D_cplxd64_planner._res_ptr == NULL) {
+        decx::dsp::fft::g_cpu_FFT1D_cplxd64_planner.RegisterResource(new decx::dsp::fft::cpu_FFT1D_planner<double>,
             5, &decx::dsp::fft::cpu_FFT1D_planner<double>::release_buffers);
     }
-    decx::dsp::fft::cpu_FFT1D_cplxd64_planner.lock();
+    decx::dsp::fft::g_cpu_FFT1D_cplxd64_planner.lock();
 
     decx::dsp::fft::cpu_FFT1D_planner<double>* _planner =
-        decx::dsp::fft::cpu_FFT1D_cplxd64_planner.get_resource_raw_ptr<decx::dsp::fft::cpu_FFT1D_planner<double>>();
+        decx::dsp::fft::g_cpu_FFT1D_cplxd64_planner.get_resource_raw_ptr<decx::dsp::fft::cpu_FFT1D_planner<double>>();
 
     if (_planner->changed(src->Len(), t1D.total_thread)) {
         _planner->plan(src->Len(), &t1D, handle);
@@ -83,7 +83,7 @@ void decx::dsp::fft::FFT1D_caller_cplxd(decx::_Vector* src, decx::_Vector* dst, 
 
     _planner->Forward<_type_in>(src, dst, &t1D);
 
-    decx::dsp::fft::cpu_FFT1D_cplxd64_planner.unlock();
+    decx::dsp::fft::g_cpu_FFT1D_cplxd64_planner.unlock();
 }
 
 
@@ -93,15 +93,15 @@ void decx::dsp::fft::IFFT1D_caller(decx::_Vector* src, decx::_Vector* dst, de::D
 {
     decx::utils::_thr_1D t1D(decx::cpu::_get_permitted_concurrency());
 
-    if (decx::dsp::fft::cpu_IFFT1D_cplxf32_planner._res_ptr == NULL) {
-        decx::dsp::fft::cpu_IFFT1D_cplxf32_planner.RegisterResource(new decx::dsp::fft::cpu_FFT1D_planner<float>,
+    if (decx::dsp::fft::g_cpu_IFFT1D_cplxf32_planner._res_ptr == NULL) {
+        decx::dsp::fft::g_cpu_IFFT1D_cplxf32_planner.RegisterResource(new decx::dsp::fft::cpu_FFT1D_planner<float>,
             5, &decx::dsp::fft::cpu_FFT1D_planner<float>::release_buffers);
     }
 
-    decx::dsp::fft::cpu_IFFT1D_cplxf32_planner.lock();
+    decx::dsp::fft::g_cpu_IFFT1D_cplxf32_planner.lock();
 
     decx::dsp::fft::cpu_FFT1D_planner<float>* _planner =
-        decx::dsp::fft::cpu_IFFT1D_cplxf32_planner.get_resource_raw_ptr<decx::dsp::fft::cpu_FFT1D_planner<float>>();
+        decx::dsp::fft::g_cpu_IFFT1D_cplxf32_planner.get_resource_raw_ptr<decx::dsp::fft::cpu_FFT1D_planner<float>>();
 
     if (_planner->changed(src->Len(), t1D.total_thread)) {
         _planner->plan(src->Len(), &t1D, handle);
@@ -110,7 +110,7 @@ void decx::dsp::fft::IFFT1D_caller(decx::_Vector* src, decx::_Vector* dst, de::D
 
     _planner->Inverse<_type_out>(src, dst, &t1D);
 
-    decx::dsp::fft::cpu_IFFT1D_cplxf32_planner.unlock();
+    decx::dsp::fft::g_cpu_IFFT1D_cplxf32_planner.unlock();
 }
 
 
@@ -119,15 +119,15 @@ void decx::dsp::fft::IFFT1D_caller_cplxd(decx::_Vector* src, decx::_Vector* dst,
 {
     decx::utils::_thr_1D t1D(decx::cpu::_get_permitted_concurrency());
 
-    if (decx::dsp::fft::cpu_IFFT1D_cplxd64_planner._res_ptr == NULL) {
-        decx::dsp::fft::cpu_IFFT1D_cplxd64_planner.RegisterResource(new decx::dsp::fft::cpu_FFT1D_planner<double>,
+    if (decx::dsp::fft::g_cpu_IFFT1D_cplxd64_planner._res_ptr == NULL) {
+        decx::dsp::fft::g_cpu_IFFT1D_cplxd64_planner.RegisterResource(new decx::dsp::fft::cpu_FFT1D_planner<double>,
             5, &decx::dsp::fft::cpu_FFT1D_planner<double>::release_buffers);
     }
 
-    decx::dsp::fft::cpu_IFFT1D_cplxd64_planner.lock();
+    decx::dsp::fft::g_cpu_IFFT1D_cplxd64_planner.lock();
 
     decx::dsp::fft::cpu_FFT1D_planner<double>* _planner =
-        decx::dsp::fft::cpu_IFFT1D_cplxd64_planner.get_resource_raw_ptr<decx::dsp::fft::cpu_FFT1D_planner<double>>();
+        decx::dsp::fft::g_cpu_IFFT1D_cplxd64_planner.get_resource_raw_ptr<decx::dsp::fft::cpu_FFT1D_planner<double>>();
 
     if (_planner->changed(src->Len(), t1D.total_thread)) {
         _planner->plan(src->Len(), &t1D, handle);
@@ -136,7 +136,7 @@ void decx::dsp::fft::IFFT1D_caller_cplxd(decx::_Vector* src, decx::_Vector* dst,
 
     _planner->Inverse<_type_out>(src, dst, &t1D);
 
-    decx::dsp::fft::cpu_IFFT1D_cplxd64_planner.unlock();
+    decx::dsp::fft::g_cpu_IFFT1D_cplxd64_planner.unlock();
 }
 
 

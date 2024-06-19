@@ -73,6 +73,9 @@
     <Filter Include="源文件\utils">
       <UniqueIdentifier>{09e2589a-3ee1-4fe3-b6ea-9a1603fa66ee}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\fft\2D\fp32">
+      <UniqueIdentifier>{3187c1b2-8871-4bb0-94c4-1c8ff6dd4167}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\srcs\modules\DSP\complex\cpl32_extract.cxx">
