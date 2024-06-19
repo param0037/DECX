@@ -55,8 +55,16 @@ public:
     cpu_GEMM_planner() {}
 
 
+    bool Changed(const uint32_t concurrency, const decx::_matrix_layout* layout_A, 
+        const decx::_matrix_layout* layout_B) const;
+
+
     void _CRSR_ plan(const uint32_t concurrency, const decx::_matrix_layout* layout_A, 
         const decx::_matrix_layout* layout_B, de::DH* handle);
+
+
+    static void _CRSR_ Validate(de::DH* handle, const decx::_matrix_layout* layout_A, const decx::_matrix_layout* layout_B,
+        const decx::_matrix_layout* layout_C = NULL);
 
 
     void Run(decx::_Matrix* A, decx::_Matrix* B, decx::_Matrix* dst, decx::utils::_thread_arrange_2D* t2D);
@@ -84,6 +92,7 @@ namespace decx
 {
     namespace blas {
         extern decx::ResourceHandle g_cpu_GEMM_fp32_planner;
+        extern decx::ResourceHandle g_cpu_GEMM_64b_planner;
     }
 }
 

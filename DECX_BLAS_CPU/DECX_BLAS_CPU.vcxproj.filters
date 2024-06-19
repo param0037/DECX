@@ -118,6 +118,9 @@
     <Filter Include="源文件\GEMM\fp32">
       <UniqueIdentifier>{878bb178-7325-4015-be78-ee22b8a20d99}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\GEMM\64b">
+      <UniqueIdentifier>{eff237f6-5dad-411c-b7ea-8206cb796dff}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\srcs\modules\basic_calculations\operators\Add_exec.cxx">
@@ -305,6 +308,15 @@
     </ClCompile>
     <ClCompile Include="..\srcs\modules\BLAS\GEMM\CPU\cpu_GEMM_config.cxx">
       <Filter>源文件\GEMM</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\BLAS\GEMM\CPU\64b\GEMM_fp64_kernels.cxx">
+      <Filter>源文件\GEMM\64b</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\BLAS\GEMM\CPU\64b\GEMM_fp64_callers.cxx">
+      <Filter>源文件\GEMM\64b</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\BLAS\GEMM\CPU\64b\matrix_B_arrange_64b.cxx">
+      <Filter>源文件\GEMM\64b</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

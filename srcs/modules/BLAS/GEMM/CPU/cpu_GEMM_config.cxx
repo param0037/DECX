@@ -11,6 +11,11 @@
 #include "cpu_GEMM_config.h"
 
 
+//#define BL 2
+//#define BW 16
+//#define BH 32
+
+
 #define BL 2
 #define BW 16
 #define BH 32
@@ -39,11 +44,12 @@ decx::blas::cpu_GEMM_planner<_data_type>::_plan_for_B_arrangement(de::DH* handle
     }
 
     // plan for fragment manager for matrix B arrangement
-    decx::utils::frag_manager_gen_Nx(this->_fmgr_WH_B, decx::utils::ceil<uint32_t>(this->_layout_B->width, _alignment), this->_thread_dist_B.x, 2);
+    decx::utils::frag_manager_gen_Nx(this->_fmgr_WH_B, decx::utils::ceil<uint32_t>(this->_layout_B->pitch, _alignment), this->_thread_dist_B.x, 2);
     decx::utils::frag_manager_gen_Nx(this->_fmgr_WH_B + 1, this->_layout_B->height, this->_thread_dist_B.y, 16);
 }
 
 template void _CRSR_ decx::blas::cpu_GEMM_planner<float>::_plan_for_B_arrangement(de::DH*);
+template void _CRSR_ decx::blas::cpu_GEMM_planner<double>::_plan_for_B_arrangement(de::DH*);
 
 
 template <typename _data_type> void
@@ -82,6 +88,7 @@ decx::blas::cpu_GEMM_planner<_data_type>::_plan_for_exectutors()
 }
 
 template void decx::blas::cpu_GEMM_planner<float>::_plan_for_exectutors();
+template void decx::blas::cpu_GEMM_planner<double>::_plan_for_exectutors();
 
 
 template <typename _data_type> void _CRSR_ 
@@ -107,6 +114,62 @@ decx::blas::cpu_GEMM_planner<_data_type>::plan(const uint32_t concurrency,
 template void _CRSR_ decx::blas::cpu_GEMM_planner<float>::plan(const uint32_t, const decx::_matrix_layout*,
     const decx::_matrix_layout*, de::DH*);
 
+template void _CRSR_ decx::blas::cpu_GEMM_planner<double>::plan(const uint32_t, const decx::_matrix_layout*,
+    const decx::_matrix_layout*, de::DH*);
+
+
+template <typename _data_type>
+bool decx::blas::cpu_GEMM_planner<_data_type>::Changed(const uint32_t concurrency, 
+                                                       const decx::_matrix_layout* layout_A,
+                                                       const decx::_matrix_layout* layout_B) const
+{
+    uint32_t _conc_matched = this->_concurrency ^ concurrency;
+    uint32_t _Adims_matched = 1, _Bdims_matched = 1;
+    if (this->_layout_A) {
+        _Adims_matched = this->_layout_A->height ^ layout_A->height;
+        _Adims_matched ^= (this->_layout_A->width ^ layout_A->width);
+    }
+    if (this->_layout_B) {
+        _Bdims_matched = this->_layout_B->height ^ layout_B->height;
+        _Bdims_matched ^= (this->_layout_B->width ^ layout_B->width);
+    }
+    return _conc_matched ^ _Adims_matched ^ _Bdims_matched;
+}
+
+template bool decx::blas::cpu_GEMM_planner<float>::Changed(const uint32_t, const decx::_matrix_layout*,
+    const decx::_matrix_layout*) const;
+
+template bool decx::blas::cpu_GEMM_planner<double>::Changed(const uint32_t, const decx::_matrix_layout*,
+    const decx::_matrix_layout*) const;
+
+
+template <typename _data_type>
+void _CRSR_ decx::blas::cpu_GEMM_planner<_data_type>::Validate(de::DH* handle,
+                                                               const decx::_matrix_layout* layout_A, 
+                                                               const decx::_matrix_layout* layout_B,
+                                                               const decx::_matrix_layout* layout_C)
+{
+    if (layout_A->width != layout_B->height) {
+        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_DimsNotMatching,
+            "The width of matrix A should be consistent to the height of matrix B");
+        return;
+    }
+    if (layout_C) {
+        if (layout_C->height != layout_A->height || layout_C->width != layout_B->width) {
+            decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_DimsNotMatching,
+                "The height and width of the matrix C should be identical to that of matrix A and matrix B, respectively");
+            return;
+        }
+    }
+}
+
+template void decx::blas::cpu_GEMM_planner<float>::Validate(de::DH*, const decx::_matrix_layout*,
+    const decx::_matrix_layout*, const decx::_matrix_layout*);
+
+template void decx::blas::cpu_GEMM_planner<double>::Validate(de::DH*, const decx::_matrix_layout*,
+    const decx::_matrix_layout*, const decx::_matrix_layout*);
+
+
 
 template <typename _data_type>
 uint2 decx::blas::cpu_GEMM_planner<_data_type>::GetThreadDist_B() const
@@ -115,6 +178,7 @@ uint2 decx::blas::cpu_GEMM_planner<_data_type>::GetThreadDist_B() const
 }
 
 template uint2 decx::blas::cpu_GEMM_planner<float>::GetThreadDist_B() const;
+template uint2 decx::blas::cpu_GEMM_planner<double>::GetThreadDist_B() const;
 
 
 template <typename _data_type>
@@ -124,6 +188,7 @@ uint2 decx::blas::cpu_GEMM_planner<_data_type>::GetThreadDist_dst() const
 }
 
 template uint2 decx::blas::cpu_GEMM_planner<float>::GetThreadDist_dst() const;
+template uint2 decx::blas::cpu_GEMM_planner<double>::GetThreadDist_dst() const;
 
 
 template <typename _data_type>
@@ -134,3 +199,4 @@ void decx::blas::cpu_GEMM_planner<_data_type>::Release(decx::blas::cpu_GEMM_plan
 }
 
 template void decx::blas::cpu_GEMM_planner<float>::Release(decx::blas::cpu_GEMM_planner<float>* _fake_this);
+template void decx::blas::cpu_GEMM_planner<double>::Release(decx::blas::cpu_GEMM_planner<double>* _fake_this);
