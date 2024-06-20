@@ -16,13 +16,14 @@
 #include "GEMM.h"
 
 
-_DECX_API_
-de::DH de::cuda::GEMM(de::Matrix& A, de::Matrix& B, de::Matrix& dst)
+_DECX_API_ void 
+de::blas::cuda::GEMM(de::Matrix& A, de::Matrix& B, de::Matrix& dst)
 {
-    de::DH handle;
+    de::ResetLastError();
+
     if (!decx::cuda::_is_CUDA_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
-        return handle;
+        decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
+        return;
     }
 
     decx::_Matrix* _A = dynamic_cast<decx::_Matrix*>(&A);
@@ -32,32 +33,30 @@ de::DH de::cuda::GEMM(de::Matrix& A, de::Matrix& B, de::Matrix& dst)
     switch (_A->Type())
     {
     case de::_DATA_TYPES_FLAGS_::_FP32_:
-        decx::cuda::GEMM_fp32_organizer<true>(_A, _B, _dst, &handle);
+        decx::cuda::GEMM_fp32_organizer<true>(_A, _B, _dst, de::GetLastError());
         break;
 
     case de::_DATA_TYPES_FLAGS_::_FP16_:
-        decx::cuda::GEMM_fp16_organizer<true>(_A, _B, _dst, &handle);
+        decx::cuda::GEMM_fp16_organizer<true>(_A, _B, _dst, de::GetLastError());
         break;
 
     case de::_DATA_TYPES_FLAGS_::_COMPLEX_F32_:
-        decx::cuda::GEMM_cpl32_organizer<true>(_A, _B, _dst, &handle);
+        decx::cuda::GEMM_cpl32_organizer<true>(_A, _B, _dst, de::GetLastError());
         break;
     default:
         break;
     }
-
-    decx::err::Success(&handle);
-    return handle;
 }
 
 
-_DECX_API_
-de::DH de::cuda::GEMM(de::Matrix& A, de::Matrix& B, de::Matrix& C, de::Matrix& dst)
+_DECX_API_ void 
+de::blas::cuda::GEMM(de::Matrix& A, de::Matrix& B, de::Matrix& C, de::Matrix& dst)
 {
-    de::DH handle;
+    de::ResetLastError();
+
     if (!decx::cuda::_is_CUDA_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
-        return handle;
+        decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
+        return;
     }
 
     decx::_Matrix* _A = dynamic_cast<decx::_Matrix*>(&A);
@@ -68,36 +67,33 @@ de::DH de::cuda::GEMM(de::Matrix& A, de::Matrix& B, de::Matrix& C, de::Matrix& d
     switch (_A->Type())
     {
     case de::_DATA_TYPES_FLAGS_::_FP32_:
-        decx::cuda::GEMM_fp32_ABC_organizer<true>(_A, _B, _C, _dst, &handle);
+        decx::cuda::GEMM_fp32_ABC_organizer<true>(_A, _B, _C, _dst, de::GetLastError());
         break;
 
     case de::_DATA_TYPES_FLAGS_::_FP16_:
-        decx::cuda::GEMM_fp16_ABC_organizer<true>(_A, _B, _C, _dst, &handle);
+        decx::cuda::GEMM_fp16_ABC_organizer<true>(_A, _B, _C, _dst, de::GetLastError());
         break;
 
     case de::_DATA_TYPES_FLAGS_::_COMPLEX_F32_:
-        decx::cuda::GEMM_cpl32_ABC_organizer<true>(_A, _B, _C, _dst, &handle);
+        decx::cuda::GEMM_cpl32_ABC_organizer<true>(_A, _B, _C, _dst, de::GetLastError());
         break;
     default:
         break;
     }
-
-    decx::err::Success(&handle);
-    return handle;
 }
-
 
 
 // --------------------------------------------- pure GPU ------------------------------------------------
 
 
-_DECX_API_
-de::DH de::cuda::GEMM(de::GPU_Matrix& A, de::GPU_Matrix& B, de::GPU_Matrix& dst, const int flag)
+_DECX_API_ void 
+de::blas::cuda::GEMM(de::GPU_Matrix& A, de::GPU_Matrix& B, de::GPU_Matrix& dst, const int flag)
 {
-    de::DH handle;
+    de::ResetLastError();
+
     if (!decx::cuda::_is_CUDA_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
-        return handle;
+        decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
+        return;
     }
 
     decx::_GPU_Matrix* _A = dynamic_cast<decx::_GPU_Matrix*>(&A);
@@ -107,32 +103,30 @@ de::DH de::cuda::GEMM(de::GPU_Matrix& A, de::GPU_Matrix& B, de::GPU_Matrix& dst,
     switch (_A->Type())
     {
     case de::_DATA_TYPES_FLAGS_::_FP32_:
-        decx::cuda::GEMM_on_GPU_fp32<true>(_A, _B, _dst, &handle);
+        decx::cuda::GEMM_on_GPU_fp32<true>(_A, _B, _dst, de::GetLastError());
         break;
 
     case de::_DATA_TYPES_FLAGS_::_FP16_:
-        decx::cuda::GEMM_on_GPU_fp16<true>(_A, _B, _dst, flag, &handle);
+        decx::cuda::GEMM_on_GPU_fp16<true>(_A, _B, _dst, flag, de::GetLastError());
         break;
 
     case de::_DATA_TYPES_FLAGS_::_COMPLEX_F32_:
-        decx::cuda::GEMM_on_GPU_cpl32<true>(_A, _B, _dst, &handle);
+        decx::cuda::GEMM_on_GPU_cpl32<true>(_A, _B, _dst, de::GetLastError());
         break;
     default:
         break;
     }
-
-    decx::err::Success(&handle);
-    return handle;
 }
 
 
-_DECX_API_
-de::DH de::cuda::GEMM(de::GPU_Matrix& A, de::GPU_Matrix& B, de::GPU_Matrix& C, de::GPU_Matrix& dst, const int flag)
+_DECX_API_ void 
+de::blas::cuda::GEMM(de::GPU_Matrix& A, de::GPU_Matrix& B, de::GPU_Matrix& C, de::GPU_Matrix& dst, const int flag)
 {
-    de::DH handle;
+    de::GetLastError();
+
     if (!decx::cuda::_is_CUDA_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
-        return handle;
+        decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
+        return;
     }
 
     decx::_GPU_Matrix* _A = dynamic_cast<decx::_GPU_Matrix*>(&A);
@@ -143,20 +137,17 @@ de::DH de::cuda::GEMM(de::GPU_Matrix& A, de::GPU_Matrix& B, de::GPU_Matrix& C, d
     switch (_A->Type())
     {
     case de::_DATA_TYPES_FLAGS_::_FP32_:
-        decx::cuda::GEMM_on_GPU_fp32_ABC<true>(_A, _B, _C, _dst, &handle);
+        decx::cuda::GEMM_on_GPU_fp32_ABC<true>(_A, _B, _C, _dst, de::GetLastError());
         break;
 
     case de::_DATA_TYPES_FLAGS_::_FP16_:
-        decx::cuda::GEMM_on_GPU_fp16_ABC<true>(_A, _B, _C, _dst, flag, &handle);
+        decx::cuda::GEMM_on_GPU_fp16_ABC<true>(_A, _B, _C, _dst, flag, de::GetLastError());
         break;
 
     case de::_DATA_TYPES_FLAGS_::_COMPLEX_F32_:
-        decx::cuda::GEMM_on_GPU_cpl32_ABC<true>(_A, _B, _C, _dst, &handle);
+        decx::cuda::GEMM_on_GPU_cpl32_ABC<true>(_A, _B, _C, _dst, de::GetLastError());
         break;
     default:
         break;
     }
-
-    decx::err::Success(&handle);
-    return handle;
 }

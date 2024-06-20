@@ -22,7 +22,7 @@
 
 namespace decx
 {
-    namespace dot
+    namespace blas
     {
         /**
         * @param dev_A : The device pointer where vector A is stored
@@ -33,26 +33,23 @@ namespace decx
         *
         * @return The pointer where the result being stored
         */
-        const void* cuda_DP1D_fp32_caller_Async(decx::dot::cuda_DP1D_configs<float>* _configs, decx::cuda_stream* S);
+        const void* cuda_DP1D_fp32_caller_Async(decx::blas::cuda_DP1D_configs<float>* _configs, decx::cuda_stream* S);
 
 
-        const void* cuda_DP1D_fp16_caller_Async(decx::dot::cuda_DP1D_configs<de::Half>* _configs, decx::cuda_stream* S, const uint32_t _fp16_accu);
+        const void* cuda_DP1D_fp16_caller_Async(decx::blas::cuda_DP1D_configs<de::Half>* _configs, decx::cuda_stream* S, const uint32_t _fp16_accu);
 
 
-        const void* cuda_DP1D_fp64_caller_Async(decx::dot::cuda_DP1D_configs<double>* _configs, decx::cuda_stream* S);
+        const void* cuda_DP1D_fp64_caller_Async(decx::blas::cuda_DP1D_configs<double>* _configs, decx::cuda_stream* S);
 
 
-        const void* cuda_DP1D_cplxf_caller_Async(decx::dot::cuda_DP1D_configs<double>* _configs, decx::cuda_stream* S);
+        const void* cuda_DP1D_cplxf_caller_Async(decx::blas::cuda_DP1D_configs<double>* _configs, decx::cuda_stream* S);
     }
 }
 
 
-
-
-
 namespace decx
 {
-    namespace dot
+    namespace blas
     {
         static void vector_dot_fp32(decx::_Vector* A, decx::_Vector* B, de::DecxNumber* res);
         static void dev_vector_dot_fp32(decx::_GPU_Vector* A, decx::_GPU_Vector* B, de::DecxNumber* res);
@@ -72,7 +69,7 @@ namespace decx
 }
 
 
-static void decx::dot::vector_dot_fp32(decx::_Vector* A, decx::_Vector* B, de::DecxNumber* res)
+static void decx::blas::vector_dot_fp32(decx::_Vector* A, decx::_Vector* B, de::DecxNumber* res)
 {
     decx::cuda_stream* S = NULL;
     S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
@@ -87,14 +84,14 @@ static void decx::dot::vector_dot_fp32(decx::_Vector* A, decx::_Vector* B, de::D
         return;
     }
 
-    decx::dot::cuda_DP1D_configs<float> _configs(A->Len(), S);
+    decx::blas::cuda_DP1D_configs<float> _configs(A->Len(), S);
 
     checkCudaErrors(cudaMemcpyAsync(_configs._dev_A.ptr, A->Vec.ptr, A->Len() * sizeof(float), cudaMemcpyHostToDevice,
         S->get_raw_stream_ref()));
     checkCudaErrors(cudaMemcpyAsync(_configs._dev_B.ptr, B->Vec.ptr, B->Len() * sizeof(float), cudaMemcpyHostToDevice,
         S->get_raw_stream_ref()));
 
-    const void* res_ptr = decx::dot::cuda_DP1D_fp32_caller_Async(&_configs, S);
+    const void* res_ptr = decx::blas::cuda_DP1D_fp32_caller_Async(&_configs, S);
     
     if (res_ptr == NULL) {
         Print_Error_Message(4, INTERNAL_ERROR);
@@ -110,7 +107,7 @@ static void decx::dot::vector_dot_fp32(decx::_Vector* A, decx::_Vector* B, de::D
 
 
 
-static void decx::dot::dev_vector_dot_fp32(decx::_GPU_Vector* A, decx::_GPU_Vector* B, de::DecxNumber* res)
+static void decx::blas::dev_vector_dot_fp32(decx::_GPU_Vector* A, decx::_GPU_Vector* B, de::DecxNumber* res)
 {
     decx::cuda_stream* S = NULL;
     S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
@@ -125,9 +122,9 @@ static void decx::dot::dev_vector_dot_fp32(decx::_GPU_Vector* A, decx::_GPU_Vect
         return;
     }
 
-    decx::dot::cuda_DP1D_configs<float> _configs(A->Vec, B->Vec, A->Len(), S);
+    decx::blas::cuda_DP1D_configs<float> _configs(A->Vec, B->Vec, A->Len(), S);
 
-    const void* res_ptr = decx::dot::cuda_DP1D_fp32_caller_Async(&_configs, S);
+    const void* res_ptr = decx::blas::cuda_DP1D_fp32_caller_Async(&_configs, S);
 
     if (res_ptr == NULL) {
         Print_Error_Message(4, INTERNAL_ERROR);
@@ -143,7 +140,7 @@ static void decx::dot::dev_vector_dot_fp32(decx::_GPU_Vector* A, decx::_GPU_Vect
 
 
 
-static void decx::dot::vector_dot_fp16(decx::_Vector* A, decx::_Vector* B, de::DecxNumber* res, const uint32_t _fp16_accu)
+static void decx::blas::vector_dot_fp16(decx::_Vector* A, decx::_Vector* B, de::DecxNumber* res, const uint32_t _fp16_accu)
 {
     decx::cuda_stream* S = NULL;
     S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
@@ -158,14 +155,14 @@ static void decx::dot::vector_dot_fp16(decx::_Vector* A, decx::_Vector* B, de::D
         return;
     }
 
-    decx::dot::cuda_DP1D_configs<de::Half> _configs(A->Len(), S, _fp16_accu);
+    decx::blas::cuda_DP1D_configs<de::Half> _configs(A->Len(), S, _fp16_accu);
 
     checkCudaErrors(cudaMemcpyAsync(_configs._dev_A.ptr, A->Vec.ptr, A->Len() * sizeof(de::Half), cudaMemcpyHostToDevice,
         S->get_raw_stream_ref()));
     checkCudaErrors(cudaMemcpyAsync(_configs._dev_B.ptr, B->Vec.ptr, B->Len() * sizeof(de::Half), cudaMemcpyHostToDevice,
         S->get_raw_stream_ref()));
 
-    const void* res_ptr = decx::dot::cuda_DP1D_fp16_caller_Async(&_configs, S, _fp16_accu);
+    const void* res_ptr = decx::blas::cuda_DP1D_fp16_caller_Async(&_configs, S, _fp16_accu);
 
     if (res_ptr == NULL) {
         Print_Error_Message(4, INTERNAL_ERROR);
@@ -185,7 +182,7 @@ static void decx::dot::vector_dot_fp16(decx::_Vector* A, decx::_Vector* B, de::D
 
 
 
-static void decx::dot::dev_vector_dot_fp16(decx::_GPU_Vector* A, decx::_GPU_Vector* B, de::DecxNumber* res, const uint32_t _fp16_accu)
+static void decx::blas::dev_vector_dot_fp16(decx::_GPU_Vector* A, decx::_GPU_Vector* B, de::DecxNumber* res, const uint32_t _fp16_accu)
 {
     decx::cuda_stream* S = NULL;
     S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
@@ -200,9 +197,9 @@ static void decx::dot::dev_vector_dot_fp16(decx::_GPU_Vector* A, decx::_GPU_Vect
         return;
     }
 
-    decx::dot::cuda_DP1D_configs<de::Half> _configs(A->Vec, B->Vec, A->Len(), S, _fp16_accu);
+    decx::blas::cuda_DP1D_configs<de::Half> _configs(A->Vec, B->Vec, A->Len(), S, _fp16_accu);
 
-    const void* res_ptr = decx::dot::cuda_DP1D_fp16_caller_Async(&_configs, S, _fp16_accu);
+    const void* res_ptr = decx::blas::cuda_DP1D_fp16_caller_Async(&_configs, S, _fp16_accu);
 
     if (res_ptr == NULL) {
         Print_Error_Message(4, INTERNAL_ERROR);
@@ -222,7 +219,7 @@ static void decx::dot::dev_vector_dot_fp16(decx::_GPU_Vector* A, decx::_GPU_Vect
 
 
 
-static void decx::dot::vector_dot_fp64(decx::_Vector* A, decx::_Vector* B, de::DecxNumber* res)
+static void decx::blas::vector_dot_fp64(decx::_Vector* A, decx::_Vector* B, de::DecxNumber* res)
 {
     decx::cuda_stream* S = NULL;
     S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
@@ -237,14 +234,14 @@ static void decx::dot::vector_dot_fp64(decx::_Vector* A, decx::_Vector* B, de::D
         return;
     }
 
-    decx::dot::cuda_DP1D_configs<double> _configs(A->Len(), S);
+    decx::blas::cuda_DP1D_configs<double> _configs(A->Len(), S);
 
     checkCudaErrors(cudaMemcpyAsync(_configs._dev_A.ptr, A->Vec.ptr, A->Len() * sizeof(double), cudaMemcpyHostToDevice,
         S->get_raw_stream_ref()));
     checkCudaErrors(cudaMemcpyAsync(_configs._dev_B.ptr, B->Vec.ptr, B->Len() * sizeof(double), cudaMemcpyHostToDevice,
         S->get_raw_stream_ref()));
 
-    const void* res_ptr = decx::dot::cuda_DP1D_fp64_caller_Async(&_configs, S);
+    const void* res_ptr = decx::blas::cuda_DP1D_fp64_caller_Async(&_configs, S);
 
     if (res_ptr == NULL) {
         Print_Error_Message(4, INTERNAL_ERROR);
@@ -260,7 +257,7 @@ static void decx::dot::vector_dot_fp64(decx::_Vector* A, decx::_Vector* B, de::D
 
 
 
-static void decx::dot::dev_vector_dot_fp64(decx::_GPU_Vector* A, decx::_GPU_Vector* B, de::DecxNumber* res)
+static void decx::blas::dev_vector_dot_fp64(decx::_GPU_Vector* A, decx::_GPU_Vector* B, de::DecxNumber* res)
 {
     decx::cuda_stream* S = NULL;
     S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
@@ -275,9 +272,9 @@ static void decx::dot::dev_vector_dot_fp64(decx::_GPU_Vector* A, decx::_GPU_Vect
         return;
     }
 
-    decx::dot::cuda_DP1D_configs<double> _configs(A->Vec, B->Vec, A->Len(), S);
+    decx::blas::cuda_DP1D_configs<double> _configs(A->Vec, B->Vec, A->Len(), S);
 
-    const void* res_ptr = decx::dot::cuda_DP1D_fp64_caller_Async(&_configs, S);
+    const void* res_ptr = decx::blas::cuda_DP1D_fp64_caller_Async(&_configs, S);
 
     if (res_ptr == NULL) {
         Print_Error_Message(4, INTERNAL_ERROR);
@@ -293,7 +290,7 @@ static void decx::dot::dev_vector_dot_fp64(decx::_GPU_Vector* A, decx::_GPU_Vect
 
 
 
-static void decx::dot::vector_dot_cplxf(decx::_Vector* A, decx::_Vector* B, de::DecxNumber* res)
+static void decx::blas::vector_dot_cplxf(decx::_Vector* A, decx::_Vector* B, de::DecxNumber* res)
 {
     decx::cuda_stream* S = NULL;
     S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
@@ -308,14 +305,14 @@ static void decx::dot::vector_dot_cplxf(decx::_Vector* A, decx::_Vector* B, de::
         return;
     }
 
-    decx::dot::cuda_DP1D_configs<double> _configs(A->Len(), S);
+    decx::blas::cuda_DP1D_configs<double> _configs(A->Len(), S);
 
     checkCudaErrors(cudaMemcpyAsync(_configs._dev_A.ptr, A->Vec.ptr, A->Len() * sizeof(de::CPf), cudaMemcpyHostToDevice,
         S->get_raw_stream_ref()));
     checkCudaErrors(cudaMemcpyAsync(_configs._dev_B.ptr, B->Vec.ptr, B->Len() * sizeof(de::CPf), cudaMemcpyHostToDevice,
         S->get_raw_stream_ref()));
 
-    const void* res_ptr = decx::dot::cuda_DP1D_cplxf_caller_Async(&_configs, S);
+    const void* res_ptr = decx::blas::cuda_DP1D_cplxf_caller_Async(&_configs, S);
 
     if (res_ptr == NULL) {
         Print_Error_Message(4, INTERNAL_ERROR);
@@ -331,7 +328,7 @@ static void decx::dot::vector_dot_cplxf(decx::_Vector* A, decx::_Vector* B, de::
 
 
 
-static void decx::dot::dev_vector_dot_cplxf(decx::_GPU_Vector* A, decx::_GPU_Vector* B, de::DecxNumber* res)
+static void decx::blas::dev_vector_dot_cplxf(decx::_GPU_Vector* A, decx::_GPU_Vector* B, de::DecxNumber* res)
 {
     decx::cuda_stream* S = NULL;
     S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
@@ -346,9 +343,9 @@ static void decx::dot::dev_vector_dot_cplxf(decx::_GPU_Vector* A, decx::_GPU_Vec
         return;
     }
 
-    decx::dot::cuda_DP1D_configs<double> _configs(A->Vec, B->Vec, A->Len(), S);
+    decx::blas::cuda_DP1D_configs<double> _configs(A->Vec, B->Vec, A->Len(), S);
 
-    const void* res_ptr = decx::dot::cuda_DP1D_cplxf_caller_Async(&_configs, S);
+    const void* res_ptr = decx::blas::cuda_DP1D_cplxf_caller_Async(&_configs, S);
 
     if (res_ptr == NULL) {
         Print_Error_Message(4, INTERNAL_ERROR);

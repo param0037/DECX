@@ -14,7 +14,7 @@
 
 // ---------------------------------------------------------- h ----------------------------------------------------------
 __global__ void 
-decx::dot::GPUK::cu_block_dot2D_1way_h_fp32(const float4 * __restrict   A,
+decx::blas::GPUK::cu_block_dot2D_1way_h_fp32(const float4 * __restrict   A,
                                             const float4 * __restrict   B, 
                                             float* __restrict           dst,
                                             const uint32_t              Wsrc_v4, 
@@ -63,7 +63,7 @@ decx::dot::GPUK::cu_block_dot2D_1way_h_fp32(const float4 * __restrict   A,
 // ---------------------------------------------------------- v ----------------------------------------------------------
 
 __global__ void 
-decx::dot::GPUK::cu_block_dot2D_1way_v_fp32(const float4 * __restrict    A,
+decx::blas::GPUK::cu_block_dot2D_1way_v_fp32(const float4 * __restrict    A,
                                             const float4 * __restrict    B,
                                             float4* __restrict           dst,
                                             const uint32_t               Wsrc_v4, 
@@ -136,7 +136,7 @@ decx::dot::GPUK::cu_block_dot2D_1way_v_fp32(const float4 * __restrict    A,
 // ---------------------------------------------------------- h ----------------------------------------------------------
 
 __global__ void 
-decx::dot::GPUK::cu_block_dot2D_1way_h_fp16_L1(const float4 * __restrict   A, 
+decx::blas::GPUK::cu_block_dot2D_1way_h_fp16_L1(const float4 * __restrict   A, 
                                                const float4 * __restrict   B, 
                                                float* __restrict           dst,
                                                const uint32_t              Wsrc_v8, 
@@ -186,7 +186,7 @@ decx::dot::GPUK::cu_block_dot2D_1way_h_fp16_L1(const float4 * __restrict   A,
 
 
 __global__ void 
-decx::dot::GPUK::cu_block_dot2D_1way_h_fp16_L2(const float4 * __restrict   A,
+decx::blas::GPUK::cu_block_dot2D_1way_h_fp16_L2(const float4 * __restrict   A,
                                          const float4 * __restrict   B,
                                          __half* __restrict          dst,
                                          const uint32_t              Wsrc_v8, 
@@ -236,7 +236,7 @@ decx::dot::GPUK::cu_block_dot2D_1way_h_fp16_L2(const float4 * __restrict   A,
 
 
 __global__ void 
-decx::dot::GPUK::cu_block_dot2D_1way_h_fp16_L3(const float4 * __restrict   A,
+decx::blas::GPUK::cu_block_dot2D_1way_h_fp16_L3(const float4 * __restrict   A,
                                          const float4 * __restrict   B,
                                          __half* __restrict          dst,
                                          const uint32_t              Wsrc_v8, 
@@ -288,7 +288,7 @@ decx::dot::GPUK::cu_block_dot2D_1way_h_fp16_L3(const float4 * __restrict   A,
 
 
 __global__ void 
-decx::dot::GPUK::cu_block_dot2D_1way_v_fp16_L1(const float4 * __restrict   A,
+decx::blas::GPUK::cu_block_dot2D_1way_v_fp16_L1(const float4 * __restrict   A,
                                          const float4 * __restrict   B,
                                          float4* __restrict          dst,
                                          const uint32_t              Wsrc_v8, 
@@ -366,7 +366,7 @@ decx::dot::GPUK::cu_block_dot2D_1way_v_fp16_L1(const float4 * __restrict   A,
 
 
 __global__ void 
-decx::dot::GPUK::cu_block_dot2D_1way_v_fp16_L2(const float4 * __restrict   A,
+decx::blas::GPUK::cu_block_dot2D_1way_v_fp16_L2(const float4 * __restrict   A,
                                          const float4 * __restrict   B,
                                          float4* __restrict          dst,
                                          const uint32_t              Wsrc_v8, 
@@ -448,7 +448,7 @@ decx::dot::GPUK::cu_block_dot2D_1way_v_fp16_L2(const float4 * __restrict   A,
 
 
 __global__ void 
-decx::dot::GPUK::cu_block_dot2D_1way_v_fp16_L3(const float4 * __restrict   A,
+decx::blas::GPUK::cu_block_dot2D_1way_v_fp16_L3(const float4 * __restrict   A,
                                          const float4 * __restrict   B,
                                          float4* __restrict          dst,
                                          const uint32_t              Wsrc_v8, 

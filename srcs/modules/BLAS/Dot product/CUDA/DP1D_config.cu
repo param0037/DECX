@@ -13,20 +13,20 @@
 
 
 template <typename _type_in>
-decx::dot::cuda_DP1D_configs<_type_in>::cuda_DP1D_configs()
+decx::blas::cuda_DP1D_configs<_type_in>::cuda_DP1D_configs()
 {
     this->_load_byte_changed = false;
     this->_post_proc_conf = NULL;
 }
 
-template decx::dot::cuda_DP1D_configs<float>::cuda_DP1D_configs();
-template decx::dot::cuda_DP1D_configs<de::Half>::cuda_DP1D_configs();
-template decx::dot::cuda_DP1D_configs<double>::cuda_DP1D_configs();
+template decx::blas::cuda_DP1D_configs<float>::cuda_DP1D_configs();
+template decx::blas::cuda_DP1D_configs<de::Half>::cuda_DP1D_configs();
+template decx::blas::cuda_DP1D_configs<double>::cuda_DP1D_configs();
 
 
 
 template <typename _type_in>
-decx::dot::cuda_DP1D_configs<_type_in>::cuda_DP1D_configs(const uint64_t _proc_len, decx::cuda_stream* S,
+decx::blas::cuda_DP1D_configs<_type_in>::cuda_DP1D_configs(const uint64_t _proc_len, decx::cuda_stream* S,
     const uint32_t _fp16_accu)
 {
     this->_from_dev = false;
@@ -84,63 +84,63 @@ decx::dot::cuda_DP1D_configs<_type_in>::cuda_DP1D_configs(const uint64_t _proc_l
     }
 }
 
-template decx::dot::cuda_DP1D_configs<float>::cuda_DP1D_configs(const uint64_t _proc_len, decx::cuda_stream* S, const uint32_t _fp16_accu);
-template decx::dot::cuda_DP1D_configs<de::Half>::cuda_DP1D_configs(const uint64_t _proc_len, decx::cuda_stream* S, const uint32_t _fp16_accu);
-template decx::dot::cuda_DP1D_configs<double>::cuda_DP1D_configs(const uint64_t _proc_len, decx::cuda_stream* S, const uint32_t _fp16_accu);
+template decx::blas::cuda_DP1D_configs<float>::cuda_DP1D_configs(const uint64_t _proc_len, decx::cuda_stream* S, const uint32_t _fp16_accu);
+template decx::blas::cuda_DP1D_configs<de::Half>::cuda_DP1D_configs(const uint64_t _proc_len, decx::cuda_stream* S, const uint32_t _fp16_accu);
+template decx::blas::cuda_DP1D_configs<double>::cuda_DP1D_configs(const uint64_t _proc_len, decx::cuda_stream* S, const uint32_t _fp16_accu);
 
 
 template <typename _type_in>
-bool decx::dot::cuda_DP1D_configs<_type_in>::postproc_needed() const
+bool decx::blas::cuda_DP1D_configs<_type_in>::postproc_needed() const
 {
     return this->_post_proc_needed;
 }
 
-template bool decx::dot::cuda_DP1D_configs<float>::postproc_needed() const;
-template bool decx::dot::cuda_DP1D_configs<de::Half>::postproc_needed() const;
-template bool decx::dot::cuda_DP1D_configs<double>::postproc_needed() const;
+template bool decx::blas::cuda_DP1D_configs<float>::postproc_needed() const;
+template bool decx::blas::cuda_DP1D_configs<de::Half>::postproc_needed() const;
+template bool decx::blas::cuda_DP1D_configs<double>::postproc_needed() const;
 
 
 
 template <typename _type_in>
-uint64_t decx::dot::cuda_DP1D_configs<_type_in>::get_actual_proc_len() const
+uint64_t decx::blas::cuda_DP1D_configs<_type_in>::get_actual_proc_len() const
 {
     return this->_proc_len_v1;
 }
 
-template uint64_t decx::dot::cuda_DP1D_configs<float>::get_actual_proc_len() const;
-template uint64_t decx::dot::cuda_DP1D_configs<de::Half>::get_actual_proc_len() const;
-template uint64_t decx::dot::cuda_DP1D_configs<double>::get_actual_proc_len() const;
+template uint64_t decx::blas::cuda_DP1D_configs<float>::get_actual_proc_len() const;
+template uint64_t decx::blas::cuda_DP1D_configs<de::Half>::get_actual_proc_len() const;
+template uint64_t decx::blas::cuda_DP1D_configs<double>::get_actual_proc_len() const;
 
 
 
 template <typename _type_in>
-uint64_t decx::dot::cuda_DP1D_configs<_type_in>::get_grid_len_k1() const
+uint64_t decx::blas::cuda_DP1D_configs<_type_in>::get_grid_len_k1() const
 {
     return this->_grid_len_k1;
 }
 
-template uint64_t decx::dot::cuda_DP1D_configs<float>::get_grid_len_k1() const;
-template uint64_t decx::dot::cuda_DP1D_configs<de::Half>::get_grid_len_k1() const;
-template uint64_t decx::dot::cuda_DP1D_configs<double>::get_grid_len_k1() const;
+template uint64_t decx::blas::cuda_DP1D_configs<float>::get_grid_len_k1() const;
+template uint64_t decx::blas::cuda_DP1D_configs<de::Half>::get_grid_len_k1() const;
+template uint64_t decx::blas::cuda_DP1D_configs<double>::get_grid_len_k1() const;
 
 
 
 template <typename _type_in>
 template <typename _config_type>
-decx::reduce::cuda_reduce1D_configs<_config_type>* decx::dot::cuda_DP1D_configs<_type_in>::get_configs_ptr()
+decx::reduce::cuda_reduce1D_configs<_config_type>* decx::blas::cuda_DP1D_configs<_type_in>::get_configs_ptr()
 {
     return ((decx::reduce::cuda_reduce1D_configs<_config_type>*)this->_post_proc_conf);
 }
 
-template decx::reduce::cuda_reduce1D_configs<float>* decx::dot::cuda_DP1D_configs<float>::get_configs_ptr<float>();
-template decx::reduce::cuda_reduce1D_configs<float>* decx::dot::cuda_DP1D_configs<de::Half>::get_configs_ptr<float>();
-template decx::reduce::cuda_reduce1D_configs<de::Half>* decx::dot::cuda_DP1D_configs<de::Half>::get_configs_ptr<de::Half>();
-template decx::reduce::cuda_reduce1D_configs<double>* decx::dot::cuda_DP1D_configs<double>::get_configs_ptr<double>();
+template decx::reduce::cuda_reduce1D_configs<float>* decx::blas::cuda_DP1D_configs<float>::get_configs_ptr<float>();
+template decx::reduce::cuda_reduce1D_configs<float>* decx::blas::cuda_DP1D_configs<de::Half>::get_configs_ptr<float>();
+template decx::reduce::cuda_reduce1D_configs<de::Half>* decx::blas::cuda_DP1D_configs<de::Half>::get_configs_ptr<de::Half>();
+template decx::reduce::cuda_reduce1D_configs<double>* decx::blas::cuda_DP1D_configs<double>::get_configs_ptr<double>();
 
 
 
 template <typename _type_in>
-decx::dot::cuda_DP1D_configs<_type_in>::cuda_DP1D_configs(decx::PtrInfo<void> dev_A, decx::PtrInfo<void> dev_B, 
+decx::blas::cuda_DP1D_configs<_type_in>::cuda_DP1D_configs(decx::PtrInfo<void> dev_A, decx::PtrInfo<void> dev_B, 
     const uint64_t _proc_len, decx::cuda_stream* S, const uint32_t _fp16_accu)
 {
     this->_from_dev = false;
@@ -193,18 +193,18 @@ decx::dot::cuda_DP1D_configs<_type_in>::cuda_DP1D_configs(decx::PtrInfo<void> de
     }
 }
 
-template decx::dot::cuda_DP1D_configs<float>::cuda_DP1D_configs(decx::PtrInfo<void> dev_A, decx::PtrInfo<void> dev_B, 
+template decx::blas::cuda_DP1D_configs<float>::cuda_DP1D_configs(decx::PtrInfo<void> dev_A, decx::PtrInfo<void> dev_B, 
     const uint64_t _proc_len, decx::cuda_stream* S, const uint32_t _fp16_accu);
-template decx::dot::cuda_DP1D_configs<de::Half>::cuda_DP1D_configs(decx::PtrInfo<void> dev_A, decx::PtrInfo<void> dev_B, 
+template decx::blas::cuda_DP1D_configs<de::Half>::cuda_DP1D_configs(decx::PtrInfo<void> dev_A, decx::PtrInfo<void> dev_B, 
     const uint64_t _proc_len, decx::cuda_stream* S, const uint32_t _fp16_accu);
-template decx::dot::cuda_DP1D_configs<double>::cuda_DP1D_configs(decx::PtrInfo<void> dev_A, decx::PtrInfo<void> dev_B, 
+template decx::blas::cuda_DP1D_configs<double>::cuda_DP1D_configs(decx::PtrInfo<void> dev_A, decx::PtrInfo<void> dev_B, 
     const uint64_t _proc_len, decx::cuda_stream* S, const uint32_t _fp16_accu);
 
 
 
 
 template <typename _type_in>
-void decx::dot::cuda_DP1D_configs<_type_in>::relase_buffer()
+void decx::blas::cuda_DP1D_configs<_type_in>::relase_buffer()
 {
     if (this->_from_dev) {
         decx::alloc::_device_dealloc(&this->_dev_A);
@@ -215,17 +215,17 @@ void decx::dot::cuda_DP1D_configs<_type_in>::relase_buffer()
     }
 }
 
-template void decx::dot::cuda_DP1D_configs<float>::relase_buffer();
-template void decx::dot::cuda_DP1D_configs<de::Half>::relase_buffer();
-template void decx::dot::cuda_DP1D_configs<double>::relase_buffer();
+template void decx::blas::cuda_DP1D_configs<float>::relase_buffer();
+template void decx::blas::cuda_DP1D_configs<de::Half>::relase_buffer();
+template void decx::blas::cuda_DP1D_configs<double>::relase_buffer();
 
 
 template <typename _type_in>
-decx::dot::cuda_DP1D_configs<_type_in>::~cuda_DP1D_configs()
+decx::blas::cuda_DP1D_configs<_type_in>::~cuda_DP1D_configs()
 {
     this->relase_buffer();
 }
 
-template decx::dot::cuda_DP1D_configs<float>::~cuda_DP1D_configs();
-template decx::dot::cuda_DP1D_configs<de::Half>::~cuda_DP1D_configs();
-template decx::dot::cuda_DP1D_configs<double>::~cuda_DP1D_configs();
+template decx::blas::cuda_DP1D_configs<float>::~cuda_DP1D_configs();
+template decx::blas::cuda_DP1D_configs<de::Half>::~cuda_DP1D_configs();
+template decx::blas::cuda_DP1D_configs<double>::~cuda_DP1D_configs();

@@ -101,37 +101,20 @@ namespace de
 
 namespace de
 {
-    enum REDUCE_METHOD
-    {
-        _REDUCE2D_FULL_ = 0,
-        _REDUCE2D_H_ = 1,
-        _REDUCE2D_V_ = 2,
-    };
-
-
     namespace cuda {
         _DECX_API_ de::DH Sum(de::Vector& src, de::DecxNumber* res, const uint32_t _fp16_accu);
-        _DECX_API_ de::DH Sum_Async(de::Vector& src, de::DecxNumber* res, const uint32_t _fp16_accu, de::DecxStream& S);
-
 
         _DECX_API_ de::DH Max(de::Vector& src, de::DecxNumber* res);
-        _DECX_API_ de::DH Max_Async(de::Vector& src, de::DecxNumber* res, de::DecxStream& S);
-
 
         _DECX_API_ de::DH Min(de::Vector& src, de::DecxNumber* res);
-        _DECX_API_ de::DH Min_Async(de::Vector& src, de::DecxNumber* res, de::DecxStream& S);
 
 
         _DECX_API_ de::DH Sum(de::GPU_Vector& src, de::DecxNumber* res, const uint32_t _fp16_accu);
-        _DECX_API_ de::DH Sum_Async(de::GPU_Vector& src, de::DecxNumber* res, const uint32_t _fp16_accu, de::DecxStream& S);
-
 
         _DECX_API_ de::DH Max(de::GPU_Vector& src, de::DecxNumber* res);
-        _DECX_API_ de::DH Max_Async(de::GPU_Vector& src, de::DecxNumber* res, de::DecxStream& S);
 
 
         _DECX_API_ de::DH Min(de::GPU_Vector& src, de::DecxNumber* res);
-        _DECX_API_ de::DH Min_Async(de::GPU_Vector& src, de::DecxNumber* res, de::DecxStream& S);
 
 
         // 1-way
@@ -151,45 +134,9 @@ namespace de
         _DECX_API_ de::DH Sum(de::GPU_Matrix& src, de::DecxNumber& res, const uint32_t _fp16_accu);
         _DECX_API_ de::DH Max(de::GPU_Matrix& src, de::DecxNumber& res);
         _DECX_API_ de::DH Min(de::GPU_Matrix& src, de::DecxNumber& res);
-
-
-        // Asynchronous APIs
-        _DECX_API_ de::DH Sum_Async(de::Matrix& src, de::DecxNumber& res, const uint32_t _fp16_accu, de::DecxStream& S);
-        _DECX_API_ de::DH Max_Async(de::Matrix& src, de::DecxNumber& res, de::DecxStream& S);
-        _DECX_API_ de::DH Min_Async(de::Matrix& src, de::DecxNumber& res, de::DecxStream& S);
-
-        _DECX_API_ de::DH Sum_Async(de::GPU_Matrix& src, de::DecxNumber& res, const uint32_t _fp16_accu, de::DecxStream& S);
-        _DECX_API_ de::DH Max_Async(de::GPU_Matrix& src, de::DecxNumber& res, de::DecxStream& S);
-        _DECX_API_ de::DH Min_Async(de::GPU_Matrix& src, de::DecxNumber& res, de::DecxStream& S);
-
-        _DECX_API_ de::DH Sum_Async(de::Matrix& src, de::Vector& dst, const int _reduce2D_mode, const uint32_t _fp16_accu, de::DecxStream& S);
-        _DECX_API_ de::DH Max_Async(de::Matrix& src, de::Vector& dst, const int _reduce2D_mode, de::DecxStream& S);
-        _DECX_API_ de::DH Min_Async(de::Matrix& src, de::Vector& dst, const int _reduce2D_mode, de::DecxStream& S);
-
-        _DECX_API_ de::DH Sum_Async(de::GPU_Matrix& src, de::GPU_Vector& dst, const int _reduce2D_mode, const uint32_t _fp16_accu, de::DecxStream& S);
-        _DECX_API_ de::DH Max_Async(de::GPU_Matrix& src, de::GPU_Vector& dst, const int _reduce2D_mode, de::DecxStream& S);
-        _DECX_API_ de::DH Min_Async(de::GPU_Matrix& src, de::GPU_Vector& dst, const int _reduce2D_mode, de::DecxStream& S);
     }
 }
 
 
-namespace de
-{
-    namespace cuda
-    {
-        _DECX_API_ de::DH Dot_product(de::Vector& A, de::Vector& B, de::DecxNumber& res, const uint32_t _fp16_accu);
-        _DECX_API_ de::DH Dot_product(de::GPU_Vector& A, de::GPU_Vector& B, de::DecxNumber& res, const uint32_t _fp16_accu);
-        _DECX_API_ de::DH Dot_product_Async(de::Vector& A, de::Vector& B, de::DecxNumber* res, const uint32_t _fp16_accu, de::DecxStream& S);
-
-    }
-
-    namespace cuda
-    {
-        _DECX_API_ de::DH Dot_product(de::Matrix& A, de::Matrix& B, de::Vector& dst, const de::REDUCE_METHOD _rd_method, const uint32_t _fp16_accu);
-
-        _DECX_API_ de::DH GEMM(de::Vector& A, de::Matrix& B, de::Vector& dst, const uint32_t _fp16_accu = 0);
-        _DECX_API_ de::DH GEMM(de::Matrix& A, de::Vector& B, de::Vector& dst, const uint32_t _fp16_accu = 0);
-    }
-}
 
 #endif

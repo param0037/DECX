@@ -21,17 +21,16 @@
 
 namespace de
 {
+namespace blas {
     namespace cuda
     {
-        _DECX_API_ de::DH Dot_product(de::Vector& A, de::Vector& B, de::DecxNumber& res, const uint32_t _fp16_accu);
+        _DECX_API_ void Dot_product(de::Vector& A, de::Vector& B, de::DecxNumber& res, const uint32_t _fp16_accu);
 
-        _DECX_API_ de::DH Dot_product(de::GPU_Vector& A, de::GPU_Vector& B, de::DecxNumber& res, const uint32_t _fp16_accu);
-    }
+        _DECX_API_ void Dot_product(de::GPU_Vector& A, de::GPU_Vector& B, de::DecxNumber& res, const uint32_t _fp16_accu);
 
-    namespace cuda
-    {
-        _DECX_API_ de::DH Dot_product(de::Matrix& A, de::Matrix& B, de::Vector& dst, const de::REDUCE_METHOD _rd_method, const uint32_t _fp16_accu);
+        _DECX_API_ void Dot_product(de::Matrix& A, de::Matrix& B, de::Vector& dst, const de::REDUCE_METHOD _rd_method, const uint32_t _fp16_accu);
     }
+}
 }
 
 

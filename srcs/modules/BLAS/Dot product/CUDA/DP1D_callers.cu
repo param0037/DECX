@@ -12,11 +12,11 @@
 #include "DP1D_callers.cuh"
 
 
-const void* decx::dot::cuda_DP1D_fp32_caller_Async(decx::dot::cuda_DP1D_configs<float>* _configs, decx::cuda_stream* S)
+const void* decx::blas::cuda_DP1D_fp32_caller_Async(decx::blas::cuda_DP1D_configs<float>* _configs, decx::cuda_stream* S)
 {
     const void* res_ptr = _configs->postproc_needed() ? _configs->get_configs_ptr<float>()->get_src() : _configs->_dev_dst.ptr;
 
-    decx::dot::GPUK::cu_block_dot1D_fp32 << <_configs->get_grid_len_k1(), _REDUCE1D_BLOCK_DIM_, 0, S->get_raw_stream_ref() >> > (
+    decx::blas::GPUK::cu_block_dot1D_fp32 << <_configs->get_grid_len_k1(), _REDUCE1D_BLOCK_DIM_, 0, S->get_raw_stream_ref() >> > (
         (float4*)_configs->_dev_A.ptr, (float4*)_configs->_dev_B.ptr, (float*)res_ptr,
         decx::utils::ceil<uint64_t>(_configs->get_actual_proc_len(), _CU_REDUCE1D_MEM_ALIGN_4B_), _configs->get_actual_proc_len());
 
@@ -41,9 +41,7 @@ const void* decx::dot::cuda_DP1D_fp32_caller_Async(decx::dot::cuda_DP1D_configs<
 }
 
 
-
-
-const void* decx::dot::cuda_DP1D_fp16_caller_Async(decx::dot::cuda_DP1D_configs<de::Half>* _configs, 
+const void* decx::blas::cuda_DP1D_fp16_caller_Async(decx::blas::cuda_DP1D_configs<de::Half>* _configs, 
     decx::cuda_stream* S, const uint32_t _fp16_accu)
 {
     const void* res_ptr = _configs->postproc_needed() ? _configs->get_configs_ptr<de::Half>()->get_src() : _configs->_dev_dst.ptr;
@@ -51,19 +49,19 @@ const void* decx::dot::cuda_DP1D_fp16_caller_Async(decx::dot::cuda_DP1D_configs<
     switch (_fp16_accu)
     {
     case decx::Fp16_Accuracy_Levels::Fp16_Accurate_L1:
-        decx::dot::GPUK::cu_block_dot1D_fp16_L1 << <_configs->get_grid_len_k1(), _REDUCE1D_BLOCK_DIM_, 0, S->get_raw_stream_ref() >> > (
+        decx::blas::GPUK::cu_block_dot1D_fp16_L1 << <_configs->get_grid_len_k1(), _REDUCE1D_BLOCK_DIM_, 0, S->get_raw_stream_ref() >> > (
             (float4*)_configs->_dev_A.ptr, (float4*)_configs->_dev_B.ptr, (float*)res_ptr,
             decx::utils::ceil<uint64_t>(_configs->get_actual_proc_len(), _CU_REDUCE1D_MEM_ALIGN_2B_), _configs->get_actual_proc_len());
         break;
 
     case decx::Fp16_Accuracy_Levels::Fp16_Accurate_L2:
-        decx::dot::GPUK::cu_block_dot1D_fp16_L2 << <_configs->get_grid_len_k1(), _REDUCE1D_BLOCK_DIM_, 0, S->get_raw_stream_ref() >> > (
+        decx::blas::GPUK::cu_block_dot1D_fp16_L2 << <_configs->get_grid_len_k1(), _REDUCE1D_BLOCK_DIM_, 0, S->get_raw_stream_ref() >> > (
             (float4*)_configs->_dev_A.ptr, (float4*)_configs->_dev_B.ptr, (__half*)res_ptr,
             decx::utils::ceil<uint64_t>(_configs->get_actual_proc_len(), _CU_REDUCE1D_MEM_ALIGN_2B_), _configs->get_actual_proc_len());
         break;
 
     case decx::Fp16_Accuracy_Levels::Fp16_Accurate_L3:
-        decx::dot::GPUK::cu_block_dot1D_fp16_L3 << <_configs->get_grid_len_k1(), _REDUCE1D_BLOCK_DIM_, 0, S->get_raw_stream_ref() >> > (
+        decx::blas::GPUK::cu_block_dot1D_fp16_L3 << <_configs->get_grid_len_k1(), _REDUCE1D_BLOCK_DIM_, 0, S->get_raw_stream_ref() >> > (
             (float4*)_configs->_dev_A.ptr, (float4*)_configs->_dev_B.ptr, (__half*)res_ptr,
             decx::utils::ceil<uint64_t>(_configs->get_actual_proc_len(), _CU_REDUCE1D_MEM_ALIGN_2B_), _configs->get_actual_proc_len());
         break;
@@ -121,11 +119,11 @@ const void* decx::dot::cuda_DP1D_fp16_caller_Async(decx::dot::cuda_DP1D_configs<
 
 
 
-const void* decx::dot::cuda_DP1D_fp64_caller_Async(decx::dot::cuda_DP1D_configs<double>* _configs, decx::cuda_stream* S)
+const void* decx::blas::cuda_DP1D_fp64_caller_Async(decx::blas::cuda_DP1D_configs<double>* _configs, decx::cuda_stream* S)
 {
     const void* res_ptr = _configs->postproc_needed() ? _configs->get_configs_ptr<double>()->get_src() : _configs->_dev_dst.ptr;
 
-    decx::dot::GPUK::cu_block_dot1D_fp64 << <_configs->get_grid_len_k1(), _REDUCE1D_BLOCK_DIM_, 0, S->get_raw_stream_ref() >> > (
+    decx::blas::GPUK::cu_block_dot1D_fp64 << <_configs->get_grid_len_k1(), _REDUCE1D_BLOCK_DIM_, 0, S->get_raw_stream_ref() >> > (
         (double2*)_configs->_dev_A.ptr, (double2*)_configs->_dev_B.ptr, (double*)res_ptr,
         decx::utils::ceil<uint64_t>(_configs->get_actual_proc_len(), _CU_REDUCE1D_MEM_ALIGN_8B_), _configs->get_actual_proc_len());
 
@@ -152,11 +150,11 @@ const void* decx::dot::cuda_DP1D_fp64_caller_Async(decx::dot::cuda_DP1D_configs<
 
 
 
-const void* decx::dot::cuda_DP1D_cplxf_caller_Async(decx::dot::cuda_DP1D_configs<double>* _configs, decx::cuda_stream* S)
+const void* decx::blas::cuda_DP1D_cplxf_caller_Async(decx::blas::cuda_DP1D_configs<double>* _configs, decx::cuda_stream* S)
 {
     const void* res_ptr = _configs->postproc_needed() ? _configs->get_configs_ptr<double>()->get_src() : _configs->_dev_dst.ptr;
 
-    decx::dot::GPUK::cu_block_dot1D_cplxf << <_configs->get_grid_len_k1(), _REDUCE1D_BLOCK_DIM_, 0, S->get_raw_stream_ref() >> > (
+    decx::blas::GPUK::cu_block_dot1D_cplxf << <_configs->get_grid_len_k1(), _REDUCE1D_BLOCK_DIM_, 0, S->get_raw_stream_ref() >> > (
         (float4*)_configs->_dev_A.ptr, (float4*)_configs->_dev_B.ptr, (de::CPf*)res_ptr,
         decx::utils::ceil<uint64_t>(_configs->get_actual_proc_len(), _CU_REDUCE1D_MEM_ALIGN_8B_), _configs->get_actual_proc_len());
 

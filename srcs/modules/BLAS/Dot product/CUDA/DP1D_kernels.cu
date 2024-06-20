@@ -13,7 +13,7 @@
 
 
 __global__ void 
-decx::dot::GPUK::cu_block_dot1D_fp32(const float4* __restrict       A, 
+decx::blas::GPUK::cu_block_dot1D_fp32(const float4* __restrict       A, 
                                      const float4* __restrict       B, 
                                      float* __restrict              dst,
                                      const uint64_t                 proc_len_v4, 
@@ -79,7 +79,7 @@ decx::dot::GPUK::cu_block_dot1D_fp32(const float4* __restrict       A,
 
 
 __global__ void 
-decx::dot::GPUK::cu_block_dot1D_fp16_L1(const float4* __restrict       A,
+decx::blas::GPUK::cu_block_dot1D_fp16_L1(const float4* __restrict       A,
                                         const float4* __restrict       B, 
                                         float* __restrict              dst,
                                         const uint64_t                 proc_len_v8, 
@@ -153,7 +153,7 @@ decx::dot::GPUK::cu_block_dot1D_fp16_L1(const float4* __restrict       A,
 
 
 __global__ void 
-decx::dot::GPUK::cu_block_dot1D_fp16_L2(const float4* __restrict       A,
+decx::blas::GPUK::cu_block_dot1D_fp16_L2(const float4* __restrict       A,
                                         const float4* __restrict       B, 
                                         __half* __restrict             dst,
                                         const uint64_t                 proc_len_v8, 
@@ -227,7 +227,7 @@ decx::dot::GPUK::cu_block_dot1D_fp16_L2(const float4* __restrict       A,
 
 
 __global__ void 
-decx::dot::GPUK::cu_block_dot1D_fp16_L3(const float4* __restrict       A,
+decx::blas::GPUK::cu_block_dot1D_fp16_L3(const float4* __restrict       A,
                                         const float4* __restrict       B, 
                                         __half* __restrict             dst,
                                         const uint64_t                 proc_len_v8, 
@@ -297,7 +297,7 @@ decx::dot::GPUK::cu_block_dot1D_fp16_L3(const float4* __restrict       A,
 
 
 __global__ void 
-decx::dot::GPUK::cu_block_dot1D_fp64(const double2* __restrict       A, 
+decx::blas::GPUK::cu_block_dot1D_fp64(const double2* __restrict       A, 
                                      const double2* __restrict       B, 
                                      double* __restrict              dst,
                                      const uint64_t                  proc_len_v2, 
@@ -360,7 +360,7 @@ decx::dot::GPUK::cu_block_dot1D_fp64(const double2* __restrict       A,
 
 
 __global__ void 
-decx::dot::GPUK::cu_block_dot1D_cplxf(const float4* __restrict         A, 
+decx::blas::GPUK::cu_block_dot1D_cplxf(const float4* __restrict         A, 
                                       const float4* __restrict         B, 
                                       de::CPf* __restrict              dst,
                                       const uint64_t                   proc_len_v2, 

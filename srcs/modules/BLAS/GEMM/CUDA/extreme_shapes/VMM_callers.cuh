@@ -18,13 +18,15 @@
 
 namespace decx
 {
-    template <bool _is_reduce_h>
-    void generate_VMM_config_fp32(decx::dot::cuda_DP2D_configs<float>* _configs, const uint2 proc_dims, decx::cuda_stream* S);
+    namespace blas {
+        template <bool _is_reduce_h>
+        void generate_VMM_config_fp32(decx::blas::cuda_DP2D_configs<float>* _configs, const uint2 proc_dims, decx::cuda_stream* S);
 
 
-    template <bool _is_reduce_h>
-    void generate_VMM_config_fp16(decx::dot::cuda_DP2D_configs<de::Half>* _configs, const uint2 proc_dims, decx::cuda_stream* S,
-        const uint32_t _fp16_accu);
+        template <bool _is_reduce_h>
+        void generate_VMM_config_fp16(decx::blas::cuda_DP2D_configs<de::Half>* _configs, const uint2 proc_dims, decx::cuda_stream* S,
+            const uint32_t _fp16_accu);
+    }
 }
 
 
@@ -32,17 +34,17 @@ namespace decx
 namespace decx
 {
     template <bool _is_reduce_h>
-    static void* _VMM_fp32_caller_async(decx::dot::cuda_DP2D_configs<float>* _configs, decx::cuda_stream* S);
+    static void* _VMM_fp32_caller_async(decx::blas::cuda_DP2D_configs<float>* _configs, decx::cuda_stream* S);
 
 
     template <bool _is_reduce_h>
-    static void* _VMM_fp16_caller_async(decx::dot::cuda_DP2D_configs<de::Half>* _configs, decx::cuda_stream* S, 
+    static void* _VMM_fp16_caller_async(decx::blas::cuda_DP2D_configs<de::Half>* _configs, decx::cuda_stream* S, 
         const uint32_t _fp16_accu);
 }
 
 
 template <bool _is_reduce_h>
-static void* decx::_VMM_fp32_caller_async(decx::dot::cuda_DP2D_configs<float>* _configs, decx::cuda_stream* S)
+static void* decx::_VMM_fp32_caller_async(decx::blas::cuda_DP2D_configs<float>* _configs, decx::cuda_stream* S)
 {
     const void* res_ptr = _configs->postproc_needed() ? _configs->get_configs_ptr<float>()->get_src()._ptr.ptr : _configs->_dev_dst.ptr;
     
@@ -101,7 +103,7 @@ static void* decx::_VMM_fp32_caller_async(decx::dot::cuda_DP2D_configs<float>* _
 
 
 template <bool _is_reduce_h>
-static void* decx::_VMM_fp16_caller_async(decx::dot::cuda_DP2D_configs<de::Half>* _configs, decx::cuda_stream* S,
+static void* decx::_VMM_fp16_caller_async(decx::blas::cuda_DP2D_configs<de::Half>* _configs, decx::cuda_stream* S,
     const uint32_t _fp16_accu)
 {
     const void* res_ptr = NULL;

@@ -12,12 +12,12 @@
 
 
 template <bool _is_reduce_h>
-const void* decx::dot::cuda_DP2D_1way_fp32_caller_Async(decx::dot::cuda_DP2D_configs<float>* _configs, decx::cuda_stream* S)
+const void* decx::blas::cuda_DP2D_1way_fp32_caller_Async(decx::blas::cuda_DP2D_configs<float>* _configs, decx::cuda_stream* S)
 {
     const void* res_ptr = _configs->postproc_needed() ? _configs->get_configs_ptr<float>()->get_src()._ptr.ptr : _configs->_dev_dst.ptr;
 
     if (_is_reduce_h) {
-        decx::dot::GPUK::cu_block_dot2D_1way_h_fp32 << < _configs->get_1st_kernel_config(),
+        decx::blas::GPUK::cu_block_dot2D_1way_h_fp32 << < _configs->get_1st_kernel_config(),
             dim3(_REDUCE2D_BLOCK_DIM_X_, _REDUCE2D_BLOCK_DIM_Y_), 0, S->get_raw_stream_ref() >> > (
                 (float4*)_configs->_dev_A.ptr,
                 (float4*)_configs->_dev_B.ptr,
@@ -27,7 +27,7 @@ const void* decx::dot::cuda_DP2D_1way_fp32_caller_Async(decx::dot::cuda_DP2D_con
                 _configs->get_actual_proc_dims());
     }
     else {
-        decx::dot::GPUK::cu_block_dot2D_1way_v_fp32 << < _configs->get_1st_kernel_config(),
+        decx::blas::GPUK::cu_block_dot2D_1way_v_fp32 << < _configs->get_1st_kernel_config(),
             dim3(_REDUCE2D_BLOCK_DIM_X_, _REDUCE2D_BLOCK_DIM_Y_), 0, S->get_raw_stream_ref() >> > (
                 (float4*)_configs->_dev_A.ptr,
                 (float4*)_configs->_dev_B.ptr,
@@ -54,8 +54,8 @@ const void* decx::dot::cuda_DP2D_1way_fp32_caller_Async(decx::dot::cuda_DP2D_con
     }
 }
 
-template const void* decx::dot::cuda_DP2D_1way_fp32_caller_Async<true>(decx::dot::cuda_DP2D_configs<float>*, decx::cuda_stream*);
-template const void* decx::dot::cuda_DP2D_1way_fp32_caller_Async<false>(decx::dot::cuda_DP2D_configs<float>*, decx::cuda_stream*);
+template const void* decx::blas::cuda_DP2D_1way_fp32_caller_Async<true>(decx::blas::cuda_DP2D_configs<float>*, decx::cuda_stream*);
+template const void* decx::blas::cuda_DP2D_1way_fp32_caller_Async<false>(decx::blas::cuda_DP2D_configs<float>*, decx::cuda_stream*);
 
 
 #define _DOT2D_1WAY_H_FP16_PARAM(_dst_type)                                                                 \
@@ -75,7 +75,7 @@ template const void* decx::dot::cuda_DP2D_1way_fp32_caller_Async<false>(decx::do
 
 
 template <bool _is_reduce_h>
-const void* decx::dot::cuda_DP2D_1way_fp16_caller_Async(decx::dot::cuda_DP2D_configs<de::Half>* _configs, const uint32_t _fp16_accu, decx::cuda_stream* S)
+const void* decx::blas::cuda_DP2D_1way_fp16_caller_Async(decx::blas::cuda_DP2D_configs<de::Half>* _configs, const uint32_t _fp16_accu, decx::cuda_stream* S)
 {
     const void* res_ptr = NULL;
     if (_fp16_accu == decx::Fp16_Accuracy_Levels::Fp16_Accurate_L1) {
@@ -89,17 +89,17 @@ const void* decx::dot::cuda_DP2D_1way_fp16_caller_Async(decx::dot::cuda_DP2D_con
         switch (_fp16_accu)
         {
         case decx::Fp16_Accuracy_Levels::Fp16_Accurate_L1:
-            decx::dot::GPUK::cu_block_dot2D_1way_h_fp16_L1 << < _configs->get_1st_kernel_config(),
+            decx::blas::GPUK::cu_block_dot2D_1way_h_fp16_L1 << < _configs->get_1st_kernel_config(),
                 dim3(_REDUCE2D_BLOCK_DIM_X_, _REDUCE2D_BLOCK_DIM_Y_), 0, S->get_raw_stream_ref() >> > (_DOT2D_1WAY_H_FP16_PARAM(float));
             break;
 
         case decx::Fp16_Accuracy_Levels::Fp16_Accurate_L2:
-            decx::dot::GPUK::cu_block_dot2D_1way_h_fp16_L2 << < _configs->get_1st_kernel_config(),
+            decx::blas::GPUK::cu_block_dot2D_1way_h_fp16_L2 << < _configs->get_1st_kernel_config(),
                 dim3(_REDUCE2D_BLOCK_DIM_X_, _REDUCE2D_BLOCK_DIM_Y_), 0, S->get_raw_stream_ref() >> > (_DOT2D_1WAY_H_FP16_PARAM(half));
             break;
 
         case decx::Fp16_Accuracy_Levels::Fp16_Accurate_L3:
-            decx::dot::GPUK::cu_block_dot2D_1way_h_fp16_L3 << < _configs->get_1st_kernel_config(),
+            decx::blas::GPUK::cu_block_dot2D_1way_h_fp16_L3 << < _configs->get_1st_kernel_config(),
                 dim3(_REDUCE2D_BLOCK_DIM_X_, _REDUCE2D_BLOCK_DIM_Y_), 0, S->get_raw_stream_ref() >> > (_DOT2D_1WAY_H_FP16_PARAM(half));
             break;
         default:
@@ -110,17 +110,17 @@ const void* decx::dot::cuda_DP2D_1way_fp16_caller_Async(decx::dot::cuda_DP2D_con
         switch (_fp16_accu)
         {
         case decx::Fp16_Accuracy_Levels::Fp16_Accurate_L1:
-            decx::dot::GPUK::cu_block_dot2D_1way_v_fp16_L1 << < _configs->get_1st_kernel_config(),
+            decx::blas::GPUK::cu_block_dot2D_1way_v_fp16_L1 << < _configs->get_1st_kernel_config(),
                 dim3(_REDUCE2D_BLOCK_DIM_X_, _REDUCE2D_BLOCK_DIM_Y_), 0, S->get_raw_stream_ref() >> > (_DOT2D_1WAY_V_FP16_PARAM(float));
             break;
 
         case decx::Fp16_Accuracy_Levels::Fp16_Accurate_L2:
-            decx::dot::GPUK::cu_block_dot2D_1way_v_fp16_L2 << < _configs->get_1st_kernel_config(),
+            decx::blas::GPUK::cu_block_dot2D_1way_v_fp16_L2 << < _configs->get_1st_kernel_config(),
                 dim3(_REDUCE2D_BLOCK_DIM_X_, _REDUCE2D_BLOCK_DIM_Y_), 0, S->get_raw_stream_ref() >> > (_DOT2D_1WAY_V_FP16_PARAM(half));
             break;
 
         case decx::Fp16_Accuracy_Levels::Fp16_Accurate_L3:
-            decx::dot::GPUK::cu_block_dot2D_1way_v_fp16_L3 << < _configs->get_1st_kernel_config(),
+            decx::blas::GPUK::cu_block_dot2D_1way_v_fp16_L3 << < _configs->get_1st_kernel_config(),
                 dim3(_REDUCE2D_BLOCK_DIM_X_, _REDUCE2D_BLOCK_DIM_Y_), 0, S->get_raw_stream_ref() >> > (_DOT2D_1WAY_V_FP16_PARAM(half));
             break;
         default:
@@ -151,8 +151,8 @@ const void* decx::dot::cuda_DP2D_1way_fp16_caller_Async(decx::dot::cuda_DP2D_con
     }
 }
 
-template const void* decx::dot::cuda_DP2D_1way_fp16_caller_Async<true>(decx::dot::cuda_DP2D_configs<de::Half>*, const uint32_t, decx::cuda_stream*);
-template const void* decx::dot::cuda_DP2D_1way_fp16_caller_Async<false>(decx::dot::cuda_DP2D_configs<de::Half>*, const uint32_t, decx::cuda_stream*);
+template const void* decx::blas::cuda_DP2D_1way_fp16_caller_Async<true>(decx::blas::cuda_DP2D_configs<de::Half>*, const uint32_t, decx::cuda_stream*);
+template const void* decx::blas::cuda_DP2D_1way_fp16_caller_Async<false>(decx::blas::cuda_DP2D_configs<de::Half>*, const uint32_t, decx::cuda_stream*);
 
 #ifdef _DOT2D_1WAY_H_FP16_PARAM
 #undef _DOT2D_1WAY_H_FP16_PARAM
@@ -165,7 +165,7 @@ template const void* decx::dot::cuda_DP2D_1way_fp16_caller_Async<false>(decx::do
 // Host
 
 template <bool _is_reduce_h>
-void decx::dot::matrix_dot_1way_fp32(decx::_Matrix* A, decx::_Matrix* B, decx::_Vector* dst)
+void decx::blas::matrix_dot_1way_fp32(decx::_Matrix* A, decx::_Matrix* B, decx::_Vector* dst)
 {
     decx::cuda_stream* S = NULL;
     S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
@@ -180,7 +180,7 @@ void decx::dot::matrix_dot_1way_fp32(decx::_Matrix* A, decx::_Matrix* B, decx::_
         return;
     }
 
-    decx::dot::cuda_DP2D_configs<float> _configs;
+    decx::blas::cuda_DP2D_configs<float> _configs;
     _configs.generate_config<_is_reduce_h>(make_uint2(A->Width(), A->Height()), S);
     _configs.alloc_buffers<_is_reduce_h>(S, 0);
 
@@ -196,7 +196,7 @@ void decx::dot::matrix_dot_1way_fp32(decx::_Matrix* A, decx::_Matrix* B, decx::_
                                       B->Width() * sizeof(float),   B->Height(), 
                                       cudaMemcpyHostToDevice,       S->get_raw_stream_ref()));
 
-    const void* res_ptr = decx::dot::cuda_DP2D_1way_fp32_caller_Async<_is_reduce_h>(&_configs, S);
+    const void* res_ptr = decx::blas::cuda_DP2D_1way_fp32_caller_Async<_is_reduce_h>(&_configs, S);
 
     if (res_ptr == NULL) {
         Print_Error_Message(4, INTERNAL_ERROR);
@@ -209,14 +209,14 @@ void decx::dot::matrix_dot_1way_fp32(decx::_Matrix* A, decx::_Matrix* B, decx::_
     E->synchronize();
 }
 
-template void decx::dot::matrix_dot_1way_fp32<true>(decx::_Matrix* A, decx::_Matrix* B, decx::_Vector* dst);
-template void decx::dot::matrix_dot_1way_fp32<false>(decx::_Matrix* A, decx::_Matrix* B, decx::_Vector* dst);
+template void decx::blas::matrix_dot_1way_fp32<true>(decx::_Matrix* A, decx::_Matrix* B, decx::_Vector* dst);
+template void decx::blas::matrix_dot_1way_fp32<false>(decx::_Matrix* A, decx::_Matrix* B, decx::_Vector* dst);
 
 
 
 
 template <bool _is_reduce_h>
-void decx::dot::matrix_dot_1way_fp16(decx::_Matrix* A, decx::_Matrix* B, decx::_Vector* dst, const uint32_t _fp16_accu)
+void decx::blas::matrix_dot_1way_fp16(decx::_Matrix* A, decx::_Matrix* B, decx::_Vector* dst, const uint32_t _fp16_accu)
 {
     decx::cuda_stream* S = NULL;
     S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
@@ -231,7 +231,7 @@ void decx::dot::matrix_dot_1way_fp16(decx::_Matrix* A, decx::_Matrix* B, decx::_
         return;
     }
 
-    decx::dot::cuda_DP2D_configs<de::Half> _configs;
+    decx::blas::cuda_DP2D_configs<de::Half> _configs;
     _configs.generate_config<_is_reduce_h>(make_uint2(A->Width(), A->Height()), S, _fp16_accu);
     _configs.alloc_buffers<_is_reduce_h>(S, _fp16_accu);
 
@@ -247,7 +247,7 @@ void decx::dot::matrix_dot_1way_fp16(decx::_Matrix* A, decx::_Matrix* B, decx::_
                                       B->Width() * sizeof(de::Half),    B->Height(),
                                       cudaMemcpyHostToDevice,           S->get_raw_stream_ref()));
 
-    const void* res_ptr = decx::dot::cuda_DP2D_1way_fp16_caller_Async<_is_reduce_h>(&_configs, _fp16_accu, S);
+    const void* res_ptr = decx::blas::cuda_DP2D_1way_fp16_caller_Async<_is_reduce_h>(&_configs, _fp16_accu, S);
 
     if (res_ptr == NULL) {
         Print_Error_Message(4, INTERNAL_ERROR);
@@ -261,8 +261,8 @@ void decx::dot::matrix_dot_1way_fp16(decx::_Matrix* A, decx::_Matrix* B, decx::_
     E->synchronize();
 }
 
-template void decx::dot::matrix_dot_1way_fp16<true>(decx::_Matrix*, decx::_Matrix*, decx::_Vector*, const uint32_t);
-template void decx::dot::matrix_dot_1way_fp16<false>(decx::_Matrix*, decx::_Matrix*, decx::_Vector*, const uint32_t);
+template void decx::blas::matrix_dot_1way_fp16<true>(decx::_Matrix*, decx::_Matrix*, decx::_Vector*, const uint32_t);
+template void decx::blas::matrix_dot_1way_fp16<false>(decx::_Matrix*, decx::_Matrix*, decx::_Vector*, const uint32_t);
 
 
 #ifdef _DOT2D_1WAY_H_FP16_PARAM

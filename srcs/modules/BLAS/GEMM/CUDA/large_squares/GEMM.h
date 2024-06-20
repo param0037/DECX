@@ -20,25 +20,28 @@
 
 namespace de
 {
+namespace blas
+{
     namespace cuda
     {
-        _DECX_API_ de::DH GEMM(de::Matrix& A, de::Matrix& B, de::Matrix& dst);
+        _DECX_API_ void GEMM(de::Matrix& A, de::Matrix& B, de::Matrix& dst);
 
 
-        _DECX_API_ de::DH GEMM(de::Matrix& A, de::Matrix& B, de::Matrix& C, de::Matrix& dst);
+        _DECX_API_ void GEMM(de::Matrix& A, de::Matrix& B, de::Matrix& C, de::Matrix& dst);
 
 
-        _DECX_API_ de::DH GEMM(de::Vector& A, de::Matrix& B, de::Vector& dst, const uint32_t _fp16_accu);
-        _DECX_API_ de::DH GEMM(de::Matrix& A, de::Vector& B, de::Vector& dst, const uint32_t _fp16_accu);
+        _DECX_API_ void GEMM(de::Vector& A, de::Matrix& B, de::Vector& dst, const uint32_t _fp16_accu);
+        _DECX_API_ void GEMM(de::Matrix& A, de::Vector& B, de::Vector& dst, const uint32_t _fp16_accu);
 
 
         // --------------------------------------------- on GPU -----------------------------------------------------------
 
-        _DECX_API_ de::DH GEMM(de::GPU_Matrix& A, de::GPU_Matrix& B, de::GPU_Matrix& dst, const int flag);
+        _DECX_API_ void GEMM(de::GPU_Matrix& A, de::GPU_Matrix& B, de::GPU_Matrix& dst, const int flag);
 
 
-        _DECX_API_ de::DH GEMM(de::GPU_Matrix& A, de::GPU_Matrix& B, de::GPU_Matrix& C, de::GPU_Matrix& dst, const int flag);
+        _DECX_API_ void GEMM(de::GPU_Matrix& A, de::GPU_Matrix& B, de::GPU_Matrix& C, de::GPU_Matrix& dst, const int flag);
     }
+}
 }
 
 

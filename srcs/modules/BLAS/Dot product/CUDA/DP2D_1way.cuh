@@ -24,7 +24,7 @@
 
 namespace decx
 {
-    namespace dot
+    namespace blas
     {
         template <typename _type_in>
         class cuda_DP2D_configs;
@@ -34,7 +34,7 @@ namespace decx
 
 
 template <typename _type_in>
-class decx::dot::cuda_DP2D_configs
+class decx::blas::cuda_DP2D_configs
 {
 private:
     void* _post_proc_conf;

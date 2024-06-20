@@ -23,7 +23,7 @@ namespace decx
             const decx::blas::GEMM_blocking_config* _thread_configs, decx::utils::_thr_2D* t1D, const float* C = NULL);
 
 
-        template <bool _ABC>
+        template <bool _ABC, bool _cplxf>
         void GEMM_64b_caller(const double* A, const double* B, double* dst, const decx::_matrix_layout* layout_A,
             const decx::_matrix_layout* layout_dst, const uint2 _arranged_B_dims, const decx::utils::frag_manager* f_mgrH,
             const decx::blas::GEMM_blocking_config* _thread_configs, decx::utils::_thr_2D* t1D, const double* C = NULL);
@@ -32,8 +32,8 @@ namespace decx
         void GEMM_fp32(decx::_Matrix* A, decx::_Matrix* B, decx::_Matrix* dst, de::DH* handle, decx::_Matrix* C = NULL);
 
 
-        template <bool _ABC>
-        void GEMM_fp64(decx::_Matrix* A, decx::_Matrix* B, decx::_Matrix* dst, de::DH* handle, decx::_Matrix* C = NULL);
+        template <bool _ABC, bool _cplxf>
+        void GEMM_64b(decx::_Matrix* A, decx::_Matrix* B, decx::_Matrix* dst, de::DH* handle, decx::_Matrix* C = NULL);
     }
 }
 

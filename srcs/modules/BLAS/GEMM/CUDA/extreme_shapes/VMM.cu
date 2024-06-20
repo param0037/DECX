@@ -21,17 +21,19 @@
 
 namespace decx
 {
-    template <bool _is_reduce_h>
-    static void _VMM_caller_fp32(decx::_Vector* vec, decx::_Matrix* mat, decx::_Vector* dst, de::DH* handle);
+    namespace blas {
+        template <bool _is_reduce_h>
+        static void _VMM_caller_fp32(decx::_Vector* vec, decx::_Matrix* mat, decx::_Vector* dst, de::DH* handle);
 
 
-    template <bool _is_reduce_h>
-    static void _VMM_caller_fp16(decx::_Vector* vec, decx::_Matrix* mat, decx::_Vector* dst, const uint32_t _fp16_accu, de::DH* handle);
+        template <bool _is_reduce_h>
+        static void _VMM_caller_fp16(decx::_Vector* vec, decx::_Matrix* mat, decx::_Vector* dst, const uint32_t _fp16_accu, de::DH* handle);
+    }
 }
 
 
 template <bool _is_reduce_h>
-static void decx::_VMM_caller_fp32(decx::_Vector* vec, decx::_Matrix* mat, decx::_Vector* dst, de::DH* handle)
+static void decx::blas::_VMM_caller_fp32(decx::_Vector* vec, decx::_Matrix* mat, decx::_Vector* dst, de::DH* handle)
 {
     decx::cuda_stream* S = NULL;
     S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
@@ -46,8 +48,8 @@ static void decx::_VMM_caller_fp32(decx::_Vector* vec, decx::_Matrix* mat, decx:
         return;
     }
 
-    decx::dot::cuda_DP2D_configs<float> _configs;
-    decx::generate_VMM_config_fp32<_is_reduce_h>(&_configs, make_uint2(mat->Width(), mat->Height()), S);
+    decx::blas::cuda_DP2D_configs<float> _configs;
+    decx::blas::generate_VMM_config_fp32<_is_reduce_h>(&_configs, make_uint2(mat->Width(), mat->Height()), S);
 
     // Copy matrix data
     checkCudaErrors(cudaMemcpy2DAsync(_configs._dev_A.ptr,          _configs._dev_mat_dims.x * sizeof(float),
@@ -74,7 +76,7 @@ static void decx::_VMM_caller_fp32(decx::_Vector* vec, decx::_Matrix* mat, decx:
 
 
 template <bool _is_reduce_h>
-static void decx::_VMM_caller_fp16(decx::_Vector* vec, decx::_Matrix* mat, decx::_Vector* dst, const uint32_t _fp16_accu, de::DH* handle)
+static void decx::blas::_VMM_caller_fp16(decx::_Vector* vec, decx::_Matrix* mat, decx::_Vector* dst, const uint32_t _fp16_accu, de::DH* handle)
 {
     decx::cuda_stream* S = NULL;
     S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
@@ -89,8 +91,8 @@ static void decx::_VMM_caller_fp16(decx::_Vector* vec, decx::_Matrix* mat, decx:
         return;
     }
     
-    decx::dot::cuda_DP2D_configs<de::Half> _configs;
-    decx::generate_VMM_config_fp16<_is_reduce_h>(&_configs, make_uint2(mat->Width(), mat->Height()), S, _fp16_accu);
+    decx::blas::cuda_DP2D_configs<de::Half> _configs;
+    decx::blas::generate_VMM_config_fp16<_is_reduce_h>(&_configs, make_uint2(mat->Width(), mat->Height()), S, _fp16_accu);
 
     // Copy matrix data
     checkCudaErrors(cudaMemcpy2DAsync(_configs._dev_A.ptr,              _configs._dev_mat_dims.x * sizeof(de::Half),
@@ -117,9 +119,9 @@ static void decx::_VMM_caller_fp16(decx::_Vector* vec, decx::_Matrix* mat, decx:
 
 
 
-_DECX_API_ de::DH de::cuda::GEMM(de::Vector& A, de::Matrix& B, de::Vector& dst, const uint32_t _fp16_accu)
+_DECX_API_ void de::blas::cuda::GEMM(de::Vector& A, de::Matrix& B, de::Vector& dst, const uint32_t _fp16_accu)
 {
-    de::DH handle;
+    de::ResetLastError();
     
     decx::_Vector* _A = dynamic_cast<decx::_Vector*>(&A);
     decx::_Matrix* _B = dynamic_cast<decx::_Matrix*>(&B);
@@ -128,23 +130,21 @@ _DECX_API_ de::DH de::cuda::GEMM(de::Vector& A, de::Matrix& B, de::Vector& dst, 
     switch (_A->Type())
     {
     case de::_DATA_TYPES_FLAGS_::_FP32_:
-        decx::_VMM_caller_fp32<_VMM_VEC_MUL_MAT_>(_A, _B, _dst, &handle);
+        decx::blas::_VMM_caller_fp32<_VMM_VEC_MUL_MAT_>(_A, _B, _dst, de::GetLastError());
         break;
 
     case de::_DATA_TYPES_FLAGS_::_FP16_:
-        decx::_VMM_caller_fp16<_VMM_VEC_MUL_MAT_>(_A, _B, _dst, _fp16_accu, &handle);
+        decx::blas::_VMM_caller_fp16<_VMM_VEC_MUL_MAT_>(_A, _B, _dst, _fp16_accu, de::GetLastError());
         break;
     default:
         break;
     }
-    
-    return handle;
 }
 
 
-_DECX_API_ de::DH de::cuda::GEMM(de::Matrix& A, de::Vector& B, de::Vector& dst, const uint32_t _fp16_accu)
+_DECX_API_ void de::blas::cuda::GEMM(de::Matrix& A, de::Vector& B, de::Vector& dst, const uint32_t _fp16_accu)
 {
-    de::DH handle;
+    de::ResetLastError();
 
     decx::_Matrix* _A = dynamic_cast<decx::_Matrix*>(&A);
     decx::_Vector* _B = dynamic_cast<decx::_Vector*>(&B);
@@ -153,15 +153,13 @@ _DECX_API_ de::DH de::cuda::GEMM(de::Matrix& A, de::Vector& B, de::Vector& dst, 
     switch (_A->Type())
     {
     case de::_DATA_TYPES_FLAGS_::_FP32_:
-        decx::_VMM_caller_fp32<_VMM_MAT_MUL_VEC_>(_B, _A, _dst, &handle);
+        decx::blas::_VMM_caller_fp32<_VMM_MAT_MUL_VEC_>(_B, _A, _dst, de::GetLastError());
         break;
 
     case de::_DATA_TYPES_FLAGS_::_FP16_:
-        decx::_VMM_caller_fp16<_VMM_MAT_MUL_VEC_>(_B, _A, _dst, _fp16_accu, &handle);
+        decx::blas::_VMM_caller_fp16<_VMM_MAT_MUL_VEC_>(_B, _A, _dst, _fp16_accu, de::GetLastError());
         break;
     default:
         break;
     }
-
-    return handle;
 }

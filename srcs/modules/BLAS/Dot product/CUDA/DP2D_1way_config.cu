@@ -16,20 +16,20 @@
 
 
 template <typename _type_in>
-decx::dot::cuda_DP2D_configs<_type_in>::cuda_DP2D_configs()
+decx::blas::cuda_DP2D_configs<_type_in>::cuda_DP2D_configs()
 {
     this->_load_byte_changed = false;
     this->_post_proc_conf = NULL;
 }
 
-template decx::dot::cuda_DP2D_configs<float>::cuda_DP2D_configs();
-template decx::dot::cuda_DP2D_configs<de::Half>::cuda_DP2D_configs();
+template decx::blas::cuda_DP2D_configs<float>::cuda_DP2D_configs();
+template decx::blas::cuda_DP2D_configs<de::Half>::cuda_DP2D_configs();
 
 
 
 template <typename _type_in>
 template <bool _is_reduce_h>
-void decx::dot::cuda_DP2D_configs<_type_in>::generate_config(const uint2 proc_dims, decx::cuda_stream* S, const uint32_t _fp16_accu)
+void decx::blas::cuda_DP2D_configs<_type_in>::generate_config(const uint2 proc_dims, decx::cuda_stream* S, const uint32_t _fp16_accu)
 {
     this->_from_dev = false;
 
@@ -51,12 +51,6 @@ void decx::dot::cuda_DP2D_configs<_type_in>::generate_config(const uint2 proc_di
 
     const uint64_t _proc_W_v = decx::utils::ceil<uint64_t>(this->_proc_dims.x, _proc_align);
     this->_dev_mat_dims = make_uint2(_proc_W_v * _proc_align, this->_proc_dims.y);
-
-    /*if (decx::alloc::_device_malloc(&this->_dev_A, this->_dev_mat_dims.x * this->_dev_mat_dims.y * sizeof(_type_in), true, S) ||
-        decx::alloc::_device_malloc(&this->_dev_B, this->_dev_mat_dims.x * this->_dev_mat_dims.y * sizeof(_type_in), true, S)) {
-        Print_Error_Message(4, DEV_ALLOC_FAIL);
-        return;
-    }*/
 
     this->_first_kernel_config =
         dim3(decx::utils::ceil<uint32_t>(_proc_W_v, _REDUCE2D_BLOCK_DIM_X_), decx::utils::ceil<uint32_t>(this->_proc_dims.y, _REDUCE2D_BLOCK_DIM_Y_));
@@ -107,16 +101,16 @@ void decx::dot::cuda_DP2D_configs<_type_in>::generate_config(const uint2 proc_di
     }
 }
 
-template void decx::dot::cuda_DP2D_configs<float>::generate_config<true>(const uint2, decx::cuda_stream*, const uint32_t);
-template void decx::dot::cuda_DP2D_configs<de::Half>::generate_config<true>(const uint2, decx::cuda_stream*, const uint32_t);
+template void decx::blas::cuda_DP2D_configs<float>::generate_config<true>(const uint2, decx::cuda_stream*, const uint32_t);
+template void decx::blas::cuda_DP2D_configs<de::Half>::generate_config<true>(const uint2, decx::cuda_stream*, const uint32_t);
 
-template void decx::dot::cuda_DP2D_configs<float>::generate_config<false>(const uint2, decx::cuda_stream*, const uint32_t);
-template void decx::dot::cuda_DP2D_configs<de::Half>::generate_config<false>(const uint2, decx::cuda_stream*, const uint32_t);
+template void decx::blas::cuda_DP2D_configs<float>::generate_config<false>(const uint2, decx::cuda_stream*, const uint32_t);
+template void decx::blas::cuda_DP2D_configs<de::Half>::generate_config<false>(const uint2, decx::cuda_stream*, const uint32_t);
 
 
 template <typename _type_in>
 template <bool _is_reduce_h>
-void decx::dot::cuda_DP2D_configs<_type_in>::alloc_buffers(decx::cuda_stream* S, const uint32_t _fp16_accu)
+void decx::blas::cuda_DP2D_configs<_type_in>::alloc_buffers(decx::cuda_stream* S, const uint32_t _fp16_accu)
 {
     if (decx::alloc::_device_malloc(&this->_dev_A, this->_dev_mat_dims.x * this->_dev_mat_dims.y * sizeof(_type_in), true, S) ||
         decx::alloc::_device_malloc(&this->_dev_B, this->_dev_mat_dims.x * this->_dev_mat_dims.y * sizeof(_type_in), true, S)) {
@@ -141,14 +135,14 @@ void decx::dot::cuda_DP2D_configs<_type_in>::alloc_buffers(decx::cuda_stream* S,
     }
 }
 
-template void decx::dot::cuda_DP2D_configs<float>::alloc_buffers<true>(decx::cuda_stream*, const uint32_t);
-template void decx::dot::cuda_DP2D_configs<float>::alloc_buffers<false>(decx::cuda_stream*, const uint32_t);
-template void decx::dot::cuda_DP2D_configs<de::Half>::alloc_buffers<true>(decx::cuda_stream*, const uint32_t);
-template void decx::dot::cuda_DP2D_configs<de::Half>::alloc_buffers<false>(decx::cuda_stream*, const uint32_t);
+template void decx::blas::cuda_DP2D_configs<float>::alloc_buffers<true>(decx::cuda_stream*, const uint32_t);
+template void decx::blas::cuda_DP2D_configs<float>::alloc_buffers<false>(decx::cuda_stream*, const uint32_t);
+template void decx::blas::cuda_DP2D_configs<de::Half>::alloc_buffers<true>(decx::cuda_stream*, const uint32_t);
+template void decx::blas::cuda_DP2D_configs<de::Half>::alloc_buffers<false>(decx::cuda_stream*, const uint32_t);
 
 
 template <typename _type_in>
-void decx::dot::cuda_DP2D_configs<_type_in>::release_buffer()
+void decx::blas::cuda_DP2D_configs<_type_in>::release_buffer()
 {
     if (!this->_from_dev) {
         decx::alloc::_device_dealloc(&this->_dev_A);
@@ -161,49 +155,49 @@ void decx::dot::cuda_DP2D_configs<_type_in>::release_buffer()
     }
 }
 
-template void decx::dot::cuda_DP2D_configs<float>::release_buffer();
-template void decx::dot::cuda_DP2D_configs<de::Half>::release_buffer();
+template void decx::blas::cuda_DP2D_configs<float>::release_buffer();
+template void decx::blas::cuda_DP2D_configs<de::Half>::release_buffer();
 
 
 template <typename _type_in>
 template <typename _config_type>
-decx::reduce::cuda_reduce2D_1way_configs<_config_type>* decx::dot::cuda_DP2D_configs<_type_in>::get_configs_ptr()
+decx::reduce::cuda_reduce2D_1way_configs<_config_type>* decx::blas::cuda_DP2D_configs<_type_in>::get_configs_ptr()
 {
     return (decx::reduce::cuda_reduce2D_1way_configs<_config_type>*)this->_post_proc_conf;
 }
 
-template decx::reduce::cuda_reduce2D_1way_configs<float>* decx::dot::cuda_DP2D_configs<float>::get_configs_ptr();
-template decx::reduce::cuda_reduce2D_1way_configs<de::Half>* decx::dot::cuda_DP2D_configs<de::Half>::get_configs_ptr();
-template decx::reduce::cuda_reduce2D_1way_configs<float>* decx::dot::cuda_DP2D_configs<de::Half>::get_configs_ptr();
+template decx::reduce::cuda_reduce2D_1way_configs<float>* decx::blas::cuda_DP2D_configs<float>::get_configs_ptr();
+template decx::reduce::cuda_reduce2D_1way_configs<de::Half>* decx::blas::cuda_DP2D_configs<de::Half>::get_configs_ptr();
+template decx::reduce::cuda_reduce2D_1way_configs<float>* decx::blas::cuda_DP2D_configs<de::Half>::get_configs_ptr();
 
 
 template <typename _type_in>
-uint2 decx::dot::cuda_DP2D_configs<_type_in>::get_actual_proc_dims() const
+uint2 decx::blas::cuda_DP2D_configs<_type_in>::get_actual_proc_dims() const
 {
     return this->_proc_dims;
 }
 
-template uint2 decx::dot::cuda_DP2D_configs<float>::get_actual_proc_dims() const;
-template uint2 decx::dot::cuda_DP2D_configs<de::Half>::get_actual_proc_dims() const;
+template uint2 decx::blas::cuda_DP2D_configs<float>::get_actual_proc_dims() const;
+template uint2 decx::blas::cuda_DP2D_configs<de::Half>::get_actual_proc_dims() const;
 
 
 
 template <typename _type_in>
-dim3 decx::dot::cuda_DP2D_configs<_type_in>::get_1st_kernel_config() const
+dim3 decx::blas::cuda_DP2D_configs<_type_in>::get_1st_kernel_config() const
 {
     return this->_first_kernel_config;
 }
 
-template dim3 decx::dot::cuda_DP2D_configs<float>::get_1st_kernel_config() const;
-template dim3 decx::dot::cuda_DP2D_configs<de::Half>::get_1st_kernel_config() const;
+template dim3 decx::blas::cuda_DP2D_configs<float>::get_1st_kernel_config() const;
+template dim3 decx::blas::cuda_DP2D_configs<de::Half>::get_1st_kernel_config() const;
 
 
 
 template <typename _type_in>
-bool decx::dot::cuda_DP2D_configs<_type_in>::postproc_needed() const
+bool decx::blas::cuda_DP2D_configs<_type_in>::postproc_needed() const
 {
     return this->_post_proc_needed;
 }
 
-template bool decx::dot::cuda_DP2D_configs<float>::postproc_needed() const;
-template bool decx::dot::cuda_DP2D_configs<de::Half>::postproc_needed() const;
+template bool decx::blas::cuda_DP2D_configs<float>::postproc_needed() const;
+template bool decx::blas::cuda_DP2D_configs<de::Half>::postproc_needed() const;

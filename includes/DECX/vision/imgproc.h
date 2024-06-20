@@ -54,12 +54,12 @@ namespace de
             *   IF de::extend_label::_EXTEND_REFLECT_ : fill the reflections of the pixels on the convolutional border
             * @return 
             */
-            _DECX_API_ de::DH Bilateral_Filter(de::Matrix& src, de::Matrix& dst, const de::Point2D neighbor_dims,
+            _DECX_API_ void Bilateral_Filter(de::Matrix& src, de::Matrix& dst, const de::Point2D neighbor_dims,
                 const float sigma_space, const float sigma_color, const int border_type);
 
 
 
-            _DECX_API_ de::DH Gaussian_Filter(de::Matrix& src, de::Matrix& dst, const de::Point2D neighbor_dims,
+            _DECX_API_ void Gaussian_Filter(de::Matrix& src, de::Matrix& dst, const de::Point2D neighbor_dims,
                 const de::Point2D_f sigmaXY,
                 const int border_type,
                 const bool _is_central = true,

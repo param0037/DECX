@@ -196,11 +196,9 @@
     <ClCompile Include="..\srcs\modules\BLAS\basic_process\type_statistics\CPU\summation.cxx" />
     <ClCompile Include="..\srcs\modules\BLAS\Dot product\CPU\fp32\dot_fp32.cxx" />
     <ClCompile Include="..\srcs\modules\BLAS\Dot product\CPU\fp32\dot_fp32_exec.cxx" />
-    <ClCompile Include="..\srcs\modules\BLAS\GEMM\CPU\64b\GEMM_fp64_callers.cxx" />
-    <ClCompile Include="..\srcs\modules\BLAS\GEMM\CPU\64b\GEMM_fp64_kernels.cxx" />
+    <ClCompile Include="..\srcs\modules\BLAS\GEMM\CPU\64b\GEMM_64b_callers.cxx" />
     <ClCompile Include="..\srcs\modules\BLAS\GEMM\CPU\64b\matrix_B_arrange_64b.cxx" />
     <ClCompile Include="..\srcs\modules\BLAS\GEMM\CPU\cpu_GEMM_config.cxx" />
-    <ClCompile Include="..\srcs\modules\BLAS\GEMM\CPU\fp32\GEMM_fp32_kernels.cxx" />
     <ClCompile Include="..\srcs\modules\BLAS\GEMM\CPU\fp32\GEMM_fp32_caller.cxx" />
     <ClCompile Include="..\srcs\modules\BLAS\GEMM\CPU\fp32\matrix_B_arrange_fp32.cxx" />
     <ClCompile Include="..\srcs\modules\BLAS\GEMM\CPU\GEMM.cxx" />

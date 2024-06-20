@@ -20,7 +20,7 @@
 
 namespace decx
 {
-    namespace dot
+    namespace blas
     {
         template <typename _type_in>
         class cuda_DP1D_configs;
@@ -30,7 +30,7 @@ namespace decx
 
 
 template <typename _type_in>
-class decx::dot::cuda_DP1D_configs
+class decx::blas::cuda_DP1D_configs
 {
 private:
     void* _post_proc_conf;
@@ -89,7 +89,6 @@ public:
 
     ~cuda_DP1D_configs();
 };
-
 
 
 #endif

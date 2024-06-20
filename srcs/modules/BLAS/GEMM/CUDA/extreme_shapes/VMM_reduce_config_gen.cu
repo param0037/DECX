@@ -13,7 +13,7 @@
 
 
 template <bool _is_reduce_h>
-void decx::generate_VMM_config_fp32(decx::dot::cuda_DP2D_configs<float>* _configs, const uint2 proc_dims, decx::cuda_stream* S)
+void decx::blas::generate_VMM_config_fp32(decx::blas::cuda_DP2D_configs<float>* _configs, const uint2 proc_dims, decx::cuda_stream* S)
 {
     _configs->generate_config<_is_reduce_h>(proc_dims, S);
 
@@ -37,12 +37,12 @@ void decx::generate_VMM_config_fp32(decx::dot::cuda_DP2D_configs<float>* _config
     }
 }
 
-template void decx::generate_VMM_config_fp32<true>(decx::dot::cuda_DP2D_configs<float>*, const uint2, decx::cuda_stream*);
-template void decx::generate_VMM_config_fp32<false>(decx::dot::cuda_DP2D_configs<float>*, const uint2, decx::cuda_stream*);
+template void decx::blas::generate_VMM_config_fp32<true>(decx::blas::cuda_DP2D_configs<float>*, const uint2, decx::cuda_stream*);
+template void decx::blas::generate_VMM_config_fp32<false>(decx::blas::cuda_DP2D_configs<float>*, const uint2, decx::cuda_stream*);
 
 
 template <bool _is_reduce_h>
-void decx::generate_VMM_config_fp16(decx::dot::cuda_DP2D_configs<de::Half>* _configs, const uint2 proc_dims, decx::cuda_stream* S,
+void decx::blas::generate_VMM_config_fp16(decx::blas::cuda_DP2D_configs<de::Half>* _configs, const uint2 proc_dims, decx::cuda_stream* S,
     const uint32_t _fp16_accu)
 {
     _configs->generate_config<_is_reduce_h>(proc_dims, S, _fp16_accu);
@@ -71,8 +71,5 @@ void decx::generate_VMM_config_fp16(decx::dot::cuda_DP2D_configs<de::Half>* _con
     }
 }
 
-template void decx::generate_VMM_config_fp16<true>(decx::dot::cuda_DP2D_configs<de::Half>*, const uint2, decx::cuda_stream*, const uint32_t);
-template void decx::generate_VMM_config_fp16<false>(decx::dot::cuda_DP2D_configs<de::Half>*, const uint2, decx::cuda_stream*, const uint32_t);
-
-
-
+template void decx::blas::generate_VMM_config_fp16<true>(decx::blas::cuda_DP2D_configs<de::Half>*, const uint2, decx::cuda_stream*, const uint32_t);
+template void decx::blas::generate_VMM_config_fp16<false>(decx::blas::cuda_DP2D_configs<de::Half>*, const uint2, decx::cuda_stream*, const uint32_t);
