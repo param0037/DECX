@@ -10,44 +10,137 @@
 
 #include "transpose.h"
 
-
-_DECX_API_ de::DH de::cpu::Transpose(de::Matrix& src, de::Matrix& dst)
+namespace decx
 {
-    de::DH handle;
+    namespace blas {
+        static void Transpose_4b(decx::_Matrix* src, decx::_Matrix* dst, de::DH* handle);
+        static void Transpose_1b(decx::_Matrix* src, decx::_Matrix* dst, de::DH* handle);
+        static void Transpose_8b(decx::_Matrix* src, decx::_Matrix* dst, de::DH* handle);
+        static void Transpose_16b(decx::_Matrix* src, decx::_Matrix* dst, de::DH* handle);
+    }
+}
 
-    if (!decx::cpu::_is_CPU_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CPU_not_init,
-            CPU_NOT_INIT);
-        return handle;
+
+static void decx::blas::Transpose_4b(decx::_Matrix* src, decx::_Matrix* dst, de::DH* handle)
+{
+    if (decx::blas::g_cpu_transpose_4b_config._res_ptr == NULL) {
+        decx::blas::g_cpu_transpose_4b_config.RegisterResource(new decx::blas::_cpu_transpose_config,
+            5, decx::blas::_cpu_transpose_config::release);
     }
 
-    decx::err::Success(&handle);
+    decx::blas::g_cpu_transpose_4b_config.lock();
+
+    const uint32_t _conc = decx::cpu::_get_permitted_concurrency();
+
+    auto* _planner = decx::blas::g_cpu_transpose_4b_config.get_resource_raw_ptr < decx::blas::_cpu_transpose_config>();
+    if (_planner->changed(4, _conc, make_uint2(src->Width(), src->Height()))) {
+        _planner->config(4, decx::cpu::_get_permitted_concurrency(), make_uint2(src->Width(), src->Height()), handle);
+        Check_Runtime_Error(handle);
+    }
+
+    decx::utils::_thread_arrange_1D t1D(_conc);
+    _planner->transpose_4b_caller((float*)src->Mat.ptr, (float*)dst->Mat.ptr, src->Pitch(), dst->Pitch(), &t1D);
+
+    decx::blas::g_cpu_transpose_4b_config.unlock();
+}
+
+
+
+static void decx::blas::Transpose_8b(decx::_Matrix* src, decx::_Matrix* dst, de::DH* handle)
+{
+    if (decx::blas::g_cpu_transpose_8b_config._res_ptr == NULL) {
+        decx::blas::g_cpu_transpose_8b_config.RegisterResource(new decx::blas::_cpu_transpose_config,
+            5, decx::blas::_cpu_transpose_config::release);
+    }
+
+    decx::blas::g_cpu_transpose_8b_config.lock();
+
+    const uint32_t _conc = decx::cpu::_get_permitted_concurrency();
+
+    auto* _planner = decx::blas::g_cpu_transpose_8b_config.get_resource_raw_ptr<decx::blas::_cpu_transpose_config>();
+    if (_planner->changed(8, _conc, make_uint2(src->Width(), src->Height()))) {
+        _planner->config(8, decx::cpu::_get_permitted_concurrency(), make_uint2(src->Width(), src->Height()), handle);
+        Check_Runtime_Error(handle);
+    }
+
+    decx::utils::_thread_arrange_1D t1D(_conc);
+    _planner->transpose_8b_caller((double*)src->Mat.ptr, (double*)dst->Mat.ptr, src->Pitch(), dst->Pitch(), &t1D);
+
+    decx::blas::g_cpu_transpose_8b_config.unlock();
+}
+
+
+static void decx::blas::Transpose_1b(decx::_Matrix* src, decx::_Matrix* dst, de::DH* handle)
+{
+    if (decx::blas::g_cpu_transpose_1b_config._res_ptr == NULL) {
+        decx::blas::g_cpu_transpose_1b_config.RegisterResource(new decx::blas::_cpu_transpose_config,
+            5, decx::blas::_cpu_transpose_config::release);
+    }
+    
+    decx::blas::g_cpu_transpose_1b_config.lock();
+
+    const uint32_t _conc = decx::cpu::_get_permitted_concurrency();
+
+    auto* _planner = decx::blas::g_cpu_transpose_1b_config.get_resource_raw_ptr < decx::blas::_cpu_transpose_config>();
+    if (_planner->changed(1, _conc, make_uint2(src->Width(), src->Height()))) {
+        _planner->config(1, _conc, make_uint2(src->Width(), src->Height()), handle);
+        Check_Runtime_Error(handle);
+    }
+
+    decx::utils::_thread_arrange_1D t1D(_conc);
+    _planner->transpose_1b_caller((uint64_t*)src->Mat.ptr, (uint64_t*)dst->Mat.ptr, 
+        src->Pitch() / 8, dst->Pitch() / 8, &t1D);
+
+    decx::blas::g_cpu_transpose_1b_config.unlock();
+}
+
+
+static void decx::blas::Transpose_16b(decx::_Matrix* src, decx::_Matrix* dst, de::DH* handle)
+{
+    if (decx::blas::g_cpu_transpose_16b_config._res_ptr == NULL) {
+        decx::blas::g_cpu_transpose_16b_config.RegisterResource(new decx::blas::_cpu_transpose_config,
+            5, decx::blas::_cpu_transpose_config::release);
+    }
+
+    decx::blas::g_cpu_transpose_16b_config.lock();
+
+    const uint32_t _conc = decx::cpu::_get_permitted_concurrency();
+
+    auto* _planner = decx::blas::g_cpu_transpose_16b_config.get_resource_raw_ptr<decx::blas::_cpu_transpose_config>();
+    if (_planner->changed(16, _conc, make_uint2(src->Width(), src->Height()))) {
+        _planner->config(16, decx::cpu::_get_permitted_concurrency(), make_uint2(src->Width(), src->Height()), handle);
+        Check_Runtime_Error(handle);
+    }
+
+    decx::utils::_thread_arrange_1D t1D(_conc);
+    _planner->transpose_16b_caller((double*)src->Mat.ptr, (double*)dst->Mat.ptr, src->Pitch(), dst->Pitch(), &t1D);
+
+    decx::blas::g_cpu_transpose_16b_config.unlock();
+}
+
+
+_DECX_API_ void de::blas::cpu::Transpose(de::Matrix& src, de::Matrix& dst)
+{
+    de::ResetLastError();
 
     decx::_Matrix* _src = dynamic_cast<decx::_Matrix*>(&src);
     decx::_Matrix* _dst = dynamic_cast<decx::_Matrix*>(&dst);
 
-    decx::utils::_thread_arrange_1D t1D(decx::cpu::_get_permitted_concurrency());
-
-    if (_src->get_layout()._single_element_size == sizeof(float)) 
+    switch (_src->get_layout()._single_element_size)
     {
-        decx::bp::_cpu_transpose_config<4> config(make_uint2(_src->Width(), _src->Height()), t1D.total_thread);
-
-        decx::bp::transpose_4x4_caller((const float*)_src->Mat.ptr, (float*)_dst->Mat.ptr,
-            _src->Pitch(), _dst->Pitch(), &config, &t1D);
+    case 1:
+        decx::blas::Transpose_1b(_src, _dst, de::GetLastError());
+        break;
+    case 4:
+        decx::blas::Transpose_4b(_src, _dst, de::GetLastError());
+        break;
+    case 8:
+        decx::blas::Transpose_8b(_src, _dst, de::GetLastError());
+        break;
+    case 16:
+        decx::blas::Transpose_16b(_src, _dst, de::GetLastError());
+        break;
+    default:
+        break;
     }
-    else if (_src->get_layout()._single_element_size == sizeof(uint8_t)) {
-        decx::bp::_cpu_transpose_config<1> config(make_uint2(_src->Width(), _src->Height()), t1D.total_thread);
-
-        decx::bp::transpose_8x8_caller((const double*)_src->Mat.ptr, (double*)_dst->Mat.ptr,
-            _src->Pitch(), _dst->Pitch(), &config, &t1D);
-    }
-    else if (_src->get_layout()._single_element_size == sizeof(double)) 
-    {
-        decx::bp::_cpu_transpose_config<8> config(make_uint2(_src->Width(), _src->Height()), t1D.total_thread);
-
-        decx::bp::transpose_2x2_caller((const double*)_src->Mat.ptr, (double*)_dst->Mat.ptr, 
-             _src->Pitch(), _dst->Pitch(), &config, &t1D);
-    }
-
-    return handle;
 }

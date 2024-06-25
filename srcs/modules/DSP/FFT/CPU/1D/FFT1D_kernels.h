@@ -98,7 +98,7 @@ namespace fft {
 
 
         template <bool _IFFT, typename _type_in> _THREAD_FUNCTION_ void
-        _FFT1D_smaller_1st_cplxf32(const _type_in* __restrict src, de::CPf* __restrict dst, const decx::dsp::fft::FKT1D_fp32* _tiles,
+        _FFT1D_smaller_1st_cplxf32(const _type_in* __restrict src, de::CPf* __restrict dst, const decx::dsp::fft::FKT1D* _tiles,
             const uint64_t _signal_length, const decx::dsp::fft::cpu_FFT1D_smaller<float>* _FFT_info, const uint32_t FFT_call_times,
             const uint32_t FFT_call_time_start, const decx::dsp::fft::FIMT1D* _Twd_info);
 
@@ -229,7 +229,7 @@ namespace fft {
 
 
         template <bool _IFFT, typename _type_in> _THREAD_FUNCTION_ void
-        _FFT1D_smaller_1st_cplxd64(const _type_in* __restrict src, de::CPd* __restrict dst, const decx::dsp::fft::FKT1D_fp32* _tiles,
+        _FFT1D_smaller_1st_cplxd64(const _type_in* __restrict src, de::CPd* __restrict dst, const decx::dsp::fft::FKT1D* _tiles,
             const uint64_t _signal_length, const decx::dsp::fft::cpu_FFT1D_smaller<double>* _FFT_info, const uint32_t FFT_call_times,
             const uint32_t FFT_call_time_start, const decx::dsp::fft::FIMT1D* _Twd_info);
 

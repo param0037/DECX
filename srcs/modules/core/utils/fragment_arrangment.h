@@ -141,44 +141,25 @@ struct decx::utils::frag_manager
 
 namespace decx
 {
-    float _get_ratio_grater_than_one(const uint32_t X, const uint32_t Y);
-
-
-    uint32_t _get_mid_factors(const uint32_t x);
-
-
-    uint32_t _get_mid_factors_pow2(const uint32_t x);
-
-    /*
-    * @brief : This function won't consider if __devided % __base == 0. That is, even though
-    * __devided can be devided with no reminder by __base, this function will continue to count
-    * until __base increases to another factor, thus ensuring it returns the maximum factor
+namespace utils
+{
+    /**
+    * @brief This function arrange threads for a 2D matrix.
+    *
+    * @param thr_arrange : The two dimensions of processed 2D area
+    * @param total_thr_num The number of total thread
+    * @param proc_dims : .x -> width; .y ->height
+    *
+    * @return The return value is a uint2 structure, of which x and y are propotional to proc_dims
     */
-    uint32_t _fit_factor_to_no_reminder_inc(const uint32_t __base, const uint32_t __devided);
+    void thread2D_arrangement_advisor(uint2* thr_arrange, const uint32_t total_thr_num, const uint2 proc_dims);
 
 
-    uint2 find_closest_factors_by_ratio(const uint32_t x, const uint2 pair);
-
-    /*
-    * @param x : Divided number
-    * @param pair : ~.x -> width; ~.y -> height
-    */
-    uint2 find_closest_factors_by_ratio_pow2(const uint32_t x, const uint2 pair, bool pow2_on_x);
-
-
-    namespace utils
-    {
-        /**
-         * @brief This function arrange threads for a 2D matrix.
-         *
-         * @param thr_arrange : The two dimensions of processed 2D area
-         * @param total_thr_num The number of total thread
-         * @param proc_dims : .x -> width; .y ->height
-         *
-         * @return The return value is a uint2 structure, of which x and y are propotional to proc_dims
-         */
-        void thread2D_arrangement_advisor(uint2* thr_arrange, const uint32_t total_thr_num, const uint2 proc_dims);
-    }
+    struct _blocking2D_fmgrs {
+        decx::utils::frag_manager _fmgrH;
+        decx::utils::frag_manager _fmgrW;
+    };
+}
 }
 
 

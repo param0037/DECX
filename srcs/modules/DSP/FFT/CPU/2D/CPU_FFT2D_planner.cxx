@@ -10,51 +10,24 @@
 
 #include "CPU_FFT2D_planner.h"
 
-//
-//template <typename _data_type>
-//decx::dsp::fft::cpu_FFT2D_planner<_data_type>::cpu_FFT2D_planner(const uint2 signal_dims, de::DH* handle)
-//{
-//    this->_signal_dims = signal_dims;
-//
-//    constexpr uint8_t _alignment = std::is_same_v<_data_type, float> ? 4 : 2;
-//
-//    // Get the smallest allocation size (the minimum size that is able to cover all the alignments)
-//    const uint2 _aligned_dims = make_uint2(decx::utils::ceil<uint32_t>(signal_dims.x, _alignment) * _alignment,
-//                                           decx::utils::ceil<uint32_t>(signal_dims.y, _alignment) * _alignment);
-//
-//    const uint64_t _alloc_size = max(_aligned_dims.x * signal_dims.y, signal_dims.x * _aligned_dims.y) * sizeof(_data_type) * 2;
-//    
-//    //decx::PtrInfo<void> _tmp1, _tmp2;
-//    if (decx::alloc::_host_virtual_page_malloc(&this->_tmp1, _alloc_size)) {
-//        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION, ALLOC_FAIL);
-//        return;
-//    }
-//    if (decx::alloc::_host_virtual_page_malloc(&this->_tmp2, _alloc_size)) {
-//        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION, ALLOC_FAIL);
-//        return;
-//    }
-//    // Allocate other spaces    
-//    this->_FFT_H.set_length(this->_signal_dims.x, handle);
-//    Check_Runtime_Error(handle);
-//    this->_FFT_V.set_length(this->_signal_dims.y, handle);
-//    Check_Runtime_Error(handle);
-//}
-//
-//template decx::dsp::fft::cpu_FFT2D_planner<float>::cpu_FFT2D_planner(const uint2, de::DH*);
-
 
 template <typename _data_type>
 template <typename _type_out>
-void decx::dsp::fft::cpu_FFT2D_planner<_data_type>::plan_transpose_configs()
+void decx::dsp::fft::cpu_FFT2D_planner<_data_type>::plan_transpose_configs(de::DH* handle)
 {
-    this->_transpose_config_1st = decx::bp::_cpu_transpose_config<8>(this->_signal_dims, this->_concurrency);
-    this->_transpose_config_2nd = decx::bp::_cpu_transpose_config<sizeof(_type_out)>(
-        make_uint2(this->_signal_dims.y, this->_signal_dims.x), this->_concurrency);
+    this->_transpose_config_1st.config(8, this->_concurrency, this->_signal_dims, handle);
+    Check_Runtime_Error(handle);
+
+    this->_transpose_config_2nd.config(sizeof(_type_out), this->_concurrency,
+        make_uint2(this->_signal_dims.y, this->_signal_dims.x), handle);
 }
 
-template void decx::dsp::fft::cpu_FFT2D_planner<float>::plan_transpose_configs<double>();
-template void decx::dsp::fft::cpu_FFT2D_planner<float>::plan_transpose_configs<uint8_t>();
-template void decx::dsp::fft::cpu_FFT2D_planner<float>::plan_transpose_configs<float>();
+template void decx::dsp::fft::cpu_FFT2D_planner<float>::plan_transpose_configs<de::CPf>(de::DH*);
+template void decx::dsp::fft::cpu_FFT2D_planner<float>::plan_transpose_configs<uint8_t>(de::DH*);
+template void decx::dsp::fft::cpu_FFT2D_planner<float>::plan_transpose_configs<float>(de::DH*);
+template void decx::dsp::fft::cpu_FFT2D_planner<double>::plan_transpose_configs<de::CPd>(de::DH*);
+template void decx::dsp::fft::cpu_FFT2D_planner<double>::plan_transpose_configs<uint8_t>(de::DH*);
+template void decx::dsp::fft::cpu_FFT2D_planner<double>::plan_transpose_configs<double>(de::DH*);
 
 
 template <typename _data_type>
@@ -62,18 +35,27 @@ bool decx::dsp::fft::cpu_FFT2D_planner<_data_type>::changed(const decx::_matrix_
                                                             const decx::_matrix_layout* dst_layout,
                                                             const uint32_t concurrency) const
 {
-    return (this->_signal_dims.x ^ src_layout->width) |
-           (this->_signal_dims.y ^ src_layout->height) |
-           (this->_concurrency ^ concurrency) |
-           (this->_input_typesize ^ src_layout->_single_element_size) |
-           (this->_output_typesize ^ dst_layout->_single_element_size);
+    if (src_layout != NULL && dst_layout != NULL) {
+        return (this->_signal_dims.x ^ src_layout->width) |
+               (this->_signal_dims.y ^ src_layout->height) |
+               (this->_concurrency ^ concurrency) |
+               (this->_input_typesize ^ src_layout->_single_element_size) |
+               (this->_output_typesize ^ dst_layout->_single_element_size);
+    }
+    else {
+        return 1;
+    }
 }
 
 template bool decx::dsp::fft::cpu_FFT2D_planner<float>::changed(const decx::_matrix_layout*,
     const decx::_matrix_layout*, const uint32_t) const;
 
+template bool decx::dsp::fft::cpu_FFT2D_planner<double>::changed(const decx::_matrix_layout*,
+    const decx::_matrix_layout*, const uint32_t) const;
 
 
+// _type_out only valid for IFFT
+// For FFT, pass de::CPf when op_mode = fp32; de::CPd when op_mode = fp64.
 template <typename _data_type> _CRSR_
 template <typename _type_out>
 void decx::dsp::fft::cpu_FFT2D_planner<_data_type>::plan(const decx::_matrix_layout* src_layout, 
@@ -88,6 +70,8 @@ void decx::dsp::fft::cpu_FFT2D_planner<_data_type>::plan(const decx::_matrix_lay
     this->_input_typesize = src_layout->_single_element_size;
     this->_output_typesize = dst_layout->_single_element_size;
 
+    // If operate in float mode, aligned to 4;
+    // If operate in double mode, aligned to 2;
     constexpr uint8_t _alignment = std::is_same_v<_data_type, float> ? 4 : 2;
 
     // Get the smallest allocation size (the minimum size that is able to cover all the alignments)
@@ -136,7 +120,7 @@ void decx::dsp::fft::cpu_FFT2D_planner<_data_type>::plan(const decx::_matrix_lay
         Check_Runtime_Error(handle);
     }
 
-    this->plan_transpose_configs<_type_out>();
+    this->plan_transpose_configs<_type_out>(handle);
 }
 
 template void decx::dsp::fft::cpu_FFT2D_planner<float>::plan<de::CPf>(const decx::_matrix_layout*,
@@ -148,7 +132,14 @@ template void decx::dsp::fft::cpu_FFT2D_planner<float>::plan<float>(const decx::
 template void decx::dsp::fft::cpu_FFT2D_planner<float>::plan<uint8_t>(const decx::_matrix_layout*,
     const decx::_matrix_layout*, decx::utils::_thread_arrange_1D*, de::DH*);
 
+template void decx::dsp::fft::cpu_FFT2D_planner<double>::plan<de::CPd>(const decx::_matrix_layout*,
+    const decx::_matrix_layout*, decx::utils::_thread_arrange_1D*, de::DH*);
 
+template void decx::dsp::fft::cpu_FFT2D_planner<double>::plan<double>(const decx::_matrix_layout*,
+    const decx::_matrix_layout*, decx::utils::_thread_arrange_1D*, de::DH*);
+
+template void decx::dsp::fft::cpu_FFT2D_planner<double>::plan<uint8_t>(const decx::_matrix_layout*,
+    const decx::_matrix_layout*, decx::utils::_thread_arrange_1D*, de::DH*);
 
 
 template <typename _data_type>
@@ -158,6 +149,7 @@ void* decx::dsp::fft::cpu_FFT2D_planner<_data_type>::get_tmp1_ptr() const
 }
 
 template void* decx::dsp::fft::cpu_FFT2D_planner<float>::get_tmp1_ptr() const;
+template void* decx::dsp::fft::cpu_FFT2D_planner<double>::get_tmp1_ptr() const;
 
 
 template <typename _data_type>
@@ -167,8 +159,7 @@ void* decx::dsp::fft::cpu_FFT2D_planner<_data_type>::get_tmp2_ptr() const
 }
 
 template void* decx::dsp::fft::cpu_FFT2D_planner<float>::get_tmp2_ptr() const;
-
-
+template void* decx::dsp::fft::cpu_FFT2D_planner<double>::get_tmp2_ptr() const;
 
 template <typename _data_type>
 uint2 decx::dsp::fft::cpu_FFT2D_planner<_data_type>::get_signal_dims() const
@@ -177,7 +168,7 @@ uint2 decx::dsp::fft::cpu_FFT2D_planner<_data_type>::get_signal_dims() const
 }
 
 template uint2 decx::dsp::fft::cpu_FFT2D_planner<float>::get_signal_dims() const;
-
+template uint2 decx::dsp::fft::cpu_FFT2D_planner<double>::get_signal_dims() const;
 
 template <typename _data_type>
 const decx::dsp::fft::cpu_FFT1D_smaller<_data_type>* decx::dsp::fft::cpu_FFT2D_planner<_data_type>::get_FFTH_info() const
@@ -186,6 +177,7 @@ const decx::dsp::fft::cpu_FFT1D_smaller<_data_type>* decx::dsp::fft::cpu_FFT2D_p
 }
 
 template const decx::dsp::fft::cpu_FFT1D_smaller<float>* decx::dsp::fft::cpu_FFT2D_planner<float>::get_FFTH_info() const;
+template const decx::dsp::fft::cpu_FFT1D_smaller<double>* decx::dsp::fft::cpu_FFT2D_planner<double>::get_FFTH_info() const;
 
 
 template <typename _data_type>
@@ -195,6 +187,7 @@ const decx::dsp::fft::cpu_FFT1D_smaller<_data_type>* decx::dsp::fft::cpu_FFT2D_p
 }
 
 template const decx::dsp::fft::cpu_FFT1D_smaller<float>* decx::dsp::fft::cpu_FFT2D_planner<float>::get_FFTV_info() const;
+template const decx::dsp::fft::cpu_FFT1D_smaller<double>* decx::dsp::fft::cpu_FFT2D_planner<double>::get_FFTV_info() const;
 
 
 template <typename _data_type>
@@ -204,6 +197,7 @@ const decx::utils::frag_manager* decx::dsp::fft::cpu_FFT2D_planner<_data_type>::
 }
 
 template const decx::utils::frag_manager* decx::dsp::fft::cpu_FFT2D_planner<float>::get_thread_dist_H() const;
+template const decx::utils::frag_manager* decx::dsp::fft::cpu_FFT2D_planner<double>::get_thread_dist_H() const;
 
 
 template <typename _data_type>
@@ -213,16 +207,17 @@ const decx::utils::frag_manager* decx::dsp::fft::cpu_FFT2D_planner<_data_type>::
 }
 
 template const decx::utils::frag_manager* decx::dsp::fft::cpu_FFT2D_planner<float>::get_thread_dist_V() const;
-
+template const decx::utils::frag_manager* decx::dsp::fft::cpu_FFT2D_planner<double>::get_thread_dist_V() const;
 
 
 template <typename _data_type>
-const decx::dsp::fft::FKT1D_fp32* decx::dsp::fft::cpu_FFT2D_planner<_data_type>::get_tile_ptr(const uint32_t _id) const
+const decx::dsp::fft::FKT1D* decx::dsp::fft::cpu_FFT2D_planner<_data_type>::get_tile_ptr(const uint32_t _id) const
 {
     return this->_tiles.get_const_ptr(_id);
 }
 
-template const decx::dsp::fft::FKT1D_fp32* decx::dsp::fft::cpu_FFT2D_planner<float>::get_tile_ptr(const uint32_t _id) const;
+template const decx::dsp::fft::FKT1D* decx::dsp::fft::cpu_FFT2D_planner<float>::get_tile_ptr(const uint32_t _id) const;
+template const decx::dsp::fft::FKT1D* decx::dsp::fft::cpu_FFT2D_planner<double>::get_tile_ptr(const uint32_t _id) const;
 
 
 template <typename _data_type>
@@ -237,6 +232,7 @@ void decx::dsp::fft::cpu_FFT2D_planner<_data_type>::release_buffers(decx::dsp::f
 }
 
 template void decx::dsp::fft::cpu_FFT2D_planner<float>::release_buffers(decx::dsp::fft::cpu_FFT2D_planner<float>*);
+template void decx::dsp::fft::cpu_FFT2D_planner<double>::release_buffers(decx::dsp::fft::cpu_FFT2D_planner<double>*);
 
 
 template <typename _data_type>
@@ -246,4 +242,4 @@ decx::dsp::fft::cpu_FFT2D_planner<_data_type>::~cpu_FFT2D_planner()
 }
 
 template decx::dsp::fft::cpu_FFT2D_planner<float>::~cpu_FFT2D_planner(); 
-//template decx::dsp::fft::cpu_FFT2D_planner<double>::~cpu_FFT2D_planner();
+template decx::dsp::fft::cpu_FFT2D_planner<double>::~cpu_FFT2D_planner();

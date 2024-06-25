@@ -17,97 +17,49 @@
 //    __m128 _period = _mm_round_ps(_mm_mul_ps(angle, _mm_set1_ps(0.3183098862f)), 0x01);
 //    angle = _mm_fmadd_ps(_mm_set1_ps(-3.1415926536f), _period, angle);
 //
-//    __m128 x = angle;
+//    __m128 sin_rectf = _mm_cmp_ps(decx::utils::simd::_mm_abs_ps(_mm_sub_ps(angle, _mm_set1_ps(1.57079632679f))), _mm_set1_ps(0.7853981634f), _CMP_LT_OS);
+//    __m128 cos_otherside = _mm_cmp_ps(angle, _mm_set1_ps(2.35619449019234f), _CMP_GT_OS);
 //
-//    __m128 _mask_cmp = _mm_cmp_ps(x, _mm_set1_ps(3.1415926536f / 4), _CMP_GT_OS);
-//    x = _mm_castsi128_ps(_mm_sub_epi32(_mm_castps_si128(x), _mm_and_si128(_mm_castps_si128(_mask_cmp), _mm_set1_epi32(0x00800000u))));
-//    _mask_cmp = _mm_cmp_ps(x, _mm_set1_ps(3.1415926536f / 4), _CMP_GT_OS);
-//    x = _mm_castsi128_ps(_mm_sub_epi32(_mm_castps_si128(x), _mm_and_si128(_mm_castps_si128(_mask_cmp), _mm_set1_epi32(0x00800000u))));
+//    angle = _mm_sub_ps(angle, _mm_and_ps(_mm_set_ps1(1.57079632679f), sin_rectf));
 //
-//    __m128 x_sq = _mm_mul_ps(x, x);
-//    __m128 x_term = _mm_mul_ps(x_sq, _mm_set1_ps(0.5f));
+//    angle = _mm_sub_ps(angle, _mm_and_ps(_mm_set1_ps(3.14159265359f), cos_otherside));
+//    angle = _mm_xor_ps(angle, _mm_and_ps(_mm_castsi128_ps(_mm_set1_epi32(0x80000000)), cos_otherside));
+//
+//    __m128 x_sq = _mm_mul_ps(angle, angle);
+//    __m128 fact = _mm_blendv_ps(_mm_set1_ps(0.5f), _mm_set1_ps(0.1666666667), sin_rectf);
+//    __m128 x_term = _mm_mul_ps(x_sq, fact);
 //    __m128 res = _mm_sub_ps(_mm_set1_ps(1), x_term);
 //
-//    x_term = _mm_mul_ps(_mm_mul_ps(x_term, x_sq), _mm_set1_ps(0.0833333333));
+//    fact = _mm_blendv_ps(_mm_set1_ps(0.0833333333f), _mm_set1_ps(0.05f), sin_rectf);
+//    x_term = _mm_mul_ps(x_term, _mm_mul_ps(x_sq, fact));
 //    res = _mm_add_ps(res, x_term);
 //
-//    x_term = _mm_mul_ps(_mm_mul_ps(x_term, x_sq), _mm_set1_ps(0.0333333333));
+//    fact = _mm_blendv_ps(_mm_set1_ps(0.0333333333f), _mm_set1_ps(0.0238095238f), sin_rectf);
+//    x_term = _mm_mul_ps(x_term, _mm_mul_ps(x_sq, fact));
 //    res = _mm_sub_ps(res, x_term);
 //
-//    x_term = _mm_mul_ps(_mm_mul_ps(x_term, x_sq), _mm_set1_ps(0.0178571429));
+//    fact = _mm_blendv_ps(_mm_set1_ps(0.0178571429f), _mm_set1_ps(0.0138888889f), sin_rectf);
+//    x_term = _mm_mul_ps(x_term, _mm_mul_ps(x_sq, fact));
 //    res = _mm_add_ps(res, x_term);
 //
-//    x_term = _mm_mul_ps(_mm_mul_ps(x_term, x_sq), _mm_set1_ps(0.0111111111));
+//    fact = _mm_blendv_ps(_mm_set1_ps(0.0111111111f), _mm_set1_ps(0.0090909091f), sin_rectf);
+//    x_term = _mm_mul_ps(x_term, _mm_mul_ps(x_sq, fact));
 //    res = _mm_sub_ps(res, x_term);
 //
-//    x_term = _mm_mul_ps(_mm_mul_ps(x_term, x_sq), _mm_set1_ps(0.0075757576));
-//    res = _mm_add_ps(res, x_term);
-//
-//    _mask_cmp = _mm_cmp_ps(x, angle, _CMP_LT_OS);
-//    x = _mm_castsi128_ps(_mm_add_epi32(_mm_castps_si128(x), _mm_and_si128(_mm_castps_si128(_mask_cmp), _mm_set1_epi32(0x00800000u))));
-//    __m128 tmp = _mm_fmsub_ps(_mm_mul_ps(res, res), _mm_set1_ps(2), _mm_set1_ps(1));
-//    res = _mm_blendv_ps(res, tmp, _mask_cmp);
-//
-//    _mask_cmp = _mm_cmp_ps(x, angle, _CMP_LT_OS);
-//    x = _mm_castsi128_ps(_mm_add_epi32(_mm_castps_si128(x), _mm_and_si128(_mm_castps_si128(_mask_cmp), _mm_set1_epi32(0x00800000u))));
-//    tmp = _mm_fmsub_ps(_mm_mul_ps(res, res), _mm_set1_ps(2), _mm_set1_ps(1));
-//    res = _mm_blendv_ps(res, tmp, _mask_cmp);
+//    angle = _mm_xor_ps(angle, _mm_castsi128_ps(_mm_set1_epi32(0x80000000)));
+//    res = _mm_mul_ps(res, _mm_blendv_ps(_mm_set1_ps(1.f), angle, sin_rectf));
 //
 //    __m128i mask_signinv = _mm_slli_epi32(_mm_and_si128(_mm_cvtps_epi32(_period), _mm_set1_epi32(0x01)), 31);
+//    mask_signinv = _mm_xor_si128(mask_signinv, _mm_and_si128(_mm_castps_si128(cos_otherside), _mm_set1_epi32(0x80000000)));
 //    res = _mm_xor_ps(res, _mm_castsi128_ps(mask_signinv));
 //    return res;
 //}
-
-
-__m128 _mm_cos_ps_taylor(__m128 angle)
-{
-    angle = _mm_and_ps(angle, _mm_castsi128_ps(_mm_set1_epi32(0x7fffffff)));
-    __m128 _period = _mm_round_ps(_mm_mul_ps(angle, _mm_set1_ps(0.3183098862f)), 0x01);
-    angle = _mm_fmadd_ps(_mm_set1_ps(-3.1415926536f), _period, angle);
-
-    __m128 sin_rectf = _mm_cmp_ps(decx::utils::simd::_mm_abs_ps(_mm_sub_ps(angle, _mm_set1_ps(1.57079632679f))), _mm_set1_ps(0.7853981634f), _CMP_LT_OS);
-    __m128 cos_otherside = _mm_cmp_ps(angle, _mm_set1_ps(2.35619449019234f), _CMP_GT_OS);
-
-    angle = _mm_sub_ps(angle, _mm_and_ps(_mm_set_ps1(1.57079632679f), sin_rectf));
-
-    angle = _mm_sub_ps(angle, _mm_and_ps(_mm_set1_ps(3.14159265359f), cos_otherside));
-    angle = _mm_xor_ps(angle, _mm_and_ps(_mm_castsi128_ps(_mm_set1_epi32(0x80000000)), cos_otherside));
-
-    __m128 x_sq = _mm_mul_ps(angle, angle);
-    __m128 fact = _mm_blendv_ps(_mm_set1_ps(0.5f), _mm_set1_ps(0.1666666667), sin_rectf);
-    __m128 x_term = _mm_mul_ps(x_sq, fact);
-    __m128 res = _mm_sub_ps(_mm_set1_ps(1), x_term);
-
-    fact = _mm_blendv_ps(_mm_set1_ps(0.0833333333f), _mm_set1_ps(0.05f), sin_rectf);
-    x_term = _mm_mul_ps(x_term, _mm_mul_ps(x_sq, fact));
-    res = _mm_add_ps(res, x_term);
-
-    fact = _mm_blendv_ps(_mm_set1_ps(0.0333333333f), _mm_set1_ps(0.0238095238f), sin_rectf);
-    x_term = _mm_mul_ps(x_term, _mm_mul_ps(x_sq, fact));
-    res = _mm_sub_ps(res, x_term);
-
-    fact = _mm_blendv_ps(_mm_set1_ps(0.0178571429f), _mm_set1_ps(0.0138888889f), sin_rectf);
-    x_term = _mm_mul_ps(x_term, _mm_mul_ps(x_sq, fact));
-    res = _mm_add_ps(res, x_term);
-
-    fact = _mm_blendv_ps(_mm_set1_ps(0.0111111111f), _mm_set1_ps(0.0090909091f), sin_rectf);
-    x_term = _mm_mul_ps(x_term, _mm_mul_ps(x_sq, fact));
-    res = _mm_sub_ps(res, x_term);
-
-    angle = _mm_xor_ps(angle, _mm_castsi128_ps(_mm_set1_epi32(0x80000000)));
-    res = _mm_mul_ps(res, _mm_blendv_ps(_mm_set1_ps(1.f), angle, sin_rectf));
-
-    __m128i mask_signinv = _mm_slli_epi32(_mm_and_si128(_mm_cvtps_epi32(_period), _mm_set1_epi32(0x01)), 31);
-    mask_signinv = _mm_xor_si128(mask_signinv, _mm_and_si128(_mm_castps_si128(cos_otherside), _mm_set1_epi32(0x80000000)));
-    res = _mm_xor_ps(res, _mm_castsi128_ps(mask_signinv));
-    return res;
-}
-
-
-__m128 _mm_sin_ps_taylor(__m128 angle)
-{
-    return _mm_cos_ps_taylor(_mm_sub_ps(_mm_set1_ps(1.570796326794897), angle));
-}
+//
+//
+//__m128 _mm_sin_ps_taylor(__m128 angle)
+//{
+//    return _mm_cos_ps_taylor(_mm_sub_ps(_mm_set1_ps(1.570796326794897), angle));
+//}
 
 
 _THREAD_FUNCTION_ void 
@@ -143,7 +95,7 @@ decx::dsp::fft::CPUK::_FFT1D_Twd_smaller_kernels_v4_1st(const de::CPf* __restric
         _image_v4 = _real_v4;
 
         _real_v4 = __cos_fp32x4(_real_v4);
-        _image_v4 = _mm_sin_ps_taylor(_image_v4);
+        _image_v4 = __sin_fp32x4(_image_v4);
 
 #if _SIMD_VER_ == AVX256
         W_v4._vf = _mm256_permute2f128_ps(_mm256_castps128_ps256(_real_v4), _mm256_castps128_ps256(_image_v4), 0b00100000);
@@ -256,13 +208,7 @@ decx::dsp::fft::CPUK::_FFT1D_Twd_smaller_kernels_v4_mid(const de::CPf* __restric
         _image_v4 = _real_v4;
 #ifdef _MSC_VER
         _real_v4 = __cos_fp32x4(_real_v4);
-        _image_v4 = _mm_sin_ps_taylor(_image_v4);
-
-        //_cossin_vec4_pair res = gen_cos_sin(_real_v4);
-        //_cossin_vec4_pair res = _mm_cos_sin_pair_CORDIC_40_ps(_real_v4);
-        /*_cossin_vec4_pair res = gen_cos_sin(_real_v4);
-        _real_v4 = res._cos_val;
-        _image_v4 = res._sin_val;*/
+        _image_v4 = __sin_fp32x4(_image_v4);
 #endif
 #if _SIMD_VER_ == AVX256
         W_v4._vf = _mm256_permute2f128_ps(_mm256_castps128_ps256(_real_v4), _mm256_castps128_ps256(_image_v4), 0b00100000);

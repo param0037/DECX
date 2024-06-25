@@ -90,120 +90,33 @@ bool decx::utils::frag_manager_gen_Nx(decx::utils::frag_manager* src, const uint
 
 
 
-// --------------------------- 2D --------------------------------------
-
-
-float decx::_get_ratio_grater_than_one(const uint32_t X, const uint32_t Y)
-{
-    if (X > Y) {
-        return ((float)X / (float)Y);
-    }
-    else {
-        return ((float)Y / (float)X);
-    }
-}
-
-
-
-uint32_t decx::_get_mid_factors_pow2(const uint32_t x)
-{
-    float expect_fac = sqrtf((float)x);
-    uint32_t pow = decx::utils::_GetHighest_abd(expect_fac);
-    uint32_t fac_R = 1 << pow;
-    uint32_t fac_L = 1 << (pow - 1);
-    if (expect_fac - fac_L > fac_R - expect_fac) {
-        return fac_R;
-    }
-    else {
-        return fac_L;
-    }
-}
-
-
-
-uint2 decx::find_closest_factors_by_ratio(const uint32_t x, const uint2 pair)
-{
-    uint32_t start_inc = (uint32_t)sqrtf(x * (float)pair.y / (float)pair.x);
-    uint32_t start_dec = start_inc, closest_res;
-    while (true) {
-        if (x % start_inc) { ++start_inc; }
-        else {
-            closest_res = start_inc;
-            break;
-        }
-        if (x % start_dec) { --start_dec; }
-        else {
-            closest_res = start_dec;
-            break;
-        }
-    }
-    return make_uint2(x / closest_res, closest_res);
-}
-
-
-
-
-uint32_t decx::_fit_factor_to_no_reminder_inc(const uint32_t __base, const uint32_t __devided)
-{
-    uint32_t base = __base + 1;
-    while (base < __devided)
-    {
-        if (__devided % base == 0) {
-            return base;
-        }
-        ++base;
-    }
-    return base;
-}
-
-
-uint2 decx::find_closest_factors_by_ratio_pow2(const uint32_t x, const uint2 pair, bool pow2_on_x)
-{
-    const float mid_fac = sqrtf((float)x);
-    const float ratio_GT_one = _get_ratio_grater_than_one(pair.x, pair.y);
-
-    if (pow2_on_x) {
-        // decide which one is greater
-        float start_factor = pair.x < pair.y ? (mid_fac / ratio_GT_one) : (mid_fac * ratio_GT_one);
-
-        float expect_fac = decx::utils::clamp_max<float>(decx::utils::clamp_min<float>(start_factor, 1), x);
-
-        uint32_t pow = decx::utils::_GetHighest(expect_fac);
-        uint32_t fac_R = (1 << pow);
-        uint32_t fac_L = (1 << (pow - 1));
-
-        uint32_t cloest_fac_pow2 = ((expect_fac - fac_L) > (fac_R - expect_fac)) ? fac_R : fac_L;
-        make_uint2(cloest_fac_pow2, x / cloest_fac_pow2);
-    }
-    else {
-        // decide which one is greater
-        float start_factor = pair.x > pair.y ? (mid_fac / ratio_GT_one) : (mid_fac * ratio_GT_one);
-
-        float expect_fac = decx::utils::clamp_max<float>(decx::utils::clamp_min<float>(start_factor, 1), x);
-
-        uint32_t pow = decx::utils::_GetHighest(expect_fac);
-        uint32_t fac_R = (1 << pow);
-        uint32_t fac_L = (1 << (pow - 1));
-
-        uint32_t cloest_fac_pow2 = ((expect_fac - fac_L) > (fac_R - expect_fac)) ? fac_R : fac_L;
-        return make_uint2(x / cloest_fac_pow2, cloest_fac_pow2);
-    }
-}
-
-
-
+// something wrong, for some inputs it fails to give the right results
 void decx::utils::thread2D_arrangement_advisor(uint2*              thr_arrange, 
                                                const uint32_t      total_thr_num, 
                                                const uint2         proc_dims)
 {
-    // approximately a square, arrange the same number of threads noth on width and height if possible
-    const float ratio = decx::_get_ratio_grater_than_one(proc_dims.x, proc_dims.y);
-    if (ratio < 1.5) {
-        uint32_t fac1 = decx::_get_mid_factors_pow2(total_thr_num);
-        thr_arrange->x = fac1;                      // width
-        thr_arrange->y = total_thr_num / fac1;      // height
+    if (total_thr_num > 1) {
+        const float k = (float)proc_dims.x / (float)proc_dims.y;
+        const uint32_t base = roundf(sqrtf((float)total_thr_num / k));
+
+        uint32_t base_var_ni = base;
+        uint32_t base_var_nz = base;
+        // Towards infinity
+        while (total_thr_num % base_var_ni) {
+            ++base_var_ni;
+        }
+        // Towards zero
+        while (total_thr_num % base_var_nz) {
+            --base_var_nz;
+        }
+        // Get the differences and find the minimal
+        uint32_t diff_ni = fabs(base - base_var_ni);
+        uint32_t diff_nz = fabs(base - base_var_nz);
+        uint32_t candidate_base = diff_ni > diff_nz ? base_var_nz : base_var_ni;
+        thr_arrange->y = candidate_base;
+        thr_arrange->x = total_thr_num / candidate_base;
     }
-    else {       // It is a rectangle
-        *thr_arrange = decx::find_closest_factors_by_ratio_pow2(total_thr_num, proc_dims, true);
+    else {
+        *thr_arrange = make_uint2(1, 1);
     }
 }

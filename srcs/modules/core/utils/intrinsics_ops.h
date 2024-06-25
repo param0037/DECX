@@ -23,121 +23,122 @@
 
 namespace decx
 {
-    namespace utils
-    {
+namespace utils
+{
 #ifdef _DECX_CPU_PARTS_
-        namespace simd 
-        {
-            typedef union __align__(8) xmm64_reg {
+namespace simd 
+{
+    typedef union __align__(8) xmm64_reg {
 #if defined(__x86_64__) || defined(__i386__)
-                __m64 _m64;
+        __m64 _m64;
 #elif defined(__aarch64__) || defined(__arm__)
-                float32x2_t _vf;
-                int32x2_t _vi;
-                int8x8_t _vuc;
+        float32x2_t _vf;
+        int32x2_t _vi;
+        int8x8_t _vuc;
 #endif
-                double _fp64;
-                uint64_t _ull;
-                float _arrf[2];
-            }_mmv64;
+        double _fp64;
+        uint64_t _ull;
+        float _arrf[2];
+    }_mmv64;
 
 
-            typedef union __align__(16) xmm128_reg {
+    typedef union __align__(16) xmm128_reg {
 #if defined(__x86_64__) || defined(__i386__)
-                __m128 _vf;
-                __m128d _vd;
-                __m128i _vi;
+        __m128 _vf;
+        __m128d _vd;
+        __m128i _vi;
 #elif defined(__aarch64__) || defined(__arm__)
-                float32x4_t _vf;
-                int32x4_t _vi;
-                float64x2_t _vd;
-                int8x16_t _vuc;
+        float32x4_t _vf;
+        int32x4_t _vi;
+        float64x2_t _vd;
+        int8x16_t _vuc;
 #endif
-                float _arrf[4];
-                int32_t _arri[4];
-                double _arrd[2];
-                uint64_t _arrull[2];
-            }_mmv128;
+        float _arrf[4];
+        int32_t _arri[4];
+        int16_t _arrs[8];
+        double _arrd[2];
+        uint64_t _arrull[2];
+    }_mmv128;
 
 
-            typedef union __align__(32) xmm256_reg {
+    typedef union __align__(32) xmm256_reg {
 #if defined(__x86_64__) || defined(__i386__)
-                __m256 _vf;
-                __m256d _vd;
-                __m256i _vi;
+        __m256 _vf;
+        __m256d _vd;
+        __m256i _vi;
 
-                __m128 _vf2[2];
-                __m128d _vd2[2];
+        __m128 _vf2[2];
+        __m128d _vd2[2];
 #elif defined(__aarch64__) || defined(__arm__)
-                float32x4x2_t _vf;
-                int32x4x2_t _vi;
-                float64x2_t _vd;
-                int8x16x2_t _vuc;
+        float32x4x2_t _vf;
+        int32x4x2_t _vi;
+        float64x2_t _vd;
+        int8x16x2_t _vuc;
 #endif
-                float _arrf[8];
-                double _arrd[4];
-                uint64_t _arrull[4];
-            }_mmv256;
+        float _arrf[8];
+        double _arrd[4];
+        uint64_t _arrull[4];
+    }_mmv256;
 
 #if defined(__x86_64__) || defined(__i386__)
-            static float _mm128_h_sum(__m128 v);
+    static float _mm128_h_sum(__m128 v);
 
 
-            static float _mm256_h_sum(__m256 v);
+    static float _mm256_h_sum(__m256 v);
 
-            static float _mm256_h_max(__m256 v);
+    static float _mm256_h_max(__m256 v);
 
-            static float _mm256_h_min(__m256 v);
-
-
-            static double _mm256d_h_sum(__m256d v);
-            static int64_t _mm256i_h_sum_epi64(__m256i v);
-
-            static double _mm256d_h_max(__m256d v);
-
-            static double _mm256d_h_min(__m256d v);
-
-            static uint8_t _mm128_h_max_u8(__m128i v);
-
-            static uint8_t _mm128_h_min_u8(__m128i v);
+    static float _mm256_h_min(__m256 v);
 
 
-            /**
-            * The data move from higher address to lower address for 1 element
-            * @param __proc : the pointer of the value to be processed
-            */
-            inline __m256 _mm256_shift1_H2L(__m256 __proc);
+    static double _mm256d_h_sum(__m256d v);
+    static int64_t _mm256i_h_sum_epi64(__m256i v);
+
+    static double _mm256d_h_max(__m256d v);
+
+    static double _mm256d_h_min(__m256d v);
+
+    static uint8_t _mm128_h_max_u8(__m128i v);
+
+    static uint8_t _mm128_h_min_u8(__m128i v);
 
 
-            /**
-            * The data move from higher address to lower address for 2 elements
-            * @param __proc : the pointer of the value to be processed
-            */
-            inline __m256 _mm256_shift2_H2L(__m256 __proc);
+    /**
+    * The data move from higher address to lower address for 1 element
+    * @param __proc : the pointer of the value to be processed
+    */
+    inline __m256 _mm256_shift1_H2L(__m256 __proc);
 
 
-            /**
-            * The data move from higher address to lower address for 1 element
-            * @param __proc : the pointer of the value to be processed
-            */
-            inline __m256 _mm256_shift1_L2H(__m256 __proc);
+    /**
+    * The data move from higher address to lower address for 2 elements
+    * @param __proc : the pointer of the value to be processed
+    */
+    inline __m256 _mm256_shift2_H2L(__m256 __proc);
 
 
-            /**
-            * The data move from higher address to lower address for 2 elements
-            * @param __proc : the pointer of the value to be processed
-            */
-            inline __m256 _mm256_shift2_L2H(__m256 __proc);
+    /**
+    * The data move from higher address to lower address for 1 element
+    * @param __proc : the pointer of the value to be processed
+    */
+    inline __m256 _mm256_shift1_L2H(__m256 __proc);
+
+
+    /**
+    * The data move from higher address to lower address for 2 elements
+    * @param __proc : the pointer of the value to be processed
+    */
+    inline __m256 _mm256_shift2_L2H(__m256 __proc);
 
 #elif defined(__aarch64__) || defined(__arm__)
             
 
 #endif  // #if defined(__x86_x64__) || defined(__i386__)
 
-            
-        }
+    
+}
 #endif  // #ifdef _DECX_CPU_PARTS_
-    }
+}
 }
 
 

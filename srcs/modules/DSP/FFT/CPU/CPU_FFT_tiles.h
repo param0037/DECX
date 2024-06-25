@@ -31,10 +31,10 @@ namespace decx
 namespace dsp {
     namespace fft 
     {
-        struct _FFT1D_kernel_tile_fp32;
+        struct _FFT1D_kernel_tile;
 
 
-        using FKT1D_fp32 = decx::dsp::fft::_FFT1D_kernel_tile_fp32;
+        using FKT1D = decx::dsp::fft::_FFT1D_kernel_tile;
     }
 }
 }
@@ -52,7 +52,7 @@ namespace dsp {
 * |<---- (aligned to 8) ---->|<------ _tile_pitch ----->|
 * [***********************000|***********************000|***********************000]
 */
-struct decx::dsp::fft::_FFT1D_kernel_tile_fp32
+struct decx::dsp::fft::_FFT1D_kernel_tile
 {
     decx::PtrInfo<void> _tmp_ptr;
 

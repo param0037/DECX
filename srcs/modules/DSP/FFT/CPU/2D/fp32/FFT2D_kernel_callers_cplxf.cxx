@@ -8,16 +8,15 @@
 *   More information please visit https://github.com/param0037/DECX
 */
 
-#include "../1D/FFT1D_kernels.h"
-#include "FFT2D_kernel_utils.h"
-#include "FFT2D_kernels.h"
-
+#include "../../1D/FFT1D_kernels.h"
+#include "../FFT2D_kernel_utils.h"
+#include "../FFT2D_kernels.h"
 
 
 template <typename _type_in, bool _conj> _THREAD_FUNCTION_ void
 decx::dsp::fft::CPUK::_FFT2D_smaller_4rows_cplxf(const _type_in* __restrict                      src,
                                                  de::CPf* __restrict                              dst,
-                                                 const decx::dsp::fft::FKT1D_fp32*               _tiles,
+                                                 const decx::dsp::fft::FKT1D*                   _tiles,
                                                  const uint32_t                                  _pitch_src, 
                                                  const uint32_t                                  _pitch_dst, 
                                                  const uint32_t                                  _proc_H_r1,
@@ -26,7 +25,6 @@ decx::dsp::fft::CPUK::_FFT2D_smaller_4rows_cplxf(const _type_in* __restrict     
     decx::utils::double_buffer_manager _double_buffer(_tiles->get_tile1<void>(), _tiles->get_tile2<void>());
     decx::utils::frag_manager _f_mgr_H;
     decx::utils::frag_manager_gen_from_fragLen(&_f_mgr_H, _proc_H_r1, 4);
-    const uint32_t _L = _f_mgr_H.is_left ? _f_mgr_H.frag_left_over : 4;
     
     const _type_in* _src_loc_ptr = src;
     de::CPf* _dst_loc_ptr = dst;
@@ -37,7 +35,7 @@ decx::dsp::fft::CPUK::_FFT2D_smaller_4rows_cplxf(const _type_in* __restrict     
         if constexpr (std::is_same_v<_type_in, float>){
             // Load and transpose data from global memory
             decx::dsp::fft::CPUK::load_entire_row_transpose_fp32(_src_loc_ptr, &_double_buffer, _tiles, _pitch_src >> 2, _pitch_src,
-                i == (_f_mgr_H.frag_num - 1) ? _L : 4);
+                i == (_f_mgr_H.frag_num - 1) ? _f_mgr_H.last_frag_len : 4);
 
             // Call vec4 smaller FFT
 		    decx::dsp::fft::CPUK::_FFT1D_caller_cplxf32_1st_R2C(_double_buffer.get_leading_ptr<float>(), 
@@ -47,7 +45,7 @@ decx::dsp::fft::CPUK::_FFT2D_smaller_4rows_cplxf(const _type_in* __restrict     
         else if constexpr (std::is_same_v<_type_in, uint8_t>) {
             // Load and transpose data from global memory
             decx::dsp::fft::CPUK::load_entire_row_transpose_u8_fp32((float*)_src_loc_ptr, &_double_buffer, _tiles, _pitch_src >> 2, _pitch_src,
-                i == (_f_mgr_H.frag_num - 1) ? _L : 4);
+                i == (_f_mgr_H.frag_num - 1) ? _f_mgr_H.last_frag_len : 4);
 
             // Call vec4 smaller FFT
 		    decx::dsp::fft::CPUK::_FFT1D_caller_cplxf32_1st_R2C(_double_buffer.get_leading_ptr<float>(), 
@@ -57,7 +55,7 @@ decx::dsp::fft::CPUK::_FFT2D_smaller_4rows_cplxf(const _type_in* __restrict     
         else {
             // Load and transpose data from global memory
             decx::dsp::fft::CPUK::load_entire_row_transpose_cplxf<false>(_src_loc_ptr, &_double_buffer, _tiles, _pitch_src >> 2, _pitch_src,
-                i == (_f_mgr_H.frag_num - 1) ? _L : 4);
+                i == (_f_mgr_H.frag_num - 1) ? _f_mgr_H.last_frag_len : 4);
 
             // Call vec4 smaller FFT
 		    decx::dsp::fft::CPUK::_FFT1D_caller_cplxf32_1st_C2C(_double_buffer.get_leading_ptr<de::CPf>(), 
@@ -77,7 +75,7 @@ decx::dsp::fft::CPUK::_FFT2D_smaller_4rows_cplxf(const _type_in* __restrict     
 
         // Store back to global memory
         decx::dsp::fft::CPUK::store_entire_row_transpose_cplxf<_conj>(&_double_buffer, _dst_loc_ptr, _tiles, _pitch_dst >> 2, _pitch_dst,
-            i == (_f_mgr_H.frag_num - 1) ? _L : 4);
+            i == (_f_mgr_H.frag_num - 1) ? _f_mgr_H.last_frag_len : 4);
 
         _src_loc_ptr += (_pitch_src << 2);
         _dst_loc_ptr += (_pitch_dst << 2);
@@ -85,29 +83,29 @@ decx::dsp::fft::CPUK::_FFT2D_smaller_4rows_cplxf(const _type_in* __restrict     
 }
 
 template _THREAD_FUNCTION_ void decx::dsp::fft::CPUK::_FFT2D_smaller_4rows_cplxf<float, true>(const float* __restrict, de::CPf* __restrict,
-    const decx::dsp::fft::FKT1D_fp32*, const uint32_t, const uint32_t, const uint32_t, const decx::dsp::fft::cpu_FFT1D_smaller<float>*);
+    const decx::dsp::fft::FKT1D*, const uint32_t, const uint32_t, const uint32_t, const decx::dsp::fft::cpu_FFT1D_smaller<float>*);
 
 template _THREAD_FUNCTION_ void decx::dsp::fft::CPUK::_FFT2D_smaller_4rows_cplxf<float, false>(const float* __restrict, de::CPf* __restrict,
-    const decx::dsp::fft::FKT1D_fp32*, const uint32_t, const uint32_t, const uint32_t, const decx::dsp::fft::cpu_FFT1D_smaller<float>*);
+    const decx::dsp::fft::FKT1D*, const uint32_t, const uint32_t, const uint32_t, const decx::dsp::fft::cpu_FFT1D_smaller<float>*);
 
 template _THREAD_FUNCTION_ void decx::dsp::fft::CPUK::_FFT2D_smaller_4rows_cplxf<de::CPf, true>(const de::CPf* __restrict, de::CPf* __restrict,
-    const decx::dsp::fft::FKT1D_fp32*, const uint32_t, const uint32_t, const uint32_t, const decx::dsp::fft::cpu_FFT1D_smaller<float>*);
+    const decx::dsp::fft::FKT1D*, const uint32_t, const uint32_t, const uint32_t, const decx::dsp::fft::cpu_FFT1D_smaller<float>*);
 
 template _THREAD_FUNCTION_ void decx::dsp::fft::CPUK::_FFT2D_smaller_4rows_cplxf<de::CPf, false>(const de::CPf* __restrict, de::CPf* __restrict,
-    const decx::dsp::fft::FKT1D_fp32*, const uint32_t, const uint32_t, const uint32_t, const decx::dsp::fft::cpu_FFT1D_smaller<float>*);
+    const decx::dsp::fft::FKT1D*, const uint32_t, const uint32_t, const uint32_t, const decx::dsp::fft::cpu_FFT1D_smaller<float>*);
 
 template _THREAD_FUNCTION_ void decx::dsp::fft::CPUK::_FFT2D_smaller_4rows_cplxf<uint8_t, true>(const uint8_t* __restrict, de::CPf* __restrict,
-    const decx::dsp::fft::FKT1D_fp32*, const uint32_t, const uint32_t, const uint32_t, const decx::dsp::fft::cpu_FFT1D_smaller<float>*);
+    const decx::dsp::fft::FKT1D*, const uint32_t, const uint32_t, const uint32_t, const decx::dsp::fft::cpu_FFT1D_smaller<float>*);
 
 template _THREAD_FUNCTION_ void decx::dsp::fft::CPUK::_FFT2D_smaller_4rows_cplxf<uint8_t, false>(const uint8_t* __restrict, de::CPf* __restrict,
-    const decx::dsp::fft::FKT1D_fp32*, const uint32_t, const uint32_t, const uint32_t, const decx::dsp::fft::cpu_FFT1D_smaller<float>*);
+    const decx::dsp::fft::FKT1D*, const uint32_t, const uint32_t, const uint32_t, const decx::dsp::fft::cpu_FFT1D_smaller<float>*);
 
 
 
 template <typename _type_out> _THREAD_FUNCTION_ void
 decx::dsp::fft::CPUK::_IFFT2D_smaller_4rows_cplxf(const de::CPf* __restrict                        src,
                                                   _type_out* __restrict                           dst,
-                                                  const decx::dsp::fft::FKT1D_fp32*               _tiles,
+                                                  const decx::dsp::fft::FKT1D*               _tiles,
                                                   const uint32_t                                  _pitch_src, 
                                                   const uint32_t                                  _pitch_dst, 
                                                   const uint32_t                                  _proc_H_r1,
@@ -167,13 +165,13 @@ decx::dsp::fft::CPUK::_IFFT2D_smaller_4rows_cplxf(const de::CPf* __restrict     
 }
 
 
-template _THREAD_FUNCTION_ void decx::dsp::fft::CPUK::_IFFT2D_smaller_4rows_cplxf<de::CPf>(const de::CPf* __restrict, de::CPf* __restrict, const decx::dsp::fft::FKT1D_fp32*,
+template _THREAD_FUNCTION_ void decx::dsp::fft::CPUK::_IFFT2D_smaller_4rows_cplxf<de::CPf>(const de::CPf* __restrict, de::CPf* __restrict, const decx::dsp::fft::FKT1D*,
     const uint32_t, const uint32_t, const uint32_t, const decx::dsp::fft::cpu_FFT1D_smaller<float>*);
 
-template _THREAD_FUNCTION_ void decx::dsp::fft::CPUK::_IFFT2D_smaller_4rows_cplxf<float>(const de::CPf* __restrict, float* __restrict, const decx::dsp::fft::FKT1D_fp32*,
+template _THREAD_FUNCTION_ void decx::dsp::fft::CPUK::_IFFT2D_smaller_4rows_cplxf<float>(const de::CPf* __restrict, float* __restrict, const decx::dsp::fft::FKT1D*,
     const uint32_t, const uint32_t, const uint32_t, const decx::dsp::fft::cpu_FFT1D_smaller<float>*);
 
-template _THREAD_FUNCTION_ void decx::dsp::fft::CPUK::_IFFT2D_smaller_4rows_cplxf<uint8_t>(const de::CPf* __restrict, uint8_t* __restrict, const decx::dsp::fft::FKT1D_fp32*,
+template _THREAD_FUNCTION_ void decx::dsp::fft::CPUK::_IFFT2D_smaller_4rows_cplxf<uint8_t>(const de::CPf* __restrict, uint8_t* __restrict, const decx::dsp::fft::FKT1D*,
     const uint32_t, const uint32_t, const uint32_t, const decx::dsp::fft::cpu_FFT1D_smaller<float>*);
 
 

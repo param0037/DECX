@@ -127,8 +127,6 @@ decx::dsp::fft::GPUK::cu_FFT2_R3_1st_R2C_uc8_cplxf(const ushort* __restrict src,
 
 
 
-
-
 template<bool _div> __global__ void 
 decx::dsp::fft::GPUK::cu_FFT2_R3_1st_C2C_cplxf(const float4* __restrict src,
                                                float4* __restrict dst,
@@ -306,15 +304,15 @@ decx::dsp::fft::GPUK::cu_FFT2_R3_C2R_cplxf_u8(const float4* __restrict src,
         _FFT_domain_dex += _kernel_info._store_pitch;
 
         tmp._vf = decx::dsp::fft::GPUK::_complex_2fma1(recv[1]._vf, de::CPf(-0.5, 0.8660254f), recv[0]._vf);
-        res._vf2.x = __fsub_rn(fmaf(recv[2]._vf.x, -0.5, tmp._vf.x), __fmul_rn(recv[2]._vf.y, -0.8660254f));
-        res._vf2.y = __fsub_rn(fmaf(recv[2]._vf.z, -0.5, tmp._vf.z), __fmul_rn(recv[2]._vf.w, -0.8660254f));
+        res._vf2.x = __fsub_rn(__fmaf_rn(recv[2]._vf.x, -0.5, tmp._vf.x), __fmul_rn(recv[2]._vf.y, -0.8660254f));
+        res._vf2.y = __fsub_rn(__fmaf_rn(recv[2]._vf.z, -0.5, tmp._vf.z), __fmul_rn(recv[2]._vf.w, -0.8660254f));
 
         dst[_FFT_domain_dex * _pitchdst_v2 + tidx] = make_uchar2(res._vf2.x, res._vf2.y);
         _FFT_domain_dex += _kernel_info._store_pitch;
 
         tmp._vf = decx::dsp::fft::GPUK::_complex_2fma1(recv[1]._vf, de::CPf(-0.5, -0.8660254f), recv[0]._vf);
-        res._vf2.x = __fsub_rn(fmaf(recv[2]._vf.x, -0.5, tmp._vf.x), __fmul_rn(recv[2]._vf.y, 0.8660254f));
-        res._vf2.y = __fsub_rn(fmaf(recv[2]._vf.z, -0.5, tmp._vf.z), __fmul_rn(recv[2]._vf.w, 0.8660254f));
+        res._vf2.x = __fsub_rn(__fmaf_rn(recv[2]._vf.x, -0.5, tmp._vf.x), __fmul_rn(recv[2]._vf.y, 0.8660254f));
+        res._vf2.y = __fsub_rn(__fmaf_rn(recv[2]._vf.z, -0.5, tmp._vf.z), __fmul_rn(recv[2]._vf.w, 0.8660254f));
 
         dst[_FFT_domain_dex * _pitchdst_v2 + tidx] = make_uchar2(res._vf2.x, res._vf2.y);
     }
@@ -367,15 +365,15 @@ decx::dsp::fft::GPUK::cu_FFT2_R3_C2R_cplxf_fp32(const float4* __restrict src,
         _FFT_domain_dex += _kernel_info._store_pitch;
 
         tmp._vf = decx::dsp::fft::GPUK::_complex_2fma1(recv[1]._vf, de::CPf(-0.5, 0.8660254f), recv[0]._vf);
-        res._vf2.x = __fsub_rn(fmaf(recv[2]._vf.x, -0.5, tmp._vf.x), __fmul_rn(recv[2]._vf.y, -0.8660254f));
-        res._vf2.y = __fsub_rn(fmaf(recv[2]._vf.z, -0.5, tmp._vf.z), __fmul_rn(recv[2]._vf.w, -0.8660254f));
+        res._vf2.x = __fsub_rn(__fmaf_rn(recv[2]._vf.x, -0.5, tmp._vf.x), __fmul_rn(recv[2]._vf.y, -0.8660254f));
+        res._vf2.y = __fsub_rn(__fmaf_rn(recv[2]._vf.z, -0.5, tmp._vf.z), __fmul_rn(recv[2]._vf.w, -0.8660254f));
 
         dst[_FFT_domain_dex * _pitchdst_v2 + tidx] = res._vf2;
         _FFT_domain_dex += _kernel_info._store_pitch;
 
         tmp._vf = decx::dsp::fft::GPUK::_complex_2fma1(recv[1]._vf, de::CPf(-0.5, -0.8660254f), recv[0]._vf);
-        res._vf2.x = __fsub_rn(fmaf(recv[2]._vf.x, -0.5, tmp._vf.x), __fmul_rn(recv[2]._vf.y, 0.8660254f));
-        res._vf2.y = __fsub_rn(fmaf(recv[2]._vf.z, -0.5, tmp._vf.z), __fmul_rn(recv[2]._vf.w, 0.8660254f));
+        res._vf2.x = __fsub_rn(__fmaf_rn(recv[2]._vf.x, -0.5, tmp._vf.x), __fmul_rn(recv[2]._vf.y, 0.8660254f));
+        res._vf2.y = __fsub_rn(__fmaf_rn(recv[2]._vf.z, -0.5, tmp._vf.z), __fmul_rn(recv[2]._vf.w, 0.8660254f));
 
         dst[_FFT_domain_dex * _pitchdst_v2 + tidx] = res._vf2;
     }

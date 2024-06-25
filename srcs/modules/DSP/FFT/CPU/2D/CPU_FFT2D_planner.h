@@ -38,7 +38,7 @@ private:
     decx::dsp::fft::cpu_FFT1D_smaller<_data_type> _FFT_H, _FFT_V;
 
     // Tiles for each thread (2 (double buffers) for each)
-    decx::utils::Fixed_Length_Array<decx::dsp::fft::FKT1D_fp32> _tiles;
+    decx::utils::Fixed_Length_Array<decx::dsp::fft::FKT1D> _tiles;
 
     // Thread distributions for width and height
     decx::utils::frag_manager _thread_dist_FFTH, _thread_dist_FFTV;
@@ -47,15 +47,13 @@ private:
 
     uint32_t _input_typesize, _output_typesize;
 
+    decx::blas::_cpu_transpose_config _transpose_config_1st, _transpose_config_2nd;
 
     uint32_t _concurrency;
 
 
-    decx::bp::_cpu_transpose_config<8> _transpose_config_1st, _transpose_config_2nd;
-
-
     template <typename _type_out>
-    void plan_transpose_configs();
+    void _CRSR_ plan_transpose_configs(de::DH* handle);
 
 public:
     cpu_FFT2D_planner() {}
@@ -88,13 +86,18 @@ public:
     static void release_buffers(decx::dsp::fft::cpu_FFT2D_planner<_data_type>* _fake_this);
 
 
-    const decx::dsp::fft::FKT1D_fp32* get_tile_ptr(const uint32_t _id) const;
+    const decx::dsp::fft::FKT1D* get_tile_ptr(const uint32_t _id) const;
 
 
     template <typename _type_out>
     static inline uint8_t get_alignment_FFT_last_dimension()
     {
-        return std::is_same_v<_type_out, uint8_t> ? 8 : 4;
+        if (sizeof(_data_type) == 4) {
+            return std::is_same_v<_type_out, uint8_t> ? 8 : 4;
+        }
+        else {
+            return std::is_same_v<_type_out, uint8_t> ? 8 : 2;
+        }
     }
 
     
@@ -111,12 +114,15 @@ public:
 
 namespace decx
 {
-    namespace dsp {
-        namespace fft {
-            extern decx::ResourceHandle cpu_FFT2D_cplxf32_planner;
-            extern decx::ResourceHandle cpu_IFFT2D_cplxf32_planner;
-        }
+namespace dsp {
+    namespace fft {
+        extern decx::ResourceHandle cpu_FFT2D_cplxf32_planner;
+        extern decx::ResourceHandle cpu_IFFT2D_cplxf32_planner;
+
+        extern decx::ResourceHandle g_cpu_FFT2D_cplxd64_planner;
+        extern decx::ResourceHandle g_cpu_IFFT2D_cplxd64_planner;
     }
+}
 }
 
 

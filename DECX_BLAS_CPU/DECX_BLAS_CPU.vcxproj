@@ -181,7 +181,11 @@
     <ClCompile Include="..\srcs\modules\BLAS\basic_process\fill\constant\CPU\Matrix_fill.cxx" />
     <ClCompile Include="..\srcs\modules\BLAS\basic_process\fill\constant\CPU\Vector_fill.cxx" />
     <ClCompile Include="..\srcs\modules\BLAS\basic_process\transpose\CPU\transpose.cxx" />
-    <ClCompile Include="..\srcs\modules\BLAS\basic_process\transpose\CPU\transpose_exec.cxx" />
+    <ClCompile Include="..\srcs\modules\BLAS\basic_process\transpose\CPU\transpose2D_config.cxx" />
+    <ClCompile Include="..\srcs\modules\BLAS\basic_process\transpose\CPU\transpose_exec_16b.cxx" />
+    <ClCompile Include="..\srcs\modules\BLAS\basic_process\transpose\CPU\transpose_exec_1b.cxx" />
+    <ClCompile Include="..\srcs\modules\BLAS\basic_process\transpose\CPU\transpose_exec_4b.cxx" />
+    <ClCompile Include="..\srcs\modules\BLAS\basic_process\transpose\CPU\transpose_exec_8b.cxx" />
     <ClCompile Include="..\srcs\modules\BLAS\basic_process\type_cast\CPU\type_cast.cxx" />
     <ClCompile Include="..\srcs\modules\BLAS\basic_process\type_cast\CPU\_mm256_fp32_fp64.cxx" />
     <ClCompile Include="..\srcs\modules\BLAS\basic_process\type_cast\CPU\_mm256_fp32_int32.cxx" />
@@ -196,11 +200,11 @@
     <ClCompile Include="..\srcs\modules\BLAS\basic_process\type_statistics\CPU\summation.cxx" />
     <ClCompile Include="..\srcs\modules\BLAS\Dot product\CPU\fp32\dot_fp32.cxx" />
     <ClCompile Include="..\srcs\modules\BLAS\Dot product\CPU\fp32\dot_fp32_exec.cxx" />
-    <ClCompile Include="..\srcs\modules\BLAS\GEMM\CPU\64b\GEMM_64b_callers.cxx" />
-    <ClCompile Include="..\srcs\modules\BLAS\GEMM\CPU\64b\matrix_B_arrange_64b.cxx" />
     <ClCompile Include="..\srcs\modules\BLAS\GEMM\CPU\cpu_GEMM_config.cxx" />
     <ClCompile Include="..\srcs\modules\BLAS\GEMM\CPU\fp32\GEMM_fp32_caller.cxx" />
     <ClCompile Include="..\srcs\modules\BLAS\GEMM\CPU\fp32\matrix_B_arrange_fp32.cxx" />
+    <ClCompile Include="..\srcs\modules\BLAS\GEMM\CPU\fp64\GEMM_64b_caller.cxx" />
+    <ClCompile Include="..\srcs\modules\BLAS\GEMM\CPU\fp64\matrix_B_arrange_64b.cxx" />
     <ClCompile Include="..\srcs\modules\BLAS\GEMM\CPU\GEMM.cxx" />
     <ClCompile Include="..\srcs\modules\BLAS\Vectorial\fields\CPU\divergence.cxx" />
     <ClCompile Include="..\srcs\modules\BLAS\Vectorial\fields\CPU\rotation.cxx" />

@@ -13,7 +13,7 @@
 
 
 template <typename _data_type>
-void decx::dsp::fft::_FFT1D_kernel_tile_fp32::allocate_tile(const uint32_t tile_frag_len, de::DH* handle)
+void decx::dsp::fft::_FFT1D_kernel_tile::allocate_tile(const uint32_t tile_frag_len, de::DH* handle)
 {
     constexpr uint32_t _alignment = 256 / (sizeof(_data_type) * 8 * 2);
     this->_tile_row_pitch = decx::utils::align<uint32_t>(tile_frag_len, _alignment);
@@ -28,23 +28,23 @@ void decx::dsp::fft::_FFT1D_kernel_tile_fp32::allocate_tile(const uint32_t tile_
     }
 }
 
-template void decx::dsp::fft::_FFT1D_kernel_tile_fp32::allocate_tile<float>(const uint32_t, de::DH*);
-template void decx::dsp::fft::_FFT1D_kernel_tile_fp32::allocate_tile<double>(const uint32_t, de::DH*);
+template void decx::dsp::fft::_FFT1D_kernel_tile::allocate_tile<float>(const uint32_t, de::DH*);
+template void decx::dsp::fft::_FFT1D_kernel_tile::allocate_tile<double>(const uint32_t, de::DH*);
 
 
-void decx::dsp::fft::_FFT1D_kernel_tile_fp32::release()
+void decx::dsp::fft::_FFT1D_kernel_tile::release()
 {
     decx::alloc::_host_virtual_page_dealloc(&this->_tmp_ptr);
 }
 
 
-void decx::dsp::fft::_FFT1D_kernel_tile_fp32::flush() const
+void decx::dsp::fft::_FFT1D_kernel_tile::flush() const
 {
     memset(this->_tmp_ptr.ptr, 0, this->_total_size);
 }
 
 
-void decx::dsp::fft::_FFT1D_kernel_tile_fp32::
+void decx::dsp::fft::_FFT1D_kernel_tile::
 _inblock_transpose_vecAdj_2_VecDist_cplxf(decx::utils::double_buffer_manager* __restrict _double_buffer) const
 {
     const double* src = _double_buffer->get_leading_ptr<double>();
@@ -73,7 +73,7 @@ _inblock_transpose_vecAdj_2_VecDist_cplxf(decx::utils::double_buffer_manager* __
 
 
 
-void decx::dsp::fft::_FFT1D_kernel_tile_fp32::
+void decx::dsp::fft::_FFT1D_kernel_tile::
 _inblock_transpose_vecAdj_2_VecDist_cplxd(decx::utils::double_buffer_manager* __restrict _double_buffer) const
 {
     const de::CPd* src = _double_buffer->get_leading_ptr<de::CPd>();
@@ -99,7 +99,7 @@ _inblock_transpose_vecAdj_2_VecDist_cplxd(decx::utils::double_buffer_manager* __
 
 
 
-void decx::dsp::fft::_FFT1D_kernel_tile_fp32::
+void decx::dsp::fft::_FFT1D_kernel_tile::
 _inblock_transpose_vecDist_2_VecAdj_fp32(decx::utils::double_buffer_manager* __restrict _double_buffer) const
 {
     __m128 _reg[4], _store[4];
@@ -125,7 +125,7 @@ _inblock_transpose_vecDist_2_VecAdj_fp32(decx::utils::double_buffer_manager* __r
 
 
 
-void decx::dsp::fft::_FFT1D_kernel_tile_fp32::
+void decx::dsp::fft::_FFT1D_kernel_tile::
 _inblock_transpose_vecDist_2_VecAdj_fp64(decx::utils::double_buffer_manager* __restrict _double_buffer) const
 {
     const double* src = _double_buffer->get_leading_ptr<double>();
@@ -137,20 +137,20 @@ _inblock_transpose_vecDist_2_VecAdj_fp64(decx::utils::double_buffer_manager* __r
     const uint32_t frag_len_v2 = this->_tile_row_pitch / 2;
 
     for (uint32_t i = 0; i < frag_len_v2; ++i) {
-        _reg[0] = _mm_load_pd(src + (i << 2));
-        _reg[1] = _mm_load_pd(src + (i << 2) + 2);
+        _reg[0] = _mm_load_pd(src + (i << 1));
+        _reg[1] = _mm_load_pd(src + (i << 1) + this->_tile_row_pitch);
 
         _AVX_MM128_TRANSPOSE_2X2_(_reg, _transposed);
 
-        _mm_store_pd(dst + (i << 1), _transposed[0]);
-        _mm_store_pd(dst + (i << 1) + this->_tile_row_pitch, _transposed[1]);
+        _mm_store_pd(dst + (i << 2), _transposed[0]);
+        _mm_store_pd(dst + (i << 2) + 2, _transposed[1]);
     }
     _double_buffer->update_states();
 }
 
 
 
-void decx::dsp::fft::_FFT1D_kernel_tile_fp32::
+void decx::dsp::fft::_FFT1D_kernel_tile::
 _inblock_transpose_vecDist_2_VecAdj_cplxf(decx::utils::double_buffer_manager* __restrict _double_buffer) const
 {
     const double* src = _double_buffer->get_leading_ptr<double>();
@@ -177,7 +177,7 @@ _inblock_transpose_vecDist_2_VecAdj_cplxf(decx::utils::double_buffer_manager* __
 
 
 
-void decx::dsp::fft::_FFT1D_kernel_tile_fp32::
+void decx::dsp::fft::_FFT1D_kernel_tile::
 _inblock_transpose_vecDist_2_VecAdj_cplxd(decx::utils::double_buffer_manager* __restrict _double_buffer) const
 {
     const de::CPd* src = _double_buffer->get_leading_ptr<de::CPd>();

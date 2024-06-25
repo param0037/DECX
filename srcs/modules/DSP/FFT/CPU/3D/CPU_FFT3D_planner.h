@@ -74,13 +74,13 @@ private:
     const decx::_tensor_layout* _src_layout;
     const decx::_tensor_layout*_dst_layout;
 
-    decx::bp::_cpu_transpose_MK_config<8> _transp_config_MC, _transp_config_MC_back;
-    decx::bp::_cpu_transpose_config<sizeof(_data_type) * 2>  _transp_config, _transp_config_back;
+    //decx::bp::_cpu_transpose_MK_config<8> _transp_config_MC, _transp_config_MC_back;
+    //decx::bp::_cpu_transpose_config<sizeof(_data_type) * 2>  _transp_config, _transp_config_back;
 
     uint32_t _concurrency;
 
     // Tiles for each thread (2 (double buffers) for each)
-    decx::utils::Fixed_Length_Array<decx::dsp::fft::FKT1D_fp32> _tiles;
+    decx::utils::Fixed_Length_Array<decx::dsp::fft::FKT1D> _tiles;
 
     decx::PtrInfo<void> _tmp1, _tmp2;
 
@@ -110,7 +110,7 @@ public:
     const decx::dsp::fft::cpu_FFT3D_subproc<_data_type>* get_subproc(const decx::dsp::fft::FFT_directions proc_dir) const;
 
 
-    const decx::dsp::fft::FKT1D_fp32* get_tile_ptr(const uint32_t _id) const;
+    const decx::dsp::fft::FKT1D* get_tile_ptr(const uint32_t _id) const;
 
 
     template <typename _input_type>

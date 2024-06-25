@@ -14,13 +14,16 @@
 
 #include "transpose_exec.h"
 #include "../../../../classes/Matrix.h"
+#include "transpose2D_config.h"
 
 
 namespace de
 {
+namespace blas {
     namespace cpu {
-        _DECX_API_ de::DH Transpose(de::Matrix& src, de::Matrix& dst);
+        _DECX_API_ void Transpose(de::Matrix& src, de::Matrix& dst);
     }
+}
 }
 
 

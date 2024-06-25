@@ -180,13 +180,13 @@ template bool decx::dsp::fft::cpu_FFT1D_planner<double>::changed(const uint64_t,
 
 
 template <typename _data_type>
-const decx::dsp::fft::FKT1D_fp32* decx::dsp::fft::cpu_FFT1D_planner<_data_type>::get_tile_ptr(const uint32_t _thread_id) const
+const decx::dsp::fft::FKT1D* decx::dsp::fft::cpu_FFT1D_planner<_data_type>::get_tile_ptr(const uint32_t _thread_id) const
 {
     return &this->_tiles[_thread_id];
 }
 
-template const decx::dsp::fft::FKT1D_fp32* decx::dsp::fft::cpu_FFT1D_planner<float>::get_tile_ptr(const uint32_t _thread_id) const;
-template const decx::dsp::fft::FKT1D_fp32* decx::dsp::fft::cpu_FFT1D_planner<double>::get_tile_ptr(const uint32_t _thread_id) const;
+template const decx::dsp::fft::FKT1D* decx::dsp::fft::cpu_FFT1D_planner<float>::get_tile_ptr(const uint32_t _thread_id) const;
+template const decx::dsp::fft::FKT1D* decx::dsp::fft::cpu_FFT1D_planner<double>::get_tile_ptr(const uint32_t _thread_id) const;
 
 
 

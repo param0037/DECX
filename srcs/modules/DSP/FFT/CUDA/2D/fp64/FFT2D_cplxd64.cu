@@ -78,11 +78,11 @@ void decx::dsp::fft::_cuda_FFT2D_planner<double>::Inverse(decx::_GPU_Matrix* src
                                  dst->Pitch(), S);
     }
     else if (std::is_same<_type_out, uint8_t>::value) {
-        //decx::bp::transpose2D_b1(double_buffer.get_leading_ptr<uint32_t>(), 
-        //                         (uint32_t*)dst->Mat.ptr,
-        //                         make_uint2(dst->Width(), dst->Height()),
-        //                         this->get_buffer_dims().y * 8,  // Times 8 cuz 8 uchars in one de::CPf
-        //                         dst->Pitch(), S);
+        decx::bp::transpose2D_b1(double_buffer.get_leading_ptr<uint32_t>(), 
+                                 (uint32_t*)dst->Mat.ptr,
+                                 make_uint2(dst->Width(), dst->Height()),
+                                 this->get_buffer_dims().y * 16,  // Times 8 cuz 8 uchars in one de::CPd
+                                 dst->Pitch(), S);
     }
     else if (std::is_same<_type_out, double>::value) {
         decx::bp::transpose2D_b8(double_buffer.get_leading_ptr<double2>(), 

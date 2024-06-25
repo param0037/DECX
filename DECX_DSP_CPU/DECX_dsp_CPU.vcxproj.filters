@@ -76,6 +76,9 @@
     <Filter Include="源文件\fft\2D\fp32">
       <UniqueIdentifier>{3187c1b2-8871-4bb0-94c4-1c8ff6dd4167}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\fft\2D\fp64">
+      <UniqueIdentifier>{6861923e-5565-4925-b51c-8e4a8ab52dee}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\srcs\modules\DSP\complex\cpl32_extract.cxx">
@@ -183,12 +186,6 @@
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\2D\FFT2D.cxx">
       <Filter>源文件\fft\2D</Filter>
     </ClCompile>
-    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\2D\FFT2D_kernel_callers.cxx">
-      <Filter>源文件\fft\2D</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\BLAS\basic_process\transpose\CPU\transpose_exec.cxx">
-      <Filter>源文件\fft\2D</Filter>
-    </ClCompile>
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\CPU_FFT_tiles.cxx">
       <Filter>源文件\fft</Filter>
     </ClCompile>
@@ -203,9 +200,6 @@
     </ClCompile>
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\3D\FFT3D_cplxf32.cxx">
       <Filter>源文件\fft\3D</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\2D\FFT2D_cplxf32.cxx">
-      <Filter>源文件\fft\2D</Filter>
     </ClCompile>
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\fp32\FFT1D_R3_cplxf_kernels.cxx">
       <Filter>源文件\fft\1D\fp32</Filter>
@@ -242,6 +236,18 @@
     </ClCompile>
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\fp64\FFT1D_R5_cplxd_kernels.cxx">
       <Filter>源文件\fft\1D\fp64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\2D\fp32\FFT2D_cplxf32.cxx">
+      <Filter>源文件\fft\2D\fp32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\2D\fp32\FFT2D_kernel_callers_cplxf.cxx">
+      <Filter>源文件\fft\2D\fp32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\2D\fp64\FFT2D_kernel_callers_cplxd.cxx">
+      <Filter>源文件\fft\2D\fp64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\2D\fp64\FFT2D_cplxd64.cxx">
+      <Filter>源文件\fft\2D\fp64</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

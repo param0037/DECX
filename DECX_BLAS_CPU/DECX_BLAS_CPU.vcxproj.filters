@@ -119,7 +119,7 @@
       <UniqueIdentifier>{878bb178-7325-4015-be78-ee22b8a20d99}</UniqueIdentifier>
     </Filter>
     <Filter Include="源文件\GEMM\64b">
-      <UniqueIdentifier>{eff237f6-5dad-411c-b7ea-8206cb796dff}</UniqueIdentifier>
+      <UniqueIdentifier>{69c19517-9c52-4dc3-a981-284d44816631}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -234,12 +234,6 @@
     <ClCompile Include="..\srcs\modules\BLAS\basic_process\fill\constant\CPU\Vector_fill.cxx">
       <Filter>源文件\basic_process\fill\constant</Filter>
     </ClCompile>
-    <ClCompile Include="..\srcs\modules\BLAS\basic_process\transpose\CPU\transpose.cxx">
-      <Filter>源文件\basic_process\transpose</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\BLAS\basic_process\transpose\CPU\transpose_exec.cxx">
-      <Filter>源文件\basic_process\transpose</Filter>
-    </ClCompile>
     <ClCompile Include="..\srcs\modules\BLAS\basic_process\type_cast\CPU\_mm256_fp32_fp64.cxx">
       <Filter>源文件\basic_process\type_cast</Filter>
     </ClCompile>
@@ -306,10 +300,28 @@
     <ClCompile Include="..\srcs\modules\BLAS\GEMM\CPU\cpu_GEMM_config.cxx">
       <Filter>源文件\GEMM</Filter>
     </ClCompile>
-    <ClCompile Include="..\srcs\modules\BLAS\GEMM\CPU\64b\GEMM_64b_callers.cxx">
+    <ClCompile Include="..\srcs\modules\BLAS\basic_process\transpose\CPU\transpose_exec_4b.cxx">
+      <Filter>源文件\basic_process\transpose</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\BLAS\basic_process\transpose\CPU\transpose2D_config.cxx">
+      <Filter>源文件\basic_process\transpose</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\BLAS\basic_process\transpose\CPU\transpose.cxx">
+      <Filter>源文件\basic_process\transpose</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\BLAS\basic_process\transpose\CPU\transpose_exec_1b.cxx">
+      <Filter>源文件\basic_process\transpose</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\BLAS\basic_process\transpose\CPU\transpose_exec_8b.cxx">
+      <Filter>源文件\basic_process\transpose</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\BLAS\basic_process\transpose\CPU\transpose_exec_16b.cxx">
+      <Filter>源文件\basic_process\transpose</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\BLAS\GEMM\CPU\fp64\GEMM_64b_caller.cxx">
       <Filter>源文件\GEMM\64b</Filter>
     </ClCompile>
-    <ClCompile Include="..\srcs\modules\BLAS\GEMM\CPU\64b\matrix_B_arrange_64b.cxx">
+    <ClCompile Include="..\srcs\modules\BLAS\GEMM\CPU\fp64\matrix_B_arrange_64b.cxx">
       <Filter>源文件\GEMM\64b</Filter>
     </ClCompile>
   </ItemGroup>

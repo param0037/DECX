@@ -20,18 +20,26 @@ namespace de
     enum _DATA_TYPES_FLAGS_ 
     {
         _VOID_              = 0,
-        _INT32_             = 1,
-        _FP32_              = 2,
-        _FP64_              = 3,
-        _FP16_              = 4,
-        _COMPLEX_F32_       = 5,
-        _COMPLEX_F64_       = 6,
-        _UINT8_             = 7,
-        _UCHAR3_            = 8,
-        _UCHAR4_            = 9,
-        _VECTOR3F_          = 10,
-        _VECTOR4F_          = 11,
-        _UINT64_            = 12
+
+        // FP32 and CPLXF : 0bxx01
+        _FP32_              = 0b0001,
+        _COMPLEX_F32_       = 0b0101,
+
+        _FP16_              = 0b0011,
+
+        // FP64 and CPLXD : 0bxx10
+        _FP64_              = 0b0010,
+        _COMPLEX_F64_       = 0b0110,
+
+        // Pixel related : 0bxx00
+        _UINT8_             = 0b1000,
+        _UCHAR4_            = 0b1100,
+
+        _INT32_             = 0b0100,
+        _UINT64_            = 0b0111,
+
+        _VECTOR3F_          = 0b1110,
+        _VECTOR4F_          = 0b1111
     };
 
 
@@ -55,7 +63,7 @@ namespace de
 #define _SIZE_FLOAT16_      sizeof(de::Half)
 #define _SIZE_COMPLEX_F32_  sizeof(de::CPf)
 #define _SIZE_UINT8_        sizeof(uchar)
-#define _SIZE_UCHAR3_       sizeof(uchar4)
+//#define _SIZE_UCHAR3_       sizeof(uchar4)
 #define _SIZE_UCHAR4_       sizeof(uchar4)
 #define _SIZE_VECTOR4_FP32_ sizeof(de::Vector4f)
 #define _SIZE_VECTOR3_FP32_ sizeof(de::Vector3f)
@@ -65,17 +73,17 @@ namespace de
 #if _C_EXPORT_ENABLED_
 // Data Types
 #define DECX_TYPE_VOID      0
-#define DECX_TYPE_INT32     1
-#define DECX_TYPE_FP32      2
-#define DECX_TYPE_FP64      3
-#define DECX_TYPE_FP16      4
-#define DECX_TYPE_CPLXF32   5
-#define DECX_TYPE_UINT8     6
-#define DECX_TYPE_UC3       7
-#define DECX_TYPE_UC4       8
-#define DECX_TYPE_VEC3F     9
-#define DECX_TYPE_VEC4F     10
-#define DECX_TYPE_UINT64    11
+#define DECX_TYPE_INT32     0b0100
+#define DECX_TYPE_FP32      0b0001
+#define DECX_TYPE_FP64      0b0010
+#define DECX_TYPE_FP16      0b0011
+#define DECX_TYPE_CPLXF32   0b0101
+#define DECX_TYPE_UINT8     0b1000
+//#define DECX_TYPE_UC3       7
+#define DECX_TYPE_UC4       0b1100
+#define DECX_TYPE_VEC3F     0b1110
+#define DECX_TYPE_VEC4F     0b1111
+#define DECX_TYPE_UINT64    0b0111
 
 // Data Formats
 #define DECX_FORMAT_NA                  0
@@ -120,8 +128,8 @@ static uint8_t decx::core::_size_mapping(const de::_DATA_TYPES_FLAGS_ type) {
         __byte = _SIZE_VECTOR4_FP32_;           break;
     case de::_DATA_TYPES_FLAGS_::_UINT8_:
         __byte = _SIZE_UINT8_;                  break;
-    case de::_DATA_TYPES_FLAGS_::_UCHAR3_:
-        __byte = _SIZE_UCHAR3_;                 break;
+    /*case de::_DATA_TYPES_FLAGS_::_UCHAR3_:
+        __byte = _SIZE_UCHAR3_;                 break;*/
     case de::_DATA_TYPES_FLAGS_::_UCHAR4_:
         __byte = _SIZE_UCHAR4_;                 break;
     case de::_DATA_TYPES_FLAGS_::_VECTOR3F_:

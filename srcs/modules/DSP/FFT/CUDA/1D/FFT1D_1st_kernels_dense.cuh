@@ -521,12 +521,12 @@ namespace fft {
 // Copy to the buffer with aligned pitch (ensuring coalsecing memory access)
 static void 
 decx::dsp::fft::FFT2D_1st_R2C_caller_cplxd(const double* __restrict src, 
-                                                 double2* __restrict dst,
-                                                 const uint8_t _radix, 
-                                                 const uint32_t _signal_len, 
-                                                 const uint32_t _pitchsrc, 
-                                                 const uint32_t _pitchdst,
-                                                 decx::cuda_stream* S)
+                                           double2* __restrict dst,
+                                           const uint8_t _radix, 
+                                           const uint32_t _signal_len, 
+                                           const uint32_t _pitchsrc, 
+                                           const uint32_t _pitchdst,
+                                           decx::cuda_stream* S)
 {
     dim3 _grid(decx::utils::ceil<uint32_t>(min(_pitchsrc, _pitchdst), _FFT2D_BLOCK_X_),
         decx::utils::ceil<uint32_t>(_signal_len / _radix, _FFT2D_BLOCK_Y_));

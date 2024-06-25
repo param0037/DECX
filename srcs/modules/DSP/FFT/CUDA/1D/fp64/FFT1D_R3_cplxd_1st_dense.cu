@@ -51,12 +51,12 @@ decx::dsp::fft::GPUK::cu_FFT2D_R3_1st_cplxd_R2C(const double* __restrict src,
         tmp = __fma_rn(-0.5f, __dadd_rn(recv[1], recv[2]), recv[0]);
 
         res._cplxd.real = tmp;
-        res._cplxd.image = __dmul_rn(__dsub_rn(recv[1], recv[2]), 0.8660254);
+        res._cplxd.image = __dmul_rn(__dsub_rn(recv[1], recv[2]), 0.8660254037844386);
         dst[_FFT_domain_dex * _pitchdst_v1 + tidx] = res._vd;
         ++_FFT_domain_dex;
 
         res._cplxd.real = tmp;
-        res._cplxd.image = __dmul_rn(__dsub_rn(recv[2], recv[1]), 0.8660254);
+        res._cplxd.image = __dmul_rn(__dsub_rn(recv[2], recv[1]), 0.8660254037844386);
         dst[_FFT_domain_dex * _pitchdst_v1 + tidx] = res._vd;
     }
 }
@@ -102,14 +102,14 @@ decx::dsp::fft::GPUK::cu_FFT2D_R3_1st_cplxd_C2C(const double2* __restrict src,
         dst[_FFT_domain_dex * _pitchdst + tidx] = res._vd;
         ++_FFT_domain_dex;
 
-        res._cplxd = decx::dsp::fft::GPUK::_complex_fma_fp64(recv[1]._cplxd, de::CPd(-0.5, 0.8660254), recv[0]._cplxd);
-        res._cplxd = decx::dsp::fft::GPUK::_complex_fma_fp64(recv[2]._cplxd, de::CPd(-0.5, -0.8660254), res._cplxd);
+        res._cplxd = decx::dsp::fft::GPUK::_complex_fma_fp64(recv[1]._cplxd, de::CPd(-0.5, 0.8660254037844386), recv[0]._cplxd);
+        res._cplxd = decx::dsp::fft::GPUK::_complex_fma_fp64(recv[2]._cplxd, de::CPd(-0.5, -0.8660254037844386), res._cplxd);
 
         dst[_FFT_domain_dex * _pitchdst + tidx] = res._vd;
         ++_FFT_domain_dex;
 
-        res._cplxd = decx::dsp::fft::GPUK::_complex_fma_fp64(recv[1]._cplxd, de::CPd(-0.5, -0.8660254), recv[0]._cplxd);
-        res._cplxd = decx::dsp::fft::GPUK::_complex_fma_fp64(recv[2]._cplxd, de::CPd(-0.5, 0.8660254), res._cplxd);
+        res._cplxd = decx::dsp::fft::GPUK::_complex_fma_fp64(recv[1]._cplxd, de::CPd(-0.5, -0.8660254037844386), recv[0]._cplxd);
+        res._cplxd = decx::dsp::fft::GPUK::_complex_fma_fp64(recv[2]._cplxd, de::CPd(-0.5, 0.8660254037844386), res._cplxd);
 
         dst[_FFT_domain_dex * _pitchdst + tidx] = res._vd;
     }
@@ -172,15 +172,15 @@ decx::dsp::fft::GPUK::cu_FFT2D_R3_end_cplxd_C2C(const double2* __restrict src,
         dst[_FFT_domain_dex * _pitchdst_v1 + tidx] = res._vd;
         _FFT_domain_dex += _kernel_info._store_pitch;
 
-        res._cplxd = decx::dsp::fft::GPUK::_complex_fma_fp64(recv[1]._cplxd, de::CPd(-0.5, 0.8660254f), recv[0]._cplxd);
-        res._cplxd = decx::dsp::fft::GPUK::_complex_fma_fp64(recv[2]._cplxd, de::CPd(-0.5, -0.8660254f), res._cplxd);
+        res._cplxd = decx::dsp::fft::GPUK::_complex_fma_fp64(recv[1]._cplxd, de::CPd(-0.5, 0.8660254037844386), recv[0]._cplxd);
+        res._cplxd = decx::dsp::fft::GPUK::_complex_fma_fp64(recv[2]._cplxd, de::CPd(-0.5, -0.8660254037844386), res._cplxd);
 
         if (_conj) { res._cplxd = decx::dsp::fft::GPUK::_complex_conjugate_fp64(res._cplxd); }
         dst[_FFT_domain_dex * _pitchdst_v1 + tidx] = res._vd;
         _FFT_domain_dex += _kernel_info._store_pitch;
 
-        res._cplxd = decx::dsp::fft::GPUK::_complex_fma_fp64(recv[1]._cplxd, de::CPd(-0.5, -0.8660254f), recv[0]._cplxd);
-        res._cplxd = decx::dsp::fft::GPUK::_complex_fma_fp64(recv[2]._cplxd, de::CPd(-0.5, 0.8660254f), res._cplxd);
+        res._cplxd = decx::dsp::fft::GPUK::_complex_fma_fp64(recv[1]._cplxd, de::CPd(-0.5, -0.8660254037844386), recv[0]._cplxd);
+        res._cplxd = decx::dsp::fft::GPUK::_complex_fma_fp64(recv[2]._cplxd, de::CPd(-0.5, 0.8660254037844386), res._cplxd);
 
         if (_conj) { res._cplxd = decx::dsp::fft::GPUK::_complex_conjugate_fp64(res._cplxd); }
         dst[_FFT_domain_dex * _pitchdst_v1 + tidx] = res._vd;
@@ -240,14 +240,14 @@ decx::dsp::fft::GPUK::cu_FFT2D_R3_end_cplxd_C2R(const double2* __restrict src,
         dst[_FFT_domain_dex * _pitchdst_v1 + tidx] = res;
         _FFT_domain_dex += _kernel_info._store_pitch;
 
-        tmp._cplxd = decx::dsp::fft::GPUK::_complex_fma_fp64(recv[1]._cplxd, de::CPd(-0.5, 0.8660254), recv[0]._cplxd);
-        res = __dsub_rn(__fma_rn(recv[2]._vd.x, -0.5, tmp._vd.x), __fmul_rn(recv[2]._vd.y, -0.8660254f));
+        tmp._cplxd = decx::dsp::fft::GPUK::_complex_fma_fp64(recv[1]._cplxd, de::CPd(-0.5, 0.8660254037844386), recv[0]._cplxd);
+        res = __dsub_rn(__fma_rn(recv[2]._vd.x, -0.5, tmp._vd.x), __fmul_rn(recv[2]._vd.y, -0.8660254037844386));
 
         dst[_FFT_domain_dex * _pitchdst_v1 + tidx] = res;
         _FFT_domain_dex += _kernel_info._store_pitch;
 
-        tmp._cplxd = decx::dsp::fft::GPUK::_complex_fma_fp64(recv[1]._cplxd, de::CPd(-0.5, -0.8660254f), recv[0]._cplxd);
-        res = __dsub_rn(fmaf(recv[2]._vd.x, -0.5, tmp._vd.x), __fmul_rn(recv[2]._vd.y, 0.8660254f));
+        tmp._cplxd = decx::dsp::fft::GPUK::_complex_fma_fp64(recv[1]._cplxd, de::CPd(-0.5, -0.8660254037844386), recv[0]._cplxd);
+        res = __dsub_rn(fmaf(recv[2]._vd.x, -0.5, tmp._vd.x), __fmul_rn(recv[2]._vd.y, 0.8660254037844386));
 
         dst[_FFT_domain_dex * _pitchdst_v1 + tidx] = res;
     }

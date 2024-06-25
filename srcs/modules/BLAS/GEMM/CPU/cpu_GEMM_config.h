@@ -41,8 +41,14 @@ private:
 
     decx::Ptr2D_Info<void> _arranged_B;
 
-    // Fragment manager for matrix B arrangement
+    /**
+    * Fragment manager for matrix B arrangement
+    */
     decx::utils::frag_manager _fmgr_WH_B[2];
+    /**
+    * ::_fmgr_WH_dst[0] have to be configured by frag_manager_gen_Nx() with N = 2 for multi-threading cases.
+    * Since the inner thread block width should be ALIGNED TO _alignment x 2.
+    */
     decx::utils::frag_manager _fmgr_WH_dst[2];
 
 
@@ -84,7 +90,7 @@ public:
 struct decx::blas::GEMM_blocking_config
 {
     decx::utils::frag_manager _fmgr_L;
-    decx::utils::frag_manager _fmgr_W;
+    decx::utils::frag_manager _fmgr_W;  // Aligned to original alignment
     decx::utils::frag_manager _fmgr_H;
 };
 

@@ -18,7 +18,7 @@
 template <typename _type_in, bool _conj> _THREAD_FUNCTION_ void
 decx::dsp::fft::CPUK::_FFT3D_smaller_4rows_cplxf(const _type_in* __restrict                      src_head_ptr,
                                                  de::CPf* __restrict                              dst_head_ptr,
-                                                 const decx::dsp::fft::FKT1D_fp32*               _tiles,
+                                                 const decx::dsp::fft::FKT1D*               _tiles,
                                                  const uint32_t                                  _pitch_src, 
                                                  const uint32_t                                  _pitch_dst, 
                                                  const uint32_t                                  _proc_H_r1,
@@ -98,22 +98,22 @@ decx::dsp::fft::CPUK::_FFT3D_smaller_4rows_cplxf(const _type_in* __restrict     
 
 
 template _THREAD_FUNCTION_ void decx::dsp::fft::CPUK::_FFT3D_smaller_4rows_cplxf<float, true>(const float* __restrict, de::CPf* __restrict,
-    const decx::dsp::fft::FKT1D_fp32*, const uint32_t, const uint32_t, const uint32_t, const uint32_t, const decx::dsp::fft::cpu_FFT3D_subproc<float>*);
+    const decx::dsp::fft::FKT1D*, const uint32_t, const uint32_t, const uint32_t, const uint32_t, const decx::dsp::fft::cpu_FFT3D_subproc<float>*);
 
 template _THREAD_FUNCTION_ void decx::dsp::fft::CPUK::_FFT3D_smaller_4rows_cplxf<float, false>(const float* __restrict, de::CPf* __restrict,
-    const decx::dsp::fft::FKT1D_fp32*, const uint32_t, const uint32_t, const uint32_t, const uint32_t, const decx::dsp::fft::cpu_FFT3D_subproc<float>*);
+    const decx::dsp::fft::FKT1D*, const uint32_t, const uint32_t, const uint32_t, const uint32_t, const decx::dsp::fft::cpu_FFT3D_subproc<float>*);
 
 template _THREAD_FUNCTION_ void decx::dsp::fft::CPUK::_FFT3D_smaller_4rows_cplxf<de::CPf, true>(const de::CPf* __restrict, de::CPf* __restrict,
-    const decx::dsp::fft::FKT1D_fp32*, const uint32_t, const uint32_t, const uint32_t, const uint32_t, const decx::dsp::fft::cpu_FFT3D_subproc<float>*);
+    const decx::dsp::fft::FKT1D*, const uint32_t, const uint32_t, const uint32_t, const uint32_t, const decx::dsp::fft::cpu_FFT3D_subproc<float>*);
 
 template _THREAD_FUNCTION_ void decx::dsp::fft::CPUK::_FFT3D_smaller_4rows_cplxf<de::CPf, false>(const de::CPf* __restrict, de::CPf* __restrict,
-    const decx::dsp::fft::FKT1D_fp32*, const uint32_t, const uint32_t, const uint32_t, const uint32_t, const decx::dsp::fft::cpu_FFT3D_subproc<float>*);
+    const decx::dsp::fft::FKT1D*, const uint32_t, const uint32_t, const uint32_t, const uint32_t, const decx::dsp::fft::cpu_FFT3D_subproc<float>*);
 
 template _THREAD_FUNCTION_ void decx::dsp::fft::CPUK::_FFT3D_smaller_4rows_cplxf<uint8_t, true>(const uint8_t* __restrict, de::CPf* __restrict,
-    const decx::dsp::fft::FKT1D_fp32*, const uint32_t, const uint32_t, const uint32_t, const uint32_t, const decx::dsp::fft::cpu_FFT3D_subproc<float>*);
+    const decx::dsp::fft::FKT1D*, const uint32_t, const uint32_t, const uint32_t, const uint32_t, const decx::dsp::fft::cpu_FFT3D_subproc<float>*);
 
 template _THREAD_FUNCTION_ void decx::dsp::fft::CPUK::_FFT3D_smaller_4rows_cplxf<uint8_t, false>(const uint8_t* __restrict, de::CPf* __restrict,
-    const decx::dsp::fft::FKT1D_fp32*, const uint32_t, const uint32_t, const uint32_t, const uint32_t, const decx::dsp::fft::cpu_FFT3D_subproc<float>*);
+    const decx::dsp::fft::FKT1D*, const uint32_t, const uint32_t, const uint32_t, const uint32_t, const decx::dsp::fft::cpu_FFT3D_subproc<float>*);
 
 
 
@@ -121,7 +121,7 @@ template _THREAD_FUNCTION_ void decx::dsp::fft::CPUK::_FFT3D_smaller_4rows_cplxf
 template <typename _type_out> _THREAD_FUNCTION_ void
 decx::dsp::fft::CPUK::_IFFT3D_smaller_4rows_cplxf(const de::CPf* __restrict                      src_head_ptr,
                                                  _type_out* __restrict                          dst_head_ptr,
-                                                 const decx::dsp::fft::FKT1D_fp32*               _tiles,
+                                                 const decx::dsp::fft::FKT1D*               _tiles,
                                                  const uint32_t                                  _pitch_src, 
                                                  const uint32_t                                  _pitch_dst, 
                                                  const uint32_t                                  _proc_H_r1,
@@ -185,13 +185,13 @@ decx::dsp::fft::CPUK::_IFFT3D_smaller_4rows_cplxf(const de::CPf* __restrict     
 }
 
 template _THREAD_FUNCTION_ void decx::dsp::fft::CPUK::_IFFT3D_smaller_4rows_cplxf<de::CPf>(const de::CPf* __restrict, de::CPf* __restrict,
-    const decx::dsp::fft::FKT1D_fp32*, const uint32_t, const uint32_t, const uint32_t, const uint32_t, const decx::dsp::fft::cpu_FFT3D_subproc<float>*);
+    const decx::dsp::fft::FKT1D*, const uint32_t, const uint32_t, const uint32_t, const uint32_t, const decx::dsp::fft::cpu_FFT3D_subproc<float>*);
 
 template _THREAD_FUNCTION_ void decx::dsp::fft::CPUK::_IFFT3D_smaller_4rows_cplxf<float>(const de::CPf* __restrict, float* __restrict,
-    const decx::dsp::fft::FKT1D_fp32*, const uint32_t, const uint32_t, const uint32_t, const uint32_t, const decx::dsp::fft::cpu_FFT3D_subproc<float>*);
+    const decx::dsp::fft::FKT1D*, const uint32_t, const uint32_t, const uint32_t, const uint32_t, const decx::dsp::fft::cpu_FFT3D_subproc<float>*);
 
 template _THREAD_FUNCTION_ void decx::dsp::fft::CPUK::_IFFT3D_smaller_4rows_cplxf<uint8_t>(const de::CPf* __restrict, uint8_t* __restrict,
-    const decx::dsp::fft::FKT1D_fp32*, const uint32_t, const uint32_t, const uint32_t, const uint32_t, const decx::dsp::fft::cpu_FFT3D_subproc<float>*);
+    const decx::dsp::fft::FKT1D*, const uint32_t, const uint32_t, const uint32_t, const uint32_t, const decx::dsp::fft::cpu_FFT3D_subproc<float>*);
 
 
 

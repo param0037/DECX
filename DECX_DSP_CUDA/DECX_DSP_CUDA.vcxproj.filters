@@ -235,5 +235,17 @@
     <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\sliding_window\fp64\filter2D_fp64_caller.cu">
       <Filter>源文件\convolution\sliding_window\fp64</Filter>
     </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\2D\fp64\FFT2D_R2_cplxd_kernels.cu">
+      <Filter>源文件\signal\FFT\2D\fp64</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\2D\fp64\FFT2D_R3_cplxd_kernels.cu">
+      <Filter>源文件\signal\FFT\2D\fp64</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\2D\fp64\FFT2D_R4_cplxd_kernels.cu">
+      <Filter>源文件\signal\FFT\2D\fp64</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\2D\fp64\FFT2D_R5_cplxd_kernels.cu">
+      <Filter>源文件\signal\FFT\2D\fp64</Filter>
+    </CudaCompile>
   </ItemGroup>
 </Project>

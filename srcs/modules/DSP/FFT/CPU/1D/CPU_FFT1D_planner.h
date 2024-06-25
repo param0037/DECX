@@ -109,7 +109,7 @@ private:
     uint32_t _permitted_concurrency;
 
 
-    std::vector<decx::dsp::fft::FKT1D_fp32> _tiles;
+    std::vector<decx::dsp::fft::FKT1D> _tiles;
 
 
     std::vector<uint32_t> _all_radixes;
@@ -149,7 +149,7 @@ public:
     void plan(const uint64_t signal_len, decx::utils::_thr_1D* t1D, de::DH *handle);
 
 
-    const decx::dsp::fft::FKT1D_fp32* get_tile_ptr(const uint32_t _thread_id) const;
+    const decx::dsp::fft::FKT1D* get_tile_ptr(const uint32_t _thread_id) const;
 
 
     const decx::dsp::fft::cpu_FFT1D_smaller<_data_type>* get_smaller_FFT_info_ptr(const uint32_t _order) const;

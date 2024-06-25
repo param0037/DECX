@@ -24,6 +24,7 @@
 #define _MATRIX_ALIGN_4B_ 8
 #define _MATRIX_ALIGN_2B_ 16
 #define _MATRIX_ALIGN_8B_ 4
+#define _MATRIX_ALIGN_16B_ 2
 #define _MATRIX_ALIGN_1B_ 32
 
 

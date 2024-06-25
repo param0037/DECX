@@ -20,7 +20,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\srcs\modules\basic_calculations\operators\cp_ops_exec.cxx" />
-    <ClCompile Include="..\srcs\modules\BLAS\basic_process\transpose\CPU\transpose_exec.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\complex\cpl32_extract.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\complex\cpl32_extract_exec.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\complex\rotate_fp32.cxx" />
@@ -55,8 +54,10 @@
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\fp64\kernel_callers_cplxd.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\2D\CPU_FFT2D_planner.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\2D\FFT2D.cxx" />
-    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\2D\FFT2D_cplxf32.cxx" />
-    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\2D\FFT2D_kernel_callers.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\2D\fp32\FFT2D_cplxf32.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\2D\fp32\FFT2D_kernel_callers_cplxf.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\2D\fp64\FFT2D_cplxd64.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\2D\fp64\FFT2D_kernel_callers_cplxd.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\3D\FFT3D.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\3D\CPU_FFT3D_planner.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\3D\FFT3D_cplxf32.cxx" />

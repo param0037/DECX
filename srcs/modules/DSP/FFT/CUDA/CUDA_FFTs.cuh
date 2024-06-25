@@ -14,6 +14,7 @@
 #include "../../../classes/GPU_Tensor.h"
 #include "../../../classes/GPU_Matrix.h"
 #include "../../../classes/GPU_Vector.h"
+#include "../FFT_commons.h"
 
 
 namespace de
@@ -33,7 +34,7 @@ namespace cuda
     _DECX_API_ void IFFT(de::GPU_Vector& src, de::GPU_Vector& dst, const de::_DATA_TYPES_FLAGS_ _type_out);
 
 
-    _DECX_API_ void FFT(de::GPU_Matrix& src, de::GPU_Matrix& dst);
+    _DECX_API_ void FFT(de::GPU_Matrix& src, de::GPU_Matrix& dst, const de::_DATA_TYPES_FLAGS_ _type_out);
 
 
     _DECX_API_ void IFFT(de::GPU_Matrix& src, de::GPU_Matrix& dst, const de::_DATA_TYPES_FLAGS_ type_out);

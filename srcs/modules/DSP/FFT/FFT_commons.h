@@ -17,6 +17,8 @@
 #include "../../core/memory_management/PtrInfo.h"
 #include "../../core/allocators.h"
 #include "../../core/utils/Fixed_Length_Array.h"
+#include "../../classes/type_info.h"
+
 
 #ifdef _DECX_CPU_PARTS_
 #include "../../core/allocators.h"
@@ -64,6 +66,50 @@ namespace fft {
 }
 
 #endif
+
+namespace decx
+{
+namespace dsp {
+    namespace fft 
+    {
+        /**
+        * @brief This function is used both in CPU and CUDA.
+        *        validate if the type is supported by FFT2D.
+        * @param _type The type needs to be validated
+        * @return True for valid, false for invalid.
+        */
+        static bool validate_type_FFT2D(const de::_DATA_TYPES_FLAGS_ _type);
+
+
+        /**
+        * @brief This function is used both in CPU and CUDA.
+        *        Check if the two types are matched:
+        *        _FP32_ and _COMPLEX_F32_ are matched;
+        *        _FP64_ and _COMPLEX_F64_ are matched.
+        * @param _type1 The first type
+        * @param _type2 The second type
+        * @return True for matched, and false for unmatched.
+        */
+        static bool check_type_matched_FFT(const de::_DATA_TYPES_FLAGS_ _type1,
+            const de::_DATA_TYPES_FLAGS_ _type2);
+    }
+}
+}
+
+
+static bool decx::dsp::fft::validate_type_FFT2D(const de::_DATA_TYPES_FLAGS_ _type)
+{
+    return (_type < 7 && (_type != 0 || _type != 3 || _type != 4)) ||
+        _type == de::_DATA_TYPES_FLAGS_::_UINT8_;
+}
+
+
+static bool decx::dsp::fft::check_type_matched_FFT(const de::_DATA_TYPES_FLAGS_ _type1,
+                                                   const de::_DATA_TYPES_FLAGS_ _type2)
+{
+    return (_type1 & 3) == (_type2 & 3);
+}
+
 
 #define FFT2D_BLOCK_SIZE 16
 

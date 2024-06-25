@@ -28,34 +28,34 @@ namespace fft {
         * @param dst2 : The pointer where the transposed data is stored.
         */
         static void load_entire_row_transpose_fp32_zip(const float* __restrict src_head_ptr, decx::utils::double_buffer_manager* __restrict _double_buffer,
-            const decx::dsp::fft::FKT1D_fp32* _tiles, const uint32_t _load_len_v4, const uint32_t _pitch_src, const decx::utils::unpitched_frac_mapping<uint32_t>* zip_info,
+            const decx::dsp::fft::FKT1D* _tiles, const uint32_t _load_len_v4, const uint32_t _pitch_src, const decx::utils::unpitched_frac_mapping<uint32_t>* zip_info,
             const uint32_t _start_dex, const uint8_t _load_H = 4);
 
 
         static void load_entire_row_transpose_u8_fp32_zip(const uint8_t* __restrict src_head_ptr, decx::utils::double_buffer_manager* __restrict _double_buffer,
-            const decx::dsp::fft::FKT1D_fp32* _tiles, const uint32_t _load_len_v4, const uint32_t _pitch_src, const decx::utils::unpitched_frac_mapping<uint32_t>* zip_info,
+            const decx::dsp::fft::FKT1D* _tiles, const uint32_t _load_len_v4, const uint32_t _pitch_src, const decx::utils::unpitched_frac_mapping<uint32_t>* zip_info,
             const uint32_t _start_dex, const uint8_t _load_H = 4);
 
 
         template <bool is_IFFT>
         static void load_entire_row_transpose_cplxf_zip(const de::CPf* __restrict src_head_ptr, decx::utils::double_buffer_manager* __restrict _double_buffer,
-            const decx::dsp::fft::FKT1D_fp32* _tiles, const uint32_t _load_len_v4, const uint32_t _pitch_src, const decx::utils::unpitched_frac_mapping<uint32_t>* zip_info,
+            const decx::dsp::fft::FKT1D* _tiles, const uint32_t _load_len_v4, const uint32_t _pitch_src, const decx::utils::unpitched_frac_mapping<uint32_t>* zip_info,
             const uint32_t _start_dex, const uint32_t signal_len, const uint8_t _load_H = 4);
 
 
         template <bool _conj>
         static void store_entire_row_transpose_cplxf_zip(decx::utils::double_buffer_manager* __restrict _double_buffer, de::CPf* __restrict dst_head_ptr,
-            const decx::dsp::fft::FKT1D_fp32* _tiles, const uint32_t _load_len_v4, const uint32_t _pitch_src, const decx::utils::unpitched_frac_mapping<uint32_t>* zip_info,
+            const decx::dsp::fft::FKT1D* _tiles, const uint32_t _load_len_v4, const uint32_t _pitch_src, const decx::utils::unpitched_frac_mapping<uint32_t>* zip_info,
             const uint32_t _start_dex, const uint8_t _load_H = 4);
 
 
         static void store_entire_row_transpose_cplxf_fp32_zip(decx::utils::double_buffer_manager* __restrict _double_buffer, float* __restrict dst_head_ptr,
-            const decx::dsp::fft::FKT1D_fp32* _tiles, const uint32_t _load_len_v4, const uint32_t _pitch_src, const decx::utils::unpitched_frac_mapping<uint32_t>* zip_info,
+            const decx::dsp::fft::FKT1D* _tiles, const uint32_t _load_len_v4, const uint32_t _pitch_src, const decx::utils::unpitched_frac_mapping<uint32_t>* zip_info,
             const uint32_t _start_dex, const uint8_t _load_H = 4);
 
 
         static void store_entire_row_transpose_cplxf_u8_zip(decx::utils::double_buffer_manager* __restrict _double_buffer, uint8_t* __restrict dst_head_ptr,
-            const decx::dsp::fft::FKT1D_fp32* _tiles, const uint32_t _load_len_v4, const uint32_t _pitch_src, const decx::utils::unpitched_frac_mapping<uint32_t>* zip_info,
+            const decx::dsp::fft::FKT1D* _tiles, const uint32_t _load_len_v4, const uint32_t _pitch_src, const decx::utils::unpitched_frac_mapping<uint32_t>* zip_info,
             const uint32_t _start_dex, const uint8_t _load_H = 4);
 
     }
@@ -67,7 +67,7 @@ namespace fft {
 static void decx::dsp::fft::CPUK::
 load_entire_row_transpose_fp32_zip(const float* __restrict src_head_ptr, 
                                    decx::utils::double_buffer_manager* __restrict _double_buffer,
-                                   const decx::dsp::fft::FKT1D_fp32*              _tiles, 
+                                   const decx::dsp::fft::FKT1D*              _tiles, 
                                    const uint32_t                                 _load_len_v4, 
                                    const uint32_t                                 _pitch_src, 
                                    const decx::utils::unpitched_frac_mapping<uint32_t>* zip_info,
@@ -108,7 +108,7 @@ load_entire_row_transpose_fp32_zip(const float* __restrict src_head_ptr,
 static void decx::dsp::fft::CPUK::
 load_entire_row_transpose_u8_fp32_zip(const uint8_t* __restrict src_head_ptr, 
                                    decx::utils::double_buffer_manager* __restrict _double_buffer,
-                                   const decx::dsp::fft::FKT1D_fp32*              _tiles, 
+                                   const decx::dsp::fft::FKT1D*              _tiles, 
                                    const uint32_t                                 _load_len_v4, 
                                    const uint32_t                                 _pitch_src, 
                                    const decx::utils::unpitched_frac_mapping<uint32_t>* zip_info,
@@ -153,7 +153,7 @@ load_entire_row_transpose_u8_fp32_zip(const uint8_t* __restrict src_head_ptr,
 template <bool _IFFT> static void decx::dsp::fft::CPUK::
 load_entire_row_transpose_cplxf_zip(const de::CPf* __restrict src_head_ptr, 
                                     decx::utils::double_buffer_manager* __restrict  _double_buffer,
-                                    const decx::dsp::fft::FKT1D_fp32*               _tiles, 
+                                    const decx::dsp::fft::FKT1D*               _tiles, 
                                     const uint32_t                                  _load_len_v4, 
                                     const uint32_t                                  _pitch_src, 
                                     const decx::utils::unpitched_frac_mapping<uint32_t>* zip_info,
@@ -199,7 +199,7 @@ load_entire_row_transpose_cplxf_zip(const de::CPf* __restrict src_head_ptr,
 template <bool _conj> static void
 decx::dsp::fft::CPUK::store_entire_row_transpose_cplxf_zip(decx::utils::double_buffer_manager* __restrict _double_buffer, 
                                                        de::CPf* __restrict dst_head_ptr,
-                                                       const decx::dsp::fft::FKT1D_fp32* _tiles,
+                                                       const decx::dsp::fft::FKT1D* _tiles,
                                                        const uint32_t _load_len_v4, 
                                                        const uint32_t _pitch_dst, 
                                                        const decx::utils::unpitched_frac_mapping<uint32_t>* zip_info,
@@ -247,7 +247,7 @@ decx::dsp::fft::CPUK::store_entire_row_transpose_cplxf_zip(decx::utils::double_b
 static void decx::dsp::fft::CPUK::
 store_entire_row_transpose_cplxf_fp32_zip(decx::utils::double_buffer_manager* __restrict _double_buffer, 
                                           float* __restrict dst_head_ptr,
-                                          const decx::dsp::fft::FKT1D_fp32* _tiles,
+                                          const decx::dsp::fft::FKT1D* _tiles,
                                           const uint32_t _load_len_v4, 
                                           const uint32_t _pitch_dst, 
                                           const decx::utils::unpitched_frac_mapping<uint32_t>* zip_info,
@@ -293,7 +293,7 @@ store_entire_row_transpose_cplxf_fp32_zip(decx::utils::double_buffer_manager* __
 static void decx::dsp::fft::CPUK::
 store_entire_row_transpose_cplxf_u8_zip(decx::utils::double_buffer_manager* __restrict _double_buffer, 
                                           uint8_t* __restrict dst_head_ptr,
-                                          const decx::dsp::fft::FKT1D_fp32* _tiles,
+                                          const decx::dsp::fft::FKT1D* _tiles,
                                           const uint32_t _load_len_v4, 
                                           const uint32_t _pitch_dst, 
                                           const decx::utils::unpitched_frac_mapping<uint32_t>* zip_info,

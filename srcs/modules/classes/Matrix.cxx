@@ -28,6 +28,8 @@ void decx::_matrix_layout::_attribute_assign(const de::_DATA_TYPES_FLAGS_ type, 
         {
         case 4:
             _alignment = _MATRIX_ALIGN_4B_;     break;
+        case 16:
+            _alignment = _MATRIX_ALIGN_16B_;     break;
         case 8:
             _alignment = _MATRIX_ALIGN_8B_;     break;
         case 2:
@@ -38,7 +40,7 @@ void decx::_matrix_layout::_attribute_assign(const de::_DATA_TYPES_FLAGS_ type, 
             break;
         }
     }
-    this->pitch = decx::utils::ceil<uint>(_width, _alignment) * _alignment;
+    this->pitch = decx::utils::align<uint>(_width, _alignment);
 }
 
 

@@ -14,10 +14,10 @@
 
 __global__ void 
 decx::dsp::fft::GPUK::cu_FFT2D_R5_1st_cplxd_R2C(const double* __restrict src, 
-                                                      double2* __restrict dst,
-                                                      const uint32_t _signal_len, 
-                                                      const uint32_t _pitchsrc, 
-                                                      const uint32_t _pitchdst)
+                                                double2* __restrict dst,
+                                                const uint32_t _signal_len, 
+                                                const uint32_t _pitchsrc, 
+                                                const uint32_t _pitchdst)
 {
     uint32_t tidx = threadIdx.x + blockIdx.x * blockDim.x;
     uint32_t tidy = threadIdx.y + blockIdx.y * blockDim.y;

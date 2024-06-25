@@ -19,13 +19,13 @@ namespace decx
     namespace blas {
         template <bool _ABC>
         void GEMM_fp32_caller(const float* A, const float* B, float* dst, const decx::_matrix_layout* layout_A,
-            const decx::_matrix_layout* layout_dst, const uint2 _arranged_B_dims, const decx::utils::frag_manager *f_mgrH,
+            const decx::_matrix_layout* layout_dst, const uint32_t Llen, const decx::utils::frag_manager *f_mgrH,
             const decx::blas::GEMM_blocking_config* _thread_configs, decx::utils::_thr_2D* t1D, const float* C = NULL);
 
 
         template <bool _ABC, bool _cplxf>
         void GEMM_64b_caller(const double* A, const double* B, double* dst, const decx::_matrix_layout* layout_A,
-            const decx::_matrix_layout* layout_dst, const uint2 _arranged_B_dims, const decx::utils::frag_manager* f_mgrH,
+            const decx::_matrix_layout* layout_dst, const uint32_t Llen, const decx::utils::frag_manager* f_mgrH,
             const decx::blas::GEMM_blocking_config* _thread_configs, decx::utils::_thr_2D* t1D, const double* C = NULL);
 
         template <bool _ABC>

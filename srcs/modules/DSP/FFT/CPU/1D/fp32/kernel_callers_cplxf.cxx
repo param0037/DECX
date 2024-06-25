@@ -107,7 +107,7 @@ decx::dsp::fft::CPUK::_FFT1D_caller_cplxf32_mid_C2C(const de::CPf* __restrict			
 template <bool _IFFT, typename _type_in> _THREAD_FUNCTION_ void
 decx::dsp::fft::CPUK::_FFT1D_smaller_1st_cplxf32(const _type_in* __restrict							src,
 												 de::CPf* __restrict								dst, 
-												 const decx::dsp::fft::FKT1D_fp32*					_tiles,
+												 const decx::dsp::fft::FKT1D*					_tiles,
 												 const uint64_t										_signal_length,
 												 const decx::dsp::fft::cpu_FFT1D_smaller<float>*	_FFT_info,
 												 const uint32_t										FFT_call_times,
@@ -177,19 +177,19 @@ decx::dsp::fft::CPUK::_FFT1D_smaller_1st_cplxf32(const _type_in* __restrict					
 }
 
 template _THREAD_FUNCTION_ void
-decx::dsp::fft::CPUK::_FFT1D_smaller_1st_cplxf32<true, float>(const float* __restrict, de::CPf* __restrict, const decx::dsp::fft::FKT1D_fp32*,
+decx::dsp::fft::CPUK::_FFT1D_smaller_1st_cplxf32<true, float>(const float* __restrict, de::CPf* __restrict, const decx::dsp::fft::FKT1D*,
 	const uint64_t, const decx::dsp::fft::cpu_FFT1D_smaller<float>*, const uint32_t, const uint32_t, const decx::dsp::fft::FIMT1D*);
 
 template _THREAD_FUNCTION_ void
-decx::dsp::fft::CPUK::_FFT1D_smaller_1st_cplxf32<true, de::CPf>(const de::CPf* __restrict, de::CPf* __restrict, const decx::dsp::fft::FKT1D_fp32*,
+decx::dsp::fft::CPUK::_FFT1D_smaller_1st_cplxf32<true, de::CPf>(const de::CPf* __restrict, de::CPf* __restrict, const decx::dsp::fft::FKT1D*,
 	const uint64_t, const decx::dsp::fft::cpu_FFT1D_smaller<float>*, const uint32_t, const uint32_t, const decx::dsp::fft::FIMT1D*);
 
 template _THREAD_FUNCTION_ void
-decx::dsp::fft::CPUK::_FFT1D_smaller_1st_cplxf32<false, float>(const float* __restrict, de::CPf* __restrict, const decx::dsp::fft::FKT1D_fp32*,
+decx::dsp::fft::CPUK::_FFT1D_smaller_1st_cplxf32<false, float>(const float* __restrict, de::CPf* __restrict, const decx::dsp::fft::FKT1D*,
 	const uint64_t, const decx::dsp::fft::cpu_FFT1D_smaller<float>*, const uint32_t, const uint32_t, const decx::dsp::fft::FIMT1D*);
 
 template _THREAD_FUNCTION_ void
-decx::dsp::fft::CPUK::_FFT1D_smaller_1st_cplxf32<false, de::CPf>(const de::CPf* __restrict, de::CPf* __restrict, const decx::dsp::fft::FKT1D_fp32*,
+decx::dsp::fft::CPUK::_FFT1D_smaller_1st_cplxf32<false, de::CPf>(const de::CPf* __restrict, de::CPf* __restrict, const decx::dsp::fft::FKT1D*,
 	const uint64_t, const decx::dsp::fft::cpu_FFT1D_smaller<float>*, const uint32_t, const uint32_t, const decx::dsp::fft::FIMT1D*);
 
 

@@ -15,7 +15,7 @@ template <typename _data_type>
 template <typename _type_out>
 void decx::dsp::fft::cpu_FFT3D_planner<_data_type>::plan_transpose_configs()
 {
-    new(&this->_transp_config_MC) decx::bp::_cpu_transpose_MK_config<8>(make_uint2(this->_signal_dims.x, this->_signal_dims.y),
+    /*new(&this->_transp_config_MC) decx::bp::_cpu_transpose_MK_config<8>(make_uint2(this->_signal_dims.x, this->_signal_dims.y),
         this->_concurrency,
         this->_signal_dims.z,
         this->_FFT_D._pitchdst * this->_signal_dims.y,
@@ -31,7 +31,7 @@ void decx::dsp::fft::cpu_FFT3D_planner<_data_type>::plan_transpose_configs()
         this->_concurrency);
 
     new(&this->_transp_config_back) decx::bp::_cpu_transpose_config<sizeof(_type_out)> (make_uint2(this->_signal_dims.z, this->_dst_layout->dp_x_wp),
-        this->_concurrency);
+        this->_concurrency);*/
 }
 
 template void decx::dsp::fft::cpu_FFT3D_planner<float>::plan_transpose_configs<double>();
@@ -175,12 +175,12 @@ decx::dsp::fft::cpu_FFT3D_planner<float>::get_subproc(const decx::dsp::fft::FFT_
 
 
 template <typename _data_type> const
-decx::dsp::fft::FKT1D_fp32* decx::dsp::fft::cpu_FFT3D_planner<_data_type>::get_tile_ptr(const uint32_t _id) const
+decx::dsp::fft::FKT1D* decx::dsp::fft::cpu_FFT3D_planner<_data_type>::get_tile_ptr(const uint32_t _id) const
 {
     return this->_tiles.get_const_ptr(_id);
 }
 
-template const decx::dsp::fft::FKT1D_fp32* decx::dsp::fft::cpu_FFT3D_planner<float>::get_tile_ptr(const uint32_t _id) const;
+template const decx::dsp::fft::FKT1D* decx::dsp::fft::cpu_FFT3D_planner<float>::get_tile_ptr(const uint32_t _id) const;
 
 
 template <typename _data_type>

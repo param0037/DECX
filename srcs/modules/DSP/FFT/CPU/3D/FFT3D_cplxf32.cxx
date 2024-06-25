@@ -28,12 +28,12 @@ void _CRSR_ decx::dsp::fft::cpu_FFT3D_planner<float>::Forward(decx::_Tensor* src
         decx::dsp::fft::FFT_directions::_FFT_AlongD);
 
     // Transpose multi-channel
-    decx::bp::transpose_MK_2x2_caller((double*)this->get_tmp1_ptr(), 
+    /*decx::bp::transpose_MK_2x2_caller((double*)this->get_tmp1_ptr(), 
         (double*)this->get_tmp2_ptr(),
         this->_FFT_D._pitchdst, 
         this->_FFT_W._pitchsrc, 
         &this->_transp_config_MC,
-        &t1D);
+        &t1D);*/
 
     // FFT along width
     decx::dsp::fft::_FFT3D_H_entire_rows_cplxf<de::CPf, false>((de::CPf*)this->get_tmp2_ptr(), 
@@ -43,20 +43,20 @@ void _CRSR_ decx::dsp::fft::cpu_FFT3D_planner<float>::Forward(decx::_Tensor* src
         decx::dsp::fft::FFT_directions::_FFT_AlongW);
 
     // Transpose multi-channel back
-    decx::bp::transpose_MK_2x2_caller((double*)this->get_tmp1_ptr(),
+    /*decx::bp::transpose_MK_2x2_caller((double*)this->get_tmp1_ptr(),
         (double*)this->get_tmp2_ptr(),
         this->_FFT_W._pitchdst,
         this->_FFT_D._pitchdst,
         &this->_transp_config_MC_back,
-        &t1D);
+        &t1D);*/
 
     // Transpose [DPxW, H] to [DH, DPXW]
-    decx::bp::transpose_2x2_caller((double*)this->get_tmp2_ptr(), 
+    /*decx::bp::transpose_2x2_caller((double*)this->get_tmp2_ptr(), 
                                    (double*)this->get_tmp1_ptr(),
                                    this->_FFT_D._pitchdst * src->Width(), 
                                    this->_FFT_H._pitchsrc, 
                                    &this->_transp_config, 
-                                   &t1D);
+                                   &t1D);*/
     
     decx::dsp::fft::_FFT3D_H_entire_rows_cplxf<de::CPf, true>((de::CPf*)this->get_tmp1_ptr(),
         (de::CPf*)this->get_tmp2_ptr(),
@@ -64,12 +64,12 @@ void _CRSR_ decx::dsp::fft::cpu_FFT3D_planner<float>::Forward(decx::_Tensor* src
         &t1D,
         decx::dsp::fft::FFT_directions::_FFT_AlongH);
     
-    decx::bp::transpose_2x2_caller((double*)this->get_tmp2_ptr(),
+    /*decx::bp::transpose_2x2_caller((double*)this->get_tmp2_ptr(),
                                    (double*)dst->Tens.ptr,
                                    this->_FFT_H._pitchdst, 
                                    dst->get_layout().dp_x_wp, 
                                    &this->_transp_config_back, 
-                                   &t1D);
+                                   &t1D);*/
 }
 
 template void _CRSR_ decx::dsp::fft::cpu_FFT3D_planner<float>::Forward<float>(decx::_Tensor*, decx::_Tensor*) const;
@@ -91,12 +91,12 @@ void _CRSR_ decx::dsp::fft::cpu_FFT3D_planner<float>::Inverse(decx::_Tensor* src
         decx::dsp::fft::FFT_directions::_FFT_AlongD);
 
     // Transpose multi-channel
-    decx::bp::transpose_MK_2x2_caller((double*)this->get_tmp1_ptr(), 
+    /*decx::bp::transpose_MK_2x2_caller((double*)this->get_tmp1_ptr(), 
         (double*)this->get_tmp2_ptr(),
         this->_FFT_D._pitchdst, 
         this->_FFT_W._pitchsrc, 
         &this->_transp_config_MC,
-        &t1D);
+        &t1D);*/
 
     // FFT along width
     decx::dsp::fft::_IFFT3D_H_entire_rows_cplxf<de::CPf>((de::CPf*)this->get_tmp2_ptr(), 
@@ -106,20 +106,20 @@ void _CRSR_ decx::dsp::fft::cpu_FFT3D_planner<float>::Inverse(decx::_Tensor* src
         decx::dsp::fft::FFT_directions::_FFT_AlongW);
 
     // Transpose multi-channel back
-    decx::bp::transpose_MK_2x2_caller((double*)this->get_tmp1_ptr(),
+    /*decx::bp::transpose_MK_2x2_caller((double*)this->get_tmp1_ptr(),
         (double*)this->get_tmp2_ptr(),
         this->_FFT_W._pitchdst,
         this->_FFT_D._pitchdst,
         &this->_transp_config_MC_back,
-        &t1D);
+        &t1D);*/
 
     // Transpose [DPxW, H] to [DH, DPXW]
-    decx::bp::transpose_2x2_caller((double*)this->get_tmp2_ptr(), 
+    /*decx::bp::transpose_2x2_caller((double*)this->get_tmp2_ptr(), 
                                    (double*)this->get_tmp1_ptr(),
                                    this->_FFT_D._pitchdst * src->Width(), 
                                    this->_FFT_H._pitchsrc, 
                                    &this->_transp_config, 
-                                   &t1D);
+                                   &t1D);*/
     
     decx::dsp::fft::_IFFT3D_H_entire_rows_cplxf<_type_out>((de::CPf*)this->get_tmp1_ptr(),
         (_type_out*)this->get_tmp2_ptr(),
@@ -127,10 +127,10 @@ void _CRSR_ decx::dsp::fft::cpu_FFT3D_planner<float>::Inverse(decx::_Tensor* src
         &t1D,
         decx::dsp::fft::FFT_directions::_FFT_AlongH);
 
-    decx::bp::_cpu_transpose_config<sizeof(_type_out)>* transp_config_back =
-        (decx::bp::_cpu_transpose_config<sizeof(_type_out)>*)(&this->_transp_config_back);
+    /*decx::bp::_cpu_transpose_config<sizeof(_type_out)>* transp_config_back =
+        (decx::bp::_cpu_transpose_config<sizeof(_type_out)>*)(&this->_transp_config_back);*/
     
-    if constexpr (std::is_same_v<_type_out, float>) {
+    /*if constexpr (std::is_same_v<_type_out, float>) {
         decx::bp::transpose_4x4_caller((float*)this->get_tmp2_ptr(),
                                        (float*)dst->Tens.ptr,
                                        this->_FFT_H._pitchdst, 
@@ -153,7 +153,7 @@ void _CRSR_ decx::dsp::fft::cpu_FFT3D_planner<float>::Inverse(decx::_Tensor* src
                                        dst->get_layout().dp_x_wp, 
                                        transp_config_back, 
                                        &t1D);
-    }
+    }*/
 }
 
 template void _CRSR_ decx::dsp::fft::cpu_FFT3D_planner<float>::Inverse<float>(decx::_Tensor*, decx::_Tensor*) const;

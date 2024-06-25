@@ -29,7 +29,7 @@ namespace CPUK
 {
 	_THREAD_CALL_ static void 
 	_1st_FFT1D_frag_transpose_v4_cplxf(decx::utils::double_buffer_manager*	_double_buffer,
-									   const decx::dsp::fft::FKT1D_fp32*	_tiles,
+									   const decx::dsp::fft::FKT1D*	_tiles,
 									   de::CPf* __restrict					dst,
 									   const uint32_t						_call_times,
 									   const uint32_t						FFT_call_times_v4,
@@ -62,7 +62,7 @@ namespace CPUK
 
 	_THREAD_CALL_ static void 
 	_1st_FFT1D_frag_transpose_v2_cplxd(decx::utils::double_buffer_manager*	_double_buffer,
-									   const decx::dsp::fft::FKT1D_fp32*	_tiles,
+									   const decx::dsp::fft::FKT1D*	_tiles,
 									   de::CPd* __restrict					dst,
 									   const uint32_t						_call_times,
 									   const uint32_t						FFT_call_times_v2,

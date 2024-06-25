@@ -100,7 +100,6 @@ decx::dsp::fft::GPUK::cu_FFT2_R2_1st_R2C_uc8_cplxf(const ushort* __restrict src,
 }
 
 
-
 template<bool _div> __global__ void 
 decx::dsp::fft::GPUK::cu_FFT2_R2_1st_C2C_cplxf(const float4* __restrict src,
                                                float4* __restrict dst,
@@ -258,8 +257,6 @@ decx::dsp::fft::GPUK::cu_FFT2_R2_C2R_cplxf_u8(const float4* __restrict src,
         dst[_FFT_domain_dex * _pitchdst_v2 + tidx] = make_uchar2(res._vf2.x, res._vf2.y);
     }
 }
-
-
 
 
 __global__ void 
