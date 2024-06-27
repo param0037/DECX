@@ -7,27 +7,28 @@ A fast linear algebra, computer vision, and mathematic library, based on CUDA an
 3. Computer vision (Including Edge detectors, color space transformation, filters, and so on)
 4. Neural Network components (Including convolution on the multi-channel array, executing functions including sigmoid(developing))
 
-# Warning
-## The project is recommended to be compiled using C++ 17 standard or above.
-
-# Changelog
-## Update 18/03/2024
-1. The samples are now available.
-
-# Upcoming optimizations
-1. Linear algebra mathematical functions, especially iterations (Jacob and GS method) for solving linear equations.
+# Supported Platforms
+1. Windows 7 or later, x86, 64bit.
+2. Ubuntu, x86, 64bit.
+3. Android that supports ARM64 CPUs.
 
 
-# How to build
-## 1. Windows
-   Open cmd under the project directory and enter ""build" or "build.cmd" to call the build manager script. Follow the instruction
-   of the script.
-## 2. Linux
-   Open cmd under the project directory and enter ""build.sh" to call the build manager script. Follow the instruction
-   of the script.
-## 3. Install
-    Configure the directory of the built binaries to your environmental variables. All the include headers are in ${project_dir}/APIs!
+# Make
+## Dependencies
+1. Nvidia CUDA toolkit with proper version.
+2. CMake v3.23 or later if using CMake.
+3. SDL2 and SDL_image.
+4. NDK, if building for Android ARM64 platform.
 
-# References
-[1] Duane Merrill, Michael Garland "Single-pass Parallel Prefix Scan with Decoupled Look-back" Tuesday, March 1, 2016
-   [Online] Available: https://research.nvidia.com/publication/2016-03_single-pass-parallel-prefix-scan-decoupled-look-back
+## 1. General x86 64bit Windows
+### (a) Using Visual Studio (VS)
+Clone this repository, open DECX_world.sln with VS. The version of VS should be 2019 or higher. In the window of VS project, right click on the solution, click build solution.
+
+### (b) Using CMake on Windows
+Follow the same steps described in section (a) until opening DECX_world.sln. Run cmd or powershell under the root path of the project. Run the build script build.cmd. Simply enter "build" and the script will print the instructions. Follow these instructions to build the project.
+
+## 2. General x86 Ubuntu
+Clone the project, enter the root path of the project. Then run the build script for Linux, which is build.sh. Simply enter "./build.sh" and follow the printed instructions to build the project.
+
+## 3. Android for ARM64 (aarch64)
+Follow the same steps described in section 3 before running the script. When performing cross compilation for Android ARM64, replace the directory where your NDK is installed for -DCMAKE_TOOLCHAIN_FILE at line 10 of config_on_android.sh. Run "config_on_android.sh" and then run "build_on_android.sh". Please notice that only DECX_core_CPU supports aarch64. Additionally, its building system is just a prototype. Supports for aarch64 will be updated later.
