@@ -28,12 +28,24 @@ namespace blas {
         const decx::_matrix_layout* layout_dst, const uint32_t Llen, const decx::utils::frag_manager* f_mgrH,
         const decx::blas::GEMM_blocking_config* _thread_configs, decx::utils::_thr_2D* t1D, const double* C = NULL);
 
+
+    template <bool _ABC>
+    void GEMM_cplxd_caller(const de::CPd* A, const de::CPd* B, de::CPd* dst, const decx::_matrix_layout* layout_A,
+        const decx::_matrix_layout* layout_dst, const uint32_t Llen, const decx::utils::frag_manager* f_mgrH,
+        const decx::blas::GEMM_blocking_config* _thread_configs, decx::utils::_thr_2D* t1D, const de::CPd* C = NULL);
+
+
+
     template <bool _ABC>
     void GEMM_fp32(decx::_Matrix* A, decx::_Matrix* B, decx::_Matrix* dst, de::DH* handle, decx::_Matrix* C = NULL);
 
 
     template <bool _ABC, bool _cplxf>
     void GEMM_64b(decx::_Matrix* A, decx::_Matrix* B, decx::_Matrix* dst, de::DH* handle, decx::_Matrix* C = NULL);
+
+
+    template <bool _ABC>
+    void GEMM_cplxd(decx::_Matrix* A, decx::_Matrix* B, decx::_Matrix* dst, de::DH* handle, decx::_Matrix* C = NULL);
 
 
     namespace CPUK {

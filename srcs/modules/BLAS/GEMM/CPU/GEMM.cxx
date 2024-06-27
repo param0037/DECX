@@ -49,6 +49,10 @@ _DECX_API_ void de::blas::cpu::GEMM(de::Matrix& A, de::Matrix& B, de::Matrix& ds
         decx::blas::GEMM_64b<false, true>(_A, _B, _dst, de::GetLastError());
         break;
 
+    case de::_DATA_TYPES_FLAGS_::_COMPLEX_F64_:
+        decx::blas::GEMM_cplxd<false>(_A, _B, _dst, de::GetLastError());
+        break;
+
     default:
         break;
     }
@@ -77,6 +81,10 @@ _DECX_API_ void de::blas::cpu::GEMM(de::Matrix& A, de::Matrix& B, de::Matrix &C,
 
     case de::_DATA_TYPES_FLAGS_::_COMPLEX_F32_:
         decx::blas::GEMM_64b<true, true>(_A, _B, _dst, de::GetLastError(), _C);
+        break;
+
+    case de::_DATA_TYPES_FLAGS_::_COMPLEX_F64_:
+        decx::blas::GEMM_cplxd<true>(_A, _B, _dst, de::GetLastError(), _C);
         break;
 
     default:

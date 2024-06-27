@@ -100,6 +100,7 @@ namespace decx
     namespace blas {
         extern decx::ResourceHandle g_cpu_GEMM_fp32_planner;
         extern decx::ResourceHandle g_cpu_GEMM_64b_planner;
+        extern decx::ResourceHandle g_cpu_GEMM_cplxd_planner;
     }
 }
 

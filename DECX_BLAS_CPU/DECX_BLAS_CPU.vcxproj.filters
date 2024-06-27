@@ -121,6 +121,9 @@
     <Filter Include="源文件\GEMM\64b">
       <UniqueIdentifier>{69c19517-9c52-4dc3-a981-284d44816631}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\GEMM\cplxd">
+      <UniqueIdentifier>{f203b96e-f1ca-4f86-9586-ad762fba69c9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\srcs\modules\basic_calculations\operators\Add_exec.cxx">
@@ -323,6 +326,12 @@
     </ClCompile>
     <ClCompile Include="..\srcs\modules\BLAS\GEMM\CPU\fp64\matrix_B_arrange_64b.cxx">
       <Filter>源文件\GEMM\64b</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\BLAS\GEMM\CPU\cplxd\matrix_B_arrange_cplxd.cxx">
+      <Filter>源文件\GEMM\cplxd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\BLAS\GEMM\CPU\cplxd\GEMM_cplxd_caller.cxx">
+      <Filter>源文件\GEMM\cplxd</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

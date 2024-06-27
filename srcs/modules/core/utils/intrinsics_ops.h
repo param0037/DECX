@@ -61,7 +61,12 @@ namespace simd
     }_mmv128;
 
 
-    typedef union __align__(32) xmm256_reg {
+    typedef union __align__(32) xmm256_reg 
+    {
+        float _arrf[8];
+        double _arrd[4];
+        uint64_t _arrull[4];
+
 #if defined(__x86_64__) || defined(__i386__)
         __m256 _vf;
         __m256d _vd;
@@ -69,15 +74,25 @@ namespace simd
 
         __m128 _vf2[2];
         __m128d _vd2[2];
+
+        /*__inline float read_fp32_0() {
+            return _mm256_cvtss_f32(this->_vf);
+        }
+
+        __inline double read_fp64_0() {
+            return _mm256_cvtsd_f64(this->_vd);
+        }
+
+        __inline float read_fp32_123(const int idx) {
+            return _mm_extract_ps(_mm256_castps256_ps128(this->_vf), idx);
+        }*/
+
 #elif defined(__aarch64__) || defined(__arm__)
         float32x4x2_t _vf;
         int32x4x2_t _vi;
         float64x2_t _vd;
         int8x16x2_t _vuc;
 #endif
-        float _arrf[8];
-        double _arrd[4];
-        uint64_t _arrull[4];
     }_mmv256;
 
 #if defined(__x86_64__) || defined(__i386__)

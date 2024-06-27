@@ -19,7 +19,6 @@
 decx::ResourceHandle decx::blas::g_cpu_GEMM_64b_planner;
 
 
-
 template <bool _ABC, bool _cplxf> void 
 decx::blas::GEMM_64b_caller(const double* A,                            const double* B, 
                             double* dst,                                const decx::_matrix_layout* layout_A,
