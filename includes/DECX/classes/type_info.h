@@ -20,18 +20,26 @@ namespace de
     enum _DATA_TYPES_FLAGS_
     {
         _VOID_              = 0,
-        _INT32_             = 1,
-        _FP32_              = 2,
-        _FP64_              = 3,
-        _FP16_              = 4,
-        _COMPLEX_F32_       = 5,
-        _COMPLEX_F64_       = 6,
-        _UINT8_             = 7,
-        _UCHAR3_            = 8,
-        _UCHAR4_            = 9,
-        _VECTOR3F_          = 10,
-        _VECTOR4F_          = 11,
-        _UINT64_            = 12
+
+        // FP32 and CPLXF : 0bxx01
+        _FP32_              = 0b0001,
+        _COMPLEX_F32_       = 0b0101,
+
+        _FP16_              = 0b0011,
+
+        // FP64 and CPLXD : 0bxx10
+        _FP64_              = 0b0010,
+        _COMPLEX_F64_       = 0b0110,
+
+        // Pixel related : 0bxx00
+        _UINT8_             = 0b1000,
+        _UCHAR4_            = 0b1100,
+
+        _INT32_             = 0b0100,
+        _UINT64_            = 0b0111,
+
+        _VECTOR3F_          = 0b1110,
+        _VECTOR4F_          = 0b1111
     };
 
     enum _DATA_FORMATS_

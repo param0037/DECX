@@ -49,6 +49,10 @@ namespace blas {
 
 
 		_DECX_API_ void GEMM(de::Matrix& A, de::Matrix& B, de::Matrix& C, de::Matrix& dst);
+
+
+		_DECX_API_ void Transpose(de::Matrix& src, de::Matrix& dst);
+
 	}
 
 	namespace cuda

@@ -62,19 +62,21 @@ namespace de
 namespace de
 {
     namespace cuda {
-        _DECX_API_ de::DH Transpose(de::GPU_Matrix& src, de::GPU_Matrix& dst);
+        //_DECX_API_ de::DH Transpose(de::GPU_Matrix& src, de::GPU_Matrix& dst);
 
 
-        _DECX_API_ de::DH Transpose(de::GPU_Vector& src, de::GPU_Vector& dst);
+        //_DECX_API_ de::DH Transpose(de::GPU_Vector& src, de::GPU_Vector& dst);
     }
 
     namespace cpu {
-        _DECX_API_ de::DH Transpose(de::Matrix& src, de::Matrix& dst);
+        /*_DECX_API_ de::DH Transpose(de::Matrix& src, de::Matrix& dst);
 
 
+        _DECX_API_ de::DH Histogram(de::Matrix& src, de::Vector& dst);*/
         _DECX_API_ de::DH Histogram(de::Matrix& src, de::Vector& dst);
     }
 }
+
 
 
 #endif
