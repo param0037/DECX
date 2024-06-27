@@ -55,7 +55,7 @@ private:
     void _CRSR_ _plan_for_B_arrangement(de::DH* handle);
 
 
-    void _plan_for_exectutors();
+    void _plan_for_exectutors(const bool _cplxf);
 
 public:
     cpu_GEMM_planner() {}
@@ -65,8 +65,8 @@ public:
         const decx::_matrix_layout* layout_B) const;
 
 
-    void _CRSR_ plan(const uint32_t concurrency, const decx::_matrix_layout* layout_A, 
-        const decx::_matrix_layout* layout_B, de::DH* handle);
+    void _CRSR_ plan(const uint32_t concurrency, const decx::_matrix_layout* layout_A,
+        const decx::_matrix_layout* layout_B, de::DH* handle, const bool _cplxf = false);
 
 
     static void _CRSR_ Validate(de::DH* handle, const decx::_matrix_layout* layout_A, const decx::_matrix_layout* layout_B,

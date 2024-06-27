@@ -16,25 +16,32 @@
 
 namespace decx
 {
-    namespace blas {
-        template <bool _ABC>
-        void GEMM_fp32_caller(const float* A, const float* B, float* dst, const decx::_matrix_layout* layout_A,
-            const decx::_matrix_layout* layout_dst, const uint32_t Llen, const decx::utils::frag_manager *f_mgrH,
-            const decx::blas::GEMM_blocking_config* _thread_configs, decx::utils::_thr_2D* t1D, const float* C = NULL);
+namespace blas {
+    template <bool _ABC>
+    void GEMM_fp32_caller(const float* A, const float* B, float* dst, const decx::_matrix_layout* layout_A,
+        const decx::_matrix_layout* layout_dst, const uint32_t Llen, const decx::utils::frag_manager *f_mgrH,
+        const decx::blas::GEMM_blocking_config* _thread_configs, decx::utils::_thr_2D* t1D, const float* C = NULL);
 
 
-        template <bool _ABC, bool _cplxf>
-        void GEMM_64b_caller(const double* A, const double* B, double* dst, const decx::_matrix_layout* layout_A,
-            const decx::_matrix_layout* layout_dst, const uint32_t Llen, const decx::utils::frag_manager* f_mgrH,
-            const decx::blas::GEMM_blocking_config* _thread_configs, decx::utils::_thr_2D* t1D, const double* C = NULL);
+    template <bool _ABC, bool _cplxf>
+    void GEMM_64b_caller(const double* A, const double* B, double* dst, const decx::_matrix_layout* layout_A,
+        const decx::_matrix_layout* layout_dst, const uint32_t Llen, const decx::utils::frag_manager* f_mgrH,
+        const decx::blas::GEMM_blocking_config* _thread_configs, decx::utils::_thr_2D* t1D, const double* C = NULL);
 
-        template <bool _ABC>
-        void GEMM_fp32(decx::_Matrix* A, decx::_Matrix* B, decx::_Matrix* dst, de::DH* handle, decx::_Matrix* C = NULL);
+    template <bool _ABC>
+    void GEMM_fp32(decx::_Matrix* A, decx::_Matrix* B, decx::_Matrix* dst, de::DH* handle, decx::_Matrix* C = NULL);
 
 
-        template <bool _ABC, bool _cplxf>
-        void GEMM_64b(decx::_Matrix* A, decx::_Matrix* B, decx::_Matrix* dst, de::DH* handle, decx::_Matrix* C = NULL);
+    template <bool _ABC, bool _cplxf>
+    void GEMM_64b(decx::_Matrix* A, decx::_Matrix* B, decx::_Matrix* dst, de::DH* handle, decx::_Matrix* C = NULL);
+
+
+    namespace CPUK {
+        typedef void 
+        (*GEMM_64b_kernel)(const double* __restrict, const double* __restrict, double* __restrict, 
+        const decx::blas::GEMM_blocking_config*, const uint32_t, const uint32_t, const uint32_t, const double* __restrict);
     }
+}
 }
 
 

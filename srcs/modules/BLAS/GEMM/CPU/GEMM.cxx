@@ -19,6 +19,7 @@ namespace de
         namespace cpu {
             _DECX_API_ void GEMM(de::Matrix& A, de::Matrix& B, de::Matrix& dst);
 
+
             _DECX_API_ void GEMM(de::Matrix& A, de::Matrix& B, de::Matrix& C, de::Matrix& dst);
         }
     }
@@ -75,7 +76,7 @@ _DECX_API_ void de::blas::cpu::GEMM(de::Matrix& A, de::Matrix& B, de::Matrix &C,
         break;
 
     case de::_DATA_TYPES_FLAGS_::_COMPLEX_F32_:
-        decx::blas::GEMM_64b<false, true>(_A, _B, _dst, de::GetLastError(), _C);
+        decx::blas::GEMM_64b<true, true>(_A, _B, _dst, de::GetLastError(), _C);
         break;
 
     default:

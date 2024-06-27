@@ -16,9 +16,9 @@
 //#define BH 32
 
 
-#define BL 32
+#define BL 64
 #define BW 2
-#define BH 32
+#define BH 8
 
 
 template <typename _data_type> void _CRSR_
@@ -63,7 +63,7 @@ template void _CRSR_ decx::blas::cpu_GEMM_planner<double>::_plan_for_B_arrangeme
 
 
 template <typename _data_type> void
-decx::blas::cpu_GEMM_planner<_data_type>::_plan_for_exectutors()
+decx::blas::cpu_GEMM_planner<_data_type>::_plan_for_exectutors(const bool _cplxf)
 {
     constexpr uint32_t _alignment = (32 / sizeof(_data_type));
 
@@ -75,11 +75,19 @@ decx::blas::cpu_GEMM_planner<_data_type>::_plan_for_exectutors()
     decx::utils::frag_manager_gen_Nx(this->_fmgr_WH_dst, 
                                      decx::utils::ceil<uint32_t>(this->_proc_dims_v1.x, _alignment), 
                                      this->_thread_dist_dst.x, 2);
-
-    decx::utils::frag_manager_gen(this->_fmgr_WH_dst + 1, 
-                                  this->_proc_dims_v1.y, 
-                                  this->_thread_dist_dst.y);
-
+    if (_cplxf) {
+        // If is for complex_f32, the height has to be configured by _Nx with N=2 
+        // for Strassen's algorithm on 2x2 matrix multiply.
+        decx::utils::frag_manager_gen_Nx(this->_fmgr_WH_dst + 1, 
+                                         this->_proc_dims_v1.y, 
+                                         this->_thread_dist_dst.y, 2);
+    }
+    else {
+        decx::utils::frag_manager_gen(this->_fmgr_WH_dst + 1, 
+                                      this->_proc_dims_v1.y, 
+                                      this->_thread_dist_dst.y);
+    }
+    
     for (uint32_t i = 0; i < this->_thread_dist_dst.y; ++i) 
     {
         uint2 proc_dims_v = make_uint2(this->_fmgr_WH_dst[0].frag_len, 
@@ -102,15 +110,16 @@ decx::blas::cpu_GEMM_planner<_data_type>::_plan_for_exectutors()
     }
 }
 
-template void decx::blas::cpu_GEMM_planner<float>::_plan_for_exectutors();
-template void decx::blas::cpu_GEMM_planner<double>::_plan_for_exectutors();
+template void decx::blas::cpu_GEMM_planner<float>::_plan_for_exectutors(const bool);
+template void decx::blas::cpu_GEMM_planner<double>::_plan_for_exectutors(const bool);
 
 
 template <typename _data_type> void _CRSR_ 
 decx::blas::cpu_GEMM_planner<_data_type>::plan(const uint32_t concurrency, 
                                           const decx::_matrix_layout* layout_A,
                                           const decx::_matrix_layout* layout_B, 
-                                          de::DH* handle)
+                                          de::DH* handle,
+                                          const bool _cplxf)
 {
     this->_concurrency = concurrency;
     this->_layout_A = layout_A;
@@ -123,14 +132,14 @@ decx::blas::cpu_GEMM_planner<_data_type>::plan(const uint32_t concurrency,
         return;
     }
 
-    this->_plan_for_exectutors();
+    this->_plan_for_exectutors(_cplxf);
 }
 
 template void _CRSR_ decx::blas::cpu_GEMM_planner<float>::plan(const uint32_t, const decx::_matrix_layout*,
-    const decx::_matrix_layout*, de::DH*);
+    const decx::_matrix_layout*, de::DH*, const bool);
 
 template void _CRSR_ decx::blas::cpu_GEMM_planner<double>::plan(const uint32_t, const decx::_matrix_layout*,
-    const decx::_matrix_layout*, de::DH*);
+    const decx::_matrix_layout*, de::DH*, const bool);
 
 
 template <typename _data_type>

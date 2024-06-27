@@ -29,11 +29,6 @@ namespace blas {
             float* __restrict dst, const uint32_t _linear, const bool _first = false, const float* __restrict C = NULL);
 
 
-        template <bool dual_lane, bool _ABC>
-        static _THREAD_CALL_ void GEMM_fp32_dp_kernel(const float* __restrict A_line, const float* __restrict B_lane,
-            float* __restrict dst, const decx::utils::frag_manager* _fmgr_L, const float* __restrict C = NULL);
-
-
         /*
         * The layout of dst and C should be completely consistant. Normally it will be, by the definition of GEMM.
         */
@@ -189,39 +184,6 @@ GEMM_fp32_dp_kernel_frag_dual(const float* __restrict A_line,
 
 
 
-template <bool dual_lane, bool _ABC>
-static _THREAD_CALL_ void
-decx::blas::CPUK::GEMM_fp32_dp_kernel(const float* __restrict A_line, 
-                                      const float* __restrict B_lane,
-                                      float* __restrict dst, 
-                                      const decx::utils::frag_manager* _fmgr_L,
-                                      const float* __restrict C)
-{
-    uint32_t A_dex = 0, B_dex = 0;
-
-    for (uint32_t i = 0; i < _fmgr_L->frag_num - 1; ++i) {
-        if constexpr (dual_lane) {
-            decx::blas::CPUK::GEMM_fp32_dp_kernel_frag_dual<_ABC>(A_line + A_dex, B_lane + B_dex, dst, _fmgr_L->frag_len, 
-                i == 0, C);
-        }
-        else {
-            decx::blas::CPUK::GEMM_fp32_dp_kernel_frag<_ABC>(A_line + A_dex, B_lane + B_dex, dst, _fmgr_L->frag_len, i == 0,
-                C);
-        }
-        A_dex += _fmgr_L->frag_len;
-        B_dex += _fmgr_L->frag_len * 16;
-    }
-    if constexpr (dual_lane) {
-        decx::blas::CPUK::GEMM_fp32_dp_kernel_frag_dual<_ABC>(A_line + A_dex, B_lane + B_dex, dst, _fmgr_L->last_frag_len,
-            _fmgr_L->frag_num - 1 == 0, C);
-    }
-    else {
-        decx::blas::CPUK::GEMM_fp32_dp_kernel_frag<_ABC>(A_line + A_dex, B_lane + B_dex, dst, _fmgr_L->last_frag_len,
-            _fmgr_L->frag_num - 1 == 0, C);
-    }
-}
-
-
 template <bool _ABC>
 static _THREAD_FUNCTION_ void 
 decx::blas::CPUK::GEMM_fp32_block_kernel(const float* __restrict    A,
@@ -236,22 +198,31 @@ decx::blas::CPUK::GEMM_fp32_block_kernel(const float* __restrict    A,
 {
     uint64_t A_dex = 0, B_dex = 0, dst_dex = 0;
     
-    for (uint32_t i = 0; i < proc_dims_v8.y; ++i) {
-        B_dex = 0;
-        dst_dex = i * pitchdst_v1;
-        for (uint32_t j = 0; j < proc_dims_v8.x / 2; ++j) {
-            decx::blas::CPUK::GEMM_fp32_dp_kernel<true, _ABC>(A + A_dex, B + B_dex, dst + dst_dex, fmgrL, C + dst_dex);
-            B_dex += Llen * 16;
-            dst_dex += 16;
+    for (uint32_t k = 0; k < fmgrL->frag_num; ++k) 
+    {
+        const uint32_t _L_frag = k == fmgrL->frag_num - 1 ? fmgrL->last_frag_len : fmgrL->frag_len;
+        A_dex = fmgrL->frag_len * k;
+
+        for (uint32_t i = 0; i < proc_dims_v8.y; ++i) {
+            B_dex = fmgrL->frag_len * k * 16;
+            dst_dex = i * pitchdst_v1;
+            for (uint32_t j = 0; j < proc_dims_v8.x / 2; ++j) {
+                decx::blas::CPUK::GEMM_fp32_dp_kernel_frag_dual<_ABC>(A + A_dex, B + B_dex, dst + dst_dex, _L_frag,
+                    k == 0, C);
+                B_dex += Llen * 16;
+                dst_dex += 16;
+            }
+            if (proc_dims_v8.x % 2) {
+                decx::blas::CPUK::GEMM_fp32_dp_kernel_frag<_ABC>(A + A_dex, B + B_dex, dst + dst_dex, _L_frag, k == 0,
+                    C);
+            }
+            A_dex += pitchA_v1;
         }
-        if (proc_dims_v8.x % 2) {
-            decx::blas::CPUK::GEMM_fp32_dp_kernel<false, _ABC>(A + A_dex, B + B_dex, dst + dst_dex, fmgrL, C + dst_dex);
-        }
-        A_dex += pitchA_v1;
     }
 }
 
 
+// Typically the processing sizes = [BW, BH]
 template <bool _ABC>
 static _THREAD_FUNCTION_ void 
 decx::blas::CPUK::GEMM_fp32_kernel(const float* __restrict                  A, 
@@ -265,30 +236,28 @@ decx::blas::CPUK::GEMM_fp32_kernel(const float* __restrict                  A,
 {
     uint64_t A_dex = 0, B_dex = 0, dst_dex = 0;
 
-    for (uint32_t i = 0; i < config->_fmgr_H.frag_num; ++i) 
+    for (uint32_t i = 0; i < config->_fmgr_W.frag_num; ++i) 
     {
-        B_dex = 0;      // To the origin when a new row begin
-        dst_dex = i * config->_fmgr_H.frag_len * pitchdst_v1;       // Targeted to the next row
+        B_dex = i * config->_fmgr_W.frag_len * Llen * 8;
+        A_dex = 0;
+        dst_dex = i * config->_fmgr_W.frag_len * 8;
 
-        uint2 proc_dims = make_uint2(config->_fmgr_W.frag_len,
-                                     i < config->_fmgr_H.frag_num - 1 ? 
-                                         config->_fmgr_H.frag_len : 
-                                         config->_fmgr_H.last_frag_len);
+        uint2 proc_dims = make_uint2(i < config->_fmgr_W.frag_num - 1 ? 
+                                     config->_fmgr_W.frag_len : config->_fmgr_W.last_frag_len,
+                                     config->_fmgr_H.frag_len);
 
-        for (uint32_t j = 0; j < config->_fmgr_W.frag_num - 1; ++j) 
+        for (uint32_t j = 0; j < config->_fmgr_H.frag_num - 1; ++j) 
         {
             decx::blas::CPUK::GEMM_fp32_block_kernel<_ABC>(A + A_dex, B + B_dex, dst + dst_dex,
-                proc_dims, &config->_fmgr_L, pitchA_v1, Llen, pitchdst_v1, C + dst_dex);
+                        proc_dims, &config->_fmgr_L, pitchA_v1, Llen, pitchdst_v1, C + dst_dex);
 
-            B_dex += config->_fmgr_W.frag_len * Llen * 8;
-            dst_dex += config->_fmgr_W.frag_len * 8;
+            A_dex += config->_fmgr_H.frag_len * pitchA_v1;
+            dst_dex += config->_fmgr_H.frag_len * pitchdst_v1;
         }
 
-        proc_dims.x = config->_fmgr_W.last_frag_len;
+        proc_dims.y = config->_fmgr_H.last_frag_len;
         decx::blas::CPUK::GEMM_fp32_block_kernel<_ABC>(A + A_dex, B + B_dex, dst + dst_dex,
-            proc_dims, &config->_fmgr_L, pitchA_v1, Llen, pitchdst_v1, C + dst_dex);
-
-        A_dex += config->_fmgr_H.frag_len * pitchA_v1;
+                    proc_dims, &config->_fmgr_L, pitchA_v1, Llen, pitchdst_v1, C + dst_dex);
     }
 }
 

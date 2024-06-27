@@ -62,6 +62,17 @@ __host__ __device__
         inline static _Ty ceil(_Ty __deno, _Ty __numer) noexcept;
 
 
+template <typename _Ty>
+#ifdef _DECX_CUDA_PARTS_
+__host__ __device__
+#endif
+        /**
+        * @brief Only valid for positive int32_t, uint32_t, positive int64_t, and uint64_t;
+        */
+        constexpr
+        inline static _Ty fast_uint_ceil2(_Ty __src) noexcept;
+
+
         template <typename _Ty>
 #ifdef _DECX_CUDA_PARTS_
         __host__ __device__
@@ -158,6 +169,17 @@ constexpr
 inline static _Ty decx::utils::ceil(_Ty __deno, _Ty __numer) noexcept
 {
     return (__deno / __numer) + (_Ty)((bool)(__deno % __numer));
+}
+
+
+template <typename _Ty>
+#ifdef _DECX_CUDA_PARTS_
+__host__ __device__
+#endif
+constexpr
+inline static _Ty decx::utils::fast_uint_ceil2(_Ty __src) noexcept
+{
+    return ((__src >> 1) + (__src & 1));
 }
 
 

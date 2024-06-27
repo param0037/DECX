@@ -23,7 +23,7 @@ namespace decx
         void matrix_B_arrange_fp32(const float* src, float* dst, const uint32_t pitchsrc_v1,
             const uint32_t pitchdst_v8, const decx::utils::frag_manager* _fmgr_WH, decx::utils::_thr_2D* t2D);
 
-
+        template <bool _cplxf>
         void matrix_B_arrange_64b(const double* src, double* dst, const uint32_t pitchsrc_v1,
             const uint32_t pitchdst_v8, const decx::utils::frag_manager* _fmgr_WH, decx::utils::_thr_2D* t2D);
     }

@@ -12,6 +12,8 @@
 #include "../GEMM_callers.h"
 #include "../matrix_B_arrange.h"
 #include "GEMM_fp64_kernels.h"
+#include "GEMM_cplxf_kernels.h"
+//#include "_GEMM_cplxf_kernels.h"
 
 
 decx::ResourceHandle decx::blas::g_cpu_GEMM_64b_planner;
@@ -30,17 +32,27 @@ decx::blas::GEMM_64b_caller(const double* A,                            const do
     double* dst_loc = dst;
     const double* C_loc = C;
 
+    // Pointer of the kernels
+    decx::blas::CPUK::GEMM_64b_kernel _kernel_ptr = NULL;
+    if constexpr (_cplxf) {
+        _kernel_ptr = decx::blas::CPUK::GEMM_cplxf_kernel<_ABC>;
+    }
+    else {
+        _kernel_ptr = decx::blas::CPUK::GEMM_fp64_kernel<_ABC>;
+    }
+
     for (uint32_t i = 0; i < t2D->thread_h; ++i) 
     {
         B_loc = B;
         dst_loc = dst + i * layout_dst->pitch * f_mgrWH[1].frag_len;
+        C_loc = C + i * layout_dst->pitch * f_mgrWH[1].frag_len;
 
         for (uint32_t j = 0; j < t2D->thread_w - 1; ++j) 
         {
             const auto* conf_ptr = &_thread_configs[t2D->thread_w * i + j];
 
             t2D->_async_thread[t2D->thread_w * i + j] = decx::cpu::register_task_default(
-                decx::blas::CPUK::GEMM_fp64_kernel<_ABC>, A_loc, B_loc, dst_loc, conf_ptr,
+                _kernel_ptr, A_loc, B_loc, dst_loc, conf_ptr,
                 layout_A->pitch, conf_ptr->_fmgr_L.total, layout_dst->pitch, C_loc);
 
             B_loc += f_mgrWH[0].frag_len * Llen * 4;
@@ -50,8 +62,8 @@ decx::blas::GEMM_64b_caller(const double* A,                            const do
 
         const auto* conf_ptr = &_thread_configs[t2D->thread_w * (i + 1) - 1];
 
-        t2D->_async_thread[t2D->thread_w * (i+1) - 1] = decx::cpu::register_task_default(
-            decx::blas::CPUK::GEMM_fp64_kernel<_ABC>, A_loc, B_loc, dst_loc, conf_ptr,
+        t2D->_async_thread[t2D->thread_w * (i + 1) - 1] = decx::cpu::register_task_default(
+            _kernel_ptr, A_loc, B_loc, dst_loc, conf_ptr,
             layout_A->pitch, conf_ptr->_fmgr_L.total, layout_dst->pitch, C_loc);
 
         A_loc += f_mgrWH[1].frag_len * layout_A->pitch;
@@ -83,7 +95,7 @@ void decx::blas::cpu_GEMM_planner<double>::Run(decx::_Matrix* A, decx::_Matrix* 
     decx::utils::_thread_arrange_2D* t2D)
 {
     // Arrange matrix B
-    decx::blas::matrix_B_arrange_64b((double*)B->Mat.ptr, 
+    decx::blas::matrix_B_arrange_64b<_cplxf>((double*)B->Mat.ptr, 
         (double*)this->_arranged_B._ptr.ptr,
         B->Pitch(), 
         B->Height(), this->_fmgr_WH_B, t2D);
@@ -109,7 +121,7 @@ void decx::blas::cpu_GEMM_planner<double>::Run(decx::_Matrix* A, decx::_Matrix* 
     decx::utils::_thread_arrange_2D* t2D)
 {
     // Arrange matrix B
-    decx::blas::matrix_B_arrange_64b((double*)B->Mat.ptr,
+    decx::blas::matrix_B_arrange_64b<_cplxf>((double*)B->Mat.ptr,
         (double*)this->_arranged_B._ptr.ptr,
         B->Pitch(),
         B->Height(), this->_fmgr_WH_B, t2D);
