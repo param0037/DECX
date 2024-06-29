@@ -16,7 +16,7 @@
 //#define BH 32
 
 
-#define BL 64
+#define BL 128
 #define BW 2
 #define BH 8
 

@@ -479,11 +479,6 @@ decx::blas::CPUK::GEMM_cplxd_block_kernel(const de::CPd* __restrict A,          
             
             dst_dex += 4;
         }
-        // if (proc_dims_v2.x & 1) {
-        //     __m256d reg = _mm256_load_pd(dst + dst_dex);
-        //     reg = _mm256_permute4x64_pd(reg, 0b11011000);
-        //     _mm256_store_pd(dst + dst_dex, reg);
-        // }
     }
 }
 
