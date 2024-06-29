@@ -129,7 +129,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;_DECX_CPU_PARTS_;_DECX_NN_CPU_;_C_EXPORT_ENABLED_=1;_CPP_EXPORT_ENABLED_=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;_DECX_CPU_PARTS_;_DECX_NN_CPU_;_C_EXPORT_ENABLED_=1;_CPP_EXPORT_ENABLED_=1;__x86_64__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
@@ -141,14 +141,6 @@
       <AdditionalDependencies>DECX_core_CPU.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="..\srcs\modules\NN\convolution\CPU\fp32\conv2_im2row_BC_fp32.cxx" />
-    <ClCompile Include="..\srcs\modules\NN\convolution\CPU\fp32\conv2_im2row_fp32.cxx" />
-    <ClCompile Include="..\srcs\modules\NN\convolution\CPU\fp32\conv2_im2row_NB_fp32.cxx" />
-    <ClCompile Include="..\srcs\modules\NN\convolution\CPU\fp32\im2row_caller_fp32.cxx" />
-    <ClCompile Include="..\srcs\modules\NN\convolution\CPU\fp32\im2row_eq_GEMM_fp32.cxx" />
-    <ClCompile Include="..\srcs\modules\NN\convolution\CPU\im2row.cxx" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

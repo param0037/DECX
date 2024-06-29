@@ -1,11 +1,31 @@
 /**
-*   ---------------------------------------------------------------------
+*   ----------------------------------------------------------------------------------
 *   Author : Wayne Anderson
 *   Date   : 2021.04.16
-*   ---------------------------------------------------------------------
-*   This is a part of the open source program named "DECX", copyright c Wayne,
-*   2021.04.16, all right reserved.
-*   More information please visit https://github.com/param0037/DECX
+*   ----------------------------------------------------------------------------------
+* 
+* This is a part of the open source project named "DECX", a high-performance scientific
+* computational library. This project follows the MIT License. For more information 
+* please visit https://github.com/param0037/DECX.
+* 
+* Copyright (c) 2021 Wayne Anderson
+* 
+* Permission is hereby granted, free of charge, to any person obtaining a copy of this 
+* software and associated documentation files (the "Software"), to deal in the Software 
+* without restriction, including without limitation the rights to use, copy, modify, 
+* merge, publish, distribute, sublicense, and/or sell copies of the Software, and to 
+* permit persons to whom the Software is furnished to do so, subject to the following 
+* conditions:
+* 
+* The above copyright notice and this permission notice shall be included in all copies 
+* or substantial portions of the Software.
+* 
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
+* INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR 
+* PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE 
+* FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR 
+* OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+* DEALINGS IN THE SOFTWARE.
 */
 
 
@@ -13,34 +33,34 @@
 
 
 namespace decx{
-    namespace vis {
-        namespace CPUK
-        {
-            // *** ATTENTION *** ! -> In this model, kernel should be stored linearly (pitch = width)
-            /*
-            * In this model, we only pay attention to the width of kernel, regardless its height
-            * Since only the kernel width affects the behaviours during loading data from src matrix
-            */
+namespace vis {
+    namespace CPUK
+    {
+        // *** ATTENTION *** ! -> In this model, kernel should be stored linearly (pitch = width)
+        /*
+        * In this model, we only pay attention to the width of kernel, regardless its height
+        * Since only the kernel width affects the behaviours during loading data from src matrix
+        */
 
-            //static _THREAD_CALL_ void _bilateral_calc_v16(const float* _exp_chart_dist, const float* _exp_chart_diff, const __m256i _I_u16_v16,
-            //    const __m128i _proc_reg, const uint32_t i, const uint32_t _Y, const uint2 ker_dims, decx::conv::_v256_2f32* _accu_W,
-            //    decx::conv::_v256_2f32* _accumulator);
+        //static _THREAD_CALL_ void _bilateral_calc_v16(const float* _exp_chart_dist, const float* _exp_chart_diff, const __m256i _I_u16_v16,
+        //    const __m128i _proc_reg, const uint32_t i, const uint32_t _Y, const uint2 ker_dims, decx::conv::_v256_2f32* _accu_W,
+        //    decx::conv::_v256_2f32* _accumulator);
 
-            /*
-            * @param Wsrc : width of src matrix, in double (1 double = 8 uint8_t)
-            * @param Wdst : width of dst matrix, in float
-            */
-            static _THREAD_CALL_
-                decx::conv::_v256_2f32 _bilateral_uint8_f32_loop_in_kernel(const double* src, const float* _exp_chart_dist, const float* _exp_chart_diff,
-                    const uint2 ker_dims, const ushort reg_WL, const uint64_t Wsrc, const uint32_t _loop);
+        /*
+        * @param Wsrc : width of src matrix, in double (1 double = 8 uint8_t)
+        * @param Wdst : width of dst matrix, in float
+        */
+        static _THREAD_CALL_ decx::conv::_v256_2f32 
+        _bilateral_uint8_f32_loop_in_kernel(const double* src, const float* _exp_chart_dist, const float* _exp_chart_diff,
+            const uint2 ker_dims, const ushort reg_WL, const uint64_t Wsrc, const uint32_t _loop);
 
 
 
-            static _THREAD_CALL_ decx::conv::_v256_2f32
-                _bilateral_uchar4_f32_loop_in_kernel(const float* src, const float* _exp_chart_dist, const float* _exp_chart_diff,
-                    const uint2 ker_dims, const ushort reg_WL, const uint64_t Wsrc, const uint32_t _loop);
-        }
+        static _THREAD_CALL_ decx::conv::_v256_2f32
+        _bilateral_uchar4_f32_loop_in_kernel(const float* src, const float* _exp_chart_dist, const float* _exp_chart_diff,
+            const uint2 ker_dims, const ushort reg_WL, const uint64_t Wsrc, const uint32_t _loop);
     }
+}
 }
 
 
@@ -48,28 +68,28 @@ namespace decx{
 
 namespace decx
 {
-    namespace vis {
-        namespace CPUK
-        {
-            static _THREAD_CALL_ void _bilateral_rect_fixed_uint8_ST(const double* src, const float* _exp_vals_dist, const float* _exp_chart_diff, double* dst,
-                const uint2 ker_dims, const uint32_t Wsrc, const uint32_t Wdst, const ushort reg_WL, const uint32_t _loop);
+namespace vis {
+    namespace CPUK
+    {
+        static _THREAD_CALL_ void _bilateral_rect_fixed_uint8_ST(const double* src, const float* _exp_vals_dist, const float* _exp_chart_diff, double* dst,
+            const uint2 ker_dims, const uint32_t Wsrc, const uint32_t Wdst, const ushort reg_WL, const uint32_t _loop);
 
 
 
-            static _THREAD_CALL_ void _bilateral_rect_flex_uint8_ST(const double* src, const float* _exp_vals_dist, const float* _exp_chart_diff, double* dst,
-                const uint2 proc_dim, const uint2 ker_dims, const uint32_t Wsrc, const uint32_t Wdst, const ushort reg_WL, const uint32_t _loop);
+        static _THREAD_CALL_ void _bilateral_rect_flex_uint8_ST(const double* src, const float* _exp_vals_dist, const float* _exp_chart_diff, double* dst,
+            const uint2 proc_dim, const uint2 ker_dims, const uint32_t Wsrc, const uint32_t Wdst, const ushort reg_WL, const uint32_t _loop);
 
 
 
-            static _THREAD_CALL_ void _bilateral_rect_fixed_uchar4_ST(const float* src, const float* _exp_vals_dist, const float* _exp_chart_diff, float* dst,
-                const uint2 ker_dims, const uint32_t Wsrc, const uint32_t Wdst, const ushort reg_WL, const uint32_t _loop);
+        static _THREAD_CALL_ void _bilateral_rect_fixed_uchar4_ST(const float* src, const float* _exp_vals_dist, const float* _exp_chart_diff, float* dst,
+            const uint2 ker_dims, const uint32_t Wsrc, const uint32_t Wdst, const ushort reg_WL, const uint32_t _loop);
 
 
 
-            static _THREAD_CALL_ void _bilateral_rect_flex_uchar4_ST(const float* src, const float* _exp_vals_dist, const float* _exp_chart_diff, float* dst,
-                const uint2 proc_dim, const uint2 ker_dims, const uint32_t Wsrc, const uint32_t Wdst, const ushort reg_WL, const uint32_t _loop);
-        }
+        static _THREAD_CALL_ void _bilateral_rect_flex_uchar4_ST(const float* src, const float* _exp_vals_dist, const float* _exp_chart_diff, float* dst,
+            const uint2 proc_dim, const uint2 ker_dims, const uint32_t Wsrc, const uint32_t Wdst, const ushort reg_WL, const uint32_t _loop);
     }
+}
 }
 
 

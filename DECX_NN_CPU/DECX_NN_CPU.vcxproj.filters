@@ -13,31 +13,5 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="源文件\convolution">
-      <UniqueIdentifier>{720982c3-00a1-4e07-848b-28ea4a0ce9fc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\convolution\fp32">
-      <UniqueIdentifier>{2944426e-48f7-47ea-97ba-06257205f47b}</UniqueIdentifier>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\srcs\modules\NN\convolution\CPU\im2row.cxx">
-      <Filter>源文件\convolution</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\NN\convolution\CPU\fp32\conv2_im2row_BC_fp32.cxx">
-      <Filter>源文件\convolution\fp32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\NN\convolution\CPU\fp32\conv2_im2row_fp32.cxx">
-      <Filter>源文件\convolution\fp32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\NN\convolution\CPU\fp32\conv2_im2row_NB_fp32.cxx">
-      <Filter>源文件\convolution\fp32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\NN\convolution\CPU\fp32\im2row_eq_GEMM_fp32.cxx">
-      <Filter>源文件\convolution\fp32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\NN\convolution\CPU\fp32\im2row_caller_fp32.cxx">
-      <Filter>源文件\convolution\fp32</Filter>
-    </ClCompile>
   </ItemGroup>
 </Project>

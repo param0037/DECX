@@ -120,9 +120,6 @@
     <ClCompile Include="..\srcs\modules\DSP\convolution\CPU\sliding_window\fp64\conv2_fp64_NB_SK_exec.cxx">
       <Filter>源文件\convolution\sliding_window\fp64</Filter>
     </ClCompile>
-    <ClCompile Include="..\srcs\modules\DSP\convolution\CPU\sliding_window\uint8\conv2_uint8_BC_SK_exec.cxx">
-      <Filter>源文件\convolution\sliding_window\uint8</Filter>
-    </ClCompile>
     <ClCompile Include="..\srcs\modules\DSP\convolution\CPU\sliding_window\uint8\conv2_uint8_exec.cxx">
       <Filter>源文件\convolution\sliding_window\uint8</Filter>
     </ClCompile>
