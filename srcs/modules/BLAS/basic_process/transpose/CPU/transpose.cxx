@@ -134,7 +134,7 @@ static void decx::blas::Transpose_16b(decx::_Matrix* src, decx::_Matrix* dst, de
     }
 
     decx::utils::_thread_arrange_1D t1D(_conc);
-    _planner->transpose_16b_caller((double*)src->Mat.ptr, (double*)dst->Mat.ptr, src->Pitch(), dst->Pitch(), &t1D);
+    _planner->transpose_16b_caller((de::CPd*)src->Mat.ptr, (de::CPd*)dst->Mat.ptr, src->Pitch(), dst->Pitch(), &t1D);
 
     decx::blas::g_cpu_transpose_16b_config.unlock();
 }

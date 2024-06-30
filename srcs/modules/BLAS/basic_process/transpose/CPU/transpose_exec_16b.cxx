@@ -55,8 +55,12 @@ namespace blas {
             const uint32_t pitchdst_v1);
 
         
-        _THREAD_FUNCTION_ static void transpose_16b_kernel(const double* src, double* dst, const decx::utils::_blocking2D_fmgrs* proc_dims_v4, 
-            const uint32_t Wsrc_v8, const uint32_t Wdst_v1);
+        _THREAD_FUNCTION_ static void transpose_16b_kernel(const de::CPd* src, de::CPd* dst, const decx::utils::_blocking2D_fmgrs* proc_dims_v2, 
+            const uint32_t pitchsrc_v1, const uint32_t pitchdst_v1);
+
+
+        _THREAD_FUNCTION_ static void transpose_16b_kernel_MC(const de::CPd* src, de::CPd* dst, const decx::utils::_blocking2D_fmgrs* proc_dims_v2,
+            const uint32_t pitchsrc_v1, const uint32_t pitchdst_v1, const uint32_t ch_num, const uint64_t gch_src_v1, const uint64_t gch_dst_v1);
     }
 }
 }
@@ -152,8 +156,8 @@ transpose_block_16b(const double* __restrict   src,
 
 
 _THREAD_FUNCTION_ static void decx::blas::CPUK::
-transpose_16b_kernel(const double* __restrict                src, 
-                     double* __restrict                      dst, 
+transpose_16b_kernel(const de::CPd* __restrict                src, 
+                     de::CPd* __restrict                      dst, 
                      const decx::utils::_blocking2D_fmgrs*  proc_dims_config,
                      const uint32_t                         pitchsrc_v1, 
                      const uint32_t                         pitchdst_v1)
@@ -162,8 +166,8 @@ transpose_16b_kernel(const double* __restrict                src,
 
     for (uint32_t i = 0; i < proc_dims_config->_fmgrH.frag_num; ++i) 
     {
-        dex_src = i * (proc_dims_config->_fmgrH.frag_len) * pitchsrc_v1 * 2;
-        dex_dst = i * (proc_dims_config->_fmgrH.frag_len * 2);
+        dex_src = i * (proc_dims_config->_fmgrH.frag_len) * pitchsrc_v1;
+        dex_dst = i * (proc_dims_config->_fmgrH.frag_len);
 
         uint2 proc_dims = make_uint2(proc_dims_config->_fmgrW.frag_len,
                                         i < proc_dims_config->_fmgrH.frag_num - 1 ?
@@ -171,30 +175,76 @@ transpose_16b_kernel(const double* __restrict                src,
                                         proc_dims_config->_fmgrH.last_frag_len);
 
         for (uint32_t j = 0; j < proc_dims_config->_fmgrW.frag_num - 1; ++j) {
-            decx::blas::CPUK::transpose_block_16b(src + dex_src, dst + dex_dst,
+            decx::blas::CPUK::transpose_block_16b((double*)(src + dex_src), (double*)(dst + dex_dst),
                 proc_dims, pitchsrc_v1, pitchdst_v1);
 
-            dex_src += proc_dims_config->_fmgrW.frag_len * 2;
-            dex_dst += (proc_dims_config->_fmgrW.frag_len * pitchdst_v1 * 2);
+            dex_src += proc_dims_config->_fmgrW.frag_len;
+            dex_dst += (proc_dims_config->_fmgrW.frag_len * pitchdst_v1);
         }
         proc_dims.x = proc_dims_config->_fmgrW.last_frag_len;
-        decx::blas::CPUK::transpose_block_16b(src + dex_src, dst + dex_dst,
+        decx::blas::CPUK::transpose_block_16b((double*)(src + dex_src), (double*)(dst + dex_dst),
             proc_dims, pitchsrc_v1, pitchdst_v1);
     }
 }
 
 
 
-void decx::blas::_cpu_transpose_config::transpose_16b_caller(const double* src, double* dst,
-    const uint32_t pitchsrc_v1, const uint32_t pitchdst_v1, decx::utils::_thread_arrange_1D* t1D) const
+_THREAD_FUNCTION_ static void decx::blas::CPUK::
+transpose_16b_kernel_MC(const de::CPd* __restrict                src, 
+                     de::CPd* __restrict                      dst, 
+                     const decx::utils::_blocking2D_fmgrs*  proc_dims_config,
+                     const uint32_t                         pitchsrc_v1, 
+                     const uint32_t                         pitchdst_v1,
+                     const uint32_t                         ch_num,
+                     const uint64_t                         gch_src_v1,
+                     const uint64_t                         gch_dst_v1)
 {
-    const double* src_loc = src;
-    double* dst_loc = dst;
+    uint64_t dex_src = 0, dex_dst = 0;
+    uint64_t base_src = 0, base_dst = 0;
+
+    for (uint32_t k = 0; k < ch_num; ++k) {
+        for (uint32_t i = 0; i < proc_dims_config->_fmgrH.frag_num; ++i) 
+        {
+            dex_src = base_src + i * (proc_dims_config->_fmgrH.frag_len) * pitchsrc_v1;
+            dex_dst = base_dst + i * (proc_dims_config->_fmgrH.frag_len );
+
+            uint2 proc_dims = make_uint2(proc_dims_config->_fmgrW.frag_len,
+                                            i < proc_dims_config->_fmgrH.frag_num - 1 ?
+                                            proc_dims_config->_fmgrH.frag_len : 
+                                            proc_dims_config->_fmgrH.last_frag_len);
+
+            for (uint32_t j = 0; j < proc_dims_config->_fmgrW.frag_num - 1; ++j) {
+                decx::blas::CPUK::transpose_block_16b((double*)(src + dex_src), 
+                    (double*)(dst + dex_dst), proc_dims, pitchsrc_v1, pitchdst_v1);
+
+                dex_src += proc_dims_config->_fmgrW.frag_len;
+                dex_dst += (proc_dims_config->_fmgrW.frag_len * pitchdst_v1);
+            }
+            proc_dims.x = proc_dims_config->_fmgrW.last_frag_len;
+            decx::blas::CPUK::transpose_block_16b((double*)(src + dex_src), 
+                (double*)(dst + dex_dst), proc_dims, pitchsrc_v1, pitchdst_v1);
+        }
+        base_src += gch_src_v1;
+        base_dst += gch_dst_v1;
+    }
+}
+
+
+
+void decx::blas::_cpu_transpose_config::
+transpose_16b_caller(const de::CPd* src, 
+                     de::CPd* dst,
+                     const uint32_t pitchsrc_v1, 
+                     const uint32_t pitchdst_v1, 
+                     decx::utils::_thread_arrange_1D* t1D) const
+{
+    const de::CPd* src_loc = src;
+    de::CPd* dst_loc = dst;
 
     for (uint32_t i = 0; i < this->_thread_dist2D.y; ++i)
     {
-        src_loc = src + i * this->_fmgr_H.frag_len * pitchsrc_v1 * 2;
-        dst_loc = dst + i * this->_fmgr_H.frag_len * 2;
+        src_loc = src + i * this->_fmgr_H.frag_len * pitchsrc_v1;
+        dst_loc = dst + i * this->_fmgr_H.frag_len;
 
         for (uint32_t j = 0; j < this->_thread_dist2D.x; ++j)
         {
@@ -202,9 +252,79 @@ void decx::blas::_cpu_transpose_config::transpose_16b_caller(const double* src, 
                 decx::blas::CPUK::transpose_16b_kernel, src_loc, dst_loc,
                 &this->_blocking_configs.ptr[this->_thread_dist2D.x * i + j], pitchsrc_v1, pitchdst_v1);
 
-            src_loc += this->_fmgr_W.frag_len * 2;
-            dst_loc += this->_fmgr_W.frag_len * pitchdst_v1 * 2;
+            src_loc += this->_fmgr_W.frag_len;
+            dst_loc += this->_fmgr_W.frag_len * pitchdst_v1;
         }
     }
     t1D->__sync_all_threads();
 }
+
+
+void decx::blas::_cpu_transpose_config::
+transpose_16b_MC_caller(const de::CPd* src, 
+                     de::CPd* dst,
+                     const uint32_t pitchsrc_v1, 
+                     const uint32_t pitchdst_v1,
+                     const uint32_t ch_num, 
+                     const uint64_t gch_src_v1, 
+                     const uint64_t gch_dst_v1,
+                     decx::utils::_thread_arrange_1D* t1D) const
+{
+    const de::CPd* src_loc = src;
+    de::CPd* dst_loc = dst;
+
+    for (uint32_t i = 0; i < this->_thread_dist2D.y; ++i)
+    {
+        src_loc = src + i * this->_fmgr_H.frag_len * pitchsrc_v1;
+        dst_loc = dst + i * this->_fmgr_H.frag_len;
+
+        for (uint32_t j = 0; j < this->_thread_dist2D.x; ++j)
+        {
+            t1D->_async_thread[i * this->_thread_dist2D.x + j] = decx::cpu::register_task_default(
+                decx::blas::CPUK::transpose_16b_kernel_MC, src_loc, dst_loc,
+                &this->_blocking_configs.ptr[this->_thread_dist2D.x * i + j], 
+                pitchsrc_v1, pitchdst_v1, ch_num, gch_src_v1, gch_dst_v1);
+
+            src_loc += this->_fmgr_W.frag_len;
+            dst_loc += this->_fmgr_W.frag_len * pitchdst_v1;
+        }
+    }
+    t1D->__sync_all_threads();
+}
+
+
+
+void decx::blas::_cpu_transpose_MC_config::
+transpose_16b_caller(const de::CPd* src,              de::CPd* dst, 
+                    const uint32_t pitchsrc_v1,     const uint32_t pitchdst_v1, 
+                    decx::utils::_thread_arrange_1D* t1D) const
+{
+    if (this->_divide_ch) 
+    {
+        const uint32_t& _conc = this->_parallel_transp_config._concurrency;
+
+        const de::CPd* src_loc = src;
+        de::CPd* dst_loc = dst;
+        for (uint32_t i = 0; i < _conc - 1; ++i) 
+        {
+            t1D->_async_thread[i] = decx::cpu::register_task_default(
+                decx::blas::CPUK::transpose_16b_kernel_MC, src_loc, dst_loc,
+                &this->_blocking_conf, pitchsrc_v1, pitchdst_v1, 
+                this->_fmgr_ch.frag_len, this->_ch_gap_src, this->_ch_gap_dst);
+
+            src_loc += this->_fmgr_ch.frag_len * this->_ch_gap_src;
+            dst_loc += this->_fmgr_ch.frag_len * this->_ch_gap_dst;
+        }
+        t1D->_async_thread[_conc - 1] = decx::cpu::register_task_default(
+            decx::blas::CPUK::transpose_16b_kernel_MC, src_loc, dst_loc,
+            &this->_blocking_conf, pitchsrc_v1, pitchdst_v1,
+            this->_fmgr_ch.last_frag_len, this->_ch_gap_src, this->_ch_gap_dst);
+
+        t1D->__sync_all_threads();
+    }
+    else {
+        this->_parallel_transp_config.transpose_16b_MC_caller(src, dst, pitchsrc_v1, pitchdst_v1,
+            this->_channel_num, this->_ch_gap_src, this->_ch_gap_dst, t1D);
+    }
+}
+

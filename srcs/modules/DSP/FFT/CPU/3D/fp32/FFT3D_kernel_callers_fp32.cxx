@@ -46,7 +46,6 @@ _FFT3D_smaller_4rows_cplxf(const _type_in* __restrict src_head_ptr, de::CPf* __r
     decx::utils::double_buffer_manager _double_buffer(_tiles->get_tile1<void>(), _tiles->get_tile2<void>());
     decx::utils::frag_manager _f_mgr_H;
     decx::utils::frag_manager_gen_from_fragLen(&_f_mgr_H, _proc_H_r1, 4);
-    const uint32_t _L = _f_mgr_H.is_left ? _f_mgr_H.frag_left_over : 4;
     
     uint32_t start_dex_H = start_dex;
     
@@ -61,7 +60,7 @@ _FFT3D_smaller_4rows_cplxf(const _type_in* __restrict src_head_ptr, de::CPf* __r
             decx::dsp::fft::CPUK::load_entire_row_transpose_fp32_zip(src_head_ptr,  &_double_buffer,
                                                                      _tiles,        decx::utils::ceil<uint32_t>(_FFT_info->_FFT_info.get_signal_len(), 4),
                                                                      _pitch_src,    &_FFT_info->_FFT_zip_info_LDG,
-                                                                     start_dex_H, i == (_f_mgr_H.frag_num - 1) ? _L : 4);
+                                                                     start_dex_H, i == (_f_mgr_H.frag_num - 1) ? _f_mgr_H.last_frag_len : 4);
 
             // Call vec4 smaller FFT
 		    decx::dsp::fft::CPUK::_FFT1D_caller_cplxf32_1st_R2C(_double_buffer.get_leading_ptr<float>(), 
@@ -73,7 +72,7 @@ _FFT3D_smaller_4rows_cplxf(const _type_in* __restrict src_head_ptr, de::CPf* __r
             decx::dsp::fft::CPUK::load_entire_row_transpose_u8_fp32_zip(src_head_ptr,           &_double_buffer,
                                                                         _tiles,                 _pitch_src >> 2, 
                                                                         _pitch_src,             &_FFT_info->_FFT_zip_info_LDG,
-                                                                        start_dex_H, i == (_f_mgr_H.frag_num - 1) ? _L : 4);
+                                                                        start_dex_H, i == (_f_mgr_H.frag_num - 1) ? _f_mgr_H.last_frag_len : 4);
 
             // Call vec4 smaller FFT
 		    decx::dsp::fft::CPUK::_FFT1D_caller_cplxf32_1st_R2C(_double_buffer.get_leading_ptr<float>(), 
@@ -86,7 +85,7 @@ _FFT3D_smaller_4rows_cplxf(const _type_in* __restrict src_head_ptr, de::CPf* __r
                                                                              _tiles,            _pitch_src >> 2,
                                                                              _pitch_src,        &_FFT_info->_FFT_zip_info_LDG,
                                                                              start_dex_H,       _FFT_info->_FFT_info.get_signal_len(),
-                                                                             i == (_f_mgr_H.frag_num - 1) ? _L : 4);
+                                                                             i == (_f_mgr_H.frag_num - 1) ? _f_mgr_H.last_frag_len : 4);
 
             // Call vec4 smaller FFT
 		    decx::dsp::fft::CPUK::_FFT1D_caller_cplxf32_1st_C2C(_double_buffer.get_leading_ptr<de::CPf>(), 
@@ -108,7 +107,7 @@ _FFT3D_smaller_4rows_cplxf(const _type_in* __restrict src_head_ptr, de::CPf* __r
         decx::dsp::fft::CPUK::store_entire_row_transpose_cplxf_zip<_conj>(&_double_buffer,      dst_head_ptr, 
                                                                           _tiles,               decx::utils::ceil<uint32_t>(_FFT_info->_FFT_info.get_signal_len(), 4), 
                                                                           _pitch_dst,           &_FFT_info->_FFT_zip_info_STG, 
-                                                                          start_dex_H,          i == (_f_mgr_H.frag_num - 1) ? _L : 4);
+                                                                          start_dex_H,          i == (_f_mgr_H.frag_num - 1) ? _f_mgr_H.last_frag_len : 4);
 
         start_dex_H += 4;
     }
@@ -146,7 +145,6 @@ _IFFT3D_smaller_4rows_cplxf(const de::CPf* __restrict src_head_ptr, _type_out* _
     decx::utils::double_buffer_manager _double_buffer(_tiles->get_tile1<void>(), _tiles->get_tile2<void>());
     decx::utils::frag_manager _f_mgr_H;
     decx::utils::frag_manager_gen_from_fragLen(&_f_mgr_H, _proc_H_r1, 4);
-    const uint32_t _L = _f_mgr_H.is_left ? _f_mgr_H.frag_left_over : 4;
     
     uint32_t start_dex_H = start_dex;
     
@@ -159,7 +157,7 @@ _IFFT3D_smaller_4rows_cplxf(const de::CPf* __restrict src_head_ptr, _type_out* _
                                                                         _tiles,            _pitch_src >> 2,
                                                                         _pitch_src,        &_FFT_info->_FFT_zip_info_LDG,
                                                                         start_dex_H,       _FFT_info->_FFT_info.get_signal_len(),
-                                                                        i == (_f_mgr_H.frag_num - 1) ? _L : 4);
+                                                                        i == (_f_mgr_H.frag_num - 1) ? _f_mgr_H.last_frag_len : 4);
 
         // Call vec4 smaller FFT
 		decx::dsp::fft::CPUK::_FFT1D_caller_cplxf32_1st_C2C(_double_buffer.get_leading_ptr<de::CPf>(), 
@@ -178,22 +176,25 @@ _IFFT3D_smaller_4rows_cplxf(const de::CPf* __restrict src_head_ptr, _type_out* _
 
         // Store back to global memory
         if constexpr (std::is_same_v<_type_out, float>){
-            decx::dsp::fft::CPUK::store_entire_row_transpose_cplxf_fp32_zip(&_double_buffer,      dst_head_ptr, 
-                                                                              _tiles,               _pitch_dst >> 2, 
-                                                                              _pitch_dst,           &_FFT_info->_FFT_zip_info_STG, 
-                                                                              start_dex_H,          i == (_f_mgr_H.frag_num - 1) ? _L : 4);
+            decx::dsp::fft::CPUK::
+                store_entire_row_transpose_cplxf_fp32_zip(&_double_buffer,      dst_head_ptr, 
+                                                          _tiles,               _pitch_dst >> 2, 
+                                                          _pitch_dst,           &_FFT_info->_FFT_zip_info_STG, 
+                                                          start_dex_H,          i == (_f_mgr_H.frag_num - 1) ? _f_mgr_H.last_frag_len : 4);
         }
         else if constexpr (std::is_same_v<_type_out, uint8_t>) {
-            decx::dsp::fft::CPUK::store_entire_row_transpose_cplxf_u8_zip(&_double_buffer,      dst_head_ptr, 
-                                                                              _tiles,               _pitch_dst >> 2, 
-                                                                              _pitch_dst,           &_FFT_info->_FFT_zip_info_STG, 
-                                                                              start_dex_H,          i == (_f_mgr_H.frag_num - 1) ? _L : 4);
+            decx::dsp::fft::CPUK::
+                store_entire_row_transpose_cplxf_u8_zip(&_double_buffer,      dst_head_ptr, 
+                                                        _tiles,               _pitch_dst >> 2, 
+                                                        _pitch_dst,           &_FFT_info->_FFT_zip_info_STG, 
+                                                        start_dex_H,          i == (_f_mgr_H.frag_num - 1) ? _f_mgr_H.last_frag_len : 4);
         }
         else {
-            decx::dsp::fft::CPUK::store_entire_row_transpose_cplxf_zip<false>(&_double_buffer,      dst_head_ptr, 
-                                                                              _tiles,               _pitch_dst >> 2, 
-                                                                              _pitch_dst,           &_FFT_info->_FFT_zip_info_STG, 
-                                                                              start_dex_H,          i == (_f_mgr_H.frag_num - 1) ? _L : 4);
+            decx::dsp::fft::CPUK::
+                store_entire_row_transpose_cplxf_zip<false>(&_double_buffer,      dst_head_ptr, 
+                                                            _tiles,               _pitch_dst >> 2, 
+                                                            _pitch_dst,           &_FFT_info->_FFT_zip_info_STG, 
+                                                            start_dex_H,          i == (_f_mgr_H.frag_num - 1) ? _f_mgr_H.last_frag_len : 4);
         }
         start_dex_H += 4;
     }

@@ -315,3 +315,4 @@ transpose_8b_caller(const double* src,              double* dst,
             this->_channel_num, this->_ch_gap_src, this->_ch_gap_dst, t1D);
     }
 }
+

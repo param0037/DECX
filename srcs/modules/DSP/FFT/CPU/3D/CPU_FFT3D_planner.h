@@ -173,7 +173,9 @@ namespace decx
     namespace dsp {
         namespace fft {
             extern decx::ResourceHandle FFT3D_cplxf32_planner;
+            extern decx::ResourceHandle FFT3D_cplxd64_planner;
             extern decx::ResourceHandle IFFT3D_cplxf32_planner;
+            extern decx::ResourceHandle IFFT3D_cplxd64_planner;
         }
     }
 }

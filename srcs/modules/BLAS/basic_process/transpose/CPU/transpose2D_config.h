@@ -37,6 +37,7 @@
 #include "../../../../core/utils/fragment_arrangment.h"
 #include "../../../../core/thread_management/thread_pool.h"
 #include "../../../../core/resources_manager/decx_resource.h"
+#include "../../../../classes/classes_util.h"
 
 namespace decx
 {
@@ -102,8 +103,13 @@ public:
         decx::utils::_thread_arrange_1D* t1D) const;
 
 
-    void transpose_16b_caller(const double* src, double* dst, const uint32_t pitchsrc_v1,
+    void transpose_16b_caller(const de::CPd* src, de::CPd* dst, const uint32_t pitchsrc_v1,
         const uint32_t pitchdst_v1, decx::utils::_thread_arrange_1D* t1D) const;
+
+
+    void transpose_16b_MC_caller(const de::CPd* src, de::CPd* dst, const uint32_t pitchsrc_v1,
+        const uint32_t pitchdst_v1, const uint32_t ch_num, const uint64_t gch_src_v1, const uint64_t gch_dst_v1,
+        decx::utils::_thread_arrange_1D* t1D) const;
 
 
     bool changed(const uint8_t element_byte, const uint32_t concurrency, const uint2 src_dims_v1) const;
@@ -141,6 +147,10 @@ public:
 
 
     void transpose_8b_caller(const double* src, double* dst, const uint32_t pitchsrc_v1,
+        const uint32_t pitchdst_v1, decx::utils::_thread_arrange_1D* t1D) const;
+
+
+    void transpose_16b_caller(const de::CPd* src, de::CPd* dst, const uint32_t pitchsrc_v1,
         const uint32_t pitchdst_v1, decx::utils::_thread_arrange_1D* t1D) const;
 };
 

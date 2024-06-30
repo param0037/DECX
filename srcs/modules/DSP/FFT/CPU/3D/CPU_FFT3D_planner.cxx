@@ -64,9 +64,13 @@ void decx::dsp::fft::cpu_FFT3D_planner<_data_type>::plan_transpose_configs(de::D
                                      handle);
 }
 
-template void decx::dsp::fft::cpu_FFT3D_planner<float>::plan_transpose_configs<double>(de::DH*);
+template void decx::dsp::fft::cpu_FFT3D_planner<float>::plan_transpose_configs<de::CPf>(de::DH*);
 template void decx::dsp::fft::cpu_FFT3D_planner<float>::plan_transpose_configs<float>(de::DH*);
 template void decx::dsp::fft::cpu_FFT3D_planner<float>::plan_transpose_configs<uint8_t>(de::DH*);
+
+template void decx::dsp::fft::cpu_FFT3D_planner<double>::plan_transpose_configs<de::CPd>(de::DH*);
+template void decx::dsp::fft::cpu_FFT3D_planner<double>::plan_transpose_configs<double>(de::DH*);
+template void decx::dsp::fft::cpu_FFT3D_planner<double>::plan_transpose_configs<uint8_t>(de::DH*);
 
 
 template <typename _data_type>
@@ -145,6 +149,16 @@ template void decx::dsp::fft::cpu_FFT3D_planner<float>::plan<uint8_t>(decx::util
     const decx::_tensor_layout*, const decx::_tensor_layout*, de::DH*);
 
 
+template void decx::dsp::fft::cpu_FFT3D_planner<double>::plan<de::CPd>(decx::utils::_thread_arrange_1D*,
+    const decx::_tensor_layout*, const decx::_tensor_layout*, de::DH*);
+
+template void decx::dsp::fft::cpu_FFT3D_planner<double>::plan<double>(decx::utils::_thread_arrange_1D*,
+    const decx::_tensor_layout*, const decx::_tensor_layout*, de::DH*);
+
+template void decx::dsp::fft::cpu_FFT3D_planner<double>::plan<uint8_t>(decx::utils::_thread_arrange_1D*,
+    const decx::_tensor_layout*, const decx::_tensor_layout*, de::DH*);
+
+
 
 template <typename _data_type>
 void _CRSR_ decx::dsp::fft::cpu_FFT3D_planner<_data_type>::allocate_buffers(de::DH* handle) 
@@ -178,6 +192,7 @@ void _CRSR_ decx::dsp::fft::cpu_FFT3D_planner<_data_type>::allocate_buffers(de::
 }
 
 template void _CRSR_ decx::dsp::fft::cpu_FFT3D_planner<float>::allocate_buffers(de::DH*);
+template void _CRSR_ decx::dsp::fft::cpu_FFT3D_planner<double>::allocate_buffers(de::DH*);
 
 
 template <typename _data_type> const decx::dsp::fft::cpu_FFT3D_subproc<_data_type>*
@@ -202,6 +217,8 @@ decx::dsp::fft::cpu_FFT3D_planner<_data_type>::get_subproc(const decx::dsp::fft:
 
 template const decx::dsp::fft::cpu_FFT3D_subproc<float>*
 decx::dsp::fft::cpu_FFT3D_planner<float>::get_subproc(const decx::dsp::fft::FFT_directions) const;
+template const decx::dsp::fft::cpu_FFT3D_subproc<double>*
+decx::dsp::fft::cpu_FFT3D_planner<double>::get_subproc(const decx::dsp::fft::FFT_directions) const;
 
 
 template <typename _data_type> const
@@ -210,7 +227,8 @@ decx::dsp::fft::FKT1D* decx::dsp::fft::cpu_FFT3D_planner<_data_type>::get_tile_p
     return this->_tiles.get_const_ptr(_id);
 }
 
-template const decx::dsp::fft::FKT1D* decx::dsp::fft::cpu_FFT3D_planner<float>::get_tile_ptr(const uint32_t _id) const;
+template const decx::dsp::fft::FKT1D* decx::dsp::fft::cpu_FFT3D_planner<float>::get_tile_ptr(const uint32_t) const;
+template const decx::dsp::fft::FKT1D* decx::dsp::fft::cpu_FFT3D_planner<double>::get_tile_ptr(const uint32_t) const;
 
 
 template <typename _data_type>
@@ -226,7 +244,8 @@ bool decx::dsp::fft::cpu_FFT3D_planner<_data_type>::changed(const decx::_tensor_
         (this->_output_typesize ^ dst_layout->_single_element_size);
 }
 
-template bool decx::dsp::fft::cpu_FFT3D_planner<float>::changed(const decx::_tensor_layout*, const decx::_tensor_layout* , const uint32_t) const;
+template bool decx::dsp::fft::cpu_FFT3D_planner<float>::changed(const decx::_tensor_layout*, const decx::_tensor_layout*, const uint32_t) const;
+template bool decx::dsp::fft::cpu_FFT3D_planner<double>::changed(const decx::_tensor_layout*, const decx::_tensor_layout*, const uint32_t) const;
 
 
 template <typename _data_type>
@@ -236,6 +255,7 @@ void* decx::dsp::fft::cpu_FFT3D_planner<_data_type>::get_tmp1_ptr() const
 }
 
 template void* decx::dsp::fft::cpu_FFT3D_planner<float>::get_tmp1_ptr() const;
+template void* decx::dsp::fft::cpu_FFT3D_planner<double>::get_tmp1_ptr() const;
 
 
 template <typename _data_type>
@@ -245,8 +265,7 @@ void* decx::dsp::fft::cpu_FFT3D_planner<_data_type>::get_tmp2_ptr() const
 }
 
 template void* decx::dsp::fft::cpu_FFT3D_planner<float>::get_tmp2_ptr() const;
-
-
+template void* decx::dsp::fft::cpu_FFT3D_planner<double>::get_tmp2_ptr() const;
 
 
 template <typename _data_type>
@@ -261,6 +280,7 @@ void decx::dsp::fft::cpu_FFT3D_planner<_data_type>::release(decx::dsp::fft::cpu_
 }
 
 template void decx::dsp::fft::cpu_FFT3D_planner<float>::release(decx::dsp::fft::cpu_FFT3D_planner<float>*);
+template void decx::dsp::fft::cpu_FFT3D_planner<double>::release(decx::dsp::fft::cpu_FFT3D_planner<double>*);
 
 
 template <typename _data_type>
@@ -270,3 +290,4 @@ decx::dsp::fft::cpu_FFT3D_planner<_data_type>::~cpu_FFT3D_planner()
 }
 
 template decx::dsp::fft::cpu_FFT3D_planner<float>::~cpu_FFT3D_planner();
+template decx::dsp::fft::cpu_FFT3D_planner<double>::~cpu_FFT3D_planner();

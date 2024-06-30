@@ -106,13 +106,6 @@ void _CRSR_ decx::dsp::fft::cpu_FFT3D_planner<float>::Inverse(decx::_Tensor* src
         decx::dsp::fft::FFT_directions::_FFT_AlongD);
 
     // Transpose multi-channel
-    /*decx::bp::transpose_MK_2x2_caller((double*)this->get_tmp1_ptr(), 
-        (double*)this->get_tmp2_ptr(),
-        this->_FFT_D._pitchdst, 
-        this->_FFT_W._pitchsrc, 
-        &this->_transp_config_MC,
-        &t1D);*/
-
     this->_transp_config_MC.
         transpose_8b_caller((double*)this->get_tmp1_ptr(),
             (double*)this->get_tmp2_ptr(),
@@ -127,12 +120,6 @@ void _CRSR_ decx::dsp::fft::cpu_FFT3D_planner<float>::Inverse(decx::_Tensor* src
         decx::dsp::fft::FFT_directions::_FFT_AlongW);
 
     // Transpose multi-channel back
-    /*decx::bp::transpose_MK_2x2_caller((double*)this->get_tmp1_ptr(),
-        (double*)this->get_tmp2_ptr(),
-        this->_FFT_W._pitchdst,
-        this->_FFT_D._pitchdst,
-        &this->_transp_config_MC_back,
-        &t1D);*/
     this->_transp_config_MC_back.
         transpose_8b_caller((double*)this->get_tmp1_ptr(), 
                             (double*)this->get_tmp2_ptr(),
@@ -140,12 +127,6 @@ void _CRSR_ decx::dsp::fft::cpu_FFT3D_planner<float>::Inverse(decx::_Tensor* src
                             this->_FFT_D._pitchdst, &t1D);
 
     // Transpose [DPxW, H] to [DH, DPXW]
-    /*decx::bp::transpose_2x2_caller((double*)this->get_tmp2_ptr(), 
-                                   (double*)this->get_tmp1_ptr(),
-                                   this->_FFT_D._pitchdst * src->Width(), 
-                                   this->_FFT_H._pitchsrc, 
-                                   &this->_transp_config, 
-                                   &t1D);*/
     this->_transp_config.
         transpose_8b_caller((double*)this->get_tmp2_ptr(),
                             (double*)this->get_tmp1_ptr(),
@@ -159,16 +140,7 @@ void _CRSR_ decx::dsp::fft::cpu_FFT3D_planner<float>::Inverse(decx::_Tensor* src
         &t1D,
         decx::dsp::fft::FFT_directions::_FFT_AlongH);
 
-    /*decx::bp::_cpu_transpose_config<sizeof(_type_out)>* transp_config_back =
-        (decx::bp::_cpu_transpose_config<sizeof(_type_out)>*)(&this->_transp_config_back);*/
-    
     if constexpr (std::is_same_v<_type_out, float>) {
-        /*decx::bp::transpose_4x4_caller((float*)this->get_tmp2_ptr(),
-                                       (float*)dst->Tens.ptr,
-                                       this->_FFT_H._pitchdst, 
-                                       dst->get_layout().dp_x_wp, 
-                                       transp_config_back, 
-                                       &t1D);*/
         this->_transp_config_back.
             transpose_4b_caller((float*)this->get_tmp2_ptr(),
                                 (float*)dst->Tens.ptr, 
@@ -176,12 +148,6 @@ void _CRSR_ decx::dsp::fft::cpu_FFT3D_planner<float>::Inverse(decx::_Tensor* src
                                 dst->get_layout().dp_x_wp, &t1D);
     }
     else if constexpr (std::is_same_v<_type_out, uint8_t>) {
-        /*decx::bp::transpose_8x8_caller((double*)this->get_tmp2_ptr(),
-                                       (double*)dst->Tens.ptr,
-                                       this->_FFT_H._pitchdst, 
-                                       dst->get_layout().dp_x_wp, 
-                                       transp_config_back, 
-                                       &t1D);*/
         this->_transp_config_back.
             transpose_1b_caller((uint64_t*)this->get_tmp2_ptr(),
                                 (uint64_t*)dst->Tens.ptr, 
@@ -189,12 +155,6 @@ void _CRSR_ decx::dsp::fft::cpu_FFT3D_planner<float>::Inverse(decx::_Tensor* src
                                 dst->get_layout().dp_x_wp, &t1D);
     }
     else {
-        /*decx::bp::transpose_2x2_caller((double*)this->get_tmp2_ptr(),
-                                       (double*)dst->Tens.ptr,
-                                       this->_FFT_H._pitchdst, 
-                                       dst->get_layout().dp_x_wp, 
-                                       transp_config_back, 
-                                       &t1D);*/
         this->_transp_config_back.
             transpose_8b_caller((double*)this->get_tmp2_ptr(),
                                 (double*)dst->Tens.ptr, 

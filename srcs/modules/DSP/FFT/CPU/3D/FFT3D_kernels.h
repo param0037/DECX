@@ -49,10 +49,22 @@ namespace fft {
                 const decx::dsp::fft::cpu_FFT3D_subproc<float>* _FFT_info);
 
 
+        template <typename _type_in, bool _conj> _THREAD_FUNCTION_ void
+            _FFT3D_smaller_2rows_cplxd(const _type_in* __restrict src, de::CPd* __restrict dst, const decx::dsp::fft::FKT1D* _tiles,
+                const uint32_t _pitch_src, const uint32_t _pitch_dst, const uint32_t _proc_H_r1, const uint32_t start_dex,
+                const decx::dsp::fft::cpu_FFT3D_subproc<double>* _FFT_info);
+
+
         template <typename _type_out> _THREAD_FUNCTION_ void
             _IFFT3D_smaller_4rows_cplxf(const de::CPf* __restrict src, _type_out* __restrict dst, const decx::dsp::fft::FKT1D* _tiles,
                 const uint32_t _pitch_src, const uint32_t _pitch_dst, const uint32_t _proc_H_r1, const uint32_t start_dex,
                 const decx::dsp::fft::cpu_FFT3D_subproc<float>* _FFT_info);
+
+
+        template <typename _type_out> _THREAD_FUNCTION_ void
+            _IFFT3D_smaller_2rows_cplxd(const de::CPd* __restrict src, _type_out* __restrict dst, const decx::dsp::fft::FKT1D* _tiles,
+                const uint32_t _pitch_src, const uint32_t _pitch_dst, const uint32_t _proc_H_r1, const uint32_t start_dex,
+                const decx::dsp::fft::cpu_FFT3D_subproc<double>* _FFT_info);
     }
 
     template <typename _type_in, bool _conj>
@@ -60,8 +72,18 @@ namespace fft {
         decx::utils::_thread_arrange_1D* t1D, decx::dsp::fft::FFT_directions _proc_dir);
 
 
+    template <typename _type_in, bool _conj>
+    void _FFT3D_H_entire_rows_cplxd(const _type_in* __restrict src, de::CPd* __restrict dst, const decx::dsp::fft::cpu_FFT3D_planner<double>* planner,
+        decx::utils::_thread_arrange_1D* t1D, decx::dsp::fft::FFT_directions _proc_dir);
+
+
     template <typename _type_out>
     void _IFFT3D_H_entire_rows_cplxf(const de::CPf* __restrict src, _type_out* __restrict dst, const decx::dsp::fft::cpu_FFT3D_planner<float>* planner,
+        decx::utils::_thread_arrange_1D* t1D, decx::dsp::fft::FFT_directions _proc_dir);
+
+
+    template <typename _type_out>
+    void _IFFT3D_H_entire_rows_cplxd(const de::CPd* __restrict src, _type_out* __restrict dst, const decx::dsp::fft::cpu_FFT3D_planner<double>* planner,
         decx::utils::_thread_arrange_1D* t1D, decx::dsp::fft::FFT_directions _proc_dir);
 }
 }
