@@ -53,7 +53,7 @@ decx::dsp::fft::CPUK::_FFT2D_smaller_4rows_cplxf(const _type_in* __restrict     
     for (uint32_t i = 0; i < _f_mgr_H.frag_num; ++i) 
     {
         _double_buffer.reset_buffer1_leading();
-        if constexpr (std::is_same_v<_type_in, float>){
+        if constexpr (std::is_same_v<_type_in, float>) {
             // Load and transpose data from global memory
             decx::dsp::fft::CPUK::load_entire_row_transpose_fp32(_src_loc_ptr, &_double_buffer, _tiles, _pitch_src >> 2, _pitch_src,
                 i == (_f_mgr_H.frag_num - 1) ? _f_mgr_H.last_frag_len : 4);

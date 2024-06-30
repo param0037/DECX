@@ -98,6 +98,11 @@ private:
     //decx::bp::_cpu_transpose_MK_config<8> _transp_config_MC, _transp_config_MC_back;
     //decx::bp::_cpu_transpose_config<sizeof(_data_type) * 2>  _transp_config, _transp_config_back;
 
+    decx::blas::_cpu_transpose_MC_config _transp_config_MC, _transp_config_MC_back;
+    decx::blas::_cpu_transpose_config _transp_config, _transp_config_back;
+
+    //decx::blas::_cpu_transpose_config
+
     uint32_t _concurrency;
 
     // Tiles for each thread (2 (double buffers) for each)
@@ -117,7 +122,7 @@ private:
 
 
     template <typename type_out>
-    void plan_transpose_configs();
+    void _CRSR_ plan_transpose_configs(de::DH* handle);
 
 public:
     cpu_FFT3D_planner() {}

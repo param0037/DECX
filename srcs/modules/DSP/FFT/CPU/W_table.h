@@ -35,22 +35,7 @@
 #include "../FFT_commons.h"
 #include "../../../classes/classes_util.h"
 
-//
-//extern "C"
-//{
-//    struct _cossin_vec4_pair
-//    {
-//        __m128 _cos_val;
-//        __m128 _sin_val;
-//    };
-//
-//    _cossin_vec4_pair gen_cos_sin(__m128 angle_v4);
-//
-//
-//    _cossin_vec4_pair __vectorcall _mm_cos_sin_pair_CORDIC_40_ps(__m128 angle_v4);
-//}
-extern "C" __m128 __vectorcall __cos_fp32x4(__m128);
-extern "C" __m128 __vectorcall __sin_fp32x4(__m128);
+
 
 namespace decx
 {
@@ -58,7 +43,7 @@ namespace dsp
 {
 namespace fft
 {
-    /*_THREAD_CALL_*/ static uint64_t _calc_WT_mapping(const uint64_t warp_loc_id,
+    _THREAD_CALL_ static uint64_t _calc_WT_mapping(const uint64_t warp_loc_id,
         const uint64_t _signal_len, const uint64_t warp_proc_len)
     {
 #define _CALC_MAPPING_(_idx) ((_idx) > warp_proc_len ? ((_idx) - warp_proc_len) : (_idx))
@@ -68,7 +53,7 @@ namespace fft
 #endif
     }
 
-    /*_THREAD_CALL_*/  static __m128i _calc_WT_mapping_v4(const __m128i _base_dex, const uint64_t warp_loc_id,
+    _THREAD_CALL_  static __m128i _calc_WT_mapping_v4(const __m128i _base_dex, const uint64_t warp_loc_id,
         const uint64_t _signal_len, const uint64_t _warp_proc_len)
     {
         const __m128i _warp_proc_len_v4 = _mm_set1_epi32(_warp_proc_len);

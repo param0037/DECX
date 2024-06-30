@@ -120,22 +120,30 @@ void decx::utils::thread2D_arrangement_advisor(uint2*              thr_arrange,
         const float k = (float)proc_dims.x / (float)proc_dims.y;
         const uint32_t base = roundf(sqrtf((float)total_thr_num / k));
 
-        uint32_t base_var_ni = base;
-        uint32_t base_var_nz = base;
-        // Towards infinity
-        while (total_thr_num % base_var_ni) {
-            ++base_var_ni;
+        if (base < 2) {
+            *thr_arrange = make_uint2(total_thr_num, 1);
         }
-        // Towards zero
-        while (total_thr_num % base_var_nz) {
-            --base_var_nz;
+        else if (base > total_thr_num) {
+            *thr_arrange = make_uint2(1, total_thr_num);
         }
-        // Get the differences and find the minimal
-        uint32_t diff_ni = fabs(base - base_var_ni);
-        uint32_t diff_nz = fabs(base - base_var_nz);
-        uint32_t candidate_base = diff_ni > diff_nz ? base_var_nz : base_var_ni;
-        thr_arrange->y = candidate_base;
-        thr_arrange->x = total_thr_num / candidate_base;
+        else {
+            uint32_t base_var_ni = base;
+            uint32_t base_var_nz = base;
+            // Towards infinity
+            while (total_thr_num % base_var_ni) {
+                ++base_var_ni;
+            }
+            // Towards zero
+            while (total_thr_num % base_var_nz) {
+                --base_var_nz;
+            }
+            // Get the differences and find the minimal
+            uint32_t diff_ni = fabs(base - base_var_ni);
+            uint32_t diff_nz = fabs(base - base_var_nz);
+            uint32_t candidate_base = diff_ni > diff_nz ? base_var_nz : base_var_ni;
+            thr_arrange->y = candidate_base;
+            thr_arrange->x = total_thr_num / candidate_base;
+        }
     }
     else {
         *thr_arrange = make_uint2(1, 1);

@@ -53,8 +53,8 @@ _W_table_gen_cplxf(double* __restrict      _W_table,
 
         angle_v4._vf = _mm_mul_ps(_mm_div_ps(angle_v4._vf, _mm_set1_ps(_signal_length)), _mm_set1_ps(Two_Pi));
         
-        _real_v4._vf = __cos_fp32x4(angle_v4._vf);
-        _image_v4._vf = __sin_fp32x4(angle_v4._vf);
+        _real_v4._vf = _avx_cos_fp32x4(angle_v4._vf);
+        _image_v4._vf = _avx_sin_fp32x4(angle_v4._vf);
 
         _res._vf = _mm256_permute2f128_ps(_mm256_castps128_ps256(_real_v4._vf), _mm256_castps128_ps256(_image_v4._vf), 0b00100000);
         _res._vf = _mm256_permutevar8x32_ps(_res._vf, _mm256_setr_epi32(0, 4, 1, 5, 2, 6, 3, 7));

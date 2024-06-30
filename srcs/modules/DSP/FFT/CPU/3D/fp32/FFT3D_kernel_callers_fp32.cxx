@@ -29,22 +29,19 @@
 */
 
 
-#include "../1D/FFT1D_kernels.h"
-#include "../2D/FFT2D_kernel_utils.h"
-#include "FFT3D_kernel_utils.h"
-#include "FFT3D_kernels.h"
+#include "../../1D/FFT1D_kernels.h"
+#include "../../2D/FFT2D_kernel_utils.h"
+#include "../FFT3D_kernel_utils.h"
+#include "../FFT3D_kernels.h"
 
 
 
-template <typename _type_in, bool _conj> _THREAD_FUNCTION_ void
-decx::dsp::fft::CPUK::_FFT3D_smaller_4rows_cplxf(const _type_in* __restrict                      src_head_ptr,
-                                                 de::CPf* __restrict                              dst_head_ptr,
-                                                 const decx::dsp::fft::FKT1D*               _tiles,
-                                                 const uint32_t                                  _pitch_src, 
-                                                 const uint32_t                                  _pitch_dst, 
-                                                 const uint32_t                                  _proc_H_r1,
-                                                 const uint32_t                                  start_dex,
-                                                 const decx::dsp::fft::cpu_FFT3D_subproc<float>* _FFT_info)
+template <typename _type_in, bool _conj> 
+_THREAD_FUNCTION_ void decx::dsp::fft::CPUK::
+_FFT3D_smaller_4rows_cplxf(const _type_in* __restrict src_head_ptr, de::CPf* __restrict dst_head_ptr,
+                           const decx::dsp::fft::FKT1D* _tiles,     const uint32_t _pitch_src, 
+                           const uint32_t _pitch_dst,               const uint32_t _proc_H_r1,
+                           const uint32_t start_dex,                const decx::dsp::fft::cpu_FFT3D_subproc<float>* _FFT_info)
 {
     decx::utils::double_buffer_manager _double_buffer(_tiles->get_tile1<void>(), _tiles->get_tile2<void>());
     decx::utils::frag_manager _f_mgr_H;
@@ -139,15 +136,12 @@ template _THREAD_FUNCTION_ void decx::dsp::fft::CPUK::_FFT3D_smaller_4rows_cplxf
 
 
 
-template <typename _type_out> _THREAD_FUNCTION_ void
-decx::dsp::fft::CPUK::_IFFT3D_smaller_4rows_cplxf(const de::CPf* __restrict                      src_head_ptr,
-                                                 _type_out* __restrict                          dst_head_ptr,
-                                                 const decx::dsp::fft::FKT1D*               _tiles,
-                                                 const uint32_t                                  _pitch_src, 
-                                                 const uint32_t                                  _pitch_dst, 
-                                                 const uint32_t                                  _proc_H_r1,
-                                                 const uint32_t                                  start_dex,
-                                                 const decx::dsp::fft::cpu_FFT3D_subproc<float>* _FFT_info)
+template <typename _type_out> 
+_THREAD_FUNCTION_ void decx::dsp::fft::CPUK::
+_IFFT3D_smaller_4rows_cplxf(const de::CPf* __restrict src_head_ptr, _type_out* __restrict dst_head_ptr,
+                            const decx::dsp::fft::FKT1D* _tiles,    const uint32_t _pitch_src, 
+                            const uint32_t _pitch_dst,              const uint32_t _proc_H_r1,
+                            const uint32_t start_dex,               const decx::dsp::fft::cpu_FFT3D_subproc<float>* _FFT_info)
 {
     decx::utils::double_buffer_manager _double_buffer(_tiles->get_tile1<void>(), _tiles->get_tile2<void>());
     decx::utils::frag_manager _f_mgr_H;

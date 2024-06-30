@@ -53,15 +53,9 @@
                     dd      0.0018115942f
 
 
-
 ; __vectorcall convention
 .CODE
-; COS_TAYLOR_CORE PROC
-
-
-; COS_TAYLOR_CORE ENDP
-
-__cos_fp32x4@@16 PROC
+_avx_cos_fp32x4@@16 PROC
     
     push            rbx
     movups          DWORD PTR   [rsp - 16],  XMM6
@@ -217,14 +211,14 @@ __cos_fp32x4@@16 PROC
 
     ret
     
-__cos_fp32x4@@16 ENDP
+_avx_cos_fp32x4@@16 ENDP
 
-PUBLIC __cos_fp32x4@@16
+PUBLIC _avx_cos_fp32x4@@16
 
 
 ; __vectorcall convention
 .CODE
-__sin_fp32x4@@16 PROC
+_avx_sin_fp32x4@@16 PROC
     
     push            rbx
     movups          DWORD PTR   [rsp - 16],  XMM10
@@ -239,7 +233,7 @@ __sin_fp32x4@@16 PROC
     vmovq           XMM1,   rax
     vpunpcklqdq     XMM1,   XMM1,   XMM1                    ; XMM1 -> pi / 2
     vsubps          XMM0,   XMM1,   XMM0                    ; XMM0 = pi/2 - angle
-    call            __cos_fp32x4@@16
+    call            _avx_cos_fp32x4@@16
 
     vandps          XMM0,   XMM0,   XMM10                   ; res = angle == 0 ? 0 : res
 
@@ -249,9 +243,9 @@ __sin_fp32x4@@16 PROC
 
     ret
 
-__sin_fp32x4@@16 ENDP
+_avx_sin_fp32x4@@16 ENDP
 
-PUBLIC __sin_fp32x4@@16
+PUBLIC _avx_sin_fp32x4@@16
 
 
 END

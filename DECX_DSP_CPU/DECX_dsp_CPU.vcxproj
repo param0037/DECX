@@ -59,8 +59,10 @@
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\2D\fp64\FFT2D_kernel_callers_cplxd.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\3D\FFT3D.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\3D\CPU_FFT3D_planner.cxx" />
-    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\3D\FFT3D_cplxf32.cxx" />
-    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\3D\FFT3D_kernel_callers.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\3D\fp32\FFT3D_cplxf32.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\3D\fp32\FFT3D_kernel_callers_fp32.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\3D\fp64\FFT3D_cplxd64.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\3D\fp64\FFT3D_kernel_callers_fp64.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\CPU_FFT_tiles.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\W_table.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\filters\CPU\low_pass.cxx" />

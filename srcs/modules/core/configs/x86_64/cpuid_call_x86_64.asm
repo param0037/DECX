@@ -34,10 +34,13 @@
 ; eax = 0BH -> ebx returns # of logical processors (with ecx = 01H)
 ; Cache size: obtained by multiplying all the (figures + 1) together in EBX and ECX.
 
+; __stdcall ---- called funciton should save E(R)BX, E(R)SI, E(R)DI, E(R)BP registers, if used
+
 .CODE
 CPUID_call PROC
     
     xor     eax,        eax
+    push    rbx
     xor     ebx,        ebx
     xor     edx,        edx
 
@@ -52,6 +55,9 @@ CPUID_call PROC
     mov     [r9 + 4],   DWORD PTR   ebx
     mov     [r9 + 8],   DWORD PTR   ecx
     mov     [r9 + 12],  DWORD PTR   edx
+
+    pop     rbx
+
     ret
 
 CPUID_call ENDP

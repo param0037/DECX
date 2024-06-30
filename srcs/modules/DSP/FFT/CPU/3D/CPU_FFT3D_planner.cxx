@@ -34,30 +34,39 @@
 
 template <typename _data_type>
 template <typename _type_out>
-void decx::dsp::fft::cpu_FFT3D_planner<_data_type>::plan_transpose_configs()
+void decx::dsp::fft::cpu_FFT3D_planner<_data_type>::plan_transpose_configs(de::DH* handle)
 {
-    /*new(&this->_transp_config_MC) decx::bp::_cpu_transpose_MK_config<8>(make_uint2(this->_signal_dims.x, this->_signal_dims.y),
-        this->_concurrency,
-        this->_signal_dims.z,
-        this->_FFT_D._pitchdst * this->_signal_dims.y,
-        this->_FFT_W._pitchsrc * this->_signal_dims.x);
+    this->_transp_config_MC.config(2 * sizeof(_data_type), 
+                                   this->_concurrency,
+                                   make_uint2(this->_signal_dims.x, this->_signal_dims.y),
+                                   this->_signal_dims.z,
+                                   this->_FFT_D._pitchdst * this->_signal_dims.y,
+                                   this->_FFT_W._pitchsrc * this->_signal_dims.x, handle);
+    Check_Runtime_Error(handle);
 
-    new(&this->_transp_config_MC_back) decx::bp::_cpu_transpose_MK_config<8>(make_uint2(this->_signal_dims.y, this->_signal_dims.x),
-        this->_concurrency,
-        this->_signal_dims.z,
-        this->_FFT_W._pitchdst * this->_signal_dims.x,
-        this->_FFT_D._pitchdst * this->_signal_dims.y);
+    this->_transp_config_MC_back.config(2 * sizeof(_data_type), 
+                                        this->_concurrency,
+                                        make_uint2(this->_signal_dims.y, this->_signal_dims.x),
+                                        this->_signal_dims.z,
+                                        this->_FFT_W._pitchdst * this->_signal_dims.x,
+                                        this->_FFT_D._pitchdst * this->_signal_dims.y, handle);
+    Check_Runtime_Error(handle);
 
-    new(&this->_transp_config) decx::bp::_cpu_transpose_config<8>(make_uint2(this->_FFT_D._pitchdst * this->_signal_dims.y, this->_signal_dims.z),
-        this->_concurrency);
+    this->_transp_config.config(2 * sizeof(_data_type), 
+                                this->_concurrency,
+                                make_uint2(this->_FFT_D._pitchdst * this->_signal_dims.y, this->_signal_dims.z), 
+                                handle);
+    Check_Runtime_Error(handle);
 
-    new(&this->_transp_config_back) decx::bp::_cpu_transpose_config<sizeof(_type_out)> (make_uint2(this->_signal_dims.z, this->_dst_layout->dp_x_wp),
-        this->_concurrency);*/
+    this->_transp_config_back.config(sizeof(_type_out), 
+                                     this->_concurrency,
+                                     make_uint2(this->_signal_dims.z, this->_dst_layout->dp_x_wp), 
+                                     handle);
 }
 
-template void decx::dsp::fft::cpu_FFT3D_planner<float>::plan_transpose_configs<double>();
-template void decx::dsp::fft::cpu_FFT3D_planner<float>::plan_transpose_configs<float>();
-template void decx::dsp::fft::cpu_FFT3D_planner<float>::plan_transpose_configs<uint8_t>();
+template void decx::dsp::fft::cpu_FFT3D_planner<float>::plan_transpose_configs<double>(de::DH*);
+template void decx::dsp::fft::cpu_FFT3D_planner<float>::plan_transpose_configs<float>(de::DH*);
+template void decx::dsp::fft::cpu_FFT3D_planner<float>::plan_transpose_configs<uint8_t>(de::DH*);
 
 
 template <typename _data_type>
@@ -123,7 +132,7 @@ _CRSR_ void decx::dsp::fft::cpu_FFT3D_planner<_data_type>::plan(decx::utils::_th
 
     this->allocate_buffers(handle);
 
-    this->template plan_transpose_configs<_type_out>();
+    this->template plan_transpose_configs<_type_out>(handle);
 }
 
 template void decx::dsp::fft::cpu_FFT3D_planner<float>::plan<de::CPf>(decx::utils::_thread_arrange_1D*,

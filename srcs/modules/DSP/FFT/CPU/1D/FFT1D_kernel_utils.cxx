@@ -115,8 +115,8 @@ decx::dsp::fft::CPUK::_FFT1D_Twd_smaller_kernels_v4_1st(const de::CPf* __restric
         _real_v4 = _mm_div_ps(_real_v4, _mm_set1_ps(_Twd->divide_length()));
         _image_v4 = _real_v4;
 
-        _real_v4 = __cos_fp32x4(_real_v4);
-        _image_v4 = __sin_fp32x4(_image_v4);
+        _real_v4 = _avx_cos_fp32x4(_real_v4);
+        _image_v4 = _avx_sin_fp32x4(_image_v4);
 
 #if _SIMD_VER_ == AVX256
         W_v4._vf = _mm256_permute2f128_ps(_mm256_castps128_ps256(_real_v4), _mm256_castps128_ps256(_image_v4), 0b00100000);
@@ -228,8 +228,8 @@ decx::dsp::fft::CPUK::_FFT1D_Twd_smaller_kernels_v4_mid(const de::CPf* __restric
 
         _image_v4 = _real_v4;
 #ifdef _MSC_VER
-        _real_v4 = __cos_fp32x4(_real_v4);
-        _image_v4 = __sin_fp32x4(_image_v4);
+        _real_v4 = _avx_cos_fp32x4(_real_v4);
+        _image_v4 = _avx_sin_fp32x4(_image_v4);
 #endif
 #if _SIMD_VER_ == AVX256
         W_v4._vf = _mm256_permute2f128_ps(_mm256_castps128_ps256(_real_v4), _mm256_castps128_ps256(_image_v4), 0b00100000);

@@ -68,7 +68,7 @@ typedef struct _decx_reg4_x86_t
 #ifdef __cplusplus
 extern "C"
 #endif
-void _stdcall CPUID_call(decx_reg4_x86*);
+void __stdcall CPUID_call(decx_reg4_x86*);
 #endif  // #ifdef _DECX_CPU_PARTS_
 
 #if defined(__x86_64__) || defined(__i386__)
@@ -107,8 +107,11 @@ void _decx_get_CPU_vendor_str(decx_CPUINFO*);
 __attribute__((optimize("O0")))
 #else
 ;
+
 #endif
 #endif      // #if defined(__x86_64__) || defined(__i386__)
+
+int _decx_NOT_AMD_CPU(const decx_CPUINFO*);
 
 int _decx_get_CPU_info(decx_CPUINFO*);
 

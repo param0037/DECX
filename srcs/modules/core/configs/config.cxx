@@ -75,6 +75,25 @@ _DECX_API_ uint64_t decx::cpu::_get_permitted_concurrency()
 }
 
 
+_DECX_API_ uint64_t decx::cpu::_get_L1_data_cache_size_per_core()
+{
+    return _decx_get_L1_cache_size_per_phy_core(_decx_NOT_AMD_CPU(&decx::cpI._hardware_info));
+}
+
+
+_DECX_API_ uint64_t decx::cpu::_get_L2_cache_size_per_core()
+{
+    return _decx_get_L2_cache_size_per_phy_core(_decx_NOT_AMD_CPU(&decx::cpI._hardware_info));
+}
+
+
+_DECX_API_ uint64_t decx::cpu::_get_L3_cache_size()
+{
+    return _decx_get_L3_cache_size(_decx_NOT_AMD_CPU(&decx::cpI._hardware_info));
+}
+
+
+
 _DECX_API_ uint64_t decx::cpu::_get_hardware_concurrency()
 {
     return decx::cpI._hardware_info._hardware_concurrency;

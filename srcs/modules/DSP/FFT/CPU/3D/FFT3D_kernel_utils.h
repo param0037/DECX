@@ -252,7 +252,7 @@ decx::dsp::fft::CPUK::store_entire_row_transpose_cplxf_zip(decx::utils::double_b
                 if constexpr (_conj) {
                     _reg._vf = decx::dsp::CPUK::_cp4_conjugate_fp32(_reg._vf);
                 }
-                
+                //_reg._vf = _mm256_set1_ps(37);
                 _mm256_store_pd(_dst_row_ptr + (j << 2), _reg._vd);
             }
         }

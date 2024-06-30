@@ -48,7 +48,6 @@ void decx::dsp::fft::cpu_FFT1D_planner<float>::Forward(decx::_Vector* src, decx:
     if (this->get_kernel_call_num() > 1) {
         decx::dsp::fft::_FFT1D_cplxf32_1st<false, _type_in>((const _type_in*)src->Vec.ptr, 
                                                      (de::CPf*)_double_buffer._MIF1.mem, 
-                                                     //(de::CPf*)dst->Vec.ptr,
                                                      this, t1D, &_FIMT1D);
 
         _double_buffer.reset_buffer1_leading();

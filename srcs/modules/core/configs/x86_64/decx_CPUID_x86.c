@@ -116,11 +116,23 @@ void _decx_get_CPU_vendor_str(decx_CPUINFO* _info_ptr)
 }
 
 
+int _decx_NOT_AMD_CPU(const decx_CPUINFO* _info_ptr)
+{
+    if (_info_ptr != 0) {
+        return (*((uint32_t*)_info_ptr->_vendor_str) ^ 1752462657);
+    }
+    else {
+        return -1;
+    }
+}
+
+
 int _decx_get_CPU_info(decx_CPUINFO* _info_ptr)
 {
     if (_info_ptr) {
         _decx_get_CPU_vendor_str(_info_ptr);
-        const int _not_AMD = (*((uint32_t*)_info_ptr->_vendor_str) ^ 1752462657);
+        //const int _not_AMD = (*((uint32_t*)_info_ptr->_vendor_str) ^ 1752462657);
+        const int _not_AMD = _decx_NOT_AMD_CPU(_info_ptr);
         _info_ptr->_hardware_concurrency = _decx_get_logical_processor_num();
         _info_ptr->_L1_data_cache_size = _decx_get_L1_cache_size_per_phy_core(_not_AMD);
         _info_ptr->_L2_data_cache_size = _decx_get_L2_cache_size_per_phy_core(_not_AMD);

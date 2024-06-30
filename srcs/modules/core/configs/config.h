@@ -90,6 +90,15 @@ namespace decx
         _DECX_API_ uint64_t _get_permitted_concurrency();
 
 
+        _DECX_API_ uint64_t _get_L1_data_cache_size_per_core();
+
+
+        _DECX_API_ uint64_t _get_L2_cache_size_per_core();
+
+
+        _DECX_API_ uint64_t _get_L3_cache_size();
+
+
         _DECX_API_ uint64_t _get_hardware_concurrency();
     }
 #endif
