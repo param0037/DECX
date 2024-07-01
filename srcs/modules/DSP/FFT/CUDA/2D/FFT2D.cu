@@ -168,7 +168,7 @@ static void decx::dsp::fft::_IFFT2D_caller_cplxd(decx::_GPU_Matrix* src, decx::_
 
 
 
-_DECX_API_ void de::dsp::cuda::FFT(de::GPU_Matrix& src, de::GPU_Matrix& dst, const de::_DATA_TYPES_FLAGS_ _type_out)
+_DECX_API_ void de::dsp::cuda::FFT(de::GPU_Matrix& src, de::GPU_Matrix& dst, const de::_DATA_TYPES_FLAGS_ _output_type)
 {
     de::ResetLastError();
 
@@ -180,20 +180,21 @@ _DECX_API_ void de::dsp::cuda::FFT(de::GPU_Matrix& src, de::GPU_Matrix& dst, con
     decx::cuda_event* E;
     E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
 
-    if (!decx::dsp::fft::validate_type_FFT2D(_src->Type())) {
+    if (!(decx::dsp::fft::validate_type_FFT2D(_src->Type()) && decx::dsp::fft::validate_type_FFT2D(_output_type)))
+    {
         decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_UNSUPPORTED_TYPE,
             "FFT2D CUDA only supports float, double, uint8_t, de::CPf and de::CPd input");
         return;
     }
-    
-    if (_src->Type() & 3 == 1) {        // Fp32
+
+    if ((_src->Type() & 3) == 1) {        // (complex)_Fp32
         _dst->re_construct(de::_DATA_TYPES_FLAGS_::_COMPLEX_F32_, _src->Width(), _src->Height(), S);
     }
-    else if (_src->Type() & 3 == 2) {       // Fp64
+    else if ((_src->Type() & 3) == 2) {       // (complex)_Fp64
         _dst->re_construct(de::_DATA_TYPES_FLAGS_::_COMPLEX_F64_, _src->Width(), _src->Height(), S);
     }
-    else if (_src->Type() == de::_DATA_TYPES_FLAGS_::_UINT8_) {
-        _dst->re_construct(_type_out, _src->Width(), _src->Height(), S);
+    else {  // If is _UINT8_
+        _dst->re_construct(_output_type, _src->Width(), _src->Height(), S);
     }
 
     switch (_src->Type())
@@ -203,7 +204,7 @@ _DECX_API_ void de::dsp::cuda::FFT(de::GPU_Matrix& src, de::GPU_Matrix& dst, con
         break;
 
     case de::_DATA_TYPES_FLAGS_::_UINT8_:
-        if (_type_out == de::_DATA_TYPES_FLAGS_::_COMPLEX_F32_) {
+        if (_output_type == de::_DATA_TYPES_FLAGS_::_COMPLEX_F32_) {
             decx::dsp::fft::_FFT2D_caller_cplxf<uint8_t>(_src, _dst, S, E, de::GetLastError());
         }
         else {
@@ -236,7 +237,7 @@ _DECX_API_ void de::dsp::cuda::FFT(de::GPU_Matrix& src, de::GPU_Matrix& dst, con
 
 
 
-_DECX_API_ void de::dsp::cuda::IFFT(de::GPU_Matrix& src, de::GPU_Matrix& dst, const de::_DATA_TYPES_FLAGS_ type_out)
+_DECX_API_ void de::dsp::cuda::IFFT(de::GPU_Matrix& src, de::GPU_Matrix& dst, const de::_DATA_TYPES_FLAGS_ _output_type)
 {
     decx::_GPU_Matrix* _src = dynamic_cast<decx::_GPU_Matrix*>(&src);
     decx::_GPU_Matrix* _dst = dynamic_cast<decx::_GPU_Matrix*>(&dst);
@@ -246,25 +247,25 @@ _DECX_API_ void de::dsp::cuda::IFFT(de::GPU_Matrix& src, de::GPU_Matrix& dst, co
     decx::cuda_event* E;
     E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
 
-    if (!decx::dsp::fft::validate_type_FFT2D(_src->Type())) {
+    if (!(decx::dsp::fft::validate_type_FFT2D(_src->Type()) && decx::dsp::fft::validate_type_FFT2D(_output_type))) {
         decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_UNSUPPORTED_TYPE,
             "FFT2D CUDA only supports float, double, uint8_t, de::CPf and de::CPd input");
         return;
     }
 
-    if (decx::dsp::fft::validate_type_FFT2D(type_out)) // Ensures it's either fp32(cplxf) or fp64(cplxd)
-    {   
-        if (decx::dsp::fft::check_type_matched_FFT(_src->Type(), type_out)) {
+    if (_output_type != de::_DATA_TYPES_FLAGS_::_UINT8_) // Ensures it's either fp32(cplxf) or fp64(cplxd)
+    {
+        if (!decx::dsp::fft::check_type_matched_FFT(_src->Type(), _output_type)) {
             decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_TYPE_MOT_MATCH,
                 "Conversion between fp32 and fp64 in FFT is not supported");
             return;
         }
-        else {
-            _dst->re_construct(type_out, _src->Width(), _src->Height(), S);
-        }
+    }
+    else {
+        _dst->re_construct(_output_type, _src->Width(), _src->Height(), S);
     }
 
-    switch (type_out) 
+    switch (_output_type)
     {
     case de::_DATA_TYPES_FLAGS_::_COMPLEX_F32_:
         decx::dsp::fft::_IFFT2D_caller_cplxf<de::CPf>(_src, _dst, S, E, de::GetLastError());

@@ -33,7 +33,7 @@
 
 
 __global__ void 
-decx::bp::GPUK::cu_transpose2D_b4_dense(const float* __restrict src, 
+decx::blas::GPUK::cu_transpose2D_b4_dense(const float* __restrict src, 
                                       float* __restrict dst,
                                       const uint32_t pitchsrc_v1, 
                                       const uint32_t pitchdst_v1, 

@@ -55,7 +55,7 @@ void decx::dsp::fft::_cuda_FFT1D_planner<float>::Forward(decx::_Vector* src, dec
         _formal_FFT2D_ptr->get_FFT_info(decx::dsp::fft::_FFT_AlongH),
         S);
 
-    decx::bp::transpose2D_b8_for_FFT(_double_buffer.get_leading_ptr<double2>(),
+    decx::blas ::transpose2D_b8_for_FFT(_double_buffer.get_leading_ptr<double2>(),
                                      _double_buffer.get_lagging_ptr<double2>(),
                                      make_uint2(this->get_larger_FFT_lengths(0), this->get_larger_FFT_lengths(1)),
                                      _formal_FFT2D_ptr->get_buffer_dims().x,
@@ -90,7 +90,7 @@ void decx::dsp::fft::_cuda_FFT1D_planner<float>::Forward(decx::_GPU_Vector* src,
         _formal_FFT2D_ptr->get_FFT_info(decx::dsp::fft::_FFT_AlongH),
         S);
 
-    decx::bp::transpose2D_b8_for_FFT(_double_buffer.get_leading_ptr<double2>(),
+    decx::blas::transpose2D_b8_for_FFT(_double_buffer.get_leading_ptr<double2>(),
                                      _double_buffer.get_lagging_ptr<double2>(),
                                      make_uint2(this->get_larger_FFT_lengths(0), this->get_larger_FFT_lengths(1)),
                                      _formal_FFT2D_ptr->get_buffer_dims().x,
@@ -123,7 +123,7 @@ void decx::dsp::fft::_cuda_FFT1D_planner<float>::Inverse(decx::_Vector* src, dec
         _formal_FFT2D_ptr->get_FFT_info(decx::dsp::fft::_FFT_AlongH),
         S, this->get_signal_length());
 
-    decx::bp::transpose2D_b8_for_FFT(_double_buffer.get_leading_ptr<double2>(),
+    decx::blas::transpose2D_b8_for_FFT(_double_buffer.get_leading_ptr<double2>(),
                                      _double_buffer.get_lagging_ptr<double2>(),
                                      make_uint2(this->get_larger_FFT_lengths(0), this->get_larger_FFT_lengths(1)),
                                      _formal_FFT2D_ptr->get_buffer_dims().x,
@@ -156,7 +156,7 @@ void decx::dsp::fft::_cuda_FFT1D_planner<float>::Inverse(decx::_GPU_Vector* src,
         _formal_FFT2D_ptr->get_FFT_info(decx::dsp::fft::_FFT_AlongH),
         S, this->get_signal_length());
 
-    decx::bp::transpose2D_b8_for_FFT(_double_buffer.get_leading_ptr<double2>(),
+    decx::blas ::transpose2D_b8_for_FFT(_double_buffer.get_leading_ptr<double2>(),
                                      _double_buffer.get_lagging_ptr<double2>(),
                                      make_uint2(this->get_larger_FFT_lengths(0), this->get_larger_FFT_lengths(1)),
                                      _formal_FFT2D_ptr->get_buffer_dims().x,

@@ -80,6 +80,8 @@ _CRSR_ void decx::dsp::fft::cpu_FFT3D_planner<_data_type>::plan(decx::utils::_th
                                                               const decx::_tensor_layout* dst_layout, 
                                                               de::DH* handle)
 {
+    constexpr uint32_t _proc_alignment = 32 / (sizeof(_data_type) * 2);
+
     this->_signal_dims.x = src_layout->depth;
     this->_signal_dims.y = src_layout->width;
     this->_signal_dims.z = src_layout->height;
@@ -102,24 +104,26 @@ _CRSR_ void decx::dsp::fft::cpu_FFT3D_planner<_data_type>::plan(decx::utils::_th
     this->_FFT_W._FFT_info.plan(t1D);
     this->_FFT_H._FFT_info.plan(t1D);
 
-    this->_aligned_proc_dims.x = decx::utils::align<uint32_t>(this->_signal_dims.x, 4);
-    this->_aligned_proc_dims.y = decx::utils::align<uint32_t>(this->_signal_dims.y, 4);
-    this->_aligned_proc_dims.z = decx::utils::align<uint32_t>(this->_signal_dims.z, dst_layout->_single_element_size == 1 ? 8 : 4);
-    
+    this->_aligned_proc_dims.x = decx::utils::align<uint32_t>(this->_signal_dims.x, _proc_alignment);
+    this->_aligned_proc_dims.y = decx::utils::align<uint32_t>(this->_signal_dims.y, _proc_alignment);
+    //this->_aligned_proc_dims.z = decx::utils::align<uint32_t>(this->_signal_dims.z, dst_layout->_single_element_size == 1 ? 8 : 4);
+    this->_aligned_proc_dims.z = decx::utils::align<uint32_t>(this->_signal_dims.z, 
+                                                              sizeof(_type_out) == 1 ? 8 : _proc_alignment);
+
     uint32_t _FFTD_lane_num_effective, _conc_FFTD_num;
     // Thread distribution for FFT along depth dimension
     _FFTD_lane_num_effective = this->_signal_dims.y * this->_signal_dims.z;
-    _conc_FFTD_num = min(decx::utils::ceil<uint32_t>(_FFTD_lane_num_effective, 4), this->_concurrency);
-    decx::utils::frag_manager_gen_Nx(&this->_FFT_D._f_mgr, _FFTD_lane_num_effective, _conc_FFTD_num, 4);
+    _conc_FFTD_num = min(decx::utils::ceil<uint32_t>(_FFTD_lane_num_effective, _proc_alignment), this->_concurrency);
+    decx::utils::frag_manager_gen_Nx(&this->_FFT_D._f_mgr, _FFTD_lane_num_effective, _conc_FFTD_num, _proc_alignment);
     this->_FFT_D._FFT_zip_info_LDG.set_attributes(src_layout->wpitch, this->_signal_dims.y);
     this->_FFT_D._FFT_zip_info_STG.set_attributes(this->_signal_dims.y, this->_signal_dims.y);
     this->_FFT_D._pitchsrc = src_layout->dpitch;
     this->_FFT_D._pitchdst = this->_aligned_proc_dims.x;
-    
+
     // Thread distribution for FFT along width dimension
     _FFTD_lane_num_effective = this->_signal_dims.x * this->_signal_dims.z;
-    _conc_FFTD_num = min(decx::utils::ceil<uint32_t>(_FFTD_lane_num_effective, 4), this->_concurrency);
-    decx::utils::frag_manager_gen_Nx(&this->_FFT_W._f_mgr, _FFTD_lane_num_effective, _conc_FFTD_num, 4);
+    _conc_FFTD_num = min(decx::utils::ceil<uint32_t>(_FFTD_lane_num_effective, _proc_alignment), this->_concurrency);
+    decx::utils::frag_manager_gen_Nx(&this->_FFT_W._f_mgr, _FFTD_lane_num_effective, _conc_FFTD_num, _proc_alignment);
     this->_FFT_W._FFT_zip_info_LDG.set_attributes(this->_signal_dims.x, this->_signal_dims.x);
     this->_FFT_W._FFT_zip_info_STG.set_attributes(this->_signal_dims.x, this->_signal_dims.x);
     this->_FFT_W._pitchsrc = this->_aligned_proc_dims.y;
@@ -127,8 +131,8 @@ _CRSR_ void decx::dsp::fft::cpu_FFT3D_planner<_data_type>::plan(decx::utils::_th
 
     // Thread distribution for FFT along height dimension
     _FFTD_lane_num_effective = this->_signal_dims.x * this->_signal_dims.y;
-    _conc_FFTD_num = min(decx::utils::ceil<uint32_t>(_FFTD_lane_num_effective, 4), this->_concurrency);
-    decx::utils::frag_manager_gen_Nx(&this->_FFT_H._f_mgr, _FFTD_lane_num_effective, _conc_FFTD_num, 4);
+    _conc_FFTD_num = min(decx::utils::ceil<uint32_t>(_FFTD_lane_num_effective, _proc_alignment), this->_concurrency);
+    decx::utils::frag_manager_gen_Nx(&this->_FFT_H._f_mgr, _FFTD_lane_num_effective, _conc_FFTD_num, _proc_alignment);
     this->_FFT_H._FFT_zip_info_LDG.set_attributes(this->_FFT_D._pitchdst, this->_signal_dims.x);
     this->_FFT_H._FFT_zip_info_STG.set_attributes(dst_layout->dpitch, this->_signal_dims.x, dst_layout->wpitch, this->_signal_dims.y);
     this->_FFT_H._pitchsrc = this->_aligned_proc_dims.z;

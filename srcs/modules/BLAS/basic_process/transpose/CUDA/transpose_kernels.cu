@@ -36,7 +36,7 @@
 
 
 __global__
-void decx::bp::GPUK::cu_transpose2D_b8(const double2* src,
+void decx::blas::GPUK::cu_transpose2D_b8(const double2* src,
                                        double2 *dst, 
                                        const uint32_t pitchsrc_v2,        // in double2 (de::CPf x2)
                                        const uint32_t pitchdst_v2,        // in double2 (de::CPf x2)
@@ -99,7 +99,7 @@ void decx::bp::GPUK::cu_transpose2D_b8(const double2* src,
 
 
 __global__
-void decx::bp::GPUK::cu_transpose2D_b16(const double2* src,
+void decx::blas::GPUK::cu_transpose2D_b16(const double2* src,
                                         double2 *dst, 
                                         const uint32_t pitchsrc_v1,        // in double2 (de::CPd x1)
                                         const uint32_t pitchdst_v1,        // in double2 (de::CPd x1)
@@ -151,7 +151,7 @@ void decx::bp::GPUK::cu_transpose2D_b16(const double2* src,
 
 #ifdef _DECX_DSP_CUDA_
 __global__
-void decx::bp::GPUK::cu_transpose2D_b8_for_FFT(const double2* src,
+void decx::blas::GPUK::cu_transpose2D_b8_for_FFT(const double2* src,
                                                double2 *dst, 
                                                const uint32_t pitchsrc_v2,        // in double2 (de::CPf x2)
                                                const uint32_t pitchdst_v2,        // in double2 (de::CPf x2)
@@ -221,7 +221,7 @@ void decx::bp::GPUK::cu_transpose2D_b8_for_FFT(const double2* src,
 
 
 __global__
-void decx::bp::GPUK::cu_transpose2D_b16_for_FFT(const double2* src,
+void decx::blas::GPUK::cu_transpose2D_b16_for_FFT(const double2* src,
                                                double2 *dst, 
                                                const uint32_t pitchsrc_v1,        // in double2 (de::CPd x1)
                                                const uint32_t pitchdst_v1,        // in double2 (de::CPd x1)
@@ -278,7 +278,7 @@ void decx::bp::GPUK::cu_transpose2D_b16_for_FFT(const double2* src,
 
 
 __global__
-void decx::bp::GPUK::cu_transpose2D_b4(const float2* src,
+void decx::blas::GPUK::cu_transpose2D_b4(const float2* src,
                                        float2 *dst, 
                                        const uint32_t pitchsrc_v2,        // in double2 (de::CPf x2)
                                        const uint32_t pitchdst_v2,        // in double2 (de::CPf x2)
@@ -341,7 +341,7 @@ void decx::bp::GPUK::cu_transpose2D_b4(const float2* src,
 
 
 __global__
-void decx::bp::GPUK::cu_transpose2D_b1(const uint32_t* src,
+void decx::blas::GPUK::cu_transpose2D_b1(const uint32_t* src,
                                        uint32_t *dst, 
                                        const uint32_t pitchsrc_v4,        // in uchar4 (int32_t)
                                        const uint32_t pitchdst_v4,        // in uchar4 (int32_t)

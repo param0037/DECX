@@ -44,7 +44,7 @@
 
 namespace decx
 {
-namespace bp
+namespace blas
 {
     namespace GPUK 
     {
@@ -106,7 +106,7 @@ namespace bp
 
 namespace decx
 {
-namespace bp
+namespace blas
 {
     namespace GPUK 
     {
@@ -122,7 +122,7 @@ namespace bp
 
 
 static void 
-decx::bp::transpose2D_b8(const double2* src, 
+decx::blas::transpose2D_b8(const double2* src, 
                          double2* dst, 
                          const uint2 proc_dims_dst,
                          const uint32_t pitchsrc, 
@@ -133,14 +133,14 @@ decx::bp::transpose2D_b8(const double2* src,
     dim3 transp_grid_0(decx::utils::ceil<uint>(proc_dims_dst.y, 64),
         decx::utils::ceil<uint>(proc_dims_dst.x, 64));
 
-    decx::bp::GPUK::cu_transpose2D_b8 << <transp_grid_0, transp_thread_0, 0, S->get_raw_stream_ref() >> > (
+    decx::blas::GPUK::cu_transpose2D_b8 << <transp_grid_0, transp_thread_0, 0, S->get_raw_stream_ref() >> > (
         src, dst, pitchsrc / 2, pitchdst / 2, proc_dims_dst);
 }
 
 
 
 static void 
-decx::bp::transpose2D_b16(const double2* src, 
+decx::blas::transpose2D_b16(const double2* src, 
                          double2* dst, 
                          const uint2 proc_dims_dst,
                          const uint32_t pitchsrc, 
@@ -151,14 +151,14 @@ decx::bp::transpose2D_b16(const double2* src,
     dim3 transp_grid_0(decx::utils::ceil<uint>(proc_dims_dst.y, 32),
         decx::utils::ceil<uint>(proc_dims_dst.x, 32));
 
-    decx::bp::GPUK::cu_transpose2D_b16 << <transp_grid_0, transp_thread_0, 0, S->get_raw_stream_ref() >> > (
+    decx::blas::GPUK::cu_transpose2D_b16 << <transp_grid_0, transp_thread_0, 0, S->get_raw_stream_ref() >> > (
         src, dst, pitchsrc, pitchdst, proc_dims_dst);
 }
 
 
 #ifdef _DECX_DSP_CUDA_
 static void 
-decx::bp::transpose2D_b8_for_FFT(const double2* src, 
+decx::blas::transpose2D_b8_for_FFT(const double2* src, 
                                  double2* dst, 
                                  const uint2 proc_dims_dst,
                                  const uint32_t pitchsrc, 
@@ -169,13 +169,13 @@ decx::bp::transpose2D_b8_for_FFT(const double2* src,
     dim3 transp_grid_0(decx::utils::ceil<uint>(proc_dims_dst.y, 64),
         decx::utils::ceil<uint>(proc_dims_dst.x, 64));
 
-    decx::bp::GPUK::cu_transpose2D_b8_for_FFT << <transp_grid_0, transp_thread_0, 0, S->get_raw_stream_ref() >> > (
+    decx::blas::GPUK::cu_transpose2D_b8_for_FFT << <transp_grid_0, transp_thread_0, 0, S->get_raw_stream_ref() >> > (
         src, dst, pitchsrc / 2, pitchdst / 2, proc_dims_dst);
 }
 
 
 static void 
-decx::bp::transpose2D_b16_for_FFT(const double2* src, 
+decx::blas::transpose2D_b16_for_FFT(const double2* src, 
                                  double2* dst, 
                                  const uint2 proc_dims_dst,
                                  const uint32_t pitchsrc, 
@@ -186,7 +186,7 @@ decx::bp::transpose2D_b16_for_FFT(const double2* src,
     dim3 transp_grid_0(decx::utils::ceil<uint>(proc_dims_dst.y, 32),
         decx::utils::ceil<uint>(proc_dims_dst.x, 32));
 
-    decx::bp::GPUK::cu_transpose2D_b16_for_FFT << <transp_grid_0, transp_thread_0, 0, S->get_raw_stream_ref() >> > (
+    decx::blas::GPUK::cu_transpose2D_b16_for_FFT << <transp_grid_0, transp_thread_0, 0, S->get_raw_stream_ref() >> > (
         src, dst, pitchsrc, pitchdst, proc_dims_dst);
 }
 #endif
@@ -194,7 +194,7 @@ decx::bp::transpose2D_b16_for_FFT(const double2* src,
 
 
 static void 
-decx::bp::transpose2D_b4(const float2* src, 
+decx::blas::transpose2D_b4(const float2* src, 
                          float2* dst, 
                          const uint2 proc_dims_dst,
                          const uint32_t pitchsrc, 
@@ -205,14 +205,14 @@ decx::bp::transpose2D_b4(const float2* src,
     dim3 transp_grid_0(decx::utils::ceil<uint>(proc_dims_dst.y, 64),
         decx::utils::ceil<uint>(proc_dims_dst.x, 64));
 
-    decx::bp::GPUK::cu_transpose2D_b4 << <transp_grid_0, transp_thread_0, 0, S->get_raw_stream_ref() >> > (
+    decx::blas::GPUK::cu_transpose2D_b4 << <transp_grid_0, transp_thread_0, 0, S->get_raw_stream_ref() >> > (
         src, dst, pitchsrc / 2, pitchdst / 2, proc_dims_dst);
 }
 
 
 
 static void 
-decx::bp::transpose2D_b1(const uint32_t* src, 
+decx::blas::transpose2D_b1(const uint32_t* src, 
                          uint32_t* dst, 
                          const uint2 proc_dims_dst,
                          const uint32_t pitchsrc, 
@@ -223,14 +223,14 @@ decx::bp::transpose2D_b1(const uint32_t* src,
     dim3 transp_grid_0(decx::utils::ceil<uint32_t>(proc_dims_dst.y, 128),
         decx::utils::ceil<uint32_t>(proc_dims_dst.x, 128));
 
-    decx::bp::GPUK::cu_transpose2D_b1 << <transp_grid_0, transp_thread_0, 0, S->get_raw_stream_ref() >> > (
+    decx::blas::GPUK::cu_transpose2D_b1 << <transp_grid_0, transp_thread_0, 0, S->get_raw_stream_ref() >> > (
         src, dst, pitchsrc / 4, pitchdst / 4, proc_dims_dst);
 }
 
 // dense
 
 static void 
-decx::bp::transpose2D_b4_dense(const float* src, 
+decx::blas::transpose2D_b4_dense(const float* src, 
                                float* dst, 
                                const uint2 proc_dims_dst,
                                const uint32_t pitchsrc, 
@@ -241,7 +241,7 @@ decx::bp::transpose2D_b4_dense(const float* src,
     dim3 transp_grid_0(decx::utils::ceil<uint>(proc_dims_dst.y, 32),
         decx::utils::ceil<uint>(proc_dims_dst.x, 32));
 
-    decx::bp::GPUK::cu_transpose2D_b4_dense << <transp_grid_0, transp_thread_0, 0, S->get_raw_stream_ref() >> > (
+    decx::blas::GPUK::cu_transpose2D_b4_dense << <transp_grid_0, transp_thread_0, 0, S->get_raw_stream_ref() >> > (
         src, dst, pitchsrc, pitchdst, proc_dims_dst);
 }
 

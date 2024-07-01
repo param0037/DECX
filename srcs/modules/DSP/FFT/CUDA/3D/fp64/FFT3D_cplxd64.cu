@@ -66,7 +66,7 @@ void decx::dsp::fft::_cuda_FFT3D_planner<double>::Forward(decx::_GPU_Tensor* src
     // Along D
     const decx::dsp::fft::_FFT2D_1way_config* _along_D = this->get_FFT_info(decx::dsp::fft::_FFT_AlongD);
 
-    decx::bp::transpose2D_b16(double_buffer.get_leading_ptr<double2>(), 
+    decx::blas::transpose2D_b16(double_buffer.get_leading_ptr<double2>(), 
                              double_buffer.get_lagging_ptr<double2>(),
                              make_uint2(_along_D->_pitchtmp, _along_D->get_signal_len()),
                              _along_W->_1way_FFT_conf._pitchdst, 
@@ -76,7 +76,7 @@ void decx::dsp::fft::_cuda_FFT3D_planner<double>::Forward(decx::_GPU_Tensor* src
     
     decx::dsp::fft::FFT2D_C2C_cplxd_1way_caller<_FFT2D_END_(de::CPd)>(&double_buffer, _along_D, S);
 
-    decx::bp::transpose2D_b16(double_buffer.get_leading_ptr<double2>(), 
+    decx::blas::transpose2D_b16(double_buffer.get_leading_ptr<double2>(), 
                              (double2*)dst->Tens.ptr,
                              make_uint2(dst->Depth(), _along_D->_pitchtmp),
                              _along_D->_pitchdst, 
@@ -115,7 +115,7 @@ void decx::dsp::fft::_cuda_FFT3D_planner<double>::Inverse(decx::_GPU_Tensor* src
 
     // Along D
     const decx::dsp::fft::_FFT2D_1way_config* _along_D = this->get_FFT_info(decx::dsp::fft::_FFT_AlongD);
-    decx::bp::transpose2D_b16(double_buffer.get_leading_ptr<double2>(), 
+    decx::blas::transpose2D_b16(double_buffer.get_leading_ptr<double2>(), 
                              double_buffer.get_lagging_ptr<double2>(),
                              make_uint2(_along_D->_pitchtmp, _along_D->get_signal_len()),
                              _along_W->_1way_FFT_conf._pitchdst, 
@@ -126,21 +126,21 @@ void decx::dsp::fft::_cuda_FFT3D_planner<double>::Inverse(decx::_GPU_Tensor* src
     decx::dsp::fft::FFT2D_C2C_cplxd_1way_caller<_IFFT2D_END_(_type_out)>(&double_buffer, _along_D, S);
 
     if (std::is_same<_type_out, de::CPd>::value){
-        decx::bp::transpose2D_b16(double_buffer.get_leading_ptr<double2>(), 
+        decx::blas::transpose2D_b16(double_buffer.get_leading_ptr<double2>(), 
                                  (double2*)dst->Tens.ptr,
                                  make_uint2(dst->Depth(), _along_D->_pitchtmp),
                                  _along_D->_pitchdst, 
                                  dst->get_layout().dpitch, S);
     }
     else if (std::is_same<_type_out, uint8_t>::value) {
-        /*decx::bp::transpose2D_b1(double_buffer.get_leading_ptr<uint32_t>(), 
+        decx::blas::transpose2D_b1(double_buffer.get_leading_ptr<uint32_t>(), 
                                  (uint32_t*)dst->Tens.ptr,
                                  make_uint2(dst->Depth(), _along_D->_pitchtmp),
                                  _along_D->_pitchdst * 8, 
-                                 dst->get_layout().dpitch, S);*/
+                                 dst->get_layout().dpitch, S);
     }
     else if (std::is_same<_type_out, double>::value){
-        decx::bp::transpose2D_b8(double_buffer.get_leading_ptr<double2>(), 
+        decx::blas::transpose2D_b8(double_buffer.get_leading_ptr<double2>(), 
                                  (double2*)dst->Tens.ptr,
                                  make_uint2(dst->Depth(), _along_D->_pitchtmp),
                                  _along_D->_pitchdst * 2, 

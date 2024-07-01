@@ -171,20 +171,31 @@ _DECX_API_ void de::dsp::cpu::FFT(de::Matrix& src, de::Matrix& dst, const de::_D
     decx::_Matrix* _src = dynamic_cast<decx::_Matrix*>(&src);
     decx::_Matrix* _dst = dynamic_cast<decx::_Matrix*>(&dst);
 
+    if (!(decx::dsp::fft::validate_type_FFT2D(_src->Type()) && decx::dsp::fft::validate_type_FFT2D(_output_type)))
+    {
+        decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_UNSUPPORTED_TYPE,
+            "FFT2D CUDA only supports float, double, uint8_t, de::CPf and de::CPd input");
+        return;
+    }
+
+    if ((_src->Type() & 3) == 1) {        // (complex)_Fp32
+        _dst->re_construct(de::_DATA_TYPES_FLAGS_::_COMPLEX_F32_, _src->Width(), _src->Height());
+    }
+    else if ((_src->Type() & 3) == 2) {       // (complex)_Fp64
+        _dst->re_construct(de::_DATA_TYPES_FLAGS_::_COMPLEX_F64_, _src->Width(), _src->Height());
+    }
+    else {  // If is _UINT8_
+        _dst->re_construct(_output_type, _src->Width(), _src->Height());
+    }
+
     // Entries of FFT callees for different cases
     switch (_src->Type())
     {
     case de::_DATA_TYPES_FLAGS_::_FP32_:
-        // reconstruct the destinated matrix
-        _dst->re_construct(de::_DATA_TYPES_FLAGS_::_COMPLEX_F32_, _src->Width(), _src->Height());
-
         decx::dsp::fft::FFT2D_caller_cplxf<float>(_src, _dst, de::GetLastError());
         break;
 
     case de::_DATA_TYPES_FLAGS_::_UINT8_:
-        // reconstruct the destinated matrix
-        _dst->re_construct(_output_type, _src->Width(), _src->Height());
-
         if (_output_type == de::_DATA_TYPES_FLAGS_::_COMPLEX_F32_) {
             decx::dsp::fft::FFT2D_caller_cplxf<uint8_t>(_src, _dst, de::GetLastError());
         }
@@ -194,23 +205,14 @@ _DECX_API_ void de::dsp::cpu::FFT(de::Matrix& src, de::Matrix& dst, const de::_D
         break;
 
     case de::_DATA_TYPES_FLAGS_::_COMPLEX_F32_:
-        // reconstruct the destinated matrix
-        _dst->re_construct(de::_DATA_TYPES_FLAGS_::_COMPLEX_F32_, _src->Width(), _src->Height());
-
         decx::dsp::fft::FFT2D_caller_cplxf<de::CPf>(_src, _dst, de::GetLastError());
         break;
 
     case de::_DATA_TYPES_FLAGS_::_FP64_:
-        // reconstruct the destinated matrix
-        _dst->re_construct(de::_DATA_TYPES_FLAGS_::_COMPLEX_F64_, _src->Width(), _src->Height());
-
         decx::dsp::fft::FFT2D_caller_cplxd<double>(_src, _dst, de::GetLastError());
         break;
 
     case de::_DATA_TYPES_FLAGS_::_COMPLEX_F64_:
-        // reconstruct the destinated matrix
-        _dst->re_construct(de::_DATA_TYPES_FLAGS_::_COMPLEX_F64_, _src->Width(), _src->Height());
-
         decx::dsp::fft::FFT2D_caller_cplxd<de::CPd>(_src, _dst, de::GetLastError());
         break;
 

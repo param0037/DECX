@@ -50,6 +50,10 @@ namespace dsp {
 
         template <typename _type_out>
         _CRSR_ static void IFFT3D_caller_cplxf(decx::_Tensor* src, decx::_Tensor* dst, de::DH* handle);
+
+
+        template <typename _type_out>
+        _CRSR_ static void IFFT3D_caller_cplxd(decx::_Tensor* src, decx::_Tensor* dst, de::DH* handle);
     }
 }
 }
@@ -110,6 +114,33 @@ static void decx::dsp::fft::FFT3D_caller_cplxd(decx::_Tensor* src, decx::_Tensor
 
 
 template <typename _type_out>
+static void decx::dsp::fft::IFFT3D_caller_cplxd(decx::_Tensor* src, decx::_Tensor* dst, de::DH* handle)
+{
+    decx::utils::_thread_arrange_1D t1D(decx::cpu::_get_permitted_concurrency());
+
+    if (decx::dsp::fft::IFFT3D_cplxd64_planner._res_ptr == NULL) {
+        decx::dsp::fft::IFFT3D_cplxd64_planner.RegisterResource(new decx::dsp::fft::cpu_FFT3D_planner<double>,
+            5, &decx::dsp::fft::cpu_FFT3D_planner<double>::release);
+    }
+
+    decx::dsp::fft::IFFT3D_cplxd64_planner.lock();
+
+    decx::dsp::fft::cpu_FFT3D_planner<double>* _planner =
+        decx::dsp::fft::IFFT3D_cplxd64_planner.get_resource_raw_ptr<decx::dsp::fft::cpu_FFT3D_planner<double>>();
+
+    if (_planner->changed(&src->get_layout(), &dst->get_layout(), t1D.total_thread)) {
+        _planner->plan<_type_out>(&t1D, &src->get_layout(), &dst->get_layout(), handle);
+        Check_Runtime_Error(handle);
+    }
+
+    _planner->Inverse<_type_out>(src, dst);
+
+    decx::dsp::fft::IFFT3D_cplxd64_planner.unlock();
+}
+
+
+
+template <typename _type_out>
 static void decx::dsp::fft::IFFT3D_caller_cplxf(decx::_Tensor* src, decx::_Tensor* dst, de::DH* handle)
 {
     decx::utils::_thread_arrange_1D t1D(decx::cpu::_get_permitted_concurrency());
@@ -136,7 +167,7 @@ static void decx::dsp::fft::IFFT3D_caller_cplxf(decx::_Tensor* src, decx::_Tenso
 
 
 
-_DECX_API_ void de::dsp::cpu::FFT(de::Tensor& src, de::Tensor& dst)
+_DECX_API_ void de::dsp::cpu::FFT(de::Tensor& src, de::Tensor& dst, const de::_DATA_TYPES_FLAGS_ _output_type)
 {
     de::ResetLastError();
 
@@ -149,6 +180,23 @@ _DECX_API_ void de::dsp::cpu::FFT(de::Tensor& src, de::Tensor& dst)
     decx::_Tensor* _src = dynamic_cast<decx::_Tensor*>(&src);
     decx::_Tensor* _dst = dynamic_cast<decx::_Tensor*>(&dst);
 
+    if (!(decx::dsp::fft::validate_type_FFT2D(_src->Type()) && decx::dsp::fft::validate_type_FFT2D(_output_type))) 
+    {
+        decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_UNSUPPORTED_TYPE,
+            "FFT2D CUDA only supports float, double, uint8_t, de::CPf and de::CPd input");
+        return;
+    }
+
+    if ((_src->Type() & 3) == 1) {        // (complex)_Fp32
+        _dst->re_construct(de::_DATA_TYPES_FLAGS_::_COMPLEX_F32_, _src->Width(), _src->Height(), _src->Depth());
+    }
+    else if ((_src->Type() & 3) == 2) {       // (complex)_Fp64
+        _dst->re_construct(de::_DATA_TYPES_FLAGS_::_COMPLEX_F64_, _src->Width(), _src->Height(), _src->Depth());
+    }
+    else {  // If is _UINT8_
+        _dst->re_construct(_output_type, _src->Width(), _src->Height(), _src->Depth());
+    }
+
     switch (_src->Type())
     {
     case de::_DATA_TYPES_FLAGS_::_FP32_:
@@ -156,7 +204,12 @@ _DECX_API_ void de::dsp::cpu::FFT(de::Tensor& src, de::Tensor& dst)
         break;
 
     case de::_DATA_TYPES_FLAGS_::_UINT8_:
-        decx::dsp::fft::FFT3D_caller_cplxf<uint8_t>(_src, _dst, de::GetLastError());
+        if (_output_type == de::_DATA_TYPES_FLAGS_::_COMPLEX_F32_) {
+            decx::dsp::fft::FFT3D_caller_cplxf<uint8_t>(_src, _dst, de::GetLastError());
+        }
+        else {
+            decx::dsp::fft::FFT3D_caller_cplxd<uint8_t>(_src, _dst, de::GetLastError());
+        }
         break;
 
     case de::_DATA_TYPES_FLAGS_::_COMPLEX_F32_:
@@ -165,6 +218,10 @@ _DECX_API_ void de::dsp::cpu::FFT(de::Tensor& src, de::Tensor& dst)
 
     case de::_DATA_TYPES_FLAGS_::_FP64_:
         decx::dsp::fft::FFT3D_caller_cplxd<double>(_src, _dst, de::GetLastError());
+        break;
+
+    case de::_DATA_TYPES_FLAGS_::_COMPLEX_F64_:
+        decx::dsp::fft::FFT3D_caller_cplxd<de::CPd>(_src, _dst, de::GetLastError());
         break;
 
     default:
@@ -188,6 +245,24 @@ _DECX_API_ void de::dsp::cpu::IFFT(de::Tensor& src, de::Tensor& dst, const de::_
     decx::_Tensor* _src = dynamic_cast<decx::_Tensor*>(&src);
     decx::_Tensor* _dst = dynamic_cast<decx::_Tensor*>(&dst);
 
+    if (!(decx::dsp::fft::validate_type_FFT2D(_src->Type()) && decx::dsp::fft::validate_type_FFT2D(_output_type))) {
+        decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_UNSUPPORTED_TYPE,
+            "FFT2D CUDA only supports float, double, uint8_t, de::CPf and de::CPd input");
+        return;
+    }
+
+    if (_output_type != de::_DATA_TYPES_FLAGS_::_UINT8_) // Ensures it's either fp32(cplxf) or fp64(cplxd)
+    {
+        if (!decx::dsp::fft::check_type_matched_FFT(_src->Type(), _output_type)) {
+            decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_TYPE_MOT_MATCH,
+                "Conversion between fp32 and fp64 in FFT is not supported");
+            return;
+        }
+    }
+    else {
+        _dst->re_construct(_output_type, _src->Width(), _src->Height(), _src->Depth());
+    }
+
     switch (_output_type)
     {
     case de::_DATA_TYPES_FLAGS_::_COMPLEX_F32_:
@@ -199,7 +274,20 @@ _DECX_API_ void de::dsp::cpu::IFFT(de::Tensor& src, de::Tensor& dst, const de::_
         break;
 
     case de::_DATA_TYPES_FLAGS_::_UINT8_:
-        decx::dsp::fft::IFFT3D_caller_cplxf<uint8_t>(_src, _dst, de::GetLastError());
+        if (_output_type == de::_DATA_TYPES_FLAGS_::_COMPLEX_F32_) {
+            decx::dsp::fft::IFFT3D_caller_cplxf<uint8_t>(_src, _dst, de::GetLastError());
+        }
+        else {
+            decx::dsp::fft::IFFT3D_caller_cplxd<uint8_t>(_src, _dst, de::GetLastError());
+        }
+        break;
+
+    case de::_DATA_TYPES_FLAGS_::_COMPLEX_F64_:
+        decx::dsp::fft::IFFT3D_caller_cplxd<de::CPd>(_src, _dst, de::GetLastError());
+        break;
+
+    case de::_DATA_TYPES_FLAGS_::_FP64_:
+        decx::dsp::fft::IFFT3D_caller_cplxd<double>(_src, _dst, de::GetLastError());
         break;
 
     default:

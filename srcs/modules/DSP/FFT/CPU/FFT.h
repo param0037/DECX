@@ -73,7 +73,7 @@ namespace dsp {
         _DECX_API_ void FFT(de::Matrix& src, de::Matrix& dst, const de::_DATA_TYPES_FLAGS_ _output_type);
 
 
-        _DECX_API_ void FFT(de::Tensor& src, de::Tensor& dst);
+        _DECX_API_ void FFT(de::Tensor& src, de::Tensor& dst, const de::_DATA_TYPES_FLAGS_ _output_type);
 
 
         _DECX_API_ void IFFT(de::Tensor& src, de::Tensor& dst, const de::_DATA_TYPES_FLAGS_ _output_type);

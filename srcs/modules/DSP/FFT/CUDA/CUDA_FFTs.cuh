@@ -67,7 +67,7 @@ namespace cuda
     _DECX_API_ void IFFT(de::Matrix& src, de::Matrix& dst, const de::_DATA_TYPES_FLAGS_ type_out);
 
 
-    _DECX_API_ void FFT(de::GPU_Tensor& src, de::GPU_Tensor& dst);
+    _DECX_API_ void FFT(de::GPU_Tensor& src, de::GPU_Tensor& dst, const de::_DATA_TYPES_FLAGS_ _output_type);
 
 
     _DECX_API_ void IFFT(de::GPU_Tensor& src, de::GPU_Tensor& dst, const de::_DATA_TYPES_FLAGS_ type_out);
