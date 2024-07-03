@@ -1,21 +1,21 @@
 ﻿  ImageFFT.cxx
-E:\DECX_world\samples\ImageFFT\ImageFFT.h(72,23): warning C4018: '<': signed/unsigned mismatch
-E:\DECX_world\samples\ImageFFT\ImageFFT.h(73,27): warning C4018: '<': signed/unsigned mismatch
-E:\DECX_world\samples\ImageFFT\ImageFFT.h(74,82): warning C4244: '=': conversion from 'double' to '_ptr_type', possible loss of data
+E:\DECX_world\samples\ImageFFT\ImageFFT.h(73,23): warning C4018: '<': signed/unsigned mismatch
+E:\DECX_world\samples\ImageFFT\ImageFFT.h(74,27): warning C4018: '<': signed/unsigned mismatch
+E:\DECX_world\samples\ImageFFT\ImageFFT.h(75,82): warning C4244: '=': conversion from 'double' to '_ptr_type', possible loss of data
           with
           [
               _ptr_type=uint8_t
           ]
-E:\DECX_world\samples\ImageFFT\ImageFFT.h(141,23): warning C4018: '<': signed/unsigned mismatch
-E:\DECX_world\samples\ImageFFT\ImageFFT.h(142,27): warning C4018: '<': signed/unsigned mismatch
-E:\DECX_world\samples\ImageFFT\ImageFFT.h(143,82): warning C4244: '=': conversion from 'double' to '_ptr_type', possible loss of data
+E:\DECX_world\samples\ImageFFT\ImageFFT.h(142,23): warning C4018: '<': signed/unsigned mismatch
+E:\DECX_world\samples\ImageFFT\ImageFFT.h(143,27): warning C4018: '<': signed/unsigned mismatch
+E:\DECX_world\samples\ImageFFT\ImageFFT.h(144,82): warning C4244: '=': conversion from 'double' to '_ptr_type', possible loss of data
           with
           [
               _ptr_type=uint8_t
           ]
      Creating library E:\DECX_world\samples\x64\Release\ImageFFT.lib and object E:\DECX_world\samples\x64\Release\ImageFFT.exp
   Generating code
-  4 of 85 functions ( 4.7%) were compiled, the rest were copied from previous compilation.
+  0 of 85 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
     0 functions had inline decision re-evaluated but remain unchanged
   Finished generating code

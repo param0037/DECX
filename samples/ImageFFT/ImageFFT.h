@@ -16,6 +16,7 @@
 #include "../../includes/DECX.h"
 #include <iostream>
 
+
 void decx_frequnce_domain_filtering_CUDA()
 {
     de::InitCPUInfo();
@@ -52,14 +53,14 @@ void decx_frequnce_domain_filtering_CUDA()
 
     //de::signal::cuda::Gaussian_Window2D(D_FFTres, D_Filter_res, de::Point2D_f(0, 0), de::Point2D_f(50, 200), 0.9);
     // call low-pass filter API on GPU
-    //de::dsp::cuda::LowPass2D_Ideal(D_FFTres, D_Filter_res, de::Point2D(100, 50));
+    de::dsp::cuda::LowPass2D_Ideal(D_FFTres, D_Filter_res, de::Point2D(100, 50));
     // load data from device to host
     de::Memcpy(FFTres, D_Filter_res, { 0, 0 }, { 0, 0 }, { FFTres.Width(), FFTres.Height() }, de::DECX_MEMCPY_D2H);
 
     clock_t s, e;
     s = clock();
     // call IFFT2D() API on GPU
-    de::dsp::cuda::IFFT(D_FFTres, D_src_fp32, de::_FP32_);
+    de::dsp::cuda::IFFT(D_Filter_res, D_src_fp32, de::_FP32_);
     e = clock();
     // load data from device to host
     de::Memcpy(src_fp32, D_src_fp32, { 0, 0 }, { 0, 0 }, { src_fp32.Width(), src_fp32.Height() }, de::DECX_MEMCPY_D2H);

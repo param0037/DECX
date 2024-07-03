@@ -11,7 +11,6 @@
 #include "Array_creating.h"
 
 
-
 void CreateMatrix()
 {
     de::InitCPUInfo();
@@ -26,7 +25,7 @@ void CreateMatrix()
 
     for (int i = A.Height() - 10; i < A.Height(); ++i) {
         for (int j = A.Width() - 10; j < A.Width(); ++j) {
-            std::cout << std::setw(5) << *A.ptr_fp64(i, j);
+            std::cout << std::setw(5) << *A.ptr<double>(i, j);
         }
         std::cout << std::endl;
     }
@@ -46,7 +45,7 @@ void CreateTensor()
     for (int i = 0; i < A.Height(); ++i) {
         for (int j = 0; j < A.Width(); ++j) {
             for (int k = 0; k < A.Depth(); ++k) {
-                *A.ptr_fp64(i, j, k) = i + j - k;
+                *A.ptr<double>(i, j, k) = i + j - k;
             }
         }
     }
@@ -54,7 +53,7 @@ void CreateTensor()
     for (int i = A.Height() - 10; i < A.Height(); ++i) {
         for (int j = A.Width() - 10; j < A.Width(); ++j) {
             for (int k = A.Depth() - 10; k < A.Depth(); ++k) {
-                std::cout << std::setw(5) << *A.ptr_fp64(i, j, k);
+                std::cout << std::setw(5) << *A.ptr<double>(i, j, k);
             }
             std::cout << std::endl;
         }
@@ -75,7 +74,7 @@ void CreateVector()
     de::cpu::Constant_fp64(A, 37);
     
     for (int i = A.Len() - 10; i < A.Len() + 2; ++i) {
-        std::cout << std::setw(5) << *A.ptr_fp64(i);
+        std::cout << std::setw(5) << *A.ptr<double>(i);
     }
 
     A.release();

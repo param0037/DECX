@@ -1,0 +1,17 @@
+﻿  DataArray_Creating.cxx
+E:\DECX_world\samples\DataArray_Creating\DataArray_Creating.cxx(26,37): warning C4018: '<': signed/unsigned mismatch
+E:\DECX_world\samples\DataArray_Creating\DataArray_Creating.cxx(27,40): warning C4018: '<': signed/unsigned mismatch
+E:\DECX_world\samples\DataArray_Creating\DataArray_Creating.cxx(45,23): warning C4018: '<': signed/unsigned mismatch
+E:\DECX_world\samples\DataArray_Creating\DataArray_Creating.cxx(46,27): warning C4018: '<': signed/unsigned mismatch
+E:\DECX_world\samples\DataArray_Creating\DataArray_Creating.cxx(47,31): warning C4018: '<': signed/unsigned mismatch
+E:\DECX_world\samples\DataArray_Creating\DataArray_Creating.cxx(53,37): warning C4018: '<': signed/unsigned mismatch
+E:\DECX_world\samples\DataArray_Creating\DataArray_Creating.cxx(54,40): warning C4018: '<': signed/unsigned mismatch
+E:\DECX_world\samples\DataArray_Creating\DataArray_Creating.cxx(55,44): warning C4018: '<': signed/unsigned mismatch
+E:\DECX_world\samples\DataArray_Creating\DataArray_Creating.cxx(76,5): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+     Creating library E:\DECX_world\samples\x64\Release\DataArray_Creating.lib and object E:\DECX_world\samples\x64\Release\DataArray_Creating.exp
+  Generating code
+  0 of 74 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  DataArray_Creating.vcxproj -> E:\DECX_world\samples\x64\Release\DataArray_Creating.exe

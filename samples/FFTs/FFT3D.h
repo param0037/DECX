@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "../../includes/DECX.h"
+#include <DECX.h>
 #include <iostream>
 #include <iomanip>
 
@@ -45,7 +45,7 @@ static void FFT3D_CPU(const de::_DATA_TYPES_FLAGS_ _inout_type, const de::Point3
             }
         }
     }
-    de::dsp::cpu::FFT(src, dst);
+    de::dsp::cpu::FFT(src, dst, de::_COMPLEX_F32_);
 
     int _show_dex = 9;
 
@@ -113,7 +113,7 @@ static void FFT3D_CUDA(const de::_DATA_TYPES_FLAGS_ _inout_type, const de::Point
 
     de::Memcpy(src, Dsrc, de::Point3D(0, 0, 0), de::Point3D(0, 0, 0), de::Point3D(src.Depth(), src.Width(), src.Height()), de::DECX_MEMCPY_H2D);
 
-    de::dsp::cuda::FFT(Dsrc, Ddst);
+    de::dsp::cuda::FFT(Dsrc, Ddst, de::_COMPLEX_F32_);
 
     int _show_dex = 9;
 

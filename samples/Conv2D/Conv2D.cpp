@@ -29,7 +29,7 @@
 */
 
 
-#include "../../includes/DECX.h"
+#include <DECX.h>
 #include <iostream>
 #include <iomanip>
 

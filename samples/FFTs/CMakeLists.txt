@@ -19,17 +19,8 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE release CACHE STRING "Build Type" FORCE)
 endif()
 
-if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    link_directories("../../bin/x64/Release")
 
-elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    link_directories("../../bin/x64")
-    
-elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-    message(STATUS "Building on macOS")
-else()
-    message(STATUS "Building on unknown platform")
-endif()
+link_directories("../../bin/x64")
 
 set(EXECUTABLE_OUTPUT_PATH "../../x64")
 add_executable(FFTs ${CXX_SOURCE})

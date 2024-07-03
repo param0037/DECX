@@ -3,6 +3,8 @@ bin/
 
 release_packages/
 
+samples/x64
+
 .git/
 .vs/
 srcs/.vscode/

@@ -29,7 +29,6 @@
 */
 
 #include "FFT1D.h"
-#include "FFT2D.h"
 #include "FFT3D.h"
 
 
