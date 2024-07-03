@@ -137,8 +137,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>DECX_core_CPU.lib;DECX_core_CUDA.lib;DECX_BLAS_CUDA.lib;DECX_CV_CPU.lib;DECX_NN_CPU.lib;DECX_NN_CUDA.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>../../bin/x64/release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>DECX_core_CPU.lib;DECX_core_CUDA.lib;DECX_BLAS_CUDA.lib;DECX_CV_CPU.lib;DECX_NN_CUDA.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../../bin/x64/Release/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

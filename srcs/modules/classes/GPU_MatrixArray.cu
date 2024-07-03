@@ -201,7 +201,8 @@ decx::_GPU_MatrixArray::_GPU_MatrixArray(const de::_DATA_TYPES_FLAGS_ _type, uin
 void decx::_GPU_MatrixArray::release()
 {
     decx::alloc::_device_dealloc(&this->MatArr);
-    free(this->MatptrArr.ptr);
+
+    decx::alloc::_host_virtual_page_dealloc(&this->MatptrArr);
 }
 
 

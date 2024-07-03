@@ -26,5 +26,8 @@
     <ClInclude Include="FFT3D.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="FFT2D.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

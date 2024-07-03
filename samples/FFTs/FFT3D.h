@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include <DECX.h>
+#include "../../includes/DECX.h"
 #include <iostream>
 #include <iomanip>
 
@@ -36,11 +36,11 @@ static void FFT3D_CPU(const de::_DATA_TYPES_FLAGS_ _inout_type, const de::Point3
             for (int32_t k = 0; k < src.Depth(); ++k)
             {
                 if (_inout_type == de::_FP32_) {
-                    *src.ptr_fp32(i, j, k) = -j + k + i;
+                    *src.ptr<float>(i, j, k) = -j + k + i;
                 }
                 else {
-                    src.ptr_cpl32(i, j, k)->real = -j + k + i;
-                    src.ptr_cpl32(i, j, k)->image = 0;
+                    src.ptr<de::CPf>(i, j, k)->real = -j + k + i;
+                    src.ptr<de::CPf>(i, j, k)->image = 0;
                 }
             }
         }
@@ -53,16 +53,16 @@ static void FFT3D_CPU(const de::_DATA_TYPES_FLAGS_ _inout_type, const de::Point3
     for (uint32_t j = 0; j < src.Width(); ++j)
     {
         if (_inout_type == de::_FP32_) {
-            cout << *src.ptr_fp32(_show_dex, j, _show_dex) << '\n';
+            cout << *src.ptr<float>(_show_dex, j, _show_dex) << '\n';
         }
         else {
-            cout << src.ptr_cpl32(_show_dex, j, _show_dex)->real << ", " << src.ptr_cpl32(_show_dex, j, _show_dex)->image << '\n';
+            cout << src.ptr<de::CPf>(_show_dex, j, _show_dex)->real << ", " << src.ptr<de::CPf>(_show_dex, j, _show_dex)->image << '\n';
         }
     }
     cout << "\nspectrum\n";
 
     for (uint32_t k = 0; k < src.Width(); ++k) {
-        cout << dst.ptr_cpl32(_show_dex, k, _show_dex)->real << ", " << dst.ptr_cpl32(_show_dex, k, _show_dex)->image << '\n';
+        cout << dst.ptr<de::CPf>(_show_dex, k, _show_dex)->real << ", " << dst.ptr<de::CPf>(_show_dex, k, _show_dex)->image << '\n';
     }
 
     de::dsp::cpu::IFFT(dst, src, _inout_type);
@@ -72,10 +72,10 @@ static void FFT3D_CPU(const de::_DATA_TYPES_FLAGS_ _inout_type, const de::Point3
     for (uint32_t j = 0; j < src.Width(); ++j)
     {
         if (_inout_type == de::_FP32_) {
-            cout << *src.ptr_fp32(_show_dex, j, _show_dex) << '\n';
+            cout << *src.ptr<float>(_show_dex, j, _show_dex) << '\n';
         }
         else {
-            cout << src.ptr_cpl32(_show_dex, j, _show_dex)->real << ", " << src.ptr_cpl32(_show_dex, j, _show_dex)->image << '\n';
+            cout << src.ptr<de::CPf>(_show_dex, j, _show_dex)->real << ", " << src.ptr<de::CPf>(_show_dex, j, _show_dex)->image << '\n';
         }
     }
 }
@@ -101,11 +101,11 @@ static void FFT3D_CUDA(const de::_DATA_TYPES_FLAGS_ _inout_type, const de::Point
             for (int32_t k = 0; k < src.Depth(); ++k)
             {
                 if (_inout_type == de::_FP32_) {
-                    *src.ptr_fp32(i, j, k) = -j + k + i;
+                    *src.ptr<float>(i, j, k) = -j + k + i;
                 }
                 else {
-                    src.ptr_cpl32(i, j, k)->real = -j + k + i;
-                    src.ptr_cpl32(i, j, k)->image = 0;
+                    src.ptr<de::CPf>(i, j, k)->real = -j + k + i;
+                    src.ptr<de::CPf>(i, j, k)->image = 0;
                 }
             }
         }
@@ -121,10 +121,10 @@ static void FFT3D_CUDA(const de::_DATA_TYPES_FLAGS_ _inout_type, const de::Point
     for (uint32_t j = 0; j < src.Width(); ++j)
     {
         if (_inout_type == de::_FP32_) {
-            cout << *src.ptr_fp32(_show_dex, j, _show_dex) << '\n';
+            cout << *src.ptr<float>(_show_dex, j, _show_dex) << '\n';
         }
         else {
-            cout << src.ptr_cpl32(_show_dex, j, _show_dex)->real << ", " << src.ptr_cpl32(_show_dex, j, _show_dex)->image << '\n';
+            cout << src.ptr<de::CPf>(_show_dex, j, _show_dex)->real << ", " << src.ptr<de::CPf>(_show_dex, j, _show_dex)->image << '\n';
         }
     }
     cout << "\nspectrum\n";
@@ -132,7 +132,7 @@ static void FFT3D_CUDA(const de::_DATA_TYPES_FLAGS_ _inout_type, const de::Point
     de::Memcpy(dst, Ddst, de::Point3D(0, 0, 0), de::Point3D(0, 0, 0), de::Point3D(src.Depth(), src.Width(), src.Height()), de::DECX_MEMCPY_D2H);
 
     for (uint32_t k = 0; k < src.Width(); ++k) {
-        cout << dst.ptr_cpl32(_show_dex, k, _show_dex)->real << ", " << dst.ptr_cpl32(_show_dex, k, _show_dex)->image << '\n';
+        cout << dst.ptr<de::CPf>(_show_dex, k, _show_dex)->real << ", " << dst.ptr<de::CPf>(_show_dex, k, _show_dex)->image << '\n';
     }
 
     de::dsp::cuda::IFFT(Ddst, Drecover, _inout_type);
@@ -145,10 +145,10 @@ static void FFT3D_CUDA(const de::_DATA_TYPES_FLAGS_ _inout_type, const de::Point
     for (uint32_t j = 0; j < src.Width(); ++j)
     {
         if (_inout_type == de::_FP32_) {
-            cout << *src.ptr_fp32(_show_dex, j, _show_dex) << '\n';
+            cout << *src.ptr<float>(_show_dex, j, _show_dex) << '\n';
         }
         else {
-            cout << src.ptr_cpl32(_show_dex, j, _show_dex)->real << ", " << src.ptr_cpl32(_show_dex, j, _show_dex)->image << '\n';
+            cout << src.ptr<de::CPf>(_show_dex, j, _show_dex)->real << ", " << src.ptr<de::CPf>(_show_dex, j, _show_dex)->image << '\n';
         }
     }
 }

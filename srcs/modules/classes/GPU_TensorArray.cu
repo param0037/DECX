@@ -275,7 +275,7 @@ void decx::_GPU_TensorArray::release()
 {
     decx::alloc::_device_dealloc(&this->TensArr);
 
-    free(&this->TensptrArr);
+    decx::alloc::_host_virtual_page_dealloc(&this->TensptrArr);
 }
 
 

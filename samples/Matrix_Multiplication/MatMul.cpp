@@ -8,7 +8,7 @@
 *   More information please visit https://github.com/param0037/DECX
 */
 
-#include <DECX.h>
+#include "../../includes/DECX.h"
 #include <iostream>
 #include <iomanip>
 
@@ -29,13 +29,13 @@ void MatMul_CPU()
 
     for (int i = 0; i < A.Height(); ++i) {
         for (int j = 0; j < A.Width(); ++j) {
-            *A.ptr_fp32(i, j) = j;
+            *A.ptr<float>(i, j) = j;
         }
     }
 
     for (int i = 0; i < B.Height(); ++i) {
         for (int j = 0; j < B.Width(); ++j) {
-            *B.ptr_fp32(i, j) = i;
+            *B.ptr<float>(i, j) = i;
         }
     }
 
@@ -44,17 +44,17 @@ void MatMul_CPU()
     // Chnage the maximum allowed concurrency to 9 (default = the hardware concurrency of your own CPU)
     de::cpu::DecxSetThreadingNum(9);
     for (int i = 0; i < 500; ++i) {
-        de::cpu::GEMM(A, B, dst);
+        de::blas::cpu::GEMM(A, B, dst);
     }
     // Chnage the maximum allowed concurrency to 12
     de::cpu::DecxSetThreadingNum(12);
     for (int i = 0; i < 500; ++i) {
-        de::cpu::GEMM(A, B, dst);
+        de::blas::cpu::GEMM(A, B, dst);
     }
 
     for (int i = dst.Height() - 10; i < dst.Height(); ++i) {
         for (int j = dst.Width() - 10; j < dst.Width(); ++j) {
-            std::cout << std::setw(15) << *dst.ptr_fp32(i, j);
+            std::cout << std::setw(15) << *dst.ptr<float>(i, j);
         }
         std::cout << std::endl;
     }
@@ -78,22 +78,22 @@ void MatMul_GPU_CPL32()
 
     for (int i = 0; i < A.Height(); ++i) {
         for (int j = 0; j < A.Width(); ++j) {
-            A.ptr_cpl32(i, j)->real = j;
-            A.ptr_cpl32(i, j)->image = 0;
+            A.ptr<de::CPf>(i, j)->real = j;
+            A.ptr<de::CPf>(i, j)->image = 0;
         }
     }
 
     for (int i = 0; i < C.Height(); ++i) {
         for (int j = 0; j < C.Width(); ++j) {
-            C.ptr_cpl32(i, j)->real = 1e6;
-            C.ptr_cpl32(i, j)->image = 1e6;
+            C.ptr<de::CPf>(i, j)->real = 1e6;
+            C.ptr<de::CPf>(i, j)->image = 1e6;
         }
     }
 
     for (int i = 0; i < B.Height(); ++i) {
         for (int j = 0; j < B.Width(); ++j) {
-            B.ptr_cpl32(i, j)->real = i;
-            B.ptr_cpl32(i, j)->image = 0;
+            B.ptr<de::CPf>(i, j)->real = i;
+            B.ptr<de::CPf>(i, j)->image = 0;
         }
     }
 
@@ -104,7 +104,7 @@ void MatMul_GPU_CPL32()
     clock_t s, e;
     s = clock();
     for (int i = 0; i < 1; ++i) {
-        de::cuda::GEMM(dev_A, dev_B, dev_C, dev_dst, 0);
+        de::blas::cuda::GEMM(dev_A, dev_B, dev_C, dev_dst, 0);
     }
     e = clock();
 
@@ -114,7 +114,7 @@ void MatMul_GPU_CPL32()
 
     for (int i = dst.Height() - 10; i < dst.Height(); ++i) {
         for (int j = dst.Width() - 10; j < dst.Width(); ++j) {
-            std::cout << std::setw(15) << dst.ptr_cpl32(i, j)->real;
+            std::cout << std::setw(15) << dst.ptr<de::CPf>(i, j)->real;
         }
         std::cout << std::endl;
     }
@@ -123,7 +123,7 @@ void MatMul_GPU_CPL32()
 
     for (int i = 0; i < 10; ++i) {
         for (int j = 0; j < 10; ++j) {
-            std::cout << std::setw(15) << dst.ptr_cpl32(i, j)->image;
+            std::cout << std::setw(15) << dst.ptr<de::CPf>(i, j)->image;
         }
         std::cout << std::endl;
     }

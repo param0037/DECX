@@ -27,14 +27,14 @@
 ; DEALINGS IN THE SOFTWARE.
 
 
-DATA_COMMON SEGMENT
-    Abs_int_sign    dd      7fffffffH
-    ONE_fp32        dd      1.f
-    Mask_MSB        dd      80000000H
+DATA_COMMON_DW SEGMENT
+    Abs_int_sign_dw dd      7fffffffH
+    Mask_MSB_dw     dd      80000000H
     ONE_int32       dd      01H
-DATA_COMMON ENDS
+DATA_COMMON_DW ENDS
 
 SINCOS_PARAMS_FP32 SEGMENT
+    ONE_fp32        dd      1.f
     Pi              dd      3.1415926536f
     ONE_over_PI     dd      0.3183098862f
     Minus_Pi        dd      -3.1415926536f
@@ -59,12 +59,11 @@ SINCOS_PARAMS_FP32 ENDS
 .CODE
 _avx_cos_fp32x8@@32 PROC
     
-    ;push            rbx
     vmovups         DWORD PTR   [rsp - 32],  YMM6
     vmovups         DWORD PTR   [rsp - 64],  YMM7
     vmovups         DWORD PTR   [rsp - 96],  YMM8
           
-    vbroadcastss    YMM1,   DWORD PTR   [Abs_int_sign]      ; YMM1 -> inverted mask of a integer
+    vbroadcastss    YMM1,   DWORD PTR   [Abs_int_sign_dw]   ; YMM1 -> inverted mask of a integer
     vpand           YMM0,   YMM0,   YMM1                    ; x = abs(x) (YMM0 -> abs(x))
 
     vbroadcastss    YMM1,   DWORD PTR   [ONE_over_PI]
@@ -76,7 +75,7 @@ _avx_cos_fp32x8@@32 PROC
 
     ; Angles normalized
     vbroadcastss    YMM3,   DWORD PTR   [Halv_Pi]           ; YMM3 -> pi / 2
-    vbroadcastss    YMM4,   DWORD PTR   [Abs_int_sign]      ; YMM4 -> 7fffffffH
+    vbroadcastss    YMM4,   DWORD PTR   [Abs_int_sign_dw]   ; YMM4 -> 7fffffffH
     vsubps          YMM3,   YMM1,   YMM3                    ; YMM3 -> norm(angle) - pi/2
     vandps          YMM3,   YMM4,   YMM3                    ; YMM3 -> abs(norm(angle) - pi/2)
 
@@ -94,7 +93,7 @@ _avx_cos_fp32x8@@32 PROC
     vandps          YMM3,   YMM3,   YMM5
     vsubps          YMM1,   YMM1,   YMM3
 
-    vbroadcastss    YMM3,   DWORD PTR   [Mask_MSB]          ; YMM3 -> 0x80000000
+    vbroadcastss    YMM3,   DWORD PTR   [Mask_MSB_dw]       ; YMM3 -> 0x80000000
     vandps          YMM3,   YMM3,   YMM5
     vxorps          YMM1,   YMM1,   YMM3
     ; Pre-process of angle is finished
@@ -138,7 +137,7 @@ _avx_cos_fp32x8@@32 PROC
     vsubps          YMM0,   YMM0,   YMM6                    ; Update res
 
     ; YMM3, YMM6, and YMM7 are free
-    vbroadcastss    YMM3,   DWORD PTR   [Mask_MSB]          ; YMM3 -> 0x80000000
+    vbroadcastss    YMM3,   DWORD PTR   [Mask_MSB_dw]       ; YMM3 -> 0x80000000
     vxorps          YMM1,   YMM1,   YMM3                    ; -norm(angle)
 
     vbroadcastss    YMM6,   DWORD PTR   [ONE_fp32]          ; YMM6 -> 1.f
@@ -151,7 +150,7 @@ _avx_cos_fp32x8@@32 PROC
     vpand           YMM2,   YMM2,   YMM1                    ; YMM2 = sign of full_period_num
     vpslld          YMM2,   YMM2,   1FH                     ; YMM2 = mask of sign inversion
 
-    vbroadcastss    YMM6,   DWORD PTR   [Mask_MSB]          ; YMM6 -> 0x80000000
+    vbroadcastss    YMM6,   DWORD PTR   [Mask_MSB_dw]       ; YMM6 -> 0x80000000
     vpand           YMM6,   YMM6,   YMM5
     vpxor           YMM2,   YMM2,   YMM6
     vpxor           YMM0,   YMM0,   YMM2                    ; YMM0 -> masked inversed
@@ -159,12 +158,33 @@ _avx_cos_fp32x8@@32 PROC
     vmovups         YMM6,   DWORD PTR   [rsp - 32]
     vmovups         YMM7,   DWORD PTR   [rsp - 64]
     vmovups         YMM8,   DWORD PTR   [rsp - 96]
-    ;pop             rbx
 
     ret
     
 _avx_cos_fp32x8@@32 ENDP
 PUBLIC _avx_cos_fp32x8@@32
+
+
+; SINCOS_PARAMS_FP64 SEGMENT
+;     Pi              dq      3.1415926536f
+;     ONE_over_PI     dq      0.3183098862f
+;     Minus_Pi        dq      -3.1415926536f
+;     Halv_Pi         dq      1.5707963268f
+;     Quarter_pi      dq      0.7853981634f
+;     Three_4_Pi      dq      2.3561944902f
+; 
+;     COS_TAYLOR      dq      0.5f
+;                     dq      0.0833333333f
+;                     dq      0.0333333333f
+;                     dq      0.0178571429f
+;                     dq      0.0111111111f
+; 
+;     SIN_TAYLOR      dq      0.1666666667f
+;                     dq      0.05f
+;                     dq      0.0238095238f
+;                     dq      0.0138888889f
+;                     dq      0.0090909091f
+; SINCOS_PARAMS_FP64 ENDS
 
 
 .CODE

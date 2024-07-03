@@ -1,16 +1,36 @@
 /**
-*   ---------------------------------------------------------------------
+*   ----------------------------------------------------------------------------------
 *   Author : Wayne Anderson
 *   Date   : 2021.04.16
-*   ---------------------------------------------------------------------
-*   This is a part of the open source program named "DECX", copyright c Wayne,
-*   2021.04.16, all right reserved.
-*   More information please visit https://github.com/param0037/DECX
+*   ----------------------------------------------------------------------------------
+*
+* This is a part of the open source project named "DECX", a high-performance scientific
+* computational library. This project follows the MIT License. For more information
+* please visit https://github.com/param0037/DECX.
+*
+* Copyright (c) 2021 Wayne Anderson
+*
+* Permission is hereby granted, free of charge, to any person obtaining a copy of this
+* software and associated documentation files (the "Software"), to deal in the Software
+* without restriction, including without limitation the rights to use, copy, modify,
+* merge, publish, distribute, sublicense, and/or sell copies of the Software, and to
+* permit persons to whom the Software is furnished to do so, subject to the following
+* conditions:
+*
+* The above copyright notice and this permission notice shall be included in all copies
+* or substantial portions of the Software.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+* INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+* PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
+* FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+* OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+* DEALINGS IN THE SOFTWARE.
 */
 
 #pragma once
 
-#include <DECX.h>
+#include "../../includes/DECX.h"
 #include <iostream>
 #include <iomanip>
 
@@ -32,11 +52,11 @@ static void FFT1D_CPU(const de::_DATA_TYPES_FLAGS_ _inout_type, const uint64_t l
 
     for (int i = 0; i < src.Len(); ++i) {
         if (_inout_type == de::_FP32_) {
-            *src.ptr_fp32(i) = i;
+            *src.ptr<float>(i) = i;
         }
         else {
-            src.ptr_cpl32(i)->real = i;
-            src.ptr_cpl32(i)->image = 0;
+            src.ptr<de::CPf>(i)->real = i;
+            src.ptr<de::CPf>(i)->image = 0;
         }
     }
 
@@ -57,23 +77,23 @@ static void FFT1D_CPU(const de::_DATA_TYPES_FLAGS_ _inout_type, const uint64_t l
 
     for (int i = 0; i < 30; ++i) {
         if (_inout_type == de::_FP32_) {
-            std::cout << i << ": " << (int)*src.ptr_fp32(i) << endl;
+            std::cout << i << ": " << (int)*src.ptr<float>(i) << endl;
         }
         else {
-            std::cout << i << ": " << src.ptr_cpl32(i)->real << ", " << src.ptr_cpl32(i)->image << endl;
+            std::cout << i << ": " << src.ptr<de::CPf>(i)->real << ", " << src.ptr<de::CPf>(i)->image << endl;
         }
     }
     std::cout << "\n";
     for (int i = len - 30; i < len; ++i) {
-        std::cout << i << ": " << dst.ptr_cpl32(i)->real << ", " << dst.ptr_cpl32(i)->image << endl;
+        std::cout << i << ": " << dst.ptr<de::CPf>(i)->real << ", " << dst.ptr<de::CPf>(i)->image << endl;
     }
     std::cout << "\n";
     for (int i = len - 300; i < len; ++i) {
         if (_inout_type == de::_FP32_) {
-            std::cout << i << ": " << (int)*IFFT_res.ptr_fp32(i) << endl;
+            std::cout << i << ": " << (int)*IFFT_res.ptr<float>(i) << endl;
         }
         else {
-            std::cout << i << ": " << IFFT_res.ptr_cpl32(i)->real << ", " << IFFT_res.ptr_cpl32(i)->image << endl;
+            std::cout << i << ": " << IFFT_res.ptr<de::CPf>(i)->real << ", " << IFFT_res.ptr<de::CPf>(i)->image << endl;
         }
     }
     std::cout << "\n";
@@ -106,11 +126,11 @@ static void FFT1D_CUDA(const de::_DATA_TYPES_FLAGS_ _inout_type, const uint64_t 
 
     for (int i = 0; i < src.Len(); ++i) {
         if (_inout_type == de::_FP32_) {
-            *src.ptr_fp32(i) = i;
+            *src.ptr<float>(i) = i;
         }
         else {
-            src.ptr_cpl32(i)->real = i;
-            src.ptr_cpl32(i)->image = 0;
+            src.ptr<de::CPf>(i)->real = i;
+            src.ptr<de::CPf>(i)->image = 0;
         }
     }
 
@@ -138,23 +158,23 @@ static void FFT1D_CUDA(const de::_DATA_TYPES_FLAGS_ _inout_type, const uint64_t 
 
     for (int i = 0; i < 30; ++i) {
         if (_inout_type == de::_FP32_) {
-            std::cout << i << ": " << (int)*src.ptr_fp32(i) << endl;
+            std::cout << i << ": " << (int)*src.ptr<float>(i) << endl;
         }
         else {
-            std::cout << i << ": " << src.ptr_cpl32(i)->real << ", " << src.ptr_cpl32(i)->image << endl;
+            std::cout << i << ": " << src.ptr<de::CPf>(i)->real << ", " << src.ptr<de::CPf>(i)->image << endl;
         }
     }
     std::cout << "\n";
     for (int i = len - 30; i < len; ++i) {
-        std::cout << i << ": " << dst.ptr_cpl32(i)->real << ", " << dst.ptr_cpl32(i)->image << endl;
+        std::cout << i << ": " << dst.ptr<de::CPf>(i)->real << ", " << dst.ptr<de::CPf>(i)->image << endl;
     }
     std::cout << "\n";
     for (int i = len - 300; i < len; ++i) {
         if (_inout_type == de::_FP32_) {
-            std::cout << i << ": " << (int)*IFFT_res.ptr_fp32(i) << endl;
+            std::cout << i << ": " << (int)*IFFT_res.ptr<float>(i) << endl;
         }
         else {
-            std::cout << i << ": " << IFFT_res.ptr_cpl32(i)->real << ", " << IFFT_res.ptr_cpl32(i)->image << endl;
+            std::cout << i << ": " << IFFT_res.ptr<de::CPf>(i)->real << ", " << IFFT_res.ptr<de::CPf>(i)->image << endl;
         }
     }
     std::cout << "\n";
