@@ -27,33 +27,146 @@
 ; DEALINGS IN THE SOFTWARE.
 
 
-.DATA
+DATA_COMMON SEGMENT
     Abs_int_sign    dd      7fffffffH
+    ONE_fp32        dd      1.f
+    Mask_MSB        dd      80000000H
+    ONE_int32       dd      01H
+DATA_COMMON ENDS
+
+SINCOS_PARAMS_FP32 SEGMENT
+    Pi              dd      3.1415926536f
     ONE_over_PI     dd      0.3183098862f
     Minus_Pi        dd      -3.1415926536f
-    ONE_fp32        dd      1.f
-    TWO_fp32        dd      2.f
+    Halv_Pi         dd      1.5707963268f
     Quarter_pi      dd      0.7853981634f
+    Three_4_Pi      dd      2.3561944902f
 
-    Halv_fp32       dd      00800000H
-    ONE_int32       dd      01H
-    
-    ONE_over_2      dd      0.5f
-
-    COS_TAYLOR      dd      0.0833333333f
+    COS_TAYLOR      dd      0.5f
+                    dd      0.0833333333f
                     dd      0.0333333333f
                     dd      0.0178571429f
                     dd      0.0111111111f
-                    dd      0.0075757576f
-                    dd      0.0059523810f
-                    dd      0.0041666667f
-                    dd      0.0032679739f
-                    dd      0.0026315789f
-                    dd      0.0021645022f
-                    dd      0.0018115942f
 
+    SIN_TAYLOR      dd      0.1666666667f
+                    dd      0.05f
+                    dd      0.0238095238f
+                    dd      0.0138888889f
+                    dd      0.0090909091f
+SINCOS_PARAMS_FP32 ENDS
 
 ; __vectorcall convention
+.CODE
+_avx_cos_fp32x8@@32 PROC
+    
+    ;push            rbx
+    vmovups         DWORD PTR   [rsp - 32],  YMM6
+    vmovups         DWORD PTR   [rsp - 64],  YMM7
+    vmovups         DWORD PTR   [rsp - 96],  YMM8
+          
+    vbroadcastss    YMM1,   DWORD PTR   [Abs_int_sign]      ; YMM1 -> inverted mask of a integer
+    vpand           YMM0,   YMM0,   YMM1                    ; x = abs(x) (YMM0 -> abs(x))
+
+    vbroadcastss    YMM1,   DWORD PTR   [ONE_over_PI]
+    vmulps          YMM2,   YMM0,   YMM1                    ; YMM2 -> x / pi
+    vroundps        YMM2,   YMM2,   01H                     ; YMM2 -> floor(x/pi)           (preserved)
+
+    vbroadcastss    YMM1,   DWORD PTR   [Minus_Pi]          ; YMM1 -> -pi
+    vfmadd132ps     YMM1,   YMM0,   YMM2                    ; YMM1 -> x - period * pi (normalized angle) (preserved)
+
+    ; Angles normalized
+    vbroadcastss    YMM3,   DWORD PTR   [Halv_Pi]           ; YMM3 -> pi / 2
+    vbroadcastss    YMM4,   DWORD PTR   [Abs_int_sign]      ; YMM4 -> 7fffffffH
+    vsubps          YMM3,   YMM1,   YMM3                    ; YMM3 -> norm(angle) - pi/2
+    vandps          YMM3,   YMM4,   YMM3                    ; YMM3 -> abs(norm(angle) - pi/2)
+
+    vbroadcastss    YMM4,   DWORD PTR   [Quarter_pi]        ; YMM4 -> pi / 4
+    vcmpps          YMM4,   YMM3,   YMM4,   01H             ; YMM4 -> sin_rectf             (preserved)
+
+    vbroadcastss    YMM3,   DWORD PTR   [Three_4_Pi]        ; YMM3 -> pi*3/4
+    vcmpps          YMM5,   YMM1,   YMM3,   0EH             ; YMM5 -> cos_otherside         (preserved)
+    
+    vbroadcastss    YMM3,   DWORD PTR   [Halv_Pi]           ; YMM3 -> Pi / 2
+    vandps          YMM3,   YMM3,   YMM4                    ; YMM3 -> sin_rectf ? pi / 2 : 0
+    vsubps          YMM1,   YMM1,   YMM3
+
+    vbroadcastss    YMM3,   DWORD PTR   [Pi]                ; YMM3 -> pi
+    vandps          YMM3,   YMM3,   YMM5
+    vsubps          YMM1,   YMM1,   YMM3
+
+    vbroadcastss    YMM3,   DWORD PTR   [Mask_MSB]          ; YMM3 -> 0x80000000
+    vandps          YMM3,   YMM3,   YMM5
+    vxorps          YMM1,   YMM1,   YMM3
+    ; Pre-process of angle is finished
+
+    vbroadcastss    YMM0,   DWORD PTR   [ONE_fp32]          ; YMM0 -> 1.f
+    vmulps          YMM3,   YMM1,   YMM1                    ; YMM3 -> x_sq                  (preserved)
+    ; YMM0, YMM1, YMM2, YMM3, YMM4, and YMM5 are preserved
+
+    vbroadcastss    YMM6,   DWORD PTR   [COS_TAYLOR]        ; YMM6 -> 0.5f
+    vbroadcastss    YMM7,   DWORD PTR   [SIN_TAYLOR]        ; YMM7 -> 0.1666666667f
+    vblendvps       YMM6,   YMM6,   YMM7,   YMM4            ; YMM6 -> fact
+    vmulps          YMM6,   YMM3,   YMM6                    ; YMM6 -> x_term                (preserved)
+    vsubps          YMM0,   YMM0,   YMM6                    ; YMM0 -> res                   (preserved)
+
+    vbroadcastss    YMM7,   DWORD PTR   [COS_TAYLOR + 4]    ; YMM7 -> 0.0833333333f
+    vbroadcastss    YMM8,   DWORD PTR   [SIN_TAYLOR + 4]    ; YMM8 -> 0.05f
+    vblendvps       YMM7,   YMM7,   YMM8,   YMM4            ; YMM7 -> fact
+    vmulps          YMM7,   YMM7,   YMM3
+    vmulps          YMM6,   YMM6,   YMM7                    ; Update x_term
+    vaddps          YMM0,   YMM0,   YMM6                    ; Update res
+
+    vbroadcastss    YMM7,   DWORD PTR   [COS_TAYLOR + 8]    ; YMM7 -> 0.0333333333f
+    vbroadcastss    YMM8,   DWORD PTR   [SIN_TAYLOR + 8]    ; YMM8 -> 0.0238095238f
+    vblendvps       YMM7,   YMM7,   YMM8,   YMM4            ; YMM7 -> fact
+    vmulps          YMM7,   YMM7,   YMM3
+    vmulps          YMM6,   YMM6,   YMM7                    ; Update x_term
+    vsubps          YMM0,   YMM0,   YMM6                    ; Update res
+
+    vbroadcastss    YMM7,   DWORD PTR   [COS_TAYLOR + 12]   ; YMM7 -> 0.0178571429f
+    vbroadcastss    YMM8,   DWORD PTR   [SIN_TAYLOR + 12]   ; YMM8 -> 0.0138888889f
+    vblendvps       YMM7,   YMM7,   YMM8,   YMM4            ; YMM7 -> fact
+    vmulps          YMM7,   YMM7,   YMM3
+    vmulps          YMM6,   YMM6,   YMM7                    ; Update x_term
+    vaddps          YMM0,   YMM0,   YMM6                    ; Update res
+
+    vbroadcastss    YMM7,   DWORD PTR   [COS_TAYLOR + 16]   ; YMM7 -> 0.0111111111f
+    vbroadcastss    YMM8,   DWORD PTR   [SIN_TAYLOR + 16]   ; YMM8 -> 0.0090909091f
+    vblendvps       YMM7,   YMM7,   YMM8,   YMM4            ; YMM7 -> fact
+    vmulps          YMM7,   YMM7,   YMM3
+    vmulps          YMM6,   YMM6,   YMM7                    ; Update x_term
+    vsubps          YMM0,   YMM0,   YMM6                    ; Update res
+
+    ; YMM3, YMM6, and YMM7 are free
+    vbroadcastss    YMM3,   DWORD PTR   [Mask_MSB]          ; YMM3 -> 0x80000000
+    vxorps          YMM1,   YMM1,   YMM3                    ; -norm(angle)
+
+    vbroadcastss    YMM6,   DWORD PTR   [ONE_fp32]          ; YMM6 -> 1.f
+    vblendvps       YMM6,   YMM6,   YMM1,   YMM4
+    vmulps          YMM0,   YMM0,   YMM6                    ; modified res by multiplying x when in sine case
+
+    vbroadcastss    YMM1,   DWORD PTR   [ONE_int32]         ; YMM1 = <int>[1 1 1 1]
+
+    vcvtps2dq       YMM2,   YMM2                            ; YMM2 -> int(floor(period))
+    vpand           YMM2,   YMM2,   YMM1                    ; YMM2 = sign of full_period_num
+    vpslld          YMM2,   YMM2,   1FH                     ; YMM2 = mask of sign inversion
+
+    vbroadcastss    YMM6,   DWORD PTR   [Mask_MSB]          ; YMM6 -> 0x80000000
+    vpand           YMM6,   YMM6,   YMM5
+    vpxor           YMM2,   YMM2,   YMM6
+    vpxor           YMM0,   YMM0,   YMM2                    ; YMM0 -> masked inversed
+
+    vmovups         YMM6,   DWORD PTR   [rsp - 32]
+    vmovups         YMM7,   DWORD PTR   [rsp - 64]
+    vmovups         YMM8,   DWORD PTR   [rsp - 96]
+    ;pop             rbx
+
+    ret
+    
+_avx_cos_fp32x8@@32 ENDP
+PUBLIC _avx_cos_fp32x8@@32
+
+
 .CODE
 _avx_cos_fp32x4@@16 PROC
     
@@ -193,7 +306,10 @@ _avx_cos_fp32x4@@16 PROC
     vblendvps       XMM6,   XMM6,   XMM1,   XMM4
     vmulps          XMM0,   XMM0,   XMM6                    ; modified res by multiplying x when in sine case
 
-    vbroadcastss    XMM1,   DWORD PTR   [ONE_int32]         ; XMM1 = <int>[1 1 1 1]
+    mov             rax,    100000001H
+    vmovq           XMM1,   rax
+    vpunpcklqdq     XMM1,   XMM1,   XMM1                    ; XMM1 = <int>[1 1 1 1]
+
     cvtps2dq        XMM2,   XMM2                            ; XMM2 -> int(floor(period))
     pand            XMM2,   XMM1                            ; XMM2 = sign of full_period_num
     pslld           XMM2,   1FH                             ; XMM2 = mask of sign inversion

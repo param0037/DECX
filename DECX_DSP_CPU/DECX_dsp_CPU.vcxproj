@@ -78,7 +78,7 @@
     <ClCompile Include="..\srcs\modules\DSP\regional\regional_comparision\CPU\utils\template_configurations.cxx" />
   </ItemGroup>
   <ItemGroup>
-    <MASM Include="..\srcs\modules\core\utils\decx_SVML_x86.asm">
+    <MASM Include="..\srcs\modules\core\utils\decx_trigonometric_x86.asm">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </MASM>
   </ItemGroup>

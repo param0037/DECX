@@ -37,16 +37,11 @@
 #include "decx_utils_macros.h"
 #include "../vector_defines.h"
 
-/*
-* DO NOT use when requiring very exact precision ! For example,
-* large signal FFT (N >= 1024)
-*/
-//extern "C" __m128 __vectorcall fast_mm_cos_ps(__m128 __x);
-//extern "C" __m128 __vectorcall fast_mm_sin_ps(__m128 __x);
-
 
 extern "C" __m128 __vectorcall _avx_cos_fp32x4(__m128);
 extern "C" __m128 __vectorcall _avx_sin_fp32x4(__m128);
+extern "C" __m256 __vectorcall _avx_cos_fp32x8(__m256);
+extern "C" __m256 __vectorcall _avx_sin_fp32x8(__m256);
 
 
 namespace decx
@@ -63,8 +58,6 @@ namespace utils{
         FORCEINLINE __m128d _mm_signinv_pd(__m128d __proc);
 
         inline __m128 _mm_atan2_ps(const __m128 __y, const __m128 __x);
-        //inline __m128 _mm_cos_ps(const __m128 __x);
-        //inline __m128 _mm_sin_ps(const __m128 __x);
     }
 }
 }
