@@ -14,8 +14,8 @@
 
 int main()
 {
-    //decx_frequnce_domain_filtering_CUDA();
-    decx_frequnce_domain_filtering_CPU();
+    decx_frequnce_domain_filtering_CUDA();
+    //decx_frequnce_domain_filtering_CPU();
 
     return 0;
 }

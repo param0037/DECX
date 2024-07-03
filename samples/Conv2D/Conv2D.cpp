@@ -125,9 +125,9 @@ void Conv2D_CUDA()
         }
     }
 
-    //de::vis::ShowImg(img, "1");
-    //de::vis::ShowImg(dst_img, "2");
-    //de::vis::wait_untill_quit();
+    de::vis::ShowImg(img, "1");
+    de::vis::ShowImg(dst_img, "2");
+    de::vis::wait_untill_quit();
 
     img.release();
     gray_img.release();

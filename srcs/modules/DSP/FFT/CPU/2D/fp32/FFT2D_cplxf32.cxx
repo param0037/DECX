@@ -46,23 +46,23 @@ void decx::dsp::fft::cpu_FFT2D_planner<float>::Forward(decx::_Matrix* src,
                                                                 (de::CPf*)this->get_tmp1_ptr(), 
                                                                 this,                                            
                                                                 src->Pitch(), 
-                                                                decx::utils::ceil<uint32_t>(src->Width(), 4) * 4,   
+                                                                decx::utils::align<uint32_t>(src->Width(), 4),   
                                                                 t1D, true);
     // Transpose
     this->_transpose_config_1st.transpose_8b_caller((double*)this->get_tmp1_ptr(),
                                                     (double*)this->get_tmp2_ptr(),
-                                                    decx::utils::ceil<uint32_t>(src->Width(), 4) * 4,
-                                                    decx::utils::ceil<uint32_t>(src->Height(), 4) * 4,
+                                                    decx::utils::align<uint32_t>(src->Width(), 4),
+                                                    decx::utils::align<uint32_t>(src->Height(), 4),
                                                     t1D);
 
     // Horizontal FFT
     decx::dsp::fft::_FFT2D_H_entire_rows_cplxf<de::CPf, true>((de::CPf*)this->get_tmp2_ptr(),       (de::CPf*)this->get_tmp1_ptr(), 
-                                               this,                                                decx::utils::ceil<uint32_t>(src->Height(), 4) * 4,  
-                                               decx::utils::ceil<uint32_t>(src->Height(), 4) * 4,   t1D, false);
+                                               this,                                                decx::utils::align<uint32_t>(src->Height(), 4),  
+                                               decx::utils::align<uint32_t>(src->Height(), 4),   t1D, false);
     // Transpose
-    this->_transpose_config_1st.transpose_8b_caller((double*)this->get_tmp1_ptr(),
+    this->_transpose_config_2nd.transpose_8b_caller((double*)this->get_tmp1_ptr(),
         (double*)dst->Mat.ptr,
-        decx::utils::ceil<uint32_t>(src->Height(), 4) * 4,
+        decx::utils::align<uint32_t>(src->Height(), 4),
         dst->Pitch(),
         t1D);
 }

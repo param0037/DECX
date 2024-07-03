@@ -36,7 +36,7 @@ template <typename _data_type>
 template <typename _type_out>
 void decx::dsp::fft::cpu_FFT2D_planner<_data_type>::plan_transpose_configs(de::DH* handle)
 {
-    this->_transpose_config_1st.config(8, this->_concurrency, this->_signal_dims, handle);
+    this->_transpose_config_1st.config(sizeof(_data_type) * 2, this->_concurrency, this->_signal_dims, handle);
     Check_Runtime_Error(handle);
 
     this->_transpose_config_2nd.config(sizeof(_type_out), this->_concurrency,
@@ -123,17 +123,17 @@ void decx::dsp::fft::cpu_FFT2D_planner<_data_type>::plan(const decx::_matrix_lay
     const uint32_t _concurrency = decx::cpu::_get_permitted_concurrency();
 
     // Thread distribution on FFT_H
-    const uint32_t _conc_FFT_1D_H = min(decx::utils::ceil<uint32_t>(this->_signal_dims.y, 4), this->_concurrency);
-    decx::utils::frag_manager_gen_Nx(&this->_thread_dist_FFTH, this->_signal_dims.y, _conc_FFT_1D_H, 4);
+    const uint32_t _conc_FFT_1D_H = min(decx::utils::ceil<uint32_t>(this->_signal_dims.y, _alignment), this->_concurrency);
+    decx::utils::frag_manager_gen_Nx(&this->_thread_dist_FFTH, this->_signal_dims.y, _conc_FFT_1D_H, _alignment);
 
     // Thread distribution in FFT_W
-    const uint32_t _conc_FFT_1D_V = min(decx::utils::ceil<uint32_t>(this->_signal_dims.x, 4), this->_concurrency);
-    decx::utils::frag_manager_gen_Nx(&this->_thread_dist_FFTV, this->_signal_dims.x, _conc_FFT_1D_V, 4);
+    const uint32_t _conc_FFT_1D_V = min(decx::utils::ceil<uint32_t>(this->_signal_dims.x, _alignment), this->_concurrency);
+    decx::utils::frag_manager_gen_Nx(&this->_thread_dist_FFTV, this->_signal_dims.x, _conc_FFT_1D_V, _alignment);
 
     const uint32_t _alloc_tiles_num = max(_conc_FFT_1D_H, _conc_FFT_1D_V);
     this->_tiles.define_capacity(_alloc_tiles_num);
     
-    const uint32_t _tile_frag_pitch = decx::utils::ceil<uint32_t>(max(this->_signal_dims.x, this->_signal_dims.y), 4) * 4;
+    const uint32_t _tile_frag_pitch = decx::utils::align<uint32_t>(max(this->_signal_dims.x, this->_signal_dims.y), _alignment);
 
     for (uint32_t i = 0; i < _alloc_tiles_num; ++i) {
         this->_tiles.emplace_back();

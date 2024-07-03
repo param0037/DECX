@@ -25,8 +25,8 @@ E:\DECX_world\samples\Conv2D\Conv2D.cpp(122,21): warning C4244: '=': conversion 
           ]
      Creating library E:\DECX_world\samples\x64\Release\Conv2D.lib and object E:\DECX_world\samples\x64\Release\Conv2D.exp
   Generating code
-  5 of 87 functions ( 5.7%) were compiled, the rest were copied from previous compilation.
+  2 of 87 functions ( 2.3%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    1 functions had inline decision re-evaluated but remain unchanged
+    0 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   Conv2D.vcxproj -> E:\DECX_world\samples\x64\Release\Conv2D.exe

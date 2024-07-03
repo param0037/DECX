@@ -35,7 +35,7 @@
 
 int main()
 {
-    /*int _dimension = 1;
+    int _dimension = 1;
     cout << "Please select the dimension, 1 for FFT1D; 3 for FFT3D\n";
     cin >> _dimension;
 
@@ -57,8 +57,7 @@ int main()
         else {
             FFT1D_CPU(de::_FP32_, 625 * 625 * 3 * 2);
         }
-    }*/
-    DECX_FFT2D_CPU();
+    }
     system("pause");
     return 0;
 }

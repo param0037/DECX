@@ -146,7 +146,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FFT1D.h" />
-    <ClInclude Include="FFT2D.h" />
     <ClInclude Include="FFT3D.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
