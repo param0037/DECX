@@ -28,7 +28,8 @@ Clone this repository, open DECX_world.sln with VS. The version of VS should be 
 Follow the same steps described in section (a) until opening DECX_world.sln. Run cmd or powershell under the root path of the project. Run the build script build.cmd. Simply enter "build" and the script will print the instructions. Follow these instructions to build the project.
 
 ## 2. General x86 Ubuntu
-Clone the project, enter the root path of the project. Then run the build script for Linux, which is build.sh. Simply enter "./build.sh" and follow the printed instructions to build the project.
+Clone the project, enter the root path of the project. Then run the build script for Linux, which is build.sh. Simply enter "./build.sh" and follow the printed instructions to build the project. 
+(Note: If terminal exports "/bin/bash^M: bad interpreter: No such file or directory", please run ./fix_CRLF_cases_for_linux_script.sh or copy the command in this script if it's also unavailable. This is caused editing these scripts on Windows. The line endings LF are replaced by CRLF. So, use sed to fix it in Linux)
 
 ## 3. Android for ARM64 (aarch64)
 Follow the same steps described in section 2 before running the script. When performing cross compilation for Android ARM64, replace the directory where your NDK is installed for -DCMAKE_TOOLCHAIN_FILE at line 10 of config_on_android.sh. Run "config_on_android.sh" and then run "build_on_android.sh". Please notice that only DECX_core_CPU supports aarch64. Additionally, its building system is just a prototype. Supports for aarch64 will be updated later.
