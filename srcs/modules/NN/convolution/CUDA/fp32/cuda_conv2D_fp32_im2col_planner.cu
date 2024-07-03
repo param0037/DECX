@@ -79,7 +79,7 @@ void decx::nn::cuda_conv2D_im2col_kernel_arrange<float>::arrange_kernel(const de
         this->_kernel_cpy_params.dstPtr.ptr = (float*)this->_kernel_cpy_params.dstPtr.ptr + _eq_kernel_dims_2D.x;
     }
     
-    decx::bp::transpose2D_b4((float2*)this->_shrinked_kernel.ptr, 
+    decx::blas::transpose2D_b4((float2*)this->_shrinked_kernel.ptr, 
                              (float2*)this->_transposed_kernel.ptr, 
                              make_uint2(this->_eq_kernel_dims_2D.y, this->_transp_ker_dims.y),
                              this->_eq_kernel_dims_2D.x, 

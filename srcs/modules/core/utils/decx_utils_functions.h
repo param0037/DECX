@@ -34,6 +34,7 @@
 
 #include "decx_utils_macros.h"
 #include "../vector_defines.h"
+#include "string.h"
 #ifdef _DECX_CPU_PARTS_
 #include "intrinsics_ops.h"
 #endif
@@ -243,12 +244,13 @@ static int decx::utils::_GetHighest(size_t __x) noexcept
 template <size_t dst_len>
 static void decx::utils::decx_strcpy(char (&dst)[dst_len], const char* src)
 {
-#ifdef Windows
+#ifdef _MSC_VER
     strcpy_s<dst_len>(dst, src);
 #endif
 
-#ifdef Linux
-    memcpy(dst, src, strlen(src) * sizeof(char));
+#ifdef __GNUC__
+    strcpy(dst, src);
+    //memcpy(dst, src, dst_len * sizeof(char));
 #endif
 }
 

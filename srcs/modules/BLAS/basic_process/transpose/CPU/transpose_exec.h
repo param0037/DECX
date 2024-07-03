@@ -59,7 +59,7 @@ namespace blas
 
 #ifdef __GNUC__
 _THREAD_CALL_ static inline void
-decx::bp::CPUK::block8x8_transpose_u8(__m64 _regs0[8], __m64 _regs1[8])
+decx::blas::CPUK::block8x8_transpose_u8(__m64 _regs0[8], __m64 _regs1[8])
 {
     const __m64 _mask_2x2_front = _mm_setr_pi16(0xFFFF, 0,      0xFFFF, 0);
     const __m64 _mask_2x2_back  = _mm_setr_pi16(0,      0xFFFF, 0,      0xFFFF);

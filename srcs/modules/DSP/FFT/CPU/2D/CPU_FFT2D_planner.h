@@ -122,7 +122,7 @@ public:
     }
 
     
-    template <typename _data_type>
+    template <typename _type_in>
     void Forward(decx::_Matrix* src, decx::_Matrix* dst, decx::utils::_thread_arrange_1D* t1D) const;
 
     template <typename _type_out>

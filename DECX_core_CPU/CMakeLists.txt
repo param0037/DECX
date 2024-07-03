@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.23)
 
-project(DECX_core_CPU LANGUAGES CXX)
+project(DECX_core_CPU LANGUAGES CXX ASM_NASM)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -9,7 +9,9 @@ string(REGEX REPLACE "/$" "" CURRENT_FOLDER_ABSOLUTE ${CMAKE_CURRENT_SOURCE_DIR}
 get_filename_component(DECX_WORLD_ABS_DIR ${CURRENT_FOLDER_ABSOLUTE} DIRECTORY)
 
 file(GLOB_RECURSE CLASS "${DECX_WORLD_ABS_DIR}/srcs/modules/classes/*.cxx")
-file(GLOB_RECURSE CORE "${DECX_WORLD_ABS_DIR}/srcs/modules/core/*.cxx")
+file(GLOB_RECURSE CORE "${DECX_WORLD_ABS_DIR}/srcs/modules/core/*.cxx" 
+                       "${DECX_WORLD_ABS_DIR}/srcs/modules/core/*.c")
+file(GLOB RECURSE UTIL_ASM "${DECX_WORLD_ABS_DIR}/srcs/modules/core/*.asm")
 
 #set(CXX_FLAGS -mFMA -mAVX2 -mAVX)
 if(CMAKE_CROSSCOMPILING)

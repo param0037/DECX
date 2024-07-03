@@ -38,6 +38,12 @@
 #include "../vector_defines.h"
 
 
+extern "C" __m128 __VECTORCALL__ _avx_cos_fp32x4(__m128);
+extern "C" __m128 __VECTORCALL__ _avx_sin_fp32x4(__m128);
+extern "C" __m256 __VECTORCALL__ _avx_cos_fp32x8(__m256);
+extern "C" __m256 __VECTORCALL__ _avx_sin_fp32x8(__m256);
+
+
 namespace decx
 {
 namespace utils{

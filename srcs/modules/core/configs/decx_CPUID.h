@@ -32,9 +32,12 @@
 #ifndef _DECX_CPUID_H_
 #define _DECX_CPUID_H_
 
-
+#ifndef __cplusplus
 typedef unsigned int uint32_t;
 typedef unsigned long long uint64_t;
+#endif
+
+#include "../compile_params.h"
 
 
 #ifdef __cplusplus
@@ -68,48 +71,23 @@ typedef struct _decx_reg4_x86_t
 #ifdef __cplusplus
 extern "C"
 #endif
-void __stdcall CPUID_call(decx_reg4_x86*);
-#endif  // #ifdef _DECX_CPU_PARTS_
+void __STDCALL__ CPUID_call(decx_reg4_x86*);
+#endif  // #ifdef _DECX_CORE_CPU_
 
-#if defined(__x86_64__) || defined(__i386__)
-uint64_t _decx_get_L1_cache_size_per_phy_core(const int is_AMD)
-#ifdef __GNUC__
-__attribute__((optimize("O0")))
-#else
-;
-#endif
+
+uint64_t _decx_get_L1_cache_size_per_phy_core(const int is_AMD);
+
 uint64_t _decx_get_L2_cache_size_per_phy_core(const int is_AMD);
-#ifdef __GNUC__
-__attribute__((optimize("O0")))
-#else
-;
-#endif
-uint64_t _decx_get_L3_cache_size(const int is_AMD);
-#ifdef __GNUC__
-__attribute__((optimize("O0")))
-#else
-;
-#endif
-void _decx_get_CPU_freqs(decx_CPUINFO*);
-#ifdef __GNUC__
-__attribute__((optimize("O0")))
-#else
-;
-#endif
-uint32_t _decx_get_logical_processor_num();
-#ifdef __GNUC__
-__attribute__((optimize("O0")))
-#else
-;
-#endif
-void _decx_get_CPU_vendor_str(decx_CPUINFO*);
-#ifdef __GNUC__
-__attribute__((optimize("O0")))
-#else
-;
 
-#endif
-#endif      // #if defined(__x86_64__) || defined(__i386__)
+
+uint64_t _decx_get_L3_cache_size(const int is_AMD);
+
+
+void _decx_get_CPU_freqs(decx_CPUINFO*);
+
+uint32_t _decx_get_logical_processor_num();
+
+void _decx_get_CPU_vendor_str(decx_CPUINFO*);
 
 int _decx_NOT_AMD_CPU(const decx_CPUINFO*);
 

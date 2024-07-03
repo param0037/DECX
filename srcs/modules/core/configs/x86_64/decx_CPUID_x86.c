@@ -34,6 +34,9 @@
 #ifdef _MSC_VER
 #pragma optimize("", off)
 #endif
+#ifdef __GNUC__
+__attribute__((optimize("O0")))
+#endif
 uint64_t _decx_get_L1_cache_size_per_phy_core(const int not_AMD)
 {
     decx_reg4_x86 regs;
@@ -51,6 +54,12 @@ uint64_t _decx_get_L1_cache_size_per_phy_core(const int not_AMD)
 }
 
 
+#ifdef _MSC_VER
+#pragma optimize("", off)
+#endif
+#ifdef __GNUC__
+__attribute__((optimize("O0")))
+#endif
 uint64_t _decx_get_L2_cache_size_per_phy_core(const int not_AMD)
 {
     decx_reg4_x86 regs;
@@ -68,6 +77,12 @@ uint64_t _decx_get_L2_cache_size_per_phy_core(const int not_AMD)
 }
 
 
+#ifdef _MSC_VER
+#pragma optimize("", off)
+#endif
+#ifdef __GNUC__
+__attribute__((optimize("O0")))
+#endif
 uint64_t _decx_get_L3_cache_size(const int not_AMD)
 {
     decx_reg4_x86 regs;
@@ -85,6 +100,12 @@ uint64_t _decx_get_L3_cache_size(const int not_AMD)
 }
 
 
+#ifdef _MSC_VER
+#pragma optimize("", off)
+#endif
+#ifdef __GNUC__
+__attribute__((optimize("O0")))
+#endif
 void _decx_get_CPU_freqs(decx_CPUINFO* _info_ptr)
 {
     decx_reg4_x86 regs;
@@ -95,6 +116,12 @@ void _decx_get_CPU_freqs(decx_CPUINFO* _info_ptr)
 }
 
 
+#ifdef _MSC_VER
+#pragma optimize("", off)
+#endif
+#ifdef __GNUC__
+__attribute__((optimize("O0")))
+#endif
 uint32_t _decx_get_logical_processor_num()
 {
     decx_reg4_x86 regs;
@@ -105,6 +132,12 @@ uint32_t _decx_get_logical_processor_num()
 }
 
 
+#ifdef _MSC_VER
+#pragma optimize("", off)
+#endif
+#ifdef __GNUC__
+__attribute__((optimize("O0")))
+#endif
 void _decx_get_CPU_vendor_str(decx_CPUINFO* _info_ptr)
 {
     decx_reg4_x86 regs;
@@ -116,6 +149,12 @@ void _decx_get_CPU_vendor_str(decx_CPUINFO* _info_ptr)
 }
 
 
+#ifdef _MSC_VER
+#pragma optimize("", off)
+#endif
+#ifdef __GNUC__
+__attribute__((optimize("O0")))
+#endif
 int _decx_NOT_AMD_CPU(const decx_CPUINFO* _info_ptr)
 {
     if (_info_ptr != 0) {

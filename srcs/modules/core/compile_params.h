@@ -85,6 +85,15 @@
 #endif
 
 
+#ifdef _MSC_VER
+#define __STDCALL__ __stdcall
+#define __VECTORCALL__ __vectorcall
+#endif
+#ifdef __GNUC__
+#define __STDCALL__ __attribute__((stdcall))
+#define __VECTORCALL__ __attribute__((vectorcall))
+#endif
+
 
 #if defined(__linux__) || defined(__GNUC__)
 #define Linux

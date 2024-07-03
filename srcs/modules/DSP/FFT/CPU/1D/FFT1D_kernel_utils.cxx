@@ -146,7 +146,9 @@ decx::dsp::fft::CPUK::_FFT1D_Twd_smaller_kernels_v2_1st(const double* __restrict
     __m128d _real_v2, _image_v2;
 
     decx::utils::simd::xmm128_reg _glo_idx;
-    _glo_idx._vi = _mm_setr_epi64x(_outer_dex * _smaller_signal_len, (_outer_dex + 1) * _smaller_signal_len);
+    //_glo_idx._vi = _mm_setr_epi64x(_outer_dex * _smaller_signal_len, (_outer_dex + 1) * _smaller_signal_len);
+    _glo_idx._arrull[0] = _outer_dex * _smaller_signal_len;
+    _glo_idx._arrull[1] = (_outer_dex + 1) * _smaller_signal_len;
 
     __m128d _i_v2, _j_v2;
     const uint64_t _div_len = _Twd->gap() * _Twd->_previous_fact_sum;
@@ -260,8 +262,11 @@ decx::dsp::fft::CPUK::_FFT1D_Twd_smaller_kernels_v2_mid(const de::CPd* __restric
     __m128d _real_v2, _image_v2;
 
     decx::utils::simd::xmm128_reg _glo_idx;
-    _glo_idx._vi = _mm_setr_epi64x(_dst_shf + (_call_times_in_warp << 1),
-                                   _dst_shf + (_call_times_in_warp << 1) + 1);
+//     _glo_idx._vi = _mm_setr_epi64x(_dst_shf + (_call_times_in_warp << 1),
+//                                    _dst_shf + (_call_times_in_warp << 1) + 1);
+
+    _glo_idx._arrull[0] = _dst_shf + (_call_times_in_warp << 1);
+    _glo_idx._arrull[1] = _dst_shf + (_call_times_in_warp << 1) + 1;
 
     __m128d _j_v2;
     const uint64_t _div_len = _Twd->gap() * _Twd->_previous_fact_sum;

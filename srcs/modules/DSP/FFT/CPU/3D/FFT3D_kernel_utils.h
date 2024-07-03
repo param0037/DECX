@@ -264,7 +264,11 @@ load_entire_row_transpose_u8_fp64_zip(const uint8_t* __restrict src_head_ptr,
             for (uint32_t j = 0; j < _load_len_v2; ++j) {
                 _reg._arrs[0] = _src_row_ptr[j];
                 _reg._vi = _mm_cvtepu8_epi64(_reg._vi);
-                _mm_store_pd(_dst_row_ptr + (j << 1), _mm_cvtepi64_pd(_reg._vi));
+
+                //_mm_store_pd(_dst_row_ptr + (j << 1), _mm_cvtepi64_pd(_reg._vi));
+                _reg._arrd[0] = (double)_reg._arrull[0];
+                _reg._arrd[1] = (double)_reg._arrull[1];
+                _mm_store_pd(_dst_row_ptr + (j << 1), _reg._vd);
             }
         }
         // Update the status of the double buffer

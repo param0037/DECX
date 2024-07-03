@@ -15,7 +15,8 @@ string(REGEX REPLACE "/$" "" CURRENT_FOLDER_ABSOLUTE ${CMAKE_CURRENT_SOURCE_DIR}
 get_filename_component(DECX_WORLD_ABS_DIR ${CURRENT_FOLDER_ABSOLUTE} DIRECTORY)
 
 file(GLOB_RECURSE DSP_CORE "${DECX_WORLD_ABS_DIR}/srcs/modules/DSP/*.cxx" 
-                           "${DECX_WORLD_ABS_DIR}/srcs/modules/BLAS/basic_process/transpose/CPU/transpose_exec.cxx")
+                           "${DECX_WORLD_ABS_DIR}/srcs/modules/BLAS/basic_process/transpose/CPU/transpose_exec.cxx"
+                           "${DECX_WORLD_ABS_DIR}/srcs/modules/core/utils/decx_trigonometric_x86.asm")
 file(GLOB_RECURSE COMPLEX_OPERATORS "${DECX_WORLD_ABS_DIR}/srcs/modules/basic_calculations/operators/cp_ops_exec.cxx")
 file(GLOB_RECURSE SIMD_FAST_MATH "${DECX_WORLD_ABS_DIR}/srcs/modules/core/utils/SSE_fast_math_masm.asm")
 
