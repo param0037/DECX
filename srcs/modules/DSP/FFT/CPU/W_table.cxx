@@ -31,10 +31,6 @@
 
 #include "W_table.h"
 
-//
-//__m128 _mm_cos_ps_taylor(__m128 angle);
-//__m128 _mm_sin_ps_taylor(__m128 angle);
-
 
 _THREAD_FUNCTION_ void decx::dsp::fft::CPUK::
 _W_table_gen_cplxf(double* __restrict      _W_table, 
@@ -84,8 +80,9 @@ _W_table_gen_cplxd(de::CPd* __restrict      _W_table,
 
         _real_v2._vd = _mm_mul_pd(_mm_div_pd(_real_v2._vd, _mm_set1_pd(_signal_length)), _mm_set1_pd(Two_Pi));
         _image_v2._vd = _mm_mul_pd(_mm_div_pd(_image_v2._vd, _mm_set1_pd(_signal_length)), _mm_set1_pd(Two_Pi));
-        _real_v2._vd = _mm_cos_pd(_real_v2._vd);
-        _image_v2._vd = _mm_sin_pd(_image_v2._vd);
+        
+        _real_v2._vd = _avx_cos_fp64x2(_real_v2._vd);
+        _image_v2._vd = _avx_sin_fp64x2(_image_v2._vd);
 
         _res._vd = _mm256_permute2f128_pd(_mm256_castpd128_pd256(_real_v2._vd), _mm256_castpd128_pd256(_image_v2._vd), 0b00100000);
         _res._vd = _mm256_permute4x64_pd(_res._vd, 0b11011000);

@@ -348,39 +348,201 @@ _avx_cos_fp32x4@@16 PROC
     ret
     
 _avx_cos_fp32x4@@16 ENDP
-
 PUBLIC _avx_cos_fp32x4@@16
+
+
+
+.CODE
+_avx_cos_fp64x2@@16 PROC
+    
+    push            rbx
+    movups          DWORD PTR   [rsp - 16],  XMM6
+    movups          DWORD PTR   [rsp - 32],  XMM7
+    movups          DWORD PTR   [rsp - 48],  XMM8
+
+    mov             rax,    7fffffffffffffffH               
+    vmovq           XMM1,   rax
+    vpunpcklqdq     XMM1,   XMM1,   XMM1                    ; XMM1 -> inverted mask of a integer
+    pand            XMM0,   XMM1                            ; x = abs(x) (XMM0 -> abs(x))
+
+    mov             rax,    4599405781057128579               
+    vmovq           XMM1,   rax
+    vpunpcklqdq     XMM1,   XMM1,   XMM1
+    vmulpd          XMM2,   XMM0,   XMM1                    ; XMM2 -> x / pi
+    vroundpd        XMM2,   XMM2,   01H                     ; XMM2 -> floor(x/pi)           (preserved)
+
+    mov             rax,    13837628693406821656               
+    vmovq           XMM1,   rax
+    vpunpcklqdq     XMM1,   XMM1,   XMM1                    ; XMM1 -> -pi
+    vfmadd132pd     XMM1,   XMM0,   XMM2                    ; XMM1 -> x - period * pi (normalized angle) (preserved)
+
+    ; Angles normalized
+
+    mov             rax,    4609753056924675352
+    vmovq           XMM3,   rax
+    vpunpcklqdq     XMM3,   XMM3,   XMM3                    ; XMM3 -> pi / 2
+                            
+    mov             rax,    7fffffffffffffffH               
+    vmovq           XMM4,   rax
+    vpunpcklqdq     XMM4,   XMM4,   XMM4                    ; XMM4 -> inverted mask of a integer
+    vsubpd          XMM3,   XMM1,   XMM3                    ; XMM3 -> norm(angle) - pi/2
+    vandpd          XMM3,   XMM4,   XMM3                    ; XMM3 -> abs(norm(angle) - pi/2)
+
+    mov             rax,    4605249457297304856
+    vmovq           XMM4,   rax
+    vpunpcklqdq     XMM4,   XMM4,   XMM4                    ; XMM4 -> pi / 4
+    vcmppd          XMM4,   XMM3,   XMM4,   11H             ; XMM4 -> sin_rectf             (preserved)
+
+    mov             rax,    4612488097114038738
+    vmovq           XMM3,   rax
+    vpunpcklqdq     XMM3,   XMM3,   XMM3                    ; XMM3 -> pi*3/4
+    vcmppd          XMM5,   XMM1,   XMM3,   1EH             ; XMM5 -> cos_otherside         (preserved)
+    
+    mov             rax,    4609753056924675352
+    vmovq           XMM3,   rax
+    vpunpcklqdq     XMM3,   XMM3,   XMM3                    ; XMM3 -> pi / 2
+    vandpd          XMM3,   XMM3,   XMM4                    ; XMM3 -> sin_rectf ? pi / 2 : 0
+    vsubpd          XMM1,   XMM1,   XMM3
+
+    mov             rax,    4614256656552045848
+    vmovq           XMM3,   rax
+    vpunpcklqdq     XMM3,   XMM3,   XMM3                    ; XMM3 -> pi
+    vandpd          XMM3,   XMM3,   XMM5
+    vsubpd          XMM1,   XMM1,   XMM3
+                            
+    mov             rax,    8000000000000000H
+    vmovq           XMM3,   rax
+    vpunpcklqdq     XMM3,   XMM3,   XMM3                    ; XMM3 -> 0x80000000
+    vandpd          XMM3,   XMM3,   XMM5
+    vxorpd          XMM1,   XMM1,   XMM3
+    ; Pre-process of angle is finished
+
+    mov             rax,    4607182418800017408
+    vmovq           XMM0,   rax
+    vpunpcklqdq     XMM0,   XMM0,   XMM0                    ; XMM0 -> 1.f
+
+    vmulpd          XMM3,   XMM1,   XMM1                    ; XMM3 -> x_sq                  (preserved)
+    ; XMM0, XMM1, XMM2, XMM3, XMM4, and XMM5 are preserved
+
+    mov             rax,    4602678819172646912
+    vmovq           XMM6,   rax
+    vpunpcklqdq     XMM6,   XMM6,   XMM6                    ; XMM6 -> 0.5f
+    mov             rax,    4595172819793696087
+    vmovq           XMM7,   rax
+    vpunpcklqdq     XMM7,   XMM7,   XMM7                    ; XMM7 -> 0.1666666667f
+
+    vblendvps       XMM6,   XMM6,   XMM7,   XMM4            ; XMM6 -> fact
+    vmulpd          XMM6,   XMM3,   XMM6                    ; XMM6 -> x_term                (preserved)
+    vsubpd          XMM0,   XMM0,   XMM6                    ; XMM0 -> res                   (preserved)
+
+    mov             rax,    4590669220166325587
+    vmovq           XMM7,   rax
+    vpunpcklqdq     XMM7,   XMM7,   XMM7                    ; XMM7 -> 0.0833333333f
+    mov             rax,    4587366580439587226
+    vmovq           XMM8,   rax
+    vpunpcklqdq     XMM8,   XMM8,   XMM8                    ; XMM8 -> 0.05f
+    vblendvpd       XMM7,   XMM7,   XMM8,   XMM4            ; XMM7 -> fact
+    vmulpd          XMM7,   XMM7,   XMM3
+    vmulpd          XMM6,   XMM6,   XMM7                    ; Update x_term
+    vaddpd          XMM0,   XMM0,   XMM6                    ; Update res
+
+    mov             rax,    4584964660638322956
+    vmovq           XMM7,   rax
+    vpunpcklqdq     XMM7,   XMM7,   XMM7                    ; XMM7 -> 0.0333333333f
+    mov             rax,    4582519849412036118
+    vmovq           XMM8,   rax
+    vpunpcklqdq     XMM8,   XMM8,   XMM8                    ; XMM8 -> 0.0238095238f
+    vblendvpd       XMM7,   XMM7,   XMM8,   XMM4            ; XMM7 -> fact
+    vmulpd          XMM7,   XMM7,   XMM3
+    vmulpd          XMM6,   XMM6,   XMM7                    ; Update x_term
+    vsubpd          XMM0,   XMM0,   XMM6                    ; Update res
+
+    mov             rax,    4580804192411133075
+    vmovq           XMM7,   rax
+    vpunpcklqdq     XMM7,   XMM7,   XMM7                    ; XMM7 -> 0.0178571429f
+    mov             rax,    4579160021118600995
+    vmovq           XMM8,   rax
+    vpunpcklqdq     XMM8,   XMM8,   XMM8                    ; XMM8 -> 0.0138888889f
+    vblendvpd       XMM7,   XMM7,   XMM8,   XMM4            ; XMM7 -> fact
+    vmulpd          XMM7,   XMM7,   XMM3
+    vmulpd          XMM6,   XMM6,   XMM7                    ; Update x_term
+    vaddpd          XMM0,   XMM0,   XMM6                    ; Update res
+
+    mov             rax,    4577558741251091472
+    vmovq           XMM7,   rax
+    vpunpcklqdq     XMM7,   XMM7,   XMM7                    ; XMM7 -> 0.0111111111f
+    mov             rax,    4576394174074720926
+    vmovq           XMM8,   rax
+    vpunpcklqdq     XMM8,   XMM8,   XMM8                    ; XMM8 -> 0.0090909091f
+    vblendvpd       XMM7,   XMM7,   XMM8,   XMM4            ; XMM7 -> fact
+    vmulpd          XMM7,   XMM7,   XMM3
+    vmulpd          XMM6,   XMM6,   XMM7                    ; Update x_term
+    vsubpd          XMM0,   XMM0,   XMM6                    ; Update res
+
+    ; XMM3, XMM6, and XMM7 are free
+    mov             rax,    8000000000000000H
+    vmovq           XMM3,   rax
+    vpunpcklqdq     XMM3,   XMM3,   XMM3                    ; XMM3 -> 0x80000000
+    vxorpd          XMM1,   XMM1,   XMM3                    ; -norm(angle)
+
+    mov             rax,    4607182418800017408
+    vmovq           XMM6,   rax
+    vpunpcklqdq     XMM6,   XMM6,   XMM6                    ; XMM6 -> 1.f
+    vblendvpd       XMM6,   XMM6,   XMM1,   XMM4
+    vmulpd          XMM0,   XMM0,   XMM6                    ; modified res by multiplying x when in sine case
+
+    mov             rax,    01H
+    vmovq           XMM1,   rax
+    vpunpcklqdq     XMM1,   XMM1,   XMM1                    ; XMM1 = <int>[1 1 1 1]
+
+    cvtpd2dq        XMM2,   XMM2                            ; XMM2 -> int(floor(period))
+    pshufd          XMM2,   XMM2,   216
+    pand            XMM2,   XMM1                            ; XMM2 = sign of full_period_num
+    psllq           XMM2,   63                              ; XMM2 = mask of sign inversion
+    mov             rax,    8000000000000000H
+    vmovq           XMM6,   rax
+    vpunpcklqdq     XMM6,   XMM6,   XMM6                    ; XMM6 -> 0x80000000
+    vpand           XMM6,   XMM6,   XMM5
+    vpxor           XMM2,   XMM2,   XMM6
+    vpxor           XMM0,   XMM0,   XMM2                    ; XMM0 -> masked inversed
+
+    movups          XMM6,   DWORD PTR   [rsp - 16]
+    movups          XMM7,   DWORD PTR   [rsp - 32]
+    movups          XMM8,   DWORD PTR   [rsp - 48]
+    pop             rbx
+
+    ret
+    
+_avx_cos_fp64x2@@16 ENDP
+PUBLIC _avx_cos_fp64x2@@16
+
+
+.CODE
+_avx_sin_fp64x2@@16 PROC
+    
+    mov             rax,    4609753056924675352             ; pi / 2
+    vmovq           XMM1,   rax
+    vpunpcklqdq     XMM1,   XMM1,   XMM1                    ; XMM1 -> pi / 2
+    vsubpd          XMM0,   XMM1,   XMM0                    ; XMM0 = pi/2 - angle
+    call            _avx_cos_fp64x2@@16
+    ret
+
+_avx_sin_fp64x2@@16 ENDP
+PUBLIC _avx_sin_fp64x2@@16
 
 
 ; __vectorcall convention
 .CODE
 _avx_sin_fp32x4@@16 PROC
     
-    push            rbx
-    movups          DWORD PTR   [rsp - 16],  XMM10
-    sub             rsp,    16
-
-    mov             rax,    0                               ; 0
-    vmovq           XMM1,   rax
-    vpunpcklqdq     XMM1,   XMM1,   XMM1                    ; XMM1 -> pi / 2
-    vcmpps          XMM10,  XMM0,   XMM1,   0EH             ; XMM10 -> angle > 0 ? 1<32> : 0<32>
-
     mov             rax,    4596222329050697691             ; pi / 2
     vmovq           XMM1,   rax
     vpunpcklqdq     XMM1,   XMM1,   XMM1                    ; XMM1 -> pi / 2
     vsubps          XMM0,   XMM1,   XMM0                    ; XMM0 = pi/2 - angle
     call            _avx_cos_fp32x4@@16
-
-    vandps          XMM0,   XMM0,   XMM10                   ; res = angle == 0 ? 0 : res
-
-    movups          XMM10,  DWORD PTR   [rsp - 16]
-    add             rsp,    16
-    pop             rbx
-
     ret
 
 _avx_sin_fp32x4@@16 ENDP
-
 PUBLIC _avx_sin_fp32x4@@16
 
 
