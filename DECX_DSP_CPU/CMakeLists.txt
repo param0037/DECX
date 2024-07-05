@@ -1,10 +1,11 @@
 cmake_minimum_required(VERSION 3.23)
 
 project(DECX_DSP_CPU LANGUAGES CXX)
+
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
 enable_language(C ASM_MASM)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-
+enable_language(C ASM_NASM)
 endif()
 
 set(CMAKE_CXX_STANDARD 17)
@@ -15,10 +16,9 @@ string(REGEX REPLACE "/$" "" CURRENT_FOLDER_ABSOLUTE ${CMAKE_CURRENT_SOURCE_DIR}
 get_filename_component(DECX_WORLD_ABS_DIR ${CURRENT_FOLDER_ABSOLUTE} DIRECTORY)
 
 file(GLOB_RECURSE DSP_CORE "${DECX_WORLD_ABS_DIR}/srcs/modules/DSP/*.cxx" 
-                           "${DECX_WORLD_ABS_DIR}/srcs/modules/BLAS/basic_process/transpose/CPU/transpose_exec.cxx"
-                           "${DECX_WORLD_ABS_DIR}/srcs/modules/core/utils/decx_trigonometric_x86.asm")
+                           "${DECX_WORLD_ABS_DIR}/srcs/modules/BLAS/basic_process/transpose/CPU/transpose_exec.cxx")
+file(GLOB_RECURSE TRIGONOMETRIC_INTRINSICS "${DECX_WORLD_ABS_DIR}/srcs/modules/core/utils/decx_trigonometric_x86_nasm.asm")
 file(GLOB_RECURSE COMPLEX_OPERATORS "${DECX_WORLD_ABS_DIR}/srcs/modules/basic_calculations/operators/cp_ops_exec.cxx")
-file(GLOB_RECURSE SIMD_FAST_MATH "${DECX_WORLD_ABS_DIR}/srcs/modules/core/utils/SSE_fast_math_masm.asm")
 
 set(CXX_FLAGS -mFMA -mAVX2 -mAVX)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native")
@@ -37,6 +37,7 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 set(LIBRARY_OUTPUT_PATH ${DECX_WORLD_ABS_DIR}/bin/x64)
+#set(LIBRARY_OUTPUT_PATH ~/DECX/libs/x64)
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     link_directories(${DECX_WORLD_ABS_DIR}/bin/x64/Release)
@@ -50,9 +51,10 @@ else()
     message(STATUS "Building on unknown platform")
 endif()
 
-add_library(DECX_DSP_CPU SHARED ${DSP_CORE} ${COMPLEX_OPERATORS} ${SIMD_FAST_MATH})
+add_library(DECX_DSP_CPU SHARED ${TRIGONOMETRIC_INTRINSICS} 
+                                ${DSP_CORE} 
+                                ${COMPLEX_OPERATORS})
 
-set_target_properties(DECX_DSP_CPU PROPERTIES CUDA_ARCHITECTURES "75")
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     message(STATUS "Building on Windows")

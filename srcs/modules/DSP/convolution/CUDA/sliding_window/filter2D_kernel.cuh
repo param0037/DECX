@@ -32,10 +32,10 @@
 #ifndef _FILER2D_FP32_KERNEL_CUH_
 #define _FILER2D_FP32_KERNEL_CUH_
 
-#include "../../../../../core/basic.h"
-#include "../../../../../core/utils/decx_cuda_vectypes_ops.cuh"
-#include "../../../../../core/utils/decx_cuda_math_functions.cuh"
-#include "../cuda_filter2D_planner.cuh"
+#include "../../../../core/basic.h"
+#include "../../../../core/utils/decx_cuda_vectypes_ops.cuh"
+#include "../../../../core/utils/decx_cuda_math_functions.cuh"
+#include "cuda_filter2D_planner.cuh"
 
 
 namespace decx

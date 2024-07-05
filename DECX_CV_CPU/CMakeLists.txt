@@ -22,7 +22,8 @@ add_compile_definitions(_C_EXPORT_ENABLED_=1)
 add_compile_definitions(_CPP_EXPORT_ENABLED_=1)
 
 
-include_directories(${SDL_PATH}/include ${SDL_IMAGE_PATH}/include)
+include_directories(${DECX_WORLD_ABS_DIR}/srcs/extern/SDL2 
+                    ${DECX_WORLD_ABS_DIR}/srcs/extern/SDL2_image)
 
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE release CACHE STRING "Build Type" FORCE)

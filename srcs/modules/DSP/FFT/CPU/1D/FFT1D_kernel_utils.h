@@ -102,7 +102,7 @@ namespace CPUK
 		for (uint8_t j = 0; j < _L_v2; ++j)
 		{
 			for (uint32_t i = 0; i < _sub_FFT_length / 2; ++i) {
-				_mm256_store_pd((double*)(_local_dst_ptr + (i << 1)), _mm256_load_pd((double*)(_read_ptr + (i << 1))));
+				_mm256_storeu_pd((double*)(_local_dst_ptr + (i << 1)), _mm256_loadu_pd((double*)(_read_ptr + (i << 1))));
 			}
 			if (_sub_FFT_length % 2) {
 				_mm_storeu_pd((double*)(_local_dst_ptr + _int_area_len), _mm_loadu_pd((double*)(_read_ptr + _int_area_len)));
@@ -124,12 +124,12 @@ namespace CPUK
 								  const uint32_t					_small_signal_len)
 	{
 		decx::utils::simd::xmm256_reg _reg;
-
+		
 		if (_call_times_in_warp < _FFT_call_times_v4 - 1 || _L_v4 == 0) {
 			for (uint32_t i = 0; i < _small_signal_len; ++i) {
 				_reg._vd = _mm256_load_pd((double*)(_frag_ptr + (i << 2)));
 				if constexpr (_conj) { _reg._vf = decx::dsp::CPUK::_cp4_conjugate_fp32(_reg._vf); }
-				_mm256_store_pd((double*)(dst + i * _global_kernel_info->_store_pitch + (_call_times_in_warp << 2)), _reg._vd);
+				_mm256_storeu_pd((double*)(dst + i * _global_kernel_info->_store_pitch + (_call_times_in_warp << 2)), _reg._vd);
 			}
 		}
 		else {
@@ -160,7 +160,7 @@ namespace CPUK
 			for (uint32_t i = 0; i < _small_signal_len; ++i) {
 				_reg._vd = _mm256_load_pd((double*)(_frag_ptr + (i << 1)));
 				if constexpr (_conj) { _reg._vd = decx::dsp::CPUK::_cp2_conjugate_fp64(_reg._vd); }
-				_mm256_store_pd((double*)(dst + i * _global_kernel_info->_store_pitch + (_call_times_in_warp << 1)), _reg._vd);
+				_mm256_storeu_pd((double*)(dst + i * _global_kernel_info->_store_pitch + (_call_times_in_warp << 1)), _reg._vd);
 			}
 		}
 		else {
@@ -189,7 +189,7 @@ namespace CPUK
 			for (uint32_t i = 0; i < _small_signal_len; ++i) {
 				_reg._vd = _mm256_load_pd((double*)(_frag_ptr + (i << 2)));
 				_reg._vf = _mm256_permutevar8x32_ps(_reg._vf, _mm256_setr_epi32(0, 2, 4, 6, 1, 3, 5, 7));
-				_mm_store_ps(dst + i * _global_kernel_info->_store_pitch + (_call_times_in_warp << 2), _mm256_castps256_ps128(_reg._vf));
+				_mm_storeu_ps(dst + i * _global_kernel_info->_store_pitch + (_call_times_in_warp << 2), _mm256_castps256_ps128(_reg._vf));
 			}
 		}
 		else {
@@ -220,7 +220,7 @@ namespace CPUK
 			for (uint32_t i = 0; i < _small_signal_len; ++i) {
 				_reg._vd = _mm256_load_pd((double*)(_frag_ptr + (i << 1)));
 				_reg._vd = _mm256_permute4x64_pd(_reg._vd, 0b11011000);
-				_mm_store_pd((double*)(dst + i * _global_kernel_info->_store_pitch + (_call_times_in_warp << 1)), 
+				_mm_storeu_pd((double*)(dst + i * _global_kernel_info->_store_pitch + (_call_times_in_warp << 1)), 
 					_mm256_castpd256_pd128(_reg._vd));
 			}
 		}

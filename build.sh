@@ -1,5 +1,34 @@
 #!/bin/bash
 
+# ----------------------------------------------------------------------------------
+# Author : Wayne Anderson
+# Date : 2021.04.16
+# ----------------------------------------------------------------------------------
+#
+# This is a part of the open source project named "DECX", a high-performance scientific
+# computational library. This project follows the MIT License. For more information
+# please visit https:
+#
+# Copyright (c) 2021 Wayne Anderson
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy of this
+# software and associated documentation files (the "Software"), to deal in the Software
+# without restriction, including without limitation the rights to use, copy, modify,
+# merge, publish, distribute, sublicense, and/or sell copies of the Software, and to
+# permit persons to whom the Software is furnished to do so, subject to the following
+# conditions:
+#
+# The above copyright notice and this permission notice shall be included in all copies
+# or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+# INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+# PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
+# FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+# OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+# DEALINGS IN THE SOFTWARE.
+
+
 full_path=$(realpath $0)
 PROJECT_PATH_BUILD=$(dirname $full_path)
 
@@ -19,16 +48,24 @@ function printf_info()
 # clean
 function clean_single()
 {
+    # Clean the generated asm sources
+    if [ "$1" = "DSP_CPU" ]; then
+        $PROJECT_PATH_BUILD/srcs/modules/core/utils/asm_preproc_trigon.sh -c NOP
+    fi
+    if [ "$1" = "core_CPU" ]; then
+        $PROJECT_PATH_BUILD/srcs/modules/core/configs/x86_64/asm_preproc_configs.sh -c NOP
+    fi
+
     if [ -d "$PROJECT_PATH_BUILD/DECX_"$1"/build/" ]; then
         rm -rf "$PROJECT_PATH_BUILD/DECX_"$1"/build/"
     else
-        echo "File not exist"
+        echo "Path not exist, skipped"
     fi
 
     if [ -d "$PROJECT_PATH_BUILD/DECX_"$1"/x64/" ]; then
         rm -rf "$PROJECT_PATH_BUILD/DECX_"$1"/x64/"
     else
-        echo "File not exist"
+        echo "Path not exist, skipped"
     fi
 }
 
@@ -66,6 +103,14 @@ function clean_optional()
 
 function config_single()
 {
+    # If is DSP_CPU, configure asm sources for math intrinsics
+    if [ "$1" = "DSP_CPU" ]; then
+        $PROJECT_PATH_BUILD/srcs/modules/core/utils/asm_preproc_trigon.sh -i NOP
+    fi
+    # If is core_CPU, configure asm sources for CPU configuration
+    if [ "$1" = "core_CPU" ]; then
+        $PROJECT_PATH_BUILD/srcs/modules/core/configs/x86_64/asm_preproc_configs.sh -i NOP
+    fi
     cd "$PROJECT_PATH_BUILD/DECX_$1"
     echo "$PROJECT_PATH_BUILD/DECX_$1"
     cmake -B build -G"Unix Makefiles"

@@ -70,14 +70,14 @@ void decx::dsp::fft::FFT1D_caller(decx::_Vector* src, decx::_Vector* dst, de::DH
 
     decx::dsp::fft::cpu_FFT1D_planner<float>* _planner =
         decx::dsp::fft::g_cpu_FFT1D_cplxf32_planner.get_resource_raw_ptr<decx::dsp::fft::cpu_FFT1D_planner<float>>();
-
+        
     if (_planner->changed(src->Len(), t1D.total_thread)) {
         _planner->plan(src->Len(), &t1D, handle);
         Check_Runtime_Error(handle);
     }
 
     _planner->Forward<_type_in>(src, dst, &t1D);
-
+    
     decx::dsp::fft::g_cpu_FFT1D_cplxf32_planner.unlock();
 }
 

@@ -101,7 +101,7 @@ void decx::dsp::fft::cpu_FFT2D_planner<_data_type>::plan(const decx::_matrix_lay
 
     const uint64_t _alloc_size = max(_aligned_dims.x * this->_signal_dims.y, this->_signal_dims.x * _aligned_dims.y)
         * sizeof(_data_type) * 2;
-
+    
     if (decx::alloc::_host_virtual_page_malloc(&this->_tmp1, _alloc_size)) {
         decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION, ALLOC_FAIL);
         return;
@@ -116,12 +116,10 @@ void decx::dsp::fft::cpu_FFT2D_planner<_data_type>::plan(const decx::_matrix_lay
     this->_FFT_V.set_length(this->_signal_dims.y, handle);
     Check_Runtime_Error(handle);
 
-
     // Plan for FFTs on two dimensions
     this->_FFT_H.plan(t1D);
     this->_FFT_V.plan(t1D);
     const uint32_t _concurrency = decx::cpu::_get_permitted_concurrency();
-
     // Thread distribution on FFT_H
     const uint32_t _conc_FFT_1D_H = min(decx::utils::ceil<uint32_t>(this->_signal_dims.y, _alignment), this->_concurrency);
     decx::utils::frag_manager_gen_Nx(&this->_thread_dist_FFTH, this->_signal_dims.y, _conc_FFT_1D_H, _alignment);

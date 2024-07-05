@@ -36,14 +36,23 @@
 
 ; __stdcall ---- called funciton should save E(R)BX, E(R)SI, E(R)DI, E(R)BP registers, if used
 
+#ifdef __NASM__ 
+default rel
+#endif
+
+#ifdef __MASM__
 .CODE
 CPUID_call PROC
+#endif
+#ifdef __NASM__
+CPUID_call:
+#endif
     
     xor     eax,        eax
     push    rbx
     xor     ebx,        ebx
     xor     edx,        edx
-
+#ifdef __MASM__
     mov     r8,         rcx
     lea     r9,         [r8]
     mov     eax,        DWORD PTR   [r9]
@@ -55,11 +64,29 @@ CPUID_call PROC
     mov     [r9 + 4],   DWORD PTR   ebx
     mov     [r9 + 8],   DWORD PTR   ecx
     mov     [r9 + 12],  DWORD PTR   edx
+#endif
+#ifdef __NASM__
+    mov     r8,         rdi
+    lea     r9,         [r8]
+    mov     eax,        DWORD   [r9]
+    mov     ecx,        DWORD   [r9 + 8]
 
+    cpuid
+
+    mov     [r9],       DWORD   eax
+    mov     [r9 + 4],   DWORD   ebx
+    mov     [r9 + 8],   DWORD   ecx
+    mov     [r9 + 12],  DWORD   edx
+#endif
     pop     rbx
 
     ret
 
+#ifdef __MASM__
 CPUID_call ENDP
-
+PUBLIC CPUID_call
 END
+#endif
+#ifdef __NASM__
+GLOBAL CPUID_call
+#endif

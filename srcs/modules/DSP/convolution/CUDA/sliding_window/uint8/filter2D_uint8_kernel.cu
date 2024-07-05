@@ -93,7 +93,7 @@ decx::dsp::GPUK::cu_filter2D_NB_u8_Kfp32_fp32(const double* __restrict src,
     __shared__ double _row[_CU_FILTER2D_FP32_BLOCK_Y_][_row_cover_x_v8 + _ext_w_v8 + 1];
 
     const uint32_t _k_loop_w_v8 = decx::utils::ceil<uint32_t>(kernel_dims.x - 1, 8);
-    const uint32_t _k_loop_w_L = (kernel_dims.x - 1) % 8 ? (kernel_dims.x - 1) % 8 : 8;
+    //const uint32_t _k_loop_w_L = (kernel_dims.x - 1) % 8 ? (kernel_dims.x - 1) % 8 : 8;
     decx::utils::_cuda_vec64 _recv[2];
     _recv[0]._vf2 = decx::utils::vec2_set1_fp32(0);
     _recv[1]._vf2 = decx::utils::vec2_set1_fp32(0);

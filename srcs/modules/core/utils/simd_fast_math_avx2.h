@@ -39,6 +39,7 @@
 
 
 extern "C" __m128 __VECTORCALL__ _avx_cos_fp32x4(__m128);
+//extern "C" void __VECTORCALL__ _avx_cos_fp32x4();
 extern "C" __m128 __VECTORCALL__ _avx_sin_fp32x4(__m128);
 extern "C" __m128d __VECTORCALL__ _avx_cos_fp64x2(__m128d);
 extern "C" __m128d __VECTORCALL__ _avx_sin_fp64x2(__m128d);

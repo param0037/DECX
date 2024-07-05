@@ -71,7 +71,7 @@ typedef struct _decx_reg4_x86_t
 #ifdef __cplusplus
 extern "C"
 #endif
-void __STDCALL__ CPUID_call(decx_reg4_x86*);
+void __VECTORCALL__ CPUID_call(decx_reg4_x86*);
 #endif  // #ifdef _DECX_CORE_CPU_
 
 

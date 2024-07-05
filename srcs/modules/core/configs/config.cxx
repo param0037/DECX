@@ -38,12 +38,17 @@ decx::cpuInfo::cpuInfo()
     this->cpu_concurrency = std::thread::hardware_concurrency();
 }
 
-
+extern "C" void __VECTORCALL__ CPUID_cal(decx_reg4_x86*);
 
 _DECX_API_ void de::InitCPUInfo()
 {
     decx::cpI.is_init = true;
     _decx_get_CPU_info(&decx::cpI._hardware_info);
+    // decx_reg4_x86 conf;
+    // conf._eax = 0x04;
+    // conf._ecx = 0x01;
+    // CPUID_cal(&conf);
+    // printf("conf::_eax: %d\n", conf._eax);
     decx::cpI.cpu_concurrency = decx::cpI._hardware_info._hardware_concurrency;
 }
 

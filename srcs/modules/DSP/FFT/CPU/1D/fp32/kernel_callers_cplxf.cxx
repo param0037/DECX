@@ -267,6 +267,7 @@ decx::dsp::fft::CPUK::_FFT1D_smaller_mid_cplxf32_C2C(const de::CPf* __restrict		
 
 				_double_buffer.update_states();
 			}
+			
 			if constexpr (std::is_same_v<_type_out, de::CPf>){
 				decx::dsp::fft::CPUK::_store_fragment_to_DRAM_cplxf<_conj>(_double_buffer.get_leading_ptr<de::CPf>(), _dst_start_ptr, 
 																		   _call_times_in_warp,						 FFT_call_times_v4, 

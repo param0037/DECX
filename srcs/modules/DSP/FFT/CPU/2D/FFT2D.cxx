@@ -62,24 +62,24 @@ template <typename _type_in>
 static void decx::dsp::fft::FFT2D_caller_cplxf(decx::_Matrix* src, decx::_Matrix* dst, de::DH* handle)
 {
     decx::utils::_thread_arrange_1D t1D(decx::cpu::_get_permitted_concurrency());
-
+    
     if (decx::dsp::fft::cpu_FFT2D_cplxf32_planner._res_ptr == NULL) {
         decx::dsp::fft::cpu_FFT2D_cplxf32_planner.RegisterResource(new decx::dsp::fft::cpu_FFT2D_planner<float>,
             5, &decx::dsp::fft::cpu_FFT2D_planner<float>::release_buffers);
     }
-
+    
     decx::dsp::fft::cpu_FFT2D_cplxf32_planner.lock();
-
+    
     decx::dsp::fft::cpu_FFT2D_planner<float>* _planner =
         decx::dsp::fft::cpu_FFT2D_cplxf32_planner.get_resource_raw_ptr<decx::dsp::fft::cpu_FFT2D_planner<float>>();
-
+        
     if (_planner->changed(&src->get_layout(), &dst->get_layout(), t1D.total_thread)) {
         _planner->plan<de::CPf>(&src->get_layout(), &dst->get_layout(), &t1D, handle);
         Check_Runtime_Error(handle);
     }
-
+    
     _planner->Forward<_type_in>(src, dst, &t1D);
-
+    
     decx::dsp::fft::cpu_FFT2D_cplxf32_planner.unlock();
 }
 
@@ -167,7 +167,7 @@ static void decx::dsp::fft::IFFT2D_caller_cplxd(decx::_Matrix* src, decx::_Matri
 _DECX_API_ void de::dsp::cpu::FFT(de::Matrix& src, de::Matrix& dst, const de::_DATA_TYPES_FLAGS_ _output_type)
 {
     de::ResetLastError();
-
+    
     decx::_Matrix* _src = dynamic_cast<decx::_Matrix*>(&src);
     decx::_Matrix* _dst = dynamic_cast<decx::_Matrix*>(&dst);
 
@@ -187,7 +187,7 @@ _DECX_API_ void de::dsp::cpu::FFT(de::Matrix& src, de::Matrix& dst, const de::_D
     else {  // If is _UINT8_
         _dst->re_construct(_output_type, _src->Width(), _src->Height());
     }
-
+    
     // Entries of FFT callees for different cases
     switch (_src->Type())
     {

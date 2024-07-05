@@ -30,7 +30,7 @@
 
 
 #include "filter2D.cuh"
-#include "cuda_Filter2D_planner.cuh"
+#include "cuda_filter2D_planner.cuh"
 #include "../../../../core/cudaStream_management/cudaEvent_queue.h"
 
 

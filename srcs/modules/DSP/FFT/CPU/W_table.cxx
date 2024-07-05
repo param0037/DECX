@@ -31,6 +31,7 @@
 
 #include "W_table.h"
 
+//extern "C" void __VECTORCALL__ _avx_cos_fp32x4();
 
 _THREAD_FUNCTION_ void decx::dsp::fft::CPUK::
 _W_table_gen_cplxf(double* __restrict      _W_table, 
@@ -43,12 +44,11 @@ _W_table_gen_cplxf(double* __restrict      _W_table,
 
     uint32_t _base_dex = _index_start;
     
-
     for (uint32_t i = 0; i < _proc_len_v4; ++i) {
         angle_v4._vf = _mm_setr_ps(_base_dex, _base_dex + 1, _base_dex + 2, _base_dex + 3);
 
         angle_v4._vf = _mm_mul_ps(_mm_div_ps(angle_v4._vf, _mm_set1_ps(_signal_length)), _mm_set1_ps(Two_Pi));
-        
+
         _real_v4._vf = _avx_cos_fp32x4(angle_v4._vf);
         _image_v4._vf = _avx_sin_fp32x4(angle_v4._vf);
 

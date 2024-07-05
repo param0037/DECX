@@ -29,7 +29,7 @@
 */
 
 
-#include "../cuda_Filter2D_planner.cuh"
+#include "../cuda_filter2D_planner.cuh"
 #include "../filter2D_kernel.cuh"
 
 
