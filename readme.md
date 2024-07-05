@@ -20,6 +20,8 @@ A fast linear algebra, computer vision, and mathematic library, based on CUDA an
 3. SDL2 and SDL_image.
 4. NDK, if building for Android ARM64 platform.
 
+## Toolchain combination
+
 ## 1. General x86 64bit Windows
 ### (a) Using Visual Studio (VS)
 Clone this repository, open DECX_world.sln with VS. The version of VS should be 2019 or higher. In the window of VS project, right click on the solution, click build solution.
