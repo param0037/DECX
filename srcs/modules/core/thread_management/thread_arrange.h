@@ -32,7 +32,8 @@
 #ifndef _THREAD_ARRANGE_H_
 #define _THREAD_ARRANGE_H_
 
-#include "../basic.h"
+
+#include "../../../common/basic.h"
 
 
 namespace decx

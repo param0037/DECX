@@ -16,21 +16,6 @@
     <Filter Include="源文件\basic_calculations">
       <UniqueIdentifier>{b1f9519a-f7d9-4bb6-9dcc-1982a4692900}</UniqueIdentifier>
     </Filter>
-    <Filter Include="源文件\basic_calculations\operators">
-      <UniqueIdentifier>{3c01a66b-c15e-4f9a-8f0d-05156ac8c8b8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\basic_calculations\operators\Vector">
-      <UniqueIdentifier>{fa352ca6-185b-4482-bc69-e146403c94e9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\basic_calculations\operators\Matrix">
-      <UniqueIdentifier>{29912044-99e7-4f30-a5df-4ecd2b581fce}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\basic_calculations\math functions">
-      <UniqueIdentifier>{798e2f22-0ae8-4eac-ad2a-d01f67d86cb8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\basic_calculations\math functions\Matrix">
-      <UniqueIdentifier>{73ee7c42-868d-43e2-af11-e5b461a17900}</UniqueIdentifier>
-    </Filter>
     <Filter Include="头文件\basic_calculations">
       <UniqueIdentifier>{b509aa50-0a51-4a86-a493-3295ed4d646d}</UniqueIdentifier>
     </Filter>
@@ -63,12 +48,6 @@
     </Filter>
     <Filter Include="头文件\GEMM\64b">
       <UniqueIdentifier>{9506d7a8-f067-4915-b843-9744fbc0a4b8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\utils">
-      <UniqueIdentifier>{9ff498e4-ae0e-40bd-a819-17cd9931d78a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\utils\thread_arrange">
-      <UniqueIdentifier>{e9a64fa4-ca30-4c47-a5f1-d5a3399ef58b}</UniqueIdentifier>
     </Filter>
     <Filter Include="源文件\Dot_product">
       <UniqueIdentifier>{1793d9e6-ca89-4939-941f-822c264c88aa}</UniqueIdentifier>
@@ -124,160 +103,16 @@
     <Filter Include="源文件\GEMM\cplxd">
       <UniqueIdentifier>{f203b96e-f1ca-4f86-9586-ad762fba69c9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\utils">
+      <UniqueIdentifier>{acb32767-aae6-43ea-9a3a-ab5f6ae37430}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\srcs\modules\basic_calculations\operators\Add_exec.cxx">
-      <Filter>源文件\basic_calculations\operators</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\basic_calculations\operators\clip_range.cxx">
-      <Filter>源文件\basic_calculations\operators</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\basic_calculations\operators\cp_ops_exec.cxx">
-      <Filter>源文件\basic_calculations\operators</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\basic_calculations\operators\Div_exec.cxx">
-      <Filter>源文件\basic_calculations\operators</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\basic_calculations\operators\Fma_exec.cxx">
-      <Filter>源文件\basic_calculations\operators</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\basic_calculations\operators\Fms_exec.cxx">
-      <Filter>源文件\basic_calculations\operators</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\basic_calculations\operators\Mul_exec.cxx">
-      <Filter>源文件\basic_calculations\operators</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\basic_calculations\operators\Sub_exec.cxx">
-      <Filter>源文件\basic_calculations\operators</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\basic_calculations\operators\Vector\cpu_add.cxx">
-      <Filter>源文件\basic_calculations\operators\Vector</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\basic_calculations\operators\Vector\cpu_divide.cxx">
-      <Filter>源文件\basic_calculations\operators\Vector</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\basic_calculations\operators\Vector\cpu_fma.cxx">
-      <Filter>源文件\basic_calculations\operators\Vector</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\basic_calculations\operators\Vector\cpu_fms.cxx">
-      <Filter>源文件\basic_calculations\operators\Vector</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\basic_calculations\operators\Vector\cpu_multiply.cxx">
-      <Filter>源文件\basic_calculations\operators\Vector</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\basic_calculations\operators\Vector\cpu_subtract.cxx">
-      <Filter>源文件\basic_calculations\operators\Vector</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\basic_calculations\operators\Matrix\cpu_cpl_ops.cxx">
-      <Filter>源文件\basic_calculations\operators\Matrix</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\basic_calculations\operators\Matrix\integral.cxx">
-      <Filter>源文件\basic_calculations\operators\Matrix</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\basic_calculations\operators\Matrix\integral_exec.cxx">
-      <Filter>源文件\basic_calculations\operators\Matrix</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\basic_calculations\operators\Matrix\matrix_add.cxx">
-      <Filter>源文件\basic_calculations\operators\Matrix</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\basic_calculations\operators\Matrix\matrix_clip_range.cxx">
-      <Filter>源文件\basic_calculations\operators\Matrix</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\basic_calculations\operators\Matrix\matrix_divide.cxx">
-      <Filter>源文件\basic_calculations\operators\Matrix</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\basic_calculations\operators\Matrix\matrix_fma.cxx">
-      <Filter>源文件\basic_calculations\operators\Matrix</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\basic_calculations\operators\Matrix\matrix_fms.cxx">
-      <Filter>源文件\basic_calculations\operators\Matrix</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\basic_calculations\operators\Matrix\matrix_multiply.cxx">
-      <Filter>源文件\basic_calculations\operators\Matrix</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\basic_calculations\operators\Matrix\matrix_subtract.cxx">
-      <Filter>源文件\basic_calculations\operators\Matrix</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\basic_calculations\math functions\math_functions_exec.cxx">
-      <Filter>源文件\basic_calculations\math functions</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\basic_calculations\math functions\math_functions_raw_API.cxx">
-      <Filter>源文件\basic_calculations\math functions</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\basic_calculations\math functions\Matrix\Matrix_math.cxx">
-      <Filter>源文件\basic_calculations\math functions\Matrix</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\core\utils\fragment_arangement.cxx">
-      <Filter>源文件\utils\thread_arrange</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\BLAS\basic_process\extension\CPU\extend.cxx">
-      <Filter>源文件\basic_process\extension</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\BLAS\basic_process\extension\CPU\extend_constant.cxx">
-      <Filter>源文件\basic_process\extension</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\BLAS\basic_process\extension\CPU\extend_constant_exec.cxx">
-      <Filter>源文件\basic_process\extension</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\BLAS\basic_process\extension\CPU\extend_reflect.cxx">
-      <Filter>源文件\basic_process\extension</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\BLAS\basic_process\extension\CPU\extend_reflect_exec.cxx">
-      <Filter>源文件\basic_process\extension</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\BLAS\basic_process\extension\CPU\extend_reflect_exec_params.cxx">
-      <Filter>源文件\basic_process\extension</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\BLAS\basic_process\fill\constant\CPU\fill_constant_exec.cxx">
-      <Filter>源文件\basic_process\fill\constant</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\BLAS\basic_process\fill\constant\CPU\Matrix_fill.cxx">
-      <Filter>源文件\basic_process\fill\constant</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\BLAS\basic_process\fill\constant\CPU\Vector_fill.cxx">
-      <Filter>源文件\basic_process\fill\constant</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\BLAS\basic_process\type_cast\CPU\_mm256_fp32_fp64.cxx">
-      <Filter>源文件\basic_process\type_cast</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\BLAS\basic_process\type_cast\CPU\_mm256_fp32_int32.cxx">
-      <Filter>源文件\basic_process\type_cast</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\BLAS\basic_process\type_cast\CPU\_mm256_fp32_uint8.cxx">
-      <Filter>源文件\basic_process\type_cast</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\BLAS\basic_process\type_cast\CPU\_mm256_uint8_int32.cxx">
-      <Filter>源文件\basic_process\type_cast</Filter>
-    </ClCompile>
     <ClCompile Include="..\srcs\modules\BLAS\Dot product\CPU\fp32\dot_fp32.cxx">
       <Filter>源文件\Dot_product\fp32</Filter>
     </ClCompile>
     <ClCompile Include="..\srcs\modules\BLAS\Dot product\CPU\fp32\dot_fp32_exec.cxx">
       <Filter>源文件\Dot_product\fp32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\BLAS\basic_process\type_statistics\CPU\cmp_min_exec.cxx">
-      <Filter>源文件\basic_process\type_statistics</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\BLAS\basic_process\type_statistics\CPU\compare.cxx">
-      <Filter>源文件\basic_process\type_statistics</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\BLAS\basic_process\type_statistics\CPU\hist_gen_exec.cxx">
-      <Filter>源文件\basic_process\type_statistics</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\BLAS\basic_process\type_statistics\CPU\histogram.cxx">
-      <Filter>源文件\basic_process\type_statistics</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\BLAS\basic_process\type_statistics\CPU\normalization.cxx">
-      <Filter>源文件\basic_process\type_statistics</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\BLAS\basic_process\type_statistics\CPU\summation.cxx">
-      <Filter>源文件\basic_process\type_statistics</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\BLAS\basic_process\type_statistics\CPU\cmp_max_exec.cxx">
-      <Filter>源文件\basic_process\type_statistics</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\BLAS\basic_process\type_cast\CPU\type_cast.cxx">
-      <Filter>源文件\basic_process\type_cast</Filter>
     </ClCompile>
     <ClCompile Include="..\srcs\modules\BLAS\Vectorial\fields\CPU\divergence.cxx">
       <Filter>源文件\vector4\fields</Filter>
@@ -287,9 +122,6 @@
     </ClCompile>
     <ClCompile Include="..\srcs\modules\BLAS\Vectorial\transforms\3D\CPU\Matrix_transform.cxx">
       <Filter>源文件\vector4\transform\3D</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\basic_calculations\operators\Maprange_exec.cxx">
-      <Filter>源文件\basic_calculations\operators</Filter>
     </ClCompile>
     <ClCompile Include="..\srcs\modules\BLAS\GEMM\CPU\fp32\matrix_B_arrange_fp32.cxx">
       <Filter>源文件\GEMM\fp32</Filter>
@@ -303,24 +135,6 @@
     <ClCompile Include="..\srcs\modules\BLAS\GEMM\CPU\cpu_GEMM_config.cxx">
       <Filter>源文件\GEMM</Filter>
     </ClCompile>
-    <ClCompile Include="..\srcs\modules\BLAS\basic_process\transpose\CPU\transpose_exec_4b.cxx">
-      <Filter>源文件\basic_process\transpose</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\BLAS\basic_process\transpose\CPU\transpose2D_config.cxx">
-      <Filter>源文件\basic_process\transpose</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\BLAS\basic_process\transpose\CPU\transpose.cxx">
-      <Filter>源文件\basic_process\transpose</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\BLAS\basic_process\transpose\CPU\transpose_exec_1b.cxx">
-      <Filter>源文件\basic_process\transpose</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\BLAS\basic_process\transpose\CPU\transpose_exec_8b.cxx">
-      <Filter>源文件\basic_process\transpose</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\BLAS\basic_process\transpose\CPU\transpose_exec_16b.cxx">
-      <Filter>源文件\basic_process\transpose</Filter>
-    </ClCompile>
     <ClCompile Include="..\srcs\modules\BLAS\GEMM\CPU\fp64\GEMM_64b_caller.cxx">
       <Filter>源文件\GEMM\64b</Filter>
     </ClCompile>
@@ -332,6 +146,90 @@
     </ClCompile>
     <ClCompile Include="..\srcs\modules\BLAS\GEMM\CPU\cplxd\GEMM_cplxd_caller.cxx">
       <Filter>源文件\GEMM\cplxd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\common\Basic_process\extension\CPU\extend_constant.cxx">
+      <Filter>源文件\basic_process\extension</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\common\Basic_process\extension\CPU\extend_constant_exec.cxx">
+      <Filter>源文件\basic_process\extension</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\common\Basic_process\extension\CPU\extend_reflect.cxx">
+      <Filter>源文件\basic_process\extension</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\common\Basic_process\extension\CPU\extend_reflect_exec.cxx">
+      <Filter>源文件\basic_process\extension</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\common\Basic_process\extension\CPU\extend_reflect_exec_params.cxx">
+      <Filter>源文件\basic_process\extension</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\common\Basic_process\fill\constant\CPU\fill_constant_exec.cxx">
+      <Filter>源文件\basic_process\fill\constant</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\common\Basic_process\transpose\CPU\transpose_exec_4b.cxx">
+      <Filter>源文件\basic_process\transpose</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\common\Basic_process\transpose\CPU\transpose_exec_8b.cxx">
+      <Filter>源文件\basic_process\transpose</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\common\Basic_process\transpose\CPU\transpose_exec_16b.cxx">
+      <Filter>源文件\basic_process\transpose</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\common\Basic_process\transpose\CPU\transpose2D_config.cxx">
+      <Filter>源文件\basic_process\transpose</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\common\Basic_process\transpose\CPU\transpose_exec_1b.cxx">
+      <Filter>源文件\basic_process\transpose</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\common\Basic_process\type_cast\CPU\_mm256_fp32_fp64.cxx">
+      <Filter>源文件\basic_process\type_cast</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\common\Basic_process\type_cast\CPU\_mm256_fp32_int32.cxx">
+      <Filter>源文件\basic_process\type_cast</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\common\Basic_process\type_cast\CPU\_mm256_fp32_uint8.cxx">
+      <Filter>源文件\basic_process\type_cast</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\common\Basic_process\type_cast\CPU\_mm256_uint8_int32.cxx">
+      <Filter>源文件\basic_process\type_cast</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\common\Basic_process\type_statistics\CPU\cmp_max_exec.cxx">
+      <Filter>源文件\basic_process\type_statistics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\common\Basic_process\type_statistics\CPU\cmp_min_exec.cxx">
+      <Filter>源文件\basic_process\type_statistics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\common\Basic_process\type_statistics\CPU\compare.cxx">
+      <Filter>源文件\basic_process\type_statistics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\common\Basic_process\type_statistics\CPU\hist_gen_exec.cxx">
+      <Filter>源文件\basic_process\type_statistics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\common\Basic_process\type_statistics\CPU\histogram.cxx">
+      <Filter>源文件\basic_process\type_statistics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\common\Basic_process\type_statistics\CPU\normalization.cxx">
+      <Filter>源文件\basic_process\type_statistics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\common\Basic_process\type_statistics\CPU\summation.cxx">
+      <Filter>源文件\basic_process\type_statistics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\common\FMGR\fragment_arangement.cxx">
+      <Filter>源文件\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\BLAS\Basic_process\transpose\transpose.cxx">
+      <Filter>源文件\basic_process\transpose</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\BLAS\Basic_process\extension\extend.cxx">
+      <Filter>源文件\basic_process\extension</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\BLAS\Basic_process\fill\Matrix_fill.cxx">
+      <Filter>源文件\basic_process\fill\constant</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\BLAS\Basic_process\fill\Vector_fill.cxx">
+      <Filter>源文件\basic_process\fill\constant</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\BLAS\Basic_process\type_cast\type_cast.cxx">
+      <Filter>源文件\basic_process\type_cast</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

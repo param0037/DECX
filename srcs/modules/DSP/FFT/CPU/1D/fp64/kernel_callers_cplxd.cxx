@@ -31,7 +31,7 @@
 
 #include "../FFT1D_kernels.h"
 #include "../FFT1D_kernel_utils.h"
-#include "../../CPU_FFT_defs.h"
+#include "../../FFT_common/CPU_FFT_defs.h"
 
 
 
@@ -147,15 +147,19 @@ decx::dsp::fft::CPUK::_FFT1D_smaller_1st_cplxd64(const _type_in* __restrict					
 
 	for (uint32_t _call_times = 0; _call_times < FFT_call_times_v2; ++_call_times)
 	{
+#if __cplusplus >= 201703L
 		if constexpr (std::is_same_v<_type_in, double>){		// R2C
-		decx::dsp::fft::CPUK::_load_1st_v2_fp64(src, _tiles->get_tile1<double>(), _FFT_info, _call_times, _signal_length);
+#else
+		if (std::is_same< _type_in, double>::value) {
+#endif
+		decx::dsp::fft::CPUK::_load_1st_v2_fp64((double*)src, _tiles->get_tile1<double>(), _FFT_info, _call_times, _signal_length);
 		
 		decx::dsp::fft::CPUK::_FFT1D_caller_cplxd64_1st_R2C(_tiles->get_tile1<double>(),
 															_tiles->get_tile2<de::CPd>(),
 															_FFT_info->get_kernel_info_ptr(0));
 		}
 		else {		// C2C
-		decx::dsp::fft::CPUK::_load_1st_v2_cplxd<_IFFT>(src, _tiles->get_tile1<de::CPd>(), _FFT_info, _call_times, _signal_length);
+		decx::dsp::fft::CPUK::_load_1st_v2_cplxd<_IFFT>((de::CPd*)src, _tiles->get_tile1<de::CPd>(), _FFT_info, _call_times, _signal_length);
 
 		decx::dsp::fft::CPUK::_FFT1D_caller_cplxd64_1st_C2C(_tiles->get_tile1<de::CPd>(),
 															_tiles->get_tile2<de::CPd>(),
@@ -269,14 +273,18 @@ decx::dsp::fft::CPUK::_FFT1D_smaller_mid_cplxd64_C2C(const de::CPd* __restrict		
 
 				_double_buffer.update_states();
 			}
+#if __cplusplus >= 201703L
 			if constexpr (std::is_same_v<_type_out, de::CPd>){
-				decx::dsp::fft::CPUK::_store_fragment_to_DRAM_cplxd<_conj>(_double_buffer.get_leading_ptr<de::CPd>(), _dst_start_ptr, 
+#else
+			if (std::is_same<_type_out, de::CPd>::value) {
+#endif
+				decx::dsp::fft::CPUK::_store_fragment_to_DRAM_cplxd<_conj>(_double_buffer.get_leading_ptr<de::CPd>(), (de::CPd*)_dst_start_ptr, 
 																		   _call_times_in_warp,						 FFT_call_times_v2, 
 																		   _L_v2,									 _global_kernel_info, 
 																		   _FFT_info->get_signal_len());
 			}
 			else {
-				decx::dsp::fft::CPUK::_store_fragment_to_DRAM_cplxd_fp64(_double_buffer.get_leading_ptr<de::CPd>(), _dst_start_ptr, 
+				decx::dsp::fft::CPUK::_store_fragment_to_DRAM_cplxd_fp64(_double_buffer.get_leading_ptr<de::CPd>(), (double*)_dst_start_ptr, 
 																	   _call_times_in_warp,							FFT_call_times_v2, 
 																	   _L_v2,										_global_kernel_info, 
 																	   _FFT_info->get_signal_len());

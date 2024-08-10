@@ -33,9 +33,9 @@
 #define _FFT3D_KERNELS_CUH_
 
 
-#include "../../../../core/utils/decx_cuda_vectypes_ops.cuh"
-#include "../../../../core/utils/decx_cuda_math_functions.cuh"
-#include "../../../CUDA_cpf32.cuh"
+#include "../../../../../common/CUSV/decx_cuda_vectypes_ops.cuh"
+#include "../../../../../common/CUSV/decx_cuda_math_functions.cuh"
+#include "../../../../../common/CUSV/CUDA_cpf32.cuh"
 #include "../../FFT_commons.h"
 #include "../2D/FFT2D_config.cuh"
 

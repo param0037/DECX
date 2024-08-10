@@ -32,7 +32,7 @@
 #define _CONFIG_H_
 
 
-#include "../basic.h"
+#include "../../../common/basic.h"
 #include "decx_CPUID.h"
 
 
@@ -45,14 +45,14 @@
 #ifdef _DECX_CUDA_PARTS_
 namespace decx
 {
-    typedef struct cudaProp
+    typedef struct cudaProp_t
     {
         cudaDeviceProp prop;
         int CURRENT_DEVICE;
         bool is_init;
 
-        cudaProp() { this->is_init = false; }
-    };
+        cudaProp_t() { this->is_init = false; }
+    }cudaProp;
 }
 
 
@@ -68,14 +68,17 @@ namespace de
 namespace decx
 {
     // Realized by DECX_allocations
-    typedef struct cpuInfo
+    typedef struct cpuInfo_t
     {
         size_t cpu_concurrency;
         decx_CPUINFO _hardware_info;
         bool is_init;
 
-        cpuInfo();
-    };
+        cpuInfo_t(){
+            this->is_init = false;
+            this->cpu_concurrency = 0;
+        }
+    }cpuInfo;
 }
 #endif
 

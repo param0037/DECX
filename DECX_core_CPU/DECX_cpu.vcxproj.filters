@@ -61,9 +61,6 @@
     <Filter Include="源文件\core\thread_management">
       <UniqueIdentifier>{9eeb56e1-60dd-4ba8-9769-0cc29e0c7b45}</UniqueIdentifier>
     </Filter>
-    <Filter Include="源文件\classes">
-      <UniqueIdentifier>{7f8b90c9-88f3-4049-8720-4b18aecffb6f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="头文件\cv">
       <UniqueIdentifier>{b10a6c38-9c10-46ca-a0d5-32730704ad80}</UniqueIdentifier>
     </Filter>
@@ -102,6 +99,9 @@
     </Filter>
     <Filter Include="源文件\core\configs\x86_64">
       <UniqueIdentifier>{50bad2ca-4b79-4b88-9691-9ff3d7e8602c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\core\classes">
+      <UniqueIdentifier>{7f8b90c9-88f3-4049-8720-4b18aecffb6f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -233,9 +233,6 @@
     <ClCompile Include="..\srcs\modules\core\configs\config.cxx">
       <Filter>源文件\core\configs</Filter>
     </ClCompile>
-    <ClCompile Include="..\srcs\modules\classes\classes_util.cxx">
-      <Filter>源文件\classes</Filter>
-    </ClCompile>
     <ClCompile Include="..\srcs\modules\core\memory_management\MemChunk_Hv.cxx">
       <Filter>源文件\core\memory management</Filter>
     </ClCompile>
@@ -245,21 +242,6 @@
     <ClCompile Include="..\srcs\modules\core\memory_management\MemBlock.cxx">
       <Filter>源文件\core\memory management</Filter>
     </ClCompile>
-    <ClCompile Include="..\srcs\modules\classes\Matrix.cxx">
-      <Filter>源文件\classes</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\classes\MatrixArray.cxx">
-      <Filter>源文件\classes</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\classes\Tensor.cxx">
-      <Filter>源文件\classes</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\classes\TensorArray.cxx">
-      <Filter>源文件\classes</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\classes\Vector.cxx">
-      <Filter>源文件\classes</Filter>
-    </ClCompile>
     <ClCompile Include="..\srcs\modules\core\allocators\_allocator.cxx">
       <Filter>源文件\core\allocators</Filter>
     </ClCompile>
@@ -268,9 +250,6 @@
     </ClCompile>
     <ClCompile Include="..\srcs\modules\core\allocators\_memset.cxx">
       <Filter>源文件\core\allocators</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\core\utils\fragment_arangement.cxx">
-      <Filter>源文件\core\utils</Filter>
     </ClCompile>
     <ClCompile Include="..\srcs\modules\core\pre_post_proc_CPUcoreModule.cxx">
       <Filter>源文件</Filter>
@@ -284,9 +263,27 @@
     <ClCompile Include="..\srcs\modules\core\configs\x86_64\decx_CPUID_x86.c">
       <Filter>源文件\core\configs\x86_64</Filter>
     </ClCompile>
+    <ClCompile Include="..\srcs\common\FMGR\fragment_arangement.cxx">
+      <Filter>源文件\core\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\core\classes\MatrixArray.cxx">
+      <Filter>源文件\core\classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\core\classes\Tensor.cxx">
+      <Filter>源文件\core\classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\core\classes\TensorArray.cxx">
+      <Filter>源文件\core\classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\core\classes\Vector.cxx">
+      <Filter>源文件\core\classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\core\classes\Matrix.cxx">
+      <Filter>源文件\core\classes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <MASM Include="..\srcs\modules\core\configs\x86_64\cpuid_call_x86_64.asm">
+    <MASM Include="..\srcs\modules\core\configs\x86_64\cpuid_call_x86_64_masm.asm">
       <Filter>源文件\core\configs\x86_64</Filter>
     </MASM>
   </ItemGroup>

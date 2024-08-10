@@ -14,9 +14,6 @@
     <Filter Include="源文件\signal">
       <UniqueIdentifier>{7e945cbd-7db2-4768-8278-65727e1d920e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="源文件\signal\complex">
-      <UniqueIdentifier>{f1db1bcc-0fe3-4c47-8a8f-cb1770625c1e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="源文件\signal\FFT">
       <UniqueIdentifier>{a7129386-4824-4722-9908-157ee27cc4aa}</UniqueIdentifier>
     </Filter>
@@ -26,32 +23,11 @@
     <Filter Include="源文件\signal\FFT\2D">
       <UniqueIdentifier>{e6f0682c-80f3-40da-93d5-900fb17aaea0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="源文件\filters">
-      <UniqueIdentifier>{2e5bc851-c452-4f86-a256-fc4b0bf635d2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\generators">
-      <UniqueIdentifier>{7d74013a-57eb-41d6-a7b4-c8f77a725495}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\signal\FFT\utils">
-      <UniqueIdentifier>{7024ca6d-1d92-42e0-813c-44f571d1e15b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="源文件\convolution">
       <UniqueIdentifier>{739bee3a-bd06-4105-8495-796d4d366654}</UniqueIdentifier>
     </Filter>
-    <Filter Include="源文件\convolution\sliding_window">
-      <UniqueIdentifier>{a59f4eea-1606-4500-8e99-ba7fb7eca271}</UniqueIdentifier>
-    </Filter>
     <Filter Include="源文件\signal\FFT\3D">
       <UniqueIdentifier>{649a5a3d-2f6e-4dc2-8d12-b8166058c7d7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\convolution\sliding_window\fp32">
-      <UniqueIdentifier>{44694a0c-8524-4769-aad5-19f7585bac77}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\convolution\sliding_window\uint8">
-      <UniqueIdentifier>{e52f28a8-cf6f-4494-ba7a-61e3a7532b59}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\convolution\sliding_window\fp64">
-      <UniqueIdentifier>{c6cadb55-fc9a-48c2-a6c7-fb834c30549f}</UniqueIdentifier>
     </Filter>
     <Filter Include="源文件\signal\FFT\3D\fp32">
       <UniqueIdentifier>{dc3386f7-c832-4384-8b9a-ae66e1a47d05}</UniqueIdentifier>
@@ -71,44 +47,38 @@
     <Filter Include="源文件\signal\FFT\3D\fp64">
       <UniqueIdentifier>{957b0a0c-07c3-4007-950c-ea94fdb7dbce}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\convolution\1D">
+      <UniqueIdentifier>{adcfd82a-42e7-4d17-bea5-8099ebd8fb6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\convolution\2D">
+      <UniqueIdentifier>{d78677b5-8a1c-42a2-86b3-bd88a42104a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\convolution\3D">
+      <UniqueIdentifier>{18edc541-c1c7-44c3-a225-233a5fe6c6a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\convolution\2D\common">
+      <UniqueIdentifier>{ec6c9e54-22f4-439f-b80a-b17cdd94b3cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\convolution\2D\fp32">
+      <UniqueIdentifier>{cee509da-1c5a-4e3f-8168-41779889b9fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\convolution\2D\cplxd">
+      <UniqueIdentifier>{b6c1be20-80ad-4b0b-b17f-e1b7f60af238}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\convolution\2D\64b">
+      <UniqueIdentifier>{961727d7-361e-4862-89b4-ac06198a439d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\convolution\2D\uint8">
+      <UniqueIdentifier>{76db3ca5-74be-496b-9603-969b455923bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\common">
+      <UniqueIdentifier>{36d755f4-38f4-4db8-a506-e737e11dacea}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="for_properties.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <CudaCompile Include="..\srcs\modules\DSP\filters\CUDA\low_pass.cu">
-      <Filter>源文件\filters</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\DSP\filters\CUDA\windows.cu">
-      <Filter>源文件\filters</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\DSP\generators\CUDA\zeros.cu">
-      <Filter>源文件\generators</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\classes\classes_util.cu">
-      <Filter>源文件\signal\complex</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\1D\FFT1D.cu">
-      <Filter>源文件\signal\FFT\1D</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\2D\FFT2D.cu">
-      <Filter>源文件\signal\FFT\2D</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\CUDA_FFT_configs.cu">
-      <Filter>源文件\signal\FFT</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\BLAS\basic_process\transpose\CUDA\transpose.cu">
-      <Filter>源文件\signal\FFT\utils</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\DSP\convolution\conv_utils.cu">
-      <Filter>源文件\convolution</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\BLAS\basic_process\transpose\CUDA\transpose_kernels_dense.cu">
-      <Filter>源文件\signal\FFT\utils</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\BLAS\basic_process\transpose\CUDA\transpose_kernels.cu">
-      <Filter>源文件\signal\FFT\utils</Filter>
-    </CudaCompile>
     <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\1D\CUDA_FFT1D_planner.cu">
       <Filter>源文件\signal\FFT\1D</Filter>
     </CudaCompile>
@@ -117,27 +87,6 @@
     </CudaCompile>
     <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\3D\FFT3D_planner.cu">
       <Filter>源文件\signal\FFT\3D</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\3D\FFT3D.cu">
-      <Filter>源文件\signal\FFT\3D</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\sliding_window\filter2D.cu">
-      <Filter>源文件\convolution\sliding_window</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\sliding_window\fp32\filter2D_fp32_kernel.cu">
-      <Filter>源文件\convolution\sliding_window\fp32</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\sliding_window\cuda_filter2D_planner.cu">
-      <Filter>源文件\convolution\sliding_window</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\sliding_window\fp32\filter2D_fp32_caller.cu">
-      <Filter>源文件\convolution\sliding_window\fp32</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\sliding_window\uint8\filter2D_uint8_kernel.cu">
-      <Filter>源文件\convolution\sliding_window\uint8</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\sliding_window\uint8\filter2D_uint8_caller.cu">
-      <Filter>源文件\convolution\sliding_window\uint8</Filter>
     </CudaCompile>
     <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\3D\fp32\FFT3D_R3_cplxf_kernels.cu">
       <Filter>源文件\signal\FFT\3D\fp32</Filter>
@@ -229,12 +178,6 @@
     <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\3D\fp64\FFT3D_cplxd64.cu">
       <Filter>源文件\signal\FFT\3D\fp64</Filter>
     </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\sliding_window\fp64\filter2D_fp64_kernel.cu">
-      <Filter>源文件\convolution\sliding_window\fp64</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\sliding_window\fp64\filter2D_fp64_caller.cu">
-      <Filter>源文件\convolution\sliding_window\fp64</Filter>
-    </CudaCompile>
     <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\2D\fp64\FFT2D_R2_cplxd_kernels.cu">
       <Filter>源文件\signal\FFT\2D\fp64</Filter>
     </CudaCompile>
@@ -246,6 +189,54 @@
     </CudaCompile>
     <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\2D\fp64\FFT2D_R5_cplxd_kernels.cu">
       <Filter>源文件\signal\FFT\2D\fp64</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\2D\common\cuda_filter2D_planner.cu">
+      <Filter>源文件\convolution\2D\common</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\2D\cplxd\filter2D_cplxd_caller.cu">
+      <Filter>源文件\convolution\2D\cplxd</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\2D\cplxd\filter2D_cplxd_kernel.cu">
+      <Filter>源文件\convolution\2D\cplxd</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\2D\fp32\filter2D_fp32_caller.cu">
+      <Filter>源文件\convolution\2D\fp32</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\2D\fp32\filter2D_fp32_kernel.cu">
+      <Filter>源文件\convolution\2D\fp32</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\2D\fp64\filter2D_64b_caller.cu">
+      <Filter>源文件\convolution\2D\64b</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\2D\fp64\filter2D_cplxf_kernel.cu">
+      <Filter>源文件\convolution\2D\64b</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\2D\fp64\filter2D_fp64_kernel.cu">
+      <Filter>源文件\convolution\2D\64b</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\2D\uint8\filter2D_uint8_caller.cu">
+      <Filter>源文件\convolution\2D\uint8</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\2D\uint8\filter2D_uint8_kernel.cu">
+      <Filter>源文件\convolution\2D\uint8</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\filter2D.cu">
+      <Filter>源文件\convolution</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\common\Basic_process\transpose\CUDA\transpose_kernels.cu">
+      <Filter>源文件\common</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\common\Basic_process\transpose\CUDA\transpose_kernels_dense.cu">
+      <Filter>源文件\common</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\FFT2D.cu">
+      <Filter>源文件\signal\FFT</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\FFT3D.cu">
+      <Filter>源文件\signal\FFT</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\FFT1D.cu">
+      <Filter>源文件\signal\FFT</Filter>
     </CudaCompile>
   </ItemGroup>
 </Project>

@@ -32,7 +32,7 @@
 #ifndef __ALIGNED_ALLOCATORS_H_
 #define __ALIGNED_ALLOCATORS_H_
 
-#include "../basic.h"
+#include "../../../common/basic.h"
 
 
 namespace decx

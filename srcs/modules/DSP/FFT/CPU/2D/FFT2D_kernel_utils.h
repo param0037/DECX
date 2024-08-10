@@ -33,9 +33,9 @@
 #define _FFT2D_KERNEL_UTILS_H_
 
 
-#include "../CPU_FFT_tiles.h"
-#include "../CPU_FFT_defs.h"
-#include "../../../../BLAS/basic_process/transpose/CPU/transpose_exec.h"
+#include "../FFT_common/CPU_FFT_tiles.h"
+#include "../FFT_common/CPU_FFT_defs.h"
+#include "../../../../../common/Basic_process/transpose/CPU/transpose_exec.h"
 
 
 namespace decx

@@ -46,7 +46,6 @@ bool WINAPI DllMain(HMODULE hModule,
 		* Note : The memory pool should be initialized first, since the dynamic_array in
 		* threadpool is based on the host memory pool.
 		*/
-		decx::mem_pool_Hv = decx::MemPool_Hv::GetInstance();
 		decx::thread_pool = new decx::ThreadPool(std::thread::hardware_concurrency(), true);
 		decx::_res_mgr = new decx::ResMgr;
 		break;
@@ -71,7 +70,10 @@ __attribute__((constructor)) void InitHost_Core_Resources()
 	* Note : The memory pool should be initialized first, since the dynamic_array in
 	* threadpool is based on the host memory pool.
 	*/
-	decx::mem_pool_Hv = decx::MemPool_Hv::GetInstance();
+	// mempool_Hv uses singleton mode, each time get_instance is called, it will judge
+	// whether it's NULL, if so, new it, otherwise, return it.
+	// So, it's initialized when it's needed by someone else.
+	//decx::mem_pool_Hv = decx::MemPool_Hv::GetInstance();
 	decx::thread_pool = new decx::ThreadPool(std::thread::hardware_concurrency(), true);
 	decx::_res_mgr = new decx::ResMgr;
 }

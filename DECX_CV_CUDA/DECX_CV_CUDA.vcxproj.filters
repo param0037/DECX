@@ -13,18 +13,10 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="源文件\NLM">
-      <UniqueIdentifier>{48d8f822-2fd5-44dc-9461-931eb6b8c300}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\DECX_core_CUDA\for_properties.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <CudaCompile Include="..\srcs\modules\cv\NLM\NLM.cu">
-      <Filter>源文件\NLM</Filter>
-    </CudaCompile>
   </ItemGroup>
 </Project>

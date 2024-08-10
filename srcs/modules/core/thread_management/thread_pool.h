@@ -117,7 +117,7 @@ namespace decx {
         {
             uint64_t id = decx::cpu::_get_optimal_thread_id_ranged_(
                 make_uint2(0, decx::utils::clamp_max<size_t>(decx::cpu::_get_permitted_concurrency(), decx::cpu::_get_current_thread_num_())));
-
+            
             decx::ThreadTaskQueue* tmp_task_que = decx::cpu::_get_task_queue_(id);
             tmp_task_que->_mtx.lock();
             std::future<void> fut = decx::emplace_back(tmp_task_que, std::forward<FuncType>(f), std::forward<Args>(args)...);

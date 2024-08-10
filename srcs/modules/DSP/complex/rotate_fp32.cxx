@@ -31,6 +31,7 @@
 
 #include "rotate_fp32.h"
 #include "../../core/thread_management/thread_arrange.h"
+#include "../../../common/FMGR/fragment_arrangment.h"
 
 
 void 

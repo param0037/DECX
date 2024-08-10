@@ -131,7 +131,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;DECXCPU_EXPORTS;_WINDOWS;_USRDLL;_DECX_CPU_PARTS_;_DECX_CV_CPU_;_C_EXPORT_ENABLED_=1;_CPP_EXPORT_ENABLED_=1;__x86_64__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../3rdparty/SDL2/Windows/include;../3rdparty/SDL2_Image/Windows/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../srcs/extern/SDL2/;../srcs/extern/SDL2_image/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -150,21 +150,10 @@
     <ClInclude Include="..\srcs\modules\cv\Image_IO\SDL_includes.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\srcs\modules\basic_calculations\operators\Maprange_exec.cxx" />
-    <ClCompile Include="..\srcs\modules\BLAS\basic_process\type_statistics\CPU\cmp_max_exec.cxx" />
     <ClCompile Include="..\srcs\modules\cv\edge_detection\CPU\Canny_ED_post_proc.cxx" />
     <ClCompile Include="..\srcs\modules\cv\edge_detection\CPU\edge_detectors.cxx" />
     <ClCompile Include="..\srcs\modules\cv\edge_detection\CPU\Scharr_edg_det_ops.cxx" />
     <ClCompile Include="..\srcs\modules\cv\edge_detection\CPU\Sobel_edg_det_ops.cxx" />
-    <ClCompile Include="..\srcs\modules\cv\Enhancement\Histogram_Equalization\generate_hist.cxx" />
-    <ClCompile Include="..\srcs\modules\cv\Enhancement\Histogram_Equalization\HE.cxx" />
-    <ClCompile Include="..\srcs\modules\CV\Enhancement\VEVID\VEVID.cxx" />
-    <ClCompile Include="..\srcs\modules\cv\filters\CPU\bilateral_filter.cxx" />
-    <ClCompile Include="..\srcs\modules\cv\filters\CPU\bilateral_filter_exec.cxx" />
-    <ClCompile Include="..\srcs\modules\cv\filters\CPU\exp_values_LUT.cxx" />
-    <ClCompile Include="..\srcs\modules\cv\filters\CPU\Gaussian_filter.cxx" />
-    <ClCompile Include="..\srcs\modules\cv\filters\CPU\Gaussian_filter_exec.cxx" />
-    <ClCompile Include="..\srcs\modules\cv\filters\CPU\Gaussian_kernel.cxx" />
     <ClCompile Include="..\srcs\modules\cv\Image_IO\Image_GUI.cxx" />
     <ClCompile Include="..\srcs\modules\cv\Image_IO\Image_IO.cxx" />
     <ClCompile Include="..\srcs\modules\cv\utils\color_transform.cxx" />

@@ -34,8 +34,8 @@
 
 
 #include "SDL_includes.h"
-#include "../../classes/Matrix.h"
-#include "../../core/error.h"
+#include "../../../common/Classes/Matrix.h"
+#include "../../../common/error.h"
 
 
 namespace decx

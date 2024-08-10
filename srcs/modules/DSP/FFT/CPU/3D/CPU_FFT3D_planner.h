@@ -33,11 +33,11 @@
 #define _CPU_FFT3D_PLANNER_H_
 
 
-#include "../W_table.h"
-#include "../CPU_FFT_defs.h"
-#include "../CPU_FFT_tiles.h"
+#include "../FFT_common/W_table.h"
+#include "../FFT_common/CPU_FFT_defs.h"
+#include "../FFT_common/CPU_FFT_tiles.h"
 #include "../2D/CPU_FFT2D_planner.h"
-#include "../../../../classes/Tensor.h"
+#include "../../../../../common/Classes/Tensor.h"
 #include "FFT3D_kernel_utils.h"
 #include "../../../../core/resources_manager/decx_resource.h"
 

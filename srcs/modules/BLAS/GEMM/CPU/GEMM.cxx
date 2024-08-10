@@ -35,14 +35,14 @@
 
 namespace de
 {
-    namespace blas {
-        namespace cpu {
-            _DECX_API_ void GEMM(de::Matrix& A, de::Matrix& B, de::Matrix& dst);
+namespace blas {
+    namespace cpu {
+        _DECX_API_ void GEMM(de::Matrix& A, de::Matrix& B, de::Matrix& dst);
 
 
-            _DECX_API_ void GEMM(de::Matrix& A, de::Matrix& B, de::Matrix& C, de::Matrix& dst);
-        }
+        _DECX_API_ void GEMM(de::Matrix& A, de::Matrix& B, de::Matrix& C, de::Matrix& dst);
     }
+}
 }
 
 

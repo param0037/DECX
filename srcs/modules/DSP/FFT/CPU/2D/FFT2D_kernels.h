@@ -33,7 +33,7 @@
 #define _FFT2D_KERNELS_H_
 
 
-#include "../CPU_FFT_tiles.h"
+#include "../FFT_common/CPU_FFT_tiles.h"
 #include "CPU_FFT2D_planner.h"
 
 

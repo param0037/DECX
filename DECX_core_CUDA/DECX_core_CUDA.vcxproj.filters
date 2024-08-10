@@ -74,9 +74,6 @@
     <Filter Include="源文件">
       <UniqueIdentifier>{4368f581-e1d9-47fa-9429-6ac7c9486db1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="源文件\classes">
-      <UniqueIdentifier>{c7fc8493-d3fa-40cd-bcff-67b61265cec3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="源文件\core">
       <UniqueIdentifier>{6e84cea2-4fc5-470d-a9a0-483026dc6f54}</UniqueIdentifier>
     </Filter>
@@ -95,8 +92,11 @@
     <Filter Include="源文件\core\allocators">
       <UniqueIdentifier>{76e5add7-7bc6-4cb6-8775-c7606e206124}</UniqueIdentifier>
     </Filter>
-    <Filter Include="源文件\classes\data transmission">
+    <Filter Include="源文件\core\data transmission">
       <UniqueIdentifier>{3a4b60e6-1288-497c-b80f-ea6df03d7cb8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\core\classes">
+      <UniqueIdentifier>{c7fc8493-d3fa-40cd-bcff-67b61265cec3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -276,24 +276,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <CudaCompile Include="..\srcs\modules\classes\classes_util.cu">
-      <Filter>源文件\classes</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\classes\GPU_Matrix.cu">
-      <Filter>源文件\classes</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\classes\GPU_MatrixArray.cu">
-      <Filter>源文件\classes</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\classes\GPU_Tensor.cu">
-      <Filter>源文件\classes</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\classes\GPU_TensorArray.cu">
-      <Filter>源文件\classes</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\classes\GPU_Vector.cu">
-      <Filter>源文件\classes</Filter>
-    </CudaCompile>
     <CudaCompile Include="..\srcs\modules\core\global_vars.cu">
       <Filter>源文件\core</Filter>
     </CudaCompile>
@@ -311,9 +293,6 @@
     </CudaCompile>
     <CudaCompile Include="..\srcs\modules\core\configs\config.cu">
       <Filter>源文件\core\configs</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\core\utils\fragment_arangement.cu">
-      <Filter>源文件\core\utils</Filter>
     </CudaCompile>
     <CudaCompile Include="..\srcs\modules\core\memory_management\MemBlock.cu">
       <Filter>源文件\core\memory_management</Filter>
@@ -333,11 +312,29 @@
     <CudaCompile Include="..\srcs\modules\core\allocators\_memset.cu">
       <Filter>源文件\core\allocators</Filter>
     </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\classes\data transmission\data_transmission.cu">
-      <Filter>源文件\classes\data transmission</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\core\utils\float_half_convert.cu">
+    <CudaCompile Include="..\srcs\common\FP16\float_half_convert.cu">
       <Filter>源文件\core\utils</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\common\FMGR\fragment_arangement.cu">
+      <Filter>源文件\core\utils</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\core\data transmission\data_transmission.cu">
+      <Filter>源文件\core\data transmission</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\core\classes\GPU_MatrixArray.cu">
+      <Filter>源文件\core\classes</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\core\classes\GPU_Tensor.cu">
+      <Filter>源文件\core\classes</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\core\classes\GPU_TensorArray.cu">
+      <Filter>源文件\core\classes</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\core\classes\GPU_Vector.cu">
+      <Filter>源文件\core\classes</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\core\classes\GPU_Matrix.cu">
+      <Filter>源文件\core\classes</Filter>
     </CudaCompile>
   </ItemGroup>
   <ItemGroup>

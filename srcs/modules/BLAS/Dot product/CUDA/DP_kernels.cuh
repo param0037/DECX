@@ -33,7 +33,7 @@
 #define _DP_KERNELS_CUH_
 
 
-#include "../../../basic_calculations/reduce/CUDA/reduce_sum.cuh"
+#include "../../../../common/Algorithms/Reduce_CUDA/reduce_sum.cuh"
 
 
 namespace decx

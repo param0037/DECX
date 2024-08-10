@@ -173,4 +173,4 @@ decx::MemPool_D::~MemPool_D()
 }
 
 
-decx::MemPool_D* decx::mem_pool_D = decx::MemPool_D::GetInstance();
+//decx::MemPool_D* decx::mem_pool_D = decx::MemPool_D::GetInstance();

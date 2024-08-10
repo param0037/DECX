@@ -1,0 +1,38 @@
+
+# Consider dependencies only in project.
+set(CMAKE_DEPENDS_IN_PROJECT_ONLY OFF)
+
+# The set of languages for which implicit dependencies are needed:
+set(CMAKE_DEPENDS_LANGUAGES
+  )
+
+# The set of dependency files which are needed:
+set(CMAKE_DEPENDS_DEPENDENCY_FILES
+  "/media/wayne/Disk/DECX_world/srcs/common/SIMD/x86_64/decx_trigonometric_x86_nasm.asm" "/media/wayne/Disk/DECX_world/DECX_DSP_CPU/GCC/fft1d_cpu/CMakeFiles/fft1d_cpu.dir/media/wayne/Disk/DECX_world/srcs/common/SIMD/x86_64/decx_trigonometric_x86_nasm.asm.o" "gcc" "/media/wayne/Disk/DECX_world/DECX_DSP_CPU/GCC/fft1d_cpu/CMakeFiles/fft1d_cpu.dir/media/wayne/Disk/DECX_world/srcs/common/SIMD/x86_64/decx_trigonometric_x86_nasm.asm.o.d"
+  "/media/wayne/Disk/DECX_world/srcs/modules/DSP/FFT/CPU/1D/CPU_FFT1D_planner.cxx" "/media/wayne/Disk/DECX_world/DECX_DSP_CPU/GCC/fft1d_cpu/CMakeFiles/fft1d_cpu.dir/CPU_FFT1D_planner.cxx.o" "gcc" "/media/wayne/Disk/DECX_world/DECX_DSP_CPU/GCC/fft1d_cpu/CMakeFiles/fft1d_cpu.dir/CPU_FFT1D_planner.cxx.o.d"
+  "/media/wayne/Disk/DECX_world/srcs/modules/DSP/FFT/CPU/1D/FFT1D_kernel_utils.cxx" "/media/wayne/Disk/DECX_world/DECX_DSP_CPU/GCC/fft1d_cpu/CMakeFiles/fft1d_cpu.dir/FFT1D_kernel_utils.cxx.o" "gcc" "/media/wayne/Disk/DECX_world/DECX_DSP_CPU/GCC/fft1d_cpu/CMakeFiles/fft1d_cpu.dir/FFT1D_kernel_utils.cxx.o.d"
+  "/media/wayne/Disk/DECX_world/srcs/modules/DSP/FFT/CPU/1D/fp32/FFT1D_R2_cplxf_kernels.cxx" "/media/wayne/Disk/DECX_world/DECX_DSP_CPU/GCC/fft1d_cpu/CMakeFiles/fft1d_cpu.dir/fp32/FFT1D_R2_cplxf_kernels.cxx.o" "gcc" "/media/wayne/Disk/DECX_world/DECX_DSP_CPU/GCC/fft1d_cpu/CMakeFiles/fft1d_cpu.dir/fp32/FFT1D_R2_cplxf_kernels.cxx.o.d"
+  "/media/wayne/Disk/DECX_world/srcs/modules/DSP/FFT/CPU/1D/fp32/FFT1D_R3_cplxf_kernels.cxx" "/media/wayne/Disk/DECX_world/DECX_DSP_CPU/GCC/fft1d_cpu/CMakeFiles/fft1d_cpu.dir/fp32/FFT1D_R3_cplxf_kernels.cxx.o" "gcc" "/media/wayne/Disk/DECX_world/DECX_DSP_CPU/GCC/fft1d_cpu/CMakeFiles/fft1d_cpu.dir/fp32/FFT1D_R3_cplxf_kernels.cxx.o.d"
+  "/media/wayne/Disk/DECX_world/srcs/modules/DSP/FFT/CPU/1D/fp32/FFT1D_R4_cplxf_kernels.cxx" "/media/wayne/Disk/DECX_world/DECX_DSP_CPU/GCC/fft1d_cpu/CMakeFiles/fft1d_cpu.dir/fp32/FFT1D_R4_cplxf_kernels.cxx.o" "gcc" "/media/wayne/Disk/DECX_world/DECX_DSP_CPU/GCC/fft1d_cpu/CMakeFiles/fft1d_cpu.dir/fp32/FFT1D_R4_cplxf_kernels.cxx.o.d"
+  "/media/wayne/Disk/DECX_world/srcs/modules/DSP/FFT/CPU/1D/fp32/FFT1D_R5_cplxf_kernels.cxx" "/media/wayne/Disk/DECX_world/DECX_DSP_CPU/GCC/fft1d_cpu/CMakeFiles/fft1d_cpu.dir/fp32/FFT1D_R5_cplxf_kernels.cxx.o" "gcc" "/media/wayne/Disk/DECX_world/DECX_DSP_CPU/GCC/fft1d_cpu/CMakeFiles/fft1d_cpu.dir/fp32/FFT1D_R5_cplxf_kernels.cxx.o.d"
+  "/media/wayne/Disk/DECX_world/srcs/modules/DSP/FFT/CPU/1D/fp32/FFT1D_cplxf32.cxx" "/media/wayne/Disk/DECX_world/DECX_DSP_CPU/GCC/fft1d_cpu/CMakeFiles/fft1d_cpu.dir/fp32/FFT1D_cplxf32.cxx.o" "gcc" "/media/wayne/Disk/DECX_world/DECX_DSP_CPU/GCC/fft1d_cpu/CMakeFiles/fft1d_cpu.dir/fp32/FFT1D_cplxf32.cxx.o.d"
+  "/media/wayne/Disk/DECX_world/srcs/modules/DSP/FFT/CPU/1D/fp32/kernel_callers_cplxf.cxx" "/media/wayne/Disk/DECX_world/DECX_DSP_CPU/GCC/fft1d_cpu/CMakeFiles/fft1d_cpu.dir/fp32/kernel_callers_cplxf.cxx.o" "gcc" "/media/wayne/Disk/DECX_world/DECX_DSP_CPU/GCC/fft1d_cpu/CMakeFiles/fft1d_cpu.dir/fp32/kernel_callers_cplxf.cxx.o.d"
+  "/media/wayne/Disk/DECX_world/srcs/modules/DSP/FFT/CPU/1D/fp64/FFT1D_R2_cplxd_kernels.cxx" "/media/wayne/Disk/DECX_world/DECX_DSP_CPU/GCC/fft1d_cpu/CMakeFiles/fft1d_cpu.dir/fp64/FFT1D_R2_cplxd_kernels.cxx.o" "gcc" "/media/wayne/Disk/DECX_world/DECX_DSP_CPU/GCC/fft1d_cpu/CMakeFiles/fft1d_cpu.dir/fp64/FFT1D_R2_cplxd_kernels.cxx.o.d"
+  "/media/wayne/Disk/DECX_world/srcs/modules/DSP/FFT/CPU/1D/fp64/FFT1D_R3_cplxd_kernels.cxx" "/media/wayne/Disk/DECX_world/DECX_DSP_CPU/GCC/fft1d_cpu/CMakeFiles/fft1d_cpu.dir/fp64/FFT1D_R3_cplxd_kernels.cxx.o" "gcc" "/media/wayne/Disk/DECX_world/DECX_DSP_CPU/GCC/fft1d_cpu/CMakeFiles/fft1d_cpu.dir/fp64/FFT1D_R3_cplxd_kernels.cxx.o.d"
+  "/media/wayne/Disk/DECX_world/srcs/modules/DSP/FFT/CPU/1D/fp64/FFT1D_R4_cplxd_kernels.cxx" "/media/wayne/Disk/DECX_world/DECX_DSP_CPU/GCC/fft1d_cpu/CMakeFiles/fft1d_cpu.dir/fp64/FFT1D_R4_cplxd_kernels.cxx.o" "gcc" "/media/wayne/Disk/DECX_world/DECX_DSP_CPU/GCC/fft1d_cpu/CMakeFiles/fft1d_cpu.dir/fp64/FFT1D_R4_cplxd_kernels.cxx.o.d"
+  "/media/wayne/Disk/DECX_world/srcs/modules/DSP/FFT/CPU/1D/fp64/FFT1D_R5_cplxd_kernels.cxx" "/media/wayne/Disk/DECX_world/DECX_DSP_CPU/GCC/fft1d_cpu/CMakeFiles/fft1d_cpu.dir/fp64/FFT1D_R5_cplxd_kernels.cxx.o" "gcc" "/media/wayne/Disk/DECX_world/DECX_DSP_CPU/GCC/fft1d_cpu/CMakeFiles/fft1d_cpu.dir/fp64/FFT1D_R5_cplxd_kernels.cxx.o.d"
+  "/media/wayne/Disk/DECX_world/srcs/modules/DSP/FFT/CPU/1D/fp64/FFT1D_cplxd64.cxx" "/media/wayne/Disk/DECX_world/DECX_DSP_CPU/GCC/fft1d_cpu/CMakeFiles/fft1d_cpu.dir/fp64/FFT1D_cplxd64.cxx.o" "gcc" "/media/wayne/Disk/DECX_world/DECX_DSP_CPU/GCC/fft1d_cpu/CMakeFiles/fft1d_cpu.dir/fp64/FFT1D_cplxd64.cxx.o.d"
+  "/media/wayne/Disk/DECX_world/srcs/modules/DSP/FFT/CPU/1D/fp64/kernel_callers_cplxd.cxx" "/media/wayne/Disk/DECX_world/DECX_DSP_CPU/GCC/fft1d_cpu/CMakeFiles/fft1d_cpu.dir/fp64/kernel_callers_cplxd.cxx.o" "gcc" "/media/wayne/Disk/DECX_world/DECX_DSP_CPU/GCC/fft1d_cpu/CMakeFiles/fft1d_cpu.dir/fp64/kernel_callers_cplxd.cxx.o.d"
+  "/media/wayne/Disk/DECX_world/srcs/common/Basic_process/transpose/CPU/transpose2D_config.cxx" "/media/wayne/Disk/DECX_world/DECX_DSP_CPU/GCC/fft1d_cpu/CMakeFiles/fft1d_cpu.dir/media/wayne/Disk/DECX_world/srcs/common/Basic_process/transpose/CPU/transpose2D_config.cxx.o" "gcc" "/media/wayne/Disk/DECX_world/DECX_DSP_CPU/GCC/fft1d_cpu/CMakeFiles/fft1d_cpu.dir/media/wayne/Disk/DECX_world/srcs/common/Basic_process/transpose/CPU/transpose2D_config.cxx.o.d"
+  "/media/wayne/Disk/DECX_world/srcs/common/Basic_process/transpose/CPU/transpose_exec_16b.cxx" "/media/wayne/Disk/DECX_world/DECX_DSP_CPU/GCC/fft1d_cpu/CMakeFiles/fft1d_cpu.dir/media/wayne/Disk/DECX_world/srcs/common/Basic_process/transpose/CPU/transpose_exec_16b.cxx.o" "gcc" "/media/wayne/Disk/DECX_world/DECX_DSP_CPU/GCC/fft1d_cpu/CMakeFiles/fft1d_cpu.dir/media/wayne/Disk/DECX_world/srcs/common/Basic_process/transpose/CPU/transpose_exec_16b.cxx.o.d"
+  "/media/wayne/Disk/DECX_world/srcs/common/Basic_process/transpose/CPU/transpose_exec_1b.cxx" "/media/wayne/Disk/DECX_world/DECX_DSP_CPU/GCC/fft1d_cpu/CMakeFiles/fft1d_cpu.dir/media/wayne/Disk/DECX_world/srcs/common/Basic_process/transpose/CPU/transpose_exec_1b.cxx.o" "gcc" "/media/wayne/Disk/DECX_world/DECX_DSP_CPU/GCC/fft1d_cpu/CMakeFiles/fft1d_cpu.dir/media/wayne/Disk/DECX_world/srcs/common/Basic_process/transpose/CPU/transpose_exec_1b.cxx.o.d"
+  "/media/wayne/Disk/DECX_world/srcs/common/Basic_process/transpose/CPU/transpose_exec_4b.cxx" "/media/wayne/Disk/DECX_world/DECX_DSP_CPU/GCC/fft1d_cpu/CMakeFiles/fft1d_cpu.dir/media/wayne/Disk/DECX_world/srcs/common/Basic_process/transpose/CPU/transpose_exec_4b.cxx.o" "gcc" "/media/wayne/Disk/DECX_world/DECX_DSP_CPU/GCC/fft1d_cpu/CMakeFiles/fft1d_cpu.dir/media/wayne/Disk/DECX_world/srcs/common/Basic_process/transpose/CPU/transpose_exec_4b.cxx.o.d"
+  "/media/wayne/Disk/DECX_world/srcs/common/Basic_process/transpose/CPU/transpose_exec_8b.cxx" "/media/wayne/Disk/DECX_world/DECX_DSP_CPU/GCC/fft1d_cpu/CMakeFiles/fft1d_cpu.dir/media/wayne/Disk/DECX_world/srcs/common/Basic_process/transpose/CPU/transpose_exec_8b.cxx.o" "gcc" "/media/wayne/Disk/DECX_world/DECX_DSP_CPU/GCC/fft1d_cpu/CMakeFiles/fft1d_cpu.dir/media/wayne/Disk/DECX_world/srcs/common/Basic_process/transpose/CPU/transpose_exec_8b.cxx.o.d"
+  )
+
+# Targets to which this target links.
+set(CMAKE_TARGET_LINKED_INFO_FILES
+  )
+
+# Fortran module output directory.
+set(CMAKE_Fortran_TARGET_MODULE_DIR "")

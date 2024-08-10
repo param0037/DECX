@@ -1,12 +1,12 @@
 cmake_minimum_required(VERSION 3.23)
 
-project(DECX_DSP_CPU LANGUAGES CXX)
+set(_CPP_EXPORT_ CACHE BOOL "To control if this module export functions in CPP mode")
+set(_C_EXPORT_ CACHE BOOL "To control if this module export functions in C mode")
+set(_DECX_HOST_ARCH_ "x86_64" CACHE STRING "Specfiy the host architecture (either x86_64 or aarch64")
 
-if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-enable_language(C ASM_MASM)
-elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-enable_language(C ASM_NASM)
-endif()
+if(_CPP_EXPORT_ OR _C_EXPORT_)
+
+project(DECX_DSP_CPU LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -15,59 +15,72 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 string(REGEX REPLACE "/$" "" CURRENT_FOLDER_ABSOLUTE ${CMAKE_CURRENT_SOURCE_DIR})
 get_filename_component(DECX_WORLD_ABS_DIR ${CURRENT_FOLDER_ABSOLUTE} DIRECTORY)
 
-file(GLOB_RECURSE DSP_CORE "${DECX_WORLD_ABS_DIR}/srcs/modules/DSP/*.cxx" 
-                           "${DECX_WORLD_ABS_DIR}/srcs/modules/BLAS/basic_process/transpose/CPU/transpose_exec.cxx")
-file(GLOB_RECURSE TRIGONOMETRIC_INTRINSICS "${DECX_WORLD_ABS_DIR}/srcs/modules/core/utils/decx_trigonometric_x86_nasm.asm")
-file(GLOB_RECURSE COMPLEX_OPERATORS "${DECX_WORLD_ABS_DIR}/srcs/modules/basic_calculations/operators/cp_ops_exec.cxx")
 
-set(CXX_FLAGS -mFMA -mAVX2 -mAVX)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native")
-
-add_compile_definitions(_DECX_CPU_PARTS_)
-add_compile_definitions(_DECX_DSP_CPU_)
-add_compile_definitions(_C_EXPORT_ENABLED_=1)
-add_compile_definitions(_CPP_EXPORT_ENABLED_=1)
-add_compile_definitions(_SIMD_VER_=AVX256)
+# Define the path of the binaries built by subdirectories
+set(DECX_SUBBUILD_BIN_DIR ${CMAKE_CURRENT_SOURCE_DIR}/${CMAKE_CXX_COMPILER_ID})
 
 
-include_directories(${SDL_PATH}/include ${SDL_IMAGE_PATH}/include)
+# Define the path for the final built binary
+if(CMAKE_CROSSCOMPILING)
+    message("Host=aarch64")
+    set(LIBRARY_OUTPUT_PATH ${DECX_WORLD_ABS_DIR}/bin/aarch64)
+else()
+    message("Host=x86_64")
+    set(LIBRARY_OUTPUT_PATH ${DECX_WORLD_ABS_DIR}/bin/x64)
+endif()
+
+# include to add compile definitions to the target
+include("${DECX_WORLD_ABS_DIR}/srcs/compile_defs.cmake")
+
+file(GLOB FFT "${DECX_WORLD_ABS_DIR}/srcs/modules/DSP/FFT/CPU/*.cxx")
+file(GLOB FILTERS "${DECX_WORLD_ABS_DIR}/srcs/modules/DSP/filters/CPU/*.cxx")
+file(GLOB CONV "${DECX_WORLD_ABS_DIR}/srcs/modules/DSP/convolution/CPU/*.cxx")
+
+add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/modules/DSP/FFT/CPU/1D" "${DECX_SUBBUILD_BIN_DIR}/fft1d_cpu")
+add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/modules/DSP/FFT/CPU/2D" "${DECX_SUBBUILD_BIN_DIR}/fft2d_cpu")
+add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/modules/DSP/FFT/CPU/3D" "${DECX_SUBBUILD_BIN_DIR}/fft3d_cpu")
+add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/modules/DSP/FFT/CPU/FFT_common" "${DECX_SUBBUILD_BIN_DIR}/fft_common_cpu")
+add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/modules/DSP/convolution/CPU/2D" "${DECX_SUBBUILD_BIN_DIR}/conv2d_cpu")
+
 
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE release CACHE STRING "Build Type" FORCE)
 endif()
 
-set(LIBRARY_OUTPUT_PATH ${DECX_WORLD_ABS_DIR}/bin/x64)
-#set(LIBRARY_OUTPUT_PATH ~/DECX/libs/x64)
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     link_directories(${DECX_WORLD_ABS_DIR}/bin/x64/Release)
-
-elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    link_directories(${DECX_WORLD_ABS_DIR}/bin/x64)
-    
-elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-    message(STATUS "Building on macOS")
 else()
-    message(STATUS "Building on unknown platform")
+    link_directories(${DECX_WORLD_ABS_DIR}/bin/x64)
 endif()
 
-add_library(DECX_DSP_CPU SHARED ${TRIGONOMETRIC_INTRINSICS} 
-                                ${DSP_CORE} 
-                                ${COMPLEX_OPERATORS})
+add_library(DECX_DSP_CPU SHARED ${FFT} 
+                                ${FILTERS}
+                                ${CONV})
 
+target_link_libraries(DECX_DSP_CPU PRIVATE fft1d_cpu
+                                   PRIVATE fft2d_cpu
+                                   PRIVATE fft3d_cpu
+                                   PRIVATE fft_common_cpu
+                                   PRIVATE conv2d_cpu)
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     message(STATUS "Building on Windows")
-    target_link_libraries(DECX_DSP_CPU DECX_core_CPU.lib)
-    target_link_libraries(DECX_DSP_CPU DECX_BLAS_CPU.lib)
+    target_link_libraries(DECX_DSP_CPU PUBLIC DECX_core_CPU.lib)
+    target_link_libraries(DECX_DSP_CPU PUBLIC DECX_BLAS_CPU.lib)
 
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     message(STATUS "Building on Linux")
-    target_link_libraries(DECX_DSP_CPU DECX_core_CPU.so)
-    target_link_libraries(DECX_DSP_CPU DECX_BLAS_CPU.so)
+    target_link_libraries(DECX_DSP_CPU PUBLIC DECX_core_CPU.so)
+    target_link_libraries(DECX_DSP_CPU PUBLIC DECX_BLAS_CPU.so)
     
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     message(STATUS "Building on macOS. Failed, not supported!")
 else()
     message(STATUS "Building on unknown platform. Failed, not supported!")
 endif()
+
+
+else()
+message("Either _CPP_EXPORT_ or _C_EXPORT_ should be true to build the library. Configuration terminated")
+endif()         # if(_CPP_EXPORT_ OR _C_EXPORT_)

@@ -32,7 +32,7 @@
 #ifndef _MEMPOOL_HV_H_
 #define _MEMPOOL_HV_H_
 
-#include "../basic.h"
+#include "../../../common/basic.h"
 #include "MemChunk_Hv.h"
 
 
@@ -52,6 +52,8 @@ private:
 
     
     MemPool_Hv(const decx::MemPool_Hv&);
+
+    
     decx::MemPool_Hv& operator=(const decx::MemPool_Hv&);
 
 
@@ -107,7 +109,7 @@ private:
 
 namespace decx
 {
-    extern decx::MemPool_Hv* mem_pool_Hv;
+    //extern decx::MemPool_Hv* mem_pool_Hv;
 }
 
 

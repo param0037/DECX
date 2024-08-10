@@ -34,20 +34,20 @@
 
 
 #include "VMM_kernels.cuh"
-#include "../../../Dot product/CUDA/DP2D_1way.cuh"
+#include "../../../Dot product/CUDA/2D/DP2D_1way.cuh"
 
 
 namespace decx
 {
-    namespace blas {
-        template <bool _is_reduce_h>
-        void generate_VMM_config_fp32(decx::blas::cuda_DP2D_configs<float>* _configs, const uint2 proc_dims, decx::cuda_stream* S);
+namespace blas {
+    template <bool _is_reduce_h>
+    void generate_VMM_config_fp32(decx::blas::cuda_DP2D_configs<float>* _configs, const uint2 proc_dims, decx::cuda_stream* S);
 
 
-        template <bool _is_reduce_h>
-        void generate_VMM_config_fp16(decx::blas::cuda_DP2D_configs<de::Half>* _configs, const uint2 proc_dims, decx::cuda_stream* S,
-            const uint32_t _fp16_accu);
-    }
+    template <bool _is_reduce_h>
+    void generate_VMM_config_fp16(decx::blas::cuda_DP2D_configs<de::Half>* _configs, const uint2 proc_dims, decx::cuda_stream* S,
+        const uint32_t _fp16_accu);
+}
 }
 
 

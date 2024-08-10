@@ -28,7 +28,7 @@
 * DEALINGS IN THE SOFTWARE.
 */
 
-#include "../../../Dot product/CUDA/DP2D_1way.cuh"
+#include "../../../Dot product/CUDA/2D/DP2D_1way.cuh"
 #include "VMM_callers.cuh"
 
 

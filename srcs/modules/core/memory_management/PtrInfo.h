@@ -33,7 +33,7 @@
 #define _PTR_INFO_H_
 
 
-#include "../include.h"
+#include "../../../common/include.h"
 #include "MemBlock.h"
 
 

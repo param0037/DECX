@@ -150,7 +150,7 @@
     <ClCompile Include="..\DECX_core_CUDA\for_properties.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <CudaCompile Include="..\srcs\modules\BLAS\basic_process\transpose\CUDA\transpose_kernels.cu" />
+    <CudaCompile Include="..\srcs\common\Basic_process\transpose\CUDA\transpose_kernels.cu" />
     <CudaCompile Include="..\srcs\modules\NN\convolution\CUDA\fp32\Conv2D.cu" />
     <CudaCompile Include="..\srcs\modules\NN\convolution\CUDA\fp32\cuda_conv2D_fp32_im2col_planner.cu" />
     <CudaCompile Include="..\srcs\modules\NN\convolution\CUDA\fp32\im2col_fp32.cu" />

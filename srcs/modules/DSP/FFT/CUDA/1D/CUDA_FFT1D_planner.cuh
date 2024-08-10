@@ -35,8 +35,8 @@
 
 #include "../../FFT_commons.h"
 #include "../2D/FFT2D_config.cuh"
-#include "../../../../classes/Vector.h"
-#include "../../../../classes/GPU_Vector.h"
+#include "../../../../../common/Classes/Vector.h"
+#include "../../../../../common/Classes/GPU_Vector.h"
 #include "../../../../core/resources_manager/decx_resource.h"
 
 

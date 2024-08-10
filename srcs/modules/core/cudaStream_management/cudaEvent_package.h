@@ -33,7 +33,7 @@
 #define _CUDAEVENT_PACKAGE_CUH_
 
 
-#include "../basic.h"
+#include "../../../common/basic.h"
 #include "cudaStream_package.h"
 
 

@@ -34,8 +34,8 @@
 
 #if defined(_DECX_CPU_PARTS_)
 
-#include "../basic.h"
-#include "../utils/Dynamic_Array.h"
+#include "../../../common/basic.h"
+#include "../../../common/Array/Dynamic_Array.h"
 
 
 #define MAX_THREAD_NUM 16

@@ -32,9 +32,9 @@
 #ifndef _CUDA_FFTS_CUH_
 #define _CUDA_FFTS_CUH_
 
-#include "../../../classes/GPU_Tensor.h"
-#include "../../../classes/GPU_Matrix.h"
-#include "../../../classes/GPU_Vector.h"
+#include "../../../../common/Classes/GPU_Tensor.h"
+#include "../../../../common/Classes/GPU_Matrix.h"
+#include "../../../../common/Classes/GPU_Vector.h"
 #include "../FFT_commons.h"
 
 

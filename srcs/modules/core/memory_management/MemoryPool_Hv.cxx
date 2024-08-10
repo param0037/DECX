@@ -32,7 +32,7 @@
 
 
 decx::MemPool_Hv* decx::MemPool_Hv::_instance;
-decx::MemPool_Hv* decx::mem_pool_Hv;
+//decx::MemPool_Hv* decx::mem_pool_Hv;
 
 
 decx::MemPool_Hv::MemPool_Hv()

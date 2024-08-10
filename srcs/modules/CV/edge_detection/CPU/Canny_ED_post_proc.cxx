@@ -30,7 +30,6 @@
 
 
 #include "edge_det_ops.h"
-#include "../../../DSP/regional/regional_comparision/CPU/rcp_sliding_window_avx_ops.h"
 
 
 #define _22_5DEG_RAD 0.392699075
@@ -44,23 +43,24 @@
 
 
 namespace decx {
-    namespace vis {
-        namespace CPUK {
-            _THREAD_CALL_ inline __m256 normalize_direction(const decx::utils::simd::xmm256_reg recv_R)
-            {
-                decx::utils::simd::xmm256_reg reg0, res;
+namespace vis {
+namespace CPUK 
+{
+    _THREAD_CALL_ inline __m256 normalize_direction(const decx::utils::simd::xmm256_reg recv_R)
+    {
+        decx::utils::simd::xmm256_reg reg0, res;
 
-                reg0._vf = _mm256_cmp_ps(recv_R._vf, _mm256_set1_ps(0), _CMP_LT_OS);
-                reg0._vi = _mm256_and_si256(reg0._vi, _mm256_castps_si256(_mm256_set1_ps(3.14159265359)));
-                res._vf = _mm256_add_ps(_mm256_add_ps(recv_R._vf, reg0._vf), _mm256_set1_ps(_22_5DEG_RAD));
-                reg0._vf = _mm256_cmp_ps(res._vf, _mm256_set1_ps(3.14159265359), _CMP_GE_OS);
-                reg0._vi = _mm256_and_si256(reg0._vi, _mm256_castps_si256(_mm256_set1_ps(3.14159265359)));
-                res._vf = _mm256_sub_ps(res._vf, reg0._vf);
+        reg0._vf = _mm256_cmp_ps(recv_R._vf, _mm256_set1_ps(0), _CMP_LT_OS);
+        reg0._vi = _mm256_and_si256(reg0._vi, _mm256_castps_si256(_mm256_set1_ps(3.14159265359)));
+        res._vf = _mm256_add_ps(_mm256_add_ps(recv_R._vf, reg0._vf), _mm256_set1_ps(_22_5DEG_RAD));
+        reg0._vf = _mm256_cmp_ps(res._vf, _mm256_set1_ps(3.14159265359), _CMP_GE_OS);
+        reg0._vi = _mm256_and_si256(reg0._vi, _mm256_castps_si256(_mm256_set1_ps(3.14159265359)));
+        res._vf = _mm256_sub_ps(res._vf, reg0._vf);
 
-                return res._vf;
-            }
-        }
+        return res._vf;
     }
+}
+}
 }
 
 

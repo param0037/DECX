@@ -72,13 +72,13 @@ decx::dsp::fft::GPUK::cu_FFT3_R3_1st_C2C_cplxf(const float4* __restrict src,
         dst[_FFT_domain_dex * _pitchdst_v2 + tidx] = res._vf;
         ++_FFT_domain_dex;
 
-        res._vf = decx::dsp::fft::GPUK::_complex_2fma1(recv[1]._vf, de::CPf(-0.5, 0.8660254f), recv[0]._vf);
-        res._vf = decx::dsp::fft::GPUK::_complex_2fma1(recv[2]._vf, de::CPf(-0.5, -0.8660254f), res._vf);
+        res._vf = decx::dsp::fft::GPUK::_complex_2fma1_fp32(recv[1]._vf, de::CPf(-0.5, 0.8660254f), recv[0]._vf);
+        res._vf = decx::dsp::fft::GPUK::_complex_2fma1_fp32(recv[2]._vf, de::CPf(-0.5, -0.8660254f), res._vf);
         dst[_FFT_domain_dex * _pitchdst_v2 + tidx] = res._vf;
         ++_FFT_domain_dex;
 
-        res._vf = decx::dsp::fft::GPUK::_complex_2fma1(recv[1]._vf, de::CPf(-0.5, -0.8660254f), recv[0]._vf);
-        res._vf = decx::dsp::fft::GPUK::_complex_2fma1(recv[2]._vf, de::CPf(-0.5, 0.8660254f), res._vf);
+        res._vf = decx::dsp::fft::GPUK::_complex_2fma1_fp32(recv[1]._vf, de::CPf(-0.5, -0.8660254f), recv[0]._vf);
+        res._vf = decx::dsp::fft::GPUK::_complex_2fma1_fp32(recv[2]._vf, de::CPf(-0.5, 0.8660254f), res._vf);
         dst[_FFT_domain_dex * _pitchdst_v2 + tidx] = res._vf;
     }
 }
@@ -142,14 +142,14 @@ decx::dsp::fft::GPUK::cu_FFT3_R3_C2C_cplxf(const float4* __restrict src,
         dst[_FFT_domain_dex * _pitchdst_v2 + tidx] = res._vf;
         _FFT_domain_dex += _kernel_info._store_pitch;
 
-        res._vf = decx::dsp::fft::GPUK::_complex_2fma1(recv[1]._vf, de::CPf(-0.5, 0.8660254f), recv[0]._vf);
-        res._vf = decx::dsp::fft::GPUK::_complex_2fma1(recv[2]._vf, de::CPf(-0.5, -0.8660254f), res._vf);
+        res._vf = decx::dsp::fft::GPUK::_complex_2fma1_fp32(recv[1]._vf, de::CPf(-0.5, 0.8660254f), recv[0]._vf);
+        res._vf = decx::dsp::fft::GPUK::_complex_2fma1_fp32(recv[2]._vf, de::CPf(-0.5, -0.8660254f), res._vf);
 
         dst[_FFT_domain_dex * _pitchdst_v2 + tidx] = res._vf;
         _FFT_domain_dex += _kernel_info._store_pitch;
 
-        res._vf = decx::dsp::fft::GPUK::_complex_2fma1(recv[1]._vf, de::CPf(-0.5, -0.8660254f), recv[0]._vf);
-        res._vf = decx::dsp::fft::GPUK::_complex_2fma1(recv[2]._vf, de::CPf(-0.5, 0.8660254f), res._vf);
+        res._vf = decx::dsp::fft::GPUK::_complex_2fma1_fp32(recv[1]._vf, de::CPf(-0.5, -0.8660254f), recv[0]._vf);
+        res._vf = decx::dsp::fft::GPUK::_complex_2fma1_fp32(recv[2]._vf, de::CPf(-0.5, 0.8660254f), res._vf);
 
         dst[_FFT_domain_dex * _pitchdst_v2 + tidx] = res._vf;
     }

@@ -22,21 +22,20 @@
     <ClCompile Include="for_properties.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <CudaCompile Include="..\srcs\modules\BLAS\basic_process\transpose\CUDA\transpose.cu" />
-    <CudaCompile Include="..\srcs\modules\BLAS\basic_process\transpose\CUDA\transpose_kernels.cu" />
-    <CudaCompile Include="..\srcs\modules\BLAS\basic_process\transpose\CUDA\transpose_kernels_dense.cu" />
-    <CudaCompile Include="..\srcs\modules\classes\classes_util.cu" />
-    <CudaCompile Include="..\srcs\modules\DSP\convolution\conv_utils.cu" />
-    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\sliding_window\cuda_filter2D_planner.cu" />
-    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\sliding_window\filter2D.cu" />
-    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\sliding_window\fp32\filter2D_fp32_caller.cu" />
-    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\sliding_window\fp32\filter2D_fp32_kernel.cu" />
-    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\sliding_window\fp64\filter2D_fp64_caller.cu" />
-    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\sliding_window\fp64\filter2D_fp64_kernel.cu" />
-    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\sliding_window\uint8\filter2D_uint8_caller.cu" />
-    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\sliding_window\uint8\filter2D_uint8_kernel.cu" />
+    <CudaCompile Include="..\srcs\common\Basic_process\transpose\CUDA\transpose_kernels.cu" />
+    <CudaCompile Include="..\srcs\common\Basic_process\transpose\CUDA\transpose_kernels_dense.cu" />
+    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\2D\common\cuda_filter2D_planner.cu" />
+    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\2D\cplxd\filter2D_cplxd_caller.cu" />
+    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\2D\cplxd\filter2D_cplxd_kernel.cu" />
+    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\2D\fp32\filter2D_fp32_caller.cu" />
+    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\2D\fp32\filter2D_fp32_kernel.cu" />
+    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\2D\fp64\filter2D_64b_caller.cu" />
+    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\2D\fp64\filter2D_cplxf_kernel.cu" />
+    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\2D\fp64\filter2D_fp64_kernel.cu" />
+    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\2D\uint8\filter2D_uint8_caller.cu" />
+    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\2D\uint8\filter2D_uint8_kernel.cu" />
+    <CudaCompile Include="..\srcs\modules\DSP\convolution\CUDA\filter2D.cu" />
     <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\1D\CUDA_FFT1D_planner.cu" />
-    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\1D\FFT1D.cu" />
     <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\1D\FFT1D_kernel_callers.cu" />
     <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\1D\fp32\FFT1D_cplxf32.cu" />
     <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\1D\fp32\FFT1D_R2_cplxf_1st_dense.cu" />
@@ -48,7 +47,6 @@
     <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\1D\fp64\FFT1D_R3_cplxd_1st_dense.cu" />
     <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\1D\fp64\FFT1D_R4_cplxd_1st_dense.cu" />
     <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\1D\fp64\FFT1D_R5_cplxd_1st_dense.cu" />
-    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\2D\FFT2D.cu" />
     <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\2D\FFT2D_config.cu" />
     <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\2D\fp32\FFT2D_1way_kernel_callers_cplxf.cu" />
     <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\2D\fp32\FFT2D_cplxf32.cu" />
@@ -62,7 +60,6 @@
     <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\2D\fp64\FFT2D_R3_cplxd_kernels.cu" />
     <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\2D\fp64\FFT2D_R4_cplxd_kernels.cu" />
     <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\2D\fp64\FFT2D_R5_cplxd_kernels.cu" />
-    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\3D\FFT3D.cu" />
     <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\3D\FFT3D_MidProc_caller.cu" />
     <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\3D\FFT3D_planner.cu" />
     <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\3D\fp32\FFT3D_cplxf32.cu" />
@@ -75,10 +72,9 @@
     <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\3D\fp64\FFT3D_R3_cplxd_kernels.cu" />
     <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\3D\fp64\FFT3D_R4_cplxd_kernels.cu" />
     <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\3D\fp64\FFT3D_R5_cplxd_kernels.cu" />
-    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\CUDA_FFT_configs.cu" />
-    <CudaCompile Include="..\srcs\modules\DSP\filters\CUDA\low_pass.cu" />
-    <CudaCompile Include="..\srcs\modules\DSP\filters\CUDA\windows.cu" />
-    <CudaCompile Include="..\srcs\modules\DSP\generators\CUDA\zeros.cu" />
+    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\FFT1D.cu" />
+    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\FFT2D.cu" />
+    <CudaCompile Include="..\srcs\modules\DSP\FFT\CUDA\FFT3D.cu" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

@@ -29,11 +29,10 @@
 */
 
 
-#include "../../../../../core/basic.h"
 #include "../CUDA_FFT1D_planner.cuh"
 #include "../FFT1D_1st_kernels_dense.cuh"
 #include "../../2D/FFT2D_kernels.cuh"
-#include "../../../../../BLAS/basic_process/transpose/CUDA/transpose_kernels.cuh"
+#include "../../../../../../common/Basic_process/transpose/CUDA/transpose_kernels.cuh"
 #include "../FFT1D_kernel_callers.cuh"
 #include "../../2D/FFT2D_1way_kernel_callers.cuh"
 

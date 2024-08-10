@@ -33,10 +33,10 @@
 #define _SDL_INCLUDES_H_
 
 
-#include "../../core/compile_params.h"
+#include "../../../common/compile_params.h"
 
 #include <SDL.h>
-#include <SDL_shape.h>
+#include <SDL_surface.h>
 #include <SDL_image.h>
 
 #endif

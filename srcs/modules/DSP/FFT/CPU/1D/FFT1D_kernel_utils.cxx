@@ -212,8 +212,6 @@ decx::dsp::fft::CPUK::_FFT1D_Twd_smaller_kernels_v2_mid(const de::CPd* __restric
     __m128d _real_v2, _image_v2;
 
     decx::utils::simd::xmm128_reg _glo_idx;
-//     _glo_idx._vi = _mm_setr_epi64x(_dst_shf + (_call_times_in_warp << 1),
-//                                    _dst_shf + (_call_times_in_warp << 1) + 1);
 
     _glo_idx._arrull[0] = _dst_shf + (_call_times_in_warp << 1);
     _glo_idx._arrull[1] = _dst_shf + (_call_times_in_warp << 1) + 1;

@@ -19,25 +19,20 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\srcs\modules\basic_calculations\operators\cp_ops_exec.cxx" />
-    <ClCompile Include="..\srcs\modules\DSP\complex\cpl32_extract.cxx" />
-    <ClCompile Include="..\srcs\modules\DSP\complex\cpl32_extract_exec.cxx" />
-    <ClCompile Include="..\srcs\modules\DSP\complex\rotate_fp32.cxx" />
-    <ClCompile Include="..\srcs\modules\DSP\convolution\conv_utils.cxx" />
-    <ClCompile Include="..\srcs\modules\DSP\convolution\CPU\sliding_window\Filter2.cxx" />
-    <ClCompile Include="..\srcs\modules\DSP\convolution\CPU\sliding_window\fp32\conv2_fp32_BC_MK_exec.cxx" />
-    <ClCompile Include="..\srcs\modules\DSP\convolution\CPU\sliding_window\fp32\conv2_fp32_BC_SK_exec.cxx" />
-    <ClCompile Include="..\srcs\modules\DSP\convolution\CPU\sliding_window\fp32\conv2_fp32_exec.cxx" />
-    <ClCompile Include="..\srcs\modules\DSP\convolution\CPU\sliding_window\fp32\conv2_fp32_NB_MK_exec.cxx" />
-    <ClCompile Include="..\srcs\modules\DSP\convolution\CPU\sliding_window\fp32\conv2_fp32_NB_SK_exec.cxx" />
-    <ClCompile Include="..\srcs\modules\DSP\convolution\CPU\sliding_window\fp64\conv2_fp64_BC_MK_exec.cxx" />
-    <ClCompile Include="..\srcs\modules\DSP\convolution\CPU\sliding_window\fp64\conv2_fp64_BC_SK_exec.cxx" />
-    <ClCompile Include="..\srcs\modules\DSP\convolution\CPU\sliding_window\fp64\conv2_fp64_exec.cxx" />
-    <ClCompile Include="..\srcs\modules\DSP\convolution\CPU\sliding_window\fp64\conv2_fp64_NB_MK_exec.cxx" />
-    <ClCompile Include="..\srcs\modules\DSP\convolution\CPU\sliding_window\fp64\conv2_fp64_NB_SK_exec.cxx" />
-    <ClCompile Include="..\srcs\modules\DSP\convolution\CPU\sliding_window\uint8\conv2_uint8_exec.cxx" />
+    <ClCompile Include="..\srcs\common\Basic_process\extension\CPU\extend_constant.cxx" />
+    <ClCompile Include="..\srcs\common\Basic_process\extension\CPU\extend_constant_exec.cxx" />
+    <ClCompile Include="..\srcs\common\Basic_process\extension\CPU\extend_reflect.cxx" />
+    <ClCompile Include="..\srcs\common\Basic_process\extension\CPU\extend_reflect_exec.cxx" />
+    <ClCompile Include="..\srcs\common\Basic_process\extension\CPU\extend_reflect_exec_params.cxx" />
+    <ClCompile Include="..\srcs\common\FMGR\fragment_arangement.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\convolution\CPU\2D\64b\filter2D_64b_caller.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\convolution\CPU\2D\64b\filter2D_cplxf_kernels.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\convolution\CPU\2D\64b\filter2D_fp64_kernels.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\convolution\CPU\2D\common\cpu_filter2D_planner.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\convolution\CPU\2D\fp32\filter2D_fp32_caller.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\convolution\CPU\2D\fp32\filter2D_fp32_kernels.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\convolution\CPU\Filter2D.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\CPU_FFT1D_planner.cxx" />
-    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\FFT1D.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\FFT1D_kernel_utils.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\fp32\FFT1D_cplxf32.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\fp32\FFT1D_R2_cplxf_kernels.cxx" />
@@ -52,35 +47,28 @@
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\fp64\FFT1D_R5_cplxd_kernels.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\fp64\kernel_callers_cplxd.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\2D\CPU_FFT2D_planner.cxx" />
-    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\2D\FFT2D.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\2D\fp32\FFT2D_cplxf32.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\2D\fp32\FFT2D_kernel_callers_cplxf.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\2D\fp64\FFT2D_cplxd64.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\2D\fp64\FFT2D_kernel_callers_cplxd.cxx" />
-    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\3D\FFT3D.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\3D\CPU_FFT3D_planner.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\3D\fp32\FFT3D_cplxf32.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\3D\fp32\FFT3D_kernel_callers_fp32.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\3D\fp64\FFT3D_cplxd64.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\3D\fp64\FFT3D_kernel_callers_fp64.cxx" />
-    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\CPU_FFT_tiles.cxx" />
-    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\W_table.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\FFT1D.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\FFT2D.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\FFT3D.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\FFT_common\CPU_FFT_tiles.cxx" />
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\FFT_common\W_table.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\filters\CPU\low_pass.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\filters\CPU\windows.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\generators\CPU\distributions_exec.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\generators\CPU\random.cxx" />
     <ClCompile Include="..\srcs\modules\DSP\generators\CPU\zeros.cxx" />
-    <ClCompile Include="..\srcs\modules\DSP\regional\regional_comparision\CPU\fp32\rcp2_CCOEFF_fp32_exec.cxx" />
-    <ClCompile Include="..\srcs\modules\DSP\regional\regional_comparision\CPU\fp32\rcp2_SQDIFF_fp32_exec.cxx" />
-    <ClCompile Include="..\srcs\modules\DSP\regional\regional_comparision\CPU\rcp2.cxx" />
-    <ClCompile Include="..\srcs\modules\DSP\regional\regional_comparision\CPU\uint8\rcp2_CCOEFF_uint8_exec.cxx" />
-    <ClCompile Include="..\srcs\modules\DSP\regional\regional_comparision\CPU\uint8\rcp2_SQDIFF_uint8_exec.cxx" />
-    <ClCompile Include="..\srcs\modules\DSP\regional\regional_comparision\CPU\utils\template_configurations.cxx" />
   </ItemGroup>
   <ItemGroup>
-    <MASM Include="..\srcs\modules\core\utils\decx_trigonometric_x86.asm">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
-    </MASM>
+    <MASM Include="..\srcs\common\SIMD\x86_64\decx_trigonometric_x86_masm.asm" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -201,7 +189,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>

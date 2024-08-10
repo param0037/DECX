@@ -22,23 +22,8 @@
     <Filter Include="源文件\edge_detection">
       <UniqueIdentifier>{b002206d-5771-4bc8-8dab-a6721299f58e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="源文件\Enhancement">
-      <UniqueIdentifier>{a5faefe9-1907-4a19-a1ca-d939cc2bdb4d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\Enhancement\RETINEX">
-      <UniqueIdentifier>{bd35f374-6ace-44c2-8175-dd2af6da56f6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\Enhancement\Histogram_Equalization">
-      <UniqueIdentifier>{14a1cd21-f75c-4d43-b940-1f36de8f9add}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\filters">
-      <UniqueIdentifier>{883ef2f8-e4a6-4061-b763-e35c6c33902c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="源文件\utils">
       <UniqueIdentifier>{a22b4676-800b-4bb5-93db-175c3bf9120f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\Enhancement\VEVID">
-      <UniqueIdentifier>{71c7bf49-6c89-48a6-a00c-ce132f3bfd8a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -74,44 +59,11 @@
     <ClCompile Include="..\srcs\modules\cv\edge_detection\CPU\Sobel_edg_det_ops.cxx">
       <Filter>源文件\edge_detection</Filter>
     </ClCompile>
-    <ClCompile Include="..\srcs\modules\cv\Enhancement\Histogram_Equalization\generate_hist.cxx">
-      <Filter>源文件\Enhancement\Histogram_Equalization</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\cv\Enhancement\Histogram_Equalization\HE.cxx">
-      <Filter>源文件\Enhancement\Histogram_Equalization</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\cv\filters\CPU\bilateral_filter.cxx">
-      <Filter>源文件\filters</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\cv\filters\CPU\bilateral_filter_exec.cxx">
-      <Filter>源文件\filters</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\cv\filters\CPU\exp_values_LUT.cxx">
-      <Filter>源文件\filters</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\cv\filters\CPU\Gaussian_filter.cxx">
-      <Filter>源文件\filters</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\cv\filters\CPU\Gaussian_filter_exec.cxx">
-      <Filter>源文件\filters</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\cv\filters\CPU\Gaussian_kernel.cxx">
-      <Filter>源文件\filters</Filter>
-    </ClCompile>
     <ClCompile Include="..\srcs\modules\cv\utils\color_transform.cxx">
       <Filter>源文件\utils</Filter>
     </ClCompile>
     <ClCompile Include="..\srcs\modules\cv\utils\cvt_colors.cxx">
       <Filter>源文件\utils</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\CV\Enhancement\VEVID\VEVID.cxx">
-      <Filter>源文件\Enhancement\VEVID</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\basic_calculations\operators\Maprange_exec.cxx">
-      <Filter>源文件\Enhancement\VEVID</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\BLAS\basic_process\type_statistics\CPU\cmp_max_exec.cxx">
-      <Filter>源文件\Enhancement\VEVID</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

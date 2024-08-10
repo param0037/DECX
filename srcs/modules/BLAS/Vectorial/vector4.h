@@ -33,8 +33,8 @@
 #define _VECTOR4_H_
 
 
-#include "../../core/basic.h"
-#include "../../core/utils/intrinsics_ops.h"
+#include "../../../common/basic.h"
+#include "../../../common/SIMD/intrinsics_ops.h"
 #ifdef _DECX_CPU_PARTS_
 #include "../../core/thread_management/thread_pool.h"
 #endif
@@ -69,7 +69,7 @@ namespace decx
         __m128 _vec;
     };
 
-    union __align__(16) _Vector8f {
+    union __align__(32) _Vector8f {
         float _vec_sp[8];
         __m256 _vec;
     };

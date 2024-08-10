@@ -33,12 +33,12 @@
 #define _CPU_FFT1D_PLANNER_H_
 
 
-#include "../../../../core/basic.h"
-#include "../CPU_FFT_tiles.h"
-#include "../W_table.h"
-#include "../../../../core/utils/Fixed_Length_Array.h"
-#include "../CPU_FFT_defs.h"
-#include "../../../../classes/Vector.h"
+#include "../../../../../common/basic.h"
+#include "../FFT_common/CPU_FFT_tiles.h"
+#include "../FFT_common/W_table.h"
+#include "../../../../../common/Array/Fixed_Length_Array.h"
+#include "../FFT_common/CPU_FFT_defs.h"
+#include "../../../../../common/Classes/Vector.h"
 #include "../../../../core/resources_manager/decx_resource.h"
 
 

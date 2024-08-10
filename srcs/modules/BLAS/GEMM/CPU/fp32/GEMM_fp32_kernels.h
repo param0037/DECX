@@ -32,7 +32,7 @@
 #ifndef _GEMM_FP32_KERNEL_H_
 #define _GEMM_FP32_KERNEL_H_
 
-#include "../../../../core/basic.h"
+#include "../../../../../common/basic.h"
 
 
 namespace decx

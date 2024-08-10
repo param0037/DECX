@@ -33,7 +33,7 @@
 #define _FFT2D_CONFIG_CUH_
 
 #include "../../FFT_commons.h"
-#include "../../../../classes/GPU_Matrix.h"
+#include "../../../../../common/Classes/GPU_Matrix.h"
 #include "../../../../core/cudaStream_management/cudaEvent_queue.h"
 #include "../../../../core/cudaStream_management/cudaStream_queue.h"
 #include "../../../../core/resources_manager/decx_resource.h"

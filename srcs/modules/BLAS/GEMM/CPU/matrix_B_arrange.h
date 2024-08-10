@@ -32,7 +32,8 @@
 #ifndef _MATRIX_B_ARRANGE_H_
 #define _MATRIX_B_ARRANGE_H_
 
-#include "../../../classes/Matrix.h"
+
+#include "../../../../common/Classes/Matrix.h"
 #include "../GEMM_utils.h"
 #include "../../../core/thread_management/thread_arrange.h"
 #include "../../../core/thread_management/thread_pool.h"

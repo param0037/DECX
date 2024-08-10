@@ -1,0 +1,229 @@
+﻿Build started 2024/7/30 17:37:33.
+Logging verbosity is set to: Normal.     1>Project "E:\DECX_world\DECX_NN_CUDA\DECX_NN_CUDA.vcxproj" on node 3 (Build target(s)).
+     1>D:\Microsoft Visual Studio\Visual Studio\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(499,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
+     1>InitializeBuildStatus:
+         Touching "x64\Release\DECX_NN_CUDA.tlog\unsuccessfulbuild".
+       AddCudaCompileDeps:
+         D:\Microsoft Visual Studio\Visual Studio\VC\Tools\MSVC\14.29.30133\bin\HostX86\x64\cl.exe /E /nologo /showIncludes /TP /D__CUDACC__ /DNDEBUG /D_CONSOLE /D_DECX_CUDA_PARTS_ /D_DECX_NN_CUDA_ /D_C_EXPORT_ENABLED_=1 /D_CPP_EXPORT_ENABLED_=1 /D_WINDLL /D_UNICODE /DUNICODE /ID:\CUDA\Development\include /ID:\CUDA\Development\bin /ID:\CUDA\Development\include /I. /FIcuda_runtime.h /c E:\DECX_world\srcs\common\Basic_process\transpose\CUDA\transpose_kernels.cu 
+       AddCudaCompileDeps:
+       Skipping target "AddCudaCompileDeps" because all output files are up-to-date with respect to the input files.
+       AddCudaCompileDeps:
+       Skipping target "AddCudaCompileDeps" because all output files are up-to-date with respect to the input files.
+       AddCudaCompileDeps:
+       Skipping target "AddCudaCompileDeps" because all output files are up-to-date with respect to the input files.
+       AddCudaCompileDeps:
+       Skipping target "AddCudaCompileDeps" because all output files are up-to-date with respect to the input files.
+       AddCudaCompileDeps:
+       Skipping target "AddCudaCompileDeps" because all output files are up-to-date with respect to the input files.
+     1>Project "E:\DECX_world\DECX_NN_CUDA\DECX_NN_CUDA.vcxproj" (1) is building "E:\DECX_world\DECX_NN_CUDA\DECX_NN_CUDA.vcxproj" (1:2) on node 1 (CudaBuildCore target(s)).
+     1>CudaBuildCore:
+       Skipping target "CudaBuildCore" because all output files are up-to-date with respect to the input files.
+     1>Done Building Project "E:\DECX_world\DECX_NN_CUDA\DECX_NN_CUDA.vcxproj" (CudaBuildCore target(s)).
+     1>Project "E:\DECX_world\DECX_NN_CUDA\DECX_NN_CUDA.vcxproj" (1) is building "E:\DECX_world\DECX_NN_CUDA\DECX_NN_CUDA.vcxproj" (1:3) on node 10 (CudaBuildCore target(s)).
+     1>CudaBuildCore:
+       Skipping target "CudaBuildCore" because all output files are up-to-date with respect to the input files.
+     1>Done Building Project "E:\DECX_world\DECX_NN_CUDA\DECX_NN_CUDA.vcxproj" (CudaBuildCore target(s)).
+     1>Project "E:\DECX_world\DECX_NN_CUDA\DECX_NN_CUDA.vcxproj" (1) is building "E:\DECX_world\DECX_NN_CUDA\DECX_NN_CUDA.vcxproj" (1:4) on node 12 (CudaBuildCore target(s)).
+     1>CudaBuildCore:
+       Skipping target "CudaBuildCore" because all output files are up-to-date with respect to the input files.
+     1>Done Building Project "E:\DECX_world\DECX_NN_CUDA\DECX_NN_CUDA.vcxproj" (CudaBuildCore target(s)).
+     1>Project "E:\DECX_world\DECX_NN_CUDA\DECX_NN_CUDA.vcxproj" (1) is building "E:\DECX_world\DECX_NN_CUDA\DECX_NN_CUDA.vcxproj" (1:5) on node 9 (CudaBuildCore target(s)).
+     1>CudaBuildCore:
+       Skipping target "CudaBuildCore" because all output files are up-to-date with respect to the input files.
+     1>Done Building Project "E:\DECX_world\DECX_NN_CUDA\DECX_NN_CUDA.vcxproj" (CudaBuildCore target(s)).
+     1>Project "E:\DECX_world\DECX_NN_CUDA\DECX_NN_CUDA.vcxproj" (1) is building "E:\DECX_world\DECX_NN_CUDA\DECX_NN_CUDA.vcxproj" (1:6) on node 8 (CudaBuildCore target(s)).
+     1>CudaBuildCore:
+         Compiling CUDA source file ..\srcs\common\Basic_process\transpose\CUDA\transpose_kernels.cu...
+     1>Project "E:\DECX_world\DECX_NN_CUDA\DECX_NN_CUDA.vcxproj" (1) is building "E:\DECX_world\DECX_NN_CUDA\DECX_NN_CUDA.vcxproj" (1:7) on node 3 (CudaBuildCore target(s)).
+     1>CudaBuildCore:
+       Skipping target "CudaBuildCore" because all output files are up-to-date with respect to the input files.
+     1>Done Building Project "E:\DECX_world\DECX_NN_CUDA\DECX_NN_CUDA.vcxproj" (CudaBuildCore target(s)).
+     1>CudaBuildCore:
+         cmd.exe /C "C:\Users\Wayne\AppData\Local\Temp\tmp92d43897e5f94609ba70add99a51fe4a.cmd"
+         "D:\CUDA\Development\bin\nvcc.exe" -gencode=arch=compute_75,code=\"sm_75,compute_75\" --use-local-env -ccbin "D:\Microsoft Visual Studio\Visual Studio\VC\Tools\MSVC\14.29.30133\bin\HostX86\x64" -x cu -rdc=true -ID:\CUDA\Development\include -ID:\CUDA\Development\include     --keep-dir x64\Release -maxrregcount=0  --machine 64 --compile -cudart static     -DNDEBUG -D_CONSOLE -D_DECX_CUDA_PARTS_ -D_DECX_NN_CUDA_ -D_C_EXPORT_ENABLED_=1 -D_CPP_EXPORT_ENABLED_=1 -D_WINDLL -D_UNICODE -DUNICODE -Xcompiler "/EHsc /W3 /nologo /O2 /Fdx64\Release\vc142.pdb /FS /Zi  /MD " -o x64\Release\transpose_kernels.cu.obj "E:\DECX_world\srcs\common\Basic_process\transpose\CUDA\transpose_kernels.cu"
+         
+         E:\DECX_world\DECX_NN_CUDA>"D:\CUDA\Development\bin\nvcc.exe" -gencode=arch=compute_75,code=\"sm_75,compute_75\" --use-local-env -ccbin "D:\Microsoft Visual Studio\Visual Studio\VC\Tools\MSVC\14.29.30133\bin\HostX86\x64" -x cu -rdc=true -ID:\CUDA\Development\include -ID:\CUDA\Development\include     --keep-dir x64\Release -maxrregcount=0  --machine 64 --compile -cudart static     -DNDEBUG -D_CONSOLE -D_DECX_CUDA_PARTS_ -D_DECX_NN_CUDA_ -D_C_EXPORT_ENABLED_=1 -D_CPP_EXPORT_ENABLED_=1 -D_WINDLL -D_UNICODE -DUNICODE -Xcompiler "/EHsc /W3 /nologo /O2 /Fdx64\Release\vc142.pdb /FS /Zi  /MD " -o x64\Release\transpose_kernels.cu.obj "E:\DECX_world\srcs\common\Basic_process\transpose\CUDA\transpose_kernels.cu" 
+     1>D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>D:\CUDA\Development\include\sm_20_intrinsics.h(1): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>D:\CUDA\Development\include\sm_20_intrinsics.h(926): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>D:\CUDA\Development\include\cuda.h(13166): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>D:\CUDA\Development\include\cuda_fp16.h(1): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>E:\DECX_world\srcs\common\CUSV\../Classes/classes_util.h(270): warning : returning reference to local variable
+         
+     1>D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>D:\CUDA\Development\include\sm_20_intrinsics.h(1): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>D:\CUDA\Development\include\sm_20_intrinsics.h(926): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>D:\CUDA\Development\include\cuda.h(13166): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>D:\CUDA\Development\include\cuda_fp16.h(1): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>E:\DECX_world\srcs\common\CUSV\../Classes/classes_util.h(273): warning : returning reference to local variable
+         
+         transpose_kernels.cu
+     1>Done Building Project "E:\DECX_world\DECX_NN_CUDA\DECX_NN_CUDA.vcxproj" (CudaBuildCore target(s)).
+     1>ClCompile:
+         All outputs are up-to-date.
+       CudaLink:
+         cmd.exe /C "C:\Users\Wayne\AppData\Local\Temp\tmp88332e2ed9374860b3d5d4dd0263726a.cmd"
+         "D:\CUDA\Development\bin\nvcc.exe" -dlink -o x64\Release\DECX_NN_CUDA.device-link.obj -Xcompiler "/EHsc /W3 /nologo /O2 /Zi  /MD " -L../bin/x64 -LD:\CUDA\Development\lib\x64 cudart_static.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib DECX_core_CUDA.lib DECX_core_CPU.lib  -gencode=arch=compute_75,code=sm_75  --machine 64 x64\Release\transpose_kernels.cu.obj x64\Release\Conv2D.cu.obj x64\Release\cuda_conv2D_fp32_im2col_planner.cu.obj x64\Release\im2col_fp32.cu.obj x64\Release\im2col_GEMM_fp32.cu.obj x64\Release\pre_post_proc_CUDA_NNModule.cu.obj
+         
+         E:\DECX_world\DECX_NN_CUDA>"D:\CUDA\Development\bin\nvcc.exe" -dlink -o x64\Release\DECX_NN_CUDA.device-link.obj -Xcompiler "/EHsc /W3 /nologo /O2 /Zi  /MD " -L../bin/x64 -LD:\CUDA\Development\lib\x64 cudart_static.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib DECX_core_CUDA.lib DECX_core_CPU.lib  -gencode=arch=compute_75,code=sm_75  --machine 64 x64\Release\transpose_kernels.cu.obj x64\Release\Conv2D.cu.obj x64\Release\cuda_conv2D_fp32_im2col_planner.cu.obj x64\Release\im2col_fp32.cu.obj x64\Release\im2col_GEMM_fp32.cu.obj x64\Release\pre_post_proc_CUDA_NNModule.cu.obj 
+         cudart_static.lib
+         kernel32.lib
+         user32.lib
+         gdi32.lib
+         winspool.lib
+         comdlg32.lib
+         advapi32.lib
+         shell32.lib
+         ole32.lib
+         oleaut32.lib
+         uuid.lib
+         odbc32.lib
+         odbccp32.lib
+         DECX_core_CUDA.lib
+         DECX_core_CPU.lib
+         transpose_kernels.cu.obj
+         Conv2D.cu.obj
+         cuda_conv2D_fp32_im2col_planner.cu.obj
+         im2col_fp32.cu.obj
+         im2col_GEMM_fp32.cu.obj
+         pre_post_proc_CUDA_NNModule.cu.obj
+       Link:
+         D:\Microsoft Visual Studio\Visual Studio\VC\Tools\MSVC\14.29.30133\bin\HostX86\x64\link.exe /ERRORREPORT:PROMPT /OUT:"../bin/x64\DECX_NN_CUDA.dll" /INCREMENTAL:NO /NOLOGO /LIBPATH:../bin/x64 /LIBPATH:D:\CUDA\Development\lib\x64 cudart_static.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib DECX_core_CUDA.lib DECX_core_CPU.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:"../bin/x64\DECX_NN_CUDA.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG:incremental /LTCGOUT:"x64\Release\DECX_NN_CUDA.iobj" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"../bin/x64\DECX_NN_CUDA.lib" /MACHINE:X64 /DLL x64\Release\transpose_kernels.cu.obj
+         x64\Release\Conv2D.cu.obj
+         x64\Release\cuda_conv2D_fp32_im2col_planner.cu.obj
+         x64\Release\im2col_fp32.cu.obj
+         x64\Release\im2col_GEMM_fp32.cu.obj
+         x64\Release\pre_post_proc_CUDA_NNModule.cu.obj
+         x64\Release\for_properties.obj
+         "x64\Release\DECX_NN_CUDA.device-link.obj"
+            Creating library ../bin/x64\DECX_NN_CUDA.lib and object ../bin/x64\DECX_NN_CUDA.exp
+         Generating code
+         Incremental LTCG not supported for -Od component, build without incremental LTCG.
+         Finished generating code
+         DECX_NN_CUDA.vcxproj -> E:\DECX_world\bin\x64\DECX_NN_CUDA.dll
+       FinalizeBuildStatus:
+         Deleting file "x64\Release\DECX_NN_CUDA.tlog\unsuccessfulbuild".
+         Touching "x64\Release\DECX_NN_CUDA.tlog\DECX_NN_CUDA.lastbuildstate".
+     1>Done Building Project "E:\DECX_world\DECX_NN_CUDA\DECX_NN_CUDA.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+       "E:\DECX_world\DECX_NN_CUDA\DECX_NN_CUDA.vcxproj" (Build target) (1) ->
+       (PrepareForBuild target) -> 
+         D:\Microsoft Visual Studio\Visual Studio\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(499,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
+
+
+       "E:\DECX_world\DECX_NN_CUDA\DECX_NN_CUDA.vcxproj" (Build target) (1) ->
+       "E:\DECX_world\DECX_NN_CUDA\DECX_NN_CUDA.vcxproj" (CudaBuildCore target) (1:6) ->
+       (CudaBuildCore target) -> 
+         D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+         D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+         D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+         D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+         D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+         D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+         D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+         D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+         D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+         D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+         D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+         D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+         D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+         D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+         D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+         D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+         D:\CUDA\Development\include\sm_20_intrinsics.h(1): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+         D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+         D:\CUDA\Development\include\sm_20_intrinsics.h(926): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+         D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+         D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+         D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+         D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+         D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+         D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+         D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+         D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+         D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+         D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+         D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+         D:\CUDA\Development\include\cuda.h(13166): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+         D:\CUDA\Development\include\cuda_fp16.h(1): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+         D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+         E:\DECX_world\srcs\common\CUSV\../Classes/classes_util.h(270): warning : returning reference to local variable
+         D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+         D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+         D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+         D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+         D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+         D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+         D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+         D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+         D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+         D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+         D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+         D:\CUDA\Development\include\sm_20_intrinsics.h(1): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+         D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+         D:\CUDA\Development\include\sm_20_intrinsics.h(926): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+         D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+         D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+         D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+         D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+         D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+         D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+         D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+         D:\CUDA\Development\include\cuda.h(13166): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+         D:\CUDA\Development\include\cuda_fp16.h(1): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+         D:\CUDA\Development\include\cuda_runtime_api.h(9349): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+         E:\DECX_world\srcs\common\CUSV\../Classes/classes_util.h(273): warning : returning reference to local variable
+
+    60 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:06.34

@@ -33,10 +33,10 @@
 #define _MODULE_FP32_EXEC_H_
 
 #include "../../core/thread_management/thread_pool.h"
-#include "../../core/utils/fragment_arrangment.h"
+#include "../../../common/FMGR/fragment_arrangment.h"
 #include "../../core/thread_management/thread_arrange.h"
-#include "../../classes/Matrix.h"
-#include "../../classes/classes_util.h"
+#include "../../../common/Classes/Matrix.h"
+#include "../../../common/Classes/classes_util.h"
 
 
 namespace decx

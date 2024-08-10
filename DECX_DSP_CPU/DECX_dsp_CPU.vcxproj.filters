@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="源文件\complex">
-      <UniqueIdentifier>{5e0b10f8-695d-4cf5-ad53-a27116da3f99}</UniqueIdentifier>
-    </Filter>
     <Filter Include="源文件\filters">
       <UniqueIdentifier>{3e1ae59c-b3d3-4c41-b932-3cff9e653374}</UniqueIdentifier>
     </Filter>
@@ -24,33 +21,6 @@
     </Filter>
     <Filter Include="源文件\convolution">
       <UniqueIdentifier>{38092171-c8b5-41b0-88db-39983b906552}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\convolution\sliding_window">
-      <UniqueIdentifier>{76da395a-dc57-45a3-a0d7-3cf99370ebe5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\convolution\sliding_window\fp32">
-      <UniqueIdentifier>{5befe884-aebb-460b-872f-e7fdcc383682}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\convolution\sliding_window\fp64">
-      <UniqueIdentifier>{fd76da05-3cd6-478c-8d69-e942ec87b4aa}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\convolution\sliding_window\uint8">
-      <UniqueIdentifier>{0e7609ec-bd2b-4fc3-af21-c77807b87184}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\region">
-      <UniqueIdentifier>{ad663b24-f173-4df6-bac3-d000dba53b21}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\region\regional_comparision">
-      <UniqueIdentifier>{16ca9783-f7da-4fdc-8cb0-b8324a83a733}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\region\regional_comparision\fp32">
-      <UniqueIdentifier>{bcab4597-d67c-43e8-9510-3adb19dff258}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\region\regional_comparision\uint8">
-      <UniqueIdentifier>{8739ee40-ecf8-4d57-bd11-1e23bbccc11b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\region\regional_comparision\utils">
-      <UniqueIdentifier>{c87741a7-a2d3-4458-abc5-5e39560f449a}</UniqueIdentifier>
     </Filter>
     <Filter Include="源文件\fft">
       <UniqueIdentifier>{5cbdb94e-092c-4359-a7bb-d047eeb7a4c7}</UniqueIdentifier>
@@ -85,56 +55,38 @@
     <Filter Include="源文件\fft\3D\fp64">
       <UniqueIdentifier>{b0caf196-3799-44c1-bdff-09e2c273fe61}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\fft\FFT_common">
+      <UniqueIdentifier>{d63aba4c-72bd-450a-9be0-80e8edf8818e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\convolution\1D">
+      <UniqueIdentifier>{4e543a6e-bbbd-45f8-9f17-776236da1ad0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\convolution\2D">
+      <UniqueIdentifier>{d3a1f9f3-4fa6-45c8-b2c2-5e6d70171ea2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\convolution\3D">
+      <UniqueIdentifier>{65b2e920-4324-49a7-9baa-90b33bbeca84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\convolution\2D\64b">
+      <UniqueIdentifier>{1b0048cf-37ed-44a0-8b18-cfa8dbe3968a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\convolution\2D\common">
+      <UniqueIdentifier>{136469a7-b63e-4f9b-b369-8bfc05f80e91}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\convolution\2D\fp32">
+      <UniqueIdentifier>{fc2a1342-8ba0-4418-bee4-06a5079b75ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\convolution\2D\cplxd">
+      <UniqueIdentifier>{ad291cf2-815f-4387-b32c-2f4e6f1f9f57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\common">
+      <UniqueIdentifier>{8b7504e4-f202-4079-9c9f-9055f21ebf12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\common\extension">
+      <UniqueIdentifier>{990ed7a2-3b88-4e5a-85b3-9c0cb8530bd7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\srcs\modules\DSP\complex\cpl32_extract.cxx">
-      <Filter>源文件\complex</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\DSP\complex\cpl32_extract_exec.cxx">
-      <Filter>源文件\complex</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\DSP\complex\rotate_fp32.cxx">
-      <Filter>源文件\complex</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\DSP\convolution\CPU\sliding_window\fp32\conv2_fp32_BC_MK_exec.cxx">
-      <Filter>源文件\convolution\sliding_window\fp32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\DSP\convolution\CPU\sliding_window\fp32\conv2_fp32_BC_SK_exec.cxx">
-      <Filter>源文件\convolution\sliding_window\fp32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\DSP\convolution\CPU\sliding_window\fp32\conv2_fp32_exec.cxx">
-      <Filter>源文件\convolution\sliding_window\fp32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\DSP\convolution\CPU\sliding_window\fp32\conv2_fp32_NB_MK_exec.cxx">
-      <Filter>源文件\convolution\sliding_window\fp32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\DSP\convolution\CPU\sliding_window\fp32\conv2_fp32_NB_SK_exec.cxx">
-      <Filter>源文件\convolution\sliding_window\fp32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\DSP\convolution\CPU\sliding_window\fp64\conv2_fp64_BC_MK_exec.cxx">
-      <Filter>源文件\convolution\sliding_window\fp64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\DSP\convolution\CPU\sliding_window\fp64\conv2_fp64_BC_SK_exec.cxx">
-      <Filter>源文件\convolution\sliding_window\fp64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\DSP\convolution\CPU\sliding_window\fp64\conv2_fp64_exec.cxx">
-      <Filter>源文件\convolution\sliding_window\fp64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\DSP\convolution\CPU\sliding_window\fp64\conv2_fp64_NB_MK_exec.cxx">
-      <Filter>源文件\convolution\sliding_window\fp64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\DSP\convolution\CPU\sliding_window\fp64\conv2_fp64_NB_SK_exec.cxx">
-      <Filter>源文件\convolution\sliding_window\fp64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\DSP\convolution\CPU\sliding_window\uint8\conv2_uint8_exec.cxx">
-      <Filter>源文件\convolution\sliding_window\uint8</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\DSP\convolution\CPU\sliding_window\Filter2.cxx">
-      <Filter>源文件\convolution\sliding_window</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\DSP\convolution\conv_utils.cxx">
-      <Filter>源文件\convolution</Filter>
-    </ClCompile>
     <ClCompile Include="..\srcs\modules\DSP\filters\CPU\low_pass.cxx">
       <Filter>源文件\filters</Filter>
     </ClCompile>
@@ -150,34 +102,7 @@
     <ClCompile Include="..\srcs\modules\DSP\generators\CPU\zeros.cxx">
       <Filter>源文件\generators</Filter>
     </ClCompile>
-    <ClCompile Include="..\srcs\modules\basic_calculations\operators\cp_ops_exec.cxx">
-      <Filter>源文件\complex</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\DSP\regional\regional_comparision\CPU\fp32\rcp2_CCOEFF_fp32_exec.cxx">
-      <Filter>源文件\region\regional_comparision\fp32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\DSP\regional\regional_comparision\CPU\fp32\rcp2_SQDIFF_fp32_exec.cxx">
-      <Filter>源文件\region\regional_comparision\fp32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\DSP\regional\regional_comparision\CPU\uint8\rcp2_CCOEFF_uint8_exec.cxx">
-      <Filter>源文件\region\regional_comparision\uint8</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\DSP\regional\regional_comparision\CPU\uint8\rcp2_SQDIFF_uint8_exec.cxx">
-      <Filter>源文件\region\regional_comparision\uint8</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\DSP\regional\regional_comparision\CPU\rcp2.cxx">
-      <Filter>源文件\region\regional_comparision</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\DSP\regional\regional_comparision\CPU\utils\template_configurations.cxx">
-      <Filter>源文件\region\regional_comparision\utils</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\W_table.cxx">
-      <Filter>源文件\fft</Filter>
-    </ClCompile>
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\CPU_FFT1D_planner.cxx">
-      <Filter>源文件\fft\1D</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\FFT1D.cxx">
       <Filter>源文件\fft\1D</Filter>
     </ClCompile>
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\1D\FFT1D_kernel_utils.cxx">
@@ -185,15 +110,6 @@
     </ClCompile>
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\2D\CPU_FFT2D_planner.cxx">
       <Filter>源文件\fft\2D</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\2D\FFT2D.cxx">
-      <Filter>源文件\fft\2D</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\CPU_FFT_tiles.cxx">
-      <Filter>源文件\fft</Filter>
-    </ClCompile>
-    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\3D\FFT3D.cxx">
-      <Filter>源文件\fft\3D</Filter>
     </ClCompile>
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\3D\CPU_FFT3D_planner.cxx">
       <Filter>源文件\fft\3D</Filter>
@@ -258,9 +174,63 @@
     <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\3D\fp64\FFT3D_kernel_callers_fp64.cxx">
       <Filter>源文件\fft\3D\fp64</Filter>
     </ClCompile>
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\FFT_common\CPU_FFT_tiles.cxx">
+      <Filter>源文件\fft\FFT_common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\FFT_common\W_table.cxx">
+      <Filter>源文件\fft\FFT_common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\FFT2D.cxx">
+      <Filter>源文件\fft</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\FFT3D.cxx">
+      <Filter>源文件\fft</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\DSP\FFT\CPU\FFT1D.cxx">
+      <Filter>源文件\fft</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\DSP\convolution\CPU\2D\common\cpu_filter2D_planner.cxx">
+      <Filter>源文件\convolution\2D\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\DSP\convolution\CPU\2D\fp32\filter2D_fp32_caller.cxx">
+      <Filter>源文件\convolution\2D\fp32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\DSP\convolution\CPU\2D\fp32\filter2D_fp32_kernels.cxx">
+      <Filter>源文件\convolution\2D\fp32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\DSP\convolution\CPU\Filter2D.cxx">
+      <Filter>源文件\convolution\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\common\FMGR\fragment_arangement.cxx">
+      <Filter>源文件\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\common\Basic_process\extension\CPU\extend_constant.cxx">
+      <Filter>源文件\common\extension</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\common\Basic_process\extension\CPU\extend_constant_exec.cxx">
+      <Filter>源文件\common\extension</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\common\Basic_process\extension\CPU\extend_reflect.cxx">
+      <Filter>源文件\common\extension</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\common\Basic_process\extension\CPU\extend_reflect_exec.cxx">
+      <Filter>源文件\common\extension</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\common\Basic_process\extension\CPU\extend_reflect_exec_params.cxx">
+      <Filter>源文件\common\extension</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\DSP\convolution\CPU\2D\64b\filter2D_64b_caller.cxx">
+      <Filter>源文件\convolution\2D\64b</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\DSP\convolution\CPU\2D\64b\filter2D_fp64_kernels.cxx">
+      <Filter>源文件\convolution\2D\64b</Filter>
+    </ClCompile>
+    <ClCompile Include="..\srcs\modules\DSP\convolution\CPU\2D\64b\filter2D_cplxf_kernels.cxx">
+      <Filter>源文件\convolution\2D\64b</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <MASM Include="..\srcs\modules\core\utils\decx_trigonometric_x86.asm">
+    <MASM Include="..\srcs\common\SIMD\x86_64\decx_trigonometric_x86_masm.asm">
       <Filter>源文件\utils</Filter>
     </MASM>
   </ItemGroup>

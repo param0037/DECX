@@ -41,7 +41,7 @@
 #ifdef _DECX_CUDA_PARTS_
 #include "../memory_management/MemoryPool_D.h"
 #endif
-#include "../../handles/decx_handles.h"
+#include "../../../common/Handle/decx_handle.h"
 
 
 

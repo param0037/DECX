@@ -33,13 +33,13 @@
 #define _WINDOWS_H_
 
 
-#include "../../../core/basic.h"
-#include "../../../classes/Matrix.h"
-#include "../../../classes/Vector.h"
+#include "../../../../common/basic.h"
+#include "../../../../common/Classes/Matrix.h"
+#include "../../../../common/Classes/Vector.h"
 #include "../../../core/thread_management/thread_pool.h"
 #include "../../../core/thread_management/thread_arrange.h"
-#include "../../../core/utils/intrinsics_ops.h"
-#include "../../../core/utils/fragment_arrangment.h"
+#include "../../../../common/SIMD/intrinsics_ops.h"
+#include "../../../../common/FMGR/fragment_arrangment.h"
 
 
 namespace decx {

@@ -30,8 +30,8 @@
 
 
 #include "../FFT2D_config.cuh"
-#include "../../../../../core/utils/double_buffer.h"
-#include "../../../../../BLAS/basic_process/transpose/CUDA/transpose_kernels.cuh"
+#include "../../../../../../common/double_buffer.h"
+#include "../../../../../../common/Basic_process/transpose/CUDA/transpose_kernels.cuh"
 #include "../FFT2D_1way_kernel_callers.cuh"
 
 

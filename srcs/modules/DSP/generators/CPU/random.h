@@ -34,8 +34,8 @@
 
 
 #include "distributions_exec.h"
-#include "../../../classes/Matrix.h"
-#include "../../../classes/Vector.h"
+#include "../../../../common/Classes/Matrix.h"
+#include "../../../../common/Classes/Vector.h"
 
 
 namespace de

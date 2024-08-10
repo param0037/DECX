@@ -32,7 +32,9 @@
 #include "_deallocator.h"
 
 
+void decx::alloc::_dealloc_Hv(decx::MemBlock* _ptr) 
+{
+    decx::MemPool_Hv* _mempool_ptr = decx::MemPool_Hv::GetInstance();
 
-void decx::alloc::_dealloc_Hv(decx::MemBlock* _ptr) {
-    decx::mem_pool_Hv->deallocate(_ptr);
+    _mempool_ptr->deallocate(_ptr);
 }

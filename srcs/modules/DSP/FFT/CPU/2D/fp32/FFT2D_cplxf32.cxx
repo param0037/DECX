@@ -30,7 +30,7 @@
 
 
 #include "../FFT2D_kernels.h"
-#include "../../../../../BLAS/basic_process/transpose/CPU/transpose_exec.h"
+#include "../../../../../../common/Basic_process/transpose/CPU/transpose_exec.h"
 #include "../CPU_FFT2D_planner.h"
 
 

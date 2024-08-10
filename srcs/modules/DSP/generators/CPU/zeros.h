@@ -33,9 +33,9 @@
 #define _ZEROS_H_
 
 
-#include "../../../classes/Vector.h"
-#include "../../../classes/Matrix.h"
-#include "../../../classes/Tensor.h"
+#include "../../../../common/Classes/Vector.h"
+#include "../../../../common/Classes/Matrix.h"
+#include "../../../../common/Classes/Tensor.h"
 
 
 namespace de

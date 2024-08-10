@@ -32,23 +32,11 @@
 #include "config.h"
 
 
-decx::cpuInfo::cpuInfo()
-{
-    this->is_init = false;
-    this->cpu_concurrency = std::thread::hardware_concurrency();
-}
-
-extern "C" void __VECTORCALL__ CPUID_cal(decx_reg4_x86*);
-
 _DECX_API_ void de::InitCPUInfo()
 {
     decx::cpI.is_init = true;
     _decx_get_CPU_info(&decx::cpI._hardware_info);
-    // decx_reg4_x86 conf;
-    // conf._eax = 0x04;
-    // conf._ecx = 0x01;
-    // CPUID_cal(&conf);
-    // printf("conf::_eax: %d\n", conf._eax);
+    
     decx::cpI.cpu_concurrency = decx::cpI._hardware_info._hardware_concurrency;
 }
 
@@ -67,7 +55,6 @@ _DECX_API_ void de::cpu::DecxSetThreadingNum(const size_t _thread_num)
 }
 
 
-
 _DECX_API_ bool decx::cpu::_is_CPU_init()
 {
     return decx::cpI.is_init;
@@ -79,7 +66,7 @@ _DECX_API_ uint64_t decx::cpu::_get_permitted_concurrency()
     return decx::cpI.cpu_concurrency;
 }
 
-
+#if defined(__x86_64__) || defined(__i386__)
 _DECX_API_ uint64_t decx::cpu::_get_L1_data_cache_size_per_core()
 {
     return _decx_get_L1_cache_size_per_phy_core(_decx_NOT_AMD_CPU(&decx::cpI._hardware_info));
@@ -96,7 +83,7 @@ _DECX_API_ uint64_t decx::cpu::_get_L3_cache_size()
 {
     return _decx_get_L3_cache_size(_decx_NOT_AMD_CPU(&decx::cpI._hardware_info));
 }
-
+#endif
 
 
 _DECX_API_ uint64_t decx::cpu::_get_hardware_concurrency()

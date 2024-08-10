@@ -33,9 +33,9 @@
 #define _FFT1D_1st_KERNELS_DENSE_CUH_ 
 
 
-#include "../../../../core/basic.h"
-#include "../../../../core/utils/decx_cuda_vectypes_ops.cuh"
-#include "../../../../core/utils/decx_cuda_math_functions.cuh"
+#include "../../../../../common/basic.h"
+#include "../../../../../common/CUSV/decx_cuda_vectypes_ops.cuh"
+#include "../../../../../common/CUSV/decx_cuda_math_functions.cuh"
 #include "../../FFT_commons.h"
 #include "../2D/FFT2D_config.cuh"
 #include "../2D/FFT2D_kernels.cuh"

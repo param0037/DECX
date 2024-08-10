@@ -33,11 +33,11 @@
 #define _FFT1D_KERNELS_H_
 
 
-#include "../../../../core/basic.h"
+#include "../../../../../common/basic.h"
 #include "../../../../core/thread_management/thread_pool.h"
 #include "../../../../core/thread_management/thread_arrange.h"
-#include "../CPU_FFT_tiles.h"
-#include "../../../../core/utils/fragment_arrangment.h"
+#include "../FFT_common/CPU_FFT_tiles.h"
+#include "../../../../../common/FMGR/fragment_arrangment.h"
 #include "CPU_FFT1D_planner.h"
 
 

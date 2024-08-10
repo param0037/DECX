@@ -33,7 +33,7 @@
 #define _DECX_ALLOC_INTERFACE_H_
 
 
-#include "../core/basic.h"
+#include "../../common/basic.h"
 #include "../core/memory_management/MemBlock.h"
 
 

@@ -33,7 +33,7 @@
 #define _DICERGENCE_H_
 
 
-#include "../../../../classes/Tensor.h"
+#include "../../../../../common/Classes/Tensor.h"
 #include "../../../../core/thread_management/thread_pool.h"
 #include "../../../../core/thread_management/thread_arrange.h"
 

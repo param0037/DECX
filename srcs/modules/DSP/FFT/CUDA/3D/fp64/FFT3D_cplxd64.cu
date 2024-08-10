@@ -29,10 +29,9 @@
 */
 
 
-#include "../../../../../core/basic.h"
 #include "../../2D/FFT2D_kernels.cuh"
-#include "../../../../../core/utils/double_buffer.h"
-#include "../../../../../BLAS/basic_process/transpose/CUDA/transpose_kernels.cuh"
+#include "../../../../../../common/double_buffer.h"
+#include "../../../../../../common/Basic_process/transpose/CUDA/transpose_kernels.cuh"
 #include "../FFT3D_planner.cuh"
 #include "../../2D/FFT2D_1way_kernel_callers.cuh"
 #include "../FFT3D_MidProc_caller.cuh"

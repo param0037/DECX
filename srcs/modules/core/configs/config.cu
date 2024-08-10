@@ -43,8 +43,6 @@ _DECX_API_ void de::InitCuda()
 
 _DECX_API_ void de::cuda::DECX_CUDA_exit()
 {
-    //decx::alloc::release_all_tmp();
-
     decx::CStream.release();
 }
 

@@ -49,12 +49,12 @@ function printf_info()
 function clean_single()
 {
     # Clean the generated asm sources
-    if [ "$1" = "DSP_CPU" ]; then
-        $PROJECT_PATH_BUILD/srcs/modules/core/utils/asm_preproc_trigon.sh -c NOP
-    fi
-    if [ "$1" = "core_CPU" ]; then
-        $PROJECT_PATH_BUILD/srcs/modules/core/configs/x86_64/asm_preproc_configs.sh -c NOP
-    fi
+    #if [ "$1" = "DSP_CPU" ]; then
+        #$PROJECT_PATH_BUILD/srcs/common/SIMD/x86_64/asm_preproc_SVML.sh -c NOP
+    #fi
+    #if [ "$1" = "core_CPU" ]; then
+        #$PROJECT_PATH_BUILD/srcs/modules/core/configs/x86_64/asm_preproc_configs.sh -c NOP
+    #fi
 
     if [ -d "$PROJECT_PATH_BUILD/DECX_"$1"/build/" ]; then
         rm -rf "$PROJECT_PATH_BUILD/DECX_"$1"/build/"
@@ -62,8 +62,8 @@ function clean_single()
         echo "Path not exist, skipped"
     fi
 
-    if [ -d "$PROJECT_PATH_BUILD/DECX_"$1"/x64/" ]; then
-        rm -rf "$PROJECT_PATH_BUILD/DECX_"$1"/x64/"
+    if [ -d "$PROJECT_PATH_BUILD/DECX_"$1"/GCC/" ]; then
+        rm -rf "$PROJECT_PATH_BUILD/DECX_"$1"/GCC/"
     else
         echo "Path not exist, skipped"
     fi
@@ -104,16 +104,16 @@ function clean_optional()
 function config_single()
 {
     # If is DSP_CPU, configure asm sources for math intrinsics
-    if [ "$1" = "DSP_CPU" ]; then
-        $PROJECT_PATH_BUILD/srcs/modules/core/utils/asm_preproc_trigon.sh -i NOP
-    fi
+    #if [ "$1" = "DSP_CPU" ]; then
+        #$PROJECT_PATH_BUILD/srcs/common/SIMD/x86_64/asm_preproc_SVML.sh -i NOP
+    #fi
     # If is core_CPU, configure asm sources for CPU configuration
-    if [ "$1" = "core_CPU" ]; then
-        $PROJECT_PATH_BUILD/srcs/modules/core/configs/x86_64/asm_preproc_configs.sh -i NOP
-    fi
+    #if [ "$1" = "core_CPU" ]; then
+        #$PROJECT_PATH_BUILD/srcs/modules/core/configs/x86_64/asm_preproc_configs.sh -i NOP
+    #fi
     cd "$PROJECT_PATH_BUILD/DECX_$1"
     echo "$PROJECT_PATH_BUILD/DECX_$1"
-    cmake -B build -G"Unix Makefiles"
+    cmake -D_CPP_EXPORT_=true -D_C_EXPORT_=true -B build -G"Unix Makefiles"
 }
 
 
@@ -150,7 +150,8 @@ function config_optional()
 function build_single()
 {
     cd "$PROJECT_PATH_BUILD/DECX_"$1
-    cmake --build build --config Release
+    cmake --build build -j 12 --config Release
+    cp $PROJECT_PATH_BUILD/bin/x64/libDECX_DSP_CPU.so ~/DECX/libs/x64/
 }
 
 

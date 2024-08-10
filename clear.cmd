@@ -5,6 +5,6 @@ set prefix=DECX_
 
 cd %PROJECT_PATH%%prefix%%1
 rmdir /s /q "build"
-rmdir /s /q "x64"
+rmdir /s /q "MSVC"
 
 cd %PROJECT_PATH%

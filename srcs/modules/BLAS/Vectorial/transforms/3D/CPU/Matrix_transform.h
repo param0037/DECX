@@ -32,12 +32,12 @@
 #ifndef _MATRIX_TRANSFORM_H_
 #define _MATRIX_TRANSFORM_H_
 
-#include "../../../../../core/basic.h"
+#include "../../../../../../common/basic.h"
 #include "../../../../../core/thread_management/thread_pool.h"
 #include "../../../../../core/thread_management/thread_arrange.h"
-#include "../../../../../core/utils/fragment_arrangment.h"
-#include "../../../../../classes/Vector.h"
-#include "../../../../../classes/Matrix.h"
+#include "../../../../../../common/FMGR/fragment_arrangment.h"
+#include "../../../../../../common/Classes/Vector.h"
+#include "../../../../../../common/Classes/Matrix.h"
 #include "../../../vector4.h"
 
 

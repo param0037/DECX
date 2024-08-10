@@ -33,7 +33,7 @@
 #define _CUDASTREAM_PACKAGE_CUH_
 
 
-#include "../basic.h"
+#include "../../../common/basic.h"
 
 
 namespace decx

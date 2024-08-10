@@ -33,6 +33,8 @@
 
 
 
-void decx::alloc::_dealloc_D(decx::MemBlock* _ptr) {
-    decx::mem_pool_D->deallocate(_ptr);
+void decx::alloc::_dealloc_D(decx::MemBlock* _ptr) 
+{
+    decx::MemPool_D* _mempool_ptr = decx::MemPool_D::GetInstance();
+    _mempool_ptr->deallocate(_ptr);
 }

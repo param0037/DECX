@@ -32,31 +32,30 @@
 #ifndef _FFT_H_
 #define _FFT_H_
 
-
-#include "../../../classes/Matrix.h"
-#include "../../../classes/Tensor.h"
-#include "../../../classes/Vector.h"
-
-
-namespace decx
-{
-    namespace dsp
-    {
-        void InitFFT1Resources();
-
-        void FreeFFT1Resources();
+#include "../../../../common/Classes/Matrix.h"
+#include "../../../../common/Classes/Tensor.h"
+#include "../../../../common/Classes/Vector.h"
 
 
-        void InitFFT2Resources();
+// namespace decx
+// {
+//     namespace dsp
+//     {
+//         void InitFFT1Resources();
 
-        void FreeFFT2Resources();
+//         void FreeFFT1Resources();
 
 
-        void InitFFT3Resources();
+//         void InitFFT2Resources();
 
-        void FreeFFT3Resources();
-    }
-}
+//         void FreeFFT2Resources();
+
+
+//         void InitFFT3Resources();
+
+//         void FreeFFT3Resources();
+//     }
+// }
 
 
 namespace de

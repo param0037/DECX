@@ -79,27 +79,26 @@
     <ClInclude Include="..\srcs\modules\signal\FFT\CUDA\2D\IFFT2D_sub_functions.h" />
   </ItemGroup>
   <ItemGroup>
-    <CudaCompile Include="..\srcs\modules\classes\classes_util.cu" />
-    <CudaCompile Include="..\srcs\modules\classes\data transmission\data_transmission.cu" />
-    <CudaCompile Include="..\srcs\modules\classes\GPU_Matrix.cu" />
-    <CudaCompile Include="..\srcs\modules\classes\GPU_MatrixArray.cu" />
-    <CudaCompile Include="..\srcs\modules\classes\GPU_Tensor.cu" />
-    <CudaCompile Include="..\srcs\modules\classes\GPU_TensorArray.cu" />
-    <CudaCompile Include="..\srcs\modules\classes\GPU_Vector.cu" />
+    <CudaCompile Include="..\srcs\common\FMGR\fragment_arangement.cu" />
+    <CudaCompile Include="..\srcs\common\FP16\float_half_convert.cu" />
     <CudaCompile Include="..\srcs\modules\core\allocators\_allocator.cu" />
     <CudaCompile Include="..\srcs\modules\core\allocators\_deallocator.cu" />
     <CudaCompile Include="..\srcs\modules\core\allocators\_memset.cu" />
+    <CudaCompile Include="..\srcs\modules\core\classes\GPU_Matrix.cu" />
+    <CudaCompile Include="..\srcs\modules\core\classes\GPU_MatrixArray.cu" />
+    <CudaCompile Include="..\srcs\modules\core\classes\GPU_Tensor.cu" />
+    <CudaCompile Include="..\srcs\modules\core\classes\GPU_TensorArray.cu" />
+    <CudaCompile Include="..\srcs\modules\core\classes\GPU_Vector.cu" />
     <CudaCompile Include="..\srcs\modules\core\configs\config.cu" />
     <CudaCompile Include="..\srcs\modules\core\cudaStream_management\cudaEvent_queue.cu" />
     <CudaCompile Include="..\srcs\modules\core\cudaStream_management\cudaStream_queue.cu" />
     <CudaCompile Include="..\srcs\modules\core\cudaStream_management\cuda_event.cu" />
     <CudaCompile Include="..\srcs\modules\core\cudaStream_management\cuda_stream.cu" />
+    <CudaCompile Include="..\srcs\modules\core\data transmission\data_transmission.cu" />
     <CudaCompile Include="..\srcs\modules\core\global_vars.cu" />
     <CudaCompile Include="..\srcs\modules\core\memory_management\MemBlock.cu" />
     <CudaCompile Include="..\srcs\modules\core\memory_management\MemChunk_D.cu" />
     <CudaCompile Include="..\srcs\modules\core\memory_management\MemoryPool_D.cu" />
-    <CudaCompile Include="..\srcs\modules\core\utils\float_half_convert.cu" />
-    <CudaCompile Include="..\srcs\modules\core\utils\fragment_arangement.cu" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="for_properties.cpp" />

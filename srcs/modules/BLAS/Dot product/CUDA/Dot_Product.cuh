@@ -33,11 +33,11 @@
 #define _DP1D_CUH_
 
 
-#include "../../../classes/Vector.h"
-#include "../../../classes/Matrix.h"
-#include "../../../classes/GPU_Vector.h"
-#include "../../../classes/DecxNumber.h"
-#include "../../basic_process/type_statistics/Matrix_reduce.h"
+#include "../../../../common/Classes/Vector.h"
+#include "../../../../common/Classes/Matrix.h"
+#include "../../../../common/Classes/GPU_Vector.h"
+#include "../../../../common/Classes/Number.h"
+#include "../../Basic_process/Matrix_reduce.h"
 
 
 namespace de
@@ -45,9 +45,9 @@ namespace de
 namespace blas {
     namespace cuda
     {
-        _DECX_API_ void Dot_product(de::Vector& A, de::Vector& B, de::DecxNumber& res, const uint32_t _fp16_accu);
+        _DECX_API_ void Dot_product(de::Vector& A, de::Vector& B, de::Number& res, const uint32_t _fp16_accu);
 
-        _DECX_API_ void Dot_product(de::GPU_Vector& A, de::GPU_Vector& B, de::DecxNumber& res, const uint32_t _fp16_accu);
+        _DECX_API_ void Dot_product(de::GPU_Vector& A, de::GPU_Vector& B, de::Number& res, const uint32_t _fp16_accu);
 
         _DECX_API_ void Dot_product(de::Matrix& A, de::Matrix& B, de::Vector& dst, const de::REDUCE_METHOD _rd_method, const uint32_t _fp16_accu);
     }

@@ -79,7 +79,8 @@ private:
     void _plan_for_exectutors(const bool _cplxf);
 
 public:
-    cpu_GEMM_planner() {}
+    cpu_GEMM_planner() : _layout_A(NULL), _layout_B(NULL), _layout_C(NULL)
+    {}
 
 
     bool Changed(const uint32_t concurrency, const decx::_matrix_layout* layout_A, 

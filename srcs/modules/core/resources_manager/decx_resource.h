@@ -47,8 +47,8 @@
 #ifndef _DECX_RESOURCE_H_
 #define _DECX_RESOURCE_H_
 
-#include "../basic.h"
-#include "../utils/Dynamic_Array.h"
+#include "../../../common/basic.h"
+#include "../../../common/Array/Dynamic_Array.h"
 
 namespace decx
 {
@@ -104,8 +104,8 @@ private:
         decx::ResMgr* _outer_info;
 
         bool operator() () {
-            return _outer_info->_last_res_num != _outer_info->_res_arr.size()
-                && this->_outer_info->_res_arr.size() != 0;
+            return (_outer_info->_last_res_num != _outer_info->_res_arr.size()) && 
+                   (this->_outer_info->_res_arr.size() != 0);
         }
     }_wp;
 

@@ -34,7 +34,7 @@
 
 
 #include "../1D/CPU_FFT1D_planner.h"
-#include "../../../../classes/Matrix.h"
+#include "../../../../../common/Classes/Matrix.h"
 #include "../../../../core/resources_manager/decx_resource.h"
 
 

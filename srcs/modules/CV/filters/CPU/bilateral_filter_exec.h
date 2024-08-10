@@ -32,7 +32,7 @@
 #ifndef _BILATERAL_FILTER_EXEC_H_
 #define _BILATERAL_FILTER_EXEC_H_
 
-#include "../../../core/basic.h"
+#include "../../../../common/basic.h"
 #include "../../../DSP/convolution/CPU/sliding_window/uint8/conv2_uint8_K_loop_core.h"
 #include "../../../core/thread_management/thread_pool.h"
 #include "../../../core/utils/fragment_arrangment.h"

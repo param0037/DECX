@@ -40,8 +40,8 @@
 #include "../cudaStream_management/cudaStream_queue.h"
 #endif
 
-#include "../../handles/decx_handles.h"
-#include "../error.h"
+#include "../../../common/Handle/decx_handle.h"
+#include "../../../common//error.h"
 
 
 namespace decx {

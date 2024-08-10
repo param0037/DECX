@@ -33,10 +33,10 @@
 #define _VMM_KERNELS_CUH_
 
 
-#include "../../../../core/basic.h"
-#include "../../../../core/utils/decx_cuda_vectypes_ops.cuh"
-#include "../../../../core/utils/decx_cuda_math_functions.cuh"
-#include "../../../../basic_calculations/reduce/CUDA/reduce_sum.cuh"
+#include "../../../../../common/basic.h"
+#include "../../../../../common/CUSV/decx_cuda_vectypes_ops.cuh"
+#include "../../../../../common/CUSV/decx_cuda_math_functions.cuh"
+#include "../../../../../common/Algorithms/Reduce_CUDA/reduce_sum.cuh"
 
 
 namespace decx

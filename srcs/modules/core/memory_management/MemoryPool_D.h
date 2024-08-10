@@ -32,7 +32,8 @@
 #ifndef _MEMORY_POOL_D_H_
 #define _MEMORY_POOL_D_H_
 
-#include "../basic.h"
+
+#include "../../../common/basic.h"
 #include "MemChunk_D.h"
 
 
@@ -110,7 +111,7 @@ private:
 
 namespace decx
 {
-    extern decx::MemPool_D* mem_pool_D;
+    //extern decx::MemPool_D* mem_pool_D;
 }
 
 

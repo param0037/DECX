@@ -1,0 +1,2 @@
+/usr/bin/ar qc /media/wayne/Disk/DECX_world/DECX_DSP_CPU/GCC/libfft_common_cpu.a CMakeFiles/fft_common_cpu.dir/CPU_FFT_tiles.cxx.o CMakeFiles/fft_common_cpu.dir/W_table.cxx.o
+/usr/bin/ranlib /media/wayne/Disk/DECX_world/DECX_DSP_CPU/GCC/libfft_common_cpu.a

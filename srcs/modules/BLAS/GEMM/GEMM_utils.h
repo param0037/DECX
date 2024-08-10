@@ -32,10 +32,11 @@
 #ifndef _GEMM_UTILS_H_
 #define _GEMM_UTILS_H_
 
-#include "../../core/basic.h"
-#include "../../classes/Matrix.h"
+
+#include "../../../common/basic.h"
+#include "../../../common/Classes/Matrix.h"
 #include "../../core/thread_management/thread_arrange.h"
-#include "../../core/utils/fragment_arrangment.h"
+#include "../../../common/FMGR/fragment_arrangment.h"
 #include "../../core/resources_manager/decx_resource.h"
 
 

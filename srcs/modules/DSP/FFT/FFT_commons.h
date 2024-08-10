@@ -33,30 +33,30 @@
 #define _FFT_COMMONS_H_
 
 // include basic dependencies
-#include "../../core/basic.h"
-#include "../../core/utils/double_buffer.h"
+
+#include "../../../common/basic.h"
+#include "../../../common/double_buffer.h"
 #include "../../core/memory_management/PtrInfo.h"
 #include "../../core/allocators.h"
-#include "../../core/utils/Fixed_Length_Array.h"
-#include "../../classes/type_info.h"
+#include "../../../common/Array/Fixed_Length_Array.h"
+#include "../../../common/Classes/type_info.h"
 
 
 #ifdef _DECX_CPU_PARTS_
 #include "../../core/allocators.h"
 #include "../../core/thread_management/thread_pool.h"
-#include "../../core/utils/fragment_arrangment.h"
+#include "../../../common/FMGR/fragment_arrangment.h"
 #include "../../core/thread_management/thread_arrange.h"
-#include "../../core/utils/intrinsics_ops.h"
-#include "CPU/CPU_FFT_defs.h"
+#include "../../../common/SIMD/intrinsics_ops.h"
+#include "CPU/FFT_common/CPU_FFT_defs.h"
 #endif
 
 //
 #ifdef _DECX_CUDA_PARTS_
-#include "../CUDA_cpf32.cuh"
 #include "../../core/cudaStream_management/cudaEvent_queue.h"
 #include "../../core/cudaStream_management/cudaStream_queue.h"
-#include "../CUDA_cpf32.cuh"
-#include "../CUDA_cpd64.cuh"
+#include "../../../common/CUSV/CUDA_cpf32.cuh"
+#include "../../../common/CUSV/CUDA_cpd64.cuh"
 
 #define _FFT2D_END_(_cplx_type) false, true, _cplx_type
 #define _FFT1D_END_(_cplx_type) _FFT2D_END_(_cplx_type)
@@ -256,7 +256,7 @@ static bool decx::dsp::check_apart(int __x)
 {
     int prime[4] = { 5, 4, 3, 2 };
     int tmp = 0;
-    // ���ж���һ��ȫ���Ҳ������ʵģ�break��whileѭ�����������?
+    // ���ж���һ��ȫ���Ҳ������ʵģ�break��whileѭ�����������?
     bool __continue = true;
     bool round_not_f = true;
 
@@ -270,7 +270,7 @@ static bool decx::dsp::check_apart(int __x)
                 break;
             }
         }
-        if (round_not_f) {    // ���һ����û���ҵ����ʵ�?
+        if (round_not_f) {    // ���һ����û���ҵ����ʵ�?
             __continue = false;
         }
     }

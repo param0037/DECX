@@ -12,10 +12,10 @@
 #define _GENERATE_HIST_H_
 
 
-#include "../../../core/basic.h"
+#include "../../../../common/basic.h"
 #include "../../../core/thread_management/thread_pool.h"
 #include "../../../core/thread_management/thread_arrange.h"
-#include "../../../core/utils/fragment_arrangment.h"
+#include "../../../../common/FMGR/fragment_arrangment.h"
 
 
 namespace decx

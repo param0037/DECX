@@ -165,7 +165,7 @@ void decx::blas::matrix_B_arrange_fp32(const float*                     src,
 {
     const float* loc_src = NULL;
     float* loc_dst = NULL;
-
+    
     for (uint32_t i = 0; i < t2D->thread_h; ++i) 
     {
         uint2 proc_dims;

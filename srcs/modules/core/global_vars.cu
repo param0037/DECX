@@ -29,7 +29,7 @@
 */
 
 
-#include "basic.h"
+#include "../../common/basic.h"
 #include "cudaStream_management/cudaStream_queue.h"
 #include "cudaStream_management/cudaEvent_queue.h"
 #include "configs/config.h"

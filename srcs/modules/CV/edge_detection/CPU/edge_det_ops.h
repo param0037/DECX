@@ -34,7 +34,7 @@
 
 
 #include "../../../core/thread_management/thread_pool.h"
-#include "../../../core/utils/intrinsics_ops.h"
+#include "../../../../common/SIMD/intrinsics_ops.h"
 
 
 namespace decx {

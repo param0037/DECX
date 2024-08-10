@@ -33,12 +33,12 @@
 #define _FFT3D_PLANNER_CUH_
 
 
-#include "../../../../core/basic.h"
+#include "../../../../../common/basic.h"
 #include "../2D/FFT2D_config.cuh"
 #include "../../../../core/cudaStream_management/cudaEvent_queue.h"
 #include "../../../../core/cudaStream_management/cudaStream_queue.h"
-#include "../../../../classes/Tensor.h"
-#include "../../../../classes/GPU_Tensor.h"
+#include "../../../../../common/Classes/Tensor.h"
+#include "../../../../../common/Classes/GPU_Tensor.h"
 #include "../../../../core/resources_manager/decx_resource.h"
 
 

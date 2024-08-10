@@ -35,12 +35,12 @@
 
 #include "im2col_fp32.cuh"
 #include "im2col_GEMM_fp32.cuh"
-#include "../../../../classes/GPU_Tensor.h"
-#include "../../../../classes/Tensor.h"
-#include "../../../../classes/GPU_TensorArray.h"
-#include "../../../../BLAS/basic_process/transpose/CUDA/transpose_kernels.cuh"
-#include "../../../../BLAS/basic_process/extension/extend_flags.h"
-#include "../../../../core/utils/Fixed_Length_Array.h"
+#include "../../../../../common/Classes/GPU_Tensor.h"
+#include "../../../../../common/Classes/Tensor.h"
+#include "../../../../../common/Classes/GPU_TensorArray.h"
+#include "../../../../../common/Basic_process/transpose/CUDA/transpose_kernels.cuh"
+#include "../../../../../common/Basic_process/extension/extend_flags.h"
+#include "../../../../../common/Array/Fixed_Length_Array.h"
 
 
 namespace decx

@@ -33,7 +33,7 @@
 #define _MEM_BLOCK_H_
 
 
-#include "../basic.h"
+#include "../../../common/basic.h"
 
 
 typedef unsigned char uchar;

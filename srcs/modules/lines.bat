@@ -1,3 +1,0 @@
-cloc ./
-@echo off
-pause

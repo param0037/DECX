@@ -32,10 +32,10 @@
 #ifndef _IM2COL_GEMM_FP32_CUH_
 #define _IM2COL_GEMM_FP32_CUH_
 
-#include "../../../../core/basic.h"
+#include "../../../../../common/basic.h"
 #include "../../../../core/cudaStream_management/cudaEvent_queue.h"
 #include "../../../../core/cudaStream_management/cudaStream_queue.h"
-#include "../../../../core/utils/fragment_arrangment.h"
+#include "../../../../../common/FMGR/fragment_arrangment.h"
 
 
 #define _IM2COL_GEMM_FP32_BLOCK_X_ _CUDA_WARP_SIZE_

@@ -30,7 +30,7 @@
 
 
 #include "im2col_GEMM_fp32.cuh"
-#include "../../../../core/utils/decx_cuda_vectypes_ops.cuh"
+#include "../../../../../common/CUSV/decx_cuda_vectypes_ops.cuh"
 
 
 // block[32, 8]

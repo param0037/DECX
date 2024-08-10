@@ -34,7 +34,8 @@
 
 int decx::alloc::_alloc_D(decx::MemBlock** _ptr, size_t req_size)
 {
-    decx::mem_pool_D->allocate(req_size, _ptr);
+    decx::MemPool_D* _mempool_ptr = decx::MemPool_D::GetInstance();
+    _mempool_ptr->allocate(req_size, _ptr);
 
     if ((*_ptr)->_ptr == NULL) {
         return -1;
@@ -45,5 +46,6 @@ int decx::alloc::_alloc_D(decx::MemBlock** _ptr, size_t req_size)
 
 void decx::alloc::_alloc_D_same_place(decx::MemBlock** _ptr)
 {
-    decx::mem_pool_D->register_reference(*_ptr);
+    decx::MemPool_D* _mempool_ptr = decx::MemPool_D::GetInstance();
+    _mempool_ptr->register_reference(*_ptr);
 }

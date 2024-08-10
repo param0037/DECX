@@ -58,26 +58,8 @@
     <Filter Include="源文件\GEMM\large_squares">
       <UniqueIdentifier>{5d1a7bf9-3ea7-4a3c-803c-b1501e6e132c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="源文件\GEMM\large_squares\fp32">
-      <UniqueIdentifier>{63923a21-ef5a-4a4f-9e3e-245cac6b3d87}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\GEMM\large_squares\fp16">
-      <UniqueIdentifier>{b2ef9f5c-f8c1-4d99-bc75-86ac6854f023}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\GEMM\large_squares\cpl32">
-      <UniqueIdentifier>{0a91c50d-8d8d-495d-a0f6-574df9830051}</UniqueIdentifier>
-    </Filter>
     <Filter Include="源文件\basic_calculations">
       <UniqueIdentifier>{ae0f93b8-c37d-4f13-8a95-52c46403c1fc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\basic_calculations\operators">
-      <UniqueIdentifier>{74582a86-77ef-4b07-a177-89c9feb732d6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\basic_calculations\operators\Vector">
-      <UniqueIdentifier>{77a952cf-6997-46c3-8d9a-7cb495db751c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\basic_calculations\operators\Matrix">
-      <UniqueIdentifier>{3662c4cc-1565-4d6d-b22c-ea58c4268daf}</UniqueIdentifier>
     </Filter>
     <Filter Include="源文件\basic_process">
       <UniqueIdentifier>{fcafd8e1-00b0-4678-b008-f6c60bfed3a0}</UniqueIdentifier>
@@ -112,11 +94,29 @@
     <Filter Include="源文件\basic_calculations\reduce">
       <UniqueIdentifier>{2bea411d-d95b-4616-bed8-88cfdfe28f3d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="源文件\utils">
-      <UniqueIdentifier>{c62a30e7-ff86-44f0-b567-def8a8f37047}</UniqueIdentifier>
-    </Filter>
     <Filter Include="源文件\GEMM\extreme_shapes">
       <UniqueIdentifier>{9f2edbe4-d5a5-4a52-a30a-3de22bc93fff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Dot product\1D">
+      <UniqueIdentifier>{410b390a-3063-4942-8461-b0b00bd515aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Dot product\2D">
+      <UniqueIdentifier>{9fda892d-481c-4b60-8ad5-27cb35b6d77b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\GEMM\large_squares\fp32">
+      <UniqueIdentifier>{7c5281b8-780f-42b3-93fa-499c0c8d406a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\GEMM\large_squares\64b">
+      <UniqueIdentifier>{50958e51-5c76-460a-91c3-314c3555a845}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\GEMM\large_squares\cplxd">
+      <UniqueIdentifier>{61d30b47-c34e-4c0b-942f-48945a2276a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\GEMM\large_squares\common">
+      <UniqueIdentifier>{10e1cfc0-2139-4348-88d6-24917e12b3c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\GEMM\large_squares\fp16">
+      <UniqueIdentifier>{4631fff5-89aa-4737-9af3-749237c97002}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -251,193 +251,157 @@
     <ClInclude Include="..\srcs\modules\basic_calculations\operators\Matrix\Matrix_integral.h">
       <Filter>头文件\basic_calculations\operatiors\Matrix</Filter>
     </ClInclude>
+    <ClInclude Include="..\srcs\common\Basic_process\fill\constant\CUDA\GPU_Matrix_fill.cuh">
+      <Filter>源文件\basic_process\fill\constant</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\common\Basic_process\fill\constant\CUDA\GPU_Vector_fill.cuh">
+      <Filter>源文件\basic_process\fill\constant</Filter>
+    </ClInclude>
+    <ClInclude Include="..\srcs\common\Basic_process\fill\constant\CUDA\constant_fill_kernels.cuh">
+      <Filter>源文件\basic_process\fill\constant</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <CudaCompile Include="..\srcs\modules\basic_calculations\operators\Add_kernel.cu">
-      <Filter>源文件\basic_calculations\operators</Filter>
+    <CudaCompile Include="..\srcs\common\Basic_process\fill\constant\CUDA\GPU_Matrix_fill.cu">
+      <Filter>源文件\basic_process\fill\constant</Filter>
     </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\basic_calculations\operators\Div_kernel.cu">
-      <Filter>源文件\basic_calculations\operators</Filter>
+    <CudaCompile Include="..\srcs\common\Basic_process\fill\constant\CUDA\GPU_Vector_fill.cu">
+      <Filter>源文件\basic_process\fill\constant</Filter>
     </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\basic_calculations\operators\Fma_kernel.cu">
-      <Filter>源文件\basic_calculations\operators</Filter>
+    <CudaCompile Include="..\srcs\common\Basic_process\fill\constant\CUDA\constant_fill_kernels.cu">
+      <Filter>源文件\basic_process\fill\constant</Filter>
     </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\basic_calculations\operators\Fms_kernel.cu">
-      <Filter>源文件\basic_calculations\operators</Filter>
+    <CudaCompile Include="..\srcs\common\Basic_process\transpose\CUDA\transpose_kernels.cu">
+      <Filter>源文件\basic_process\transpose</Filter>
     </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\basic_calculations\operators\Mul_kernel.cu">
-      <Filter>源文件\basic_calculations\operators</Filter>
+    <CudaCompile Include="..\srcs\common\Basic_process\transpose\CUDA\transpose_kernels_dense.cu">
+      <Filter>源文件\basic_process\transpose</Filter>
     </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\basic_calculations\operators\Sub_kernel.cu">
-      <Filter>源文件\basic_calculations\operators</Filter>
+    <CudaCompile Include="..\srcs\common\Basic_process\type_cast\CUDA\_mm128_fp32_fp64.cu">
+      <Filter>源文件\basic_process\type_cast</Filter>
     </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\basic_calculations\operators\Vector\Vector_add.cu">
-      <Filter>源文件\basic_calculations\operators\Vector</Filter>
+    <CudaCompile Include="..\srcs\common\Basic_process\type_cast\CUDA\_mm128_fp32_int32.cu">
+      <Filter>源文件\basic_process\type_cast</Filter>
     </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\basic_calculations\operators\Vector\Vector_divide.cu">
-      <Filter>源文件\basic_calculations\operators\Vector</Filter>
+    <CudaCompile Include="..\srcs\common\Basic_process\type_statistics\CUDA\reduction_sum.cu">
+      <Filter>源文件\basic_process\type_statistics</Filter>
     </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\basic_calculations\operators\Vector\Vector_fma.cu">
-      <Filter>源文件\basic_calculations\operators\Vector</Filter>
+    <CudaCompile Include="..\srcs\modules\BLAS\Basic_process\transpose\transpose.cu">
+      <Filter>源文件\basic_process\transpose</Filter>
     </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\basic_calculations\operators\Vector\Vector_fms.cu">
-      <Filter>源文件\basic_calculations\operators\Vector</Filter>
+    <CudaCompile Include="..\srcs\modules\BLAS\Basic_process\type_cast\GPU_Matrix_type_cast.cu">
+      <Filter>源文件\basic_process\type_cast</Filter>
     </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\basic_calculations\operators\Vector\Vector_multiply.cu">
-      <Filter>源文件\basic_calculations\operators\Vector</Filter>
+    <CudaCompile Include="..\srcs\modules\BLAS\Basic_process\type_cast\GPU_Vector_type_cast.cu">
+      <Filter>源文件\basic_process\type_cast</Filter>
     </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\basic_calculations\operators\Vector\Vector_subtract.cu">
-      <Filter>源文件\basic_calculations\operators\Vector</Filter>
+    <CudaCompile Include="..\srcs\modules\BLAS\Basic_process\type_statistics\Matrix_reduce.cu">
+      <Filter>源文件\basic_process\type_statistics</Filter>
     </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\basic_calculations\operators\Matrix\Matrix_add.cu">
-      <Filter>源文件\basic_calculations\operators\Matrix</Filter>
+    <CudaCompile Include="..\srcs\modules\BLAS\Basic_process\type_statistics\Vector_reduce.cu">
+      <Filter>源文件\basic_process\type_statistics</Filter>
     </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\basic_calculations\operators\Matrix\Matrix_divide.cu">
-      <Filter>源文件\basic_calculations\operators\Matrix</Filter>
+    <CudaCompile Include="..\srcs\common\Algorithms\Reduce_CUDA\reduce_cmp.cu">
+      <Filter>源文件\basic_calculations\reduce</Filter>
     </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\basic_calculations\operators\Matrix\Matrix_fma.cu">
-      <Filter>源文件\basic_calculations\operators\Matrix</Filter>
+    <CudaCompile Include="..\srcs\common\Algorithms\Reduce_CUDA\reduce_sum.cu">
+      <Filter>源文件\basic_calculations\reduce</Filter>
     </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\basic_calculations\operators\Matrix\Matrix_fms.cu">
-      <Filter>源文件\basic_calculations\operators\Matrix</Filter>
+    <CudaCompile Include="..\srcs\common\Algorithms\Reduce_CUDA\reduce1D.cu">
+      <Filter>源文件\basic_calculations\reduce</Filter>
     </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\basic_calculations\operators\Matrix\Matrix_multiply.cu">
-      <Filter>源文件\basic_calculations\operators\Matrix</Filter>
+    <CudaCompile Include="..\srcs\common\Algorithms\Reduce_CUDA\reduce1D_cmp_kernels.cu">
+      <Filter>源文件\basic_calculations\reduce</Filter>
     </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\basic_calculations\operators\Matrix\Matrix_subtract.cu">
-      <Filter>源文件\basic_calculations\operators\Matrix</Filter>
+    <CudaCompile Include="..\srcs\common\Algorithms\Reduce_CUDA\reduce1D_sum_kernels.cu">
+      <Filter>源文件\basic_calculations\reduce</Filter>
     </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\BLAS\GEMM\CUDA\large_squares\cpl32\GEMM_cpl32.cu">
-      <Filter>源文件\GEMM\large_squares\cpl32</Filter>
+    <CudaCompile Include="..\srcs\common\Algorithms\Reduce_CUDA\reduce2D.cu">
+      <Filter>源文件\basic_calculations\reduce</Filter>
     </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\BLAS\GEMM\CUDA\large_squares\fp16\GEMM_fp16.cu">
-      <Filter>源文件\GEMM\large_squares\fp16</Filter>
+    <CudaCompile Include="..\srcs\common\Algorithms\Reduce_CUDA\reduce2D_cmp_kernels.cu">
+      <Filter>源文件\basic_calculations\reduce</Filter>
     </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\BLAS\GEMM\CUDA\large_squares\fp16\GEMM_fp16_accurate.cu">
-      <Filter>源文件\GEMM\large_squares\fp16</Filter>
+    <CudaCompile Include="..\srcs\common\Algorithms\Reduce_CUDA\reduce2D_sum_kernels.cu">
+      <Filter>源文件\basic_calculations\reduce</Filter>
     </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\BLAS\GEMM\CUDA\large_squares\fp32\GEMM_fp32.cu">
+    <CudaCompile Include="..\srcs\common\Algorithms\Scan_CUDA\scan1D_fp32_kernel.cu">
+      <Filter>源文件\basic_calculations\scan</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\common\Algorithms\Scan_CUDA\scan1D_uint8_kernel.cu">
+      <Filter>源文件\basic_calculations\scan</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\common\Algorithms\Scan_CUDA\scan2D.cu">
+      <Filter>源文件\basic_calculations\scan</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\common\Algorithms\Scan_CUDA\scan2D_fp16_kernel.cu">
+      <Filter>源文件\basic_calculations\scan</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\common\Algorithms\Scan_CUDA\scan2D_fp32_kernel.cu">
+      <Filter>源文件\basic_calculations\scan</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\common\Algorithms\Scan_CUDA\scan2D_uint8_kernel.cu">
+      <Filter>源文件\basic_calculations\scan</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\common\Algorithms\Scan_CUDA\scan1D.cu">
+      <Filter>源文件\basic_calculations\scan</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\common\Algorithms\Scan_CUDA\scan1D_fp16_kernel.cu">
+      <Filter>源文件\basic_calculations\scan</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\BLAS\Dot product\CUDA\1D\DP1D_kernels.cu">
+      <Filter>源文件\Dot product\1D</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\BLAS\Dot product\CUDA\1D\DP1D_callers.cu">
+      <Filter>源文件\Dot product\1D</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\BLAS\Dot product\CUDA\1D\DP1D_config.cu">
+      <Filter>源文件\Dot product\1D</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\BLAS\Dot product\CUDA\2D\DP2D_1way_callers.cu">
+      <Filter>源文件\Dot product\2D</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\BLAS\Dot product\CUDA\2D\DP2D_1way_config.cu">
+      <Filter>源文件\Dot product\2D</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\BLAS\Dot product\CUDA\2D\DP2D_kernels.cu">
+      <Filter>源文件\Dot product\2D</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\BLAS\GEMM\CUDA\large_squares\common\cuda_GEMM_LS_planner.cu">
+      <Filter>源文件\GEMM\large_squares\common</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\BLAS\GEMM\CUDA\large_squares\64b\GEMM_cplxf_B64_kernels.cu">
+      <Filter>源文件\GEMM\large_squares\64b</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\BLAS\GEMM\CUDA\large_squares\64b\GEMM_fp64_B64_kernels.cu">
+      <Filter>源文件\GEMM\large_squares\64b</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\BLAS\GEMM\CUDA\large_squares\64b\GEMM_64b_callers.cu">
+      <Filter>源文件\GEMM\large_squares\64b</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\BLAS\GEMM\CUDA\large_squares\cplxd\GEMM_cplxd_B64_kernels.cu">
+      <Filter>源文件\GEMM\large_squares\cplxd</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\BLAS\GEMM\CUDA\large_squares\cplxd\GEMM_cplxd_callers.cu">
+      <Filter>源文件\GEMM\large_squares\cplxd</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\BLAS\GEMM\CUDA\large_squares\fp32\GEMM_fp32_B64_kernels.cu">
       <Filter>源文件\GEMM\large_squares\fp32</Filter>
     </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\BLAS\GEMM\CUDA\large_squares\GEMM.cu">
-      <Filter>源文件\GEMM\large_squares</Filter>
+    <CudaCompile Include="..\srcs\modules\BLAS\GEMM\CUDA\large_squares\fp32\GEMM_fp32_callers.cu">
+      <Filter>源文件\GEMM\large_squares\fp32</Filter>
     </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\BLAS\basic_process\fill\constant\CUDA\constant_fill_kernels.cu">
-      <Filter>源文件\basic_process\fill\constant</Filter>
+    <CudaCompile Include="..\srcs\modules\BLAS\GEMM\CUDA\large_squares\fp16\GEMM_fp16_B128_kernels.cu">
+      <Filter>源文件\GEMM\large_squares\fp16</Filter>
     </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\BLAS\basic_process\fill\constant\CUDA\GPU_Matrix_fill.cu">
-      <Filter>源文件\basic_process\fill\constant</Filter>
+    <CudaCompile Include="..\srcs\modules\BLAS\GEMM\CUDA\large_squares\fp16\GEMM_fp16_callers.cu">
+      <Filter>源文件\GEMM\large_squares\fp16</Filter>
     </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\BLAS\basic_process\fill\constant\CUDA\GPU_Vector_fill.cu">
-      <Filter>源文件\basic_process\fill\constant</Filter>
+    <CudaCompile Include="..\srcs\modules\BLAS\GEMM\CUDA\GEMM_LS.cu">
+      <Filter>源文件\GEMM</Filter>
     </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\BLAS\basic_process\transpose\CUDA\transpose.cu">
-      <Filter>源文件\basic_process\transpose</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\BLAS\basic_process\type_cast\CUDA\_mm128_fp32_fp64.cu">
-      <Filter>源文件\basic_process\type_cast</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\BLAS\basic_process\type_cast\CUDA\_mm128_fp32_int32.cu">
-      <Filter>源文件\basic_process\type_cast</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\BLAS\basic_process\type_cast\CUDA\GPU_Matrix_type_cast.cu">
-      <Filter>源文件\basic_process\type_cast</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\BLAS\basic_process\type_cast\CUDA\GPU_Vector_type_cast.cu">
-      <Filter>源文件\basic_process\type_cast</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\basic_calculations\operators\Vector\Vector_integral.cu">
-      <Filter>源文件\basic_calculations\operators\Vector</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\basic_calculations\scan\CUDA\scan1D_fp32_kernel.cu">
-      <Filter>源文件\basic_calculations\scan</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\basic_calculations\scan\CUDA\scan1D_uint8_kernel.cu">
-      <Filter>源文件\basic_calculations\scan</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\basic_calculations\scan\CUDA\scan1D_fp16_kernel.cu">
-      <Filter>源文件\basic_calculations\scan</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\basic_calculations\scan\CUDA\scan2D_fp32_kernel.cu">
-      <Filter>源文件\basic_calculations\scan</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\basic_calculations\scan\CUDA\scan1D.cu">
-      <Filter>源文件\basic_calculations\scan</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\basic_calculations\operators\Matrix\Matrix_integral.cu">
-      <Filter>源文件\basic_calculations\operators\Matrix</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\basic_calculations\scan\CUDA\scan2D_fp16_kernel.cu">
-      <Filter>源文件\basic_calculations\scan</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\basic_calculations\scan\CUDA\scan2D_uint8_kernel.cu">
-      <Filter>源文件\basic_calculations\scan</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\basic_calculations\scan\CUDA\scan2D.cu">
-      <Filter>源文件\basic_calculations\scan</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\basic_calculations\reduce\CUDA\reduce1D_sum_kernels.cu">
-      <Filter>源文件\basic_calculations\reduce</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\basic_calculations\reduce\CUDA\reduce1D.cu">
-      <Filter>源文件\basic_calculations\reduce</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\BLAS\basic_process\type_statistics\CUDA\Vector_reduce.cu">
-      <Filter>源文件\basic_process\type_statistics</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\basic_calculations\reduce\CUDA\reduce1D_cmp_kernels.cu">
-      <Filter>源文件\basic_calculations\reduce</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\basic_calculations\reduce\CUDA\reduce_sum.cu">
-      <Filter>源文件\basic_calculations\reduce</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\basic_calculations\reduce\CUDA\reduce_cmp.cu">
-      <Filter>源文件\basic_calculations\reduce</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\basic_calculations\reduce\CUDA\reduce2D_sum_kernels.cu">
-      <Filter>源文件\basic_calculations\reduce</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\BLAS\basic_process\type_statistics\CUDA\Matrix_reduce.cu">
-      <Filter>源文件\basic_process\type_statistics</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\basic_calculations\reduce\CUDA\reduce2D_cmp_kernels.cu">
-      <Filter>源文件\basic_calculations\reduce</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\basic_calculations\reduce\CUDA\reduce2D.cu">
-      <Filter>源文件\basic_calculations\reduce</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\BLAS\Dot product\CUDA\DP1D_kernels.cu">
-      <Filter>源文件\Dot product</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\BLAS\Dot product\CUDA\DP1D.cu">
-      <Filter>源文件\Dot product</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\BLAS\Dot product\CUDA\DP1D_callers.cu">
-      <Filter>源文件\Dot product</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\classes\classes_util.cu">
-      <Filter>源文件\utils</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\BLAS\Dot product\CUDA\DP2D_1way_config.cu">
-      <Filter>源文件\Dot product</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\BLAS\Dot product\CUDA\DP2D.cu">
-      <Filter>源文件\Dot product</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\BLAS\Dot product\CUDA\DP2D_kernels.cu">
-      <Filter>源文件\Dot product</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\BLAS\Dot product\CUDA\DP2D_1way_callers.cu">
-      <Filter>源文件\Dot product</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\BLAS\Dot product\CUDA\DP1D_config.cu">
-      <Filter>源文件\Dot product</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\BLAS\basic_process\transpose\CUDA\transpose_kernels.cu">
-      <Filter>源文件\basic_process\transpose</Filter>
-    </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\BLAS\basic_process\transpose\CUDA\transpose_kernels_dense.cu">
-      <Filter>源文件\basic_process\transpose</Filter>
+    <CudaCompile Include="..\srcs\modules\BLAS\GEMM\CUDA\VMM.cu">
+      <Filter>源文件\GEMM</Filter>
     </CudaCompile>
     <CudaCompile Include="..\srcs\modules\BLAS\GEMM\CUDA\extreme_shapes\VMM_fp16.cu">
       <Filter>源文件\GEMM\extreme_shapes</Filter>
@@ -451,8 +415,11 @@
     <CudaCompile Include="..\srcs\modules\BLAS\GEMM\CUDA\extreme_shapes\VMM_reduce_config_gen.cu">
       <Filter>源文件\GEMM\extreme_shapes</Filter>
     </CudaCompile>
-    <CudaCompile Include="..\srcs\modules\BLAS\GEMM\CUDA\extreme_shapes\VMM.cu">
-      <Filter>源文件\GEMM\extreme_shapes</Filter>
+    <CudaCompile Include="..\srcs\modules\BLAS\GEMM\CUDA\large_squares\fp32\GEMM_fp32_B128_kernels.cu">
+      <Filter>源文件\GEMM\large_squares\fp32</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\srcs\modules\BLAS\Dot product\CUDA\DP.cu">
+      <Filter>源文件\Dot product</Filter>
     </CudaCompile>
   </ItemGroup>
 </Project>

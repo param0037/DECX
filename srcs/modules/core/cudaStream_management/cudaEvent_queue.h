@@ -33,7 +33,7 @@
 #define _CUDAEVENT_QUEUE_CUH_
 
 
-#include "../basic.h"
+#include "../../../common/basic.h"
 #include "cudaEvent_package.h"
 #include "../decx_alloc_interface.h"
 #include "../memory_management/PtrInfo.h"

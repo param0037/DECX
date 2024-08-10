@@ -33,9 +33,9 @@
 #define _DISTRIBUTIONS_EXEC_H_
 
 
-#include "../../../core/basic.h"
+#include "../../../../common/basic.h"
 #include "../../../core/thread_management/thread_pool.h"
-#include "../../../core/utils/fragment_arrangment.h"
+#include "../../../../common/FMGR/fragment_arrangment.h"
 #include "../../../core/thread_management/thread_arrange.h"
 
 

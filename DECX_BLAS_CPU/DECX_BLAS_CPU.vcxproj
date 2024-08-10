@@ -81,7 +81,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>../bin/$(Platform)</OutDir>
+    <OutDir>..\bin\$(Platform)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -143,61 +143,34 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\srcs\modules\basic_calculations\math functions\math_functions_exec.cxx" />
-    <ClCompile Include="..\srcs\modules\basic_calculations\math functions\math_functions_raw_API.cxx" />
-    <ClCompile Include="..\srcs\modules\basic_calculations\math functions\Matrix\Matrix_math.cxx" />
-    <ClCompile Include="..\srcs\modules\basic_calculations\operators\Add_exec.cxx" />
-    <ClCompile Include="..\srcs\modules\basic_calculations\operators\clip_range.cxx" />
-    <ClCompile Include="..\srcs\modules\basic_calculations\operators\cp_ops_exec.cxx" />
-    <ClCompile Include="..\srcs\modules\basic_calculations\operators\Div_exec.cxx" />
-    <ClCompile Include="..\srcs\modules\basic_calculations\operators\Fma_exec.cxx" />
-    <ClCompile Include="..\srcs\modules\basic_calculations\operators\Fms_exec.cxx" />
-    <ClCompile Include="..\srcs\modules\basic_calculations\operators\Maprange_exec.cxx" />
-    <ClCompile Include="..\srcs\modules\basic_calculations\operators\Matrix\cpu_cpl_ops.cxx" />
-    <ClCompile Include="..\srcs\modules\basic_calculations\operators\Matrix\integral.cxx" />
-    <ClCompile Include="..\srcs\modules\basic_calculations\operators\Matrix\integral_exec.cxx" />
-    <ClCompile Include="..\srcs\modules\basic_calculations\operators\Matrix\matrix_add.cxx" />
-    <ClCompile Include="..\srcs\modules\basic_calculations\operators\Matrix\matrix_clip_range.cxx" />
-    <ClCompile Include="..\srcs\modules\basic_calculations\operators\Matrix\matrix_divide.cxx" />
-    <ClCompile Include="..\srcs\modules\basic_calculations\operators\Matrix\matrix_fma.cxx" />
-    <ClCompile Include="..\srcs\modules\basic_calculations\operators\Matrix\matrix_fms.cxx" />
-    <ClCompile Include="..\srcs\modules\basic_calculations\operators\Matrix\matrix_multiply.cxx" />
-    <ClCompile Include="..\srcs\modules\basic_calculations\operators\Matrix\matrix_subtract.cxx" />
-    <ClCompile Include="..\srcs\modules\basic_calculations\operators\Mul_exec.cxx" />
-    <ClCompile Include="..\srcs\modules\basic_calculations\operators\Sub_exec.cxx" />
-    <ClCompile Include="..\srcs\modules\basic_calculations\operators\Vector\cpu_add.cxx" />
-    <ClCompile Include="..\srcs\modules\basic_calculations\operators\Vector\cpu_divide.cxx" />
-    <ClCompile Include="..\srcs\modules\basic_calculations\operators\Vector\cpu_fma.cxx" />
-    <ClCompile Include="..\srcs\modules\basic_calculations\operators\Vector\cpu_fms.cxx" />
-    <ClCompile Include="..\srcs\modules\basic_calculations\operators\Vector\cpu_multiply.cxx" />
-    <ClCompile Include="..\srcs\modules\basic_calculations\operators\Vector\cpu_subtract.cxx" />
-    <ClCompile Include="..\srcs\modules\BLAS\basic_process\extension\CPU\extend.cxx" />
-    <ClCompile Include="..\srcs\modules\BLAS\basic_process\extension\CPU\extend_constant.cxx" />
-    <ClCompile Include="..\srcs\modules\BLAS\basic_process\extension\CPU\extend_constant_exec.cxx" />
-    <ClCompile Include="..\srcs\modules\BLAS\basic_process\extension\CPU\extend_reflect.cxx" />
-    <ClCompile Include="..\srcs\modules\BLAS\basic_process\extension\CPU\extend_reflect_exec.cxx" />
-    <ClCompile Include="..\srcs\modules\BLAS\basic_process\extension\CPU\extend_reflect_exec_params.cxx" />
-    <ClCompile Include="..\srcs\modules\BLAS\basic_process\fill\constant\CPU\fill_constant_exec.cxx" />
-    <ClCompile Include="..\srcs\modules\BLAS\basic_process\fill\constant\CPU\Matrix_fill.cxx" />
-    <ClCompile Include="..\srcs\modules\BLAS\basic_process\fill\constant\CPU\Vector_fill.cxx" />
-    <ClCompile Include="..\srcs\modules\BLAS\basic_process\transpose\CPU\transpose.cxx" />
-    <ClCompile Include="..\srcs\modules\BLAS\basic_process\transpose\CPU\transpose2D_config.cxx" />
-    <ClCompile Include="..\srcs\modules\BLAS\basic_process\transpose\CPU\transpose_exec_16b.cxx" />
-    <ClCompile Include="..\srcs\modules\BLAS\basic_process\transpose\CPU\transpose_exec_1b.cxx" />
-    <ClCompile Include="..\srcs\modules\BLAS\basic_process\transpose\CPU\transpose_exec_4b.cxx" />
-    <ClCompile Include="..\srcs\modules\BLAS\basic_process\transpose\CPU\transpose_exec_8b.cxx" />
-    <ClCompile Include="..\srcs\modules\BLAS\basic_process\type_cast\CPU\type_cast.cxx" />
-    <ClCompile Include="..\srcs\modules\BLAS\basic_process\type_cast\CPU\_mm256_fp32_fp64.cxx" />
-    <ClCompile Include="..\srcs\modules\BLAS\basic_process\type_cast\CPU\_mm256_fp32_int32.cxx" />
-    <ClCompile Include="..\srcs\modules\BLAS\basic_process\type_cast\CPU\_mm256_fp32_uint8.cxx" />
-    <ClCompile Include="..\srcs\modules\BLAS\basic_process\type_cast\CPU\_mm256_uint8_int32.cxx" />
-    <ClCompile Include="..\srcs\modules\BLAS\basic_process\type_statistics\CPU\cmp_max_exec.cxx" />
-    <ClCompile Include="..\srcs\modules\BLAS\basic_process\type_statistics\CPU\cmp_min_exec.cxx" />
-    <ClCompile Include="..\srcs\modules\BLAS\basic_process\type_statistics\CPU\compare.cxx" />
-    <ClCompile Include="..\srcs\modules\BLAS\basic_process\type_statistics\CPU\histogram.cxx" />
-    <ClCompile Include="..\srcs\modules\BLAS\basic_process\type_statistics\CPU\hist_gen_exec.cxx" />
-    <ClCompile Include="..\srcs\modules\BLAS\basic_process\type_statistics\CPU\normalization.cxx" />
-    <ClCompile Include="..\srcs\modules\BLAS\basic_process\type_statistics\CPU\summation.cxx" />
+    <ClCompile Include="..\srcs\common\Basic_process\extension\CPU\extend_constant.cxx" />
+    <ClCompile Include="..\srcs\common\Basic_process\extension\CPU\extend_constant_exec.cxx" />
+    <ClCompile Include="..\srcs\common\Basic_process\extension\CPU\extend_reflect.cxx" />
+    <ClCompile Include="..\srcs\common\Basic_process\extension\CPU\extend_reflect_exec.cxx" />
+    <ClCompile Include="..\srcs\common\Basic_process\extension\CPU\extend_reflect_exec_params.cxx" />
+    <ClCompile Include="..\srcs\common\Basic_process\fill\constant\CPU\fill_constant_exec.cxx" />
+    <ClCompile Include="..\srcs\common\Basic_process\transpose\CPU\transpose2D_config.cxx" />
+    <ClCompile Include="..\srcs\common\Basic_process\transpose\CPU\transpose_exec_16b.cxx" />
+    <ClCompile Include="..\srcs\common\Basic_process\transpose\CPU\transpose_exec_1b.cxx" />
+    <ClCompile Include="..\srcs\common\Basic_process\transpose\CPU\transpose_exec_4b.cxx" />
+    <ClCompile Include="..\srcs\common\Basic_process\transpose\CPU\transpose_exec_8b.cxx" />
+    <ClCompile Include="..\srcs\common\Basic_process\type_cast\CPU\_mm256_fp32_fp64.cxx" />
+    <ClCompile Include="..\srcs\common\Basic_process\type_cast\CPU\_mm256_fp32_int32.cxx" />
+    <ClCompile Include="..\srcs\common\Basic_process\type_cast\CPU\_mm256_fp32_uint8.cxx" />
+    <ClCompile Include="..\srcs\common\Basic_process\type_cast\CPU\_mm256_uint8_int32.cxx" />
+    <ClCompile Include="..\srcs\common\Basic_process\type_statistics\CPU\cmp_max_exec.cxx" />
+    <ClCompile Include="..\srcs\common\Basic_process\type_statistics\CPU\cmp_min_exec.cxx" />
+    <ClCompile Include="..\srcs\common\Basic_process\type_statistics\CPU\compare.cxx" />
+    <ClCompile Include="..\srcs\common\Basic_process\type_statistics\CPU\histogram.cxx" />
+    <ClCompile Include="..\srcs\common\Basic_process\type_statistics\CPU\hist_gen_exec.cxx" />
+    <ClCompile Include="..\srcs\common\Basic_process\type_statistics\CPU\normalization.cxx" />
+    <ClCompile Include="..\srcs\common\Basic_process\type_statistics\CPU\summation.cxx" />
+    <ClCompile Include="..\srcs\common\FMGR\fragment_arangement.cxx" />
+    <ClCompile Include="..\srcs\modules\BLAS\Basic_process\extension\extend.cxx" />
+    <ClCompile Include="..\srcs\modules\BLAS\Basic_process\fill\Matrix_fill.cxx" />
+    <ClCompile Include="..\srcs\modules\BLAS\Basic_process\fill\Vector_fill.cxx" />
+    <ClCompile Include="..\srcs\modules\BLAS\Basic_process\transpose\transpose.cxx" />
+    <ClCompile Include="..\srcs\modules\BLAS\Basic_process\type_cast\type_cast.cxx" />
     <ClCompile Include="..\srcs\modules\BLAS\Dot product\CPU\fp32\dot_fp32.cxx" />
     <ClCompile Include="..\srcs\modules\BLAS\Dot product\CPU\fp32\dot_fp32_exec.cxx" />
     <ClCompile Include="..\srcs\modules\BLAS\GEMM\CPU\cplxd\GEMM_cplxd_caller.cxx" />
@@ -211,7 +184,6 @@
     <ClCompile Include="..\srcs\modules\BLAS\Vectorial\fields\CPU\divergence.cxx" />
     <ClCompile Include="..\srcs\modules\BLAS\Vectorial\fields\CPU\rotation.cxx" />
     <ClCompile Include="..\srcs\modules\BLAS\Vectorial\transforms\3D\CPU\Matrix_transform.cxx" />
-    <ClCompile Include="..\srcs\modules\core\utils\fragment_arangement.cxx" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\srcs\modules\basic_calculations\operators\Add_exec.h" />

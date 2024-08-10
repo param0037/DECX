@@ -33,7 +33,7 @@
 #define _IM2COL_FP32_CUH_
 
 
-#include "../../../../core/basic.h"
+#include "../../../../../common/basic.h"
 #include "../../../../core/cudaStream_management/cudaEvent_queue.h"
 #include "../../../../core/cudaStream_management/cudaStream_queue.h"
 

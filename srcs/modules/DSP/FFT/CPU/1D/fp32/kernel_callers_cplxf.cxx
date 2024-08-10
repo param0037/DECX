@@ -30,7 +30,7 @@
 
 #include "../FFT1D_kernels.h"
 #include "../FFT1D_kernel_utils.h"
-#include "../../CPU_FFT_defs.h"
+#include "../../FFT_common/CPU_FFT_defs.h"
 
 
 

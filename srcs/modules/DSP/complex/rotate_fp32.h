@@ -33,10 +33,9 @@
 #define _ROTATE_FP32_H_
 
 
-#include "../../basic_calculations/operators/cp_ops_exec.h"
-#include "../../classes/classes_util.h"
-#include "../../classes/Vector.h"
-#include "../../classes/Matrix.h"
+#include "../../../common/Classes/classes_util.h"
+#include "../../../common/Classes/Vector.h"
+#include "../../../common/Classes/Matrix.h"
 
 
 namespace decx {
