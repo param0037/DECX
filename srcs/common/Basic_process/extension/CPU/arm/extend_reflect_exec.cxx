@@ -75,16 +75,19 @@ namespace CPUK
         }
     }
 
+    
 
     _THREAD_CALL_ inline void
-    _rev_load_reflection_region_b16_v8(const uint16_t* __restrict src, uint16_t* __restrict dst, const uint32_t reflect_depth_v16)
+    _rev_load_reflection_region_b16_v8(const uint16_t* __restrict src, uint16_t* __restrict dst, const uint32_t reflect_depth_v8)
     {
-        uint16x8_t _reg;
-        for (uint32_t i = 0; i < reflect_depth_v16; ++i) {
-            _reg = vld1q_u16(src + (reflect_depth_v16 - i - 1) * 8);
-            _reg = vrev64q_u16(_reg);
-            _reg = vextq_u16(_reg, _reg, 4);
-            vst1q_u16(dst + i * 8, _reg);
+        static uint8_t _idx_rev_u16[16] = {14, 15, 12, 13, 10, 11, 8, 9, 6, 7, 4, 5, 2, 3, 0, 1};
+        const uint8x16_t _idx = vld1q_u8(_idx_rev_u16);
+
+        uint16x8_t _reg, stg;
+        for (uint32_t i = 0; i < reflect_depth_v8; ++i) {
+            _reg = vld1q_u16(src + (reflect_depth_v8 - i - 1) * 8);
+            stg = vreinterpretq_u16_u8(vqtbl1q_u8(vreinterpretq_u8_u16(_reg), _idx));
+            vst1q_u16(dst + i * 8, stg);
         }
     }
 
@@ -119,9 +122,16 @@ namespace CPUK
     _THREAD_CALL_ inline void
     _store_buf_to_dst_b16_v8(const uint16_t* __restrict src, uint16_t* __restrict dst, const uint32_t store_num_v8)
     {
-        for (uint32_t i = 0; i < store_num_v8; ++i) {
-            vst1q_u16(dst + i * 8, vld1q_u16(src + i * 8));
+        for (uint32_t i = 0; i < store_num_v8 / 2; ++i) {
+            vst1q_u16_x2(dst + i * 16, vld1q_u16_x2(src + i * 16));
         }
+        if (store_num_v8 & 1){
+            vst1q_u16(dst + ((store_num_v8 >> 1) << 4), vld1q_u16(src + ((store_num_v8 >> 1) << 4)));
+        }
+        
+        // for (uint32_t i = 0; i < store_num_v8; ++i) {
+        //     vst1q_u16(dst + i * 8, vld1q_u16(src + i * 8));
+        // }
     }
 }
 }
@@ -157,7 +167,7 @@ decx::bp::CPUK::_extend_reflect1D_b32(const float* __restrict   src,
     reg._vf.val[0] = reg._vf.val[1];
     reg._vui.val[1] = veorq_u32(reg._vui.val[1], reg._vui.val[1]);
     store._vuc = vqtbl2q_u8(reg._vuc, _idx);
-    vst1q_f32(dst + b_rfct->_actual_load_num_L + _original_w_v4 * 8 - 8, store._vf);
+    vst1q_f32(dst + b_rfct->_actual_load_num_L + _original_w_v4 * 4 - 4, store._vf);
 
     decx::bp::CPUK::_rev_load_reflection_region_b32_v4(src + (_original_w_v4) * 4 - b_rfct->_actual_load_num_R, 
                                                        buffer, 
@@ -327,7 +337,7 @@ _THREAD_FUNCTION_ void
 decx::bp::CPUK::_extend_V_reflect2D_m128(float* __restrict   dst,        // point A
                                         const uint32_t      _top, 
                                         const uint32_t      _bottom,
-                                        const uint          Hsrc, 
+                                        const uint32_t      Hsrc, 
                                         const uint32_t      Wdst)       // in float
 {
     float32x4_t recv;
@@ -381,11 +391,11 @@ _extend_reflect1D_b16(const uint16_t* __restrict                    src,
     vst1q_u16(dst + b_rfct->_left, reg._vus.val[1]);
 
     for (uint32_t i = 1; i < _original_w_v8; ++i) {
-        reg._vus.val[0] = reg._vus.val[1];
-        reg._vus.val[1] = vld1q_u16(src + i * 8);
+        reg._vus = vld1q_u16_x2(src + i * 8 - 8);
         store._vuc = vqtbl2q_u8(reg._vuc, _idx);
         vst1q_u16(dst + b_rfct->_actual_load_num_L + i * 8 - 8, store._vus);
     }
+
     reg._vus.val[0] = reg._vus.val[1];
     reg._vui.val[1] = veorq_u32(reg._vui.val[1], reg._vui.val[1]);
     store._vuc = vqtbl2q_u8(reg._vuc, _idx);
@@ -409,7 +419,7 @@ decx::bp::CPUK::_extend_H_reflect2D_b16(const uint16_t* __restrict   src,
                                        const uint32_t            Wsrc,
                                        const uint32_t            Wdst,
                                        const uint32_t            _actual_w_v1,
-                                       const uint2               _original_dims_v16)
+                                       const uint2               _original_dims_v8)
 {
     const uint8x16_t _idx = decx::bp::e_rfct_exep_get_tbl_b16(b_rfct);
 
@@ -418,7 +428,7 @@ decx::bp::CPUK::_extend_H_reflect2D_b16(const uint16_t* __restrict   src,
 
     uint64_t dex_src = 0, dex_dst = 0;
 
-    for (uint32_t i = 0; i < _original_dims_v16.y; ++i) 
+    for (uint32_t i = 0; i < _original_dims_v8.y; ++i) 
     {
         dex_src = i * Wsrc;
         dex_dst = i * Wdst;
@@ -427,12 +437,10 @@ decx::bp::CPUK::_extend_H_reflect2D_b16(const uint16_t* __restrict   src,
         reg._vus.val[1] = vld1q_u16(src + dex_src);
         vst1q_u16(dst + dex_dst + b_rfct->_left, reg._vus.val[1]);
 
-        dex_src += 8;
         dex_dst += b_rfct->_actual_load_num_L;
 
-        for (uint32_t j = 1; j < _original_dims_v16.x; ++j) {
-            reg._vus.val[0] = reg._vus.val[1];
-            reg._vus.val[1] = vld1q_u16(src + dex_src);
+        for (uint32_t j = 1; j < _original_dims_v8.x; ++j) {
+            reg._vus = vld1q_u16_x2(src + dex_src);
             store._vuc = vqtbl2q_u8(reg._vuc, _idx);
             vst1q_u16(dst + dex_dst, store._vus);
 
@@ -444,6 +452,8 @@ decx::bp::CPUK::_extend_H_reflect2D_b16(const uint16_t* __restrict   src,
         reg._vui.val[1] = veorq_u32(reg._vui.val[1], reg._vui.val[1]);
         store._vuc = vqtbl2q_u8(reg._vuc, _idx);
         vst1q_u16(dst + dex_dst, store._vus);
+
+        dex_src += 8;
 
         decx::bp::CPUK::_rev_load_reflection_region_b16_v8(src + dex_src - b_rfct->_actual_load_num_R, 
                                                            buffer, 
@@ -463,8 +473,8 @@ decx::bp::CPUK::_extend_reflect1D_b64(const double* __restrict   src,
                                       double* __restrict         buffer,
                                       double* __restrict         dst,
                                       const decx::bp::extend_reflect_exec_params* b_rfct,
-                                      const size_t              _actual_w_v1,
-                                      const size_t              _original_w_v4)
+                                      const uint64_t             _actual_w_v1,
+                                      const uint64_t             _original_w_v2)
 {
     const uint8x16_t _idx = decx::bp::e_rfct_exep_get_tbl_b64(b_rfct);
 
@@ -476,7 +486,7 @@ decx::bp::CPUK::_extend_reflect1D_b64(const double* __restrict   src,
     reg._vd.val[1] = vld1q_f64(src);
     vst1q_f64(dst + b_rfct->_left, reg._vd.val[1]);
 
-    for (uint32_t i = 1; i < _original_w_v4; ++i) {
+    for (uint32_t i = 1; i < _original_w_v2; ++i) {
         reg._vd.val[0] = reg._vd.val[1];
         reg._vd.val[1] = vld1q_f64(src + i * 2);
         store._vuc = vqtbl2q_u8(reg._vuc, _idx);
@@ -485,9 +495,9 @@ decx::bp::CPUK::_extend_reflect1D_b64(const double* __restrict   src,
     reg._vf.val[0] = reg._vf.val[1];
     reg._vui.val[1] = veorq_u32(reg._vui.val[1], reg._vui.val[1]);
     store._vuc = vqtbl2q_u8(reg._vuc, _idx);
-    vst1q_f64(dst + b_rfct->_actual_load_num_L + _original_w_v4 * 2 - 2, store._vd);
+    vst1q_f64(dst + b_rfct->_actual_load_num_L + _original_w_v2 * 2 - 2, store._vd);
 
-    decx::bp::CPUK::_rev_load_reflection_region_b64_v2(src + (_original_w_v4) * 2 - b_rfct->_actual_load_num_R, 
+    decx::bp::CPUK::_rev_load_reflection_region_b64_v2(src + (_original_w_v2) * 2 - b_rfct->_actual_load_num_R, 
                                                        buffer, 
                                                        b_rfct->_actual_load_num_R / 2);
     memcpy(dst + _actual_w_v1 + b_rfct->_left, 

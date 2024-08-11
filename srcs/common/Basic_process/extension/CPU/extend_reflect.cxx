@@ -61,7 +61,7 @@ void decx::bp::_extend_reflect_b32_1D(const float* src, float* dst, const uint32
 
 
 void decx::bp::_extend_reflect_b64_1D(const double* src, double* dst, const uint32_t _left, const uint32_t _right,
-    const size_t _length_src, const size_t _actual_Lsrc, de::DH* handle)
+    const uint64_t _length_src, const uint64_t _actual_Lsrc, de::DH* handle)
 {
 #if defined(__x86_64__) || defined(__i386__)
     constexpr uint32_t _alignment = 4;
@@ -86,8 +86,10 @@ void decx::bp::_extend_reflect_b64_1D(const double* src, double* dst, const uint
 
 
 
-void decx::bp::_extend_reflect_b8_1D(const uint8_t* src, uint8_t* dst, const uint32_t _left, const uint32_t _right,
-    const size_t _length_src, const size_t _actual_Lsrc, de::DH* handle)
+void decx::bp::_extend_reflect_b8_1D(const uint8_t* src,            uint8_t* dst, 
+                                     const uint32_t _left,          const uint32_t _right,
+                                     const uint64_t _length_src,    const uint64_t _actual_Lsrc, 
+                                     de::DH* handle)
 {
     decx::bp::extend_reflect_exec_params b_rfct;
     decx::bp::e_rfct_exep_gen_b8(&b_rfct, _left, _right, _actual_Lsrc, _length_src / 16);
@@ -111,7 +113,7 @@ void decx::bp::_extend_reflect_b16_1D(const uint16_t* src,          uint16_t* ds
                                       de::DH* handle)
 {
     decx::bp::extend_reflect_exec_params b_rfct;
-    decx::bp::e_rfct_exep_gen_b8(&b_rfct, _left, _right, _actual_Lsrc, _length_src / 8);
+    decx::bp::e_rfct_exep_gen_b16(&b_rfct, _left, _right, _actual_Lsrc, _length_src / 8);
 
     decx::PtrInfo<uint16_t> buffer;
     if (decx::alloc::_host_virtual_page_malloc(&buffer, decx::bp::e_rfct_exep_get_buffer_len(&b_rfct) * sizeof(uint16_t))) {

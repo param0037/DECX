@@ -32,7 +32,12 @@
 #include "../cpu_GEMM_config.h"
 #include "../GEMM_callers.h"
 #include "../matrix_B_arrange.h"
-#include "GEMM_fp32_kernels.h"
+#if defined(__x86_64__) || defined(__i386__)
+#include "x86/GEMM_fp32_kernels.h"
+#endif
+#if defined(__aarch64__) || defined(__arm__)
+#include "arm/GEMM_fp32_kernels.h"
+#endif
 
 
 decx::ResourceHandle decx::blas::g_cpu_GEMM_fp32_planner;
@@ -50,6 +55,13 @@ void decx::blas::GEMM_fp32_caller(const float*                      A,
                                   decx::utils::_thr_2D*             t2D,
                                   const float*                      C)
 {
+#if defined(__x86_64__) || defined(__i386__)
+    constexpr uint32_t _alignment = 8;
+#endif
+#if defined(__aarch64__) || defined(__arm__)
+    constexpr uint32_t _alignment = 4;
+#endif
+
     const float* A_loc = A;
     const float* B_loc = B;
     float* dst_loc = dst;
@@ -68,9 +80,9 @@ void decx::blas::GEMM_fp32_caller(const float*                      A,
                 decx::blas::CPUK::GEMM_fp32_kernel<_ABC>, A_loc, B_loc, dst_loc, conf_ptr,
                 layout_A->pitch, conf_ptr->_fmgr_L.total, layout_dst->pitch, C_loc);
 
-            B_loc += f_mgrWH[0].frag_len * Llen * 8;
-            dst_loc += f_mgrWH[0].frag_len * 8;
-            if constexpr (_ABC) { C_loc += f_mgrWH[0].frag_len * 8; }
+            B_loc += f_mgrWH[0].frag_len * Llen * _alignment;
+            dst_loc += f_mgrWH[0].frag_len * _alignment;
+            if constexpr (_ABC) { C_loc += f_mgrWH[0].frag_len * _alignment; }
         }
 
         const auto* conf_ptr = &_thread_configs[t2D->thread_w * (i + 1) - 1];
@@ -103,6 +115,7 @@ void decx::blas::cpu_GEMM_planner<float>::Run<false>(decx::_Matrix* A, decx::_Ma
     // Arrange matrix B
     decx::blas::matrix_B_arrange_fp32((float*)B->Mat.ptr, 
         (float*)this->_arranged_B._ptr.ptr,
+        // (float*)dst->Mat.ptr,
         B->Pitch(), 
         B->Height(), this->_fmgr_WH_B, t2D);
         

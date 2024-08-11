@@ -45,7 +45,12 @@
 template <typename _data_type> void _CRSR_
 decx::blas::cpu_GEMM_planner<_data_type>::_plan_for_B_arrangement(de::DH* handle)
 {
+#if defined(__x86_64__) || defined(__i386__)
     constexpr uint32_t _alignment = 32 / sizeof(_data_type);
+#endif
+#if defined(__aarch64__) || defined(__arm__)
+    constexpr uint32_t _alignment = 16 / sizeof(_data_type);
+#endif
     constexpr uint32_t _alignment_2x = _alignment * 2;
 
     // Plan the thread distribution
@@ -86,8 +91,12 @@ template void _CRSR_ decx::blas::cpu_GEMM_planner<double>::_plan_for_B_arrangeme
 template <typename _data_type> void
 decx::blas::cpu_GEMM_planner<_data_type>::_plan_for_exectutors(const bool _cplxf)
 {
+#if defined(__x86_64__) || defined(__i386__)
     constexpr uint32_t _alignment = (32 / sizeof(_data_type));
-
+#endif
+#if defined(__aarch64__) || defined(__arm__)
+    constexpr uint32_t _alignment = (16 / sizeof(_data_type));
+#endif
     // Plan the thread distribution
     decx::utils::thread2D_arrangement_advisor(&this->_thread_dist_dst, this->_concurrency,
         this->_proc_dims_v1);

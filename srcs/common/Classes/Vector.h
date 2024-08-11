@@ -42,11 +42,20 @@
 
 // 39193 2022.4.28 12:49
 
+#if defined(__x86_64__) || defined(__i386__)
 #define _VECTOR_ALIGN_4B_ 8        // fp32, int32
 #define _VECTOR_ALIGN_8B_ 4        // fp64
 #define _VECTOR_ALIGN_16B_ 2       // vector4f
 #define _VECTOR_ALIGN_2B_ 16       // fp16
 #define _VECTOR_ALIGN_1B_ 32       // uchar
+#endif
+#if defined(__aarch64__) || defined(__arm__)
+#define _VECTOR_ALIGN_4B_ 4        // fp32, int32
+#define _VECTOR_ALIGN_8B_ 2        // fp64
+#define _VECTOR_ALIGN_16B_ 1       // vector4f
+#define _VECTOR_ALIGN_2B_ 8       // fp16
+#define _VECTOR_ALIGN_1B_ 16       // uchar
+#endif
 
 
 namespace de

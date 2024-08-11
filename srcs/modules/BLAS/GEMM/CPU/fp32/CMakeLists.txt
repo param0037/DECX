@@ -26,7 +26,7 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
 # DEALINGS IN THE SOFTWARE.
 
-file(GLOB_RECURSE SRCS "*.cxx")
+file(GLOB SRCS "*.cxx")
 
 # include to add compile definitions to the target
 include("${DECX_WORLD_ABS_DIR}/srcs/compile_defs.cmake")
