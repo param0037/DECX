@@ -32,9 +32,9 @@
 #ifndef _GEMM_CPLXF_KERNEL_H_
 #define _GEMM_CPLXF_KERNEL_H_
 
-#include "../../../../../common/basic.h"
-#include "../../../../../common/SIMD/x86_64/CPU_cpf32_avx.h"
-#include "../../../../../common/SIMD/x86_64/cplxf_SSE.h"
+#include "../../../../../../common/basic.h"
+#include "../../../../../../common/SIMD/x86_64/CPU_cpf32_avx.h"
+#include "../../../../../../common/SIMD/x86_64/cplxf_SSE.h"
 
 
 namespace decx

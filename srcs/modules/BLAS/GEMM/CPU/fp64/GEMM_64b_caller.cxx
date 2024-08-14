@@ -32,9 +32,14 @@
 #include "../cpu_GEMM_config.h"
 #include "../GEMM_callers.h"
 #include "../matrix_B_arrange.h"
-#include "GEMM_fp64_kernels.h"
-#include "GEMM_cplxf_kernels.h"
-//#include "_GEMM_cplxf_kernels.h"
+#if defined(__x86_64__) || defined(__i386__)
+#include "x86/GEMM_fp64_kernels_x86_64.h"
+#include "x86/GEMM_cplxf_kernels_x86_64.h"
+#endif
+#if defined(__aarch64__) || defined(__arm__)
+#include "arm/GEMM_fp64_kernels_aarch64.h"
+
+#endif
 
 
 decx::ResourceHandle decx::blas::g_cpu_GEMM_64b_planner;
@@ -47,6 +52,13 @@ decx::blas::GEMM_64b_caller(const double* A,                            const do
                             const decx::utils::frag_manager* f_mgrWH,   const decx::blas::GEMM_blocking_config* _thread_configs, 
                             decx::utils::_thr_2D* t2D,                  const double* C)
 {
+#if defined(__x86_64__) || defined(__i386__)
+    constexpr uint32_t _alignment = 4;
+#endif
+#if defined(__aarch64__) || defined(__arm__)
+    constexpr uint32_t _alignment = 2;
+#endif
+
     const double* A_loc = A;
     const double* B_loc = B;
     double* dst_loc = dst;
@@ -55,7 +67,7 @@ decx::blas::GEMM_64b_caller(const double* A,                            const do
     // Pointer of the kernels
     decx::blas::CPUK::GEMM_64b_kernel _kernel_ptr = NULL;
     if constexpr (_cplxf) {
-        _kernel_ptr = decx::blas::CPUK::GEMM_cplxf_kernel<_ABC>;
+        //_kernel_ptr = decx::blas::CPUK::GEMM_cplxf_kernel<_ABC>;
     }
     else {
         _kernel_ptr = decx::blas::CPUK::GEMM_fp64_kernel<_ABC>;
@@ -75,9 +87,9 @@ decx::blas::GEMM_64b_caller(const double* A,                            const do
                 _kernel_ptr, A_loc, B_loc, dst_loc, conf_ptr,
                 layout_A->pitch, conf_ptr->_fmgr_L.total, layout_dst->pitch, C_loc);
 
-            B_loc += f_mgrWH[0].frag_len * Llen * 4;
-            dst_loc += f_mgrWH[0].frag_len * 4;
-            if constexpr (_ABC) { C_loc += f_mgrWH[0].frag_len * 4; }
+            B_loc += f_mgrWH[0].frag_len * Llen * _alignment;
+            dst_loc += f_mgrWH[0].frag_len * _alignment;
+            if constexpr (_ABC) { C_loc += f_mgrWH[0].frag_len * _alignment; }
         }
 
         const auto* conf_ptr = &_thread_configs[t2D->thread_w * (i + 1) - 1];

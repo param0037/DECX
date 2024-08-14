@@ -29,11 +29,10 @@
 */
 
 
-#ifndef __GEMM_CPLXF_KERNEL_H_
-#define __GEMM_CPLXF_KERNEL_H_
+#ifndef _GEMM_FP64_KERNEL_AARCH64_H_
+#define _GEMM_FP64_KERNEL_AARCH64_H_
 
-#include "../../../../core/basic.h"
-#include "../../../../DSP/CPU_cpf32_avx.h"
+#include "../../../../../../common/basic.h"
 
 
 namespace decx
@@ -42,31 +41,26 @@ namespace blas {
     namespace CPUK 
     {
         template <bool _ABC>
-        static _THREAD_CALL_ void GEMM_cplxf_dp_kernel_frag(const double* __restrict A_line, const double* __restrict B_lane,
+        static _THREAD_CALL_ void GEMM_fp64_dp_kernel_frag(const double* __restrict A_line, const double* __restrict B_lane,
             double* __restrict dst, const uint32_t _linear, const bool _first = false, const double* __restrict C = NULL);
 
 
         template <bool _ABC>
-        static _THREAD_CALL_ void GEMM_cplxf_dp_kernel_frag_dual(const double* __restrict A_line, const double* __restrict B_lane,
+        static _THREAD_CALL_ void GEMM_fp64_dp_kernel_frag_dual(const double* __restrict A_line, const double* __restrict B_lane,
             double* __restrict dst, const uint32_t _linear, const bool _first = false, const double* __restrict C = NULL);
-
-
-        template <bool dual_lane, bool _ABC>
-        static _THREAD_CALL_ void GEMM_cplxf_dp_kernel(const double* __restrict A_line, const double* __restrict B_lane,
-            double* __restrict dst, const decx::utils::frag_manager* _fmgr_L, const double* __restrict C = NULL);
 
 
         /**
         * The layout of dst and C should be completely consistant. Normally it will be, by the definition of GEMM.
         */
         template <bool _ABC>
-        static _THREAD_FUNCTION_ void GEMM_cplxf_block_kernel(const double* __restrict A, const double* __restrict B,
+        static _THREAD_FUNCTION_ void GEMM_fp64_block_kernel(const double* __restrict A, const double* __restrict B,
             double* __restrict dst, const uint2 proc_dims_v8, const decx::utils::frag_manager* fmgrL,
             const uint32_t pitchA_v1, const uint32_t Llen, const uint32_t pitchdst_v1, const double* __restrict C = NULL);
 
 
         template <bool _ABC>
-        static _THREAD_FUNCTION_ void GEMM_cplxf_kernel(const double* __restrict A, const double* __restrict B,
+        static _THREAD_FUNCTION_ void GEMM_fp64_kernel(const double* __restrict A, const double* __restrict B,
             double* __restrict dst, const decx::blas::GEMM_blocking_config* config,
             const uint32_t pitchA_v1, const uint32_t Llen, const uint32_t pitchdst_v1, const double* __restrict C = NULL);
     }
@@ -76,128 +70,108 @@ namespace blas {
 
 template <bool _ABC>
 static _THREAD_CALL_ void decx::blas::CPUK::
-GEMM_cplxf_dp_kernel_frag(const double* __restrict    A_line, 
-                          const double* __restrict    B_lane,
-                          double* __restrict          dst, 
-                          const uint32_t              _linear,
-                          const bool                  _first,
-                          const double* __restrict    C)
+GEMM_fp64_dp_kernel_frag(const double* __restrict    A_line, 
+                         const double* __restrict    B_lane,
+                         double* __restrict          dst, 
+                         const uint32_t             _linear,
+                         const bool                 _first,
+                         const double* __restrict    C)
 {
     uint32_t B_dex = 0;
-    decx::utils::simd::xmm256_reg _accu;
+    decx::utils::simd::xmm128_reg _accu;
     // first && !ABC: setzero
     // !first && !ABC: load dst
     // first && ABC: load C
     // !first && ABC: load dst
     if (!_first) { 
-        _accu._vd = _mm256_load_pd(dst); 
+        _accu._vd = vld1q_f64(dst); 
     }
     else {
-        if constexpr (_ABC) { _accu._vd = _mm256_load_pd(C); }
-        else { _accu._vd = _mm256_setzero_pd(); }
+        if constexpr (_ABC) { _accu._vd = vld1q_f64(C); }
+        else { _accu._vui = veorq_u32(_accu._vui, _accu._vui); }
     }
 
     for (uint32_t i = 0; i < _linear / 2; ++i) 
     {
-        __m128d A_palette = _mm_load_pd(A_line + i * 2);
-        __m256d A_palette2 = _mm256_castpd128_pd256(A_palette);
-        A_palette2 = _mm256_insertf128_pd(A_palette2, A_palette, 1);
+        float64x2_t A_palette = vld1q_f64(A_line + i * 2);
 
         // 0
-        decx::utils::simd::xmm256_reg A_v8;
-        A_v8._vd = _mm256_permute_pd(A_palette2, 0b0000);
-        decx::utils::simd::xmm256_reg B_v8;
-        B_v8._vd = _mm256_load_pd(B_lane + B_dex);
-        _accu._vf = decx::dsp::CPUK::_cp4_fma_cp4_fp32(A_v8._vf, B_v8._vf, _accu._vf);
+        float64x2_t A_v2 = vdupq_n_f64(vgetq_lane_f64(A_palette, 0));
+        float64x2_t B_v2 = vld1q_f64(B_lane + B_dex);
+        _accu._vd = vfmaq_f64(_accu._vd, A_v2, B_v2);
         // 1
-        A_v8._vd = _mm256_permute_pd(A_palette2, 0b1111);
-        B_v8._vd = _mm256_load_pd(B_lane + B_dex + 8);
-        _accu._vf = decx::dsp::CPUK::_cp4_fma_cp4_fp32(A_v8._vf, B_v8._vf, _accu._vf);
-        B_dex += 16;
+        A_v2 = vdupq_n_f64(vgetq_lane_f64(A_palette, 1));
+        B_v2 = vld1q_f64(B_lane + B_dex + 4);
+        _accu._vd = vfmaq_f64(_accu._vd, A_v2, B_v2);
+        B_dex += 8;
     }
 
     if (_linear & 1) {
-        decx::utils::simd::xmm256_reg A_v4;
-        A_v4._vd = _mm256_broadcast_sd(A_line + (_linear / 2) * 2);
-        decx::utils::simd::xmm256_reg B_v4;
-        B_v4._vd = _mm256_load_pd(B_lane + B_dex);
-        _accu._vf = decx::dsp::CPUK::_cp4_fma_cp4_fp32(A_v4._vf, B_v4._vf, _accu._vf);
+        float64x2_t A_v2 = vdupq_n_f64(A_line[(_linear / 2) * 2]);
+        float64x2_t B_v2 = vld1q_f64(B_lane + B_dex);
+        _accu._vd = vfmaq_f64(_accu._vd, A_v2, B_v2);
     }
-    _mm256_store_pd(dst, _accu._vd);
+    vst1q_f64(dst, _accu._vd);
 }
 
 
 
 template <bool _ABC>
 static _THREAD_CALL_ void decx::blas::CPUK::
-GEMM_cplxf_dp_kernel_frag_dual(const double* __restrict  A_line, 
-                               const double* __restrict  B_lane,
-                               double* __restrict        dst, 
-                               const uint32_t            _linear,
-                               const bool                _first,
-                               const double* __restrict  C)
+GEMM_fp64_dp_kernel_frag_dual(const double* __restrict  A_line, 
+                              const double* __restrict  B_lane,
+                              double* __restrict        dst, 
+                              const uint32_t            _linear,
+                              const bool                _first,
+                              const double* __restrict  C)
 {
     uint32_t B_dex = 0;
-    decx::utils::simd::xmm256_reg _accu[2];
-
+    decx::utils::simd::xmm256_reg _accu;
     if (!_first) {
-        _accu[0]._vd = _mm256_load_pd(dst);
-        _accu[1]._vd = _mm256_load_pd(dst + 4);
+        _accu._vd = vld1q_f64_x2(dst);
     }
     else {
         if constexpr (_ABC) {
-            _accu[0]._vd = _mm256_load_pd(C);
-            _accu[1]._vd = _mm256_load_pd(C + 4);
+            _accu._vd = vld1q_f64_x2(C);
         }
         else {
-            _accu[0]._vd = _mm256_setzero_pd();
-            _accu[1]._vd = _mm256_setzero_pd();
+            _accu._vui.val[0] = veorq_u32(_accu._vui.val[0], _accu._vui.val[0]);
+            _accu._vui.val[1] = veorq_u32(_accu._vui.val[1], _accu._vui.val[1]);
         }
     }
 
     for (uint32_t i = 0; i < _linear / 2; ++i) 
     {
-        __m128d A_palette = _mm_load_pd(A_line + i * 2);
-        __m256d A_palette2 = _mm256_castpd128_pd256(A_palette);
-        A_palette2 = _mm256_insertf128_pd(A_palette2, A_palette, 1);
+        float64x2_t A_palette = vld1q_f64(A_line + i * 2);
 
         // 0
-        decx::utils::simd::xmm256_reg A_v8;
-        A_v8._vd = _mm256_permute_pd(A_palette2, 0b0000);
-        decx::utils::simd::xmm256_reg B_v8_0;
-        B_v8_0._vd = _mm256_load_pd(B_lane + B_dex);
-        _accu[0]._vf = decx::dsp::CPUK::_cp4_fma_cp4_fp32(A_v8._vf, B_v8_0._vf, _accu[0]._vf);
-        decx::utils::simd::xmm256_reg B_v4_1;
-        B_v4_1._vd = _mm256_load_pd(B_lane + B_dex + 4);
-        _accu[1]._vf = decx::dsp::CPUK::_cp4_fma_cp4_fp32(A_v8._vf, B_v4_1._vf, _accu[1]._vf);
+        float64x2_t A_v2 = vdupq_n_f64(vgetq_lane_f64(A_palette, 0));
+        float64x2x2_t B_v4 = vld1q_f64_x2(B_lane + B_dex);
+        _accu._vd.val[0] = vfmaq_f64(_accu._vd.val[0], A_v2, B_v4.val[0]);
+        _accu._vd.val[1] = vfmaq_f64(_accu._vd.val[1], A_v2, B_v4.val[1]);
         // 1
-        A_v8._vd = _mm256_permute_pd(A_palette2, 0b1111);
-        B_v8_0._vd = _mm256_load_pd(B_lane + B_dex + 8);
-        _accu[0]._vf = decx::dsp::CPUK::_cp4_fma_cp4_fp32(A_v8._vf, B_v8_0._vf, _accu[0]._vf);
-        B_v4_1._vd = _mm256_load_pd(B_lane + B_dex + 12);
-        _accu[1]._vf = decx::dsp::CPUK::_cp4_fma_cp4_fp32(A_v8._vf, B_v4_1._vf, _accu[1]._vf);
-        B_dex += 16;
+        A_v2 = vdupq_n_f64(vgetq_lane_f64(A_palette, 1));
+        B_v4 = vld1q_f64_x2(B_lane + B_dex + 4);
+        _accu._vd.val[0] = vfmaq_f64(_accu._vd.val[0], A_v2, B_v4.val[0]);
+        _accu._vd.val[1] = vfmaq_f64(_accu._vd.val[1], A_v2, B_v4.val[1]);
+        B_dex += 8;
     }
 
     if (_linear & 1) {
-        decx::utils::simd::xmm256_reg A_v4;
-        A_v4._vd = _mm256_broadcast_sd(A_line + (_linear / 2) * 2);
-        decx::utils::simd::xmm256_reg B_v4_0;
-        B_v4_0._vd = _mm256_load_pd(B_lane + B_dex);
-        decx::utils::simd::xmm256_reg B_v4_1;
-        B_v4_1._vd = _mm256_load_pd(B_lane + B_dex + 4);
-        _accu[0]._vf = decx::dsp::CPUK::_cp4_fma_cp4_fp32(A_v4._vf, B_v4_0._vf, _accu[0]._vf);
-        _accu[1]._vf = decx::dsp::CPUK::_cp4_fma_cp4_fp32(A_v4._vf, B_v4_1._vf, _accu[1]._vf);
+        float64x2_t A_v2 = vdupq_n_f64(A_line[(_linear / 2) * 2]);
+        float64x2x2_t B_v4 = vld1q_f64_x2(B_lane + B_dex);
+        _accu._vd.val[0] = vfmaq_f64(_accu._vd.val[0], A_v2, B_v4.val[0]);
+        _accu._vd.val[1] = vfmaq_f64(_accu._vd.val[1], A_v2, B_v4.val[1]);
     }
-    _mm256_store_pd(dst, _accu[0]._vd);
-    _mm256_store_pd(dst + 4, _accu[1]._vd);
+
+    vst1q_f64_x2(dst, _accu._vd);
 }
 
 
 
 template <bool _ABC>
 static _THREAD_FUNCTION_ void 
-decx::blas::CPUK::GEMM_cplxf_block_kernel(const double* __restrict    A,
+decx::blas::CPUK::GEMM_fp64_block_kernel(const double* __restrict    A,
                                          const double* __restrict    B, 
                                          double* __restrict          dst,
                                          const uint2                proc_dims_v4,
@@ -215,17 +189,17 @@ decx::blas::CPUK::GEMM_cplxf_block_kernel(const double* __restrict    A,
         A_dex = fmgrL->frag_len * k;
 
         for (uint32_t i = 0; i < proc_dims_v4.y; ++i) {
-            B_dex = fmgrL->frag_len * k * 8;
+            B_dex = fmgrL->frag_len * k * 4;
             dst_dex = i * pitchdst_v1;
             for (uint32_t j = 0; j < proc_dims_v4.x / 2; ++j) {
-                decx::blas::CPUK::GEMM_cplxf_dp_kernel_frag_dual<_ABC>(A + A_dex, B + B_dex, dst + dst_dex, _L_frag,
-                    k == 0, C);
-                B_dex += Llen * 8;
-                dst_dex += 8;
+                decx::blas::CPUK::GEMM_fp64_dp_kernel_frag_dual<_ABC>(A + A_dex, B + B_dex, dst + dst_dex, _L_frag,
+                    k == 0, C + dst_dex);
+                B_dex += Llen * 4;
+                dst_dex += 4;
             }
             if (proc_dims_v4.x % 2) {
-                decx::blas::CPUK::GEMM_cplxf_dp_kernel_frag<_ABC>(A + A_dex, B + B_dex, dst + dst_dex, _L_frag, k == 0,
-                    C);
+                decx::blas::CPUK::GEMM_fp64_dp_kernel_frag<_ABC>(A + A_dex, B + B_dex, dst + dst_dex, _L_frag, k == 0,
+                    C + dst_dex);
             }
             A_dex += pitchA_v1;
         }
@@ -236,7 +210,7 @@ decx::blas::CPUK::GEMM_cplxf_block_kernel(const double* __restrict    A,
 
 template <bool _ABC>
 static _THREAD_FUNCTION_ void 
-decx::blas::CPUK::GEMM_cplxf_kernel(const double* __restrict                  A, 
+decx::blas::CPUK::GEMM_fp64_kernel(const double* __restrict                  A, 
                                    const double* __restrict                  B,
                                    double* __restrict                        dst, 
                                    const decx::blas::GEMM_blocking_config*   config,
@@ -249,9 +223,9 @@ decx::blas::CPUK::GEMM_cplxf_kernel(const double* __restrict                  A,
 
     for (uint32_t i = 0; i < config->_fmgr_W.frag_num; ++i) 
     {
-        B_dex = i * config->_fmgr_W.frag_len * Llen * 4;
+        B_dex = i * config->_fmgr_W.frag_len * Llen * 2;
         A_dex = 0;
-        dst_dex = i * config->_fmgr_W.frag_len * 4;
+        dst_dex = i * config->_fmgr_W.frag_len * 2;
 
         uint2 proc_dims = make_uint2(i < config->_fmgr_W.frag_num - 1 ? 
                                      config->_fmgr_W.frag_len : config->_fmgr_W.last_frag_len,
@@ -259,7 +233,7 @@ decx::blas::CPUK::GEMM_cplxf_kernel(const double* __restrict                  A,
 
         for (uint32_t j = 0; j < config->_fmgr_H.frag_num - 1; ++j) 
         {
-            decx::blas::CPUK::GEMM_cplxf_block_kernel<_ABC>(A + A_dex, B + B_dex, dst + dst_dex,
+            decx::blas::CPUK::GEMM_fp64_block_kernel<_ABC>(A + A_dex, B + B_dex, dst + dst_dex,
                         proc_dims, &config->_fmgr_L, pitchA_v1, Llen, pitchdst_v1, C + dst_dex);
 
             A_dex += config->_fmgr_H.frag_len * pitchA_v1;
@@ -267,9 +241,10 @@ decx::blas::CPUK::GEMM_cplxf_kernel(const double* __restrict                  A,
         }
 
         proc_dims.y = config->_fmgr_H.last_frag_len;
-        decx::blas::CPUK::GEMM_cplxf_block_kernel<_ABC>(A + A_dex, B + B_dex, dst + dst_dex,
+        decx::blas::CPUK::GEMM_fp64_block_kernel<_ABC>(A + A_dex, B + B_dex, dst + dst_dex,
                     proc_dims, &config->_fmgr_L, pitchA_v1, Llen, pitchdst_v1, C + dst_dex);
     }
 }
+
 
 #endif

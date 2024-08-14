@@ -33,10 +33,10 @@
 #include "../GEMM_callers.h"
 #include "../matrix_B_arrange.h"
 #if defined(__x86_64__) || defined(__i386__)
-#include "x86/GEMM_fp32_kernels.h"
+#include "x86/GEMM_fp32_kernels_x86_64.h"
 #endif
 #if defined(__aarch64__) || defined(__arm__)
-#include "arm/GEMM_fp32_kernels.h"
+#include "arm/GEMM_fp32_kernels_aarch64.h"
 #endif
 
 

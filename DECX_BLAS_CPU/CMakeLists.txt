@@ -65,7 +65,7 @@ file(GLOB_RECURSE BP "${DECX_WORLD_ABS_DIR}/srcs/modules/BLAS/Basic_process/exte
 
 # Combine these kernel objects to GEMM_xxx_cpu.lib later
 add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/modules/BLAS/GEMM/CPU/fp32" "${DECX_SUBBUILD_BIN_DIR}/gemm_fp32_cpu")
-# add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/modules/BLAS/GEMM/CPU/fp64" "${DECX_SUBBUILD_BIN_DIR}/gemm_64b_cpu")
+add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/modules/BLAS/GEMM/CPU/fp64" "${DECX_SUBBUILD_BIN_DIR}/gemm_64b_cpu")
 # add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/modules/BLAS/GEMM/CPU/cplxd" "${DECX_SUBBUILD_BIN_DIR}/gemm_cplxd_cpu")
 
 # include common sources
@@ -96,8 +96,8 @@ add_library(DECX_BLAS_CPU SHARED ${GEMM}                ${BP}
                                  ${EXT_CPU_COM_SRCS}    ${FMGR_CPU_COM_SRCS})
 
 
-target_link_libraries(DECX_BLAS_CPU PRIVATE gemm_fp32_cpu)
-                                    # PRIVATE gemm_64b_cpu
+target_link_libraries(DECX_BLAS_CPU PRIVATE gemm_fp32_cpu
+                                    PRIVATE gemm_64b_cpu)
                                     # PRIVATE gemm_cplxd_cpu)
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")

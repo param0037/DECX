@@ -30,6 +30,7 @@
 
 
 #include "../matrix_B_arrange.h"
+#include "../../../../../common/SIMD/intrinsics_ops.h"
 
 
 namespace decx
@@ -53,6 +54,7 @@ namespace blas {
 }
 }
 
+#if defined(__x86_64__) || defined(__i386__)
 
 template <bool _cplxf, uint32_t block_W_v8, uint32_t block_H>
 _THREAD_CALL_ static void decx::blas::CPUK::
@@ -141,10 +143,93 @@ _matrix_B_arrange_64b_block_var(const double* __restrict    src,
     }
 }
 
+#endif
+
+#if defined(__aarch64__) || defined(__arm__)
+
+template <bool _cplxf, uint32_t block_W_v4, uint32_t block_H>
+_THREAD_CALL_ static void decx::blas::CPUK::
+_matrix_B_arrange_64b_block(const double* __restrict    src, 
+                            double* __restrict          dst, 
+                            const uint32_t              pitchsrc_v1,
+                            const uint32_t              Llen)
+{
+    uint64_t dex_src = 0, dex_dst = 0;
+    for (uint32_t i = 0; i < block_H; ++i) 
+    {
+        dex_src = i * pitchsrc_v1;
+        dex_dst = i * 4;
+
+        float64x2x2_t stg;
+        for (uint32_t j = 0; j < block_W_v4; ++j) {
+            if constexpr (_cplxf) {
+                stg = vld2q_f64(src + dex_src);
+            }
+            else {
+                stg = vld1q_f64_x2(src + dex_src);
+            }
+            vst1q_f64_x2(dst + dex_dst, stg);
+
+            dex_src += 4;
+            dex_dst += Llen * 4;
+        }
+    }
+}
+
+
+template <bool _cplxf>
+_THREAD_CALL_ static void decx::blas::CPUK::
+_matrix_B_arrange_64b_block_var(const double* __restrict    src, 
+                             double* __restrict             dst, 
+                             const uint32_t                 pitchsrc_v1,
+                             const uint32_t                 Llen,
+                             const uint2                    proc_dims_v2)
+{
+    uint64_t dex_src = 0, dex_dst = 0;
+    for (uint32_t i = 0; i < proc_dims_v2.y; ++i)
+    {
+        dex_src = i * pitchsrc_v1;
+        dex_dst = i * 4;
+        for (uint32_t j = 0; j < proc_dims_v2.x / 2; ++j) 
+        {
+            float64x2x2_t stg;
+            if constexpr (_cplxf) {
+                stg = vld2q_f64(src + dex_src);
+            }
+            else {
+                stg = vld1q_f64_x2(src + dex_src);
+            }
+            vst1q_f64_x2(dst + dex_dst, stg);
+
+            dex_src += 4;
+            dex_dst += Llen * 4;
+        }
+        if (proc_dims_v2.x & 1) 
+        {
+            decx::utils::simd::xmm256_reg stg;
+            stg._vui.val[1] = veorq_u32(stg._vui.val[1], stg._vui.val[1]);
+
+            if constexpr (_cplxf) {
+                decx::utils::simd::xmm256_reg recv;
+                recv._vd.val[0] = vld1q_f64(src + dex_src);
+                recv._vui.val[1] = veorq_u32(stg._vui.val[1], stg._vui.val[1]);
+                
+                stg._vd.val[0] = vcombine_f64(vget_low_f64(recv._vd.val[0]), vget_low_f64(recv._vd.val[1]));
+                stg._vd.val[1] = vcombine_f64(vget_high_f64(recv._vd.val[0]), vget_high_f64(recv._vd.val[1]));
+            }
+            else {
+                stg._vd = vld1q_f64_x2(src + dex_src);
+            }
+            vst1q_f64_x2(dst + dex_dst, stg._vd);
+        }
+    }
+}
+#endif
+
 
 // e.g.
 // block_W = 16 (minimal) floats = 64 byte = cache line size
-template <bool _cplxf, uint32_t block_W_v8, uint32_t block_H>
+template <bool _cplxf, uint32_t block_W_v, uint32_t block_H>
 _THREAD_FUNCTION_ static void decx::blas::CPUK::
 _matrix_B_arrange_64b_exec(const double* __restrict src,            // pointer of original matrix B (input)
                             double* __restrict       dst,            // pointer of arranged matrix B (output)
@@ -152,8 +237,16 @@ _matrix_B_arrange_64b_exec(const double* __restrict src,            // pointer o
                             const uint32_t          pitchsrc_v1,    // pitch of original matrix B
                             const uint32_t          Llen)           // Length of L dimension = # of lanes in the width of arranged matrix B
 {
+#if defined(__x86_64__) || defined(__i386__)
+    constexpr uint32_t _alignment = 4;
+#endif
+#if defined(__aarch64__) || defined(__arm__)
+    constexpr uint32_t _alignment = 2;
+#endif
+    constexpr uint32_t _alignment_x2 = _alignment * 2;
+
     uint64_t dex_src = 0, dex_dst = 0;
-    constexpr uint32_t block_W_v4 = block_W_v8 * 2;
+    constexpr uint32_t block_W_v4 = block_W_v * 2;
 
     const uint32_t ptime_w = proc_dims_v4.x / block_W_v4;
     const uint32_t _LW = proc_dims_v4.x % block_W_v4;
@@ -164,14 +257,14 @@ _matrix_B_arrange_64b_exec(const double* __restrict src,            // pointer o
     for (uint32_t i = 0; i < ptime_h; ++i) 
     {
         dex_src = i * pitchsrc_v1 * block_H;
-        dex_dst = i * block_H * 8;
+        dex_dst = i * block_H * _alignment_x2;
         if (i < ptime_h - 1 || _LH == 0) 
         {
             for (uint32_t j = 0; j < ptime_w; ++j) {
-                decx::blas::CPUK::_matrix_B_arrange_64b_block<_cplxf, block_W_v8, block_H>(src + dex_src,
+                decx::blas::CPUK::_matrix_B_arrange_64b_block<_cplxf, block_W_v, block_H>(src + dex_src,
                     dst + dex_dst, pitchsrc_v1, Llen);
-                dex_src += block_W_v4 * 4;
-                dex_dst += Llen * block_W_v8 * 8;
+                dex_src += block_W_v4 * _alignment;
+                dex_dst += Llen * block_W_v * _alignment_x2;
             }
             if (_LW) {
                 decx::blas::CPUK::_matrix_B_arrange_64b_block_var<_cplxf>(src + dex_src,
@@ -182,8 +275,8 @@ _matrix_B_arrange_64b_exec(const double* __restrict src,            // pointer o
             for (uint32_t j = 0; j < ptime_w; ++j) {
                 decx::blas::CPUK::_matrix_B_arrange_64b_block_var<_cplxf>(src + dex_src,
                     dst + dex_dst, pitchsrc_v1, Llen, make_uint2(block_W_v4, _LH));
-                dex_src += block_W_v4 * 4;
-                dex_dst += Llen * block_W_v8 * 8;
+                dex_src += block_W_v4 * _alignment;
+                dex_dst += Llen * block_W_v * _alignment_x2;
             }
             if (_LW) {
                 decx::blas::CPUK::_matrix_B_arrange_64b_block_var<_cplxf>(src + dex_src,
@@ -194,6 +287,7 @@ _matrix_B_arrange_64b_exec(const double* __restrict src,            // pointer o
 }
 
 
+
 template <bool _cplxf>
 void decx::blas::matrix_B_arrange_64b(const double*                     src, 
                                       double*                           dst, 
@@ -202,6 +296,14 @@ void decx::blas::matrix_B_arrange_64b(const double*                     src,
                                       const decx::utils::frag_manager*  _fmgr_WH,   // Aligned to 8 on width
                                       decx::utils::_thr_2D*             t2D)
 {
+#if defined(__x86_64__) || defined(__i386__)
+    constexpr uint32_t _alignment = 4;
+#endif
+#if defined(__aarch64__) || defined(__arm__)
+    constexpr uint32_t _alignment = 2;
+#endif
+    constexpr uint32_t _alignment_x2 = _alignment * 2;
+
     const double* loc_src = NULL;
     double* loc_dst = NULL;
 
@@ -213,14 +315,14 @@ void decx::blas::matrix_B_arrange_64b(const double*                     src,
                                                      : _fmgr_WH[1].last_frag_len);
 
         loc_src = src + i * _fmgr_WH[1].frag_len * pitchsrc_v1;
-        loc_dst = dst + i * _fmgr_WH[1].frag_len * 8;
+        loc_dst = dst + i * _fmgr_WH[1].frag_len * _alignment_x2;
         for (uint32_t j = 0; j < t2D->thread_w - 1; ++j) 
         {
             t2D->_async_thread[i * t2D->thread_w + j] = decx::cpu::register_task_default(
                 decx::blas::CPUK::_matrix_B_arrange_64b_exec<_cplxf, 2, 16>,
                 loc_src, loc_dst, proc_dims, pitchsrc_v1, Llen);
-            loc_src += _fmgr_WH[0].frag_len * 4;
-            loc_dst += _fmgr_WH[0].frag_len * Llen * 4;
+            loc_src += _fmgr_WH[0].frag_len * _alignment;
+            loc_dst += _fmgr_WH[0].frag_len * Llen * _alignment;
         }
         const uint32_t _LW = _fmgr_WH[0].is_left ? _fmgr_WH[0].frag_left_over : _fmgr_WH[0].frag_len;
 

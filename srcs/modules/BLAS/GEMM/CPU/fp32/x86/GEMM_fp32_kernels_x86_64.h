@@ -29,11 +29,10 @@
 */
 
 
-#ifndef _GEMM_FP32_KERNEL_AARCH64_H_
-#define _GEMM_FP32_KERNEL_AARCH64_H_
+#ifndef _GEMM_FP32_KERNEL_X86_64_H_
+#define _GEMM_FP32_KERNEL_X86_64_H_
 
 #include "../../../../../../common/basic.h"
-#include "../../../../../../common/SIMD/intrinsics_ops.h"
 
 
 namespace decx
@@ -79,52 +78,53 @@ GEMM_fp32_dp_kernel_frag(const float* __restrict    A_line,
                          const float* __restrict    C)
 {
     uint32_t B_dex = 0;
-    decx::utils::simd::xmm128_reg _accu;
+    __m256 _accu;
     // first && !ABC: setzero
     // !first && !ABC: load dst
     // first && ABC: load C
     // !first && ABC: load dst
     if (!_first) { 
-        _accu._vui = veorq_u32(_accu._vui, _accu._vui);
+        _accu = _mm256_load_ps(dst); 
     }
     else {
-        if constexpr (_ABC) { _accu._vf = vld1q_f32(C); }
-        else { _accu._vui = veorq_u32(_accu._vui, _accu._vui); }
+        if constexpr (_ABC) { _accu = _mm256_load_ps(C); }
+        else { _accu = _mm256_setzero_ps(); }
     }
 
     for (uint32_t i = 0; i < _linear / 4; ++i) 
     {
-        float32x4_t A_palette = vld1q_f32(A_line + i * 4);
+        __m128 A_palette = _mm_load_ps(A_line + i * 4);
+        __m256 A_palette2 = _mm256_castps128_ps256(A_palette);
+        A_palette2 = _mm256_insertf128_ps(A_palette2, A_palette, 1);
 
-        float32x4_t B_v4 = vld1q_f32(B_lane + B_dex);
         // 0
-        float32x4_t A_v4 = vdupq_n_f32(vgetq_lane_f32(A_palette, 0));
-        _accu._vf = vfmaq_f32(_accu._vf, A_v4, B_v4);
+        __m256 A_v8 = _mm256_permute_ps(A_palette2, 0b00000000);
+        __m256 B_v8 = _mm256_load_ps(B_lane + B_dex);
+        _accu = _mm256_fmadd_ps(A_v8, B_v8, _accu);
         // 1
-        A_v4 = vdupq_n_f32(vgetq_lane_f32(A_palette, 1));
-        B_v4 = vld1q_f32(B_lane + B_dex + 8);
-        _accu._vf = vfmaq_f32(_accu._vf, A_v4, B_v4);
+        A_v8 = _mm256_permute_ps(A_palette2, 0b01010101);
+        B_v8 = _mm256_load_ps(B_lane + B_dex + 16);
+        _accu = _mm256_fmadd_ps(A_v8, B_v8, _accu);
         // 2
-        A_v4 = vdupq_n_f32(vgetq_lane_f32(A_palette, 2));
-        B_v4 = vld1q_f32(B_lane + B_dex + 16);
-        _accu._vf = vfmaq_f32(_accu._vf, A_v4, B_v4);
+        A_v8 = _mm256_permute_ps(A_palette2, 0b10101010);
+        B_v8 = _mm256_load_ps(B_lane + B_dex + 32);
+        _accu = _mm256_fmadd_ps(A_v8, B_v8, _accu);
         // 3
-        A_v4 = vdupq_n_f32(vgetq_lane_f32(A_palette, 3));
-        B_v4 = vld1q_f32(B_lane + B_dex + 24);
-        _accu._vf = vfmaq_f32(_accu._vf, A_v4, B_v4);
-        B_dex += 32;
+        A_v8 = _mm256_permute_ps(A_palette2, 0b11111111);
+        B_v8 = _mm256_load_ps(B_lane + B_dex + 48);
+        _accu = _mm256_fmadd_ps(A_v8, B_v8, _accu);
+        B_dex += 64;
     }
-
     const uint32_t _linear_L = _linear % 4;
     if (_linear_L) {
         for (uint32_t i = 0; i < _linear_L; ++i) {
-            float32x4_t A_v4 = vdupq_n_f32(A_line[(_linear / 4) * 4 + i]);
-            float32x4_t B_v4 = vld1q_f32(B_lane + B_dex);
-            _accu._vf = vfmaq_f32(_accu._vf, A_v4, B_v4);
-            B_dex += 8;
+            __m256 A_v8 = _mm256_broadcast_ss(A_line + (_linear / 4) * 4 + i);
+            __m256 B_v8 = _mm256_load_ps(B_lane + B_dex);
+            _accu = _mm256_fmadd_ps(A_v8, B_v8, _accu);
+            B_dex += 16;
         }
     }
-    vst1q_f32(dst, _accu._vf);
+    _mm256_store_ps(dst, _accu);
 }
 
 
@@ -139,60 +139,68 @@ GEMM_fp32_dp_kernel_frag_dual(const float* __restrict A_line,
                               const float* __restrict C)
 {
     uint32_t B_dex = 0;
-    
-    decx::utils::simd::xmm256_reg _accu;
-
+    __m256 _accu[2];
     if (!_first) {
-        _accu._vf = vld1q_f32_x2(dst);
+        _accu[0] = _mm256_load_ps(dst);
+        _accu[1] = _mm256_load_ps(dst + 8);
     }
     else {
-        if constexpr (_ABC) {
-            _accu._vf = vld1q_f32_x2(C);
+        if constexpr (_ABC) { 
+            _accu[0] = _mm256_load_ps(C);
+            _accu[1] = _mm256_load_ps(C + 8);
         }
         else { 
-            _accu._vui.val[0] = veorq_u32(_accu._vui.val[0], _accu._vui.val[0]);
-            _accu._vui.val[1] = veorq_u32(_accu._vui.val[1], _accu._vui.val[1]);
+            _accu[0] = _mm256_setzero_ps();
+            _accu[1] = _mm256_setzero_ps();
         }
     }
 
     for (uint32_t i = 0; i < _linear / 4; ++i) 
     {
-        float32x4_t A_palette = vld1q_f32(A_line + i * 4);
+        __m128 A_palette = _mm_load_ps(A_line + i * 4);
+        __m256 A_palette2 = _mm256_castps128_ps256(A_palette);
+        A_palette2 = _mm256_insertf128_ps(A_palette2, A_palette, 1);
 
         // 0
-        float32x4x2_t B_v8 = vld1q_f32_x2(B_lane + B_dex);
-        float32x4_t A_v4 = vdupq_n_f32(vgetq_lane_f32(A_palette, 0));
-        _accu._vf.val[0] = vfmaq_f32(_accu._vf.val[0], A_v4, B_v8.val[0]);
-        _accu._vf.val[1] = vfmaq_f32(_accu._vf.val[1], A_v4, B_v8.val[1]);
+        __m256 A_v8 = _mm256_permute_ps(A_palette2, 0b00000000);
+        __m256 B_v8_0 = _mm256_load_ps(B_lane + B_dex);
+        _accu[0] = _mm256_fmadd_ps(A_v8, B_v8_0, _accu[0]);
+        __m256 B_v8_1 = _mm256_load_ps(B_lane + B_dex + 8);
+        _accu[1] = _mm256_fmadd_ps(A_v8, B_v8_1, _accu[1]);
         // 1
-        A_v4 = vdupq_n_f32(vgetq_lane_f32(A_palette, 1));
-        B_v8 = vld1q_f32_x2(B_lane + B_dex + 8);
-        _accu._vf.val[0] = vfmaq_f32(_accu._vf.val[0], A_v4, B_v8.val[0]);
-        _accu._vf.val[1] = vfmaq_f32(_accu._vf.val[1], A_v4, B_v8.val[1]);
+        A_v8 = _mm256_permute_ps(A_palette2, 0b01010101);
+        B_v8_0 = _mm256_load_ps(B_lane + B_dex + 16);
+        _accu[0] = _mm256_fmadd_ps(A_v8, B_v8_0, _accu[0]);
+        B_v8_1 = _mm256_load_ps(B_lane + B_dex + 24);
+        _accu[1] = _mm256_fmadd_ps(A_v8, B_v8_1, _accu[1]);
         // 2
-        A_v4 = vdupq_n_f32(vgetq_lane_f32(A_palette, 2));
-        B_v8 = vld1q_f32_x2(B_lane + B_dex + 16);
-        _accu._vf.val[0] = vfmaq_f32(_accu._vf.val[0], A_v4, B_v8.val[0]);
-        _accu._vf.val[1] = vfmaq_f32(_accu._vf.val[1], A_v4, B_v8.val[1]);
+        A_v8 = _mm256_permute_ps(A_palette2, 0b10101010);
+        B_v8_0 = _mm256_load_ps(B_lane + B_dex + 32);
+        _accu[0] = _mm256_fmadd_ps(A_v8, B_v8_0, _accu[0]);
+        B_v8_1 = _mm256_load_ps(B_lane + B_dex + 40);
+        _accu[1] = _mm256_fmadd_ps(A_v8, B_v8_1, _accu[1]);
         // 3
-        A_v4 = vdupq_n_f32(vgetq_lane_f32(A_palette, 3));
-        B_v8 = vld1q_f32_x2(B_lane + B_dex + 24);
-        _accu._vf.val[0] = vfmaq_f32(_accu._vf.val[0], A_v4, B_v8.val[0]);
-        _accu._vf.val[1] = vfmaq_f32(_accu._vf.val[1], A_v4, B_v8.val[1]);
+        A_v8 = _mm256_permute_ps(A_palette2, 0b11111111);
+        B_v8_0 = _mm256_load_ps(B_lane + B_dex + 48);
+        _accu[0] = _mm256_fmadd_ps(A_v8, B_v8_0, _accu[0]);
+        B_v8_1 = _mm256_load_ps(B_lane + B_dex + 56);
+        _accu[1] = _mm256_fmadd_ps(A_v8, B_v8_1, _accu[1]);
 
-        B_dex += 32;
+        B_dex += 64;
     }
     const uint32_t _linear_L = _linear % 4;
     if (_linear_L) {
         for (uint32_t i = 0; i < _linear_L; ++i) {
-            float32x4_t A_v8 = vdupq_n_f32(A_line[(_linear / 4) * 4 + i]);
-            float32x4x2_t B_v8 = vld1q_f32_x2(B_lane + B_dex);
-            _accu._vf.val[0] = vfmaq_f32(_accu._vf.val[0], A_v8, B_v8.val[0]);
-            _accu._vf.val[1] = vfmaq_f32(_accu._vf.val[1], A_v8, B_v8.val[1]);
-            B_dex += 8;
+            __m256 A_v8 = _mm256_broadcast_ss(A_line + (_linear / 4) * 4 + i);
+            __m256 B_v8_0 = _mm256_load_ps(B_lane + B_dex);
+            __m256 B_v8_1 = _mm256_load_ps(B_lane + B_dex + 8);
+            _accu[0] = _mm256_fmadd_ps(A_v8, B_v8_0, _accu[0]);
+            _accu[1] = _mm256_fmadd_ps(A_v8, B_v8_1, _accu[1]);
+            B_dex += 16;
         }
     }
-    vst1q_f32_x2(dst, _accu._vf);
+    _mm256_store_ps(dst, _accu[0]);
+    _mm256_store_ps(dst + 8, _accu[1]);
 }
 
 
@@ -202,7 +210,7 @@ static _THREAD_FUNCTION_ void
 decx::blas::CPUK::GEMM_fp32_block_kernel(const float* __restrict    A,
                                          const float* __restrict    B, 
                                          float* __restrict          dst,
-                                         const uint2                proc_dims_v4,
+                                         const uint2                proc_dims_v8,
                                          const decx::utils::frag_manager* fmgrL,
                                          const uint32_t             pitchA_v1, 
                                          const uint32_t             Llen, 
@@ -216,16 +224,16 @@ decx::blas::CPUK::GEMM_fp32_block_kernel(const float* __restrict    A,
         const uint32_t _L_frag = k == fmgrL->frag_num - 1 ? fmgrL->last_frag_len : fmgrL->frag_len;
         A_dex = fmgrL->frag_len * k;
 
-        for (uint32_t i = 0; i < proc_dims_v4.y; ++i) {
-            B_dex = fmgrL->frag_len * k * 8;
+        for (uint32_t i = 0; i < proc_dims_v8.y; ++i) {
+            B_dex = fmgrL->frag_len * k * 16;
             dst_dex = i * pitchdst_v1;
-            for (uint32_t j = 0; j < proc_dims_v4.x / 2; ++j) {
+            for (uint32_t j = 0; j < proc_dims_v8.x / 2; ++j) {
                 decx::blas::CPUK::GEMM_fp32_dp_kernel_frag_dual<_ABC>(A + A_dex, B + B_dex, dst + dst_dex, _L_frag,
                     k == 0, C);
-                B_dex += Llen * 8;
-                dst_dex += 8;
+                B_dex += Llen * 16;
+                dst_dex += 16;
             }
-            if (proc_dims_v4.x % 2) {
+            if (proc_dims_v8.x % 2) {
                 decx::blas::CPUK::GEMM_fp32_dp_kernel_frag<_ABC>(A + A_dex, B + B_dex, dst + dst_dex, _L_frag, k == 0,
                     C);
             }
@@ -251,9 +259,9 @@ decx::blas::CPUK::GEMM_fp32_kernel(const float* __restrict                  A,
 
     for (uint32_t i = 0; i < config->_fmgr_W.frag_num; ++i) 
     {
-        B_dex = i * config->_fmgr_W.frag_len * Llen * 4;
+        B_dex = i * config->_fmgr_W.frag_len * Llen * 8;
         A_dex = 0;
-        dst_dex = i * config->_fmgr_W.frag_len * 4;
+        dst_dex = i * config->_fmgr_W.frag_len * 8;
 
         uint2 proc_dims = make_uint2(i < config->_fmgr_W.frag_num - 1 ? 
                                      config->_fmgr_W.frag_len : config->_fmgr_W.last_frag_len,
