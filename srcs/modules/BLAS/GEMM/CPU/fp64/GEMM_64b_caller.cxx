@@ -38,7 +38,7 @@
 #endif
 #if defined(__aarch64__) || defined(__arm__)
 #include "arm/GEMM_fp64_kernels_aarch64.h"
-
+#include "arm/GEMM_cplxf_kernels_aarch64.h"
 #endif
 
 
@@ -67,7 +67,7 @@ decx::blas::GEMM_64b_caller(const double* A,                            const do
     // Pointer of the kernels
     decx::blas::CPUK::GEMM_64b_kernel _kernel_ptr = NULL;
     if constexpr (_cplxf) {
-        //_kernel_ptr = decx::blas::CPUK::GEMM_cplxf_kernel<_ABC>;
+        _kernel_ptr = decx::blas::CPUK::GEMM_cplxf_kernel<_ABC>;
     }
     else {
         _kernel_ptr = decx::blas::CPUK::GEMM_fp64_kernel<_ABC>;

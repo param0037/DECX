@@ -93,6 +93,8 @@ namespace simd
         double      _arrd[4];
         uint64_t    _arrull[4];
 
+        decx::utils::simd::xmm128_reg _vmm128[2];
+
 #if defined(__x86_64__) || defined(__i386__)
         __m256      _vf;
         __m256d     _vd;
@@ -172,9 +174,20 @@ namespace simd
     * @param __proc : the pointer of the value to be processed
     */
     inline __m256 _mm256_shift2_L2H(__m256 __proc);
+#endif
 
-#elif defined(__aarch64__) || defined(__arm__)
-            
+#if defined(__aarch64__) || defined(__arm__)
+    inline float32x4_t vswap_middle_f32(float32x4_t __src)
+    {
+        return vzip1q_f32(__src, vextq_f32(__src, __src, 2));
+    }
+
+    
+    inline decx::utils::simd::xmm128_reg& vdupq_n_zeros(decx::utils::simd::xmm128_reg& reg)
+    {
+        reg._vui = veorq_u32(reg._vui, reg._vui);
+        return reg;
+    }
 
 #endif  // #if defined(__x86_x64__) || defined(__i386__)
 
