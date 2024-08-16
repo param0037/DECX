@@ -35,3 +35,5 @@ Clone the project, enter the root path of the project. Then run the build script
 
 ## 3. Android for ARM64 (aarch64)
 Follow the same steps described in section 2 before running the script. When performing cross compilation for Android ARM64, replace the directory where your NDK is installed for -DCMAKE_TOOLCHAIN_FILE at line 10 of config_on_android.sh. Run "config_on_android.sh" and then run "build_on_android.sh". Please notice that only DECX_core_CPU supports aarch64. Additionally, its building system is just a prototype. Supports for aarch64 will be updated later.
+
+Now buiding for android is only supported by DECX_core_CPU and DECX_BLAS_CPU. By changing the built module, change the cd to the path of the built module (i.e. \${project_path}/DECX_core_CPU) on file ${project_dir}/config_on_android.sh. According to the dependency, you need to first build DECX_core_CPU and then DECX_BLAS_CPU, manually. Such process aren't included in the main building script yet, but will be soon.
