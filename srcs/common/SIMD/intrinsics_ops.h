@@ -69,6 +69,10 @@ namespace simd
         __m128      _vf;
         __m128d     _vd;
         __m128i     _vi;
+
+        inline void zeros() {
+            this->_vi = _mm_xor_si128(this->_vi, this->_vi);
+        }
 #endif
 #if defined(__aarch64__) || defined(__arm__)
         float32x4_t _vf;
@@ -78,6 +82,10 @@ namespace simd
         int8x16_t   _vuc;
         int16x8_t   _vs;
         uint8x16_t  _vus;
+
+        inline void zeros(){
+            this->_vui = veorq_u32(this->_vui, this->_vui);
+        }
 #endif
         float       _arrf[4];
         int32_t     _arri[4];
@@ -102,18 +110,26 @@ namespace simd
 
         __m128 _vf2[2];
         __m128d _vd2[2];
-#endif
-        /*__inline float read_fp32_0() {
+
+
+        inline float read_fp32_0() {
             return _mm256_cvtss_f32(this->_vf);
         }
 
-        __inline double read_fp64_0() {
+        inline double read_fp64_0() {
             return _mm256_cvtsd_f64(this->_vd);
         }
 
-        __inline float read_fp32_123(const int idx) {
+        inline float read_fp32_123(const int idx) {
             return _mm_extract_ps(_mm256_castps256_ps128(this->_vf), idx);
-        }*/
+        }
+
+
+        inline void zeros(){
+            this->_vi = _mm256_xor_si256(this->_vi, this->_vi);
+        }
+#endif
+        
 
 #if defined(__aarch64__) || defined(__arm__)
         float32x4x2_t   _vf;
@@ -122,6 +138,12 @@ namespace simd
         uint8x16x2_t    _vuc;
         uint32x4x2_t    _vui;
         uint16x8x2_t    _vus;
+
+        
+        inline void zeros(){
+            this->_vui.val[0] = veorq_u32(this->_vui.val[0], this->_vui.val[0]);
+            this->_vui.val[1] = veorq_u32(this->_vui.val[1], this->_vui.val[1]);
+        }
 #endif
     }_mmv256;
 

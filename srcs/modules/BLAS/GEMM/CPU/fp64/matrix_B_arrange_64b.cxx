@@ -145,6 +145,7 @@ _matrix_B_arrange_64b_block_var(const double* __restrict    src,
 
 #endif
 
+
 #if defined(__aarch64__) || defined(__arm__)
 
 template <bool _cplxf, uint32_t block_W_v4, uint32_t block_H>
@@ -210,17 +211,13 @@ _matrix_B_arrange_64b_block_var(const double* __restrict    src,
             stg._vui.val[1] = veorq_u32(stg._vui.val[1], stg._vui.val[1]);
 
             if constexpr (_cplxf) {
-                decx::utils::simd::xmm256_reg recv;
-                recv._vd.val[0] = vld1q_f64(src + dex_src);
-                recv._vui.val[1] = veorq_u32(stg._vui.val[1], stg._vui.val[1]);
-                
-                stg._vd.val[0] = vcombine_f64(vget_low_f64(recv._vd.val[0]), vget_low_f64(recv._vd.val[1]));
-                stg._vd.val[1] = vcombine_f64(vget_high_f64(recv._vd.val[0]), vget_high_f64(recv._vd.val[1]));
+                float64x2_t recv = vld1q_f64(src + dex_src);
+                vst1q_f64(dst + dex_dst, recv);
             }
             else {
                 stg._vd = vld1q_f64_x2(src + dex_src);
+                vst1q_f64_x2(dst + dex_dst, stg._vd);
             }
-            vst1q_f64_x2(dst + dex_dst, stg._vd);
         }
     }
 }
@@ -276,7 +273,7 @@ _matrix_B_arrange_64b_exec(const double* __restrict src,            // pointer o
                 decx::blas::CPUK::_matrix_B_arrange_64b_block_var<_cplxf>(src + dex_src,
                     dst + dex_dst, pitchsrc_v1, Llen, make_uint2(block_W_v4, _LH));
                 dex_src += block_W_v4 * _alignment;
-                dex_dst += Llen * block_W_v * _alignment_x2;
+                dex_dst += Llen * block_W_v4 * _alignment;
             }
             if (_LW) {
                 decx::blas::CPUK::_matrix_B_arrange_64b_block_var<_cplxf>(src + dex_src,

@@ -52,9 +52,6 @@ namespace dsp{
             rr_ii._vui = veorq_u32(rr_ii._vui, vreinterpretq_u64_u32(_sign_inv));      // Invert the sign of imaginary parts
 
             return vpaddq_f32(rr_ii._vf, ri_ir);
-            //float32x4_t _res_vec = vpaddq_f32(rr_ii._vf, ri_ir);
-            // R1, R2, I1, I2 -> R1, I1, R2
-            //return vzip1q_f32(_res_vec, vextq_f32(_res_vec, _res_vec, 2));
         }
     }
 }
@@ -185,177 +182,121 @@ GEMM_cplxf_dp_kernel_strassen1x2(const double* __restrict A_line,   const double
 
 
 
-// template <bool _ABC>
-// static _THREAD_CALL_ void decx::blas::CPUK::
-// GEMM_cplxf_dp_kernel_strassen2x1(const double* __restrict A_line,       const double* __restrict B_lane,
-//                                  double* __restrict dst,                const uint32_t _linear,
-//                                  const uint32_t pitchA_v1,              const uint32_t pitchdst_v1,            
-//                                  const bool _first,                     const double* __restrict C)
-// {
-//     uint32_t B_dex = 0;
-//     decx::utils::simd::xmm128_reg _accu[4];
-//     const uint32_t _L_v2 = decx::utils::fast_uint_ceil2<uint32_t>(_linear);
+template <bool _ABC>
+static _THREAD_CALL_ void decx::blas::CPUK::
+GEMM_cplxf_dp_kernel_strassen2x1(const double* __restrict A_line,       const double* __restrict B_lane,
+                                 double* __restrict dst,                const uint32_t _linear,
+                                 const uint32_t pitchA_v1,              const uint32_t pitchdst_v1,            
+                                 const bool _first,                     const double* __restrict C)
+{
+    uint32_t B_dex = 0;
+    decx::utils::simd::xmm128_reg _accu[2];
+    const uint32_t _L_v2 = decx::utils::fast_uint_ceil2<uint32_t>(_linear);
 
-//     if (!_first) {
-//         _accu[0]._vd = _mm_load_pd(dst);                 _accu[1]._vd = _mm_load_pd(dst + 2);
-//         _accu[2]._vd = _mm_load_pd(dst + pitchdst_v1);   _accu[3]._vd = _mm_load_pd(dst + pitchdst_v1 + 2);
-//     }
-//     else {
-//         if constexpr (_ABC) {
-//             /**
-//             * Since matrix C is layouted as normal, in Strassen's Algorithm for avx2 (4x cplxf),
-//             * the data has to be rearranged to the same form (layout) as that in dst (and _accu registers).
-//             */
-//             // First row
-//             __m256d recv = _mm256_load_pd(C);
-//             recv = _mm256_permute4x64_pd(recv, 0b11011000);
-//             _accu[0]._vd = _mm256_castpd256_pd128(recv); _accu[1]._vd = _mm256_extractf128_pd(recv, 1);
-//             // Second row
-//             recv = _mm256_load_pd(C + pitchdst_v1);
-//             recv = _mm256_permute4x64_pd(recv, 0b11011000);
-//             _accu[2]._vd = _mm256_castpd256_pd128(recv); _accu[3]._vd = _mm256_extractf128_pd(recv, 1);
-//         }
-//         else {
-//             _accu[0]._vd = _mm_setzero_pd();             _accu[1]._vd = _mm_setzero_pd();
-//             _accu[2]._vd = _mm_setzero_pd();             _accu[3]._vd = _mm_setzero_pd();
-//         }
-//     }
+    if (!_first) {
+        _accu[0]._vd = vld1q_f64(dst);
+        _accu[1]._vd = vld1q_f64(dst + pitchdst_v1);
+    }
+    else {
+        if constexpr (_ABC) {
+            
+        }
+        else {
+            _accu[0] = decx::utils::simd::vdupq_n_zeros(_accu[0]);
+            _accu[1] = decx::utils::simd::vdupq_n_zeros(_accu[1]);
+        }
+    }
 
-//     /**
-//     * The pitch of matrix A allows access of data where row address is width + 1 
-//     * if width is not aligned to 4 in de::CPf datatype.
-//     */
-//     for (uint32_t i = 0; i < _L_v2; ++i)
-//     {
-//         __m128d A_row0 = _mm_load_pd(A_line + i * 2);
-//         __m128d A_row1 = _mm_load_pd(A_line + i * 2 + pitchA_v1);
+    /**
+    * The pitch of matrix A allows access of data where row address is width + 1 
+    * if width is not aligned to 4 in de::CPf datatype.
+    */
+    for (uint32_t i = 0; i < _L_v2; ++i)
+    {
+        float32x4_t A_row0 = vreinterpretq_f64_f32(vld1q_f64(A_line + i * 2));
+        float32x4_t A_row1 = vreinterpretq_f64_f32(vld1q_f64(A_line + i * 2 + pitchA_v1));
 
-//         __m128 A11 = _mm_castpd_ps(_mm_permute_pd(A_row0, 0b00));
-//         __m128 A12 = _mm_castpd_ps(_mm_permute_pd(A_row0, 0b11));
-//         __m128 A21 = _mm_castpd_ps(_mm_permute_pd(A_row1, 0b00));
-//         __m128 A22 = _mm_castpd_ps(_mm_permute_pd(A_row1, 0b11));
+        float32x4_t A11 = vcombine_f32(vget_low_f32(A_row0), vget_low_f32(A_row0));
+        decx::utils::simd::xmm128_reg A12;
+        A12._vf = vcombine_f32(vget_high_f32(A_row0), vget_high_f32(A_row0));
+        float32x4_t A21 = vcombine_f32(vget_low_f32(A_row1), vget_low_f32(A_row1));
+        decx::utils::simd::xmm128_reg A22;
+        A22._vf = vcombine_f32(vget_high_f32(A_row1), vget_high_f32(A_row1));
 
-//         if ((i == _L_v2 - 1) && (_linear & 1)) {
-//             A12 = _mm_setzero_ps();
-//             A22 = _mm_setzero_ps();
-//         }
+        if ((i == _L_v2 - 1) && (_linear & 1)) {
+            A12.zeros();
+            A22.zeros();
+        }
 
-//         __m128 B1 = _mm_castpd_ps(_mm_load_pd(B_lane + B_dex));
-//         __m128 B2 = _mm_castpd_ps(_mm_load_pd(B_lane + B_dex + 10));
+        float32x4_t B11 = vreinterpretq_f64_f32(vld1q_f64(B_lane + B_dex));
+        float32x4_t B21 = vreinterpretq_f64_f32(vld1q_f64(B_lane + B_dex + 4));
 
-//         __m128 tmp = decx::dsp::CPUK::_cp2_mul_cp2_fp32(_mm_add_ps(B1, B2),
-//                                                         _mm_add_ps(A11, A22));   // M1
-//         _accu[0]._vf = _mm_add_ps(_accu[0]._vf, tmp);        // C11 += M1
-//         _accu[3]._vf = _mm_add_ps(_accu[3]._vf, tmp);        // C22 += M1
+        _accu[0]._vf = vaddq_f32(_accu[0]._vf, decx::dsp::CPUK::_cp2_mul_cp2_fp32_unshuffled(A11, B11));
+        _accu[0]._vf = vaddq_f32(_accu[0]._vf, decx::dsp::CPUK::_cp2_mul_cp2_fp32_unshuffled(A12._vf, B21));
 
-//         tmp = decx::dsp::CPUK::_cp2_mul_cp2_fp32(B1, _mm_add_ps(A21, A22));      // M2
-//         _accu[2]._vf = _mm_add_ps(_accu[2]._vf, tmp);        // C21 += M2
-//         _accu[3]._vf = _mm_sub_ps(_accu[3]._vf, tmp);        // C22 -= M2
+        _accu[1]._vf = vaddq_f32(_accu[1]._vf, decx::dsp::CPUK::_cp2_mul_cp2_fp32_unshuffled(A21, B11));
+        _accu[1]._vf = vaddq_f32(_accu[1]._vf, decx::dsp::CPUK::_cp2_mul_cp2_fp32_unshuffled(A22._vf, B21));
 
-//         B1 = _mm_castpd_ps(_mm_load_pd(B_lane + B_dex + 8));      // B21
-//         tmp = decx::dsp::CPUK::_cp2_mul_cp2_fp32(A22, _mm_sub_ps(B1,
-//                 _mm_castpd_ps(_mm_load_pd(B_lane + B_dex))));                     // M4
-//         _accu[0]._vf = _mm_add_ps(_accu[0]._vf, tmp);        // C21 += M4
-//         _accu[2]._vf = _mm_add_ps(_accu[2]._vf, tmp);        // C22 += M4
+        B_dex += 8;
+    }
 
-//         tmp = decx::dsp::CPUK::_cp2_mul_cp2_fp32(_mm_add_ps(B1, B2),
-//                 _mm_sub_ps(A12, A22));                                               // M7
-//         _accu[0]._vf = _mm_add_ps(_accu[0]._vf, tmp);        // C11 += M7
-
-//         B1 = _mm_castpd_ps(_mm_load_pd(B_lane + B_dex + 2));      // B12
-//         tmp = decx::dsp::CPUK::_cp2_mul_cp2_fp32(A11, _mm_sub_ps(B1, B2));       // M3
-//         _accu[1]._vf = _mm_add_ps(_accu[1]._vf, tmp);        // C12 += M3
-//         _accu[3]._vf = _mm_add_ps(_accu[3]._vf, tmp);        // C22 += M3
-
-//         tmp = decx::dsp::CPUK::_cp2_mul_cp2_fp32(_mm_add_ps(A11, A12), B2);      // M5
-//         _accu[0]._vf = _mm_sub_ps(_accu[0]._vf, tmp);        // C11 -= M5
-//         _accu[1]._vf = _mm_add_ps(_accu[1]._vf, tmp);        // C12 += M5
-
-//         B2 = _mm_castpd_ps(_mm_load_pd(B_lane + B_dex));          // B11
-//         tmp = decx::dsp::CPUK::_cp2_mul_cp2_fp32(_mm_add_ps(B2, B1),
-//                 _mm_sub_ps(A21, A11));                                               // M6
-//         _accu[3]._vf = _mm_add_ps(_accu[3]._vf, tmp);        // C22 += M6
-
-//         B_dex += 16;
-//     }
-
-//     _mm_store_pd(dst, _accu[0]._vd);                 _mm_store_pd(dst + 2, _accu[1]._vd);
-//     _mm_store_pd(dst + pitchdst_v1, _accu[2]._vd);   _mm_store_pd(dst + pitchdst_v1 + 2, _accu[3]._vd);
-// }
+    vst1q_f64(dst, _accu[0]._vd);
+    vst1q_f64(dst + pitchdst_v1, _accu[1]._vd);
+}
 
 
 
-// template <bool _ABC>
-// static _THREAD_CALL_ void decx::blas::CPUK::
-// GEMM_cplxf_dp_kernel_strassen1x1(const double* __restrict A_line,       const double* __restrict B_lane,
-//                                  double* __restrict dst,                const uint32_t _linear,       
-//                                  const bool _first,                     const double* __restrict C)
-// {
-//     uint32_t B_dex = 0;
-//     decx::utils::simd::xmm128_reg _accu[2];
-//     const uint32_t _L_v2 = decx::utils::fast_uint_ceil2<uint32_t>(_linear);
+template <bool _ABC>
+static _THREAD_CALL_ void decx::blas::CPUK::
+GEMM_cplxf_dp_kernel_strassen1x1(const double* __restrict A_line,       const double* __restrict B_lane,
+                                 double* __restrict dst,                const uint32_t _linear,       
+                                 const bool _first,                     const double* __restrict C)
+{
+    uint32_t B_dex = 0;
+    decx::utils::simd::xmm128_reg _accu;
+    const uint32_t _L_v2 = decx::utils::fast_uint_ceil2<uint32_t>(_linear);
 
-//     if (!_first) {
-//         _accu[0]._vd = _mm_load_pd(dst);                 _accu[1]._vd = _mm_load_pd(dst + 2);
-//     }
-//     else {
-//         if constexpr (_ABC) {
-//             /**
-//             * Since matrix C is layouted as normal, in Strassen's Algorithm for avx2 (4x cplxf),
-//             * the data has to be rearranged to the same form (layout) as that in dst (and _accu registers).
-//             */
-//             __m256d recv = _mm256_load_pd(C);
-//             recv = _mm256_permute4x64_pd(recv, 0b11011000);
-//             _accu[0]._vd = _mm256_castpd256_pd128(recv); _accu[1]._vd = _mm256_extractf128_pd(recv, 1);
-//         }
-//         else {
-//             _accu[0]._vd = _mm_setzero_pd();             _accu[1]._vd = _mm_setzero_pd();
-//         }
-//     }
+    if (!_first) {
+        _accu._vd = vld1q_f64(dst);
+    }
+    else {
+        if constexpr (_ABC) {
+            
+        }
+        else {
+            _accu.zeros();
+        }
+    }
 
-//     /**
-//     * The pitch of matrix A allows access of data where row address is width + 1 
-//     * if width is not aligned to 4 in de::CPf datatype.
-//     */
-//     for (uint32_t i = 0; i < _L_v2; ++i)
-//     {
-//         __m128d A_row0 = _mm_load_pd(A_line + i * 2);
+    /**
+    * The pitch of matrix A allows access of data where row address is width + 1 
+    * if width is not aligned to 4 in de::CPf datatype.
+    */
+    for (uint32_t i = 0; i < _L_v2; ++i)
+    {
+        float32x4_t A_row0 = vld1q_f64(A_line + i * 2);
 
-//         __m128 A11 = _mm_castpd_ps(_mm_permute_pd(A_row0, 0b00));
-//         __m128 A12 = _mm_castpd_ps(_mm_permute_pd(A_row0, 0b11));
+        float32x4_t A11 = vcombine_f32(vget_low_f32(A_row0), vget_low_f32(A_row0));
+        decx::utils::simd::xmm128_reg A12;
+        A12._vf = vcombine_f32(vget_high_f32(A_row0), vget_high_f32(A_row0));
 
-//         if ((i == _L_v2 - 1) && (_linear & 1)) {
-//             A12 = _mm_setzero_ps();
-//         }
+        if ((i == _L_v2 - 1) && (_linear & 1)) {
+            A12.zeros();
+        }
 
-//         __m128 B1 = _mm_castpd_ps(_mm_load_pd(B_lane + B_dex));
-//         __m128 B2 = _mm_castpd_ps(_mm_load_pd(B_lane + B_dex + 10));
+        float32x4_t B11 = vreinterpretq_f64_f32(vld1q_f64(B_lane + B_dex));
+        float32x4_t B21 = vreinterpretq_f64_f32(vld1q_f64(B_lane + B_dex + 4));
 
-//         __m128 tmp = decx::dsp::CPUK::_cp2_mul_cp2_fp32(_mm_add_ps(B1, B2), A11);   // M1
-//         _accu[0]._vf = _mm_add_ps(_accu[0]._vf, tmp);        // C11 += M1
+        _accu._vf = vaddq_f32(_accu._vf, decx::dsp::CPUK::_cp2_mul_cp2_fp32_unshuffled(A11, B11));
+        _accu._vf = vaddq_f32(_accu._vf, decx::dsp::CPUK::_cp2_mul_cp2_fp32_unshuffled(A12._vf, B21));
 
-//         // M2 = 0   nop
-//         B1 = _mm_castpd_ps(_mm_load_pd(B_lane + B_dex + 8));      // B21
-//         // M4 = 0   nop
+        // C22 dosen't exist    nop
 
-//         tmp = decx::dsp::CPUK::_cp2_mul_cp2_fp32(_mm_add_ps(B1, B2), A12);      // M7
-//         _accu[0]._vf = _mm_add_ps(_accu[0]._vf, tmp);        // C11 += M7
+        B_dex += 8;
+    }
 
-//         //B1 = _mm_castpd_ps(_mm_load_pd(B_lane + B_dex + 2));      // B12 = 0
-//         tmp = decx::dsp::CPUK::_cp2_mul_cp2_fp32(A11, decx::utils::simd::_mm_signinv_ps(B2)); // M3
-//         _accu[1]._vf = _mm_add_ps(_accu[1]._vf, tmp);        // C12 += M3
-
-//         tmp = decx::dsp::CPUK::_cp2_mul_cp2_fp32(_mm_add_ps(A11, A12), B2);      // M5
-//         _accu[0]._vf = _mm_sub_ps(_accu[0]._vf, tmp);        // C11 -= M5
-//         _accu[1]._vf = _mm_add_ps(_accu[1]._vf, tmp);        // C12 += M5
-
-//         // C22 dosen't exist    nop
-
-//         B_dex += 16;
-//     }
-
-//     _mm_store_pd(dst, _accu[0]._vd);                 _mm_store_pd(dst + 2, _accu[1]._vd);
-// }
+    vst1q_f64(dst, _accu._vd);
+}
 
 
 
@@ -490,8 +431,8 @@ decx::blas::CPUK::GEMM_cplxf_block_kernel(const double* __restrict A,           
             }
             if (proc_dims_v2.x % 2) {
                 // strassen2x1
-                // decx::blas::CPUK::GEMM_cplxf_dp_kernel_strassen2x1<_ABC>(A + A_dex, B + B_dex,
-                //         dst + dst_dex, _L_frag, pitchA_v1, pitchdst_v1, k == 0, C + dst_dex);
+                decx::blas::CPUK::GEMM_cplxf_dp_kernel_strassen2x1<_ABC>(A + A_dex, B + B_dex,
+                        dst + dst_dex, _L_frag, pitchA_v1, pitchdst_v1, k == 0, C + dst_dex);
             }
             A_dex += pitchA_v1 * 2;
         }
@@ -507,8 +448,8 @@ decx::blas::CPUK::GEMM_cplxf_block_kernel(const double* __restrict A,           
             }
             if (proc_dims_v2.x % 2) {
                 // strassen1x1
-                // decx::blas::CPUK::GEMM_cplxf_dp_kernel_strassen1x1<_ABC>(A + A_dex, B + B_dex,
-                //     dst + dst_dex, _L_frag, k == 0, C + dst_dex);
+                decx::blas::CPUK::GEMM_cplxf_dp_kernel_strassen1x1<_ABC>(A + A_dex, B + B_dex,
+                    dst + dst_dex, _L_frag, k == 0, C + dst_dex);
             }
         }
     }

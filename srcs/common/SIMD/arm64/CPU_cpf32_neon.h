@@ -64,7 +64,6 @@ namespace CPUK
 
         float32x4_t _res_vec = vpaddq_f32(rr_ii._vf, ri_ir);
         // R1, R2, I1, I2 -> R1, I1, R2
-        //return vzip1q_f32(_res_vec, vextq_f32(_res_vec, _res_vec, 2));
         return decx::utils::simd::vswap_middle_f32(_res_vec);
     }
 

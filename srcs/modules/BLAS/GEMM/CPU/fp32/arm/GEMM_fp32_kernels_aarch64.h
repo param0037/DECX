@@ -158,7 +158,7 @@ GEMM_fp32_dp_kernel_frag_dual(const float* __restrict A_line,
     for (uint32_t i = 0; i < _linear / 4; ++i) 
     {
         float32x4_t A_palette = vld1q_f32(A_line + i * 4);
-
+        
         // 0
         float32x4x2_t B_v8 = vld1q_f32_x2(B_lane + B_dex);
         float32x4_t A_v4 = vdupq_n_f32(vgetq_lane_f32(A_palette, 0));
@@ -185,10 +185,11 @@ GEMM_fp32_dp_kernel_frag_dual(const float* __restrict A_line,
     const uint32_t _linear_L = _linear % 4;
     if (_linear_L) {
         for (uint32_t i = 0; i < _linear_L; ++i) {
-            float32x4_t A_v8 = vdupq_n_f32(A_line[(_linear / 4) * 4 + i]);
+            float32x4_t A_v4 = vdupq_n_f32(A_line[(_linear / 4) * 4 + i]);
             float32x4x2_t B_v8 = vld1q_f32_x2(B_lane + B_dex);
-            _accu._vf.val[0] = vfmaq_f32(_accu._vf.val[0], A_v8, B_v8.val[0]);
-            _accu._vf.val[1] = vfmaq_f32(_accu._vf.val[1], A_v8, B_v8.val[1]);
+
+            _accu._vf.val[0] = vfmaq_f32(_accu._vf.val[0], A_v4, B_v8.val[0]);
+            _accu._vf.val[1] = vfmaq_f32(_accu._vf.val[1], A_v4, B_v8.val[1]);
             B_dex += 8;
         }
     }

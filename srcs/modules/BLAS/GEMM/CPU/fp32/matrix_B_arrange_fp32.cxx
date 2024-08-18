@@ -105,6 +105,7 @@ _matrix_B_arrange_fp32_block_var(const float* __restrict    src,
 }
 #endif
 
+
 #if defined(__aarch64__) || defined(__arm__)
 
 template <uint32_t block_W_v8, uint32_t block_H>
@@ -157,6 +158,7 @@ _matrix_B_arrange_fp32_block_var(const float* __restrict    src,
 }
 #endif
 
+
 // e.g.
 // block_W = 16 (minimal) floats = 64 byte = cache line size
 template <uint32_t block_W_v2x, uint32_t block_H>
@@ -204,7 +206,7 @@ _matrix_B_arrange_fp32_exec(const float* __restrict src,            // pointer o
                 decx::blas::CPUK::_matrix_B_arrange_fp32_block_var(src + dex_src,
                     dst + dex_dst, pitchsrc_v1, Llen, make_uint2(block_W_v, _LH));
                 dex_src += block_W_v * _alignment;
-                dex_dst += Llen * block_W_v * _alignment * 2;
+                dex_dst += Llen * block_W_v * _alignment;
             }
             if (_LW) {
                 decx::blas::CPUK::_matrix_B_arrange_fp32_block_var(src + dex_src,
