@@ -1,1 +1,0 @@
-  -L/media/wayne/Disk/DECX_world/build/bin/x86_64  -Wl,-rpath,/media/wayne/Disk/DECX_world/build/bin/x86_64 GNU/x86_64/libgemm_cuda_extreme_shape.a GNU/x86_64/libgemm_cuda_large_squares.a GNU/x86_64/libDP1D_cuda.a GNU/x86_64/libDP2D_cuda.a -lDECX_core_CPU -lDECX_core_CUDA -lcudadevrt -lcudart_static -lrt -lpthread -ldl 

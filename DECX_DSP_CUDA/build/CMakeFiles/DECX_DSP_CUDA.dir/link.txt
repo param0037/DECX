@@ -1,0 +1,1 @@
+/usr/bin/g++ -fPIC -shared -Wl,-soname,libDECX_DSP_CUDA.so -o /media/wayne/Disk/DECX_world/bin/x64/libDECX_DSP_CUDA.so @CMakeFiles/DECX_DSP_CUDA.dir/objects1 CMakeFiles/DECX_DSP_CUDA.dir/cmake_device_link.o @CMakeFiles/DECX_DSP_CUDA.dir/linkLibs.rsp -L"/usr/local/cuda/targets/x86_64-linux/lib/stubs" -L"/usr/local/cuda/targets/x86_64-linux/lib"

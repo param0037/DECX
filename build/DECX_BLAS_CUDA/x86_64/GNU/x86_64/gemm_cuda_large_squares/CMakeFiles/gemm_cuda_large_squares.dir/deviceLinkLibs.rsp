@@ -1,1 +1,0 @@
-  -L/media/wayne/Disk/DECX_world/build/bin/x86_64  -lcudadevrt -lcudart_static -lrt -lpthread -ldl 

@@ -1,1 +1,0 @@
-  -L/media/wayne/Disk/DECX_world/build/bin/x86_64  -Wl,-rpath,/media/wayne/Disk/DECX_world/build/bin/x86_64 GNU/x86_64/liballocators_CUDA.a -lDECX_core_CPU -lcudadevrt -lcudart_static -lrt -lpthread -ldl 

@@ -1,0 +1,15 @@
+/media/wayne/Disk/DECX_world/DECX_DSP_CUDA/build/CMakeFiles/DECX_DSP_CUDA.dir
+/media/wayne/Disk/DECX_world/DECX_DSP_CUDA/build/CMakeFiles/edit_cache.dir
+/media/wayne/Disk/DECX_world/DECX_DSP_CUDA/build/CMakeFiles/rebuild_cache.dir
+/media/wayne/Disk/DECX_world/DECX_DSP_CUDA/GCC/fft1d_cuda/CMakeFiles/fft1d_cuda.dir
+/media/wayne/Disk/DECX_world/DECX_DSP_CUDA/GCC/fft1d_cuda/CMakeFiles/edit_cache.dir
+/media/wayne/Disk/DECX_world/DECX_DSP_CUDA/GCC/fft1d_cuda/CMakeFiles/rebuild_cache.dir
+/media/wayne/Disk/DECX_world/DECX_DSP_CUDA/GCC/fft2d_cuda/CMakeFiles/fft2d_cuda.dir
+/media/wayne/Disk/DECX_world/DECX_DSP_CUDA/GCC/fft2d_cuda/CMakeFiles/edit_cache.dir
+/media/wayne/Disk/DECX_world/DECX_DSP_CUDA/GCC/fft2d_cuda/CMakeFiles/rebuild_cache.dir
+/media/wayne/Disk/DECX_world/DECX_DSP_CUDA/GCC/fft3d_cuda/CMakeFiles/fft3d_cuda.dir
+/media/wayne/Disk/DECX_world/DECX_DSP_CUDA/GCC/fft3d_cuda/CMakeFiles/edit_cache.dir
+/media/wayne/Disk/DECX_world/DECX_DSP_CUDA/GCC/fft3d_cuda/CMakeFiles/rebuild_cache.dir
+/media/wayne/Disk/DECX_world/DECX_DSP_CUDA/GCC/conv2d_cuda/CMakeFiles/conv2d_cuda.dir
+/media/wayne/Disk/DECX_world/DECX_DSP_CUDA/GCC/conv2d_cuda/CMakeFiles/edit_cache.dir
+/media/wayne/Disk/DECX_world/DECX_DSP_CUDA/GCC/conv2d_cuda/CMakeFiles/rebuild_cache.dir

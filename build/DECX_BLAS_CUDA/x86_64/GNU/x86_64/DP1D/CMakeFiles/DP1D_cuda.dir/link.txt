@@ -1,3 +1,0 @@
-/usr/bin/ar qc ../libDP1D_cuda.a CMakeFiles/DP1D_cuda.dir/DP1D_callers.cu.o CMakeFiles/DP1D_cuda.dir/DP1D_config.cu.o CMakeFiles/DP1D_cuda.dir/DP1D_kernels.cu.o
-/usr/bin/ar q ../libDP1D_cuda.a CMakeFiles/DP1D_cuda.dir/cmake_device_link.o
-/usr/bin/ranlib ../libDP1D_cuda.a

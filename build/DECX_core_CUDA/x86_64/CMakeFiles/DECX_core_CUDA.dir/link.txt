@@ -1,1 +1,0 @@
-/usr/bin/g++ -fPIC -shared -Wl,-soname,libDECX_core_CUDA.so -o /media/wayne/Disk/DECX_world/build/bin/x86_64/libDECX_core_CUDA.so @CMakeFiles/DECX_core_CUDA.dir/objects1 CMakeFiles/DECX_core_CUDA.dir/cmake_device_link.o @CMakeFiles/DECX_core_CUDA.dir/linkLibs.rsp -L"/usr/local/cuda/targets/x86_64-linux/lib/stubs" -L"/usr/local/cuda/targets/x86_64-linux/lib"

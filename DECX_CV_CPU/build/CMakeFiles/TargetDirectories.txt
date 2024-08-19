@@ -1,0 +1,3 @@
+/media/wayne/Disk/DECX_world/DECX_CV_CPU/build/CMakeFiles/DECX_CV_CPU.dir
+/media/wayne/Disk/DECX_world/DECX_CV_CPU/build/CMakeFiles/edit_cache.dir
+/media/wayne/Disk/DECX_world/DECX_CV_CPU/build/CMakeFiles/rebuild_cache.dir

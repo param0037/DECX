@@ -1,2 +1,0 @@
-/usr/bin/ar qc ../liballocators_host.a CMakeFiles/allocators_host.dir/__/_allocator.cxx.o CMakeFiles/allocators_host.dir/__/_deallocator.cxx.o CMakeFiles/allocators_host.dir/__/_memset.cxx.o ../mem_pool_host/CMakeFiles/mem_pool_host.dir/__/MemBlock.cxx.o ../mem_pool_host/CMakeFiles/mem_pool_host.dir/__/MemChunk_Hv.cxx.o ../mem_pool_host/CMakeFiles/mem_pool_host.dir/__/MemoryPool_Hv.cxx.o
-/usr/bin/ranlib ../liballocators_host.a

@@ -1,0 +1,1 @@
+  -L/media/wayne/Disk/DECX_world/bin/x64  -lDECX_BLAS_CUDA -lDECX_core_CUDA -lcudadevrt -lcudart_static -lrt -lpthread -ldl 

@@ -1,3 +1,0 @@
-/usr/bin/ar qc ../libDP2D_cuda.a CMakeFiles/DP2D_cuda.dir/DP2D_1way_callers.cu.o CMakeFiles/DP2D_cuda.dir/DP2D_1way_config.cu.o CMakeFiles/DP2D_cuda.dir/DP2D_kernels.cu.o
-/usr/bin/ar q ../libDP2D_cuda.a CMakeFiles/DP2D_cuda.dir/cmake_device_link.o
-/usr/bin/ranlib ../libDP2D_cuda.a

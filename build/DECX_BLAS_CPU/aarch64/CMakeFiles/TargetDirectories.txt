@@ -1,9 +1,0 @@
-/media/wayne/Disk/DECX_world/build/DECX_BLAS_CPU/aarch64/CMakeFiles/DECX_BLAS_CPU.dir
-/media/wayne/Disk/DECX_world/build/DECX_BLAS_CPU/aarch64/CMakeFiles/edit_cache.dir
-/media/wayne/Disk/DECX_world/build/DECX_BLAS_CPU/aarch64/CMakeFiles/rebuild_cache.dir
-/media/wayne/Disk/DECX_world/build/DECX_BLAS_CPU/aarch64/Clang/aarch64/gemm_fp32_cpu/CMakeFiles/gemm_fp32_cpu.dir
-/media/wayne/Disk/DECX_world/build/DECX_BLAS_CPU/aarch64/Clang/aarch64/gemm_fp32_cpu/CMakeFiles/edit_cache.dir
-/media/wayne/Disk/DECX_world/build/DECX_BLAS_CPU/aarch64/Clang/aarch64/gemm_fp32_cpu/CMakeFiles/rebuild_cache.dir
-/media/wayne/Disk/DECX_world/build/DECX_BLAS_CPU/aarch64/Clang/aarch64/gemm_64b_cpu/CMakeFiles/gemm_64b_cpu.dir
-/media/wayne/Disk/DECX_world/build/DECX_BLAS_CPU/aarch64/Clang/aarch64/gemm_64b_cpu/CMakeFiles/edit_cache.dir
-/media/wayne/Disk/DECX_world/build/DECX_BLAS_CPU/aarch64/Clang/aarch64/gemm_64b_cpu/CMakeFiles/rebuild_cache.dir

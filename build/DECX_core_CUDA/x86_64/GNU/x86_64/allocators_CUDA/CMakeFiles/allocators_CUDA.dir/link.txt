@@ -1,3 +1,0 @@
-/usr/bin/ar qc ../liballocators_CUDA.a CMakeFiles/allocators_CUDA.dir/__/_allocator.cu.o CMakeFiles/allocators_CUDA.dir/__/_deallocator.cu.o CMakeFiles/allocators_CUDA.dir/__/_memset.cu.o ../mempool_CUDA/CMakeFiles/mempool_CUDA.dir/__/MemBlock.cu.o ../mempool_CUDA/CMakeFiles/mempool_CUDA.dir/__/MemChunk_D.cu.o ../mempool_CUDA/CMakeFiles/mempool_CUDA.dir/__/MemoryPool_D.cu.o
-/usr/bin/ar q ../liballocators_CUDA.a CMakeFiles/allocators_CUDA.dir/cmake_device_link.o
-/usr/bin/ranlib ../liballocators_CUDA.a
