@@ -38,16 +38,20 @@ Clone the project, enter the root path of the project.
 3. ```bash
     source ./build_configs.sh
 4. Configure the necessary variables.
-5. Set module to build.
+5. Set the targeted host architecture
+    ```bash
+    host_arch x86
+6. Set module to build.
     ```bash 
     set_module core_CPU
-6. ```bash
+7. Check the configured items
+    ```bash
     list_configs
-7. ```bash
-    clean
 8. ```bash
-    conf
+    clean
 9. ```bash
+    conf
+10. ```bash
     mk
 
 (Note: If terminal exports "/bin/bash^M: bad interpreter: No such file or directory", please run ./fix_CRLF_cases_for_linux_script.sh or copy the command in this script if it's also unavailable. This is caused editing these scripts on Windows. The line endings LF are replaced by CRLF. So, use sed to fix it in Linux)
