@@ -1,0 +1,2 @@
+/usr/bin/ar qc ../libconfigs_x86_64_cpu.a CMakeFiles/configs_x86_64_cpu.dir/cpuid_call_x86_64_nasm.asm.o CMakeFiles/configs_x86_64_cpu.dir/decx_CPUID_x86.c.o
+/usr/bin/ranlib ../libconfigs_x86_64_cpu.a

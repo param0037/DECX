@@ -1,0 +1,42 @@
+file(REMOVE_RECURSE
+  "/media/wayne/Disk/DECX_world/build/bin/x86_64/libDECX_BLAS_CUDA.pdb"
+  "/media/wayne/Disk/DECX_world/build/bin/x86_64/libDECX_BLAS_CUDA.so"
+  "CMakeFiles/DECX_BLAS_CUDA.dir/Basic_process/transpose/transpose.cu.o"
+  "CMakeFiles/DECX_BLAS_CUDA.dir/Basic_process/transpose/transpose.cu.o.d"
+  "CMakeFiles/DECX_BLAS_CUDA.dir/Basic_process/type_cast/GPU_Matrix_type_cast.cu.o"
+  "CMakeFiles/DECX_BLAS_CUDA.dir/Basic_process/type_cast/GPU_Matrix_type_cast.cu.o.d"
+  "CMakeFiles/DECX_BLAS_CUDA.dir/Basic_process/type_cast/GPU_Vector_type_cast.cu.o"
+  "CMakeFiles/DECX_BLAS_CUDA.dir/Basic_process/type_cast/GPU_Vector_type_cast.cu.o.d"
+  "CMakeFiles/DECX_BLAS_CUDA.dir/Basic_process/type_statistics/Matrix_reduce.cu.o"
+  "CMakeFiles/DECX_BLAS_CUDA.dir/Basic_process/type_statistics/Matrix_reduce.cu.o.d"
+  "CMakeFiles/DECX_BLAS_CUDA.dir/Basic_process/type_statistics/Vector_reduce.cu.o"
+  "CMakeFiles/DECX_BLAS_CUDA.dir/Basic_process/type_statistics/Vector_reduce.cu.o.d"
+  "CMakeFiles/DECX_BLAS_CUDA.dir/Dot_product/CUDA/DP.cu.o"
+  "CMakeFiles/DECX_BLAS_CUDA.dir/Dot_product/CUDA/DP.cu.o.d"
+  "CMakeFiles/DECX_BLAS_CUDA.dir/GEMM/CUDA/GEMM_LS.cu.o"
+  "CMakeFiles/DECX_BLAS_CUDA.dir/GEMM/CUDA/GEMM_LS.cu.o.d"
+  "CMakeFiles/DECX_BLAS_CUDA.dir/GEMM/CUDA/VMM.cu.o"
+  "CMakeFiles/DECX_BLAS_CUDA.dir/GEMM/CUDA/VMM.cu.o.d"
+  "CMakeFiles/DECX_BLAS_CUDA.dir/cmake_device_link.o"
+  "CMakeFiles/DECX_BLAS_CUDA.dir/media/wayne/Disk/DECX_world/srcs/common/Basic_process/fill/constant/CUDA/GPU_Matrix_fill.cu.o"
+  "CMakeFiles/DECX_BLAS_CUDA.dir/media/wayne/Disk/DECX_world/srcs/common/Basic_process/fill/constant/CUDA/GPU_Matrix_fill.cu.o.d"
+  "CMakeFiles/DECX_BLAS_CUDA.dir/media/wayne/Disk/DECX_world/srcs/common/Basic_process/fill/constant/CUDA/GPU_Vector_fill.cu.o"
+  "CMakeFiles/DECX_BLAS_CUDA.dir/media/wayne/Disk/DECX_world/srcs/common/Basic_process/fill/constant/CUDA/GPU_Vector_fill.cu.o.d"
+  "CMakeFiles/DECX_BLAS_CUDA.dir/media/wayne/Disk/DECX_world/srcs/common/Basic_process/fill/constant/CUDA/constant_fill_kernels.cu.o"
+  "CMakeFiles/DECX_BLAS_CUDA.dir/media/wayne/Disk/DECX_world/srcs/common/Basic_process/fill/constant/CUDA/constant_fill_kernels.cu.o.d"
+  "CMakeFiles/DECX_BLAS_CUDA.dir/media/wayne/Disk/DECX_world/srcs/common/Basic_process/transpose/CUDA/transpose_kernels.cu.o"
+  "CMakeFiles/DECX_BLAS_CUDA.dir/media/wayne/Disk/DECX_world/srcs/common/Basic_process/transpose/CUDA/transpose_kernels.cu.o.d"
+  "CMakeFiles/DECX_BLAS_CUDA.dir/media/wayne/Disk/DECX_world/srcs/common/Basic_process/transpose/CUDA/transpose_kernels_dense.cu.o"
+  "CMakeFiles/DECX_BLAS_CUDA.dir/media/wayne/Disk/DECX_world/srcs/common/Basic_process/transpose/CUDA/transpose_kernels_dense.cu.o.d"
+  "CMakeFiles/DECX_BLAS_CUDA.dir/media/wayne/Disk/DECX_world/srcs/common/Basic_process/type_cast/CUDA/_mm128_fp32_fp64.cu.o"
+  "CMakeFiles/DECX_BLAS_CUDA.dir/media/wayne/Disk/DECX_world/srcs/common/Basic_process/type_cast/CUDA/_mm128_fp32_fp64.cu.o.d"
+  "CMakeFiles/DECX_BLAS_CUDA.dir/media/wayne/Disk/DECX_world/srcs/common/Basic_process/type_cast/CUDA/_mm128_fp32_int32.cu.o"
+  "CMakeFiles/DECX_BLAS_CUDA.dir/media/wayne/Disk/DECX_world/srcs/common/Basic_process/type_cast/CUDA/_mm128_fp32_int32.cu.o.d"
+  "CMakeFiles/DECX_BLAS_CUDA.dir/media/wayne/Disk/DECX_world/srcs/common/FMGR/fragment_arangement.cu.o"
+  "CMakeFiles/DECX_BLAS_CUDA.dir/media/wayne/Disk/DECX_world/srcs/common/FMGR/fragment_arangement.cu.o.d"
+)
+
+# Per-language clean rules from dependency scanning.
+foreach(lang CUDA)
+  include(CMakeFiles/DECX_BLAS_CUDA.dir/cmake_clean_${lang}.cmake OPTIONAL)
+endforeach()

@@ -71,6 +71,12 @@ function list_configs()
     else
         echo "[DECX]   Current module name build : $DECX_CURRENT_BUILD_MODULE"
     fi
+
+    if [ $DECX_PARALLEL_BUILD -eq 1 ]; then
+        echo -e "[DECX]   Parallel building : ${GREEN}Yes${WHITE}"
+    else
+        echo -e "[DECX]   Parallel building : ${RED}No${WHITE}"
+    fi
 }
 
 
@@ -79,10 +85,19 @@ function host_arch()
 {
     if [ -n "$1" ]; then
         validate_arch_name $1
-        if [ $? -eq 1 ]; then
+        arch_name_correct=$?
+        if [ $arch_name_correct -eq 1 ]; then
             export DECX_HOST_ARCH=$1
         else
             echo_error "Host architecture should either be X86-64 or ARM64"
+        fi
+        # Rectify arch name
+        is_aarch64 $DECX_HOST_ARCH
+        is_arm64=$?
+        if [ $is_arm64 -eq 1 ]; then
+            export DECX_HOST_ARCH="aarch64"
+        else
+            export DECX_HOST_ARCH="x86_64"
         fi
     else
         export DECX_HOST_ARCH=$DECX_HOST_ARCH
@@ -163,7 +178,8 @@ function toolchain()
     fi
 
     is_aarch64 $DECX_HOST_ARCH
-    if [ $? -eq 1 ]; then
+    is_arm64=$?
+    if [ $is_arm64 -eq 1 ]; then
         if [ -z "$DECX_CMAKE_TOOLCHAIN_PATH" ]; then
             echo_error "Cross compilation must specify the toolchain file"
         fi
@@ -234,6 +250,21 @@ function clean()
         ./build.sh -c $1
     fi
 }
+
+
+function parallel_build()
+{
+    lower_input=$(echo "$1" | tr '[:upper:]' '[:lower:]')
+    if [ "$lower_input" = "1" ] || [ "$lower_input" = 'true' ]; then
+        export DECX_PARALLEL_BUILD=1
+    else
+        echo_error "Invalid input"
+    fi
+}
+
+
+export DECX_PARALLEL_BUILD=1
+echo_status "Enable parallel build by default"
 
 host_arch $1
 exp_lang $2

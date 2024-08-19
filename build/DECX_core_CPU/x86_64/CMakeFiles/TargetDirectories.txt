@@ -1,0 +1,12 @@
+/media/wayne/Disk/DECX_world/build/DECX_core_CPU/x86_64/CMakeFiles/DECX_core_CPU.dir
+/media/wayne/Disk/DECX_world/build/DECX_core_CPU/x86_64/CMakeFiles/edit_cache.dir
+/media/wayne/Disk/DECX_world/build/DECX_core_CPU/x86_64/CMakeFiles/rebuild_cache.dir
+/media/wayne/Disk/DECX_world/build/DECX_core_CPU/x86_64/GNU/x86_64/allocators_host/CMakeFiles/allocators_host.dir
+/media/wayne/Disk/DECX_world/build/DECX_core_CPU/x86_64/GNU/x86_64/allocators_host/CMakeFiles/edit_cache.dir
+/media/wayne/Disk/DECX_world/build/DECX_core_CPU/x86_64/GNU/x86_64/allocators_host/CMakeFiles/rebuild_cache.dir
+/media/wayne/Disk/DECX_world/build/DECX_core_CPU/x86_64/GNU/x86_64/mem_pool_host/CMakeFiles/mem_pool_host.dir
+/media/wayne/Disk/DECX_world/build/DECX_core_CPU/x86_64/GNU/x86_64/mem_pool_host/CMakeFiles/edit_cache.dir
+/media/wayne/Disk/DECX_world/build/DECX_core_CPU/x86_64/GNU/x86_64/mem_pool_host/CMakeFiles/rebuild_cache.dir
+/media/wayne/Disk/DECX_world/build/DECX_core_CPU/x86_64/GNU/x86_64/configs_x86_64_cpu/CMakeFiles/configs_x86_64_cpu.dir
+/media/wayne/Disk/DECX_world/build/DECX_core_CPU/x86_64/GNU/x86_64/configs_x86_64_cpu/CMakeFiles/edit_cache.dir
+/media/wayne/Disk/DECX_world/build/DECX_core_CPU/x86_64/GNU/x86_64/configs_x86_64_cpu/CMakeFiles/rebuild_cache.dir

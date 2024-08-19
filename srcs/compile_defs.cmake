@@ -37,8 +37,12 @@ if(NOT CMAKE_BUILD_TYPE)
 	set(CMAKE_BUILD_TYPE release CACHE STRING "Build Type" FORCE)
 endif()
 
-
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
+# Force the build type to be release mode
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE release CACHE STRING "Build Type" FORCE)
+endif()
 
 # Determine if export CPP symbols (Can only be called in CPP environment)
 if(_CPP_EXPORT_)

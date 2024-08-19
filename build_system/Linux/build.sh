@@ -43,26 +43,10 @@ function clean_single()
         $PROJECT_PATH_BUILD/srcs/modules/core/configs/x86_64/asm_preproc_configs.sh -c NOP
     fi
 
-    if [ -d "$PROJECT_PATH_BUILD/DECX_"$1"/build/" ]; then
-        rm -rf "$PROJECT_PATH_BUILD/DECX_"$1"/build/"
-    else
-        echo_status "Path not exist, skipped"
-    fi
+    cmake_bin_dir="$PROJECT_PATH_BUILD/build/DECX_$1"
 
-    if [ -d "$PROJECT_PATH_BUILD/DECX_"$1"/GNU/" ]; then
-        rm -rf "$PROJECT_PATH_BUILD/DECX_"$1"/GNU/"
-    else
-        echo_status "Path not exist, skipped"
-    fi
-
-    if [ -d "$PROJECT_PATH_BUILD/DECX_"$1"/MSVC/" ]; then
-        rm -rf "$PROJECT_PATH_BUILD/DECX_"$1"/MSVC/"
-    else
-        echo_status "Path not exist, skipped"
-    fi
-
-    if [ -d "$PROJECT_PATH_BUILD/DECX_"$1"/Clang/" ]; then
-        rm -rf "$PROJECT_PATH_BUILD/DECX_"$1"/Clang/"
+    if [ -d "$cmake_bin_dir" ]; then
+        rm -rf "$cmake_bin_dir"
     else
         echo_status "Path not exist, skipped"
     fi
@@ -98,10 +82,14 @@ function clean_optional()
     fi
 }
 
-# config
 
+# config
 function config_single()
 {
+    if [ ! -e "$PROJECT_PATH_BUILD/build" ]; then
+        mkdir $PROJECT_PATH_BUILD/build
+    fi
+
     # If is DSP_CPU, configure asm sources for math intrinsics
     if [ "$1" = "DSP_CPU" ]; then
         $PROJECT_PATH_BUILD/srcs/common/SIMD/x86_64/asm_preproc_SVML.sh -i NOP
@@ -113,13 +101,24 @@ function config_single()
         fi
     fi
 
-    cd "$PROJECT_PATH_BUILD/DECX_$1"
-    echo_status "Current config project path is $PROJECT_PATH_BUILD/DECX_$1"
+    module_name=$1
+    # cd "$PROJECT_PATH_BUILD/DECX_$1"
+    cd "$PROJECT_PATH_BUILD/srcs/modules/${module_name%%_*}/"
+    echo_status "cd to $PROJECT_PATH_BUILD/srcs/modules/${module_name%%_*}/"
 
     cmake_config_cmd="cmake"
 
+    is_CUDA_module $1
+    is_CUDA=$?
+    if [ $is_CUDA -eq 1 ]; then
+        cmake_config_cmd="$cmake_config_cmd -D_DECX_CUDA_MODULE_=true"
+    else
+        cmake_config_cmd="$cmake_config_cmd -D_DECX_CUDA_MODULE_=false"
+    fi
+
     is_aarch64 $DECX_HOST_ARCH
-    if [ $? -eq 1 ]; then
+    is_arm64=$?
+    if [ $is_arm64 -eq 1 ]; then
         cmake_config_cmd="$cmake_config_cmd -DCMAKE_TOOLCHAIN_FILE=$DECX_CMAKE_TOOLCHAIN_PATH"
         cmake_config_cmd="$cmake_config_cmd -D_DECX_HOST_ARCH_=aarch64 \
             -DANDROID_ABI=arm64-v8a \
@@ -134,8 +133,8 @@ function config_single()
     if [ $DECX_EXP_CXX ]; then
         cmake_config_cmd="$cmake_config_cmd -D_CPP_EXPORT_=true"
     fi
-
-    cmake_config_cmd="$cmake_config_cmd -B build -G\"Unix Makefiles\""
+    cmake_bin_dir="$PROJECT_PATH_BUILD/build/DECX_$1/$DECX_HOST_ARCH"
+    cmake_config_cmd="$cmake_config_cmd -B $cmake_bin_dir -G\"Unix Makefiles\""
     eval $cmake_config_cmd
 }
 
@@ -168,13 +167,19 @@ function config_optional()
     fi
 }
 
-# build
 
+# build
 function build_single()
 {
-    cd "$PROJECT_PATH_BUILD/DECX_"$1
-    cmake --build build -j 12 --config Release
-    cp $PROJECT_PATH_BUILD/bin/x64/libDECX_DSP_CPU.so ~/DECX/libs/x64/
+    cmake_bin_dir="$PROJECT_PATH_BUILD/build/DECX_$1/$DECX_HOST_ARCH"
+
+    if [ $DECX_PARALLEL_BUILD -eq 1 ]; then
+        # Get the maximum concurrency of CPU
+        max_concurrency=$(nproc)
+        cmake --build $cmake_bin_dir -j $max_concurrency --config Release
+    else
+        cmake --build $cmake_bin_dir --config Release
+    fi
 }
 
 

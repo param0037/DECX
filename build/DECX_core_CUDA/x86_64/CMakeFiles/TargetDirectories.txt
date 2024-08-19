@@ -1,0 +1,9 @@
+/media/wayne/Disk/DECX_world/build/DECX_core_CUDA/x86_64/CMakeFiles/DECX_core_CUDA.dir
+/media/wayne/Disk/DECX_world/build/DECX_core_CUDA/x86_64/CMakeFiles/edit_cache.dir
+/media/wayne/Disk/DECX_world/build/DECX_core_CUDA/x86_64/CMakeFiles/rebuild_cache.dir
+/media/wayne/Disk/DECX_world/build/DECX_core_CUDA/x86_64/GNU/x86_64/allocators_CUDA/CMakeFiles/allocators_CUDA.dir
+/media/wayne/Disk/DECX_world/build/DECX_core_CUDA/x86_64/GNU/x86_64/allocators_CUDA/CMakeFiles/edit_cache.dir
+/media/wayne/Disk/DECX_world/build/DECX_core_CUDA/x86_64/GNU/x86_64/allocators_CUDA/CMakeFiles/rebuild_cache.dir
+/media/wayne/Disk/DECX_world/build/DECX_core_CUDA/x86_64/GNU/x86_64/mempool_CUDA/CMakeFiles/mempool_CUDA.dir
+/media/wayne/Disk/DECX_world/build/DECX_core_CUDA/x86_64/GNU/x86_64/mempool_CUDA/CMakeFiles/edit_cache.dir
+/media/wayne/Disk/DECX_world/build/DECX_core_CUDA/x86_64/GNU/x86_64/mempool_CUDA/CMakeFiles/rebuild_cache.dir

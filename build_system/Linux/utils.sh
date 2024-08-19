@@ -106,3 +106,13 @@ function is_aarch64()
 }
 
 
+
+function is_CUDA_module()
+{
+    lower_input=$(echo "$1" | tr '[:upper:]' '[:lower:]')
+    if [[ "$1" == *"CUDA"* ]]; then
+        return 1
+    else
+        return 0
+    fi
+}
