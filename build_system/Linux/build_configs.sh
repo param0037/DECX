@@ -257,6 +257,10 @@ function parallel_build()
     lower_input=$(echo "$1" | tr '[:upper:]' '[:lower:]')
     if [ "$lower_input" = "1" ] || [ "$lower_input" = 'true' ]; then
         export DECX_PARALLEL_BUILD=1
+        echo_status "Parallel build enabled"
+    elif [ "$lower_input" = "0" ] || [ "$lower_input" = 'false' ]; then
+        export DECX_PARALLEL_BUILD=0
+        echo_status "Parallel build enabled"
     else
         echo_error "Invalid input"
     fi

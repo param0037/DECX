@@ -27,10 +27,29 @@ A fast linear algebra, computer vision, and mathematic library, based on CUDA an
 Clone this repository, open DECX_world.sln with VS. The version of VS should be 2019 or higher. In the window of VS project, right click on the solution, click build solution.
 
 ### (b) Using CMake on Windows
-Follow the same steps described in section (a) until opening DECX_world.sln. Run cmd or powershell under the root path of the project. Run the build script build.cmd. Simply enter "build" and the script will print the instructions. Follow these instructions to build the project.
+Temporary unavailable due to the chnage of buid system recently, will soon be online.
 
 ## 2. General x86 Ubuntu
-Clone the project, enter the root path of the project. Then run the build script for Linux, which is build.sh. Simply enter "./build.sh" and follow the printed instructions to build the project. 
+Clone the project, enter the root path of the project. 
+1. cd to ${project\_path}/build_system/Linux/
+2. ```bash 
+    sudo chmod u+x ./build_configs.sh
+    sudo chmod u+x ./build.sh
+3. ```bash
+    source ./build_configs.sh
+4. Configure the necessary variables.
+5. Set module to build.
+    ```bash 
+    set_module core_CPU
+6. ```bash
+    list_configs
+7. ```bash
+    clean
+8. ```bash
+    conf
+9. ```bash
+    mk
+
 (Note: If terminal exports "/bin/bash^M: bad interpreter: No such file or directory", please run ./fix_CRLF_cases_for_linux_script.sh or copy the command in this script if it's also unavailable. This is caused editing these scripts on Windows. The line endings LF are replaced by CRLF. So, use sed to fix it in Linux)
 
 ## 3. Android for ARM64 (aarch64)
