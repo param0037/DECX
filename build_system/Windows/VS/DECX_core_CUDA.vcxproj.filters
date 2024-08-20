@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{45a51676-597b-422d-84fc-d94d5f513169}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4368f581-e1d9-47fa-9429-6ac7c9486db1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\core">
+      <UniqueIdentifier>{6e84cea2-4fc5-470d-a9a0-483026dc6f54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\core\cuda_stream_management">
+      <UniqueIdentifier>{f9d0d1e7-0a53-4398-be28-6a645fa1a21a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\core\configs">
+      <UniqueIdentifier>{87693e47-1928-4096-b66f-badc91b8e6d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\core\utils">
+      <UniqueIdentifier>{6eed11bf-d8e8-4b34-b35f-8db58fb0d436}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\core\memory_management">
+      <UniqueIdentifier>{51d6463b-965d-485a-9b6e-a5ad55b68b2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\core\allocators">
+      <UniqueIdentifier>{76e5add7-7bc6-4cb6-8775-c7606e206124}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\core\data transmission">
+      <UniqueIdentifier>{3a4b60e6-1288-497c-b80f-ea6df03d7cb8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\core\classes">
+      <UniqueIdentifier>{c7fc8493-d3fa-40cd-bcff-67b61265cec3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <CudaCompile Include="..\..\..\srcs\modules\core\allocators\_allocator.cu">
+      <Filter>源文件\core\allocators</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\..\..\srcs\modules\core\allocators\_deallocator.cu">
+      <Filter>源文件\core\allocators</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\..\..\srcs\modules\core\allocators\_memset.cu">
+      <Filter>源文件\core\allocators</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\..\..\srcs\modules\core\configs\config.cu">
+      <Filter>源文件\core\configs</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\..\..\srcs\modules\core\cudaStream_management\cuda_event.cu">
+      <Filter>源文件\core\cuda_stream_management</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\..\..\srcs\modules\core\cudaStream_management\cuda_stream.cu">
+      <Filter>源文件\core\cuda_stream_management</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\..\..\srcs\modules\core\cudaStream_management\cudaEvent_queue.cu">
+      <Filter>源文件\core\cuda_stream_management</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\..\..\srcs\modules\core\cudaStream_management\cudaStream_queue.cu">
+      <Filter>源文件\core\cuda_stream_management</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\..\..\srcs\modules\core\data transmission\data_transmission.cu">
+      <Filter>源文件\core\data transmission</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\..\..\srcs\common\FP16\float_half_convert.cu">
+      <Filter>源文件\core\utils</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\..\..\srcs\common\FMGR\fragment_arangement.cu">
+      <Filter>源文件\core\utils</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\..\..\srcs\modules\core\global_vars.cu">
+      <Filter>源文件\core\configs</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\..\..\srcs\modules\core\classes\GPU_Matrix.cu">
+      <Filter>源文件\core\classes</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\..\..\srcs\modules\core\classes\GPU_MatrixArray.cu">
+      <Filter>源文件\core\classes</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\..\..\srcs\modules\core\classes\GPU_Tensor.cu">
+      <Filter>源文件\core\classes</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\..\..\srcs\modules\core\classes\GPU_TensorArray.cu">
+      <Filter>源文件\core\classes</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\..\..\srcs\modules\core\classes\GPU_Vector.cu">
+      <Filter>源文件\core\classes</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\..\..\srcs\modules\core\memory_management\MemBlock.cu">
+      <Filter>源文件\core\memory_management</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\..\..\srcs\modules\core\memory_management\MemChunk_D.cu">
+      <Filter>源文件\core\memory_management</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\..\..\srcs\modules\core\memory_management\MemoryPool_D.cu">
+      <Filter>源文件\core\memory_management</Filter>
+    </CudaCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="for_properties.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

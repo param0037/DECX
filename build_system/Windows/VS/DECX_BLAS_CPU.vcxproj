@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{937ad5db-5900-436a-876d-e44d755cc99b}</ProjectGuid>
+    <RootNamespace>DECXBLASCPU</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>..\..\..\build\bin\$(Platform)\</OutDir>
+    <IntDir>../../../build/$(ProjectName)/$(Platform)</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;_DECX_CPU_PARTS_;_DECX_BLAS_CPU_;_C_EXPORT_ENABLED_=1;_CPP_EXPORT_ENABLED_=1;__x86_64__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>../../../build/bin/$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>DECX_core_CPU.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ProgramDatabaseFile />
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\srcs\common\Basic_process\extension\CPU\extend_constant.cxx" />
+    <ClCompile Include="..\..\..\srcs\common\Basic_process\extension\CPU\extend_reflect.cxx" />
+    <ClCompile Include="..\..\..\srcs\common\Basic_process\extension\CPU\extend_reflect_exec_params.cxx" />
+    <ClCompile Include="..\..\..\srcs\common\Basic_process\extension\CPU\x86\extend_constant_exec.cxx" />
+    <ClCompile Include="..\..\..\srcs\common\Basic_process\extension\CPU\x86\extend_reflect_exec.cxx" />
+    <ClCompile Include="..\..\..\srcs\common\Basic_process\fill\constant\CPU\fill_constant_exec.cxx" />
+    <ClCompile Include="..\..\..\srcs\common\Basic_process\transpose\CPU\transpose2D_config.cxx" />
+    <ClCompile Include="..\..\..\srcs\common\Basic_process\transpose\CPU\transpose_exec_16b.cxx" />
+    <ClCompile Include="..\..\..\srcs\common\Basic_process\transpose\CPU\transpose_exec_1b.cxx" />
+    <ClCompile Include="..\..\..\srcs\common\Basic_process\transpose\CPU\transpose_exec_4b.cxx" />
+    <ClCompile Include="..\..\..\srcs\common\Basic_process\transpose\CPU\transpose_exec_8b.cxx" />
+    <ClCompile Include="..\..\..\srcs\common\Basic_process\type_cast\CPU\_mm256_fp32_fp64.cxx" />
+    <ClCompile Include="..\..\..\srcs\common\Basic_process\type_cast\CPU\_mm256_fp32_int32.cxx" />
+    <ClCompile Include="..\..\..\srcs\common\Basic_process\type_cast\CPU\_mm256_fp32_uint8.cxx" />
+    <ClCompile Include="..\..\..\srcs\common\Basic_process\type_cast\CPU\_mm256_uint8_int32.cxx" />
+    <ClCompile Include="..\..\..\srcs\common\Basic_process\type_statistics\CPU\cmp_max_exec.cxx" />
+    <ClCompile Include="..\..\..\srcs\common\Basic_process\type_statistics\CPU\cmp_min_exec.cxx" />
+    <ClCompile Include="..\..\..\srcs\common\Basic_process\type_statistics\CPU\compare.cxx" />
+    <ClCompile Include="..\..\..\srcs\common\Basic_process\type_statistics\CPU\histogram.cxx" />
+    <ClCompile Include="..\..\..\srcs\common\Basic_process\type_statistics\CPU\hist_gen_exec.cxx" />
+    <ClCompile Include="..\..\..\srcs\common\Basic_process\type_statistics\CPU\normalization.cxx" />
+    <ClCompile Include="..\..\..\srcs\common\Basic_process\type_statistics\CPU\summation.cxx" />
+    <ClCompile Include="..\..\..\srcs\common\FMGR\fragment_arangement.cxx" />
+    <ClCompile Include="..\..\..\srcs\modules\BLAS\Basic_process\extension\extend.cxx" />
+    <ClCompile Include="..\..\..\srcs\modules\BLAS\Basic_process\fill\Matrix_fill.cxx" />
+    <ClCompile Include="..\..\..\srcs\modules\BLAS\Basic_process\fill\Vector_fill.cxx" />
+    <ClCompile Include="..\..\..\srcs\modules\BLAS\Basic_process\transpose\transpose.cxx" />
+    <ClCompile Include="..\..\..\srcs\modules\BLAS\Basic_process\type_cast\type_cast.cxx" />
+    <ClCompile Include="..\..\..\srcs\modules\BLAS\Dot product\CPU\fp32\dot_fp32.cxx" />
+    <ClCompile Include="..\..\..\srcs\modules\BLAS\Dot product\CPU\fp32\dot_fp32_exec.cxx" />
+    <ClCompile Include="..\..\..\srcs\modules\BLAS\GEMM\CPU\cplxd\GEMM_cplxd_caller.cxx" />
+    <ClCompile Include="..\..\..\srcs\modules\BLAS\GEMM\CPU\cplxd\matrix_B_arrange_cplxd.cxx" />
+    <ClCompile Include="..\..\..\srcs\modules\BLAS\GEMM\CPU\cpu_GEMM_config.cxx" />
+    <ClCompile Include="..\..\..\srcs\modules\BLAS\GEMM\CPU\fp32\GEMM_fp32_caller.cxx" />
+    <ClCompile Include="..\..\..\srcs\modules\BLAS\GEMM\CPU\fp32\matrix_B_arrange_fp32.cxx" />
+    <ClCompile Include="..\..\..\srcs\modules\BLAS\GEMM\CPU\fp64\GEMM_64b_caller.cxx" />
+    <ClCompile Include="..\..\..\srcs\modules\BLAS\GEMM\CPU\fp64\matrix_B_arrange_64b.cxx" />
+    <ClCompile Include="..\..\..\srcs\modules\BLAS\GEMM\CPU\GEMM.cxx" />
+    <ClCompile Include="..\..\..\srcs\modules\BLAS\Vectorial\fields\CPU\divergence.cxx" />
+    <ClCompile Include="..\..\..\srcs\modules\BLAS\Vectorial\fields\CPU\rotation.cxx" />
+    <ClCompile Include="..\..\..\srcs\modules\BLAS\Vectorial\transforms\3D\CPU\Matrix_transform.cxx" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
