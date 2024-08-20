@@ -38,25 +38,39 @@ Clone the project, enter the root path of the project.
 3. ```bash
     source ./build_configs.sh
 4. Configure the necessary variables.
-5. Set the targeted host architecture
+5. Set the targeted host architecture to x86
     ```bash
-    host_arch x86
+    host_arch x86[x86_64][x86-64]
 6. Set module to build.
     ```bash 
     set_module core_CPU
 7. Check the configured items
     ```bash
     list_configs
-8. ```bash
+8. Clean the configurations of the selected module.
+    ```bash
     clean
-9. ```bash
+9. Configure the selected module.
+    ```bash
     conf
-10. ```bash
+10. Call function to make
+    ```bash
     mk
 
 (Note: If terminal exports "/bin/bash^M: bad interpreter: No such file or directory", please run ./fix_CRLF_cases_for_linux_script.sh or copy the command in this script if it's also unavailable. This is caused editing these scripts on Windows. The line endings LF are replaced by CRLF. So, use sed to fix it in Linux)
 
 ## 3. Android for ARM64 (aarch64)
-Follow the same steps described in section 2 before running the script. When performing cross compilation for Android ARM64, replace the directory where your NDK is installed for -DCMAKE_TOOLCHAIN_FILE at line 10 of config_on_android.sh. Run "config_on_android.sh" and then run "build_on_android.sh". Please notice that only DECX_core_CPU supports aarch64. Additionally, its building system is just a prototype. Supports for aarch64 will be updated later.
+The setps are similar to thoes described in section 2. However, to cross compile aarch64 targets, you need to specify the architecture and toolcahin file first. 
 
-Now buiding for android is only supported by DECX_core_CPU and DECX_BLAS_CPU. By changing the built module, change the cd to the path of the built module (i.e. \${project_path}/DECX_core_CPU) on file ${project_dir}/config_on_android.sh. According to the dependency, you need to first build DECX_core_CPU and then DECX_BLAS_CPU, manually. Such process aren't included in the main building script yet, but will be soon.
+To set the architecture, run 
+```bash
+    host_arch aarch64
+```
+To set the toolchain file, run
+```bash
+    toolchain /path/to/your/toolchain_file
+```
+
+More information about the new building system can be found [here](https://github.com/param0037/DECX/tree/dev_DECX/build_system/readme.md).
+
+Now only DECX_core_* and DECX_BLAS_* modules can be compiled, since the rest of modules are not migrated to the new building system. For simplicity, the old building system is removed. Thus, you pretty much won't be able to compile the other modules.
