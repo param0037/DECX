@@ -1,3 +1,0 @@
-/media/wayne/Disk/DECX_world/DECX_NN_CUDA/build/CMakeFiles/DECX_NN_CUDA.dir
-/media/wayne/Disk/DECX_world/DECX_NN_CUDA/build/CMakeFiles/edit_cache.dir
-/media/wayne/Disk/DECX_world/DECX_NN_CUDA/build/CMakeFiles/rebuild_cache.dir

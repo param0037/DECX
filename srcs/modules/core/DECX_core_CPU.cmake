@@ -37,12 +37,11 @@ add_subdirectory(${DECX_WORLD_ABS_DIR}/srcs/modules/core/allocators/CPU
                  ${DECX_SUBBUILD_BIN_DIR}/allocators_host)
 
 
-if(CMAKE_CROSSCOMPILING)
-    message("Host=aarch64")
+message("Now building for ${_DECX_HOST_ARCH_}")
+if("${_DECX_HOST_ARCH_} " STREQUAL "aarch64 ")
     add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/modules/core/configs/arm64"
                      "${DECX_SUBBUILD_BIN_DIR}/configs_aarch64_cpu")
 else()
-    message("Host=x86_64")
     add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/modules/core/configs/x86_64"
                      "${DECX_SUBBUILD_BIN_DIR}/configs_x86_64_cpu")
 endif()
@@ -53,7 +52,7 @@ add_library(${PROJECT_NAME} SHARED ${CORE} ${CLASSES} ${RESMGR} ${THREAD_POOL} $
 target_link_libraries(DECX_core_CPU PRIVATE allocators_host)
 
 
-if(CMAKE_CROSSCOMPILING)
+if("${_DECX_HOST_ARCH_} " STREQUAL "aarch64 ")
     target_link_libraries(DECX_core_CPU PRIVATE configs_aarch64_cpu)
 else()
     target_link_libraries(DECX_core_CPU PRIVATE configs_x86_64_cpu)

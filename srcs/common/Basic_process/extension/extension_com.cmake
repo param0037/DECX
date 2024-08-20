@@ -32,7 +32,7 @@ include_guard(GLOBAL)
 if (DEFINED DECX_BUILD_WITH_CUDA)
     file(GLOB_RECURSE EXT_CUDA_COM_SRCS "${DECX_WORLD_ABS_DIR}/srcs/common/Basic_process/extension/CUDA/*.cu")
 else()
-    if ("${_DECX_HOST_ARCH_} " STREQUAL "x86_64 ")
+    if ("${_DECX_HOST_ARCH_} " STREQUAL "x64 ")
         file(GLOB EXT_CPU_COM_SRCS "${DECX_WORLD_ABS_DIR}/srcs/common/Basic_process/extension/CPU/x86/*.cxx"
                                    "${DECX_WORLD_ABS_DIR}/srcs/common/Basic_process/extension/CPU/*.cxx")
     elseif("${_DECX_HOST_ARCH_} " STREQUAL "aarch64 ")

@@ -120,9 +120,9 @@ namespace simd
             return _mm256_cvtsd_f64(this->_vd);
         }
 
-        inline float read_fp32_123(const int idx) {
+        /*inline float read_fp32_123(const int idx) {
             return _mm_extract_ps(_mm256_castps256_ps128(this->_vf), idx);
-        }
+        }*/
 
 
         inline void zeros(){

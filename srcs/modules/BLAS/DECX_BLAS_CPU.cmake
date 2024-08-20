@@ -30,7 +30,7 @@ include_guard(GLOBAL)
 
 
 file(GLOB GEMM "${DECX_WORLD_ABS_DIR}/srcs/modules/BLAS/GEMM/CPU/*.cxx")
-if(${_DECX_HOST_ARCH_} STREQUAL "x86_64")
+if(${_DECX_HOST_ARCH_} STREQUAL "x64")
     file(GLOB_RECURSE BP "${DECX_WORLD_ABS_DIR}/srcs/modules/BLAS/Basic_process/*.cxx")
 endif()
 file(GLOB_RECURSE BP "${DECX_WORLD_ABS_DIR}/srcs/modules/BLAS/Basic_process/extension/*.cxx")
@@ -38,7 +38,7 @@ file(GLOB_RECURSE BP "${DECX_WORLD_ABS_DIR}/srcs/modules/BLAS/Basic_process/exte
 # Combine these kernel objects to GEMM_xxx_cpu.lib later
 add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/modules/BLAS/GEMM/CPU/fp32" "${DECX_SUBBUILD_BIN_DIR}/gemm_fp32_cpu")
 add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/modules/BLAS/GEMM/CPU/fp64" "${DECX_SUBBUILD_BIN_DIR}/gemm_64b_cpu")
-if(${_DECX_HOST_ARCH_} STREQUAL "x86_64")
+if(${_DECX_HOST_ARCH_} STREQUAL "x64")
     add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/modules/BLAS/GEMM/CPU/cplxd" "${DECX_SUBBUILD_BIN_DIR}/gemm_cplxd_cpu")
 endif()
 
@@ -47,7 +47,7 @@ include("${DECX_WORLD_ABS_DIR}/srcs/common/FMGR/FMGR_COM.cmake")
 include("${DECX_WORLD_ABS_DIR}/srcs/common/Basic_process/extension/extension_com.cmake")
 
 # Some parts of DECX_BLAS_CPU is not designed to support aarch64 yet, this will be done in the future
-if(${_DECX_HOST_ARCH_} STREQUAL "x86_64")
+if(${_DECX_HOST_ARCH_} STREQUAL "x64")
 include("${DECX_WORLD_ABS_DIR}/srcs/common/Basic_process/fill/fill_com.cmake")
 include("${DECX_WORLD_ABS_DIR}/srcs/common/Basic_process/transpose/transpose_com.cmake")
 include("${DECX_WORLD_ABS_DIR}/srcs/common/Basic_process/type_cast/typecast_com.cmake")

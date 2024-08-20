@@ -1,1 +1,0 @@
-/usr/local/cuda/bin/nvcc -forward-unknown-to-host-compiler -O3 -DNDEBUG --generate-code=arch=compute_75,code=[compute_75,sm_75] -Xcompiler=-fPIC -Wno-deprecated-gpu-targets -shared -dlink --options-file CMakeFiles/DECX_DSP_CUDA.dir/deviceObjects1 -o CMakeFiles/DECX_DSP_CUDA.dir/cmake_device_link.o --options-file CMakeFiles/DECX_DSP_CUDA.dir/deviceLinkLibs.rsp
