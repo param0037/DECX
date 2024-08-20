@@ -35,7 +35,7 @@
 # don't need to specify CUDA since it's already contained in ${module_name}
 
 
-cmake_minimum_required(VERSION 3.23)
+cmake_minimum_required(VERSION 3.10)
 
 set(_DECX_CUDA_MODULE_          CACHE BOOL      "If the current built module is CUDA specific")
 set(_CPP_EXPORT_                CACHE BOOL      "To control if this module export functions in CPP mode")
