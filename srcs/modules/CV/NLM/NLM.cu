@@ -29,8 +29,9 @@
 */
 
 
-#include "../../classes/Matrix.h"
-#include "../../handles/decx_handles.h"
+#include "../../../common/Classes/Matrix.h"
+#include "../../../common/Handle/decx_handle.h"
+#include "../../core/configs/config.h"
 #include "NLM_BGR.cuh"
 #include "NLM_gray.cuh"
 #include "NLM_BGR_keep_alpha.cuh"
@@ -38,44 +39,44 @@
 
 namespace de
 {
-    namespace vis
+namespace vis
+{
+    namespace cuda
     {
-        namespace cuda
-        {
-            _DECX_API_ de::DH NLM_RGB(de::Matrix& src, de::Matrix& dst, uint search_window_radius, uint template_window_radius, float h);
+        _DECX_API_ de::DH NLM_RGB(de::Matrix& src, de::Matrix& dst, uint search_window_radius, uint template_window_radius, float h);
 
 
-            _DECX_API_ de::DH NLM_RGB_keep_alpha(de::Matrix& src, de::Matrix& dst, uint search_window_radius, uint template_window_radius, float h);
+        _DECX_API_ de::DH NLM_RGB_keep_alpha(de::Matrix& src, de::Matrix& dst, uint search_window_radius, uint template_window_radius, float h);
 
 
-            _DECX_API_ de::DH NLM_Gray(de::Matrix& src, de::Matrix& dst, uint search_window_radius, uint template_window_radius, float h);
-        }
+        _DECX_API_ de::DH NLM_Gray(de::Matrix& src, de::Matrix& dst, uint search_window_radius, uint template_window_radius, float h);
     }
+}
 }
 
 
 
 namespace decx
 {
-    namespace vis
-    {
-        void NLM_RGB_r16(decx::_Matrix* src, decx::_Matrix* dst, uint search_window_radius, uint template_window_radius, float h);
+namespace vis
+{
+    void NLM_RGB_r16(decx::_Matrix* src, decx::_Matrix* dst, uint search_window_radius, uint template_window_radius, float h);
 
 
-        void NLM_RGB_r16_keep_alpha(decx::_Matrix* src, decx::_Matrix* dst, uint search_window_radius, uint template_window_radius, float h);
+    void NLM_RGB_r16_keep_alpha(decx::_Matrix* src, decx::_Matrix* dst, uint search_window_radius, uint template_window_radius, float h);
 
 
-        void NLM_RGB_r8(decx::_Matrix* src, decx::_Matrix* dst, uint search_window_radius, uint template_window_radius, float h);
+    void NLM_RGB_r8(decx::_Matrix* src, decx::_Matrix* dst, uint search_window_radius, uint template_window_radius, float h);
 
 
-        void NLM_RGB_r8_keep_alpha(decx::_Matrix* src, decx::_Matrix* dst, uint search_window_radius, uint template_window_radius, float h);
+    void NLM_RGB_r8_keep_alpha(decx::_Matrix* src, decx::_Matrix* dst, uint search_window_radius, uint template_window_radius, float h);
 
 
-        void NLM_gray_r16(decx::_Matrix* src, decx::_Matrix* dst, uint search_window_radius, uint template_window_radius, float h);
+    void NLM_gray_r16(decx::_Matrix* src, decx::_Matrix* dst, uint search_window_radius, uint template_window_radius, float h);
 
 
-        void NLM_gray_r8(decx::_Matrix* src, decx::_Matrix* dst, uint search_window_radius, uint template_window_radius, float h);
-    }
+    void NLM_gray_r8(decx::_Matrix* src, decx::_Matrix* dst, uint search_window_radius, uint template_window_radius, float h);
+}
 }
 
 

@@ -473,11 +473,11 @@ decx::nn::cuda_conv2D_fp32_im2col_planner::run(decx::_GPU_Tensor* src, decx::_GP
     // Copy the data from source tensor
     this->_cpy_src_ext(src, S);
 
-    const uint64_t _src_dp_x_wp = this->_ext_method == de::_EXTEND_NONE_ ?
+    const uint64_t _src_dp_x_wp = this->_ext_method == de::extend_label::_EXTEND_NONE_ ?
         this->_src_layout->dp_x_wp :
         this->_ext_src_buf._dims.x * src->get_layout().dpitch;
 
-    float* _src_loc = this->_ext_method == de::_EXTEND_NONE_ ?
+    float* _src_loc = this->_ext_method == de::extend_label::_EXTEND_NONE_ ?
         (float*)src->Tens.ptr :
         (float*)(this->_ext_src_buf._ptr.ptr) - _src_dp_x_wp * (this->_kernel_manager._kernel_layout->height >> 1);
 
@@ -494,10 +494,10 @@ decx::nn::cuda_conv2D_fp32_im2col_planner::run(decx::_GPU_Tensor* src, decx::_GP
             this->_params_array[i]._src_loc = _src_loc;
             this->_params_array[i]._dst_loc = _dst_loc;
 
-            if (i == 0 && this->_ext_method == de::_EXTEND_CONSTANT_) {
+            if (i == 0 && this->_ext_method == de::extend_label::_EXTEND_CONSTANT_) {
                 this->run_single_frag_BC<false, true>(i, S);
             }
-            else if (i == this->_params_array.size() - 1 && this->_ext_method == de::_EXTEND_CONSTANT_) {
+            else if (i == this->_params_array.size() - 1 && this->_ext_method == de::extend_label::_EXTEND_CONSTANT_) {
                 this->run_single_frag_BC<true, false>(i, S);
             }
             else {

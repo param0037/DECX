@@ -61,7 +61,7 @@ function printf_info()
 function validate_module_name()
 {
     lower_input=$(echo "$1" | tr '[:upper:]' '[:lower:]')
-    MODULES_SET="core_cpu,core_cuda,blas_cpu,blas_cuda,dsp_cpu,dsp_cuda,cv_cpu,cv_cuda,nn_cpu,nn_cuda"
+    MODULES_SET="core_cpu,core_cuda,blas_cpu,blas_cuda,dsp_cpu,dsp_cuda,cv_cpu,cv_cuda,nn_cpu,nn_cuda,all"
 
     IFS=',' read -ra array<<< "$MODULES_SET"
     for element in "${array[@]}"; do

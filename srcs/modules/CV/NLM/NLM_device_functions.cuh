@@ -32,7 +32,7 @@
 #ifndef _CUDA_NLM_DEVICE_FUNCTIONS_CUH_
 #define _CUDA_NLM_DEVICE_FUNCTIONS_CUH_
 
-#include "../../core/basic.h"
+#include "../../../common/basic.h"
 
 
 #define store_to_shmem_L3_uchar4(offset_x) {                                                                \

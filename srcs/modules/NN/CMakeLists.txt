@@ -26,8 +26,8 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
 # DEALINGS IN THE SOFTWARE.
 
-
 cmake_minimum_required(VERSION 3.10)
+
 
 set(_DECX_CUDA_MODULE_          CACHE BOOL      "If the current built module is CUDA specific")
 set(_CPP_EXPORT_                CACHE BOOL      "To control if this module export functions in CPP mode")
@@ -37,26 +37,42 @@ set(_DECX_HOST_ARCH_ "x64"      CACHE STRING    "Specfiy the host architecture (
 if(_CPP_EXPORT_ OR _C_EXPORT_)
 
 if(_DECX_CUDA_MODULE_)
-    project(DECX_core_CUDA LANGUAGES CXX CUDA)
-    # Set CUDA arch name
+    project(DECX_NN_CUDA LANGUAGES CXX CUDA)
+    set(CUDA_ARCHS ${CUDA_NVCC_FLAGS} "sm_75;compute_75")
     set(CUDA_TARGET_ARCH "75")
-    set(CUDA_ARCH_COMPILE_FLAGS "sm_75;compute_75")
+        
+    set(CMAKE_CUDA_SEPARABLE_COMPILATION ON)
+    set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 else()
-    project(DECX_core_CPU LANGUAGES CXX)
+    project(DECX_NN_CPU LANGUAGES CXX)
 endif()
-
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# include to add compile definitions to the target
+# Configure the paths
 include("../../config_paths.cmake")
-include("../../compile_defs.cmake")
+
+# include to add compile definitions to the target
+include("${DECX_WORLD_ABS_DIR}/srcs/compile_defs.cmake")
+
+
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE release CACHE STRING "Build Type" FORCE)
+endif()
+
+# Set the link directories
+if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    link_directories(${DECX_WORLD_ABS_DIR}/build/bin/${_DECX_HOST_ARCH_}/Release)
+else()
+    link_directories(${DECX_WORLD_ABS_DIR}/build/bin/${_DECX_HOST_ARCH_})
+endif()
+
 
 if(_DECX_CUDA_MODULE_)
-    include("DECX_core_CUDA.cmake")
+    include("DECX_NN_CUDA.cmake")
 else()
-    include("DECX_core_CPU.cmake")
+    include("DECX_NN_CPU.cmake")
 endif()
 
 

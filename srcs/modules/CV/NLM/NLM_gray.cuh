@@ -32,21 +32,21 @@
 #ifndef _CUDA_NLM_GRAY_CUH_
 #define _CUDA_NLM_GRAY_CUH_
 
-#include "../../core/basic.h"
+#include "../../../common/basic.h"
 #include "NLM_device_functions.cuh"
 
 
 __global__
 /**
 * One thread process 4 uchar4
-* The radius of convolutional kernel = 8£¬Ã¿¸öÏß³Ì´¦Àí1x4¸öÊý¾Ý(one float4)£¬Ò»¸ö¿é16x16¸öÏß³Ì£¬
-* ¼´Ò»¸ö¿éÐèÒªµÄ¹²ÏíÄÚ´óÐ¡Îª(16 * 4 + 8 * 2)*(16 + 8 * 2) ¼´shmem float[48][96]
+* The radius of convolutional kernel = 8ï¿½ï¿½Ã¿ï¿½ï¿½ï¿½ß³Ì´ï¿½ï¿½ï¿½1x4ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(one float4)ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½16x16ï¿½ï¿½ï¿½ß³Ì£ï¿½
+* ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½Ä¹ï¿½ï¿½ï¿½ï¿½Ú´ï¿½Ð¡Îª(16 * 4 + 8 * 2)*(16 + 8 * 2) ï¿½ï¿½shmem float[48][96]
 * So the alignments should be x64(16 * 4) in width, and x16 in height for Ddst
 * The dims of Dsrc should be plus 16 * 2 = 32 on all directions(if float4 is consider horizentally, then +8 at width)
 * 
-* ºËÐÄÓò£º64 x 16(floats), ¹â»·Óò£º8 x 8(floats)
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½64 x 16(floats), ï¿½â»·ï¿½ï¿½8 x 8(floats)
 * constant area: 64 x 16(floats), apron area: 8 x 8(floats)
-* ¾í»ýºËÎ¬¶È¸ÕºÃ¶¼µÈÓÚ8
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î¬ï¿½È¸ÕºÃ¶ï¿½ï¿½ï¿½ï¿½ï¿½8
 * 
 *             \96 floats     16 uchar4s
 * -----------------------------------
@@ -166,14 +166,14 @@ void cu_NLM_r16_gray_N3x3(float4*               src,
 __global__
 /**
 * One thread process 4 uchar4
-* The radius of convolutional kernel = 8£¬Ã¿¸öÏß³Ì´¦Àí1x4¸öÊý¾Ý(one float4)£¬Ò»¸ö¿é16x16¸öÏß³Ì£¬
-* ¼´Ò»¸ö¿éÐèÒªµÄ¹²ÏíÄÚ´óÐ¡Îª(16 * 4 + 8 * 2)*(16 + 8 * 2) ¼´shmem float[48][96]
+* The radius of convolutional kernel = 8ï¿½ï¿½Ã¿ï¿½ï¿½ï¿½ß³Ì´ï¿½ï¿½ï¿½1x4ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(one float4)ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½16x16ï¿½ï¿½ï¿½ß³Ì£ï¿½
+* ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½Ä¹ï¿½ï¿½ï¿½ï¿½Ú´ï¿½Ð¡Îª(16 * 4 + 8 * 2)*(16 + 8 * 2) ï¿½ï¿½shmem float[48][96]
 * So the alignments should be x64(16 * 4) in width, and x16 in height for Ddst
 * The dims of Dsrc should be plus 16 * 2 = 32 on all directions(if float4 is consider horizentally, then +8 at width)
 * 
-* ºËÐÄÓò£º64 x 16(floats), ¹â»·Óò£º8 x 8(floats)
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½64 x 16(floats), ï¿½â»·ï¿½ï¿½8 x 8(floats)
 * constant area: 64 x 16(floats), apron area: 8 x 8(floats)
-* ¾í»ýºËÎ¬¶È¸ÕºÃ¶¼µÈÓÚ8
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î¬ï¿½È¸ÕºÃ¶ï¿½ï¿½ï¿½ï¿½ï¿½8
 * 
 *             \96 floats     16 uchar4s
 * -----------------------------------
@@ -307,14 +307,14 @@ void cu_NLM_r16_gray_N5x5(float4*               src,
 __global__
 /**
 * One thread process 4 uchar4
-* The radius of convolutional kernel = 8£¬Ã¿¸öÏß³Ì´¦Àí1x4¸öÊý¾Ý(one float4)£¬Ò»¸ö¿é16x16¸öÏß³Ì£¬
-* ¼´Ò»¸ö¿éÐèÒªµÄ¹²ÏíÄÚ´óÐ¡Îª(16 * 4 + 8 * 2)*(16 + 8 * 2) ¼´shmem float[48][96]
+* The radius of convolutional kernel = 8ï¿½ï¿½Ã¿ï¿½ï¿½ï¿½ß³Ì´ï¿½ï¿½ï¿½1x4ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(one float4)ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½16x16ï¿½ï¿½ï¿½ß³Ì£ï¿½
+* ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½Ä¹ï¿½ï¿½ï¿½ï¿½Ú´ï¿½Ð¡Îª(16 * 4 + 8 * 2)*(16 + 8 * 2) ï¿½ï¿½shmem float[48][96]
 * So the alignments should be x64(16 * 4) in width, and x16 in height for Ddst
 * The dims of Dsrc should be plus 16 * 2 = 32 on all directions(if float4 is consider horizentally, then +8 at width)
 * 
-* ºËÐÄÓò£º64 x 16(floats), ¹â»·Óò£º8 x 8(floats)
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½64 x 16(floats), ï¿½â»·ï¿½ï¿½8 x 8(floats)
 * constant area: 64 x 16(floats), apron area: 8 x 8(floats)
-* ¾í»ýºËÎ¬¶È¸ÕºÃ¶¼µÈÓÚ8
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î¬ï¿½È¸ÕºÃ¶ï¿½ï¿½ï¿½ï¿½ï¿½8
 * 
 *             \80 floats     8 uchar4s
 * -----------------------------------
@@ -425,14 +425,14 @@ void cu_NLM_r8_gray_N3x3(float4*               src,
 __global__
 /**
 * One thread process 4 uchar4
-* The radius of convolutional kernel = 8£¬Ã¿¸öÏß³Ì´¦Àí1x4¸öÊý¾Ý(one float4)£¬Ò»¸ö¿é16x16¸öÏß³Ì£¬
-* ¼´Ò»¸ö¿éÐèÒªµÄ¹²ÏíÄÚ´óÐ¡Îª(16 * 4 + 8 * 2)*(16 + 8 * 2) ¼´shmem float[48][96]
+* The radius of convolutional kernel = 8ï¿½ï¿½Ã¿ï¿½ï¿½ï¿½ß³Ì´ï¿½ï¿½ï¿½1x4ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(one float4)ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½16x16ï¿½ï¿½ï¿½ß³Ì£ï¿½
+* ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½Ä¹ï¿½ï¿½ï¿½ï¿½Ú´ï¿½Ð¡Îª(16 * 4 + 8 * 2)*(16 + 8 * 2) ï¿½ï¿½shmem float[48][96]
 * So the alignments should be x64(16 * 4) in width, and x16 in height for Ddst
 * The dims of Dsrc should be plus 16 * 2 = 32 on all directions(if float4 is consider horizentally, then +8 at width)
 * 
-* ºËÐÄÓò£º64 x 16(floats), ¹â»·Óò£º8 x 8(floats)
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½64 x 16(floats), ï¿½â»·ï¿½ï¿½8 x 8(floats)
 * constant area: 64 x 16(floats), apron area: 8 x 8(floats)
-* ¾í»ýºËÎ¬¶È¸ÕºÃ¶¼µÈÓÚ8
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î¬ï¿½È¸ÕºÃ¶ï¿½ï¿½ï¿½ï¿½ï¿½8
 * 
 *             \96 floats     16 uchar4s
 * -----------------------------------

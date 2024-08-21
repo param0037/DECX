@@ -26,9 +26,6 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
 # DEALINGS IN THE SOFTWARE.
 
-# This file must not be included after add_library() or any argument that has created the target
-# Since this file set the compile definitions and compiler command line flags, which need to be
-# specified before generating the compile command line
 
 include_guard(GLOBAL)
 

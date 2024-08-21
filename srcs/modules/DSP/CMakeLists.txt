@@ -32,31 +32,51 @@ cmake_minimum_required(VERSION 3.10)
 set(_DECX_CUDA_MODULE_          CACHE BOOL      "If the current built module is CUDA specific")
 set(_CPP_EXPORT_                CACHE BOOL      "To control if this module export functions in CPP mode")
 set(_C_EXPORT_                  CACHE BOOL      "To control if this module export functions in C mode")
-set(_DECX_HOST_ARCH_ "x64"      CACHE STRING    "Specfiy the host architecture (either x64 or aarch64")
+set(_DECX_HOST_ARCH_ "x86_64"   CACHE STRING    "Specfiy the host architecture (either x86_64 or aarch64")
+
 
 if(_CPP_EXPORT_ OR _C_EXPORT_)
 
 if(_DECX_CUDA_MODULE_)
-    project(DECX_core_CUDA LANGUAGES CXX CUDA)
-    # Set CUDA arch name
+    project(DECX_DSP_CUDA LANGUAGES CXX CUDA)
+    set(CMAKE_CXX_STANDARD 11)
     set(CUDA_TARGET_ARCH "75")
     set(CUDA_ARCH_COMPILE_FLAGS "sm_75;compute_75")
+
+    # Enable seperate compilation mode
+    set(CMAKE_CUDA_SEPARABLE_COMPILATION ON)
+    set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 else()
-    project(DECX_core_CPU LANGUAGES CXX)
+    project(DECX_DSP_CPU LANGUAGES CXX)
+    set(CMAKE_CXX_STANDARD 17)
+endif()
+
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Configure the paths
+include("../../config_paths.cmake")
+
+# include to add compile definitions to the target
+include("${DECX_WORLD_ABS_DIR}/srcs/compile_defs.cmake")
+
+
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE release CACHE STRING "Build Type" FORCE)
 endif()
 
 
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+# Set the link directories
+if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    link_directories(${DECX_WORLD_ABS_DIR}/build/bin/${_DECX_HOST_ARCH_}/Release)
+else()
+    link_directories(${DECX_WORLD_ABS_DIR}/build/bin/${_DECX_HOST_ARCH_})
+endif()
 
-# include to add compile definitions to the target
-include("../../config_paths.cmake")
-include("../../compile_defs.cmake")
 
 if(_DECX_CUDA_MODULE_)
-    include("DECX_core_CUDA.cmake")
+    include(DECX_DSP_CUDA.cmake)
 else()
-    include("DECX_core_CPU.cmake")
+    include(DECX_DSP_CPU.cmake)
 endif()
 
 

@@ -66,7 +66,7 @@ function clean_all()
     clean_single "DSP_CUDA"
     clean_single "CV_CPU"
     clean_single "CV_CUDA"
-    clean_single "NN_CPU"
+    # clean_single "NN_CPU"
     clean_single "NN_CUDA"
 
     cd $PROJECT_PATH_BUILD
@@ -151,9 +151,9 @@ function config_all()
     config_single "DSP_CUDA"
     config_single "CV_CPU"
     config_single "CV_CUDA"
-    config_single "NN_CPU"
+    # config_single "NN_CPU"
     config_single "NN_CUDA"
-
+    
     cd $PROJECT_PATH_BUILD
 
     echo_status "All config success"
@@ -195,7 +195,7 @@ function build_all()
     build_single "DSP_CUDA"
     build_single "CV_CPU"
     build_single "CV_CUDA"
-    build_single "NN_CPU"
+    # build_single "NN_CPU"
     build_single "NN_CUDA"
 
     cd $PROJECT_PATH_BUILD

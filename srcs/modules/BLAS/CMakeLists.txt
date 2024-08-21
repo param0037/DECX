@@ -43,13 +43,15 @@ if(_DECX_CUDA_MODULE_)
     set(CMAKE_CXX_STANDARD 11)
 else()
     project(DECX_BLAS_CPU LANGUAGES CXX)
+    set(CUDA_TARGET_ARCH "75")
+    set(CUDA_ARCH_COMPILE_FLAGS "sm_75;compute_75")
     set(CMAKE_CXX_STANDARD 17)
 endif()
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Configure the paths
-include("../../config_path.cmake")
+include("../../config_paths.cmake")
 # include to add compile definitions to the target
 include("${DECX_WORLD_ABS_DIR}/srcs/compile_defs.cmake")
 

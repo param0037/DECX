@@ -36,27 +36,42 @@ set(_DECX_HOST_ARCH_ "x64"      CACHE STRING    "Specfiy the host architecture (
 
 if(_CPP_EXPORT_ OR _C_EXPORT_)
 
-if(_DECX_CUDA_MODULE_)
-    project(DECX_core_CUDA LANGUAGES CXX CUDA)
-    # Set CUDA arch name
+if(_DECX_CUDA_MODULE_)      # If is CUDA
+    project(DECX_CV_CUDA LANGUAGES CXX CUDA)
     set(CUDA_TARGET_ARCH "75")
     set(CUDA_ARCH_COMPILE_FLAGS "sm_75;compute_75")
-else()
-    project(DECX_core_CPU LANGUAGES CXX)
+    
+    # Enable seperate compilation mode
+    set(CMAKE_CUDA_SEPARABLE_COMPILATION ON)
+    set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+else()      # If is CPU
+    project(DECX_CV_CPU LANGUAGES CXX)
 endif()
-
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# include to add compile definitions to the target
+# Configure the paths
 include("../../config_paths.cmake")
-include("../../compile_defs.cmake")
+
+# include to add compile definitions to the target
+include("${DECX_WORLD_ABS_DIR}/srcs/compile_defs.cmake")
+
+# Set the link directories
+if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    link_directories(${DECX_WORLD_ABS_DIR}/build/bin/${_DECX_HOST_ARCH_}/Release)
+else()
+    link_directories(${DECX_WORLD_ABS_DIR}/build/bin/${_DECX_HOST_ARCH_})
+endif()
+
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE release CACHE STRING "Build Type" FORCE)
+endif()
 
 if(_DECX_CUDA_MODULE_)
-    include("DECX_core_CUDA.cmake")
+    include("DECX_CV_CUDA.cmake")
 else()
-    include("DECX_core_CPU.cmake")
+    include("DECX_CV_CPU.cmake")
 endif()
 
 

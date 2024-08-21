@@ -95,12 +95,19 @@ function host_arch()
         is_aarch64 $DECX_HOST_ARCH
         is_arm64=$?
         if [ $is_arm64 -eq 1 ]; then
+            echo_status "Set targeted architecture to aarch64"
             export DECX_HOST_ARCH="aarch64"
         else
-            export DECX_HOST_ARCH="x86_64"
+            echo_status "Set targeted architecture to x64"
+            export DECX_HOST_ARCH="x64"
         fi
     else
-        export DECX_HOST_ARCH=$DECX_HOST_ARCH
+        if [ -n "$DECX_HOST_ARCH" ]; then
+            export DECX_HOST_ARCH=$DECX_HOST_ARCH
+        else
+            echo_status "Set targeted architecture to x64 by default"
+            export DECX_HOST_ARCH="x64"
+        fi
     fi
 }
 
@@ -149,6 +156,11 @@ function exp_lang()
         if [ $DECX_EXP_C -eq 0 ] && [ $DECX_EXP_CXX -eq 0 ] && [ $DECX_EXP_PYTHON -eq 0 ]; then
             echo_error "At least one language should be exported"
         fi
+    else
+        export DECX_EXP_C=1
+        export DECX_EXP_CXX=1
+        export DECX_EXP_PYTHON=0
+        echo_status "No language export is given, enable c, cxx by default"
     fi
 }
 
