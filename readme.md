@@ -20,7 +20,7 @@ A fast linear algebra, computer vision, and mathematic library, based on CUDA an
 3. SDL2 and SDL_image.
 4. NDK, if building for Android ARM64 platform.
 
-## Toolchain combination
+## make options
 
 ## 1. General x86 64bit Windows
 ### (a) Using Visual Studio (VS)
@@ -32,7 +32,8 @@ Temporary unavailable due to the chnage of buid system recently, will soon be on
 ## 2. General x86 Ubuntu
 Clone the project, enter the root path of the project. 
 1. cd to ${project\_path}/build_system/Linux/
-2. ```bash 
+2. Make the necessary scripts executable.
+    ```bash 
     sudo chmod u+x ./build_configs.sh
     sudo chmod u+x ./build.sh
 3. ```bash
@@ -68,9 +69,9 @@ To set the architecture, run
 ```
 To set the toolchain file, run
 ```bash
-    toolchain /path/to/your/toolchain_file
+    toolchain /path/to/your/toolchain_file.cmake
 ```
 
 More information about the new building system can be found [here](https://github.com/param0037/DECX/tree/dev_DECX/build_system/readme.md).
 
-Now only DECX_core_* and DECX_BLAS_* modules can be compiled, since the rest of modules are not migrated to the new building system. For simplicity, the old building system is removed. Thus, you pretty much won't be able to compile the other modules.
+(Note: Now all the modules are migrated to the new building system, except for DECX_NN_CPU, because it has no source temporarily.)
