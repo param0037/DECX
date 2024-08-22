@@ -29,6 +29,9 @@
 # DEALINGS IN THE SOFTWARE.
 
 
+# A 1x3 array stack, all the functions return their value(s) here
+export stack=("" "" "")
+
 function echo_status() 
 {
     CYAN='\033[0;36m'
