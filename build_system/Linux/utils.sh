@@ -77,7 +77,7 @@ function validate_module_name()
 function validate_arch_name()
 {
     lower_input=$(echo "$1" | tr '[:upper:]' '[:lower:]')
-    ARCH_SET="x86_64,x86-64,x86,aarch64,arm,arm64"
+    ARCH_SET="x86_64,x86-64,x64,aarch64,arm64"
 
     IFS=',' read -ra array<<< "$ARCH_SET"
     for element in "${array[@]}"; do
