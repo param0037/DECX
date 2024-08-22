@@ -35,3 +35,6 @@ export DECX_HOST_ARCH
 export DECX_EXP_C=0
 export DECX_EXP_CXX=0
 export DECX_EXP_PYTHON=0
+
+export DECX_CUDA_SM=75
+export DECX_CUDA_COMPUTE=75

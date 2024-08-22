@@ -31,34 +31,45 @@
 # Entry from dir=../
 source_script ./utils.sh
 
-# Set the host architecture
-function host_arch()
+
+function cuda_sm()
 {
-    DECX_HOST_ARCH=""
-    if [ -n "$1" ]; then
-        validate_arch_name $1
-        arch_name_correct=$?
-        if [ $arch_name_correct -eq 1 ]; then
-            DECX_HOST_ARCH=$1
-        else
-            echo_error "Host architecture should either be X86-64 or ARM64"
+    # Convert the input to all lower case
+    lower_input=$(echo "$1" | tr '[:upper:]' '[:lower:]')
+
+    IFS=',' read -ra array <<< "$lower_input"
+    for element in "${array[@]}"; do
+        # Check if is about sm
+        if [[ "$element" == *"sm" ]]; then
+            val="${sm#*=}"
+            is_numerical $val
+            numer=$?
+            if [[ $numer -eq 1 ]]; then
+                DECX_CUDA_SM=$val
+            else
+                echo_error "CUDA SM architecture should be numerical"
+            fi
         fi
-        # Rectify arch name
-        is_aarch64 $DECX_HOST_ARCH
-        is_arm64=$?
-        if [ $is_arm64 -eq 1 ]; then
-            echo_status "Set targeted architecture to aarch64"
-            DECX_HOST_ARCH="aarch64"
-        else
-            echo_status "Set targeted architecture to x64"
-            DECX_HOST_ARCH="x64"
+        # Check if is about compute
+        if [[ "$element" == *"compute" ]]; then
+            val="${sm#*=}"
+            is_numerical $val
+            numer=$?
+            if [[ $numer -eq 1 ]]; then
+                DECX_CUDA_COMPUTE=$val
+            else
+                echo_error "CUDA computability should be numerical"
+            fi
         fi
-    else
-        if [ -n "$DECX_HOST_ARCH" ]; then
-            DECX_HOST_ARCH=$DECX_HOST_ARCH
-        else
-            echo_status "Set targeted architecture to x64 by default"
-            DECX_HOST_ARCH="x64"
-        fi
+    done
+
+    # If one of them is empty, make them equal
+    if [ -z $DECX_CUDA_SM ]; then
+        echo_status "CUDA SM architecture is empty, assign it with computability"
+        DECX_CUDA_SM=$DECX_CUDA_COMPUTE
+    fi
+    if [ -z $DECX_CUDA_COMPUTE ]; then
+        echo_status "CUDA computability is empty, assign it with SM architecture"
+        DECX_CUDA_COMPUTE=$DECX_CUDA_SM
     fi
 }

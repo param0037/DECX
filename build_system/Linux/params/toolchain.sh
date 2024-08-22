@@ -32,22 +32,20 @@
 source_script ./utils.sh
 
 # Set the cmake toolchain file, if applicable
-function __builtin_toolchain()
+function toolchain()
 {
-    local _CMAKE_TOOLCHAIN_PATH=""
+    DECX_CMAKE_TOOLCHAIN_PATH=""
     if [ -n "$1" ]; then
-        _CMAKE_TOOLCHAIN_PATH=$1
+        DECX_CMAKE_TOOLCHAIN_PATH=$1
     else
-        _CMAKE_TOOLCHAIN_PATH=$DECX_CMAKE_TOOLCHAIN_PATH
+        DECX_CMAKE_TOOLCHAIN_PATH=$DECX_CMAKE_TOOLCHAIN_PATH
     fi
 
     is_aarch64 $DECX_HOST_ARCH
     is_arm64=$?
     if [ $is_arm64 -eq 1 ]; then
-        if [ -z "$_CMAKE_TOOLCHAIN_PATH" ]; then
+        if [ -z "$DECX_CMAKE_TOOLCHAIN_PATH" ]; then
             echo_error "Cross compilation must specify the toolchain file"
         fi
     fi
-
-    stack[0]=$_CMAKE_TOOLCHAIN_PATH
 }

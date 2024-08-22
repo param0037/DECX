@@ -56,6 +56,7 @@ source_script ./params/host_arch.sh
 source_script ./params/cxx_ver.sh
 source_script ./params/toolchain.sh
 source_script ./params/set_module.sh
+source_script ./params/cuda_sm.sh
 
 
 function list_configs()
@@ -102,40 +103,16 @@ function list_configs()
     else
         echo -e "[DECX]   Parallel building : ${RED}No${WHITE}"
     fi
-}
 
-
-# function set_module()
-# {
-#     if [ -n "$1" ]; then
-#         validate_module_name $1
-#         if [ $? -eq 1 ]; then
-#             export DECX_CURRENT_BUILD_MODULE=$1
-#         else
-#             echo_error "The indicated module does not exist"
-#         fi
-#     else
-#         echo "[DECX] module options"
-#     fi
-# }
-
-
-function set_module()
-{
-    __builtin_set_module $1
-    export DECX_CURRENT_BUILD_MODULE=${stack[0]}
-}
-
-
-function toolchain()
-{
-    __builtin_toolchain $1
-    export DECX_CMAKE_TOOLCHAIN_PATH=${stack[0]}
+    echo "[DECX]   CUDA SM architecture : ${DECX_CUDA_SM}"
+    echo "[DECX]   CUDA computability : ${DECX_CUDA_COMPUTE}"
 }
 
 
 function conf()
 {
+    source_script ./utils.sh
+
     is_aarch64 $DECX_HOST_ARCH
     if [ $? -eq 1 ]; then
         if [ -z "$DECX_CMAKE_TOOLCHAIN_PATH" ]; then
@@ -158,6 +135,8 @@ function conf()
 
 function mk()
 {
+    source_script ./utils.sh
+
     if [ -z $1 ]; then
         ./build.sh -m $DECX_CURRENT_BUILD_MODULE
     else
@@ -172,6 +151,8 @@ function mk()
 
 function clean()
 {
+    source_script ./utils.sh
+
     if [ -z $1 ]; then
         ./build.sh -c $DECX_CURRENT_BUILD_MODULE
     else
@@ -203,15 +184,9 @@ DECX_PARALLEL_BUILD=1
 echo_status "Enable parallel build by default"
 
 host_arch $1
-DECX_HOST_ARCH="${stack[0]}"
 
 exp_lang $2
-DECX_EXP_C=${stack[0]}
-DECX_EXP_CXX=${stack[1]}
-DECX_EXP_PYTHON=${stack[2]}
 
 cxx_ver $3
-# DECX_CXX_VER=${stack[0]}
 
 toolchain $4
-# DECX_CMAKE_TOOLCHAIN_PATH=${stack[0]}

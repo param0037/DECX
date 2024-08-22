@@ -33,13 +33,24 @@ set(_DECX_CUDA_MODULE_          CACHE BOOL      "If the current built module is 
 set(_CPP_EXPORT_                CACHE BOOL      "To control if this module export functions in CPP mode")
 set(_C_EXPORT_                  CACHE BOOL      "To control if this module export functions in C mode")
 set(_DECX_HOST_ARCH_ "x64"      CACHE STRING    "Specfiy the host architecture (either x64 or aarch64")
+set(_DECX_CUDA_COMPUTE_         CACHE STRING    "Specfiy the CUDA computability")
+set(_DECX_CUDA_SM_              CACHE STRING    "Specfiy the CUDA SM architecture")
+set(_DECX_CUDA_COMPUTE_         CACHE STRING    "Specfiy the CUDA computability")
 
 
 if(_CPP_EXPORT_ OR _C_EXPORT_)
 
 # Set CMake project name
 if(_DECX_CUDA_MODULE_)
+    # Check if the two variables are set
+    if(("${_DECX_CUDA_SM_} " STREQUAL " ") OR ("${_DECX_CUDA_COMPUTE_} " STREQUAL " "))
+        message("Error! When building CUDA modules, _DECX_CUDA_SM_ and _DECX_CUDA_COMPUTE_ should be set")
+    endif()
+
     project(DECX_BLAS_CUDA LANGUAGES CXX CUDA)
+    # Set CUDA arch name
+    set(CUDA_TARGET_ARCH ${_DECX_CUDA_SM_})
+    set(CUDA_ARCH_COMPILE_FLAGS "sm_${_DECX_CUDA_SM_};compute_${_DECX_CUDA_COMPUTE_}")
     set(CMAKE_CXX_STANDARD 11)
 else()
     project(DECX_BLAS_CPU LANGUAGES CXX)

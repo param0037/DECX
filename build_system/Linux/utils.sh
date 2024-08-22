@@ -29,9 +29,6 @@
 # DEALINGS IN THE SOFTWARE.
 
 
-# A 1x3 array stack, all the functions return their value(s) here
-export stack=("" "" "")
-
 function echo_status() 
 {
     CYAN='\033[0;36m'
@@ -112,8 +109,19 @@ function is_aarch64()
 
 function is_CUDA_module()
 {
-    lower_input=$(echo "$1" | tr '[:upper:]' '[:lower:]')
+# A 1x3 array stack, all the functions return their value(s) here
+export stack=("" "" "")
     if [[ "$1" == *"CUDA"* ]]; then
+        return 1
+    else
+        return 0
+    fi
+}
+
+
+function is_numerical()
+{
+    if [[ $1 =~ ^[0-9]+$ ]]; then
         return 1
     else
         return 0

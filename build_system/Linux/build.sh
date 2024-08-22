@@ -114,6 +114,8 @@ function config_single()
     is_CUDA=$?
     if [ $is_CUDA -eq 1 ]; then
         cmake_config_cmd="$cmake_config_cmd -D_DECX_CUDA_MODULE_=true"
+        cmake_config_cmd="$cmake_config_cmd -D_DECX_CUDA_SM_=$DECX_CUDA_SM"
+        cmake_config_cmd="$cmake_config_cmd -D_DECX_CUDA_COMPUTE_=$DECX_CUDA_COMPUTE"
     else
         cmake_config_cmd="$cmake_config_cmd -D_DECX_CUDA_MODULE_=false"
     fi
@@ -221,7 +223,18 @@ if [ "$#" -eq 0 ]; then
 fi
 
 
-chmod u+x ./utils.sh
+stat=($(ls -l ./utils.sh))
+can_run=0
+if [[ "$stat" == *"x"* ]]; then
+    can_run=1
+else
+    can_run=0
+fi
+
+
+if [[ $can_run -ne 1 ]]; then
+    chmod u+x ./utils.sh
+fi
 source ./utils.sh
 
 
