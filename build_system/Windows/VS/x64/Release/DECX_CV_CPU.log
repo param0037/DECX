@@ -1,0 +1,341 @@
+﻿Build started 2024/8/23 22:09:26.
+Logging verbosity is set to: Normal.     1>Project "E:\DECX_world\build_system\Windows\VS\DECX_CV_CPU.vcxproj" on node 7 (Rebuild target(s)).
+     1>D:\Microsoft Visual Studio\Visual Studio\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(499,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
+     1>D:\Microsoft Visual Studio\Visual Studio\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(513,5): warning MSB8028: The intermediate directory (x64\Release\) contains files shared from another project (DECX_DSP_CPU.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+         Creating directory "x64\Release\DECX_CV_CPU.tlog\".
+     1>InitializeBuildStatus:
+         Creating "x64\Release\DECX_CV_CPU.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+       ClCompile:
+         D:\Microsoft Visual Studio\Visual Studio\VC\Tools\MSVC\14.29.30133\bin\HostX86\x64\CL.exe /c /I../srcs/extern/SDL2/ /I../srcs/extern/SDL2_image/ /Zi /nologo /W3 /WX- /diagnostics:column /sdl /O2 /Oi /GL /D NDEBUG /D DECXCPU_EXPORTS /D _WINDOWS /D _USRDLL /D _DECX_CPU_PARTS_ /D _DECX_CV_CPU_ /D _C_EXPORT_ENABLED_=1 /D _CPP_EXPORT_ENABLED_=1 /D __x86_64__ /D _WINDLL /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /permissive- /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"x64\Release\\" /Fd"x64\Release\vc142.pdb" /external:W3 /Gd /TP /FC /errorReport:prompt ..\..\..\srcs\modules\cv\edge_detection\CPU\Canny_ED_post_proc.cxx ..\..\..\srcs\modules\cv\edge_detection\CPU\edge_detectors.cxx ..\..\..\srcs\modules\cv\edge_detection\CPU\Scharr_edg_det_ops.cxx ..\..\..\srcs\modules\cv\edge_detection\CPU\Sobel_edg_det_ops.cxx ..\..\..\srcs\modules\cv\Image_IO\Image_GUI.cxx ..\..\..\srcs\modules\cv\Image_IO\Image_IO.cxx ..\..\..\srcs\modules\cv\utils\color_transform.cxx ..\..\..\srcs\modules\cv\utils\cvt_colors.cxx
+         Canny_ED_post_proc.cxx
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(113,72): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(113,100): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(114,76): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(137,72): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(137,100): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(138,76): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(180,72): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_sse.h(100,66): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_sse.h(100,91): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_sse.h(101,70): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\intrinsics_ops.h(230,26): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+     1>E:\DECX_world\srcs\common\SIMD\intrinsics_ops.h(308,26): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+     1>E:\DECX_world\srcs\common\SIMD\intrinsics_ops.h(321,26): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+     1>E:\DECX_world\srcs\common\SIMD\intrinsics_ops.h(334,26): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+     1>E:\DECX_world\srcs\modules\cv\edge_detection\CPU\Canny_ED_post_proc.cxx(54,95): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\modules\cv\edge_detection\CPU\Canny_ED_post_proc.cxx(55,97): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\modules\cv\edge_detection\CPU\Canny_ED_post_proc.cxx(56,71): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\modules\cv\edge_detection\CPU\Canny_ED_post_proc.cxx(57,95): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\modules\cv\edge_detection\CPU\Canny_ED_post_proc.cxx(90,23): warning C4018: '<': signed/unsigned mismatch
+     1>E:\DECX_world\srcs\modules\cv\edge_detection\CPU\Canny_ED_post_proc.cxx(94,27): warning C4018: '<': signed/unsigned mismatch
+     1>E:\DECX_world\srcs\modules\cv\edge_detection\CPU\Canny_ED_post_proc.cxx(105,75): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\modules\cv\edge_detection\CPU\Canny_ED_post_proc.cxx(107,74): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\modules\cv\edge_detection\CPU\Canny_ED_post_proc.cxx(108,121): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\modules\cv\edge_detection\CPU\Canny_ED_post_proc.cxx(111,74): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\modules\cv\edge_detection\CPU\Canny_ED_post_proc.cxx(82,56): warning C4101: 'reg1': unreferenced local variable
+         edge_detectors.cxx
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(113,72): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(113,100): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(114,76): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(137,72): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(137,100): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(138,76): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(180,72): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_sse.h(100,66): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_sse.h(100,91): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_sse.h(101,70): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\intrinsics_ops.h(230,26): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+     1>E:\DECX_world\srcs\common\SIMD\intrinsics_ops.h(308,26): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+     1>E:\DECX_world\srcs\common\SIMD\intrinsics_ops.h(321,26): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+     1>E:\DECX_world\srcs\common\SIMD\intrinsics_ops.h(334,26): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+     1>E:\DECX_world\srcs\common\Classes\Matrix.h(188,30): warning C4251: 'decx::_Matrix::_layout': class 'decx::_matrix_layout' needs to have dll-interface to be used by clients of class 'decx::_Matrix'
+       E:\DECX_world\srcs\common\Classes\Matrix.h(72): message : see declaration of 'decx::_matrix_layout'
+     1>E:\DECX_world\srcs\common\Classes\Matrix.h(207,29): warning C4251: 'decx::_Matrix::Mat': struct 'decx::PtrInfo<void>' needs to have dll-interface to be used by clients of class 'decx::_Matrix'
+       E:\DECX_world\srcs\common\Classes\Matrix.h(207): message : see declaration of 'decx::PtrInfo<void>'
+     1>E:\DECX_world\srcs\modules\core\thread_management\thread_arrange.h(62,31): warning C4018: '<': signed/unsigned mismatch
+     1>E:\DECX_world\srcs\modules\core\thread_management\thread_arrange.h(73,38): warning C4018: '<': signed/unsigned mismatch
+     1>E:\DECX_world\srcs\modules\core\thread_management\thread_arrange.h(129,31): warning C4018: '<': signed/unsigned mismatch
+     1>E:\DECX_world\srcs\modules\core\thread_management\thread_arrange.h(140,38): warning C4018: '<': signed/unsigned mismatch
+     1>E:\DECX_world\srcs\modules\cv\edge_detection\CPU\edge_detectors.cxx(84,82): warning C4244: 'argument': conversion from 'uint64_t' to 'const uint', possible loss of data
+     1>E:\DECX_world\srcs\modules\cv\edge_detection\CPU\edge_detectors.cxx(97,27): warning C4018: '<': signed/unsigned mismatch
+     1>E:\DECX_world\srcs\modules\cv\edge_detection\CPU\edge_detectors.cxx(125,27): warning C4018: '<': signed/unsigned mismatch
+     1>E:\DECX_world\srcs\modules\core\thread_management\thread_pool.h(117,1): warning C4267: 'argument': conversion from 'size_t' to 'const uint', possible loss of data
+       E:\DECX_world\srcs\modules\cv\edge_detection\CPU\edge_detectors.cxx(100): message : see reference to function template instantiation 'std::future<void> decx::cpu::register_task_default<void(__cdecl *&)(const uint8_t *,float *,float *,uint32_t,uint32_t,uint,uint2),const uint8_t*&,float*&,float*&,const uint&,const uint&,uint32_t,uint2>(FuncType,const uint8_t *&,float *&,float *&,const uint &,const uint &,uint32_t &&,uint2 &&)' being compiled
+                 with
+                 [
+                     FuncType=void (__cdecl *&)(const uint8_t *,float *,float *,uint32_t,uint32_t,uint,uint2)
+                 ]
+         Scharr_edg_det_ops.cxx
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(113,72): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(113,100): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(114,76): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(137,72): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(137,100): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(138,76): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(180,72): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_sse.h(100,66): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_sse.h(100,91): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_sse.h(101,70): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\intrinsics_ops.h(230,26): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+     1>E:\DECX_world\srcs\common\SIMD\intrinsics_ops.h(308,26): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+     1>E:\DECX_world\srcs\common\SIMD\intrinsics_ops.h(321,26): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+     1>E:\DECX_world\srcs\common\SIMD\intrinsics_ops.h(334,26): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+     1>E:\DECX_world\srcs\modules\cv\edge_detection\CPU\Scharr_edg_det_ops.cxx(51,23): warning C4018: '<': signed/unsigned mismatch
+     1>E:\DECX_world\srcs\modules\cv\edge_detection\CPU\Scharr_edg_det_ops.cxx(56,27): warning C4018: '<': signed/unsigned mismatch
+         Sobel_edg_det_ops.cxx
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(113,72): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(113,100): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(114,76): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(137,72): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(137,100): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(138,76): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(180,72): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_sse.h(100,66): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_sse.h(100,91): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_sse.h(101,70): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\intrinsics_ops.h(230,26): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+     1>E:\DECX_world\srcs\common\SIMD\intrinsics_ops.h(308,26): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+     1>E:\DECX_world\srcs\common\SIMD\intrinsics_ops.h(321,26): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+     1>E:\DECX_world\srcs\common\SIMD\intrinsics_ops.h(334,26): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+     1>E:\DECX_world\srcs\modules\cv\edge_detection\CPU\Sobel_edg_det_ops.cxx(51,23): warning C4018: '<': signed/unsigned mismatch
+     1>E:\DECX_world\srcs\modules\cv\edge_detection\CPU\Sobel_edg_det_ops.cxx(56,27): warning C4018: '<': signed/unsigned mismatch
+         Image_GUI.cxx
+     1>E:\DECX_world\srcs\modules\cv\Image_IO\SDL_includes.h(38,10): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
+         Image_IO.cxx
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(113,72): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(113,100): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(114,76): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(137,72): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(137,100): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(138,76): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(180,72): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_sse.h(100,66): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_sse.h(100,91): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_sse.h(101,70): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\intrinsics_ops.h(230,26): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+     1>E:\DECX_world\srcs\common\SIMD\intrinsics_ops.h(308,26): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+     1>E:\DECX_world\srcs\common\SIMD\intrinsics_ops.h(321,26): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+     1>E:\DECX_world\srcs\common\SIMD\intrinsics_ops.h(334,26): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+     1>E:\DECX_world\srcs\modules\cv\Image_IO\SDL_includes.h(38,10): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
+         color_transform.cxx
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(113,72): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(113,100): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(114,76): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(137,72): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(137,100): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(138,76): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(180,72): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_sse.h(100,66): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_sse.h(100,91): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_sse.h(101,70): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\intrinsics_ops.h(230,26): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+     1>E:\DECX_world\srcs\common\SIMD\intrinsics_ops.h(308,26): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+     1>E:\DECX_world\srcs\common\SIMD\intrinsics_ops.h(321,26): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+     1>E:\DECX_world\srcs\common\SIMD\intrinsics_ops.h(334,26): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+     1>E:\DECX_world\srcs\common\Classes\Matrix.h(188,30): warning C4251: 'decx::_Matrix::_layout': class 'decx::_matrix_layout' needs to have dll-interface to be used by clients of class 'decx::_Matrix'
+       E:\DECX_world\srcs\common\Classes\Matrix.h(72): message : see declaration of 'decx::_matrix_layout'
+     1>E:\DECX_world\srcs\common\Classes\Matrix.h(207,29): warning C4251: 'decx::_Matrix::Mat': struct 'decx::PtrInfo<void>' needs to have dll-interface to be used by clients of class 'decx::_Matrix'
+       E:\DECX_world\srcs\common\Classes\Matrix.h(207): message : see declaration of 'decx::PtrInfo<void>'
+         cvt_colors.cxx
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(113,72): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(113,100): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(114,76): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(137,72): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(137,100): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(138,76): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(180,72): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_sse.h(100,66): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_sse.h(100,91): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_sse.h(101,70): warning C4305: 'argument': truncation from 'double' to 'float'
+     1>E:\DECX_world\srcs\common\SIMD\intrinsics_ops.h(230,26): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+     1>E:\DECX_world\srcs\common\SIMD\intrinsics_ops.h(308,26): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+     1>E:\DECX_world\srcs\common\SIMD\intrinsics_ops.h(321,26): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+     1>E:\DECX_world\srcs\common\SIMD\intrinsics_ops.h(334,26): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+     1>E:\DECX_world\srcs\modules\core\thread_management\thread_arrange.h(62,31): warning C4018: '<': signed/unsigned mismatch
+     1>E:\DECX_world\srcs\modules\core\thread_management\thread_arrange.h(73,38): warning C4018: '<': signed/unsigned mismatch
+     1>E:\DECX_world\srcs\modules\core\thread_management\thread_arrange.h(129,31): warning C4018: '<': signed/unsigned mismatch
+     1>E:\DECX_world\srcs\modules\core\thread_management\thread_arrange.h(140,38): warning C4018: '<': signed/unsigned mismatch
+     1>E:\DECX_world\srcs\modules\cv\utils\cvt_colors.cxx(250,28): warning C4018: '<': signed/unsigned mismatch
+     1>E:\DECX_world\srcs\modules\cv\utils\cvt_colors.cxx(253,32): warning C4018: '<': signed/unsigned mismatch
+     1>E:\DECX_world\srcs\modules\cv\utils\cvt_colors.cxx(285,67): warning C4309: 'argument': truncation of constant value
+     1>E:\DECX_world\srcs\modules\cv\utils\cvt_colors.cxx(335,28): warning C4018: '<': signed/unsigned mismatch
+     1>E:\DECX_world\srcs\modules\cv\utils\cvt_colors.cxx(338,32): warning C4018: '<': signed/unsigned mismatch
+     1>E:\DECX_world\srcs\modules\cv\utils\cvt_colors.cxx(420,28): warning C4018: '<': signed/unsigned mismatch
+     1>E:\DECX_world\srcs\modules\cv\utils\cvt_colors.cxx(423,32): warning C4018: '<': signed/unsigned mismatch
+     1>E:\DECX_world\srcs\modules\cv\utils\cvt_colors.cxx(446,78): warning C4244: 'argument': conversion from 'uint64_t' to 'const uint', possible loss of data
+     1>E:\DECX_world\srcs\modules\cv\utils\cvt_colors.cxx(457,23): warning C4018: '<': signed/unsigned mismatch
+     1>E:\DECX_world\srcs\modules\cv\utils\cvt_colors.cxx(478,78): warning C4244: 'argument': conversion from 'uint64_t' to 'const uint', possible loss of data
+     1>E:\DECX_world\srcs\modules\cv\utils\cvt_colors.cxx(489,23): warning C4018: '<': signed/unsigned mismatch
+     1>E:\DECX_world\srcs\modules\core\thread_management\thread_pool.h(117,1): warning C4267: 'argument': conversion from 'size_t' to 'const uint', possible loss of data
+       E:\DECX_world\srcs\modules\cv\utils\cvt_colors.cxx(459): message : see reference to function template instantiation 'std::future<void> decx::cpu::register_task_default<decx::vis::channel_ops_kernel(__cdecl *&),const float*,float*,int2&,const uint32_t&,const uint32_t&>(FuncType,const float *&&,float *&&,int2 &,const uint32_t &,const uint32_t &)' being compiled
+                 with
+                 [
+                     FuncType=decx::vis::channel_ops_kernel (__cdecl *&)
+                 ]
+     1>Done Building Project "E:\DECX_world\build_system\Windows\VS\DECX_CV_CPU.vcxproj" (Rebuild target(s)) -- FAILED.
+
+Build FAILED.
+
+       "E:\DECX_world\build_system\Windows\VS\DECX_CV_CPU.vcxproj" (Rebuild target) (1) ->
+       (PrepareForBuild target) -> 
+         D:\Microsoft Visual Studio\Visual Studio\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(499,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
+
+
+       "E:\DECX_world\build_system\Windows\VS\DECX_CV_CPU.vcxproj" (Rebuild target) (1) ->
+         D:\Microsoft Visual Studio\Visual Studio\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(513,5): warning MSB8028: The intermediate directory (x64\Release\) contains files shared from another project (DECX_DSP_CPU.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+
+
+       "E:\DECX_world\build_system\Windows\VS\DECX_CV_CPU.vcxproj" (Rebuild target) (1) ->
+       (ClCompile target) -> 
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(113,72): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(113,100): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(114,76): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(137,72): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(137,100): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(138,76): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(180,72): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_sse.h(100,66): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_sse.h(100,91): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_sse.h(101,70): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\intrinsics_ops.h(230,26): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+         E:\DECX_world\srcs\common\SIMD\intrinsics_ops.h(308,26): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+         E:\DECX_world\srcs\common\SIMD\intrinsics_ops.h(321,26): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+         E:\DECX_world\srcs\common\SIMD\intrinsics_ops.h(334,26): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+         E:\DECX_world\srcs\modules\cv\edge_detection\CPU\Canny_ED_post_proc.cxx(54,95): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\modules\cv\edge_detection\CPU\Canny_ED_post_proc.cxx(55,97): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\modules\cv\edge_detection\CPU\Canny_ED_post_proc.cxx(56,71): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\modules\cv\edge_detection\CPU\Canny_ED_post_proc.cxx(57,95): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\modules\cv\edge_detection\CPU\Canny_ED_post_proc.cxx(90,23): warning C4018: '<': signed/unsigned mismatch
+         E:\DECX_world\srcs\modules\cv\edge_detection\CPU\Canny_ED_post_proc.cxx(94,27): warning C4018: '<': signed/unsigned mismatch
+         E:\DECX_world\srcs\modules\cv\edge_detection\CPU\Canny_ED_post_proc.cxx(105,75): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\modules\cv\edge_detection\CPU\Canny_ED_post_proc.cxx(107,74): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\modules\cv\edge_detection\CPU\Canny_ED_post_proc.cxx(108,121): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\modules\cv\edge_detection\CPU\Canny_ED_post_proc.cxx(111,74): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\modules\cv\edge_detection\CPU\Canny_ED_post_proc.cxx(82,56): warning C4101: 'reg1': unreferenced local variable
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(113,72): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(113,100): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(114,76): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(137,72): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(137,100): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(138,76): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(180,72): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_sse.h(100,66): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_sse.h(100,91): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_sse.h(101,70): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\intrinsics_ops.h(230,26): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+         E:\DECX_world\srcs\common\SIMD\intrinsics_ops.h(308,26): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+         E:\DECX_world\srcs\common\SIMD\intrinsics_ops.h(321,26): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+         E:\DECX_world\srcs\common\SIMD\intrinsics_ops.h(334,26): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+         E:\DECX_world\srcs\common\Classes\Matrix.h(188,30): warning C4251: 'decx::_Matrix::_layout': class 'decx::_matrix_layout' needs to have dll-interface to be used by clients of class 'decx::_Matrix'
+         E:\DECX_world\srcs\common\Classes\Matrix.h(207,29): warning C4251: 'decx::_Matrix::Mat': struct 'decx::PtrInfo<void>' needs to have dll-interface to be used by clients of class 'decx::_Matrix'
+         E:\DECX_world\srcs\modules\core\thread_management\thread_arrange.h(62,31): warning C4018: '<': signed/unsigned mismatch
+         E:\DECX_world\srcs\modules\core\thread_management\thread_arrange.h(73,38): warning C4018: '<': signed/unsigned mismatch
+         E:\DECX_world\srcs\modules\core\thread_management\thread_arrange.h(129,31): warning C4018: '<': signed/unsigned mismatch
+         E:\DECX_world\srcs\modules\core\thread_management\thread_arrange.h(140,38): warning C4018: '<': signed/unsigned mismatch
+         E:\DECX_world\srcs\modules\cv\edge_detection\CPU\edge_detectors.cxx(84,82): warning C4244: 'argument': conversion from 'uint64_t' to 'const uint', possible loss of data
+         E:\DECX_world\srcs\modules\cv\edge_detection\CPU\edge_detectors.cxx(97,27): warning C4018: '<': signed/unsigned mismatch
+         E:\DECX_world\srcs\modules\cv\edge_detection\CPU\edge_detectors.cxx(125,27): warning C4018: '<': signed/unsigned mismatch
+         E:\DECX_world\srcs\modules\core\thread_management\thread_pool.h(117,1): warning C4267: 'argument': conversion from 'size_t' to 'const uint', possible loss of data
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(113,72): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(113,100): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(114,76): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(137,72): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(137,100): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(138,76): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(180,72): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_sse.h(100,66): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_sse.h(100,91): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_sse.h(101,70): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\intrinsics_ops.h(230,26): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+         E:\DECX_world\srcs\common\SIMD\intrinsics_ops.h(308,26): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+         E:\DECX_world\srcs\common\SIMD\intrinsics_ops.h(321,26): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+         E:\DECX_world\srcs\common\SIMD\intrinsics_ops.h(334,26): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+         E:\DECX_world\srcs\modules\cv\edge_detection\CPU\Scharr_edg_det_ops.cxx(51,23): warning C4018: '<': signed/unsigned mismatch
+         E:\DECX_world\srcs\modules\cv\edge_detection\CPU\Scharr_edg_det_ops.cxx(56,27): warning C4018: '<': signed/unsigned mismatch
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(113,72): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(113,100): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(114,76): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(137,72): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(137,100): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(138,76): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(180,72): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_sse.h(100,66): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_sse.h(100,91): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_sse.h(101,70): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\intrinsics_ops.h(230,26): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+         E:\DECX_world\srcs\common\SIMD\intrinsics_ops.h(308,26): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+         E:\DECX_world\srcs\common\SIMD\intrinsics_ops.h(321,26): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+         E:\DECX_world\srcs\common\SIMD\intrinsics_ops.h(334,26): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+         E:\DECX_world\srcs\modules\cv\edge_detection\CPU\Sobel_edg_det_ops.cxx(51,23): warning C4018: '<': signed/unsigned mismatch
+         E:\DECX_world\srcs\modules\cv\edge_detection\CPU\Sobel_edg_det_ops.cxx(56,27): warning C4018: '<': signed/unsigned mismatch
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(113,72): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(113,100): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(114,76): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(137,72): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(137,100): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(138,76): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(180,72): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_sse.h(100,66): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_sse.h(100,91): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_sse.h(101,70): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\intrinsics_ops.h(230,26): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+         E:\DECX_world\srcs\common\SIMD\intrinsics_ops.h(308,26): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+         E:\DECX_world\srcs\common\SIMD\intrinsics_ops.h(321,26): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+         E:\DECX_world\srcs\common\SIMD\intrinsics_ops.h(334,26): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(113,72): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(113,100): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(114,76): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(137,72): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(137,100): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(138,76): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(180,72): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_sse.h(100,66): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_sse.h(100,91): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_sse.h(101,70): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\intrinsics_ops.h(230,26): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+         E:\DECX_world\srcs\common\SIMD\intrinsics_ops.h(308,26): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+         E:\DECX_world\srcs\common\SIMD\intrinsics_ops.h(321,26): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+         E:\DECX_world\srcs\common\SIMD\intrinsics_ops.h(334,26): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+         E:\DECX_world\srcs\common\Classes\Matrix.h(188,30): warning C4251: 'decx::_Matrix::_layout': class 'decx::_matrix_layout' needs to have dll-interface to be used by clients of class 'decx::_Matrix'
+         E:\DECX_world\srcs\common\Classes\Matrix.h(207,29): warning C4251: 'decx::_Matrix::Mat': struct 'decx::PtrInfo<void>' needs to have dll-interface to be used by clients of class 'decx::_Matrix'
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(113,72): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(113,100): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(114,76): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(137,72): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(137,100): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(138,76): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_avx2.h(180,72): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_sse.h(100,66): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_sse.h(100,91): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\x86_64\simd_fast_math_sse.h(101,70): warning C4305: 'argument': truncation from 'double' to 'float'
+         E:\DECX_world\srcs\common\SIMD\intrinsics_ops.h(230,26): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+         E:\DECX_world\srcs\common\SIMD\intrinsics_ops.h(308,26): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+         E:\DECX_world\srcs\common\SIMD\intrinsics_ops.h(321,26): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+         E:\DECX_world\srcs\common\SIMD\intrinsics_ops.h(334,26): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+         E:\DECX_world\srcs\modules\core\thread_management\thread_arrange.h(62,31): warning C4018: '<': signed/unsigned mismatch
+         E:\DECX_world\srcs\modules\core\thread_management\thread_arrange.h(73,38): warning C4018: '<': signed/unsigned mismatch
+         E:\DECX_world\srcs\modules\core\thread_management\thread_arrange.h(129,31): warning C4018: '<': signed/unsigned mismatch
+         E:\DECX_world\srcs\modules\core\thread_management\thread_arrange.h(140,38): warning C4018: '<': signed/unsigned mismatch
+         E:\DECX_world\srcs\modules\cv\utils\cvt_colors.cxx(250,28): warning C4018: '<': signed/unsigned mismatch
+         E:\DECX_world\srcs\modules\cv\utils\cvt_colors.cxx(253,32): warning C4018: '<': signed/unsigned mismatch
+         E:\DECX_world\srcs\modules\cv\utils\cvt_colors.cxx(285,67): warning C4309: 'argument': truncation of constant value
+         E:\DECX_world\srcs\modules\cv\utils\cvt_colors.cxx(335,28): warning C4018: '<': signed/unsigned mismatch
+         E:\DECX_world\srcs\modules\cv\utils\cvt_colors.cxx(338,32): warning C4018: '<': signed/unsigned mismatch
+         E:\DECX_world\srcs\modules\cv\utils\cvt_colors.cxx(420,28): warning C4018: '<': signed/unsigned mismatch
+         E:\DECX_world\srcs\modules\cv\utils\cvt_colors.cxx(423,32): warning C4018: '<': signed/unsigned mismatch
+         E:\DECX_world\srcs\modules\cv\utils\cvt_colors.cxx(446,78): warning C4244: 'argument': conversion from 'uint64_t' to 'const uint', possible loss of data
+         E:\DECX_world\srcs\modules\cv\utils\cvt_colors.cxx(457,23): warning C4018: '<': signed/unsigned mismatch
+         E:\DECX_world\srcs\modules\cv\utils\cvt_colors.cxx(478,78): warning C4244: 'argument': conversion from 'uint64_t' to 'const uint', possible loss of data
+         E:\DECX_world\srcs\modules\cv\utils\cvt_colors.cxx(489,23): warning C4018: '<': signed/unsigned mismatch
+         E:\DECX_world\srcs\modules\core\thread_management\thread_pool.h(117,1): warning C4267: 'argument': conversion from 'size_t' to 'const uint', possible loss of data
+
+
+       "E:\DECX_world\build_system\Windows\VS\DECX_CV_CPU.vcxproj" (Rebuild target) (1) ->
+       (ClCompile target) -> 
+         E:\DECX_world\srcs\modules\cv\Image_IO\SDL_includes.h(38,10): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
+         E:\DECX_world\srcs\modules\cv\Image_IO\SDL_includes.h(38,10): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
+
+    143 Warning(s)
+    2 Error(s)
+
+Time Elapsed 00:00:30.42

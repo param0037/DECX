@@ -1,0 +1,32 @@
+﻿Build started 2024/8/23 22:09:26.
+Logging verbosity is set to: Normal.     1>Project "E:\DECX_world\build_system\Windows\VS\DECX_CV_CUDA.vcxproj" on node 10 (Rebuild target(s)).
+     1>D:\Microsoft Visual Studio\Visual Studio\MSBuild\Microsoft\VC\v160\Microsoft.CppClean.targets(77,5): warning : The process cannot access the file 'e:\decx_world\build_system\windows\vs\x64\release\vc142.pdb' because it is being used by another process.
+     1>D:\Microsoft Visual Studio\Visual Studio\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(499,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
+     1>D:\Microsoft Visual Studio\Visual Studio\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(513,5): warning MSB8028: The intermediate directory (x64\Release\) contains files shared from another project (DECX_CV_CPU.vcxproj, DECX_DSP_CPU.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+         Creating directory "x64\Release\DECX_CV_CUDA.tlog\".
+     1>InitializeBuildStatus:
+         Creating "x64\Release\DECX_CV_CUDA.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+       FinalizeBuildStatus:
+         Deleting file "x64\Release\DECX_CV_CUDA.tlog\unsuccessfulbuild".
+         Touching "x64\Release\DECX_CV_CUDA.tlog\DECX_CV_CUDA.lastbuildstate".
+     1>Done Building Project "E:\DECX_world\build_system\Windows\VS\DECX_CV_CUDA.vcxproj" (Rebuild target(s)).
+
+Build succeeded.
+
+       "E:\DECX_world\build_system\Windows\VS\DECX_CV_CUDA.vcxproj" (Rebuild target) (1) ->
+       (CoreCppClean target) -> 
+         D:\Microsoft Visual Studio\Visual Studio\MSBuild\Microsoft\VC\v160\Microsoft.CppClean.targets(77,5): warning : The process cannot access the file 'e:\decx_world\build_system\windows\vs\x64\release\vc142.pdb' because it is being used by another process.
+
+
+       "E:\DECX_world\build_system\Windows\VS\DECX_CV_CUDA.vcxproj" (Rebuild target) (1) ->
+       (PrepareForBuild target) -> 
+         D:\Microsoft Visual Studio\Visual Studio\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(499,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
+
+
+       "E:\DECX_world\build_system\Windows\VS\DECX_CV_CUDA.vcxproj" (Rebuild target) (1) ->
+         D:\Microsoft Visual Studio\Visual Studio\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(513,5): warning MSB8028: The intermediate directory (x64\Release\) contains files shared from another project (DECX_CV_CPU.vcxproj, DECX_DSP_CPU.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+
+    3 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:00.30

@@ -1,0 +1,45 @@
+D:\CUDA\Development\include\builtin_types.h
+D:\CUDA\Development\include\channel_descriptor.h
+D:\CUDA\Development\include\crt\common_functions.h
+D:\CUDA\Development\include\crt\host_config.h
+D:\CUDA\Development\include\crt\host_defines.h
+D:\CUDA\Development\include\crt\math_functions.h
+D:\CUDA\Development\include\cuda_device_runtime_api.h
+D:\CUDA\Development\include\cuda_runtime.h
+D:\CUDA\Development\include\cuda_runtime_api.h
+D:\CUDA\Development\include\device_types.h
+D:\CUDA\Development\include\driver_functions.h
+D:\CUDA\Development\include\driver_types.h
+D:\CUDA\Development\include\library_types.h
+D:\CUDA\Development\include\surface_types.h
+D:\CUDA\Development\include\texture_types.h
+D:\CUDA\Development\include\vector_functions.h
+D:\CUDA\Development\include\vector_functions.hpp
+D:\CUDA\Development\include\vector_types.h
+D:\Microsoft Visual Studio\Visual Studio\VC\Tools\MSVC\14.29.30133\include\cmath
+D:\Microsoft Visual Studio\Visual Studio\VC\Tools\MSVC\14.29.30133\include\concurrencysal.h
+D:\Microsoft Visual Studio\Visual Studio\VC\Tools\MSVC\14.29.30133\include\crtdefs.h
+D:\Microsoft Visual Studio\Visual Studio\VC\Tools\MSVC\14.29.30133\include\limits.h
+D:\Microsoft Visual Studio\Visual Studio\VC\Tools\MSVC\14.29.30133\include\sal.h
+D:\Microsoft Visual Studio\Visual Studio\VC\Tools\MSVC\14.29.30133\include\vadefs.h
+D:\Microsoft Visual Studio\Visual Studio\VC\Tools\MSVC\14.29.30133\include\vcruntime.h
+D:\Microsoft Visual Studio\Visual Studio\VC\Tools\MSVC\14.29.30133\include\vcruntime_string.h
+D:\Microsoft Visual Studio\Visual Studio\VC\Tools\MSVC\14.29.30133\include\xkeycheck.h
+D:\Microsoft Visual Studio\Visual Studio\VC\Tools\MSVC\14.29.30133\include\yvals.h
+D:\Microsoft Visual Studio\Visual Studio\VC\Tools\MSVC\14.29.30133\include\yvals_core.h
+D:\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt.h
+D:\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_malloc.h
+D:\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_math.h
+D:\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_memcpy_s.h
+D:\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_memory.h
+D:\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_search.h
+D:\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_wstdlib.h
+D:\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_wstring.h
+D:\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_wtime.h
+D:\Windows Kits\10\Include\10.0.19041.0\ucrt\errno.h
+D:\Windows Kits\10\Include\10.0.19041.0\ucrt\math.h
+D:\Windows Kits\10\Include\10.0.19041.0\ucrt\stddef.h
+D:\Windows Kits\10\Include\10.0.19041.0\ucrt\stdlib.h
+D:\Windows Kits\10\Include\10.0.19041.0\ucrt\string.h
+D:\Windows Kits\10\Include\10.0.19041.0\ucrt\time.h
+E:\DECX_world\srcs\modules\DSP\FFT\CUDA\1D\fp32\FFT1D_R2_cplxf_1st_dense.cu
