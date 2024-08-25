@@ -37,26 +37,21 @@
 #include "../../../../common/Classes/MatrixArray.h"
 #include "../../../../common/Classes/Vector.h"
 #include "../../../../common/Classes/Tensor.h"
-#include "../../../../common/Basic_process/type_cast/CPU/_mm256_fp32_fp64.h"
-#include "../../../../common/Basic_process/type_cast/CPU/_mm256_fp32_int32.h"
-#include "../../../../common/Basic_process/type_cast/CPU/_mm256_uint8_int32.h"
-#include "../../../../common/Basic_process/type_cast/CPU/_mm256_fp32_uint8.h"
+#include "../../../../common/Basic_process/type_cast/CPU/typecast_exec_x86_64.h"
 
 
 namespace decx
 {
-    namespace type_cast
-    {
-        namespace cpu {
-            template <bool _print>
-            _DECX_API_ void _type_cast1D_organiser(void* src, void* dst, const size_t proc_len, const int cvt_method, de::DH* handle);
+namespace type_cast
+{
+    namespace cpu {
+        _DECX_API_ void _type_cast1D_organiser(void* src, void* dst, const size_t proc_len, const int cvt_method, de::DH* handle);
 
 
-            template <bool _print>
-            _DECX_API_ void _type_cast2D_organiser(void* src, void* dst, const ulong2 proc_dims, const uint32_t Wsrc,
-                const uint32_t Wdst, const int cvt_method, de::DH* handle);
-        }
+        _DECX_API_ void _type_cast2D_organiser(void* src, void* dst, const ulong2 proc_dims, const uint32_t Wsrc,
+            const uint32_t Wdst, const int cvt_method, de::DH* handle);
     }
+}
 }
 
 

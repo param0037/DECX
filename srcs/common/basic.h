@@ -43,15 +43,5 @@
 
 #define _SHADOW_ATTRIBUTE_(__actual_type) __actual_type*
 
-// thread cores
-#ifdef _MSC_VER
-#define _NO_ALIAS_ __declspec(noalias)
-#define _NO_THROW_ __declspec(nothrow)
-#endif
-#ifdef __GNUC__
-#define _NO_ALIAS_ __attribute__((noalias))
-#define _NO_THROW_ __attribute__((nothrow))
-#endif
-
 
 #endif

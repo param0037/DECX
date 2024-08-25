@@ -100,6 +100,8 @@ namespace simd
         float       _arrf[8];
         double      _arrd[4];
         uint64_t    _arrull[4];
+        uint32_t    _arrui[8];
+        int32_t     _arri[8];
 
         decx::utils::simd::xmm128_reg _vmm128[2];
 

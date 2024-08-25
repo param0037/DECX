@@ -40,9 +40,9 @@
 #define MAX_THREAD_NUM 16
 
 
-#define _THREAD_FUNCTION_   _NO_ALIAS_              // represents a function that only runs on threads
-#define _THREAD_CALL_       _NO_ALIAS_ _NO_THROW_   // represents a function that is only called by a thread function
-#define _THREAD_GENERAL_    _NO_ALIAS_              // represents a function that can be called within threads and called as a thread function
+#define _THREAD_FUNCTION_  // represents a function that only runs on threads
+#define _THREAD_CALL_      // represents a function that is only called by a thread function
+#define _THREAD_GENERAL_   // represents a function that can be called within threads and called as a thread function
 
 
 #ifdef _DECX_CORE_CPU_

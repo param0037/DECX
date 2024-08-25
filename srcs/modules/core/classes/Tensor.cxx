@@ -41,7 +41,7 @@ void decx::_tensor_layout::_attribute_assign(const de::_DATA_TYPES_FLAGS_ _type,
     this->height = _height;
     this->depth = _depth;
 
-    this->wpitch = decx::utils::ceil<uint32_t>(_width, 4) * 4;
+    this->wpitch = decx::utils::align<uint32_t>(_width, 4);
 
     uint32_t _alignment = 1;
     switch (this->_single_element_size)
@@ -59,13 +59,13 @@ void decx::_tensor_layout::_attribute_assign(const de::_DATA_TYPES_FLAGS_ _type,
     default:
         break;
     }
-    this->dpitch = decx::utils::ceil<uint>(_depth, _alignment) * _alignment;
+    this->dpitch = decx::utils::align<uint32_t>(_depth, _alignment);
 
-    this->dp_x_wp = static_cast<size_t>(this->dpitch) * static_cast<size_t>(this->wpitch);
+    this->dp_x_wp = static_cast<uint64_t>(this->dpitch) * static_cast<uint64_t>(this->wpitch);
 
-    this->plane[0] = static_cast<size_t>(this->height) * static_cast<size_t>(this->width);
-    this->plane[1] = static_cast<size_t>(this->depth) * static_cast<size_t>(this->width);
-    this->plane[2] = static_cast<size_t>(this->height) * static_cast<size_t>(this->depth);
+    this->plane[0] = static_cast<uint64_t>(this->height) * static_cast<uint64_t>(this->width);
+    this->plane[1] = static_cast<uint64_t>(this->depth) * static_cast<uint64_t>(this->width);
+    this->plane[2] = static_cast<uint64_t>(this->height) * static_cast<uint64_t>(this->depth);
 }
 
 
@@ -89,8 +89,8 @@ void decx::_Tensor::_attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, const 
 
     this->_layout._attribute_assign(_type, _width, _height, _depth);
 
-    this->element_num = static_cast<size_t>(this->_layout.depth) * this->_layout.plane[0];
-    this->_element_num = static_cast<size_t>(this->_layout.height) * this->_layout.dp_x_wp;
+    this->element_num = static_cast<uint64_t>(this->_layout.depth) * this->_layout.plane[0];
+    this->_element_num = static_cast<uint64_t>(this->_layout.height) * this->_layout.dp_x_wp;
     this->total_bytes = this->_element_num * this->_layout._single_element_size;
 }
 
@@ -175,73 +175,6 @@ void decx::_Tensor::Reinterpret(const de::_DATA_TYPES_FLAGS_ _new_type)
 {
     this->type = _new_type;
 }
-
-
-//
-//float* decx::_Tensor::ptr_fp32(const int x, const int y, const int z)
-//{
-//    float* ptr = reinterpret_cast<float*>(this->Tens.ptr);
-//    return ptr +
-//        ((size_t)x * this->_layout.dp_x_wp + (size_t)y * (size_t)this->_layout.dpitch + (size_t)z);
-//}
-//
-//
-//int* decx::_Tensor::ptr_int32(const int x, const int y, const int z)
-//{
-//    int* ptr = reinterpret_cast<int*>(this->Tens.ptr);
-//    return ptr +
-//        ((size_t)x * this->_layout.dp_x_wp + (size_t)y * (size_t)this->_layout.dpitch + (size_t)z);
-//}
-//
-//
-//uint8_t* decx::_Tensor::ptr_uint8(const int x, const int y, const int z)
-//{
-//    uint8_t* ptr = reinterpret_cast<uint8_t*>(this->Tens.ptr);
-//    return ptr +
-//        ((size_t)x * this->_layout.dp_x_wp + (size_t)y * (size_t)this->_layout.dpitch + (size_t)z);
-//}
-//
-//
-//de::CPf* decx::_Tensor::ptr_cpl32(const int x, const int y, const int z)
-//{
-//    de::CPf* ptr = reinterpret_cast<de::CPf*>(this->Tens.ptr);
-//    return ptr +
-//        ((size_t)x * this->_layout.dp_x_wp + (size_t)y * (size_t)this->_layout.dpitch + (size_t)z);
-//}
-//
-//
-//
-//de::CPd* decx::_Tensor::ptr_cpl64(const int x, const int y, const int z)
-//{
-//    de::CPd* ptr = reinterpret_cast<de::CPd*>(this->Tens.ptr);
-//    return ptr +
-//        ((size_t)x * this->_layout.dp_x_wp + (size_t)y * (size_t)this->_layout.dpitch + (size_t)z);
-//}
-//
-//
-//
-//double* decx::_Tensor::ptr_fp64(const int x, const int y, const int z)
-//{
-//    double* ptr = reinterpret_cast<double*>(this->Tens.ptr);
-//    return ptr +
-//        ((size_t)x * this->_layout.dp_x_wp + (size_t)y * (size_t)this->_layout.dpitch + (size_t)z);
-//}
-//
-//
-//de::Half* decx::_Tensor::ptr_fp16(const int x, const int y, const int z)
-//{
-//    de::Half* ptr = reinterpret_cast<de::Half*>(this->Tens.ptr);
-//    return ptr +
-//        ((size_t)x * this->_layout.dp_x_wp + (size_t)y * (size_t)this->_layout.dpitch + (size_t)z);
-//}
-//
-//
-//de::Vector4f* decx::_Tensor::ptr_vec4f(const int x, const int y, const int z)
-//{
-//    de::Vector4f* ptr = reinterpret_cast<de::Vector4f*>(this->Tens.ptr);
-//    return ptr +
-//        ((size_t)x * this->_layout.dp_x_wp + (size_t)y * (size_t)this->_layout.dpitch + (size_t)z);
-//}
 
 
 

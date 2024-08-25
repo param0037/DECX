@@ -53,6 +53,25 @@ namespace decx
 }
 
 
+/**
+* The data storage structure is shown below
+*            
+*            <--------------------- dp_x_wp ------------------->
+*            <--------------- width ----------------> 4x
+*             <-dpitch->
+*            [[x x x...] [x x x...] ... ...[x x x...] [0 0 0 0]] T            
+*            [[x x x...] [x x x...] ... ...[x x x...] [0 0 0 0]] |            
+*            [[x x x...] [x x x...] ... ...[x x x...] [0 0 0 0]] |            
+*            ...                                     ...   ...   |    height
+*            ...                                     ...   ...   |            
+*            ...                                     ...   ...   |            
+*            [[x x x...] [x x x...] ... ...[x x x...] [0 0 0 0]] _    
+* 
+* Where : the vector along depth-axis
+*    <------------ dpitch ----------->
+*    <---- pitch ------>
+*    [x x x x x x x x x 0 0 0 0 0 0 0]
+*/
 class decx::_tensor_layout
 {
 public:
@@ -129,16 +148,6 @@ namespace de
         virtual uint32_t Depth() const = 0;
 
 
-        /*virtual float*              ptr_fp32(const int x, const int y, const int z)  = 0;
-        virtual int*                ptr_int32(const int x, const int y, const int z) = 0;
-        virtual double*             ptr_fp64(const int x, const int y, const int z)  = 0;
-        virtual de::Half*           ptr_fp16(const int x, const int y, const int z)  = 0;
-        virtual de::CPf*            ptr_cpl32(const int x, const int y, const int z) = 0;
-        virtual de::CPd*            ptr_cpl64(const int x, const int y, const int z) = 0;
-        virtual uint8_t*            ptr_uint8(const int x, const int y, const int z) = 0;
-        virtual de::Vector4f*       ptr_vec4f(const int x, const int y, const int z) = 0;*/
-
-
         virtual de::Tensor& SoftCopy(de::Tensor& src) = 0;
 
 
@@ -154,25 +163,6 @@ namespace de
 
 
 
-/**
-* The data storage structure is shown below
-*            
-*            <--------------------- dp_x_wp ------------------->
-*            <--------------- width ----------------> 4x
-*             <-dpitch->
-*            [[x x x...] [x x x...] ... ...[x x x...] [0 0 0 0]] T            
-*            [[x x x...] [x x x...] ... ...[x x x...] [0 0 0 0]] |            
-*            [[x x x...] [x x x...] ... ...[x x x...] [0 0 0 0]] |            
-*            ...                                     ...   ...   |    height
-*            ...                                     ...   ...   |            
-*            ...                                     ...   ...   |            
-*            [[x x x...] [x x x...] ... ...[x x x...] [0 0 0 0]] _    
-* 
-* Where : the vector along depth-axis
-*    <------------ dpitch ----------->
-*    <---- pitch ------>
-*    [x x x x x x x x x 0 0 0 0 0 0 0]
-*/
 
 namespace decx
 {
@@ -214,16 +204,6 @@ namespace decx
 
 
         _Tensor(const de::_DATA_TYPES_FLAGS_ _type, const uint32_t _width, const uint32_t _height, const uint32_t _depth);
-
-
-        /*virtual float*              ptr_fp32(const int x, const int y, const int z);
-        virtual int*                ptr_int32(const int x, const int y, const int z);
-        virtual double*             ptr_fp64(const int x, const int y, const int z);
-        virtual de::Half*           ptr_fp16(const int x, const int y, const int z);
-        virtual de::CPf*            ptr_cpl32(const int x, const int y, const int z);
-        virtual de::CPd*            ptr_cpl64(const int x, const int y, const int z);
-        virtual uint8_t*            ptr_uint8(const int x, const int y, const int z);
-        virtual de::Vector4f*       ptr_vec4f(const int x, const int y, const int z);*/
 
 
         virtual uint32_t Width() const;
