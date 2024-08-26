@@ -78,7 +78,7 @@ function clean_all()
 
 function clean_optional()
 {
-    if [ "$1" = "all" ]; then
+    if [ "$1" = "ALL" ]; then
         clean_all
     else
         clean_single $1
@@ -166,7 +166,7 @@ function config_all()
 
 function config_optional()
 {
-    if [ "$1" = "all" ]; then
+    if [ "$1" = "ALL" ]; then
         config_all
     else
         config_single $1
@@ -211,7 +211,7 @@ function build_all()
 
 function build_optional()
 {
-    if [ "$1" = "all" ]; then
+    if [ "$1" = "ALL" ]; then
         build_all
     else
         build_single $1
