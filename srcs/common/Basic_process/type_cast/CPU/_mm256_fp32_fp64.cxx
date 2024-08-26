@@ -70,22 +70,23 @@ _THREAD_FUNCTION_ void
 decx::type_cast::CPUK::_v256_cvtps_pd2D(const float* __restrict     src, 
                                         double* __restrict          dst, 
                                         const uint2                 proc_dims, 
-                                        const uint                  Wsrc, 
-                                        const uint                  Wdst)
+                                        const uint32_t              Wsrc, 
+                                        const uint32_t              Wdst)
 {
     decx::utils::simd::xmm128_reg recv;
     decx::utils::simd::xmm256_reg store;
 
-    size_t dex_src = 0, dex_dst = 0;
+    uint32_t dex_src = 0, dex_dst = 0;
 
-    for (int i = 0; i < proc_dims.y; ++i) 
+    for (int32_t i = 0; i < proc_dims.y; ++i) 
     {
         dex_src = i * Wsrc;
         dex_dst = i * Wdst;
-        for (int j = 0; j < proc_dims.x; ++j) {
-            recv._vf = _mm_load_ps(src + (size_t)i * 4);
+        for (int32_t j = 0; j < proc_dims.x; ++j) {
+            recv._vf = _mm_load_ps(src + dex_src);
             store._vd = _mm256_cvtps_pd(recv._vf);
-            _mm256_store_pd(dst + (size_t)i * 4, store._vd);
+
+            _mm256_store_pd(dst + dex_dst, store._vd);
 
             dex_src += 4;
             dex_dst += 4;
@@ -106,15 +107,15 @@ decx::type_cast::CPUK::_v256_cvtpd_ps2D(const double* __restrict        src,
     decx::utils::simd::xmm256_reg recv;
     decx::utils::simd::xmm128_reg store;
 
-    size_t dex_src = 0, dex_dst = 0;
+    int32_t dex_src = 0, dex_dst = 0;
 
-    for (int i = 0; i < proc_dims.y; ++i) {
+    for (int32_t i = 0; i < proc_dims.y; ++i) {
         dex_src = i * Wsrc;
         dex_dst = i * Wdst;
-        for (int j = 0; j < proc_dims.x; ++j) {
-            recv._vd = _mm256_load_pd(src + (size_t)i * 4);
+        for (int32_t j = 0; j < proc_dims.x; ++j) {
+            recv._vd = _mm256_load_pd(src + dex_src);
             store._vf = _mm256_cvtpd_ps(recv._vd);
-            _mm_store_ps(dst + (size_t)i * 4, store._vf);
+            _mm_store_ps(dst + dex_dst, store._vf);
 
             dex_src += 4;
             dex_dst += 4;

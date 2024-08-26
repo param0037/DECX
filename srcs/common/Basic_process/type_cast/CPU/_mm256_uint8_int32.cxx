@@ -442,6 +442,37 @@ _v256_cvti32_ui8_truncate_clamp_zero2D(const int32_t* __restrict      src,
 
 
 
+decx::type_cast::CPUK::_cvt_kernel2D<int32_t, uint8_t>*
+decx::type_cast::_cvti32_ui8_selector2D(const int32_t flag)
+{
+    using namespace decx::type_cast;
+    decx::type_cast::CPUK::_cvt_kernel2D<int32_t, uint8_t>* exec_kernrel_ptr = NULL;
+
+    switch (flag)
+    {
+    case (de::TypeCast_Method::CVT_INT32_UINT8 | 
+            de::TypeCast_Method::CVT_UINT8_CLAMP_TO_ZERO | 
+            de::TypeCast_Method::CVT_INT32_UINT8_TRUNCATE):        // 0b0011 (3)
+        exec_kernrel_ptr = decx::type_cast::CPUK::_v256_cvti32_ui8_truncate_clamp_zero2D;
+        break;
+
+    case de::TypeCast_Method::CVT_INT32_UINT8 | de::TypeCast_Method::CVT_INT32_UINT8_TRUNCATE:      // 0b0010 (2)
+        exec_kernrel_ptr = decx::type_cast::CPUK::_v256_cvti32_ui8_truncate2D;
+        break;
+
+    case (de::TypeCast_Method::CVT_INT32_UINT8 | de::TypeCast_Method::CVT_UINT8_CYCLIC):        // 0b0101 (5) or CVT_INT32_UINT8 | CVT_UINT8_CYCLIC | CVT_CLAMP_TO_ZERO
+        exec_kernrel_ptr = decx::type_cast::CPUK::_v256_cvti32_ui8_cyclic2D;
+        break;
+
+    case (de::TypeCast_Method::CVT_INT32_UINT8 | de::TypeCast_Method::CVT_UINT8_SATURATED):     // 0b1001 (9) or CVT_INT32_UINT8 | CVT_UINT8_SATURATED | CVT_CLAMP_TO_ZERO
+        exec_kernrel_ptr = decx::type_cast::CPUK::_v256_cvti32_ui8_saturated2D;
+        break;
+    }
+
+    return exec_kernrel_ptr;
+}
+
+
 // void decx::type_cast::_cvtui8_i32_caller2D(const float*         src, 
 //                                            float*               dst, 
 //                                            const ulong2         proc_dims, 

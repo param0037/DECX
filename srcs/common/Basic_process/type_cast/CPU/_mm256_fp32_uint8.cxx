@@ -229,6 +229,28 @@ decx::type_cast::CPUK::_v256_cvtf32_ui8_saturated2D(const float* __restrict     
 
 
 
+decx::type_cast::CPUK::_cvt_kernel2D<float, uint8_t>* 
+decx::type_cast::_cvtf32_ui8_selector2D(const int32_t flag)
+{
+    using namespace decx::type_cast;
+    decx::type_cast::CPUK::_cvt_kernel2D<float, uint8_t>* exec_kernrel_ptr = NULL;
+
+    switch (flag)
+    {
+    case (de::TypeCast_Method::CVT_FP32_UINT8 | de::TypeCast_Method::CVT_UINT8_CYCLIC):        // 0b10101 (21) or CVT_FP32_UINT8 | CVT_UINT8_CYCLIC | CVT_UINT8_CLAMP_TO_ZERO
+        exec_kernrel_ptr = decx::type_cast::CPUK::_v256_cvtf32_ui8_cyclic2D;
+        break;
+
+    case (de::TypeCast_Method::CVT_FP32_UINT8 | de::TypeCast_Method::CVT_UINT8_SATURATED):     // 0b11001 (25)  or CVT_FP32_UINT8 | CVT_UINT8_SATURATED | CVT_UINT8_CLAMP_TO_ZERO
+        exec_kernrel_ptr = decx::type_cast::CPUK::_v256_cvtf32_ui8_saturated2D;
+        break;
+    }
+
+    return exec_kernrel_ptr;
+}
+
+
+
 // void decx::type_cast::_cvtui8_f32_caller2D(const float*         src, 
 //                                            float*               dst, 
 //                                            const ulong2         proc_dims, 

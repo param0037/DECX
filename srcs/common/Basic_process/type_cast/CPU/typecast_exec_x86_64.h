@@ -108,16 +108,8 @@ namespace type_cast {
     // void _cvtfp32_fp64_caller1D(const float* src, double* dst, const uint64_t proc_num);
     // void _cvtfp64_fp32_caller1D(const double* src, float* dst, const uint64_t proc_num);
 
-    /**
-    * @param src : fp64 input pointer
-    * @param dst : fp32 output pointer
-    * @param proc_dims : dimensions of processed area : ~.x -> width (in vec8); ~.y -> height
-    * @param Wsrc : pitch of source matrix (in element)
-    * @param Wdst : pitch of destinated matrix (in vec4 (in float))
-    */
-    // template <bool _print>
+
     decx::type_cast::CPUK::_cvt_kernel1D<float, uint8_t>* _cvtf32_ui8_selector1D(const int32_t flag);
-    // template<bool _print>
     decx::type_cast::CPUK::_cvt_kernel1D<int32_t, uint8_t>* _cvti32_ui8_selector1D(const int32_t flag);
 }
 
@@ -193,8 +185,12 @@ namespace type_cast {
     * @param Wdst : pitch of destinated matrix (in vec4 (in float))
     */
    
-    void _cvtf32_ui8_caller2D(const float* src, int* dst, const ulong2 proc_dims, const uint Wsrc, const uint Wdst, const int flag, de::DH* handle);
-    void _cvti32_ui8_caller2D(const float* src, int* dst, const ulong2 proc_dims, const uint Wsrc, const uint Wdst, const int flag, de::DH* handle);
+    void _cvtf32_ui8_caller2D(const float* src, int* dst, const ulong2 proc_dims, const uint32_t Wsrc, const uint32_t Wdst, const int32_t flag, de::DH* handle);
+    void _cvti32_ui8_caller2D(const float* src, int* dst, const ulong2 proc_dims, const uint32_t Wsrc, const uint32_t Wdst, const int32_t flag, de::DH* handle);
+
+
+    decx::type_cast::CPUK::_cvt_kernel2D<float, uint8_t>* _cvtf32_ui8_selector2D(const int32_t flag);
+    decx::type_cast::CPUK::_cvt_kernel2D<int32_t, uint8_t>* _cvti32_ui8_selector2D(const int32_t flag);
 }
 
 namespace type_cast{
@@ -202,6 +198,12 @@ namespace type_cast{
     static void typecast1D_general_caller(decx::type_cast::CPUK::_cvt_kernel1D<_type_in, _type_out> *_kernel_ptr, 
         decx::cpu_ElementWise1D_planner* _planner, const _type_in* src, _type_out* dst, const uint64_t proc_len,
         decx::utils::_thr_1D* t1D);
+
+
+    template <typename _type_in, typename _type_out>
+    static void typecast2D_general_caller(decx::type_cast::CPUK::_cvt_kernel2D<_type_in, _type_out> *_kernel_ptr, 
+        decx::cpu_ElementWise2D_planner* _planner, const _type_in* src, _type_out* dst, const uint2 proc_dims,
+        const uint32_t Wsrc, const uint32_t Wdst, decx::utils::_thr_1D* t1D);
 }
 }
 
@@ -216,6 +218,21 @@ static void decx::type_cast::typecast1D_general_caller(
     _planner->plan(decx::cpu::_get_permitted_concurrency(), proc_len, sizeof(_type_in), sizeof(_type_out));
 
     _planner->caller(_kernel_ptr, src, dst, t1D);
+}
+
+
+
+template <typename _type_in, typename _type_out>
+static void decx::type_cast::typecast2D_general_caller(
+    decx::type_cast::CPUK::_cvt_kernel2D<_type_in, _type_out>*  _kernel_ptr, 
+    decx::cpu_ElementWise2D_planner*                            _planner, 
+    const _type_in* src,                                        _type_out* dst,
+    const uint2 proc_dims,                                      const uint32_t Wsrc, 
+    const uint32_t Wdst,                                        decx::utils::_thr_1D* t1D)
+{
+    _planner->plan(decx::cpu::_get_permitted_concurrency(), proc_dims, sizeof(_type_in), sizeof(_type_out));
+
+    _planner->caller(_kernel_ptr, src, dst, Wsrc, Wdst, t1D);
 }
 
 

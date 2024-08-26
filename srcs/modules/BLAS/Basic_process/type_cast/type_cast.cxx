@@ -83,118 +83,108 @@ void decx::type_cast::cpu::_type_cast1D_organiser(void* src, void* dst, const ui
 }
 
 
-
-// template <bool _print> _DECX_API_
-// void decx::type_cast::cpu::_type_cast2D_organiser(void* src, void* dst, const ulong2 proc_dims, const uint32_t Wsrc,
-//     const uint32_t Wdst, const int cvt_method, de::DH* handle)
-// {
-//     using namespace decx::type_cast;
-
-//     if (cvt_method == TypeCast_Method::CVT_FP32_FP64) {
-//         decx::type_cast::_cvtfp32_fp64_caller2D(
-//             (float*)src, (double*)dst, make_ulong2(proc_dims.x / 4, proc_dims.y), Wsrc, Wdst);
-//     }
-//     else if (cvt_method == TypeCast_Method::CVT_FP64_FP32) {
-//         decx::type_cast::_cvtfp64_fp32_caller2D(
-//             (double*)src, (float*)dst, make_ulong2(proc_dims.x / 4, proc_dims.y), Wsrc, Wdst);
-//     }
-//     else if (cvt_method == TypeCast_Method::CVT_FP32_INT32) {
-//         decx::type_cast::_cvtfp32_i32_caller((float*)src, (float*)dst, (size_t)proc_dims.x * (size_t)proc_dims.y);
-//     }
-//     else if (cvt_method == TypeCast_Method::CVT_INT32_FP32) {
-//         decx::type_cast::_cvti32_fp32_caller((float*)src, (float*)dst, (size_t)proc_dims.x * (size_t)proc_dims.y);
-//     }
-//     else if (cvt_method == TypeCast_Method::CVT_UINT8_INT32) {
-//         decx::type_cast::_cvtui8_i32_caller2D(
-//             (float*)src, (float*)dst, make_ulong2(proc_dims.x / 8, proc_dims.y), Wsrc / 4, Wdst);
-//     }
-//     else if ((cvt_method > 1 && cvt_method < 10) && (cvt_method != CVT_FP32_FP64)) {
-//         decx::type_cast::_cvti32_ui8_caller2D<_print>((float*)src, (int*)dst, make_ulong2(proc_dims.x / 8, proc_dims.y),
-//             Wsrc, Wdst / 4, cvt_method, handle);
-//     }
-//     else if (cvt_method == (CVT_FP32_UINT8 | CVT_UINT8_CYCLIC) || cvt_method == (CVT_FP32_UINT8 | CVT_UINT8_SATURATED)) {
-//         decx::type_cast::_cvtf32_ui8_caller2D<_print>((float*)src, (int*)dst, make_ulong2(proc_dims.x / 8, proc_dims.y),
-//             Wsrc, Wdst / 4, cvt_method, handle);
-//     }
-//     else if (cvt_method == CVT_UINT8_FP32) {
-//         decx::type_cast::_cvtui8_f32_caller2D((float*)src, (float*)dst, make_ulong2(proc_dims.x / 8, proc_dims.y),
-//             Wsrc / 4, Wdst);
-//     }
-//     else {
-//         decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_INVALID_PARAM,
-//             INVALID_PARAM);
-//         return;
-//     }
-// }
-
-
-// template _DECX_API_ void decx::type_cast::cpu::_type_cast2D_organiser<true>(void* src, void* dst, const ulong2 proc_dims, const uint32_t Wsrc,
-//     const uint32_t Wdst, const int cvt_method, de::DH* handle);
-
-// template _DECX_API_ void decx::type_cast::cpu::_type_cast2D_organiser<false>(void* src, void* dst, const ulong2 proc_dims, const uint32_t Wsrc,
-//     const uint32_t Wdst, const int cvt_method, de::DH* handle);
-
-
-
-_DECX_API_ de::DH de::cpu::TypeCast(de::Matrix& src, de::Matrix& dst, const int cvt_method)
+_DECX_API_
+void decx::type_cast::cpu::_type_cast2D_organiser(void* src, void* dst, const uint2 proc_dims, const uint32_t Wsrc,
+    const uint32_t Wdst, const int cvt_method, de::DH* handle)
 {
     using namespace decx::type_cast;
+    using namespace de;
 
-    de::DH handle;
-    if (!decx::cpu::_is_CPU_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CPU_not_init,
-            CPU_NOT_INIT);
-        return handle;
+    decx::cpu_ElementWise2D_planner _planner;
+    decx::utils::_thr_1D t1D(decx::cpu::_get_permitted_concurrency());
+
+    if (cvt_method == TypeCast_Method::CVT_FP32_FP64) {
+        decx::type_cast::typecast2D_general_caller(&decx::type_cast::CPUK::_v256_cvtps_pd2D, &_planner, 
+            (float*)src, (double*)dst, proc_dims, Wsrc, Wdst, &t1D);
     }
-
-    decx::err::Success(&handle);
-
-    decx::_Matrix* _src = dynamic_cast<decx::_Matrix*>(&src);
-    decx::_Matrix* _dst = dynamic_cast<decx::_Matrix*>(&dst);
-
-    if (!_src->is_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CLASS_NOT_INIT,
-            CLASS_NOT_INIT);
-        return handle;
+    else if (cvt_method == TypeCast_Method::CVT_FP64_FP32) {
+        decx::type_cast::typecast2D_general_caller(&decx::type_cast::CPUK::_v256_cvtpd_ps2D, &_planner, 
+            (double*)src, (float*)dst, proc_dims, Wsrc, Wdst, &t1D);
     }
-
-    // decx::type_cast::cpu::_type_cast2D_organiser<true>(_src->Mat.ptr, _dst->Mat.ptr,
-    //     make_ulong2(_src->Pitch(), _src->Height()), _src->Pitch(), _dst->Pitch(), cvt_method, &handle);
-
-    return handle;
+    else if (cvt_method == TypeCast_Method::CVT_FP32_INT32) {
+        decx::type_cast::typecast1D_general_caller(&decx::type_cast::CPUK::_v256_cvtps_i32, 
+            (decx::cpu_ElementWise1D_planner*)(&_planner), 
+            (float*)src, (int32_t*)dst, 
+            static_cast<uint64_t>(Wsrc) * static_cast<uint64_t>(proc_dims.y), &t1D);
+    }
+    else if (cvt_method == TypeCast_Method::CVT_INT32_FP32) {
+        decx::type_cast::typecast1D_general_caller(&decx::type_cast::CPUK::_v256_cvti32_ps, 
+            (decx::cpu_ElementWise1D_planner*)(&_planner), 
+            (int32_t*)src, (float*)dst, 
+            static_cast<uint64_t>(Wsrc) * static_cast<uint64_t>(proc_dims.y), &t1D);
+    }
+    else if (cvt_method == TypeCast_Method::CVT_UINT8_INT32) {
+        decx::type_cast::typecast2D_general_caller(&decx::type_cast::CPUK::_v256_cvtui8_i32_2D, &_planner, 
+            (uint8_t*)src, (int32_t*)dst, proc_dims, Wsrc, Wdst, &t1D);
+    }
+    else if ((cvt_method > 1 && cvt_method < 10) && (cvt_method != CVT_FP32_FP64)) {
+        auto* _kernel_ptr = decx::type_cast::_cvti32_ui8_selector2D(cvt_method);
+        decx::type_cast::typecast2D_general_caller(_kernel_ptr, &_planner, 
+            (int32_t*)src, (uint8_t*)dst, proc_dims, Wsrc, Wdst, &t1D);
+    }
+    else if (cvt_method == (CVT_FP32_UINT8 | CVT_UINT8_CYCLIC) || cvt_method == (CVT_FP32_UINT8 | CVT_UINT8_SATURATED)) {
+        auto* _kernel_ptr = decx::type_cast::_cvtf32_ui8_selector2D(cvt_method);
+        decx::type_cast::typecast2D_general_caller(_kernel_ptr, &_planner, 
+            (float*)src, (uint8_t*)dst, proc_dims, Wsrc, Wdst, &t1D);
+    }
+    else if (cvt_method == CVT_UINT8_FP32) {
+        decx::type_cast::typecast2D_general_caller(&decx::type_cast::CPUK::_v256_cvtui8_f32_2D, &_planner, 
+            (uint8_t*)src, (float*)dst, proc_dims, Wsrc, Wdst, &t1D);
+    }
+    else {
+        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_INVALID_PARAM,
+            INVALID_PARAM);
+        return;
+    }
 }
 
 
-
-_DECX_API_ de::DH de::cpu::TypeCast(de::Vector& src, de::Vector& dst, const int cvt_method)
+_DECX_API_ void de::cpu::TypeCast(de::Vector& src, de::Vector& dst, const int cvt_method)
 {
     using namespace decx::type_cast;
 
-    de::DH handle;
+    de::ResetLastError();
     if (!decx::cpu::_is_CPU_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CPU_not_init,
+        decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_CPU_not_init,
             CPU_NOT_INIT);
-        return handle;
     }
-
-    decx::err::Success(&handle);
 
     decx::_Vector* _src = dynamic_cast<decx::_Vector*>(&src);
     decx::_Vector* _dst = dynamic_cast<decx::_Vector*>(&dst);
 
     if (!_src->is_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CLASS_NOT_INIT,
+        decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_CLASS_NOT_INIT,
             CLASS_NOT_INIT);
-        return handle;
     }
 
     decx::type_cast::cpu::_type_cast1D_organiser(_src->Vec.ptr, _dst->Vec.ptr, 
-        min(_src->_length, _dst->_length), cvt_method, &handle);
+        min(_src->_length, _dst->_length), cvt_method, de::GetLastError());
 
-    return handle;
+    
 }
 
 
+_DECX_API_ void de::cpu::TypeCast(de::Matrix& src, de::Matrix& dst, const int cvt_method)
+{
+    using namespace decx::type_cast;
+
+    de::ResetLastError();
+    if (!decx::cpu::_is_CPU_init()) {
+        decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_CPU_not_init,
+            CPU_NOT_INIT);
+    }
+
+    decx::_Matrix* _src = dynamic_cast<decx::_Matrix*>(&src);
+    decx::_Matrix* _dst = dynamic_cast<decx::_Matrix*>(&dst);
+
+    if (!_src->is_init()) {
+        decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_CLASS_NOT_INIT,
+            CLASS_NOT_INIT);
+    }
+
+    decx::type_cast::cpu::_type_cast2D_organiser(_src->Mat.ptr, _dst->Mat.ptr,
+        make_uint2(_src->Width(), _src->Height()), _src->Pitch(), _dst->Pitch(), cvt_method, de::GetLastError());
+}
 
 
 // _DECX_API_ de::DH de::cpu::TypeCast(de::MatrixArray& src, de::MatrixArray& dst, const int cvt_method)
