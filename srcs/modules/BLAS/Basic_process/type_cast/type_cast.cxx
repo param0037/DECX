@@ -32,6 +32,9 @@
 #include "../../../../common/element_wise/common/cpu_element_wise_planner.h"
 
 
+
+
+
 _DECX_API_
 void decx::type_cast::cpu::_type_cast1D_organiser(void* src, void* dst, const uint64_t proc_len, 
     const int cvt_method, de::DH * handle)
@@ -159,8 +162,6 @@ _DECX_API_ void de::cpu::TypeCast(de::Vector& src, de::Vector& dst, const int cv
 
     decx::type_cast::cpu::_type_cast1D_organiser(_src->Vec.ptr, _dst->Vec.ptr, 
         min(_src->_length, _dst->_length), cvt_method, de::GetLastError());
-
-    
 }
 
 
