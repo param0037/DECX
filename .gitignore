@@ -9,4 +9,4 @@ samples/x64
 .vs/
 srcs/.vscode/
 
-/build
+/build/
