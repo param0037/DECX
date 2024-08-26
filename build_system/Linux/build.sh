@@ -36,14 +36,15 @@ PROJECT_PATH_BUILD=$(dirname $(dirname $(dirname $full_path)))
 function clean_single()
 {
     # Clean the generated asm sources
-    # if [ "$1" = "DSP_CPU" ]; then
-    #     chmod u+x $PROJECT_PATH_BUILD/srcs/common/SIMD/x86_64/asm_preproc_SVML.sh
-    #     $PROJECT_PATH_BUILD/srcs/common/SIMD/x86_64/asm_preproc_SVML.sh -c NOP
-    # fi
-    # if [ "$1" = "core_CPU" ]; then
-    #     chmod u+x $PROJECT_PATH_BUILD/srcs/modules/core/configs/x86_64/asm_preproc_configs.sh
-    #     $PROJECT_PATH_BUILD/srcs/modules/core/configs/x86_64/asm_preproc_configs.sh -c NOP
-    # fi
+    if [[ "BLAS_CPU,DSP_CPU" == *"$1"* ]]; then
+        echo_status "Deleted generated platform dependent asm files for SVML"
+        chmod u+x $PROJECT_PATH_BUILD/srcs/common/SIMD/x86_64/asm_preproc_SVML.sh
+        $PROJECT_PATH_BUILD/srcs/common/SIMD/x86_64/asm_preproc_SVML.sh -c NOP
+    fi
+    if [ "$1" = "core_CPU" ]; then
+        chmod u+x $PROJECT_PATH_BUILD/srcs/modules/core/configs/x86_64/asm_preproc_configs.sh
+        $PROJECT_PATH_BUILD/srcs/modules/core/configs/x86_64/asm_preproc_configs.sh -c NOP
+    fi
 
     cmake_bin_dir="$PROJECT_PATH_BUILD/build/DECX_$1"
 
@@ -93,7 +94,8 @@ function config_single()
     fi
 
     # If is DSP_CPU, configure asm sources for math intrinsics
-    if [ "$1" = "DSP_CPU" ]; then
+    if [[ "BLAS_CPU,DSP_CPU" == *"$1"* ]]; then
+        echo_status "Generated platform dependent asm files for SVML"
         $PROJECT_PATH_BUILD/srcs/common/SIMD/x86_64/asm_preproc_SVML.sh -i NOP
     fi
     # If is core_CPU, configure asm sources for CPU configuration
@@ -184,7 +186,7 @@ function build_single()
     else
         cmake --build $cmake_bin_dir --config Release
     fi
-    cp /media/wayne/Disk/DECX_world/build/bin/x64/libDECX_BLAS_CPU.so ~/DECX/libs/x64/
+    # cp /media/wayne/Disk/DECX_world/build/bin/x64/libDECX_BLAS_CPU.so ~/DECX/libs/x64/
 }
 
 

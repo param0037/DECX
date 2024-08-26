@@ -32,13 +32,24 @@
 source_script ./utils.sh
 
 
+function regulize_module_name()
+{
+    tmp_lower=$(echo "$1" | tr '[:upper:]' '[:lower:]')
+    tmp="${tmp_lower//core/PLACEHOLDER}"
+    tmp_upper="${tmp^^}"
+
+    result="${tmp_upper//PLACEHOLDER/core}"
+    echo "$result"
+}
+
+
 function set_module()
 {
     DECX_CURRENT_BUILD_MODULE=""
     if [ -n "$1" ]; then
         validate_module_name $1
         if [ $? -eq 1 ]; then
-            DECX_CURRENT_BUILD_MODULE=$1
+            DECX_CURRENT_BUILD_MODULE=$(regulize_module_name $1)
         else
             echo_error "The indicated module does not exist"
         fi
