@@ -173,7 +173,7 @@ function parallel_build()
         echo_status "Parallel build enabled"
     elif [ "$lower_input" = "0" ] || [ "$lower_input" = 'false' ]; then
         export DECX_PARALLEL_BUILD=0
-        echo_status "Parallel build enabled"
+        echo_status "Parallel build disabled"
     else
         echo_error "Invalid input"
     fi
