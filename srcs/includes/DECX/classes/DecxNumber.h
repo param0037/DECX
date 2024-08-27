@@ -16,6 +16,7 @@
 
 namespace de
 {
+
 class _DECX_API_ Number
 {
 private:
@@ -176,6 +177,10 @@ public:
 		}
 	}
 };
+
+    typedef const de::Number& InputNumber;
+    typedef de::Number& OutputNumber;
+    typedef de::Number& InOutNumber;
 }
 
 

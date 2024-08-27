@@ -29,25 +29,22 @@
 */
 
 
-#ifndef _VECTOR_FILL_H_
-#define _VECTOR_FILL_H_
+#ifndef _TRANSPOSE_H_
+#define _TRANSPOSE_H_
 
 
-#include "../../../../common/Basic_process/fill/constant/CPU/fill_constant_exec.h"
-#include "../../../../common/Classes/Vector.h"
-#include "../../../core/configs/config.h"
+#include "../../../../common/Basic_process/transpose/CPU/transpose_exec.h"
+#include "../../../../common/Classes/Matrix.h"
+#include "../../../../common/Basic_process/transpose/CPU/transpose2D_config.h"
 
 
-namespace de {
+namespace de
+{
+namespace blas {
     namespace cpu {
-        _DECX_API_ de::DH Constant_fp32(de::Vector& src, const float value);
-
-
-        _DECX_API_ de::DH Constant_int32(de::Vector& src, const int value);
-
-
-        _DECX_API_ de::DH Constant_fp64(de::Vector& src, const double value);
+        _DECX_API_ void Transpose(de::InputMatrix& src, de::OutputMatrix& dst);
     }
+}
 }
 
 

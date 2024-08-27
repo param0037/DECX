@@ -19,7 +19,6 @@
 #include "../classes/GPU_Vector.h"
 #include "../classes/GPU_Tensor.h"
 #include "../classes/class_utils.h"
-#include "../Async/DecxStream.h"
 
 
 namespace de {
@@ -79,22 +78,10 @@ namespace de
         _DECX_API_ de::DH Integral(de::GPU_Vector& src, de::GPU_Vector& dst, const int scan_mode);
 
 
-        _DECX_API_ de::DH Integral_Async(de::Vector& src, de::Vector& dst, const int scan_mode, de::DecxStream& S);
-
-
-        _DECX_API_ de::DH Integral_Async(de::GPU_Vector& src, de::GPU_Vector& dst, const int scan_mode, de::DecxStream& S);
-
-
         _DECX_API_ de::DH Integral(de::Matrix& src, de::Matrix& dst, const int scan2D_mode, const int scan_calc_mode);
 
 
         _DECX_API_ de::DH Integral(de::GPU_Matrix& src, de::GPU_Matrix& dst, const int scan2D_mode, const int scan_calc_mode);
-
-
-        _DECX_API_ de::DH Integral_Async(de::Matrix& src, de::Matrix& dst, const int scan2D_mode, const int scan_calc_mode, de::DecxStream& S);
-
-
-        _DECX_API_ de::DH Integral_Async(de::GPU_Matrix& src, de::GPU_Matrix& dst, const int scan2D_mode, const int scan_calc_mode, de::DecxStream& S);
     }
 }
 

@@ -60,19 +60,6 @@ namespace de
         virtual uint Height() const = 0;
 
 
-
-        /* return the reference of the element in the matrix, which locates on specific row and colume
-        * \params row -> where the element locates on row
-        * \params col -> where the element locates on colume
-        */
-        /*virtual float* ptr_fp32(const int row, const int col) = 0;
-        virtual double* ptr_fp64(const int row, const int col) = 0;
-        virtual int* ptr_int32(const int row, const int col) = 0;
-        virtual de::CPf* ptr_cpl32(const int row, const int col) = 0;
-        virtual de::CPd* ptr_cpl64(const int row, const int col) = 0;
-        virtual de::Half* ptr_fp16(const int row, const int col) = 0;
-        virtual uint8_t* ptr_uint8(const int row, const int col) = 0;*/
-
         template <typename _ptr_type>
         _ptr_type* ptr(const int row, const int col) 
         {
@@ -97,6 +84,10 @@ namespace de
 
         ~Matrix() {}
     };
+
+    typedef const de::Matrix& InputMatrix;
+    typedef de::Matrix& OutputMatrix;
+    typedef de::Matrix& InOutMatrix;
 
 
     _DECX_API_ de::Matrix* CreateMatrixPtr();

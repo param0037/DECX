@@ -40,6 +40,10 @@
 namespace de
 {
     class Number;
+
+    typedef const de::Number& InputNumber;
+    typedef de::Number& OutputNumber;
+    typedef de::Number& InOutNumber;
 }
 
 

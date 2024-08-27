@@ -63,6 +63,10 @@ namespace de
 
         ~GPU_Vector() {}
     };
+
+    typedef const de::GPU_Vector& InputGPUVector;
+    typedef de::GPU_Vector& OutputGPUVector;
+    typedef de::GPU_Vector& InOutGPUVector;
 }
 
 

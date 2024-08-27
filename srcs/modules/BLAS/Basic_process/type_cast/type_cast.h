@@ -59,16 +59,10 @@ namespace type_cast
 namespace de {
     namespace cpu 
     {
-        _DECX_API_ void TypeCast(de::Vector& src, de::Vector& dst, const int cvt_method);
+        _DECX_API_ void TypeCast(de::InputVector src, de::OutputVector dst, const int32_t cvt_method);
 
 
-        _DECX_API_ void TypeCast(de::Matrix& src, de::Matrix& dst, const int cvt_method);
-
-
-        _DECX_API_ void TypeCast(de::MatrixArray& src, de::MatrixArray& dst, const int cvt_method);
-
-
-        _DECX_API_ void TypeCast(de::Tensor& src, de::Tensor& dst, const int cvt_method);
+        _DECX_API_ void TypeCast(de::InputMatrix src, de::OutputMatrix dst, const int32_t cvt_method);
     }
 }
 

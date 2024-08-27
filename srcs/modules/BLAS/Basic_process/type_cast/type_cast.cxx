@@ -142,7 +142,7 @@ void decx::type_cast::cpu::_type_cast2D_organiser(void* src, void* dst, const ui
 }
 
 
-_DECX_API_ void de::cpu::TypeCast(de::Vector& src, de::Vector& dst, const int cvt_method)
+_DECX_API_ void de::cpu::TypeCast(de::InputVector src, de::OutputVector dst, const int cvt_method)
 {
     using namespace decx::type_cast;
 
@@ -152,7 +152,7 @@ _DECX_API_ void de::cpu::TypeCast(de::Vector& src, de::Vector& dst, const int cv
             CPU_NOT_INIT);
     }
 
-    decx::_Vector* _src = dynamic_cast<decx::_Vector*>(&src);
+    const decx::_Vector* _src = dynamic_cast<const decx::_Vector*>(&src);
     decx::_Vector* _dst = dynamic_cast<decx::_Vector*>(&dst);
 
     if (!_src->is_init()) {
@@ -165,7 +165,7 @@ _DECX_API_ void de::cpu::TypeCast(de::Vector& src, de::Vector& dst, const int cv
 }
 
 
-_DECX_API_ void de::cpu::TypeCast(de::Matrix& src, de::Matrix& dst, const int cvt_method)
+_DECX_API_ void de::cpu::TypeCast(de::InputMatrix src, de::OutputMatrix dst, const int cvt_method)
 {
     using namespace decx::type_cast;
 
@@ -175,7 +175,7 @@ _DECX_API_ void de::cpu::TypeCast(de::Matrix& src, de::Matrix& dst, const int cv
             CPU_NOT_INIT);
     }
 
-    decx::_Matrix* _src = dynamic_cast<decx::_Matrix*>(&src);
+    const decx::_Matrix* _src = dynamic_cast<const decx::_Matrix*>(&src);
     decx::_Matrix* _dst = dynamic_cast<decx::_Matrix*>(&dst);
 
     if (!_src->is_init()) {
@@ -186,61 +186,3 @@ _DECX_API_ void de::cpu::TypeCast(de::Matrix& src, de::Matrix& dst, const int cv
     decx::type_cast::cpu::_type_cast2D_organiser(_src->Mat.ptr, _dst->Mat.ptr,
         make_uint2(_src->Width(), _src->Height()), _src->Pitch(), _dst->Pitch(), cvt_method, de::GetLastError());
 }
-
-
-// _DECX_API_ de::DH de::cpu::TypeCast(de::MatrixArray& src, de::MatrixArray& dst, const int cvt_method)
-// {
-//     using namespace decx::type_cast;
-
-//     de::DH handle;
-//     if (!decx::cpu::_is_CPU_init()) {
-//         decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CPU_not_init,
-//             CPU_NOT_INIT);
-//         return handle;
-//     }
-
-//     decx::err::Success(&handle);
-
-//     decx::_MatrixArray* _src = dynamic_cast<decx::_MatrixArray*>(&src);
-//     decx::_MatrixArray* _dst = dynamic_cast<decx::_MatrixArray*>(&dst);
-
-//     if (!_src->is_init()) {
-//         decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CLASS_NOT_INIT,
-//             CLASS_NOT_INIT);
-//         return handle;
-//     }
-
-//     decx::type_cast::cpu::_type_cast2D_organiser<true>(_src->MatArr.ptr, _dst->MatArr.ptr,
-//         make_ulong2(_src->Pitch(), _src->Height() * _src->MatrixNumber()), _src->Pitch(), _dst->Pitch(), cvt_method, &handle);
-
-//     return handle;
-// }
-
-
-
-// _DECX_API_ de::DH de::cpu::TypeCast(de::Tensor& src, de::Tensor& dst, const int cvt_method)
-// {
-//     using namespace decx::type_cast;
-
-//     de::DH handle;
-//     if (!decx::cpu::_is_CPU_init()) {
-//         decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CPU_not_init, CPU_NOT_INIT);
-//         return handle;
-//     }
-
-//     decx::err::Success(&handle);
-
-//     decx::_Tensor* _src = dynamic_cast<decx::_Tensor*>(&src);
-//     decx::_Tensor* _dst = dynamic_cast<decx::_Tensor*>(&dst);
-
-//     if (!_src->is_init()) {
-//         decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CLASS_NOT_INIT, CLASS_NOT_INIT);
-//         return handle;
-//     }
-
-//     decx::type_cast::cpu::_type_cast2D_organiser<true>(_src->Tens.ptr, _dst->Tens.ptr,
-//         make_ulong2(_src->get_layout().dpitch, _src->get_layout().wpitch * _src->Height()), 
-//         _src->get_layout().dpitch, _dst->get_layout().dpitch, cvt_method, &handle);
-
-//     return handle;
-// }

@@ -41,6 +41,21 @@
 #endif
 #include "type_info.h"
 
+/**
+ * The alignment selection is based on the minimum concurent vector length
+ * when performing SIMD calculations, such as _mm256_add_ps() in AVX2 context
+ * and vaddq_f32() in arm NEON context. The computational banwidth is 256 bits
+ * while NEON is 128 bits. Hence, the alignment is decided by such bandwidth.
+ * 
+ * Technically, there are multiple streams for u-ops on both x86 and arm64 CPUs, 
+ * allowing multiple stream to run calculation concurrenctly. The alignment should
+ * have been set higher to achieve a better computational bandwith. However, DECX
+ * trade-off between computational throughput and storage efficiency, eventually
+ * the minimum bandwidth alignment is selected. (Increasing the alignment decreases
+ * the storage efficiency, especially when width of matrix, depth of tensor, or
+ * length of vector, is not in power of 2.)
+*/
+
 // x86-64, avx256, 256bit alignment
 #ifdef __x86_64__
 #define _MATRIX_ALIGN_4B_ 8
@@ -102,7 +117,8 @@ public:
 
 
 
-namespace de {
+namespace de 
+{
     class 
 #if _CPP_EXPORT_ENABLED_
         _DECX_API_
@@ -123,19 +139,6 @@ namespace de {
         virtual uint32_t Height() const = 0;
 
 
-
-        /* return the reference of the element in the matrix, which locates on specific row and colume
-        * \params row -> where the element locates on row
-        * \params col -> where the element locates on colume
-        */
-        /*virtual float*      ptr_fp32(const int row, const int col)  = 0;
-        virtual double*     ptr_fp64(const int row, const int col)  = 0;
-        virtual int*        ptr_int32(const int row, const int col) = 0;
-        virtual de::CPf*    ptr_cpl32(const int row, const int col) = 0;
-        virtual de::CPd*    ptr_cpl64(const int row, const int col) = 0;
-        virtual de::Half*   ptr_fp16(const int row, const int col)  = 0;
-        virtual uint8_t*    ptr_uint8(const int row, const int col) = 0;*/
-        
         virtual void release() = 0;
 
 
@@ -153,6 +156,11 @@ namespace de {
 
         ~Matrix() {}
     };
+
+
+    typedef const de::Matrix& InputMatrix;
+    typedef de::Matrix& OutputMatrix;
+    typedef de::Matrix& InOutMatrix;
 }
 
 
@@ -169,8 +177,6 @@ namespace de {
 *            ...                                  ...  |        
 *            [[x x x x x x... ...    ... ...x x x....] _
 */
-
-
 namespace decx
 {
     class _DECX_API_ _Matrix : public de::Matrix
@@ -186,8 +192,6 @@ namespace decx
         void _attribute_assign(const de::_DATA_TYPES_FLAGS_ type, const uint32_t _width, const uint32_t _height);
 
         decx::_matrix_layout _layout;
-
-        //unsigned short Store_Type;
 
         de::_DATA_TYPES_FLAGS_ type;
 
@@ -223,16 +227,6 @@ namespace decx
 
 
         virtual uint32_t Height() const;
-
-
-
-        /*virtual float*      ptr_fp32(const int row, const int col);
-        virtual double*     ptr_fp64(const int row, const int col);
-        virtual int*        ptr_int32(const int row, const int col);
-        virtual de::CPf*    ptr_cpl32(const int row, const int col);
-        virtual de::CPd*    ptr_cpl64(const int row, const int col);
-        virtual de::Half*   ptr_fp16(const int row, const int col);
-        virtual uint8_t*    ptr_uint8(const int row, const int col);*/
 
 
         virtual void release();

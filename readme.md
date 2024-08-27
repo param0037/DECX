@@ -12,6 +12,12 @@ A fast linear algebra, computer vision, and mathematic library, based on CUDA an
 2. Linux, x86, 64bit.
 3. Android on ARM64 CPUs.
 
+## <font color="orange">Coding Style Migrations
+1. Added typedef const de::Vector& de::InputVector; The same as other major data types. The input should be const as possible.
+2. Exported functions (under namespace de::), should have a sub namespace labled as the modules belonging to. E.g., de::blas::cpu::GEMM(...).
+3. All the service functions defined in common folder, should only be labled under namespace decx::.
+4. All the kernel functions defined in common folder, should be labled as decx::CPUK(GPUK)::.</font>
+
 
 ## Make
 ### Dependencies

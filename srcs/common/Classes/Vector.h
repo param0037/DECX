@@ -76,17 +76,6 @@ namespace de
         virtual size_t Len() const = 0;
 
 
-        /*virtual float*              ptr_fp32(size_t index)  = 0;
-        virtual int*                ptr_int32(size_t index) = 0;
-        virtual uint64_t*           ptr_uint64(size_t index) = 0;
-        virtual double*             ptr_fp64(size_t index)  = 0;
-        virtual de::Half*           ptr_fp16(size_t index)  = 0;
-        virtual de::CPf*            ptr_cpl32(size_t index) = 0;
-        virtual de::CPd*            ptr_cpl64(size_t index) = 0;
-        virtual uint8_t*            ptr_uint8(size_t index) = 0;
-        virtual de::Vector4f*       ptr_vec4f(size_t index) = 0;*/
-
-
         template <typename _ptr_type>
         _ptr_type* ptr(const uint64_t _idx)
         {
@@ -107,6 +96,10 @@ namespace de
 
         ~Vector() {}
     };
+
+    typedef const de::Vector& InputVector;
+    typedef de::Vector& OutputVector;
+    typedef de::Vector& InOutVector;
 }
 
 
@@ -161,18 +154,7 @@ namespace decx
         _Vector(const de::_DATA_TYPES_FLAGS_ _type, size_t length);
 
 
-        virtual size_t Len() const;
-
-
-        /*virtual float*           ptr_fp32(size_t index);
-        virtual int*             ptr_int32(size_t index);
-        virtual uint64_t*        ptr_uint64(size_t index);
-        virtual double*          ptr_fp64(size_t index);
-        virtual de::Half*        ptr_fp16(size_t index);
-        virtual de::CPf*         ptr_cpl32(size_t index);
-        virtual de::CPd*         ptr_cpl64(size_t index);
-        virtual uint8_t*         ptr_uint8(size_t index);
-        virtual de::Vector4f*    ptr_vec4f(size_t index);*/
+        virtual uint64_t Len() const;
 
 
         virtual void release();

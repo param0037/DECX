@@ -94,20 +94,6 @@ namespace type_cast {
         using _cvt_kernel2D = void(const _type_in*, _type_out*, const uint2, const uint32_t, const uint32_t);
     }
 
-    /**
-    * @param src : fp64 input pointer
-    * @param dst : fp32 output pointer
-    * @param proc_dims : dimensions of processed area : ~.x -> width (in vec8); ~.y -> height
-    * @param Wsrc : pitch of source matrix (in vec4 (in float))
-    * @param Wdst : pitch of destinated matrix (in element)
-    */
-    // void _cvtui8_f32_caller1D(const uint8_t* src, float* dst, const uint64_t proc_len);
-    // void _cvtui8_i32_caller1D(const float* src, float* dst, const uint64_t proc_len);
-    // void _cvtfp32_i32_caller(const float* src, float* dst, const uint64_t proc_num);
-    // void _cvti32_fp32_caller(const float* src, float* dst, const uint64_t proc_num);
-    // void _cvtfp32_fp64_caller1D(const float* src, double* dst, const uint64_t proc_num);
-    // void _cvtfp64_fp32_caller1D(const double* src, float* dst, const uint64_t proc_num);
-
 
     decx::type_cast::CPUK::_cvt_kernel1D<float, uint8_t>* _cvtf32_ui8_selector1D(const int32_t flag);
     decx::type_cast::CPUK::_cvt_kernel1D<int32_t, uint8_t>* _cvti32_ui8_selector1D(const int32_t flag);
@@ -165,30 +151,6 @@ namespace type_cast {
         typedef void (*_cvt_f32_u8_kernel2D) (const float*, int*, const uint2, const uint32_t, const uint32_t);
     }
 
-    /**
-    * @param src : fp64 input pointer
-    * @param dst : fp32 output pointer
-    * @param proc_dims : dimensions of processed area : ~.x -> width (in vec8); ~.y -> height
-    * @param Wsrc : pitch of source matrix (in vec4 (in float))
-    * @param Wdst : pitch of destinated matrix (in element)
-    */
-    // void _cvtui8_f32_caller2D(const float* src, float* dst, const ulong2 proc_dims, const uint32_t Wsrc, const uint32_t Wdst);
-    // void _cvtui8_i32_caller2D(const float* src, float* dst, const ulong2 proc_dims, const uint32_t Wsrc, const uint32_t Wdst);
-    // void _cvtfp32_fp64_caller2D(const float* src, double* dst, const ulong2 proc_dims, const uint32_t Wsrc, const uint32_t Wdst);
-    // void _cvtfp64_fp32_caller2D(const double* src, float* dst, const ulong2 proc_dims, const uint32_t Wsrc, const uint32_t Wdst);
-
-    /**
-    * @param src : fp64 input pointer
-    * @param dst : fp32 output pointer
-    * @param proc_dims : dimensions of processed area : ~.x -> width (in vec8); ~.y -> height
-    * @param Wsrc : pitch of source matrix (in element)
-    * @param Wdst : pitch of destinated matrix (in vec4 (in float))
-    */
-   
-    void _cvtf32_ui8_caller2D(const float* src, int* dst, const ulong2 proc_dims, const uint32_t Wsrc, const uint32_t Wdst, const int32_t flag, de::DH* handle);
-    void _cvti32_ui8_caller2D(const float* src, int* dst, const ulong2 proc_dims, const uint32_t Wsrc, const uint32_t Wdst, const int32_t flag, de::DH* handle);
-
-
     decx::type_cast::CPUK::_cvt_kernel2D<float, uint8_t>* _cvtf32_ui8_selector2D(const int32_t flag);
     decx::type_cast::CPUK::_cvt_kernel2D<int32_t, uint8_t>* _cvti32_ui8_selector2D(const int32_t flag);
 }
@@ -217,7 +179,7 @@ static void decx::type_cast::typecast1D_general_caller(
 {
     _planner->plan(decx::cpu::_get_permitted_concurrency(), proc_len, sizeof(_type_in), sizeof(_type_out));
 
-    _planner->caller(_kernel_ptr, src, dst, t1D);
+    _planner->caller_unary(_kernel_ptr, src, dst, t1D);
 }
 
 
@@ -232,7 +194,7 @@ static void decx::type_cast::typecast2D_general_caller(
 {
     _planner->plan(decx::cpu::_get_permitted_concurrency(), proc_dims, sizeof(_type_in), sizeof(_type_out));
 
-    _planner->caller(_kernel_ptr, src, dst, Wsrc, Wdst, t1D);
+    _planner->caller_unary(_kernel_ptr, src, dst, Wsrc, Wdst, t1D);
 }
 
 

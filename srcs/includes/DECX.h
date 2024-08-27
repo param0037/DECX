@@ -62,8 +62,6 @@
 #include "DECX/vision/imgproc.h"
 #endif
 
-
-#include "DECX/Async/DecxStream.h"
 #endif
 
 

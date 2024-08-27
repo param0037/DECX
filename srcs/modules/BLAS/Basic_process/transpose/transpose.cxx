@@ -29,20 +29,21 @@
 */
 
 
-#include "../../../../common/Basic_process/transpose/CPU/transpose.h"
+#include "transpose.h"
+
 
 namespace decx
 {
     namespace blas {
-        static void Transpose_4b(decx::_Matrix* src, decx::_Matrix* dst, de::DH* handle);
-        static void Transpose_1b(decx::_Matrix* src, decx::_Matrix* dst, de::DH* handle);
-        static void Transpose_8b(decx::_Matrix* src, decx::_Matrix* dst, de::DH* handle);
-        static void Transpose_16b(decx::_Matrix* src, decx::_Matrix* dst, de::DH* handle);
+        static void Transpose_4b(const decx::_Matrix* src, decx::_Matrix* dst, de::DH* handle);
+        static void Transpose_1b(const decx::_Matrix* src, decx::_Matrix* dst, de::DH* handle);
+        static void Transpose_8b(const decx::_Matrix* src, decx::_Matrix* dst, de::DH* handle);
+        static void Transpose_16b(const decx::_Matrix* src, decx::_Matrix* dst, de::DH* handle);
     }
 }
 
 
-static void decx::blas::Transpose_4b(decx::_Matrix* src, decx::_Matrix* dst, de::DH* handle)
+static void decx::blas::Transpose_4b(const decx::_Matrix* src, decx::_Matrix* dst, de::DH* handle)
 {
     if (decx::blas::g_cpu_transpose_4b_config._res_ptr == NULL) {
         decx::blas::g_cpu_transpose_4b_config.RegisterResource(new decx::blas::_cpu_transpose_config,
@@ -67,7 +68,7 @@ static void decx::blas::Transpose_4b(decx::_Matrix* src, decx::_Matrix* dst, de:
 
 
 
-static void decx::blas::Transpose_8b(decx::_Matrix* src, decx::_Matrix* dst, de::DH* handle)
+static void decx::blas::Transpose_8b(const decx::_Matrix* src, decx::_Matrix* dst, de::DH* handle)
 {
     if (decx::blas::g_cpu_transpose_8b_config._res_ptr == NULL) {
         decx::blas::g_cpu_transpose_8b_config.RegisterResource(new decx::blas::_cpu_transpose_config,
@@ -91,7 +92,7 @@ static void decx::blas::Transpose_8b(decx::_Matrix* src, decx::_Matrix* dst, de:
 }
 
 
-static void decx::blas::Transpose_1b(decx::_Matrix* src, decx::_Matrix* dst, de::DH* handle)
+static void decx::blas::Transpose_1b(const decx::_Matrix* src, decx::_Matrix* dst, de::DH* handle)
 {
     if (decx::blas::g_cpu_transpose_1b_config._res_ptr == NULL) {
         decx::blas::g_cpu_transpose_1b_config.RegisterResource(new decx::blas::_cpu_transpose_config,
@@ -116,7 +117,7 @@ static void decx::blas::Transpose_1b(decx::_Matrix* src, decx::_Matrix* dst, de:
 }
 
 
-static void decx::blas::Transpose_16b(decx::_Matrix* src, decx::_Matrix* dst, de::DH* handle)
+static void decx::blas::Transpose_16b(const decx::_Matrix* src, decx::_Matrix* dst, de::DH* handle)
 {
     if (decx::blas::g_cpu_transpose_16b_config._res_ptr == NULL) {
         decx::blas::g_cpu_transpose_16b_config.RegisterResource(new decx::blas::_cpu_transpose_config,
@@ -140,11 +141,11 @@ static void decx::blas::Transpose_16b(decx::_Matrix* src, decx::_Matrix* dst, de
 }
 
 
-_DECX_API_ void de::blas::cpu::Transpose(de::Matrix& src, de::Matrix& dst)
+_DECX_API_ void de::blas::cpu::Transpose(de::InputMatrix& src, de::OutputMatrix& dst)
 {
     de::ResetLastError();
 
-    decx::_Matrix* _src = dynamic_cast<decx::_Matrix*>(&src);
+    const decx::_Matrix* _src = dynamic_cast<const decx::_Matrix*>(&src);
     decx::_Matrix* _dst = dynamic_cast<decx::_Matrix*>(&dst);
 
     switch (_src->get_layout()._single_element_size)

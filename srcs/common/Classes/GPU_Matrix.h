@@ -75,6 +75,10 @@ namespace de
 
         ~GPU_Matrix() {}
     };
+
+    typedef const de::GPU_Matrix& InputGPUMatrix;
+    typedef de::GPU_Matrix& OutputGPUMatrix;
+    typedef de::GPU_Matrix& InOutGPUMatrix;
 }
 
 

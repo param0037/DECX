@@ -19,7 +19,6 @@
 #include "../classes/GPU_Vector.h"
 #include "../classes/GPU_Tensor.h"
 #include "../classes/class_utils.h"
-#include "../Async/DecxStream.h"
 #include "../basic_proc/VectorProc.h"
 
 
@@ -61,7 +60,7 @@ namespace blas {
 		_DECX_API_ void GEMM(de::Matrix& A, de::Matrix& B, de::Matrix& C, de::Matrix& dst);
 
 
-		_DECX_API_ void Transpose(de::Matrix& src, de::Matrix& dst);
+		_DECX_API_ void Transpose(de::InputMatrix& src, de::OutputMatrix& dst);
 
 	}
 

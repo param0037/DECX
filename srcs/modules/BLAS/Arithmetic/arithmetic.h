@@ -28,31 +28,45 @@
 * DEALINGS IN THE SOFTWARE.
 */
 
-#include "../arithmetic_kernels.h"
-#include "../../../SIMD/intrinsics_ops.h"
+#ifndef _ARITHMETIC_H_
+#define _ARITHMETIC_H_
+
+#include "../../../common/Classes/Vector.h"
+#include "../../../common/Classes/Matrix.h"
+#include "../../../common/Classes/Number.h"
 
 
-#define _LDGV_float(name) name##_v._vf = _mm256_load_ps(name + i * 8)
-#define _STGV_float(name) _mm256_store_ps(name + i * 8, name##_v._vf)
-#define _DUPV_float(name) name##_v._vf = _mm256_set1_ps(name)
-#define _OP_float(__intrinsics, src1, src2, dst) dst##_v._vf = __intrinsics(src1##_v._vf, src2##_v._vf)
-#define _OPinv_float(__intrinsics, src1, src2, dst) dst##_v._vf = __intrinsics(src2##_v._vf, src1##_v._vf)
+namespace de
+{
+    enum DecxArithmetic{
+        ADD = 0x00,
+        SUB = 0x01,
+        MUL = 0x02,
+        DIV = 0x03,
+        MIN = 0x04,
+        MAX = 0x05,
+        COS = 0x06,
+        SIN = 0x07,
+
+        OP_INV = 0x20
+    };
+}
 
 
-// Binary
-_BINARY_1D_OP_(_add_fp32_exec, float, _mm256_add_ps)
-_BINARY_1D_OP_(_sub_fp32_exec, float, _mm256_sub_ps)
-_BINARY_1D_OP_(_mul_fp32_exec, float, _mm256_mul_ps)
-_BINARY_1D_OP_(_div_fp32_exec, float, _mm256_div_ps)
-_BINARY_1D_OP_(_min_fp32_exec, float, _mm256_min_ps)
-_BINARY_1D_OP_(_max_fp32_exec, float, _mm256_max_ps)
+namespace de
+{
+namespace blas{
+namespace cpu{
+    _DECX_API_ void Arithmetic(de::InputVector A, de::InputVector B, de::OutputVector dst, const int32_t arith_flag);
+    _DECX_API_ void Arithmetic(de::InputVector src, de::InputNumber constant, de::OutputVector dst, const int32_t arith_flag);
+}
 
-// Unary (binary with constant)
-_UNARY_1D_OP_(_addc_fp32_exec,      float, float, _mm256_add_ps, )
-_UNARY_1D_OP_(_subc_fp32_exec,      float, float, _mm256_sub_ps, )
-_UNARY_1D_OP_(_subcinv_fp32_exec,   float, float, _mm256_sub_ps, inv)
-_UNARY_1D_OP_(_mulc_fp32_exec,      float, float, _mm256_mul_ps, )
-_UNARY_1D_OP_(_divc_fp32_exec,      float, float, _mm256_div_ps, )
-_UNARY_1D_OP_(_divcinv_fp32_exec,   float, float, _mm256_div_ps, inv)
-_UNARY_1D_OP_(_minc_fp32_exec,      float, float, _mm256_min_ps, )
-_UNARY_1D_OP_(_maxc_fp32_exec,      float, float, _mm256_max_ps, )
+namespace cpu{
+    _DECX_API_ void Arithmetic(de::InputMatrix A, de::InputMatrix B, de::OutputMatrix dst, const int32_t arith_flag);
+}
+}
+
+}
+
+
+#endif
