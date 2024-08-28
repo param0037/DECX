@@ -82,7 +82,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>..\..\..\build\bin\$(Platform)\</OutDir>
-    <IntDir>../../../build/$(ProjectName)/$(Platform)</IntDir>
+    <IntDir>../../../build/$(ProjectName)/$(Platform)/MSVC</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -149,7 +149,6 @@
     <ClCompile Include="..\..\..\srcs\common\Basic_process\extension\CPU\extend_reflect_exec_params.cxx" />
     <ClCompile Include="..\..\..\srcs\common\Basic_process\extension\CPU\x86\extend_constant_exec.cxx" />
     <ClCompile Include="..\..\..\srcs\common\Basic_process\extension\CPU\x86\extend_reflect_exec.cxx" />
-    <ClCompile Include="..\..\..\srcs\common\Basic_process\fill\constant\CPU\fill_constant_exec.cxx" />
     <ClCompile Include="..\..\..\srcs\common\Basic_process\transpose\CPU\transpose2D_config.cxx" />
     <ClCompile Include="..\..\..\srcs\common\Basic_process\transpose\CPU\transpose_exec_16b.cxx" />
     <ClCompile Include="..\..\..\srcs\common\Basic_process\transpose\CPU\transpose_exec_1b.cxx" />
@@ -166,10 +165,13 @@
     <ClCompile Include="..\..\..\srcs\common\Basic_process\type_statistics\CPU\hist_gen_exec.cxx" />
     <ClCompile Include="..\..\..\srcs\common\Basic_process\type_statistics\CPU\normalization.cxx" />
     <ClCompile Include="..\..\..\srcs\common\Basic_process\type_statistics\CPU\summation.cxx" />
+    <ClCompile Include="..\..\..\srcs\common\element_wise\common\cpu_element_wise_planner.cxx" />
+    <ClCompile Include="..\..\..\srcs\common\element_wise\CPU\fp32\arithmetic_fp32_exec_x86_64.cxx" />
+    <ClCompile Include="..\..\..\srcs\common\element_wise\CPU\fp64\arithmetic_fp64_exec_x86_64.cxx" />
     <ClCompile Include="..\..\..\srcs\common\FMGR\fragment_arangement.cxx" />
+    <ClCompile Include="..\..\..\srcs\modules\BLAS\Arithmetic\arithmetic.cxx" />
+    <ClCompile Include="..\..\..\srcs\modules\BLAS\Arithmetic\arithmetic_callers.cxx" />
     <ClCompile Include="..\..\..\srcs\modules\BLAS\Basic_process\extension\extend.cxx" />
-    <ClCompile Include="..\..\..\srcs\modules\BLAS\Basic_process\fill\Matrix_fill.cxx" />
-    <ClCompile Include="..\..\..\srcs\modules\BLAS\Basic_process\fill\Vector_fill.cxx" />
     <ClCompile Include="..\..\..\srcs\modules\BLAS\Basic_process\transpose\transpose.cxx" />
     <ClCompile Include="..\..\..\srcs\modules\BLAS\Basic_process\type_cast\type_cast.cxx" />
     <ClCompile Include="..\..\..\srcs\modules\BLAS\Dot product\CPU\fp32\dot_fp32.cxx" />

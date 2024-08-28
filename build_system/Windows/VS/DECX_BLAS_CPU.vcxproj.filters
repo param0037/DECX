@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="源文件\basic_calculations">
-      <UniqueIdentifier>{b1f9519a-f7d9-4bb6-9dcc-1982a4692900}</UniqueIdentifier>
-    </Filter>
     <Filter Include="源文件\Dot_product">
       <UniqueIdentifier>{1793d9e6-ca89-4939-941f-822c264c88aa}</UniqueIdentifier>
     </Filter>
@@ -36,12 +33,6 @@
     </Filter>
     <Filter Include="源文件\basic_process\transpose">
       <UniqueIdentifier>{3aa5d462-2a10-4186-96ba-f6a8c075ab93}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\basic_process\fill">
-      <UniqueIdentifier>{d09b7c83-59cb-49c8-b7f0-33b8585f1006}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\basic_process\fill\constant">
-      <UniqueIdentifier>{431fdd53-9ba9-4963-aabc-edc1606c2a56}</UniqueIdentifier>
     </Filter>
     <Filter Include="源文件\basic_process\extension">
       <UniqueIdentifier>{8246eb4d-b837-4959-b151-663cc1f914da}</UniqueIdentifier>
@@ -72,6 +63,12 @@
     </Filter>
     <Filter Include="源文件\utils">
       <UniqueIdentifier>{acb32767-aae6-43ea-9a3a-ab5f6ae37430}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Arithmetics">
+      <UniqueIdentifier>{b1f9519a-f7d9-4bb6-9dcc-1982a4692900}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Arithmetics\common">
+      <UniqueIdentifier>{d5a8a4c6-317b-4e51-bb98-383347773e1d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -120,9 +117,6 @@
     <ClCompile Include="..\..\..\srcs\common\Basic_process\extension\CPU\extend_reflect_exec_params.cxx">
       <Filter>源文件\basic_process\extension</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\srcs\common\Basic_process\fill\constant\CPU\fill_constant_exec.cxx">
-      <Filter>源文件\basic_process\fill\constant</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\srcs\common\FMGR\fragment_arangement.cxx">
       <Filter>源文件\utils</Filter>
     </ClCompile>
@@ -156,14 +150,11 @@
     <ClCompile Include="..\..\..\srcs\modules\BLAS\Vectorial\transforms\3D\CPU\Matrix_transform.cxx">
       <Filter>源文件\vector4\transform\3D</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\srcs\modules\BLAS\Basic_process\fill\Matrix_fill.cxx">
-      <Filter>源文件\basic_process\fill</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\srcs\modules\BLAS\Vectorial\fields\CPU\rotation.cxx">
       <Filter>源文件\vector4\transform\3D</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\srcs\common\Basic_process\type_statistics\CPU\normalization.cxx">
-      <Filter>源文件\basic_calculations</Filter>
+      <Filter>源文件\Arithmetics</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\srcs\common\Basic_process\type_statistics\CPU\summation.cxx">
       <Filter>源文件\basic_process\type_statistics</Filter>
@@ -186,9 +177,6 @@
     <ClCompile Include="..\..\..\srcs\common\Basic_process\transpose\CPU\transpose2D_config.cxx">
       <Filter>源文件\basic_process\transpose</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\srcs\modules\BLAS\Basic_process\fill\Vector_fill.cxx">
-      <Filter>源文件\basic_process\fill</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\srcs\modules\BLAS\Basic_process\type_cast\type_cast.cxx">
       <Filter>源文件\basic_process\type_cast</Filter>
     </ClCompile>
@@ -197,6 +185,21 @@
     </ClCompile>
     <ClCompile Include="..\..\..\srcs\common\Basic_process\extension\CPU\x86\extend_reflect_exec.cxx">
       <Filter>源文件\basic_process\extension</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\srcs\common\element_wise\common\cpu_element_wise_planner.cxx">
+      <Filter>源文件\Arithmetics\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\srcs\common\element_wise\CPU\fp32\arithmetic_fp32_exec_x86_64.cxx">
+      <Filter>源文件\Arithmetics\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\srcs\common\element_wise\CPU\fp64\arithmetic_fp64_exec_x86_64.cxx">
+      <Filter>源文件\Arithmetics\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\srcs\modules\BLAS\Arithmetic\arithmetic.cxx">
+      <Filter>源文件\Arithmetics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\srcs\modules\BLAS\Arithmetic\arithmetic_callers.cxx">
+      <Filter>源文件\Arithmetics</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

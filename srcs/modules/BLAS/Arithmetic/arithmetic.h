@@ -40,16 +40,30 @@ namespace de
 {
     enum DecxArithmetic{
         ADD = 0x00,
-        SUB = 0x01,
-        MUL = 0x02,
-        DIV = 0x03,
-        MIN = 0x04,
-        MAX = 0x05,
-        COS = 0x06,
-        SIN = 0x07,
+        MUL = 0x01,
+        MIN = 0x02,
+        MAX = 0x03,
+        COS = 0x04,
+        SIN = 0x05,
 
-        OP_INV = 0x20
+        SUB = 0x06,
+        DIV = 0x07,
+        // ... 0-31, 32 unique arithmetics
+        // Place all the cinv kernels to the end, making it easier to accomplish more in the future.
+
+        OP_INV = 0x40   // 64
+        // So, any arithmetic IDs ranging from [0, 31], when bitwise-or with OP_INV(64)
+        // is equivalent to add 64.
     };
+}
+
+
+namespace decx
+{
+namespace blas{
+    void mat_bin_arithmetic_caller(const decx::_Matrix* A, const decx::_Matrix* B, decx::_Matrix* dst, const int32_t arith_flag, de::DH* handle);
+    void vec_bin_arithmetic_caller(const decx::_Vector* A, const decx::_Vector* B, decx::_Vector* dst, const int32_t arith_flag, de::DH* handle);
+}
 }
 
 

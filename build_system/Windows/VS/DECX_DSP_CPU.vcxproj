@@ -137,7 +137,7 @@
     <LinkIncremental>false</LinkIncremental>
     <OutDir>..\..\..\build\bin\$(Platform)\</OutDir>
     <TargetName>$(ProjectName)</TargetName>
-    <IntDir>../../../build/$(ProjectName)/$(Platform)</IntDir>
+    <IntDir>../../../build/$(ProjectName)/$(Platform)/MSVC</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

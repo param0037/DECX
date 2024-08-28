@@ -26,15 +26,16 @@ namespace de
 {
     enum DecxArithmetic{
         ADD = 0x00,
-        SUB = 0x01,
-        MUL = 0x02,
-        DIV = 0x03,
-        MIN = 0x04,
-        MAX = 0x05,
-        COS = 0x06,
-        SIN = 0x07,
+        MUL = 0x01,
+        MIN = 0x02,
+        MAX = 0x03,
+        COS = 0x04,
+        SIN = 0x05,
 
-        OP_INV = 0x20
+        SUB = 0x06,
+        DIV = 0x07,
+        
+        OP_INV = 0x40
     };
 }
 

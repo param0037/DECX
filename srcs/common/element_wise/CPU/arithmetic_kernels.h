@@ -41,7 +41,7 @@
  * @param type_INOUT The data type of both in and out, in arithmetic kernels, in and out have the same type
  * @param intrinsics Name of the intrinsics. In avx context, _mm(256)_xxx; In arm NEON context, vxxq_xx
 */
-#define _BINARY_1D_OP_(kernel_name, type_INOUT, intrinsics)        \
+#define _BINARY_1D_OP_(kernel_name, type_INOUT, intrinsics)         \
     _THREAD_FUNCTION_ void decx::CPUK::                             \
     kernel_name(const type_INOUT* __restrict A,                     \
                 const type_INOUT* __restrict B,                     \
@@ -65,7 +65,7 @@
  * @param intrinsics Name of the intrinsics. In avx context, _mm(256)_xxx; In arm NEON context, vxxq_xx
  * @param is_inv If the operation is not inversed, e.g. OP(constant, src), then left it blank; otherwise specify "inv" only
 */
-#define _UNARY_1D_OP_(kernel_name, type_INOUT, type_const, intrinsics, is_inv)     \
+#define _UNARY_1D_OP_(kernel_name, type_INOUT, type_const, intrinsics, is_inv)      \
     _THREAD_FUNCTION_ void decx::CPUK::                                             \
     kernel_name(const type_INOUT* __restrict src,                                   \
                 type_INOUT* __restrict dst,                                         \
@@ -76,7 +76,7 @@
             decx::utils::simd::xmm256_reg src_v, constant_v, dst_v;                 \
             _LDGV_##type_INOUT(src);                                                \
             _DUPV_##type_INOUT(constant);                                           \
-            _OP##is_inv##_##type_INOUT(intrinsics, src, constant, dst);               \
+            _OP##is_inv##_##type_INOUT(intrinsics, src, constant, dst);             \
             _STGV_##type_INOUT(dst);                                                \
         }                                                                           \
     }                                                                               \

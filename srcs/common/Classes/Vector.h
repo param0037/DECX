@@ -142,10 +142,10 @@ namespace decx
         decx::PtrInfo<void> Vec;
 
 
-        void construct(const de::_DATA_TYPES_FLAGS_ _type, size_t length);
+        void construct(const de::_DATA_TYPES_FLAGS_ _type, uint64_t length);
 
 
-        void re_construct(const de::_DATA_TYPES_FLAGS_ _type, size_t length);
+        void re_construct(const de::_DATA_TYPES_FLAGS_ _type, uint64_t length);
 
 
         _Vector();
