@@ -67,4 +67,16 @@ DECX supports exporting C, C++ and Python. If multiple languages are specified, 
 exp_lang [$1=<c><cxx><c++><py><python>]
 ```
 
+(c) Clean the module builds with clean function:
+```bash
+clean [$1=<module_name>]
+```
+to clean the specific project builds. If no argument is passed, the build system will clean the module(s) indicated by set_module previously.
+
+(d) Configure the module with
+```bash
+conf [$1=<module_name>]
+```
+to configure the specific module before building. If no argument is passed, the build system will configure the module(s) specified by set_module previously.
+
 ## On x64 Windows
