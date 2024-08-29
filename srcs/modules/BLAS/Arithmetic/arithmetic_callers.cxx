@@ -31,8 +31,7 @@
 
 #include "arithmetic.h"
 #include "../../../common/Element_wise/common/cpu_element_wise_planner.h"
-#include "../../../common/Element_wise/CPU/arithmetic_kernels.h"
-
+#include "../../../common/Element_wise/Arithmetics/arithmetic_kernels.h"
 
 
 #define _SUB_OFFSET_OPINV_KERNEL_LUT_MAP_ 6

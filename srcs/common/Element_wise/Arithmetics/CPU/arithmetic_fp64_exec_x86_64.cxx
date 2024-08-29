@@ -28,34 +28,32 @@
 * DEALINGS IN THE SOFTWARE.
 */
 
-#include "arithmetic.h"
-#include "../../../common/Element_wise/common/cpu_element_wise_planner.h"
-#include "../../../common/Element_wise/Arithmetics/arithmetic_kernels.h"
+#include "../arithmetic_kernels.h"
+#include "../../../SIMD/intrinsics_ops.h"
+
+#define _LDGV_double(name) name##_v._vd = _mm256_load_pd(name + i * 4)
+#define _STGV_double(name) _mm256_store_pd(name + i * 4, name##_v._vd)
+#define _OP_double(__intrinsics, src1, src2, dst) dst##_v._vd = __intrinsics(src1##_v._vd, src2##_v._vd)
+#define _DUPV_double(name) name##_v._vd = _mm256_set1_pd(name)
+#define _OPinv_double(__intrinsics, src1, src2, dst) dst##_v._vd = __intrinsics(src2##_v._vd, src1##_v._vd)
 
 
 
-_DECX_API_ void de::blas::cpu::
-Arithmetic(de::InputVector A, de::InputVector B, de::OutputVector dst, const int32_t arith_flag)
-{
-    de::ResetLastError();
-
-    const decx::_Vector* _A = dynamic_cast<const decx::_Vector*>(&A);
-    const decx::_Vector* _B = dynamic_cast<const decx::_Vector*>(&B);
-    decx::_Vector* _dst = dynamic_cast<decx::_Vector*>(&dst);
-
-    decx::blas::vec_bin_arithmetic_caller(_A, _B, _dst, arith_flag, de::GetLastError());
-}
+// Binary operations
+_BINARY_1D_OP_(_add_fp64_exec, double, _mm256_add_pd)
+_BINARY_1D_OP_(_sub_fp64_exec, double, _mm256_sub_pd)
+_BINARY_1D_OP_(_mul_fp64_exec, double, _mm256_mul_pd)
+_BINARY_1D_OP_(_div_fp64_exec, double, _mm256_div_pd)
+_BINARY_1D_OP_(_min_fp64_exec, double, _mm256_min_pd)
+_BINARY_1D_OP_(_max_fp64_exec, double, _mm256_max_pd)
 
 
-
-_DECX_API_ void de::blas::cpu::
-Arithmetic(de::InputMatrix A, de::InputMatrix B, de::OutputMatrix dst, const int32_t arith_flag)
-{
-    de::ResetLastError();
-
-    const decx::_Matrix* _A = dynamic_cast<const decx::_Matrix*>(&A);
-    const decx::_Matrix* _B = dynamic_cast<const decx::_Matrix*>(&B);
-    decx::_Matrix* _dst = dynamic_cast<decx::_Matrix*>(&dst);
-
-    decx::blas::mat_bin_arithmetic_caller(_A, _B, _dst, arith_flag, de::GetLastError());
-}
+// Unary (binary with constant)
+_UNARY_1D_OP_(_addc_fp64_exec,      double, double, _mm256_add_pd, )
+_UNARY_1D_OP_(_subc_fp64_exec,      double, double, _mm256_sub_pd, )
+_UNARY_1D_OP_(_subcinv_fp64_exec,   double, double, _mm256_sub_pd, inv)
+_UNARY_1D_OP_(_mulc_fp64_exec,      double, double, _mm256_mul_pd, )
+_UNARY_1D_OP_(_divc_fp64_exec,      double, double, _mm256_div_pd, )
+_UNARY_1D_OP_(_divcinv_fp64_exec,   double, double, _mm256_div_pd, inv)
+_UNARY_1D_OP_(_minc_fp64_exec,      double, double, _mm256_min_pd, )
+_UNARY_1D_OP_(_maxc_fp64_exec,      double, double, _mm256_max_pd, )

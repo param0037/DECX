@@ -29,26 +29,21 @@
 */
 
 
-#ifndef _GPU_MATRIX_FILL_H_
-#define _GPU_MATRIX_FILL_H_
+#ifndef _NORMALIZATION_H_
+#define _NORMALIZATION_H_
 
 
-#include "constant_fill_kernels.cuh"
-#include "../../../../Classes/GPU_Matrix.h"
-#include "../../../../../modules/core/configs/config.h"
+#include "../../basic.h"
+#include "../../Classes/All_classes.h"
 
-
-namespace de {
-    namespace cuda {
-        _DECX_API_ de::DH Constant_fp32(de::GPU_Matrix& src, const float value);
-
-
-        _DECX_API_ de::DH Constant_int32(de::GPU_Matrix& src, const int value);
-
-
-        _DECX_API_ de::DH Constant_fp64(de::GPU_Matrix& src, const double value);
-    }
+#ifdef _DECX_CPU_PARTS_
+namespace decx
+{
+namespace CPUK{
+    _THREAD_FUNCTION_ void normalize_scale_v8_fp32(const float* src, float* dst, const uint64_t proc_len_v, const double2 min_max, const double2 range);
+    _THREAD_FUNCTION_ void normalize_scale_v4_fp64(const double* src, double* dst, const uint64_t proc_len_v, const double2 min_max, const double2 range);
 }
-
+}
+#endif
 
 #endif

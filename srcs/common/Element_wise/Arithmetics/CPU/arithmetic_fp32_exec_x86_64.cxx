@@ -28,34 +28,31 @@
 * DEALINGS IN THE SOFTWARE.
 */
 
-#include "arithmetic.h"
-#include "../../../common/Element_wise/common/cpu_element_wise_planner.h"
-#include "../../../common/Element_wise/Arithmetics/arithmetic_kernels.h"
+#include "../arithmetic_kernels.h"
+#include "../../../SIMD/intrinsics_ops.h"
 
 
-
-_DECX_API_ void de::blas::cpu::
-Arithmetic(de::InputVector A, de::InputVector B, de::OutputVector dst, const int32_t arith_flag)
-{
-    de::ResetLastError();
-
-    const decx::_Vector* _A = dynamic_cast<const decx::_Vector*>(&A);
-    const decx::_Vector* _B = dynamic_cast<const decx::_Vector*>(&B);
-    decx::_Vector* _dst = dynamic_cast<decx::_Vector*>(&dst);
-
-    decx::blas::vec_bin_arithmetic_caller(_A, _B, _dst, arith_flag, de::GetLastError());
-}
+#define _LDGV_float(name) name##_v._vf = _mm256_load_ps(name + i * 8)
+#define _STGV_float(name) _mm256_store_ps(name + i * 8, name##_v._vf)
+#define _DUPV_float(name) name##_v._vf = _mm256_set1_ps(name)
+#define _OP_float(__intrinsics, src1, src2, dst) dst##_v._vf = __intrinsics(src1##_v._vf, src2##_v._vf)
+#define _OPinv_float(__intrinsics, src1, src2, dst) dst##_v._vf = __intrinsics(src2##_v._vf, src1##_v._vf)
 
 
+// Binary
+_BINARY_1D_OP_(_add_fp32_exec, float, _mm256_add_ps)
+_BINARY_1D_OP_(_sub_fp32_exec, float, _mm256_sub_ps)
+_BINARY_1D_OP_(_mul_fp32_exec, float, _mm256_mul_ps)
+_BINARY_1D_OP_(_div_fp32_exec, float, _mm256_div_ps)
+_BINARY_1D_OP_(_min_fp32_exec, float, _mm256_min_ps)
+_BINARY_1D_OP_(_max_fp32_exec, float, _mm256_max_ps)
 
-_DECX_API_ void de::blas::cpu::
-Arithmetic(de::InputMatrix A, de::InputMatrix B, de::OutputMatrix dst, const int32_t arith_flag)
-{
-    de::ResetLastError();
-
-    const decx::_Matrix* _A = dynamic_cast<const decx::_Matrix*>(&A);
-    const decx::_Matrix* _B = dynamic_cast<const decx::_Matrix*>(&B);
-    decx::_Matrix* _dst = dynamic_cast<decx::_Matrix*>(&dst);
-
-    decx::blas::mat_bin_arithmetic_caller(_A, _B, _dst, arith_flag, de::GetLastError());
-}
+// Unary (binary with constant)
+_UNARY_1D_OP_(_addc_fp32_exec,      float, float, _mm256_add_ps, )
+_UNARY_1D_OP_(_subc_fp32_exec,      float, float, _mm256_sub_ps, )
+_UNARY_1D_OP_(_subcinv_fp32_exec,   float, float, _mm256_sub_ps, inv)
+_UNARY_1D_OP_(_mulc_fp32_exec,      float, float, _mm256_mul_ps, )
+_UNARY_1D_OP_(_divc_fp32_exec,      float, float, _mm256_div_ps, )
+_UNARY_1D_OP_(_divcinv_fp32_exec,   float, float, _mm256_div_ps, inv)
+_UNARY_1D_OP_(_minc_fp32_exec,      float, float, _mm256_min_ps, )
+_UNARY_1D_OP_(_maxc_fp32_exec,      float, float, _mm256_max_ps, )

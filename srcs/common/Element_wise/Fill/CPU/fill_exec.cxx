@@ -27,35 +27,3 @@
 * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
 * DEALINGS IN THE SOFTWARE.
 */
-
-#include "arithmetic.h"
-#include "../../../common/Element_wise/common/cpu_element_wise_planner.h"
-#include "../../../common/Element_wise/Arithmetics/arithmetic_kernels.h"
-
-
-
-_DECX_API_ void de::blas::cpu::
-Arithmetic(de::InputVector A, de::InputVector B, de::OutputVector dst, const int32_t arith_flag)
-{
-    de::ResetLastError();
-
-    const decx::_Vector* _A = dynamic_cast<const decx::_Vector*>(&A);
-    const decx::_Vector* _B = dynamic_cast<const decx::_Vector*>(&B);
-    decx::_Vector* _dst = dynamic_cast<decx::_Vector*>(&dst);
-
-    decx::blas::vec_bin_arithmetic_caller(_A, _B, _dst, arith_flag, de::GetLastError());
-}
-
-
-
-_DECX_API_ void de::blas::cpu::
-Arithmetic(de::InputMatrix A, de::InputMatrix B, de::OutputMatrix dst, const int32_t arith_flag)
-{
-    de::ResetLastError();
-
-    const decx::_Matrix* _A = dynamic_cast<const decx::_Matrix*>(&A);
-    const decx::_Matrix* _B = dynamic_cast<const decx::_Matrix*>(&B);
-    decx::_Matrix* _dst = dynamic_cast<decx::_Matrix*>(&dst);
-
-    decx::blas::mat_bin_arithmetic_caller(_A, _B, _dst, arith_flag, de::GetLastError());
-}

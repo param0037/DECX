@@ -29,7 +29,7 @@
 include_guard(GLOBAL)
 
 if (DEFINED DECX_BUILD_WITH_CUDA)
-    file(GLOB_RECURSE FILL_CUDA_COM_SRCS "${DECX_WORLD_ABS_DIR}/srcs/common/Basic_process/fill/*.cu")
+    file(GLOB_RECURSE EW_CUDA_COM_SRCS "${DECX_WORLD_ABS_DIR}/srcs/common/Element_wise/*.cu")
 else()
-    file(GLOB_RECURSE FILL_CPU_COM_SRCS "${DECX_WORLD_ABS_DIR}/srcs/common/Basic_process/fill/*.cxx")
+    file(GLOB_RECURSE EW_CPU_COM_SRCS "${DECX_WORLD_ABS_DIR}/srcs/common/Element_wise/*.cxx")
 endif()
