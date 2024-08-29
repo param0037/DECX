@@ -35,7 +35,7 @@
 #include "../../../SIMD/intrinsics_ops.h"
 #include "../../../../modules/core/configs/config.h"
 #include "../type_cast_methods.h"
-#include "../../../element_wise/common/cpu_element_wise_planner.h"
+#include "../../../Element_wise/common/cpu_element_wise_planner.h"
 
 
 namespace decx

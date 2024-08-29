@@ -29,8 +29,8 @@
 */
 
 #include "arithmetic.h"
-#include "../../../common/element_wise/common/cpu_element_wise_planner.h"
-#include "../../../common/element_wise/CPU/arithmetic_kernels.h"
+#include "../../../common/Element_wise/common/cpu_element_wise_planner.h"
+#include "../../../common/Element_wise/CPU/arithmetic_kernels.h"
 
 
 

@@ -53,7 +53,7 @@ if(${_DECX_HOST_ARCH_} STREQUAL "x64")
 include("${DECX_WORLD_ABS_DIR}/srcs/common/Basic_process/fill/fill_com.cmake")
 include("${DECX_WORLD_ABS_DIR}/srcs/common/Basic_process/transpose/transpose_com.cmake")
 include("${DECX_WORLD_ABS_DIR}/srcs/common/Basic_process/type_cast/typecast_com.cmake")
-include("${DECX_WORLD_ABS_DIR}/srcs/common/element_wise/elementwise_com.cmake")
+include("${DECX_WORLD_ABS_DIR}/srcs/common/Element_wise/elementwise_com.cmake")
 
 
 add_library(DECX_BLAS_CPU SHARED ${GEMM}                    ${BP} ${EW}
@@ -65,7 +65,6 @@ target_link_libraries(DECX_BLAS_CPU PRIVATE gemm_fp32_cpu
                                     PRIVATE gemm_64b_cpu
                                     PRIVATE gemm_cplxd_cpu)
 else()
-
 add_library(DECX_BLAS_CPU SHARED ${GEMM}                ${BP} 
                                  ${EXT_CPU_COM_SRCS}    ${FMGR_CPU_COM_SRCS})
 
