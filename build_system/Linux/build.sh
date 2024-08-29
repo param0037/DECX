@@ -141,6 +141,7 @@ function config_single()
     fi
     cmake_bin_dir="$PROJECT_PATH_BUILD/build/DECX_$1/$DECX_HOST_ARCH"
     cmake_config_cmd="$cmake_config_cmd -B $cmake_bin_dir -G\"Unix Makefiles\""
+    
     eval $cmake_config_cmd
 }
 
@@ -219,11 +220,11 @@ function build_optional()
 }
 
 
-if [ "$#" -eq 0 ]; then
-    echo_error "Require parameters"
-    printf_info
-    exit 1
-fi
+# if [ "$#" -eq 0 ]; then
+#     echo_error "Require parameters"
+#     printf_info
+#     exit 1
+# fi
 
 
 stat=($(ls -l ./utils.sh))

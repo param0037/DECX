@@ -33,16 +33,12 @@ source_script ./utils.sh
 # Set C++ version
 function cxx_ver()
 {
-    local CXX_VER=14
+    DECX_CXX_VER=14
     if [ -n "$1" ]; then
-        CXX_VER=$1
-    else
-        CXX_VER=$DECX_CXX_VER
+        DECX_CXX_VER=$1
     fi
     if [ -z "$DECX_CXX_VER" ]; then
-        CXX_VER=14
+        DECX_CXX_VER=14
         echo_status "No C++ version is given, assigned to C++14 by default"
     fi
-
-    stack[0]=$CXX_VER
 }
