@@ -43,8 +43,8 @@ namespace de
         MUL = 0x01,
         MIN = 0x02,
         MAX = 0x03,
-        COS = 0x04,
-        SIN = 0x05,
+        SIN = 0x04,
+        COS = 0x05,
 
         SUB = 0x06,
         DIV = 0x07,

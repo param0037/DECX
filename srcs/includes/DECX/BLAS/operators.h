@@ -29,8 +29,8 @@ namespace de
         MUL = 0x01,
         MIN = 0x02,
         MAX = 0x03,
-        COS = 0x04,
-        SIN = 0x05,
+        SIN = 0x04,
+        COS = 0x05,
 
         SUB = 0x06,
         DIV = 0x07,
@@ -46,13 +46,15 @@ namespace blas{
 namespace cpu{
     _DECX_API_ void Arithmetic(de::InputVector A, de::InputVector B, de::OutputVector dst, const int32_t arith_flag);
     _DECX_API_ void Arithmetic(de::InputVector src, de::InputNumber constant, de::OutputVector dst, const int32_t arith_flag);
+    _DECX_API_ void Arithmetic(de::InputVector src, de::OutputVector dst, const int32_t arith_flag);
 }
 
 namespace cpu{
     _DECX_API_ void Arithmetic(de::InputMatrix A, de::InputMatrix B, de::OutputMatrix dst, const int32_t arith_flag);
+    _DECX_API_ void Arithmetic(de::InputMatrix src, de::InputNumber constant, de::OutputMatrix dst, const int32_t arith_flag);
+    _DECX_API_ void Arithmetic(de::InputMatrix src, de::OutputMatrix dst, const int32_t arith_flag);
 }
 }
 
 }
-
 #endif
