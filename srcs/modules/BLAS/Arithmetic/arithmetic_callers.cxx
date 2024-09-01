@@ -48,8 +48,8 @@ namespace blas
          (void*)decx::CPUK::_mul_fp32_exec, 
          (void*)decx::CPUK::_min_fp32_exec, 
          (void*)decx::CPUK::_max_fp32_exec, 
-         NULL,
-         NULL,
+         (void*)decx::CPUK::_sin_fp32_exec,
+         (void*)decx::CPUK::_cos_fp32_exec,
          (void*)decx::CPUK::_sub_fp32_exec, 
          (void*)decx::CPUK::_div_fp32_exec, 
 
@@ -69,8 +69,8 @@ namespace blas
          (void*)decx::CPUK::_mul_fp64_exec, 
          (void*)decx::CPUK::_min_fp64_exec, 
          (void*)decx::CPUK::_max_fp64_exec, 
-         NULL,
-         NULL,
+         (void*)decx::CPUK::_sin_fp64_exec,
+         (void*)decx::CPUK::_cos_fp64_exec,
          (void*)decx::CPUK::_sub_fp64_exec, 
          (void*)decx::CPUK::_div_fp64_exec, 
 
@@ -112,7 +112,7 @@ static int32_t decx::blas::_find_arith_kernel_id(const int32_t _flag)
 
 
 void decx::blas::
-mat_bin_arithmetic_caller(const decx::_Matrix*  A, 
+mat_arithmetic_caller_VVO(const decx::_Matrix*  A, 
                           const decx::_Matrix*  B, 
                           decx::_Matrix*        dst, 
                           const int32_t         arith_flag,
@@ -131,7 +131,7 @@ mat_bin_arithmetic_caller(const decx::_Matrix*  A,
         _kernel_ptr = g_arithmetic_kernel_LUT[0][_kernel_dex];
 
         decx::
-        arithmetic_bin_caller((decx::CPUK::arithmetic_bin_kernels<float>*)_kernel_ptr, 
+        arithmetic_caller_VVO((decx::CPUK::arithmetic_kernels_VVO<float>*)_kernel_ptr, 
                               &_planner, 
                               (float*)A->Mat.ptr, 
                               (float*)B->Mat.ptr, 
@@ -143,7 +143,7 @@ mat_bin_arithmetic_caller(const decx::_Matrix*  A,
         _kernel_ptr = g_arithmetic_kernel_LUT[1][_kernel_dex];
 
         decx::
-        arithmetic_bin_caller((decx::CPUK::arithmetic_bin_kernels<double>*)_kernel_ptr, 
+        arithmetic_caller_VVO((decx::CPUK::arithmetic_kernels_VVO<double>*)_kernel_ptr, 
                               &_planner, 
                               (double*)A->Mat.ptr, 
                               (double*)B->Mat.ptr, 
@@ -161,7 +161,52 @@ mat_bin_arithmetic_caller(const decx::_Matrix*  A,
 
 
 void decx::blas::
-vec_bin_arithmetic_caller(const decx::_Vector*  A, 
+mat_arithmetic_caller_VO(const decx::_Matrix*  src, 
+                         decx::_Matrix*        dst, 
+                         const int32_t         arith_flag,
+                         de::DH*               handle)
+{
+    decx::cpu_ElementWise1D_planner _planner;
+    decx::utils::_thr_1D t1D(decx::cpu::_get_permitted_concurrency());
+
+    const int32_t _kernel_dex = decx::blas::_find_arith_kernel_id<0>(arith_flag);
+
+    void* _kernel_ptr = NULL;
+
+    switch (src->Type())
+    {
+    case de::_DATA_TYPES_FLAGS_::_FP32_:
+        _kernel_ptr = g_arithmetic_kernel_LUT[0][_kernel_dex];
+
+        decx::
+        arithmetic_caller_VO((decx::CPUK::arithmetic_kernels_VO<float>*)_kernel_ptr, 
+                              &_planner, 
+                              (float*)src->Mat.ptr, 
+                              (float*)dst->Mat.ptr, 
+                              static_cast<uint64_t>(src->Pitch()) * static_cast<uint64_t>(src->Height()), &t1D);
+        break;
+    
+    case de::_DATA_TYPES_FLAGS_::_FP64_:
+        _kernel_ptr = g_arithmetic_kernel_LUT[1][_kernel_dex];
+
+        decx::
+        arithmetic_caller_VO((decx::CPUK::arithmetic_kernels_VO<double>*)_kernel_ptr, 
+                              &_planner, 
+                              (double*)src->Mat.ptr, 
+                              (double*)dst->Mat.ptr, 
+                              static_cast<uint64_t>(src->Pitch()) * static_cast<uint64_t>(src->Height()), &t1D);
+        break;
+
+    default:
+        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_UNSUPPORTED_TYPE,
+            "Unsupported type when performing arithmetic");
+        break;
+    }
+}
+
+
+void decx::blas::
+vec_arithmetic_caller_VVO(const decx::_Vector*  A, 
                           const decx::_Vector*  B, 
                           decx::_Vector*        dst, 
                           const int32_t         arith_flag,
@@ -179,7 +224,7 @@ vec_bin_arithmetic_caller(const decx::_Vector*  A,
         _kernel_ptr = g_arithmetic_kernel_LUT[0][_kernel_dex];
 
         decx::
-        arithmetic_bin_caller((decx::CPUK::arithmetic_bin_kernels<float>*)_kernel_ptr, 
+        arithmetic_caller_VVO((decx::CPUK::arithmetic_kernels_VVO<float>*)_kernel_ptr, 
                               &_planner, 
                               (float*)A->Vec.ptr, 
                               (float*)B->Vec.ptr, 
@@ -191,12 +236,57 @@ vec_bin_arithmetic_caller(const decx::_Vector*  A,
         _kernel_ptr = g_arithmetic_kernel_LUT[0][_kernel_dex];
 
         decx::
-        arithmetic_bin_caller((decx::CPUK::arithmetic_bin_kernels<double>*)_kernel_ptr, 
+        arithmetic_caller_VVO((decx::CPUK::arithmetic_kernels_VVO<double>*)_kernel_ptr, 
                               &_planner, 
                               (double*)A->Vec.ptr, 
                               (double*)B->Vec.ptr, 
                               (double*)dst->Vec.ptr, 
                               A->Len(), &t1D);
+        break;
+    
+    default:
+        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_UNSUPPORTED_TYPE,
+            "Unsupported type when performing arithmetic");
+        break;
+    }
+}
+
+
+
+void decx::blas::
+vec_arithmetic_caller_VO(const decx::_Vector*  src, 
+                         decx::_Vector*        dst, 
+                         const int32_t         arith_flag,
+                         de::DH*               handle)
+{
+    decx::cpu_ElementWise1D_planner _planner;
+    decx::utils::_thr_1D t1D(decx::cpu::_get_permitted_concurrency());
+
+    const int32_t _kernel_dex = decx::blas::_find_arith_kernel_id<0>(arith_flag);
+    void* _kernel_ptr = NULL;
+
+    switch (src->Type())
+    {
+    case de::_DATA_TYPES_FLAGS_::_FP32_:
+        _kernel_ptr = g_arithmetic_kernel_LUT[0][_kernel_dex];
+
+        decx::
+        arithmetic_caller_VO((decx::CPUK::arithmetic_kernels_VO<float>*)_kernel_ptr, 
+                              &_planner, 
+                              (float*)src->Vec.ptr, 
+                              (float*)dst->Vec.ptr, 
+                              src->Len(), &t1D);
+        break;
+
+    case de::_DATA_TYPES_FLAGS_::_FP64_:
+        _kernel_ptr = g_arithmetic_kernel_LUT[0][_kernel_dex];
+
+        decx::
+        arithmetic_caller_VO((decx::CPUK::arithmetic_kernels_VO<double>*)_kernel_ptr, 
+                              &_planner, 
+                              (double*)src->Vec.ptr, 
+                              (double*)dst->Vec.ptr, 
+                              src->Len(), &t1D);
         break;
     
     default:

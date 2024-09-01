@@ -43,7 +43,34 @@ Arithmetic(de::InputVector A, de::InputVector B, de::OutputVector dst, const int
     const decx::_Vector* _B = dynamic_cast<const decx::_Vector*>(&B);
     decx::_Vector* _dst = dynamic_cast<decx::_Vector*>(&dst);
 
-    decx::blas::vec_bin_arithmetic_caller(_A, _B, _dst, arith_flag, de::GetLastError());
+    if ((arith_flag > de::MAX && arith_flag < de::SUB) || 
+        (arith_flag > de::MAX | de::OP_INV && arith_flag < de::SUB | de::OP_INV)){
+        decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_ErrorFlag,
+            "Sine or Cosine are not binary operators");
+    }
+    else{
+        decx::blas::vec_arithmetic_caller_VVO(_A, _B, _dst, arith_flag, de::GetLastError());
+    }
+}
+
+
+
+_DECX_API_ void de::blas::cpu::
+Arithmetic(de::InputVector src, de::OutputVector dst, const int32_t arith_flag)
+{
+    de::ResetLastError();
+
+    const decx::_Vector* _src = dynamic_cast<const decx::_Vector*>(&src);
+    decx::_Vector* _dst = dynamic_cast<decx::_Vector*>(&dst);
+
+    if ((arith_flag > de::MAX && arith_flag < de::SUB) || 
+        (arith_flag > de::MAX | de::OP_INV && arith_flag < de::SUB | de::OP_INV)){
+        decx::blas::vec_arithmetic_caller_VO(_src, _dst, arith_flag, de::GetLastError());
+    }
+    else{
+        decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_ErrorFlag,
+            "The indicated arithmetoc is not a unary operator");
+    }
 }
 
 
@@ -57,5 +84,32 @@ Arithmetic(de::InputMatrix A, de::InputMatrix B, de::OutputMatrix dst, const int
     const decx::_Matrix* _B = dynamic_cast<const decx::_Matrix*>(&B);
     decx::_Matrix* _dst = dynamic_cast<decx::_Matrix*>(&dst);
 
-    decx::blas::mat_bin_arithmetic_caller(_A, _B, _dst, arith_flag, de::GetLastError());
+    if ((arith_flag > de::MAX && arith_flag < de::SUB) || 
+        (arith_flag > de::MAX | de::OP_INV && arith_flag < de::SUB | de::OP_INV)){
+        decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_UNSUPPORTED_TYPE,
+            "Sine or Cosine are not binary operators");
+    }
+    else{
+        decx::blas::mat_arithmetic_caller_VVO(_A, _B, _dst, arith_flag, de::GetLastError());
+    }
+}
+
+
+
+_DECX_API_ void de::blas::cpu::
+Arithmetic(de::InputMatrix src, de::OutputMatrix dst, const int32_t arith_flag)
+{
+    de::ResetLastError();
+
+    const decx::_Matrix* _src = dynamic_cast<const decx::_Matrix*>(&src);
+    decx::_Matrix* _dst = dynamic_cast<decx::_Matrix*>(&dst);
+
+    if ((arith_flag > de::MAX && arith_flag < de::SUB) || 
+        (arith_flag > de::MAX | de::OP_INV && arith_flag < de::SUB | de::OP_INV)){
+        decx::blas::mat_arithmetic_caller_VO(_src, _dst, arith_flag, de::GetLastError());
+    }
+    else{
+        decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_UNSUPPORTED_TYPE,
+            "Sine or Cosine are not binary operators");
+    }
 }

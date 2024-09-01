@@ -39,13 +39,14 @@
 #include "../../vector_defines.h"
 
 
-extern "C" __m128 __VECTORCALL__ _avx_cos_fp32x4(__m128);
-//extern "C" void __VECTORCALL__ _avx_cos_fp32x4();
-extern "C" __m128 __VECTORCALL__ _avx_sin_fp32x4(__m128);
-extern "C" __m128d __VECTORCALL__ _avx_cos_fp64x2(__m128d);
-extern "C" __m128d __VECTORCALL__ _avx_sin_fp64x2(__m128d);
-extern "C" __m256 __VECTORCALL__ _avx_cos_fp32x8(__m256);
-extern "C" __m256 __VECTORCALL__ _avx_sin_fp32x8(__m256);
+extern "C" _DECX_API_ __m128 __VECTORCALL__ _avx_cos_fp32x4(__m128);
+extern "C" _DECX_API_ __m128 __VECTORCALL__ _avx_sin_fp32x4(__m128);
+extern "C" _DECX_API_ __m128d __VECTORCALL__ _avx_cos_fp64x2(__m128d);
+extern "C" _DECX_API_ __m128d __VECTORCALL__ _avx_sin_fp64x2(__m128d);
+extern "C" _DECX_API_ __m256 __VECTORCALL__ _avx_cos_fp32x8(__m256);
+extern "C" _DECX_API_ __m256 __VECTORCALL__ _avx_sin_fp32x8(__m256);
+extern "C" _DECX_API_ __m256d __VECTORCALL__ _avx_cos_fp64x4(__m256d);
+extern "C" _DECX_API_ __m256d __VECTORCALL__ _avx_sin_fp64x4(__m256d);
 
 
 namespace decx
@@ -148,7 +149,7 @@ inline __m256 decx::utils::simd::_mm256_atan_ps(__m256 __x)
 inline __m256 decx::utils::simd::_mm256_cos_ps(const __m256 __x)
 {
     const __m256i _full_period_num = _mm256_cvtps_epi32(_mm256_div_ps(__x, _mm256_set1_ps(3.1415926f)));
-    // The normalized input Xs [-Pi, Pi]
+    // The normalized input Xs [-Pi_FP32, Pi_FP32]
     const __m256 _normed = _mm256_sub_ps(__x, _mm256_mul_ps(_mm256_cvtepi32_ps(_full_period_num), _mm256_set1_ps(3.1415926f)));
     
     const __m256 _x_sqrt = _mm256_mul_ps(_normed, _normed);
@@ -179,7 +180,7 @@ inline __m256 decx::utils::simd::_mm256_sin_ps(const __m256 __x)
 {
     const __m256 _shitfed = _mm256_sub_ps(__x, _mm256_set1_ps(1.5707963));
     const __m256i _full_period_num = _mm256_cvtps_epi32(_mm256_div_ps(_shitfed, _mm256_set1_ps(3.1415926f)));
-    // The normalized input Xs [-Pi, Pi]
+    // The normalized input Xs [-Pi_FP32, Pi_FP32]
     const __m256 _normed = _mm256_sub_ps(_shitfed, _mm256_mul_ps(_mm256_cvtepi32_ps(_full_period_num), _mm256_set1_ps(3.1415926f)));
     
     const __m256 _x_sqrt = _mm256_mul_ps(_normed, _normed);

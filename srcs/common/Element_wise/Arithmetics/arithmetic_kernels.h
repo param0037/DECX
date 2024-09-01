@@ -41,21 +41,21 @@
  * @param type_INOUT The data type of both in and out, in arithmetic kernels, in and out have the same type
  * @param intrinsics Name of the intrinsics. In avx context, _mm(256)_xxx; In arm NEON context, vxxq_xx
 */
-#define _BINARY_1D_OP_(kernel_name, type_INOUT, intrinsics)         \
-    _THREAD_FUNCTION_ void decx::CPUK::                             \
-    kernel_name(const type_INOUT* __restrict A,                     \
-                const type_INOUT* __restrict B,                     \
-                type_INOUT* __restrict dst,                         \
-                const uint64_t proc_len_v)                          \
-    {                                                               \
-        for (uint64_t i = 0; i < proc_len_v; ++i){                  \
-            decx::utils::simd::xmm256_reg A_v, B_v, dst_v;          \
-            _LDGV_##type_INOUT(A);                                  \
-            _LDGV_##type_INOUT(B);                                  \
-            _OP_##type_INOUT(intrinsics, A, B, dst);                \
-            _STGV_##type_INOUT(dst);                                \
-        }                                                           \
-    }                                                               \
+#define _OP_1D_VVO_(kernel_name, type_INOUT, intrinsics)         \
+_THREAD_FUNCTION_ void decx::CPUK::                             \
+kernel_name(const type_INOUT* __restrict A,                     \
+            const type_INOUT* __restrict B,                     \
+            type_INOUT* __restrict dst,                         \
+            const uint64_t proc_len_v)                          \
+{                                                               \
+    for (uint64_t i = 0; i < proc_len_v; ++i){                  \
+        decx::utils::simd::xmm256_reg A_v, B_v, dst_v;          \
+        _LDGV_##type_INOUT(A);                                  \
+        _LDGV_##type_INOUT(B);                                  \
+        _OP_##type_INOUT##_2I1O(intrinsics, A, B, dst);                \
+        _STGV_##type_INOUT(dst);                                \
+    }                                                           \
+}                                                               \
 
 
 /**
@@ -65,21 +65,43 @@
  * @param intrinsics Name of the intrinsics. In avx context, _mm(256)_xxx; In arm NEON context, vxxq_xx
  * @param is_inv If the operation is not inversed, e.g. OP(constant, src), then left it blank; otherwise specify "inv" only
 */
-#define _UNARY_1D_OP_(kernel_name, type_INOUT, type_const, intrinsics, is_inv)      \
-    _THREAD_FUNCTION_ void decx::CPUK::                                             \
-    kernel_name(const type_INOUT* __restrict src,                                   \
-                type_INOUT* __restrict dst,                                         \
-                const uint64_t proc_len_v,                                          \
-                const type_const constant)                                          \
-    {                                                                               \
-        for (uint64_t i = 0; i < proc_len_v; ++i){                                  \
-            decx::utils::simd::xmm256_reg src_v, constant_v, dst_v;                 \
-            _LDGV_##type_INOUT(src);                                                \
-            _DUPV_##type_INOUT(constant);                                           \
-            _OP##is_inv##_##type_INOUT(intrinsics, src, constant, dst);             \
-            _STGV_##type_INOUT(dst);                                                \
-        }                                                                           \
-    }                                                                               \
+#define _OP_1D_VCO_(kernel_name, type_INOUT, type_const, intrinsics, is_inv)      \
+_THREAD_FUNCTION_ void decx::CPUK::                                             \
+kernel_name(const type_INOUT* __restrict src,                                   \
+            type_INOUT* __restrict dst,                                         \
+            const uint64_t proc_len_v,                                          \
+            const type_const constant)                                          \
+{                                                                               \
+    for (uint64_t i = 0; i < proc_len_v; ++i){                                  \
+        decx::utils::simd::xmm256_reg src_v, constant_v, dst_v;                 \
+        _LDGV_##type_INOUT(src);                                                \
+        _DUPV_##type_INOUT(constant);                                           \
+        _OP##is_inv##_##type_INOUT##_2I1O(intrinsics, src, constant, dst);      \
+        _STGV_##type_INOUT(dst);                                                \
+    }                                                                           \
+}                                                                               \
+
+
+/**
+ * @param kernel_name Name of the kernel
+ * @param type_INOUT The data type of both in and out, in arithmetic kernels, in and out have the same type
+ * @param type_const The type of the input constant
+ * @param intrinsics Name of the intrinsics. In avx context, _mm(256)_xxx; In arm NEON context, vxxq_xx
+ * @param is_inv If the operation is not inversed, e.g. OP(constant, src), then left it blank; otherwise specify "inv" only
+*/
+#define _OP_1D_VO_(kernel_name, type_INOUT, intrinsics)       \
+_THREAD_FUNCTION_ void decx::CPUK::                                   \
+kernel_name(const type_INOUT* __restrict src,                         \
+            type_INOUT* __restrict dst,                               \
+            const uint64_t proc_len_v)                                \
+{                                                                     \
+    for (uint64_t i = 0; i < proc_len_v; ++i){                        \
+        decx::utils::simd::xmm256_reg src_v, dst_v;                   \
+        _LDGV_##type_INOUT(src);                                      \
+        _OP_##type_INOUT##_1I1O(intrinsics, src, dst);                  \
+        _STGV_##type_INOUT(dst);                                      \
+    }                                                                 \
+}                                                                     \
 
 
 
@@ -105,6 +127,9 @@ namespace CPUK{
 
     _THREAD_FUNCTION_ void _min_fp32_exec(const float* A, const float* B, float* dst, const uint64_t proc_len_v);
     _THREAD_FUNCTION_ void _minc_fp32_exec(const float* src, float* dst, const uint64_t proc_len_v, const float constant);
+
+    _THREAD_FUNCTION_ void _cos_fp32_exec(const float* src, float* dst, const uint64_t proc_len_v);
+    _THREAD_FUNCTION_ void _sin_fp32_exec(const float* src, float* dst, const uint64_t proc_len_v);
 }
 
 namespace CPUK{
@@ -127,33 +152,45 @@ namespace CPUK{
 
     _THREAD_FUNCTION_ void _min_fp64_exec(const double* A, const double* B, double* dst, const uint64_t proc_len_v);
     _THREAD_FUNCTION_ void _minc_fp64_exec(const double* src, double* dst, const uint64_t proc_len_v, const double constant);
+
+    _THREAD_FUNCTION_ void _cos_fp64_exec(const double* src, double* dst, const uint64_t proc_len_v);
+    _THREAD_FUNCTION_ void _sin_fp64_exec(const double* src, double* dst, const uint64_t proc_len_v);
 }
 
 
 namespace CPUK{
     template <typename _type_inout>
-    using arithmetic_bin_kernels = void(const _type_inout*, const _type_inout*, _type_inout*, const uint64_t);
+    using arithmetic_kernels_VVO = void(const _type_inout*, const _type_inout*, _type_inout*, const uint64_t);
 
     template <typename _type_inout>
-    using arithmetic_un_kernels = void(const _type_inout*, _type_inout*, const uint64_t, const _type_inout);
+    using arithmetic_kernels_VCO = void(const _type_inout*, _type_inout*, const uint64_t, const _type_inout);
+
+    template <typename _type_inout>
+    using arithmetic_kernels_VO = void(const _type_inout*, _type_inout*, const uint64_t);
 }
 
 
-template <typename _type_inout>
-static void arithmetic_bin_caller(decx::CPUK::arithmetic_bin_kernels<_type_inout>* _kernel, 
-    decx::cpu_ElementWise1D_planner* _planner, const _type_inout* A, const _type_inout* B, _type_inout* dst,
-    const uint64_t _proc_len, decx::utils::_thr_1D *t1D);
+    template <typename _type_inout>
+    static void arithmetic_caller_VVO(decx::CPUK::arithmetic_kernels_VVO<_type_inout>* _kernel, 
+        decx::cpu_ElementWise1D_planner* _planner, const _type_inout* A, const _type_inout* B, _type_inout* dst,
+        const uint64_t _proc_len, decx::utils::_thr_1D *t1D);
 
 
-template <typename _type_inout>
-static void arithmetic_un_caller(decx::CPUK::arithmetic_bin_kernels<_type_inout>* _kernel, 
-    decx::cpu_ElementWise1D_planner* _planner, const _type_inout* src, const _type_inout constant, _type_inout* dst,
-    const uint64_t _proc_len, decx::utils::_thr_1D *t1D);
+    template <typename _type_inout>
+    static void arithmetic_caller_VCO(decx::CPUK::arithmetic_kernels_VVO<_type_inout>* _kernel, 
+        decx::cpu_ElementWise1D_planner* _planner, const _type_inout* src, const _type_inout constant, _type_inout* dst,
+        const uint64_t _proc_len, decx::utils::_thr_1D *t1D);
+
+
+    template <typename _type_inout>
+    static void arithmetic_caller_VO(decx::CPUK::arithmetic_kernels_VO<_type_inout>* _kernel, 
+        decx::cpu_ElementWise1D_planner* _planner, const _type_inout* src, _type_inout* dst,
+        const uint64_t _proc_len, decx::utils::_thr_1D *t1D);
 }
 
 
 template <typename _type_inout> static void decx::
-arithmetic_bin_caller(decx::CPUK::arithmetic_bin_kernels<_type_inout>* _kernel, 
+arithmetic_caller_VVO(decx::CPUK::arithmetic_kernels_VVO<_type_inout>* _kernel, 
                       decx::cpu_ElementWise1D_planner* _planner, 
                       const _type_inout* A, 
                       const _type_inout* B, 
@@ -169,7 +206,7 @@ arithmetic_bin_caller(decx::CPUK::arithmetic_bin_kernels<_type_inout>* _kernel,
 
 
 template <typename _type_inout> static void decx::
-arithmetic_un_caller(decx::CPUK::arithmetic_bin_kernels<_type_inout>* _kernel, 
+arithmetic_caller_VCO(decx::CPUK::arithmetic_kernels_VVO<_type_inout>* _kernel, 
                       decx::cpu_ElementWise1D_planner* _planner, 
                       const _type_inout* src, 
                       const _type_inout constant, 
@@ -180,6 +217,20 @@ arithmetic_un_caller(decx::CPUK::arithmetic_bin_kernels<_type_inout>* _kernel,
     _planner->plan(t1D->total_thread, _proc_len, sizeof(_type_inout), sizeof(_type_inout));
 
     _planner->caller_unary(_kernel, src, dst, t1D, constant);
+}
+
+
+template <typename _type_inout> static void decx::
+arithmetic_caller_VO(decx::CPUK::arithmetic_kernels_VO<_type_inout>* _kernel, 
+                      decx::cpu_ElementWise1D_planner* _planner, 
+                      const _type_inout* src, 
+                      _type_inout* dst,
+                      const uint64_t _proc_len,
+                      decx::utils::_thr_1D *t1D)
+{
+    _planner->plan(t1D->total_thread, _proc_len, sizeof(_type_inout), sizeof(_type_inout));
+
+    _planner->caller_unary(_kernel, src, dst, t1D);
 }
 
 

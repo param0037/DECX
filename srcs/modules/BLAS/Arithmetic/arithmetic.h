@@ -61,8 +61,12 @@ namespace de
 namespace decx
 {
 namespace blas{
-    void mat_bin_arithmetic_caller(const decx::_Matrix* A, const decx::_Matrix* B, decx::_Matrix* dst, const int32_t arith_flag, de::DH* handle);
-    void vec_bin_arithmetic_caller(const decx::_Vector* A, const decx::_Vector* B, decx::_Vector* dst, const int32_t arith_flag, de::DH* handle);
+    void mat_arithmetic_caller_VVO(const decx::_Matrix* A, const decx::_Matrix* B, decx::_Matrix* dst, const int32_t arith_flag, de::DH* handle);
+    void vec_arithmetic_caller_VVO(const decx::_Vector* A, const decx::_Vector* B, decx::_Vector* dst, const int32_t arith_flag, de::DH* handle);
+
+
+    void mat_arithmetic_caller_VO(const decx::_Matrix* src, decx::_Matrix* dst, const int32_t arith_flag, de::DH* handle);
+    void vec_arithmetic_caller_VO(const decx::_Vector* src, decx::_Vector* dst, const int32_t arith_flag, de::DH* handle);
 }
 }
 
@@ -73,10 +77,13 @@ namespace blas{
 namespace cpu{
     _DECX_API_ void Arithmetic(de::InputVector A, de::InputVector B, de::OutputVector dst, const int32_t arith_flag);
     _DECX_API_ void Arithmetic(de::InputVector src, de::InputNumber constant, de::OutputVector dst, const int32_t arith_flag);
+    _DECX_API_ void Arithmetic(de::InputVector src, de::OutputVector dst, const int32_t arith_flag);
 }
 
 namespace cpu{
     _DECX_API_ void Arithmetic(de::InputMatrix A, de::InputMatrix B, de::OutputMatrix dst, const int32_t arith_flag);
+    _DECX_API_ void Arithmetic(de::InputMatrix src, de::InputNumber constant, de::OutputMatrix dst, const int32_t arith_flag);
+    _DECX_API_ void Arithmetic(de::InputMatrix src, de::OutputMatrix dst, const int32_t arith_flag);
 }
 }
 

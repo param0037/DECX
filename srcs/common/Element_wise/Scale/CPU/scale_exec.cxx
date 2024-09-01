@@ -29,7 +29,7 @@
 */
 
 
-#include "normalization.h"
+#include "../normalization.h"
 
 
 _THREAD_FUNCTION_ void decx::CPUK::

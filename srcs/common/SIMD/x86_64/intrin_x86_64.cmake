@@ -28,12 +28,20 @@
 
 include_guard(GLOBAL)
 
+
+set(BUILTIN_SVML_PATH "${DECX_WORLD_ABS_DIR}/srcs/common/SIMD/x86_64")
+
+
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     enable_language(C ASM_MASM)
-    set(INTRIN_X86_64 "${DECX_WORLD_ABS_DIR}/srcs/common/SIMD/x86_64/decx_trigonometric_x86_masm.asm")
+    message(STATUS "Windows platform detected, using MASM(ML64) to build")
+    set(INTRIN_X86_64 "${BUILTIN_SVML_PATH}/decx_trigonometric_fp32_x64_masm.asm"
+                      "${BUILTIN_SVML_PATH}/decx_trigonometric_fp64_x64_masm.asm")
 
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     enable_language(C ASM_NASM)
-    set(INTRIN_X86_64 "${DECX_WORLD_ABS_DIR}/srcs/common/SIMD/x86_64/decx_trigonometric_x86_nasm.asm")
+    message(STATUS "Linux platform detected, using NASM to build")
+    set(INTRIN_X86_64 "${BUILTIN_SVML_PATH}/decx_trigonometric_fp32_x64_nasm.asm"
+                      "${BUILTIN_SVML_PATH}/decx_trigonometric_fp64_x64_nasm.asm")
 
 endif()

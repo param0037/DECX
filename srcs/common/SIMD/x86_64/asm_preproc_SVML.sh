@@ -33,18 +33,29 @@ full_path=$(realpath $0)
 SCRIPT_PATH=$(dirname $full_path)
 cd $SCRIPT_PATH
 
+asm_files=("./decx_trigonometric_fp32_x64.s"
+           "./decx_trigonometric_fp64_x64.s")
+
 while getopts ":m:c:i:" opt; do
     case $opt in
         c)
-            if [ -f "./decx_trigonometric_x86_nasm.asm" ]; then
-                rm -f "./decx_trigonometric_x86_nasm.asm"
-            else
-                echo "File not exist, skipped"
-            fi
+            for file in "${asm_files[@]}"
+            do
+                target_file_name="${file::-2}_nasm.asm"
+                if [ -f "$target_file_name" ]; then
+                    rm -f "$target_file_name"
+                else
+                    echo "File not exist, skipped"
+                fi
+            done
             ;;
         i)
-            echo "Generating assembly sources of intrinsics on NASM"
-            gcc -E -P -x c ./decx_trigonometric_x86.s -D__NASM__ > ./decx_trigonometric_x86_nasm.asm
+            for file in "${asm_files[@]}"
+            do
+                target_file_name="${file::-2}_nasm.asm"
+                echo "Generating assembly sources : $target_file_name"
+                gcc -E -P -x c $file -D__NASM__ > $target_file_name
+            done
             ;;
     esac
 done
