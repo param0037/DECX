@@ -187,7 +187,7 @@ function build_single()
     else
         cmake --build $cmake_bin_dir --config Release
     fi
-    # cp /media/wayne/Disk/DECX_world/build/bin/x64/libDECX_BLAS_CPU.so ~/DECX/libs/x64/
+    cp /media/wayne/Disk/DECX_world/build/bin/x64/libDECX_BLAS_CPU.so ~/DECX/libs/x64/
 }
 
 
@@ -219,12 +219,6 @@ function build_optional()
     fi
 }
 
-
-# if [ "$#" -eq 0 ]; then
-#     echo_error "Require parameters"
-#     printf_info
-#     exit 1
-# fi
 
 
 stat=($(ls -l ./utils.sh))

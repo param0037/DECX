@@ -1,5 +1,10 @@
 # Element-wise Operators Conventions
 
+## Naming rules
+1. For operators or kernels holding 1 variable input, 1 constant input, and 1 output, named by suffix "<font color="yellow">_VCO</font>".
+2. For operators or kernels holding 2 variable inputs, and 1 output, named by suffix "<font color="yellow">_VVO</font>".
+3. For operators or kernels holding 1 variable input, and 1 output, named by suffix "<font color="yellow">_VO</font>".
+
 ## 1D operators
 ### a. Unary operators
 1. CPU<br>

@@ -28,8 +28,8 @@
 * DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef _ELEMENT_WISE_PLANNER_H_
-#define _ELEMENT_WISE_PLANNER_H_
+#ifndef _CPU_ELEMENT_WISE_PLANNER_H_
+#define _CPU_ELEMENT_WISE_PLANNER_H_
 
 #include "../../basic.h"
 #include "../../FMGR/fragment_arrangment.h"
@@ -37,8 +37,12 @@
 #include "../../../modules/core/thread_management/thread_arrange.h"
 #include "../../../modules/core/thread_management/thread_pool.h"
 
-
+#if defined(__x86_64__) || defined(__i386__)
 #define _EW_MIN_THREAD_PROC_DEFAULT 256
+#endif
+#if defined(__aarch64__) || defined(__arm__)
+
+#endif
 
 
 #ifdef _DECX_CPU_PARTS_
