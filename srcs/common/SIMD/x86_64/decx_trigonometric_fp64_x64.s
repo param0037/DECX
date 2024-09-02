@@ -227,6 +227,7 @@ _avx_cos_fp64x4:
     vmovupd         [rsp - 32],     YMM6
     vmovupd         [rsp - 64],     YMM7
     vmovupd         [rsp - 96],     YMM8
+
     vbroadcastsd    YMM1, QWORD [Abs_int_sign_DW]       ; YMM1 -> inverted mask of a integer
     vandpd          YMM0, YMM0, YMM1                    ; x = abs(x) (YMM0 -> abs(x))
     vbroadcastsd    YMM1, QWORD [ONE_over_PI_FP64]
@@ -240,9 +241,9 @@ _avx_cos_fp64x4:
     vsubpd          YMM3, YMM1, YMM3                    ; YMM3 -> norm(angle) - pi/2
     vandpd          YMM3, YMM4, YMM3                    ; YMM3 -> abs(norm(angle) - pi/2)
     vbroadcastsd    YMM4, QWORD [Quarter_pi_FP64]       ; YMM4 -> pi / 4
-    vcmppd          YMM4, YMM3, YMM4, 11H               ; YMM4 -> sin_rectf (preserved)
+    vcmppd          YMM4, YMM3, YMM4, 01H               ; YMM4 -> sin_rectf (preserved)
     vbroadcastsd    YMM3, QWORD [Three_4_Pi_FP64]       ; YMM3 -> pi*3/4
-    vcmppd          YMM5, YMM1, YMM3, 1EH               ; YMM5 -> cos_otherside (preserved)
+    vcmppd          YMM5, YMM1, YMM3, 0EH               ; YMM5 -> cos_otherside (preserved)
     vbroadcastsd    YMM3, QWORD [Halv_Pi_FP64]          ; YMM3 -> Pi_FP32 / 2
     vandpd          YMM3, YMM3, YMM4                    ; YMM3 -> sin_rectf ? pi / 2 : 0
     vsubpd          YMM1, YMM1, YMM3
@@ -254,7 +255,7 @@ _avx_cos_fp64x4:
     vxorpd          YMM1, YMM1, YMM3
     ; Pre-process of angle is finished
     vbroadcastsd    YMM0, QWORD [ONE_fp64]              ; YMM0 -> 1.f
-    vmulpd YMM3,    YMM1, YMM1                          ; YMM3 -> x_sq (preserved)
+    vmulpd          YMM3, YMM1, YMM1                    ; YMM3 -> x_sq (preserved)
     ; YMM0, YMM1, YMM2, YMM3, YMM4, and YMM5 are preserved
     vbroadcastsd    YMM6, QWORD [COS_TAYLOR_FP64]       ; YMM6 -> 0.5f
     vbroadcastsd    YMM7, QWORD [SIN_TAYLOR_FP64]       ; YMM7 -> 0.1666666667f
@@ -275,7 +276,7 @@ _avx_cos_fp64x4:
     vsubpd          YMM0, YMM0, YMM6                    ; Update res
     vbroadcastsd    YMM7, QWORD [COS_TAYLOR_FP64 + 24]  ; YMM7 -> 0.0178571429f
     vbroadcastsd    YMM8, QWORD [SIN_TAYLOR_FP64 + 24]  ; YMM8 -> 0.0138888889f
-    vblendvpd       YMM7, YMM7, YMM8, YMM4              ; YMM7 -> fact
+    vblendvpd YMM7, YMM7, YMM8, YMM4                    ; YMM7 -> fact
     vmulpd          YMM7, YMM7, YMM3
     vmulpd          YMM6, YMM6, YMM7                    ; Update x_term
     vaddpd          YMM0, YMM0, YMM6                    ; Update res
@@ -287,18 +288,20 @@ _avx_cos_fp64x4:
     vsubpd          YMM0, YMM0, YMM6                    ; Update res
     ; YMM3, YMM6, and YMM7 are free
     vbroadcastsd    YMM3, QWORD [Mask_MSB_DW]           ; YMM3 -> 0x80000000
-    vxorpd          YMM1, YMM1, YMM3 ; -norm(angle)
+    vxorpd          YMM1, YMM1, YMM3                    ; -norm(angle)
     vbroadcastsd    YMM6, QWORD [ONE_fp64]              ; YMM6 -> 1.f
-    vblendvps       YMM6, YMM6, YMM1, YMM4
+    vblendvpd       YMM6, YMM6, YMM1, YMM4
     vmulpd          YMM0, YMM0, YMM6                    ; modified res by multiplying x when in sine case
     vbroadcastsd    YMM1, QWORD [ONE_uint64]            ; YMM1 = <int>[1 1 1 1]
-    vcvtps2dq       YMM2, YMM2                          ; YMM2 -> int(floor(period))
+    vcvtpd2dq       XMM2, YMM2                          ; YMM2 -> int(floor(period))
+    vpmovsxdq       YMM2, XMM2,
     vandpd          YMM2, YMM2, YMM1                    ; YMM2 = sign of full_period_num
     vpsllq          YMM2, YMM2, 63                      ; YMM2 = mask of sign inversion
     vbroadcastsd    YMM6, QWORD [Mask_MSB_DW]           ; YMM6 -> 0x80000000
     vandpd          YMM6, YMM6, YMM5
     vxorpd          YMM2, YMM2, YMM6
     vxorpd          YMM0, YMM0, YMM2                    ; YMM0 -> masked inversed
+    
     vmovupd         YMM6, [rsp - 32]
     vmovupd         YMM7, [rsp - 64]
     vmovupd         YMM8, [rsp - 96]
@@ -309,6 +312,7 @@ _avx_cos_fp64x4@@32 PROC
     vmovupd         QWORD PTR [rsp - 32],     YMM6
     vmovupd         QWORD PTR [rsp - 64],     YMM7
     vmovupd         QWORD PTR [rsp - 96],     YMM8
+
     vbroadcastsd    YMM1, QWORD PTR [Abs_int_sign_DW]       ; YMM1 -> inverted mask of a integer
     vandpd          YMM0, YMM0, YMM1                    ; x = abs(x) (YMM0 -> abs(x))
     vbroadcastsd    YMM1, QWORD PTR [ONE_over_PI_FP64]
@@ -322,9 +326,9 @@ _avx_cos_fp64x4@@32 PROC
     vsubpd          YMM3, YMM1, YMM3                    ; YMM3 -> norm(angle) - pi/2
     vandpd          YMM3, YMM4, YMM3                    ; YMM3 -> abs(norm(angle) - pi/2)
     vbroadcastsd    YMM4, QWORD PTR [Quarter_pi_FP64]       ; YMM4 -> pi / 4
-    vcmppd          YMM4, YMM3, YMM4, 11H               ; YMM4 -> sin_rectf (preserved)
+    vcmppd          YMM4, YMM3, YMM4, 01H               ; YMM4 -> sin_rectf (preserved)
     vbroadcastsd    YMM3, QWORD PTR [Three_4_Pi_FP64]       ; YMM3 -> pi*3/4
-    vcmppd          YMM5, YMM1, YMM3, 1EH               ; YMM5 -> cos_otherside (preserved)
+    vcmppd          YMM5, YMM1, YMM3, 0EH               ; YMM5 -> cos_otherside (preserved)
     vbroadcastsd    YMM3, QWORD PTR [Halv_Pi_FP64]          ; YMM3 -> Pi_FP32 / 2
     vandpd          YMM3, YMM3, YMM4                    ; YMM3 -> sin_rectf ? pi / 2 : 0
     vsubpd          YMM1, YMM1, YMM3
@@ -336,7 +340,7 @@ _avx_cos_fp64x4@@32 PROC
     vxorpd          YMM1, YMM1, YMM3
     ; Pre-process of angle is finished
     vbroadcastsd    YMM0, QWORD PTR [ONE_fp64]              ; YMM0 -> 1.f
-    vmulpd YMM3,    YMM1, YMM1                          ; YMM3 -> x_sq (preserved)
+    vmulpd          YMM3, YMM1, YMM1                    ; YMM3 -> x_sq (preserved)
     ; YMM0, YMM1, YMM2, YMM3, YMM4, and YMM5 are preserved
     vbroadcastsd    YMM6, QWORD PTR [COS_TAYLOR_FP64]       ; YMM6 -> 0.5f
     vbroadcastsd    YMM7, QWORD PTR [SIN_TAYLOR_FP64]       ; YMM7 -> 0.1666666667f
@@ -357,7 +361,7 @@ _avx_cos_fp64x4@@32 PROC
     vsubpd          YMM0, YMM0, YMM6                    ; Update res
     vbroadcastsd    YMM7, QWORD PTR [COS_TAYLOR_FP64 + 24]  ; YMM7 -> 0.0178571429f
     vbroadcastsd    YMM8, QWORD PTR [SIN_TAYLOR_FP64 + 24]  ; YMM8 -> 0.0138888889f
-    vblendvpd       YMM7, YMM7, YMM8, YMM4              ; YMM7 -> fact
+    vblendvpd YMM7, YMM7, YMM8, YMM4                    ; YMM7 -> fact
     vmulpd          YMM7, YMM7, YMM3
     vmulpd          YMM6, YMM6, YMM7                    ; Update x_term
     vaddpd          YMM0, YMM0, YMM6                    ; Update res
@@ -369,18 +373,20 @@ _avx_cos_fp64x4@@32 PROC
     vsubpd          YMM0, YMM0, YMM6                    ; Update res
     ; YMM3, YMM6, and YMM7 are free
     vbroadcastsd    YMM3, QWORD PTR [Mask_MSB_DW]           ; YMM3 -> 0x80000000
-    vxorpd          YMM1, YMM1, YMM3 ; -norm(angle)
+    vxorpd          YMM1, YMM1, YMM3                    ; -norm(angle)
     vbroadcastsd    YMM6, QWORD PTR [ONE_fp64]              ; YMM6 -> 1.f
-    vblendvps       YMM6, YMM6, YMM1, YMM4
+    vblendvpd       YMM6, YMM6, YMM1, YMM4
     vmulpd          YMM0, YMM0, YMM6                    ; modified res by multiplying x when in sine case
     vbroadcastsd    YMM1, QWORD PTR [ONE_uint64]            ; YMM1 = <int>[1 1 1 1]
-    vcvtps2dq       YMM2, YMM2                          ; YMM2 -> int(floor(period))
+    vcvtpd2dq       XMM2, YMM2                          ; YMM2 -> int(floor(period))
+    vpmovsxdq       YMM2, XMM2,
     vandpd          YMM2, YMM2, YMM1                    ; YMM2 = sign of full_period_num
     vpsllq          YMM2, YMM2, 63                      ; YMM2 = mask of sign inversion
     vbroadcastsd    YMM6, QWORD PTR [Mask_MSB_DW]           ; YMM6 -> 0x80000000
     vandpd          YMM6, YMM6, YMM5
     vxorpd          YMM2, YMM2, YMM6
     vxorpd          YMM0, YMM0, YMM2                    ; YMM0 -> masked inversed
+
     vmovupd         YMM6, QWORD PTR [rsp - 32]
     vmovupd         YMM7, QWORD PTR [rsp - 64]
     vmovupd         YMM8, QWORD PTR [rsp - 96]
