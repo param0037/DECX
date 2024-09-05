@@ -32,77 +32,12 @@
 #define _ARITHMETIC_KERNELS_H_
 
 #include "../../basic.h"
+
+#ifdef _DECX_CPU_PARTS_
+
+
 #include "../../../modules/core/thread_management/thread_pool.h"
 #include "../common/cpu_element_wise_planner.h"
-
-
-/**
- * @param kernel_name Name of the kernel
- * @param type_INOUT The data type of both in and out, in arithmetic kernels, in and out have the same type
- * @param intrinsics Name of the intrinsics. In avx context, _mm(256)_xxx; In arm NEON context, vxxq_xx
-*/
-#define _OP_1D_VVO_(kernel_name, type_INOUT, intrinsics)         \
-_THREAD_FUNCTION_ void decx::CPUK::                             \
-kernel_name(const type_INOUT* __restrict A,                     \
-            const type_INOUT* __restrict B,                     \
-            type_INOUT* __restrict dst,                         \
-            const uint64_t proc_len_v)                          \
-{                                                               \
-    for (uint64_t i = 0; i < proc_len_v; ++i){                  \
-        decx::utils::simd::xmm256_reg A_v, B_v, dst_v;          \
-        _LDGV_##type_INOUT(A);                                  \
-        _LDGV_##type_INOUT(B);                                  \
-        _OP_##type_INOUT##_2I1O(intrinsics, A, B, dst);                \
-        _STGV_##type_INOUT(dst);                                \
-    }                                                           \
-}                                                               \
-
-
-/**
- * @param kernel_name Name of the kernel
- * @param type_INOUT The data type of both in and out, in arithmetic kernels, in and out have the same type
- * @param type_const The type of the input constant
- * @param intrinsics Name of the intrinsics. In avx context, _mm(256)_xxx; In arm NEON context, vxxq_xx
- * @param is_inv If the operation is not inversed, e.g. OP(constant, src), then left it blank; otherwise specify "inv" only
-*/
-#define _OP_1D_VCO_(kernel_name, type_INOUT, type_const, intrinsics, is_inv)      \
-_THREAD_FUNCTION_ void decx::CPUK::                                             \
-kernel_name(const type_INOUT* __restrict src,                                   \
-            type_INOUT* __restrict dst,                                         \
-            const uint64_t proc_len_v,                                          \
-            const type_const constant)                                          \
-{                                                                               \
-    for (uint64_t i = 0; i < proc_len_v; ++i){                                  \
-        decx::utils::simd::xmm256_reg src_v, constant_v, dst_v;                 \
-        _LDGV_##type_INOUT(src);                                                \
-        _DUPV_##type_INOUT(constant);                                           \
-        _OP##is_inv##_##type_INOUT##_2I1O(intrinsics, src, constant, dst);      \
-        _STGV_##type_INOUT(dst);                                                \
-    }                                                                           \
-}                                                                               \
-
-
-/**
- * @param kernel_name Name of the kernel
- * @param type_INOUT The data type of both in and out, in arithmetic kernels, in and out have the same type
- * @param type_const The type of the input constant
- * @param intrinsics Name of the intrinsics. In avx context, _mm(256)_xxx; In arm NEON context, vxxq_xx
- * @param is_inv If the operation is not inversed, e.g. OP(constant, src), then left it blank; otherwise specify "inv" only
-*/
-#define _OP_1D_VO_(kernel_name, type_INOUT, intrinsics)       \
-_THREAD_FUNCTION_ void decx::CPUK::                                   \
-kernel_name(const type_INOUT* __restrict src,                         \
-            type_INOUT* __restrict dst,                               \
-            const uint64_t proc_len_v)                                \
-{                                                                     \
-    for (uint64_t i = 0; i < proc_len_v; ++i){                        \
-        decx::utils::simd::xmm256_reg src_v, dst_v;                   \
-        _LDGV_##type_INOUT(src);                                      \
-        _OP_##type_INOUT##_1I1O(intrinsics, src, dst);                  \
-        _STGV_##type_INOUT(dst);                                      \
-    }                                                                 \
-}                                                                     \
-
 
 
 namespace decx
@@ -233,6 +168,47 @@ arithmetic_caller_VO(decx::CPUK::arithmetic_kernels_VO<_type_inout>* _kernel,
     _planner->caller_unary(_kernel, src, dst, t1D);
 }
 
+#endif      // #ifdef _DECX_CPU_PARTS_
 
+#ifdef _DECX_CUDA_PARTS_
+#include "../../../modules/core/cudaStream_management/cudaStream_queue.h"
+#include "../../../modules/core/cudaStream_management/cudaEvent_queue.h"
+
+namespace decx
+{
+namespace GPUK{
+    void _add_fp32_kernel(const float* __restrict A, const float* __restrict B, float* __restrict dst, const uint64_t proc_len_v,
+        const uint32_t block, const uint32_t grid, decx::cuda_stream* S);
+    void _addc_fp32_kernel(const float* __restrict src, const float constant, float* __restrict dst, const uint64_t proc_len_v,
+        const uint32_t block, const uint32_t grid, decx::cuda_stream* S);
+
+    void _sub_fp32_kernel(const float* __restrict A, const float* __restrict B, float* __restrict dst, const uint64_t proc_len_v,
+        const uint32_t block, const uint32_t grid, decx::cuda_stream* S);
+    void _subc_fp32_kernel(const float* __restrict src, const float constant, float* __restrict dst, const uint64_t proc_len_v,
+        const uint32_t block, const uint32_t grid, decx::cuda_stream* S);
+
+    void _mul_fp32_kernel(const float* __restrict A, const float* __restrict B, float* __restrict dst, const uint64_t proc_len_v,
+        const uint32_t block, const uint32_t grid, decx::cuda_stream* S);
+    void _mulc_fp32_kernel(const float* __restrict src, const float constant, float* __restrict dst, const uint64_t proc_len_v,
+        const uint32_t block, const uint32_t grid, decx::cuda_stream* S);
+
+    void _div_fp32_kernel(const float* __restrict A, const float* __restrict B, float* __restrict dst, const uint64_t proc_len_v,
+        const uint32_t block, const uint32_t grid, decx::cuda_stream* S);
+    void _divc_fp32_kernel(const float* __restrict src, const float constant, float* __restrict dst, const uint64_t proc_len_v,
+        const uint32_t block, const uint32_t grid, decx::cuda_stream* S);
+
+    void _max_fp32_kernel(const float* __restrict A, const float* __restrict B, float* __restrict dst, const uint64_t proc_len_v,
+        const uint32_t block, const uint32_t grid, decx::cuda_stream* S);
+    void _maxc_fp32_kernel(const float* __restrict src, const float constant, float* __restrict dst, const uint64_t proc_len_v,
+        const uint32_t block, const uint32_t grid, decx::cuda_stream* S);
+
+    void _min_fp32_kernel(const float* __restrict A, const float* __restrict B, float* __restrict dst, const uint64_t proc_len_v,
+        const uint32_t block, const uint32_t grid, decx::cuda_stream* S);
+    void _minc_fp32_kernel(const float* __restrict src, const float constant, float* __restrict dst, const uint64_t proc_len_v,
+        const uint32_t block, const uint32_t grid, decx::cuda_stream* S);
+}
+}
+
+#endif
 
 #endif

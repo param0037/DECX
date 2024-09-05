@@ -28,38 +28,23 @@
 * DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef _CUDA_ELEMENT_WISE_PLANNER_H_
-#define _CUDA_ELEMENT_WISE_PLANNER_H_
-
-#include "../../basic.h"
-#include "../../FMGR/fragment_arrangment.h"
-#include "../../../modules/core/configs/config.h"
-#include "element_wise_base.h"
+#include "cuda_element_wise_planner.h"
 
 
-#define _EW_MIN_THREAD_PROC_DEFAULT_CUDA_ 128
-#define _EW_CUDA_BLOCK_SIZE_ 0      // 0 for maximum thread per block
-
-
-namespace decx
+void decx::cuda_ElementWise1D_planner::
+plan(const uint32_t conc, const uint64_t total, const uint8_t _type_in_size, const uint8_t _type_out_size)
 {
-    class cuda_ElementWise1D_planner;
+    constexpr uint32_t _align_byte = 16;
     
+    this->_total = total;
+    const uint8_t _ref_size = max(_type_in_size, _type_out_size);
+
+    this->_alignment = _align_byte / _ref_size;
+
+    this->_total_v = decx::utils::ceil<uint64_t>(this->_total, this->_alignment);
+
+    this->_block = _EW_CUDA_BLOCK_SIZE_ == 0 ? decx::cuda::_get_cuda_prop().maxThreadsPerBlock :
+        _EW_CUDA_BLOCK_SIZE_;
+    
+    this->_grid = decx::utils::ceil<uint64_t>(this->_total_v, this->_block);
 }
-
-
-class decx::cuda_ElementWise1D_planner : decx::element_wise_base_1D
-{
-private:
-    uint32_t _block, _grid;
-
-public:
-    cuda_ElementWise1D_planner() {}
-
-
-    void plan(const uint32_t conc, const uint64_t total, const uint8_t _type_in_size, const uint8_t _type_out_size);
-
-};
-
-
-#endif

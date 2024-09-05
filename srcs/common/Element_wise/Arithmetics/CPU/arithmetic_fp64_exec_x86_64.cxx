@@ -30,6 +30,8 @@
 
 #include "../arithmetic_kernels.h"
 #include "../../../SIMD/intrinsics_ops.h"
+#include "arithmetic_exec_defs.h"
+
 
 #define _LDGV_double(name) name##_v._vd = _mm256_load_pd(name + i * 4)
 #define _STGV_double(name) _mm256_store_pd(name + i * 4, name##_v._vd)

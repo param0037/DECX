@@ -45,15 +45,15 @@ add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/modules/BLAS/Dot product/CUDA/2D" "
 
 include("${DECX_WORLD_ABS_DIR}/srcs/common/FMGR/FMGR_COM.cmake")
 include("${DECX_WORLD_ABS_DIR}/srcs/common/Basic_process/extension/extension_com.cmake")
-include("${DECX_WORLD_ABS_DIR}/srcs/common/Basic_process/fill/fill_com.cmake")
 include("${DECX_WORLD_ABS_DIR}/srcs/common/Basic_process/transpose/transpose_com.cmake")
 include("${DECX_WORLD_ABS_DIR}/srcs/common/Basic_process/type_cast/typecast_com.cmake")
+include("${DECX_WORLD_ABS_DIR}/srcs/common/Element_wise/elementwise_com.cmake")
 
 
 add_library(DECX_BLAS_CUDA SHARED ${GEMM_SRCS}   ${DP}        ${BP_SRCS} 
                                   ${EXT_CUDA_COM_SRCS}        ${FMGR_CUDA_COM_SRCS}
                                   ${FILL_CUDA_COM_SRCS}       ${TRP_CUDA_COM_SRCS} 
-                                  ${TYPECAST_CUDA_COM_SRCS})
+                                  ${TYPECAST_CUDA_COM_SRCS}   ${EW_CUDA_COM_SRCS})
 
 set_target_properties(DECX_BLAS_CUDA PROPERTIES CUDA_ARCHITECTURES ${CUDA_TARGET_ARCH})
 set_target_properties(DECX_BLAS_CUDA PROPERTIES CUDA_RESOLVE_DEVICE_SYMBOLS ON)

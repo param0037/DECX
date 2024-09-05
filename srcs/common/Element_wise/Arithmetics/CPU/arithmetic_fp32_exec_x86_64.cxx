@@ -30,6 +30,7 @@
 
 #include "../arithmetic_kernels.h"
 #include "../../../SIMD/intrinsics_ops.h"
+#include "arithmetic_exec_defs.h"
 
 
 #define _LDGV_float(name) name##_v._vf = _mm256_load_ps(name + i * 8)
