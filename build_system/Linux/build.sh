@@ -187,7 +187,7 @@ function build_single()
     else
         cmake --build $cmake_bin_dir --config Release
     fi
-    cp /media/wayne/Disk/DECX_world/build/bin/x64/libDECX_BLAS_CPU.so ~/DECX/libs/x64/
+    cp /media/wayne/Disk/DECX_world/build/bin/x64/libDECX_BLAS_CUDA.so ~/DECX/libs/x64/
 }
 
 

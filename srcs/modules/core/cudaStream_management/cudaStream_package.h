@@ -53,7 +53,9 @@ public:
 
     cuda_stream(const int flag);
 
-
+    /**
+     * Release the cuda_stream
+    */
     void detach();
 
 

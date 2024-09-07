@@ -54,7 +54,9 @@ public:
 
     cuda_event(const int flag);
 
-
+    /**
+     * Release the cuda_event
+    */
     void detach();
 
 

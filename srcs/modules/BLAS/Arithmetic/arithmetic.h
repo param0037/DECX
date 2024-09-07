@@ -35,6 +35,11 @@
 #include "../../../common/Classes/Matrix.h"
 #include "../../../common/Classes/Number.h"
 
+#ifdef _DECX_CUDA_PARTS_
+#include "../../../common/Classes/GPU_Vector.h"
+#include "../../../common/Classes/GPU_Matrix.h"
+#endif
+
 
 namespace de
 {
@@ -57,34 +62,58 @@ namespace de
     };
 }
 
-
+#ifdef _DECX_CPU_PARTS_
 namespace decx
 {
 namespace blas{
     void mat_arithmetic_caller_VVO(const decx::_Matrix* A, const decx::_Matrix* B, decx::_Matrix* dst, const int32_t arith_flag, de::DH* handle);
     void vec_arithmetic_caller_VVO(const decx::_Vector* A, const decx::_Vector* B, decx::_Vector* dst, const int32_t arith_flag, de::DH* handle);
 
-
     void mat_arithmetic_caller_VO(const decx::_Matrix* src, decx::_Matrix* dst, const int32_t arith_flag, de::DH* handle);
     void vec_arithmetic_caller_VO(const decx::_Vector* src, decx::_Vector* dst, const int32_t arith_flag, de::DH* handle);
 }
 }
+#endif
+#ifdef _DECX_CUDA_PARTS_
+namespace decx
+{
+namespace blas{
+    void mat_arithmetic_caller_VVO(const decx::_GPU_Matrix* A, const decx::_GPU_Matrix* B, decx::_GPU_Matrix* dst, const int32_t arith_flag, decx::cuda_stream* S, de::DH* handle);
+    void vec_arithmetic_caller_VVO(const decx::_GPU_Vector* A, const decx::_GPU_Vector* B, decx::_GPU_Vector* dst, const int32_t arith_flag, decx::cuda_stream* S, de::DH* handle);
+
+    void mat_arithmetic_caller_VO(const decx::_GPU_Matrix* src, decx::_GPU_Matrix* dst, const int32_t arith_flag, decx::cuda_stream* S, de::DH* handle);
+    void vec_arithmetic_caller_VO(const decx::_GPU_Vector* src, decx::_GPU_Vector* dst, const int32_t arith_flag, decx::cuda_stream* S, de::DH* handle);
+}
+}
+#endif
 
 
 namespace de
 {
 namespace blas{
+#ifdef _DECX_CPU_PARTS_
 namespace cpu{
     _DECX_API_ void Arithmetic(de::InputVector A, de::InputVector B, de::OutputVector dst, const int32_t arith_flag);
     _DECX_API_ void Arithmetic(de::InputVector src, de::InputNumber constant, de::OutputVector dst, const int32_t arith_flag);
     _DECX_API_ void Arithmetic(de::InputVector src, de::OutputVector dst, const int32_t arith_flag);
-}
 
-namespace cpu{
     _DECX_API_ void Arithmetic(de::InputMatrix A, de::InputMatrix B, de::OutputMatrix dst, const int32_t arith_flag);
     _DECX_API_ void Arithmetic(de::InputMatrix src, de::InputNumber constant, de::OutputMatrix dst, const int32_t arith_flag);
     _DECX_API_ void Arithmetic(de::InputMatrix src, de::OutputMatrix dst, const int32_t arith_flag);
 }
+#endif
+
+#ifdef _DECX_CUDA_PARTS_
+namespace cuda{
+    _DECX_API_ void Arithmetic(de::InputGPUVector A, de::InputGPUVector B, de::OutputGPUVector dst, const int32_t arith_flag);
+    _DECX_API_ void Arithmetic(de::InputGPUVector src, de::InputNumber constant, de::OutputGPUVector dst, const int32_t arith_flag);
+    _DECX_API_ void Arithmetic(de::InputGPUVector src, de::OutputGPUVector dst, const int32_t arith_flag);
+
+    _DECX_API_ void Arithmetic(de::InputGPUMatrix A, de::InputGPUMatrix B, de::OutputGPUMatrix dst, const int32_t arith_flag);
+    _DECX_API_ void Arithmetic(de::InputGPUMatrix src, de::InputNumber constant, de::OutputGPUMatrix dst, const int32_t arith_flag);
+    _DECX_API_ void Arithmetic(de::InputGPUMatrix src, de::OutputGPUMatrix dst, const int32_t arith_flag);
+}
+#endif
 }
 
 }

@@ -32,14 +32,14 @@
 
 
 void decx::cuda_ElementWise1D_planner::
-plan(const uint32_t conc, const uint64_t total, const uint8_t _type_in_size, const uint8_t _type_out_size)
+plan(const uint64_t total, const uint8_t type_in_size, const uint8_t type_out_size)
 {
-    constexpr uint32_t _align_byte = 16;
-    
-    this->_total = total;
-    const uint8_t _ref_size = max(_type_in_size, _type_out_size);
+    this->_type_in_size = type_in_size;
+    this->_type_out_size = type_out_size;
 
-    this->_alignment = _align_byte / _ref_size;
+    this->plan_alignment();
+
+    this->_total = total;
 
     this->_total_v = decx::utils::ceil<uint64_t>(this->_total, this->_alignment);
 
@@ -47,4 +47,28 @@ plan(const uint32_t conc, const uint64_t total, const uint8_t _type_in_size, con
         _EW_CUDA_BLOCK_SIZE_;
     
     this->_grid = decx::utils::ceil<uint64_t>(this->_total_v, this->_block);
+}
+
+
+
+void decx::cuda_ElementWise2D_planner::
+plan(const uint2 proc_dims, const uint8_t type_in_size, const uint8_t type_out_size)
+{
+    this->_type_in_size = type_in_size;
+    this->_type_out_size = type_out_size;
+
+    this->plan_alignment();
+
+    if (decx::cuda::_get_cuda_prop().maxThreadsPerBlock < 1024){
+        this->_block = dim3(32, 8);
+    }
+    else{
+        this->_block = dim3(32, 32);
+    }
+
+    this->_proc_dims = proc_dims;
+    this->_proc_w_v = decx::utils::ceil<uint32_t>(this->_proc_dims.x, this->_alignment);
+
+    this->_grid = dim3(decx::utils::ceil<uint32_t>(this->_proc_w_v, this->_block.x),
+                       decx::utils::ceil<uint32_t>(this->_proc_dims.y, this->_block.y));
 }

@@ -167,7 +167,7 @@ namespace decx
         ~_GPU_Matrix() {}
 
 
-        uint32_t Pitch();
+        uint32_t Pitch() const;
 
 
         const decx::_matrix_layout& get_layout();

@@ -47,12 +47,16 @@ namespace cpu{
     _DECX_API_ void Arithmetic(de::InputVector A, de::InputVector B, de::OutputVector dst, const int32_t arith_flag);
     _DECX_API_ void Arithmetic(de::InputVector src, de::InputNumber constant, de::OutputVector dst, const int32_t arith_flag);
     _DECX_API_ void Arithmetic(de::InputVector src, de::OutputVector dst, const int32_t arith_flag);
-}
 
-namespace cpu{
     _DECX_API_ void Arithmetic(de::InputMatrix A, de::InputMatrix B, de::OutputMatrix dst, const int32_t arith_flag);
     _DECX_API_ void Arithmetic(de::InputMatrix src, de::InputNumber constant, de::OutputMatrix dst, const int32_t arith_flag);
     _DECX_API_ void Arithmetic(de::InputMatrix src, de::OutputMatrix dst, const int32_t arith_flag);
+}
+
+namespace cuda{
+    _DECX_API_ void Arithmetic(de::InputGPUMatrix A, de::InputGPUMatrix B, de::OutputGPUMatrix dst, const int32_t arith_flag);
+    _DECX_API_ void Arithmetic(de::InputGPUMatrix src, de::InputNumber constant, de::OutputGPUMatrix dst, const int32_t arith_flag);
+    _DECX_API_ void Arithmetic(de::InputGPUMatrix src, de::OutputGPUMatrix dst, const int32_t arith_flag);
 }
 }
 

@@ -35,6 +35,7 @@ include("${DECX_WORLD_ABS_DIR}/srcs/compile_defs.cmake")
 file(GLOB_RECURSE BP_SRCS "${DECX_WORLD_ABS_DIR}/srcs/modules/BLAS/Basic_process/*.cu")
 file(GLOB GEMM_SRCS "${DECX_WORLD_ABS_DIR}/srcs/modules/BLAS/GEMM/CUDA/*.cu")
 file(GLOB DP "${DECX_WORLD_ABS_DIR}/srcs/modules/BLAS/Dot product/CUDA/*.cu")
+file(GLOB ARITH "${DECX_WORLD_ABS_DIR}/srcs/modules/BLAS/Arithmetic/*.cu")
 
 add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/modules/BLAS/GEMM/CUDA/extreme_shapes" "${DECX_SUBBUILD_BIN_DIR}/gemm_cuda_extreme_shape")
 add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/modules/BLAS/GEMM/CUDA/large_squares" "${DECX_SUBBUILD_BIN_DIR}/gemm_cuda_large_squares")
@@ -53,7 +54,8 @@ include("${DECX_WORLD_ABS_DIR}/srcs/common/Element_wise/elementwise_com.cmake")
 add_library(DECX_BLAS_CUDA SHARED ${GEMM_SRCS}   ${DP}        ${BP_SRCS} 
                                   ${EXT_CUDA_COM_SRCS}        ${FMGR_CUDA_COM_SRCS}
                                   ${FILL_CUDA_COM_SRCS}       ${TRP_CUDA_COM_SRCS} 
-                                  ${TYPECAST_CUDA_COM_SRCS}   ${EW_CUDA_COM_SRCS})
+                                  ${TYPECAST_CUDA_COM_SRCS}   ${EW_CUDA_COM_SRCS}
+                                  ${ARITH})
 
 set_target_properties(DECX_BLAS_CUDA PROPERTIES CUDA_ARCHITECTURES ${CUDA_TARGET_ARCH})
 set_target_properties(DECX_BLAS_CUDA PROPERTIES CUDA_RESOLVE_DEVICE_SYMBOLS ON)

@@ -29,86 +29,8 @@
 */
 
 
+#include "arithmetic_callers_LUT.h"
 #include "arithmetic.h"
-#include "../../../common/Element_wise/common/cpu_element_wise_planner.h"
-#include "../../../common/Element_wise/Arithmetics/arithmetic_kernels.h"
-
-
-#define _SUB_OFFSET_OPINV_KERNEL_LUT_MAP_ 6
-#define _OFFSET_OPINV_KERNEL_LUT_MAP_ 64 - _SUB_OFFSET_OPINV_KERNEL_LUT_MAP_ * 2
-
-
-namespace decx
-{
-namespace blas
-{
-    static void* g_arithmetic_kernel_LUT[2][18] = 
-    {
-        {(void*)decx::CPUK::_add_fp32_exec, 
-         (void*)decx::CPUK::_mul_fp32_exec, 
-         (void*)decx::CPUK::_min_fp32_exec, 
-         (void*)decx::CPUK::_max_fp32_exec, 
-         (void*)decx::CPUK::_sin_fp32_exec,
-         (void*)decx::CPUK::_cos_fp32_exec,
-         (void*)decx::CPUK::_sub_fp32_exec, 
-         (void*)decx::CPUK::_div_fp32_exec, 
-
-         (void*)decx::CPUK::_addc_fp32_exec,
-         (void*)decx::CPUK::_mulc_fp32_exec,
-         (void*)decx::CPUK::_minc_fp32_exec,
-         (void*)decx::CPUK::_maxc_fp32_exec,
-         NULL,
-         NULL,
-         (void*)decx::CPUK::_subc_fp32_exec,
-         (void*)decx::CPUK::_divc_fp32_exec,   // 12-th
-         
-         (void*)decx::CPUK::_subcinv_fp32_exec,
-         (void*)decx::CPUK::_divcinv_fp32_exec },
-
-        {(void*)decx::CPUK::_add_fp64_exec, 
-         (void*)decx::CPUK::_mul_fp64_exec, 
-         (void*)decx::CPUK::_min_fp64_exec, 
-         (void*)decx::CPUK::_max_fp64_exec, 
-         (void*)decx::CPUK::_sin_fp64_exec,
-         (void*)decx::CPUK::_cos_fp64_exec,
-         (void*)decx::CPUK::_sub_fp64_exec, 
-         (void*)decx::CPUK::_div_fp64_exec, 
-
-         (void*)decx::CPUK::_addc_fp64_exec,
-         (void*)decx::CPUK::_mulc_fp64_exec,
-         (void*)decx::CPUK::_minc_fp64_exec,
-         (void*)decx::CPUK::_maxc_fp64_exec,
-         NULL,
-         NULL,
-         (void*)decx::CPUK::_subc_fp64_exec,
-         (void*)decx::CPUK::_divc_fp64_exec,   // 12-th
-         
-         (void*)decx::CPUK::_subcinv_fp64_exec,
-         (void*)decx::CPUK::_divcinv_fp64_exec },
-         
-    };
-
-    template <int32_t _is_c>
-    static int32_t _find_arith_kernel_id(const int32_t _flag);
-}
-}
-
-
-template <int32_t _is_c>
-static int32_t decx::blas::_find_arith_kernel_id(const int32_t _flag)
-{
-    if (_flag > 63){    // is _inv
-        if (_flag - 64 < _SUB_OFFSET_OPINV_KERNEL_LUT_MAP_){        // No inv-op exists, map to regular kernels
-            return _flag - 64 + 32 * _is_c;
-        }
-        else{       // Inv-ops
-            return _flag - 64 + _SUB_OFFSET_OPINV_KERNEL_LUT_MAP_;
-        }
-    }
-    else{       // isn't _inv
-        return _flag + _is_c * _SUB_OFFSET_OPINV_KERNEL_LUT_MAP_;
-    }
-}
 
 
 void decx::blas::
@@ -118,6 +40,8 @@ mat_arithmetic_caller_VVO(const decx::_Matrix*  A,
                           const int32_t         arith_flag,
                           de::DH*               handle)
 {
+    using namespace decx::CPUK;
+
     decx::cpu_ElementWise1D_planner _planner;
     decx::utils::_thr_1D t1D(decx::cpu::_get_permitted_concurrency());
 
@@ -125,30 +49,33 @@ mat_arithmetic_caller_VVO(const decx::_Matrix*  A,
 
     void* _kernel_ptr = NULL;
 
+    const uint64_t proc_len_flatten_v1 = static_cast<uint64_t>(A->Pitch()) * static_cast<uint64_t>(A->Height());
+
     switch (A->Type())
     {
     case de::_DATA_TYPES_FLAGS_::_FP32_:
-        _kernel_ptr = g_arithmetic_kernel_LUT[0][_kernel_dex];
-
-        decx::
-        arithmetic_caller_VVO((decx::CPUK::arithmetic_kernels_VVO<float>*)_kernel_ptr, 
-                              &_planner, 
-                              (float*)A->Mat.ptr, 
-                              (float*)B->Mat.ptr, 
-                              (float*)dst->Mat.ptr, 
-                              static_cast<uint64_t>(A->Pitch()) * static_cast<uint64_t>(A->Height()), &t1D);
+        // Obtain the kernel ptr according to flag
+        _kernel_ptr = g_arithmetic_cpu_kernel_LUT[0][_kernel_dex];
+        // Do the plan
+        _planner.plan(t1D.total_thread, proc_len_flatten_v1, sizeof(float), sizeof(float));
+        // Call the kernel
+        _planner.caller_binary((arithmetic_kernels_1D_VVO<float, float, float>*)_kernel_ptr,
+                               (float*)A->Mat.ptr, 
+                               (float*)B->Mat.ptr, 
+                               (float*)dst->Mat.ptr,
+                               &t1D);
         break;
     
     case de::_DATA_TYPES_FLAGS_::_FP64_:
-        _kernel_ptr = g_arithmetic_kernel_LUT[1][_kernel_dex];
+        _kernel_ptr = g_arithmetic_cpu_kernel_LUT[1][_kernel_dex];
 
-        decx::
-        arithmetic_caller_VVO((decx::CPUK::arithmetic_kernels_VVO<double>*)_kernel_ptr, 
-                              &_planner, 
-                              (double*)A->Mat.ptr, 
-                              (double*)B->Mat.ptr, 
-                              (double*)dst->Mat.ptr, 
-                              static_cast<uint64_t>(A->Pitch()) * static_cast<uint64_t>(A->Height()), &t1D);
+        _planner.plan(t1D.total_thread, proc_len_flatten_v1, sizeof(double), sizeof(double));
+
+        _planner.caller_binary((arithmetic_kernels_1D_VVO<double, double, double>*)_kernel_ptr,
+                               (double*)A->Mat.ptr, 
+                               (double*)B->Mat.ptr, 
+                               (double*)dst->Mat.ptr,
+                               &t1D);
         break;
 
     default:
@@ -159,13 +86,14 @@ mat_arithmetic_caller_VVO(const decx::_Matrix*  A,
 }
 
 
-
 void decx::blas::
 mat_arithmetic_caller_VO(const decx::_Matrix*  src, 
                          decx::_Matrix*        dst, 
                          const int32_t         arith_flag,
                          de::DH*               handle)
 {
+    using namespace decx::CPUK;
+
     decx::cpu_ElementWise1D_planner _planner;
     decx::utils::_thr_1D t1D(decx::cpu::_get_permitted_concurrency());
 
@@ -173,28 +101,30 @@ mat_arithmetic_caller_VO(const decx::_Matrix*  src,
 
     void* _kernel_ptr = NULL;
 
+    const uint64_t proc_len_flatten_v1 = static_cast<uint64_t>(src->Pitch()) * static_cast<uint64_t>(src->Height());
+
     switch (src->Type())
     {
     case de::_DATA_TYPES_FLAGS_::_FP32_:
-        _kernel_ptr = g_arithmetic_kernel_LUT[0][_kernel_dex];
+        _kernel_ptr = g_arithmetic_cpu_kernel_LUT[0][_kernel_dex];
 
-        decx::
-        arithmetic_caller_VO((decx::CPUK::arithmetic_kernels_VO<float>*)_kernel_ptr, 
-                              &_planner, 
+        _planner.plan(t1D.total_thread, proc_len_flatten_v1, sizeof(float), sizeof(float));
+
+        _planner.caller_unary((arithmetic_kernels_1D_VO<float, float>*)_kernel_ptr,
                               (float*)src->Mat.ptr, 
-                              (float*)dst->Mat.ptr, 
-                              static_cast<uint64_t>(src->Pitch()) * static_cast<uint64_t>(src->Height()), &t1D);
+                              (float*)dst->Mat.ptr,
+                              &t1D);
         break;
     
     case de::_DATA_TYPES_FLAGS_::_FP64_:
-        _kernel_ptr = g_arithmetic_kernel_LUT[1][_kernel_dex];
+        _kernel_ptr = g_arithmetic_cpu_kernel_LUT[1][_kernel_dex];
 
-        decx::
-        arithmetic_caller_VO((decx::CPUK::arithmetic_kernels_VO<double>*)_kernel_ptr, 
-                              &_planner, 
+        _planner.plan(t1D.total_thread, proc_len_flatten_v1, sizeof(double), sizeof(double));
+
+        _planner.caller_unary((arithmetic_kernels_1D_VO<double, double>*)_kernel_ptr,
                               (double*)src->Mat.ptr, 
-                              (double*)dst->Mat.ptr, 
-                              static_cast<uint64_t>(src->Pitch()) * static_cast<uint64_t>(src->Height()), &t1D);
+                              (double*)dst->Mat.ptr,
+                              &t1D);
         break;
 
     default:
@@ -212,6 +142,8 @@ vec_arithmetic_caller_VVO(const decx::_Vector*  A,
                           const int32_t         arith_flag,
                           de::DH*               handle)
 {
+    using namespace decx::CPUK;
+
     decx::cpu_ElementWise1D_planner _planner;
     decx::utils::_thr_1D t1D(decx::cpu::_get_permitted_concurrency());
 
@@ -221,27 +153,27 @@ vec_arithmetic_caller_VVO(const decx::_Vector*  A,
     switch (A->Type())
     {
     case de::_DATA_TYPES_FLAGS_::_FP32_:
-        _kernel_ptr = g_arithmetic_kernel_LUT[0][_kernel_dex];
+        _kernel_ptr = g_arithmetic_cpu_kernel_LUT[0][_kernel_dex];
 
-        decx::
-        arithmetic_caller_VVO((decx::CPUK::arithmetic_kernels_VVO<float>*)_kernel_ptr, 
-                              &_planner, 
-                              (float*)A->Vec.ptr, 
-                              (float*)B->Vec.ptr, 
-                              (float*)dst->Vec.ptr, 
-                              A->Len(), &t1D);
+        _planner.plan(t1D.total_thread, A->Len(), sizeof(float), sizeof(float));
+
+        _planner.caller_binary((arithmetic_kernels_1D_VVO<float, float, float>*)_kernel_ptr,
+                                (float*)A->Vec.ptr, 
+                                (float*)B->Vec.ptr, 
+                                (float*)dst->Vec.ptr, 
+                                &t1D);
         break;
 
     case de::_DATA_TYPES_FLAGS_::_FP64_:
-        _kernel_ptr = g_arithmetic_kernel_LUT[0][_kernel_dex];
+        _kernel_ptr = g_arithmetic_cpu_kernel_LUT[1][_kernel_dex];
 
-        decx::
-        arithmetic_caller_VVO((decx::CPUK::arithmetic_kernels_VVO<double>*)_kernel_ptr, 
-                              &_planner, 
-                              (double*)A->Vec.ptr, 
-                              (double*)B->Vec.ptr, 
-                              (double*)dst->Vec.ptr, 
-                              A->Len(), &t1D);
+        _planner.plan(t1D.total_thread, A->Len(), sizeof(double), sizeof(double));
+
+        _planner.caller_binary((arithmetic_kernels_1D_VVO<double, double, double>*)_kernel_ptr,
+                                (double*)A->Vec.ptr, 
+                                (double*)B->Vec.ptr, 
+                                (double*)dst->Vec.ptr, 
+                                &t1D);
         break;
     
     default:
@@ -259,6 +191,8 @@ vec_arithmetic_caller_VO(const decx::_Vector*  src,
                          const int32_t         arith_flag,
                          de::DH*               handle)
 {
+    using namespace decx::CPUK;
+
     decx::cpu_ElementWise1D_planner _planner;
     decx::utils::_thr_1D t1D(decx::cpu::_get_permitted_concurrency());
 
@@ -268,25 +202,25 @@ vec_arithmetic_caller_VO(const decx::_Vector*  src,
     switch (src->Type())
     {
     case de::_DATA_TYPES_FLAGS_::_FP32_:
-        _kernel_ptr = g_arithmetic_kernel_LUT[0][_kernel_dex];
+        _kernel_ptr = g_arithmetic_cpu_kernel_LUT[0][_kernel_dex];
 
-        decx::
-        arithmetic_caller_VO((decx::CPUK::arithmetic_kernels_VO<float>*)_kernel_ptr, 
-                              &_planner, 
-                              (float*)src->Vec.ptr, 
-                              (float*)dst->Vec.ptr, 
-                              src->Len(), &t1D);
+        _planner.plan(t1D.total_thread, src->Len(), sizeof(float), sizeof(float));
+
+        _planner.caller_unary((arithmetic_kernels_1D_VO<float, float>*)_kernel_ptr,
+                                (float*)src->Vec.ptr, 
+                                (float*)dst->Vec.ptr, 
+                                &t1D);
         break;
 
     case de::_DATA_TYPES_FLAGS_::_FP64_:
-        _kernel_ptr = g_arithmetic_kernel_LUT[0][_kernel_dex];
+        _kernel_ptr = g_arithmetic_cpu_kernel_LUT[1][_kernel_dex];
 
-        decx::
-        arithmetic_caller_VO((decx::CPUK::arithmetic_kernels_VO<double>*)_kernel_ptr, 
-                              &_planner, 
-                              (double*)src->Vec.ptr, 
-                              (double*)dst->Vec.ptr, 
-                              src->Len(), &t1D);
+        _planner.plan(t1D.total_thread, src->Len(), sizeof(double), sizeof(double));
+
+        _planner.caller_unary((arithmetic_kernels_1D_VO<double, double>*)_kernel_ptr,
+                                (double*)src->Vec.ptr, 
+                                (double*)dst->Vec.ptr, 
+                                &t1D);
         break;
     
     default:

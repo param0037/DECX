@@ -262,7 +262,7 @@ static bool operator<(de::Half& __a, de::Half& __b)
 
 
 __device__
-static de::Half& operator+(de::Half& __a, de::Half& __b)
+static de::Half operator+(de::Half& __a, de::Half& __b)
 {
 #if __ABOVE_SM_53
     de::Half res;

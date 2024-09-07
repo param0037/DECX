@@ -35,7 +35,6 @@
 
 #ifdef _DECX_CPU_PARTS_
 
-
 #include "../../../modules/core/thread_management/thread_pool.h"
 #include "../common/cpu_element_wise_planner.h"
 
@@ -92,81 +91,18 @@ namespace CPUK{
     _THREAD_FUNCTION_ void _sin_fp64_exec(const double* src, double* dst, const uint64_t proc_len_v);
 }
 
-
 namespace CPUK{
-    template <typename _type_inout>
-    using arithmetic_kernels_VVO = void(const _type_inout*, const _type_inout*, _type_inout*, const uint64_t);
+    template <typename _type_in1, typename _type_in2, typename _type_out>
+    using arithmetic_kernels_1D_VVO = void(const _type_in1*, const _type_in2*, _type_out*, const uint64_t);
 
-    template <typename _type_inout>
-    using arithmetic_kernels_VCO = void(const _type_inout*, _type_inout*, const uint64_t, const _type_inout);
+    template <typename _type_in, typename _type_const, typename _type_out>
+    using arithmetic_kernels_1D_VCO = void(const _type_in*, _type_const*, const _type_out*, const uint64_t);
 
-    template <typename _type_inout>
-    using arithmetic_kernels_VO = void(const _type_inout*, _type_inout*, const uint64_t);
+    template <typename _type_in, typename _type_out>
+    using arithmetic_kernels_1D_VO = void(const _type_in*, _type_out*, const uint64_t);
+}
 }
 
-
-    template <typename _type_inout>
-    static void arithmetic_caller_VVO(decx::CPUK::arithmetic_kernels_VVO<_type_inout>* _kernel, 
-        decx::cpu_ElementWise1D_planner* _planner, const _type_inout* A, const _type_inout* B, _type_inout* dst,
-        const uint64_t _proc_len, decx::utils::_thr_1D *t1D);
-
-
-    template <typename _type_inout>
-    static void arithmetic_caller_VCO(decx::CPUK::arithmetic_kernels_VVO<_type_inout>* _kernel, 
-        decx::cpu_ElementWise1D_planner* _planner, const _type_inout* src, const _type_inout constant, _type_inout* dst,
-        const uint64_t _proc_len, decx::utils::_thr_1D *t1D);
-
-
-    template <typename _type_inout>
-    static void arithmetic_caller_VO(decx::CPUK::arithmetic_kernels_VO<_type_inout>* _kernel, 
-        decx::cpu_ElementWise1D_planner* _planner, const _type_inout* src, _type_inout* dst,
-        const uint64_t _proc_len, decx::utils::_thr_1D *t1D);
-}
-
-
-template <typename _type_inout> static void decx::
-arithmetic_caller_VVO(decx::CPUK::arithmetic_kernels_VVO<_type_inout>* _kernel, 
-                      decx::cpu_ElementWise1D_planner* _planner, 
-                      const _type_inout* A, 
-                      const _type_inout* B, 
-                      _type_inout* dst,
-                      const uint64_t _proc_len,
-                      decx::utils::_thr_1D *t1D)
-{
-    _planner->plan(t1D->total_thread, _proc_len, sizeof(_type_inout), sizeof(_type_inout));
-
-    _planner->caller_binary(_kernel, A, B, dst, t1D);
-}
-
-
-
-template <typename _type_inout> static void decx::
-arithmetic_caller_VCO(decx::CPUK::arithmetic_kernels_VVO<_type_inout>* _kernel, 
-                      decx::cpu_ElementWise1D_planner* _planner, 
-                      const _type_inout* src, 
-                      const _type_inout constant, 
-                      _type_inout* dst,
-                      const uint64_t _proc_len,
-                      decx::utils::_thr_1D *t1D)
-{
-    _planner->plan(t1D->total_thread, _proc_len, sizeof(_type_inout), sizeof(_type_inout));
-
-    _planner->caller_unary(_kernel, src, dst, t1D, constant);
-}
-
-
-template <typename _type_inout> static void decx::
-arithmetic_caller_VO(decx::CPUK::arithmetic_kernels_VO<_type_inout>* _kernel, 
-                      decx::cpu_ElementWise1D_planner* _planner, 
-                      const _type_inout* src, 
-                      _type_inout* dst,
-                      const uint64_t _proc_len,
-                      decx::utils::_thr_1D *t1D)
-{
-    _planner->plan(t1D->total_thread, _proc_len, sizeof(_type_inout), sizeof(_type_inout));
-
-    _planner->caller_unary(_kernel, src, dst, t1D);
-}
 
 #endif      // #ifdef _DECX_CPU_PARTS_
 
@@ -176,36 +112,42 @@ arithmetic_caller_VO(decx::CPUK::arithmetic_kernels_VO<_type_inout>* _kernel,
 
 namespace decx
 {
+
 namespace GPUK{
-    void _add_fp32_kernel(const float* __restrict A, const float* __restrict B, float* __restrict dst, const uint64_t proc_len_v,
-        const uint32_t block, const uint32_t grid, decx::cuda_stream* S);
-    void _addc_fp32_kernel(const float* __restrict src, const float constant, float* __restrict dst, const uint64_t proc_len_v,
-        const uint32_t block, const uint32_t grid, decx::cuda_stream* S);
+    template <typename _type_in1, typename _type_in2, typename _type_out>
+    using arithmetic_kernels_1D_VVO = void(const _type_in1*, const _type_in2*, _type_out*, const uint64_t, 
+    const uint32_t, const uint32_t, decx::cuda_stream*);
 
-    void _sub_fp32_kernel(const float* __restrict A, const float* __restrict B, float* __restrict dst, const uint64_t proc_len_v,
-        const uint32_t block, const uint32_t grid, decx::cuda_stream* S);
-    void _subc_fp32_kernel(const float* __restrict src, const float constant, float* __restrict dst, const uint64_t proc_len_v,
-        const uint32_t block, const uint32_t grid, decx::cuda_stream* S);
+    template <typename _type_in, typename _type_const, typename _type_out>
+    using arithmetic_kernels_1D_VCO = void(const _type_in*, _type_const*, const _type_out*, const uint64_t, 
+    const uint32_t, const uint32_t, decx::cuda_stream*);
 
-    void _mul_fp32_kernel(const float* __restrict A, const float* __restrict B, float* __restrict dst, const uint64_t proc_len_v,
-        const uint32_t block, const uint32_t grid, decx::cuda_stream* S);
-    void _mulc_fp32_kernel(const float* __restrict src, const float constant, float* __restrict dst, const uint64_t proc_len_v,
-        const uint32_t block, const uint32_t grid, decx::cuda_stream* S);
+    template <typename _type_in, typename _type_out>
+    using arithmetic_kernels_1D_VO = void(const _type_in*, _type_out*, const uint64_t, const uint32_t, const uint32_t, 
+    decx::cuda_stream*);
+}
 
-    void _div_fp32_kernel(const float* __restrict A, const float* __restrict B, float* __restrict dst, const uint64_t proc_len_v,
-        const uint32_t block, const uint32_t grid, decx::cuda_stream* S);
-    void _divc_fp32_kernel(const float* __restrict src, const float constant, float* __restrict dst, const uint64_t proc_len_v,
-        const uint32_t block, const uint32_t grid, decx::cuda_stream* S);
+namespace GPUK{
+    void _add_fp32_kernel(const float*, const float*, float*, const uint64_t, const uint32_t, const uint32_t, decx::cuda_stream*);
+    void _addc_fp32_kernel(const float*, const float, float*, const uint64_t, const uint32_t, const uint32_t, decx::cuda_stream*);
 
-    void _max_fp32_kernel(const float* __restrict A, const float* __restrict B, float* __restrict dst, const uint64_t proc_len_v,
-        const uint32_t block, const uint32_t grid, decx::cuda_stream* S);
-    void _maxc_fp32_kernel(const float* __restrict src, const float constant, float* __restrict dst, const uint64_t proc_len_v,
-        const uint32_t block, const uint32_t grid, decx::cuda_stream* S);
+    void _sub_fp32_kernel(const float*, const float*, float*, const uint64_t, const uint32_t, const uint32_t, decx::cuda_stream*);
+    void _subc_fp32_kernel(const float*, const float, float*, const uint64_t, const uint32_t, const uint32_t, decx::cuda_stream*);
 
-    void _min_fp32_kernel(const float* __restrict A, const float* __restrict B, float* __restrict dst, const uint64_t proc_len_v,
-        const uint32_t block, const uint32_t grid, decx::cuda_stream* S);
-    void _minc_fp32_kernel(const float* __restrict src, const float constant, float* __restrict dst, const uint64_t proc_len_v,
-        const uint32_t block, const uint32_t grid, decx::cuda_stream* S);
+    void _mul_fp32_kernel(const float*, const float*, float*, const uint64_t, const uint32_t, const uint32_t, decx::cuda_stream*);
+    void _mulc_fp32_kernel(const float*, const float, float*, const uint64_t, const uint32_t, const uint32_t, decx::cuda_stream*);
+
+    void _div_fp32_kernel(const float*, const float*, float*, const uint64_t, const uint32_t, const uint32_t, decx::cuda_stream*);
+    void _divc_fp32_kernel(const float*, const float, float*, const uint64_t, const uint32_t, const uint32_t, decx::cuda_stream*);
+
+    void _sin_fp32_kernel(const float*, float*, const uint64_t, const uint32_t, const uint32_t, decx::cuda_stream*);
+    void _cos_fp32_kernel(const float*, float*, const uint64_t, const uint32_t, const uint32_t, decx::cuda_stream*);
+
+    void _max_fp32_kernel(const float*, const float*, float*, const uint64_t, const uint32_t, const uint32_t, decx::cuda_stream*);
+    void _maxc_fp32_kernel(const float*, const float, float*, const uint64_t, const uint32_t, const uint32_t, decx::cuda_stream*);
+
+    void _min_fp32_kernel(const float*, const float*, float*, const uint64_t, const uint32_t, const uint32_t, decx::cuda_stream*);
+    void _minc_fp32_kernel(const float*, const float, float*, const uint64_t, const uint32_t, const uint32_t, decx::cuda_stream*);
 }
 }
 

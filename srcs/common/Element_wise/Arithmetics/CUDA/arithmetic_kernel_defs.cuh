@@ -42,14 +42,14 @@ kernel_name(const float4* __restrict src,                   \
             const uint64_t proc_len_v) {                    \
     uint32_t tid = threadIdx.x + blockIdx.x * blockDim.x;   \
     decx::utils::_cuda_vec128 recv, stg;                    \
-    recv.vectype = src[tid];                                \
+    if (tid < proc_len_v) recv._vf = src[tid];              \
     exec;                                                   \
-    dst[tid] = stg;                                         \
+    if (tid < proc_len_v) dst[tid] = stg._vf;               \
 }                                                           \
 
 
 
-#define _CUDA_OP_1D_VCO_(kernel_name, vectype, type_const, exec)       \
+#define _CUDA_OP_1D_VCO_(kernel_name, vectype, type_const, exec)  \
 __global__ void decx::GPUK::                                \
 kernel_name(const float4* __restrict src,                   \
             const type_const constant,                      \
@@ -88,6 +88,19 @@ void decx::GPUK::caller(const type_INOUT* __restrict A,                 \
              decx::cuda_stream* S) {                                    \
     decx::GPUK::kernel<<<grid, block, 0, S->get_raw_stream_ref()>>>(    \
         (float4*)A, (float4*)B, (float4*)dst, proc_len_v);              \
+}                                                                       \
+
+
+
+#define _CUDA_OP_1D_VO_CALLER_(caller, kernel, type_INOUT, vectype)    \
+void decx::GPUK::caller(const type_INOUT* __restrict src,               \
+             type_INOUT* __restrict dst,                                \
+             const uint64_t proc_len_v,                                 \
+             const uint32_t block,                                      \
+             const uint32_t grid,                                       \
+             decx::cuda_stream* S) {                                    \
+    decx::GPUK::kernel<<<grid, block, 0, S->get_raw_stream_ref()>>>(    \
+        (float4*)src, (float4*)dst, proc_len_v);                        \
 }                                                                       \
 
 

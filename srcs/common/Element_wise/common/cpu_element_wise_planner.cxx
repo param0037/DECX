@@ -34,21 +34,17 @@
 void 
 decx::cpu_ElementWise1D_planner::plan(const uint32_t conc,
                                       const uint64_t total, 
-                                      const uint8_t _type_in_size, 
-                                      const uint8_t _type_out_size,
+                                      const uint8_t type_in_size, 
+                                      const uint8_t type_out_size,
                                       const uint64_t min_thread_proc)
 {
-#if defined(__x86_64__) || defined(__i386__)
-    constexpr uint32_t _align_byte = 32;
-#endif
-#if defined(__aarch64__) || defined(__arm__)
-    constexpr uint32_t _align_byte = 16;
-#endif
+    this->_type_in_size = type_in_size;
+    this->_type_out_size = type_out_size;
+
+    this->plan_alignment();
+
     this->_min_thread_proc = min_thread_proc;
     this->_total = total;
-    const uint8_t _ref_size = max(_type_in_size, _type_out_size);
-
-    this->_alignment = _align_byte / _ref_size;
 
     this->_total_v = decx::utils::ceil<uint64_t>(this->_total, this->_alignment);
 
@@ -67,24 +63,19 @@ decx::cpu_ElementWise1D_planner::plan(const uint32_t conc,
 void decx::
 cpu_ElementWise2D_planner::plan(const uint32_t conc, 
                                 const uint2 proc_dims, 
-                                const uint8_t _type_in_size, 
-                                const uint8_t _type_out_size,
+                                const uint8_t type_in_size, 
+                                const uint8_t type_out_size,
                                 const uint64_t min_thread_proc)
 {
-#if defined(__x86_64__) || defined(__i386__)
-    constexpr uint32_t _align_byte = 32;
-#endif
-#if defined(__aarch64__) || defined(__arm__)
-    constexpr uint32_t _align_byte = 16;
-#endif
-
-    this->_proc_dims = proc_dims;
-    this->_min_thread_proc = min_thread_proc;
-    const uint8_t _ref_size = max(_type_in_size, _type_out_size);
+    this->_type_in_size = type_in_size;
+    this->_type_out_size = type_out_size;
 
     this->_concurrency = conc;
 
-    this->_alignment = _align_byte / _ref_size;
+    this->plan_alignment();
+
+    this->_proc_dims = proc_dims;
+    this->_min_thread_proc = min_thread_proc;
 
     this->_proc_w_v = decx::utils::ceil<uint32_t>(this->_proc_dims.x, this->_alignment);
 

@@ -39,6 +39,8 @@ namespace GPUK{
     __global__ void cu_sub_fp32_kernel(const float4* __restrict, const float4* __restrict, float4* __restrict, const uint64_t);
     __global__ void cu_mul_fp32_kernel(const float4* __restrict, const float4* __restrict, float4* __restrict, const uint64_t);
     __global__ void cu_div_fp32_kernel(const float4* __restrict, const float4* __restrict, float4* __restrict, const uint64_t);
+    __global__ void cu_sin_fp32_kernel(const float4* __restrict, float4* __restrict, const uint64_t);
+    __global__ void cu_cos_fp32_kernel(const float4* __restrict, float4* __restrict, const uint64_t);
     __global__ void cu_min_fp32_kernel(const float4* __restrict, const float4* __restrict, float4* __restrict, const uint64_t);
     __global__ void cu_max_fp32_kernel(const float4* __restrict, const float4* __restrict, float4* __restrict, const uint64_t);
 
@@ -48,9 +50,6 @@ namespace GPUK{
     __global__ void cu_divc_fp32_kernel(const float4* __restrict, const float, float4* __restrict, const uint64_t);
     __global__ void cu_minc_fp32_kernel(const float4* __restrict, const float, float4* __restrict, const uint64_t);
     __global__ void cu_maxc_fp32_kernel(const float4* __restrict, const float, float4* __restrict, const uint64_t);
-
-
-
 }
 }
 
@@ -75,6 +74,8 @@ _CUDA_OP_1D_VVO_(cu_add_fp32_kernel, _vf, exec_fp32_VVO(__fadd_rn));
 _CUDA_OP_1D_VVO_(cu_sub_fp32_kernel, _vf, exec_fp32_VVO(__fsub_rn));
 _CUDA_OP_1D_VVO_(cu_mul_fp32_kernel, _vf, exec_fp32_VVO(__fmul_rn));
 _CUDA_OP_1D_VVO_(cu_div_fp32_kernel, _vf, exec_fp32_VVO(__fdividef));
+_CUDA_OP_1D_VO_(cu_sin_fp32_kernel, _vf, exec_fp32_VO(__sinf));
+_CUDA_OP_1D_VO_(cu_cos_fp32_kernel, _vf, exec_fp32_VO(__cosf));
 _CUDA_OP_1D_VVO_(cu_min_fp32_kernel, _vf, exec_fp32_VVO(min));
 _CUDA_OP_1D_VVO_(cu_max_fp32_kernel, _vf, exec_fp32_VVO(max));
 
@@ -90,6 +91,8 @@ _CUDA_OP_1D_VVO_CALLER_(_add_fp32_kernel, cu_add_fp32_kernel, float, _vf);
 _CUDA_OP_1D_VVO_CALLER_(_sub_fp32_kernel, cu_sub_fp32_kernel, float, _vf);
 _CUDA_OP_1D_VVO_CALLER_(_mul_fp32_kernel, cu_mul_fp32_kernel, float, _vf);
 _CUDA_OP_1D_VVO_CALLER_(_div_fp32_kernel, cu_div_fp32_kernel, float, _vf);
+_CUDA_OP_1D_VO_CALLER_(_sin_fp32_kernel, cu_sin_fp32_kernel, float, _vf);
+_CUDA_OP_1D_VO_CALLER_(_cos_fp32_kernel, cu_cos_fp32_kernel, float, _vf);
 _CUDA_OP_1D_VVO_CALLER_(_max_fp32_kernel, cu_max_fp32_kernel, float, _vf);
 _CUDA_OP_1D_VVO_CALLER_(_min_fp32_kernel, cu_min_fp32_kernel, float, _vf);
 
@@ -99,15 +102,3 @@ _CUDA_OP_1D_VCO_CALLER_(_mulc_fp32_kernel, cu_mulc_fp32_kernel, float, float, _v
 _CUDA_OP_1D_VCO_CALLER_(_divc_fp32_kernel, cu_divc_fp32_kernel, float, float, _vf);
 _CUDA_OP_1D_VCO_CALLER_(_maxc_fp32_kernel, cu_maxc_fp32_kernel, float, float, _vf);
 _CUDA_OP_1D_VCO_CALLER_(_minc_fp32_kernel, cu_minc_fp32_kernel, float, float, _vf);
-
-
-// void decx::GPUK::
-// _add_fp32_kernel(const float* __restrict A, 
-//                  const float* __restrict B, 
-//                  float* __restrict dst, 
-//                  const uint64_t proc_len_v,
-//                  const uint32_t block, 
-//                  const uint32_t grid)
-// {
-    
-// }

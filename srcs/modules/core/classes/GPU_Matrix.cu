@@ -221,7 +221,7 @@ de::_DATA_FORMATS_ decx::_GPU_Matrix::Format() const
 
 
 
-uint32_t decx::_GPU_Matrix::Pitch()
+uint32_t decx::_GPU_Matrix::Pitch() const
 {
     return this->_layout.pitch;
 }

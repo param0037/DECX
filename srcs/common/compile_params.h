@@ -89,8 +89,8 @@
 #define __VECTORCALL__ __vectorcall
 #endif
 #ifdef __GNUC__
-#define __STDCALL__ __attribute__((stdcall))
-#define __VECTORCALL__ __attribute__((vectorcall))
+#define __STDCALL__
+#define __VECTORCALL__
 #endif
 
 

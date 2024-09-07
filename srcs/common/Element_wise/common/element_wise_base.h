@@ -50,10 +50,18 @@ namespace decx
     class element_wise_base_2D;
 }
 
+#ifdef _DECX_CPU_PARTS_
+#if defined(__x86_64__) || defined(__i386__)
+#define _EW_MIN_THREAD_PROC_DEFAULT_CPU_ 256
+#endif
+#if defined(__aarch64__) || defined(__arm__)
+#define _EW_MIN_THREAD_PROC_DEFAULT_CPU_ 128
+#endif
+#endif
 
 class decx::element_wise_base_1D
 {
-public:
+protected:
     uint64_t _total;
 
     uint32_t _alignment;
@@ -63,170 +71,36 @@ public:
 
     uint64_t _total_v;
 
-    decx::utils::frag_manager _fmgr;
-
-#ifdef _DECX_CPU_PARTS_
-    template <typename FuncType, typename _type_in, typename _type_out, class ...Args>
-    inline void caller_unary(FuncType&& f, const _type_in* src, _type_out* dst, decx::utils::_thr_1D* t1D, Args&& ...additional);
-
-
-    template <typename FuncType, typename _type_in, typename _type_out, class ...Args>
-    inline void caller_binary(FuncType&& f, const _type_in* src1, const _type_in* src2, _type_out* dst, decx::utils::_thr_1D* t1D, Args&& ...additional);
-#endif
-};
-
-
-#ifdef _DECX_CPU_PARTS_
-template <typename FuncType, typename _type_in, typename _type_out, class ...Args>
-inline void decx::element_wise_base_1D::
-caller_unary(FuncType&& f, const _type_in* src, _type_out* dst, decx::utils::_thr_1D* t1D, Args&& ...additional)
-{
-#ifdef _DECX_CPU_PARTS_
-    const _type_in* loc_src = src;
-    _type_out* loc_dst = dst;
-
-    for (int32_t i = 0; i < this->_fmgr.frag_num; ++i){
-        const uint64_t _proc_len_v = i < this->_fmgr.frag_num - 1 ? this->_fmgr.frag_len : this->_fmgr.last_frag_len;
-        t1D->_async_thread[i] = decx::cpu::register_task_default(f, loc_src, loc_dst, _proc_len_v, additional...);
-
-        loc_src += _proc_len_v * this->_alignment;
-        loc_dst += _proc_len_v * this->_alignment;
-    }
-
-    t1D->__sync_all_threads(make_uint2(0, this->_fmgr.frag_num));
-#endif
-}
-
-
-
-template <typename FuncType, typename _type_in, typename _type_out, class ...Args>
-inline void decx::element_wise_base_1D::
-caller_binary(FuncType&& f, const _type_in* src1, const _type_in* src2, _type_out* dst, decx::utils::_thr_1D* t1D, Args&& ...additional)
-{
-#ifdef _DECX_CPU_PARTS_
-    uint64_t dex_src = 0, dex_dst = 0;
-
-    for (int32_t i = 0; i < this->_fmgr.frag_num; ++i){
-        const uint64_t _proc_len_v = i < this->_fmgr.frag_num - 1 ? this->_fmgr.frag_len : this->_fmgr.last_frag_len;
-        t1D->_async_thread[i] = decx::cpu::register_task_default(f, src1 + dex_src, src2 + dex_src, dst + dex_dst, _proc_len_v, additional...);
-
-        dex_src += _proc_len_v * this->_alignment;
-        dex_dst += _proc_len_v * this->_alignment;
-    }
-
-    t1D->__sync_all_threads(make_uint2(0, this->_fmgr.frag_num));
-#endif
-}
-#endif
-
-
-class decx::element_wise_base_2D
-{
 public:
-    uint2 _proc_dims;
-    uint32_t _proc_w_v;
-
-    uint8_t _type_in_size;
-    uint8_t _type_out_size;
-
-    decx::utils::frag_manager _fmgr_WH[2];
-
-    uint32_t _alignment;
-
+    void plan_alignment()
+    {
 #ifdef _DECX_CPU_PARTS_
-    uint2 _thread_dist;
-
-    template <typename FuncType, typename _type_in, typename _type_out, class ...Args>
-    inline void caller_unary(FuncType&& f, const _type_in* src, _type_out* dst, const uint32_t Wsrc, const uint32_t Wdst, 
-        decx::utils::_thr_1D* t1D, Args&& ...additional);
-
-
-    template <typename FuncType, typename _type_in, typename _type_out, class ...Args>
-    inline void caller_binary(FuncType&& f, const _type_in* src1, const _type_in* src2, _type_out* dst, const uint32_t Wsrc, const uint32_t Wdst, 
-        decx::utils::_thr_1D* t1D, Args&& ...additional);
+#if defined(__x86_64__) || defined(__i386__)
+    constexpr uint32_t _align_byte = 32;
+#endif
+#if defined(__aarch64__) || defined(__arm__)
+    constexpr uint32_t _align_byte = 16;
+#endif
 #endif
 #ifdef _DECX_CUDA_PARTS_
-
+    constexpr uint32_t _align_byte = 16;
 #endif
+
+    const uint8_t _ref_size = max(this->_type_in_size, this->_type_out_size);
+
+    this->_alignment = _align_byte / _ref_size;
+    }
 };
 
 
-#ifdef _DECX_CPU_PARTS_
-template <typename FuncType, 
-         typename _type_in, 
-         typename _type_out, 
-         class ...Args> 
-inline void decx::element_wise_base_2D::
-caller_unary(FuncType&& f,          const _type_in* src, 
-             _type_out* dst,        const uint32_t Wsrc, 
-             const uint32_t Wdst,   decx::utils::_thr_1D* t1D,
-             Args&& ...additional)
+class decx::element_wise_base_2D : public decx::element_wise_base_1D
 {
-#ifdef _DECX_CPU_PARTS_
-    const _type_in* loc_src = src;
-    _type_out* loc_dst = dst;
-
-    uint32_t _thr_cnt = 0;
-
-    for (int32_t i = 0; i < this->_thread_dist.y; ++i){
-        loc_src = src + Wsrc * i * this->_fmgr_WH[1].frag_len;
-        loc_dst = dst + Wdst * i * this->_fmgr_WH[1].frag_len;
-        for (int32_t j = 0; j < this->_thread_dist.x; ++j){
-            uint2 proc_dims_v = 
-                make_uint2(j < this->_thread_dist.x - 1 ? this->_fmgr_WH[0].frag_len : this->_fmgr_WH[0].last_frag_len,
-                           i < this->_thread_dist.y - 1 ? this->_fmgr_WH[1].frag_len : this->_fmgr_WH[1].last_frag_len);
-
-            t1D->_async_thread[_thr_cnt] = decx::cpu::register_task_default(f, loc_src, loc_dst, proc_dims_v, Wsrc, Wdst, additional...);
-            
-            loc_src += this->_fmgr_WH[0].frag_len * this->_alignment;
-            loc_dst += this->_fmgr_WH[0].frag_len * this->_alignment;
-            ++_thr_cnt;
-        }
-    }
-
-    t1D->__sync_all_threads(make_uint2(0, _thr_cnt));
-#endif
-}
+protected:
+    uint2 _proc_dims;
+    uint32_t _proc_w_v;
+};
 
 
-
-template <typename FuncType, 
-         typename _type_in, 
-         typename _type_out, 
-         class ...Args> 
-inline void decx::element_wise_base_2D::
-caller_binary(FuncType&& f,                 const _type_in* src1, 
-              const _type_in* src2,         _type_out* dst,
-              const uint32_t Wsrc,          const uint32_t Wdst,   
-              decx::utils::_thr_1D* t1D,    Args&& ...additional)
-{
-#ifdef _DECX_CPU_PARTS_
-    uint64_t dex_src = 0, dex_dst = 0;
-    uint32_t _thr_cnt = 0;
-
-    for (int32_t i = 0; i < this->_thread_dist.y; ++i)
-    {
-        dex_src = Wsrc * i * this->_fmgr_WH[1].frag_len;
-        dex_dst = Wdst * i * this->_fmgr_WH[1].frag_len;
-
-        for (int32_t j = 0; j < this->_thread_dist.x; ++j){
-            uint2 proc_dims_v = 
-                make_uint2(j < this->_thread_dist.x - 1 ? this->_fmgr_WH[0].frag_len : this->_fmgr_WH[0].last_frag_len,
-                           i < this->_thread_dist.y - 1 ? this->_fmgr_WH[1].frag_len : this->_fmgr_WH[1].last_frag_len);
-
-            t1D->_async_thread[_thr_cnt] = decx::cpu::register_task_default(f, src1 + dex_src, src2 + dex_src, dst + dex_dst, proc_dims_v, 
-                                Wsrc, Wdst, additional...);
-            
-            dex_src += this->_fmgr_WH[0].frag_len * this->_alignment;
-            dex_dst += this->_fmgr_WH[0].frag_len * this->_alignment;
-            ++_thr_cnt;
-        }
-    }
-
-    t1D->__sync_all_threads(make_uint2(0, _thr_cnt));
-#endif
-}
-#endif
 
 
 #endif
