@@ -71,7 +71,9 @@ namespace de
         _COLOR_YUV_         = 4,
         _COLOR_HSV_         = 5,
         _CPLX_CARTESIAN_    = 6,
-        _CPLX_POLAR_        = 7
+        _CPLX_POLAR_        = 7,
+        _VECTOR4_           = 8,
+        _QUATERNION_        = 9
     };
 }
 

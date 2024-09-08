@@ -47,7 +47,6 @@ namespace utils{
         FORCEINLINE __m128 _mm_signinv_ps(__m128 __proc);
         FORCEINLINE __m128 _mm_signinv_ps_masked(__m128 __proc, __m128 __mask);
 
-
         FORCEINLINE __m128d _mm_abs_pd(__m128d __proc);
         FORCEINLINE __m128d _mm_signinv_pd(__m128d __proc);
 
@@ -111,17 +110,6 @@ inline __m128 decx::utils::simd::_mm_atan2_ps(const __m128 __y, const __m128 __x
     return dst;
 }
 
-//
-//__m128 decx::utils::simd::_mm_cos_ps(__m128 __x)
-//{
-//    return fast_mm_cos_ps(__x);
-//}
-//
-//
-//__m128 decx::utils::simd::_mm_sin_ps(__m128 __x)
-//{
-//    return fast_mm_sin_ps(__x);
-//}
 
 #endif      // #ifdef _DECX_CPU_PARTS_
 

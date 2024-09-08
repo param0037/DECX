@@ -32,26 +32,6 @@
 #include "arithmetic.h"
 #include "../../../common/CUSV/decx_cuda_vectypes_ops.cuh"
 
-namespace decx
-{
-    namespace GPUK{
-        __global__ void g_tmp(const float4* __restrict src,                  
-            float4* __restrict dst,                        
-            const uint64_t proc_len_v);
-    }
-}
-
-__global__ void decx::GPUK::g_tmp(const float4* __restrict src,                  
-            float4* __restrict dst,                        
-            const uint64_t proc_len_v) {                   
-    uint32_t tid = threadIdx.x + blockIdx.x * blockDim.x;  
-    decx::utils::_cuda_vec128 recv, stg;                   
-    if (tid < proc_len_v) recv._vf = src[tid];             
-    stg._vf = make_float4(37, 37, 37, 37);
-    printf("yes\n");
-    if (tid < proc_len_v) dst[tid] = stg._vf;              
-}                                                          
-
 
 void decx::blas::
 mat_arithmetic_caller_VVO(const decx::_GPU_Matrix*  A, 
@@ -128,18 +108,13 @@ mat_arithmetic_caller_VO(const decx::_GPU_Matrix*   src,
     {
     case de::_DATA_TYPES_FLAGS_::_FP32_:
         _kernel_ptr = g_arithmetic_cuda_kernel_LUT[0][_kernel_dex];
-        printf("_kernel_dex : %d\n", _kernel_dex);
+        
         _planner.plan(proc_len_flatten_v1, sizeof(float), sizeof(float));
 
         _planner.caller_unary((arithmetic_kernels_1D_VO<float, float>*)_kernel_ptr,
                               (float*)src->Mat.ptr, 
                               (float*)dst->Mat.ptr,
                               S);
-
-        // decx::GPUK::g_tmp<<<1, 256, 0, S->get_raw_stream_ref()>>>(
-        // (float4*)src->Mat.ptr, (float4*)dst->Mat.ptr, 1024);
-        printf("%s\n", cudaGetErrorName(cudaGetLastError()));
-        // printf("finished\n");
         break;
     
     case de::_DATA_TYPES_FLAGS_::_FP64_:
@@ -158,5 +133,4 @@ mat_arithmetic_caller_VO(const decx::_GPU_Matrix*   src,
             "Unsupported type when performing arithmetic");
         break;
     }
-    
 }

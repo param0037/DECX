@@ -156,6 +156,7 @@ namespace decx
         }
     }
 }
-#endif
+#endif      // #ifdef __cplusplus
+
 
 #endif

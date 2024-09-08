@@ -58,7 +58,6 @@ namespace utils{
         FORCEINLINE __m256 _mm256_signinv_ps(__m256 __proc);
         FORCEINLINE __m256 _mm256_signinv_ps_masked(__m256 __proc, __m256 __mask);
 
-
         FORCEINLINE __m256d _mm256_abs_pd(__m256d __proc);
         FORCEINLINE __m256d _mm256_signinv_pd(__m256d __proc);
 

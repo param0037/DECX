@@ -35,7 +35,7 @@
 #include "../../../CUSV/decx_cuda_vectypes_ops.cuh"
 
 
-#define _CUDA_OP_1D_VO_(kernel_name, vectype, exec)       \
+#define _CUDA_OP_1D_VO_(kernel_name, exec)                  \
 __global__ void decx::GPUK::                                \
 kernel_name(const float4* __restrict src,                   \
             float4* __restrict dst,                         \
@@ -49,7 +49,7 @@ kernel_name(const float4* __restrict src,                   \
 
 
 
-#define _CUDA_OP_1D_VCO_(kernel_name, vectype, type_const, exec)  \
+#define _CUDA_OP_1D_VCO_(kernel_name, type_const, exec)     \
 __global__ void decx::GPUK::                                \
 kernel_name(const float4* __restrict src,                   \
             const type_const constant,                      \
@@ -57,13 +57,13 @@ kernel_name(const float4* __restrict src,                   \
             const uint64_t proc_len_v) {                    \
     uint32_t tid = threadIdx.x + blockIdx.x * blockDim.x;   \
     decx::utils::_cuda_vec128 recv, stg;                    \
-    recv.vectype = src[tid];                                \
+    recv._vf = src[tid];                                    \
     exec;                                                   \
-    dst[tid] = stg.vectype;                                 \
+    dst[tid] = stg._vf;                                     \
 }                                                           \
 
 
-#define _CUDA_OP_1D_VVO_(kernel_name, vectype, exec)        \
+#define _CUDA_OP_1D_VVO_(kernel_name, exec)                 \
 __global__ void decx::GPUK::                                \
 kernel_name(const float4* __restrict A,                     \
             const float4* __restrict B,                     \
@@ -71,17 +71,18 @@ kernel_name(const float4* __restrict A,                     \
             const uint64_t proc_len_v) {                    \
     uint32_t tid = threadIdx.x + blockIdx.x * blockDim.x;   \
     decx::utils::_cuda_vec128 recv_A, recv_B, stg;          \
-    recv_A.vectype = A[tid];                                \
-    recv_B.vectype = B[tid];                                \
+    recv_A._vf = A[tid];                                    \
+    recv_B._vf = B[tid];                                    \
     exec;                                                   \
-    dst[tid] = stg.vectype;                                 \
+    dst[tid] = stg._vf;                                     \
 }                                                           \
 
 
-#define _CUDA_OP_1D_VVO_CALLER_(caller, kernel, type_INOUT, vectype)    \
-void decx::GPUK::caller(const type_INOUT* __restrict A,                 \
-             const type_INOUT* __restrict B,                            \
-             type_INOUT* __restrict dst,                                \
+#define _CUDA_OP_1D_VVO_CALLER_(caller, kernel, type_in1,               \
+                                type_in2, type_out)                     \
+void decx::GPUK::caller(const type_in1* __restrict A,                   \
+             const type_in2* __restrict B,                              \
+             type_out* __restrict dst,                                  \
              const uint64_t proc_len_v,                                 \
              const uint32_t block,                                      \
              const uint32_t grid,                                       \
@@ -92,9 +93,9 @@ void decx::GPUK::caller(const type_INOUT* __restrict A,                 \
 
 
 
-#define _CUDA_OP_1D_VO_CALLER_(caller, kernel, type_INOUT, vectype)    \
-void decx::GPUK::caller(const type_INOUT* __restrict src,               \
-             type_INOUT* __restrict dst,                                \
+#define _CUDA_OP_1D_VO_CALLER_(caller, kernel, type_in, type_out)       \
+void decx::GPUK::caller(const type_in* __restrict src,                  \
+             type_out* __restrict dst,                                  \
              const uint64_t proc_len_v,                                 \
              const uint32_t block,                                      \
              const uint32_t grid,                                       \
@@ -105,10 +106,11 @@ void decx::GPUK::caller(const type_INOUT* __restrict src,               \
 
 
 
-#define _CUDA_OP_1D_VCO_CALLER_(caller, kernel, type_INOUT, type_const, vectype)    \
-void decx::GPUK::caller(const type_INOUT* __restrict src,                 \
+#define _CUDA_OP_1D_VCO_CALLER_(caller, kernel, type_in,                \
+    type_const, type_out)                                               \
+void decx::GPUK::caller(const type_in* __restrict src,                  \
              const type_const constant,                                 \
-             type_INOUT* __restrict dst,                                \
+             type_out* __restrict dst,                                  \
              const uint64_t proc_len_v,                                 \
              const uint32_t block,                                      \
              const uint32_t grid,                                       \
