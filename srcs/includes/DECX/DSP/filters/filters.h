@@ -60,6 +60,9 @@ namespace de {
 
 
 			_DECX_API_ de::DH ButterWorth_LP2D(de::Matrix& src, de::Matrix& dst, const float cutoff_freq, const int order);
+
+
+			_DECX_API_ void Resample(de::InputMatrix src, de::InputMatrix map, de::OutputMatrix dst);
 		}
 	}
 }

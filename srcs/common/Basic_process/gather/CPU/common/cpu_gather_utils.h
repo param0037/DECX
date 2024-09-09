@@ -33,6 +33,7 @@
 
 #include "../../../../basic.h"
 #include "../../../../../modules/core/thread_management/thread_pool.h"
+#include "../../../../SIMD/x86_64/simd_fast_math_avx2.h"
 
 /**
  * 0 -------------------> X
@@ -64,6 +65,7 @@ namespace CPUK
 
 
         _THREAD_CALL_ void plan(__m256 X_v8, __m256 Y_v8);
+        _THREAD_CALL_ void plan(__m256 X_v8, __m256 Y_v8, __m256 boundary);
 
 
         _THREAD_CALL_ void set_Wsrc(const uint32_t Wsrc);
@@ -73,6 +75,11 @@ namespace CPUK
         _THREAD_CALL_ __m256i get_addr1() const;
         _THREAD_CALL_ __m256i get_addr2() const;
         _THREAD_CALL_ __m256i get_addr3() const;
+
+        _THREAD_CALL_ __m256 get_dist_down_X() const;
+        _THREAD_CALL_ __m256 get_dist_down_Y() const;
+        _THREAD_CALL_ __m256 get_dist_up_X() const;
+        _THREAD_CALL_ __m256 get_dist_up_Y() const;
     }gather_map_regulate_v8_info;
 }
 }
@@ -83,6 +90,29 @@ set_Wsrc(const uint32_t Wsrc)
     this->_Wsrc_v8._vf = _mm256_broadcast_ss((float*)(&Wsrc));
 }
 
+__m256 decx::CPUK::gather_map_regulate_v8_info::
+get_dist_down_X() const
+{
+    return this->_dist_down_X_v8._vf;
+}
+
+__m256 decx::CPUK::gather_map_regulate_v8_info::
+get_dist_down_Y() const
+{
+    return this->_dist_down_Y_v8._vf;
+}
+
+__m256 decx::CPUK::gather_map_regulate_v8_info::
+get_dist_up_X() const
+{
+    return _mm256_sub_ps(_mm256_set1_ps(1.f), this->_dist_down_X_v8._vf);
+}
+
+__m256 decx::CPUK::gather_map_regulate_v8_info::
+get_dist_up_Y() const
+{
+    return _mm256_sub_ps(_mm256_set1_ps(1.f), this->_dist_down_Y_v8._vf);
+}
 
 __m256i decx::CPUK::gather_map_regulate_v8_info::
 get_addr0() const
@@ -128,7 +158,7 @@ plan(__m256 lane1, __m256 lane2)
     this->_dist_down_Y_v8._vf = _mm256_sub_ps(_Y_v8_fp32, _Y_v8._vf);
     _Y_v8._vi = _mm256_cvtps_epi32(_Y_v8._vf);
 
-    this->_flatten_base_v8._vi = _mm256_add_epi32(_mm256_mul_epi32(_Y_v8._vi, this->_Wsrc_v8._vi), _X_v8._vi);
+    this->_flatten_base_v8._vi = _mm256_add_epi32(_mm256_mullo_epi32(_Y_v8._vi, this->_Wsrc_v8._vi), _X_v8._vi);
 }
 
 
