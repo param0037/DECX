@@ -28,39 +28,15 @@
 * DEALINGS IN THE SOFTWARE.
 */
 
-#include "../../../../common/Basic_process/gather/CPU/common/cpu_vgather_planner.h"
-#include "../../../core/thread_management/thread_arrange.h"
-#include "../../../../common/FMGR/fragment_arrangment.h"
-#include "resample.h"
-#include "../../../../common/Basic_process/gather/CPU/gather_kernels.h"
-#include "../../../core/resources_manager/decx_resource.h"
+#ifndef _INTERPOLATE_TYPES_H_
+#define _INTERPOLATE_TYPES_H_
 
-
-decx::ResourceHandle g_VGT2D_hdlr;
-
-
-_DECX_API_ void 
-de::dsp::cpu::Resample(de::InputMatrix src, de::InputMatrix map, de::OutputMatrix dst)
+namespace decx
 {
-    de::ResetLastError();
-
-    const decx::_Matrix* _src = dynamic_cast<const decx::_Matrix*>(&src);
-    const decx::_Matrix* _map = dynamic_cast<const decx::_Matrix*>(&map);
-    decx::_Matrix* _dst = dynamic_cast<decx::_Matrix*>(&dst);
-
-    g_VGT2D_hdlr.RegisterResource(new decx::cpu_VGT2D_planner, 5, decx::cpu_VGT2D_planner::release);
-
-    decx::utils::_thr_1D t1D(decx::cpu::_get_permitted_concurrency());
-
-    auto* VGT = g_VGT2D_hdlr.get_resource_raw_ptr<decx::cpu_VGT2D_planner>();
-
-    g_VGT2D_hdlr.lock();
-
-    VGT->plan(decx::cpu::_get_permitted_concurrency(), make_uint2(_dst->Width(), _dst->Height()), 
-        sizeof(float), decx::Interpolate_Types::INTERPOLATE_BILINEAR, make_uint2(_src->Width(), _src->Height()), 
-        de::GetLastError());
-
-    VGT->run((float*)_src->Mat.ptr, (float2*)_map->Mat.ptr, (float*)_dst->Mat.ptr, _map->Pitch(), _dst->Pitch(), &t1D);
-
-    g_VGT2D_hdlr.unlock();
+    enum Interpolate_Types{
+        INTERPOLATE_BILINEAR = 0,
+        INTERPOLATE_NEAREST = 1
+    };
 }
+
+#endif

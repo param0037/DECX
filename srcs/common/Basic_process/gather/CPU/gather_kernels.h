@@ -33,13 +33,22 @@
 
 #include "../../../basic.h"
 #include "../../../../modules/core/thread_management/thread_pool.h"
+#include "common/vgather_addr_manager.h"
+#include "../../../Classes/Matrix.h"
 
 
 namespace decx
 {
-namespace CPUK{
+namespace CPUK
+{
+    template <typename _data_type>
+    using VGT2D_executor = void(const _data_type*, const float2*, _data_type*, const uint2, const uint32_t, 
+        const uint32_t, const uint32_t, decx::CPUK::VGT_addr_mgr*);
+
+
     _THREAD_FUNCTION_ void gather2D_fp32_exec_bilinear(const float* src_head_ptr, const float2* __restrict map,
-        float* __restrict dst, const uint2 proc_dims_v, const uint32_t Wsrc_v1, const uint32_t Wmap_v1, const uint32_t Wdst_v1);
+        float* __restrict dst, const uint2 proc_dims_v, const uint32_t Wsrc_v1, const uint32_t Wmap_v1, const uint32_t Wdst_v1,
+        decx::CPUK::VGT_addr_mgr* _addr_info);
 }
 }
 

@@ -32,8 +32,10 @@ file(GLOB FFT "${DECX_WORLD_ABS_DIR}/srcs/modules/DSP/FFT/CPU/*.cxx")
 file(GLOB FILTERS "${DECX_WORLD_ABS_DIR}/srcs/modules/DSP/filters/CPU/*.cxx")
 file(GLOB CONV "${DECX_WORLD_ABS_DIR}/srcs/modules/DSP/convolution/CPU/*.cxx")
 
-file(GLOB GATHER "${DECX_WORLD_ABS_DIR}/srcs/common/Basic_process/gather/CPU/*.cxx"
+file(GLOB_RECURSE GATHER "${DECX_WORLD_ABS_DIR}/srcs/common/Basic_process/gather/CPU/*.cxx"
                  "${DECX_WORLD_ABS_DIR}/srcs/modules/DSP/resample/CPU/*.cxx")
+
+include("${DECX_WORLD_ABS_DIR}/srcs/common/Element_wise/elementwise_com.cmake")
 
 add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/modules/DSP/FFT/CPU/1D" "${DECX_SUBBUILD_BIN_DIR}/fft1d_cpu")
 add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/modules/DSP/FFT/CPU/2D" "${DECX_SUBBUILD_BIN_DIR}/fft2d_cpu")
@@ -45,7 +47,8 @@ add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/modules/DSP/convolution/CPU/2D" "${
 add_library(DECX_DSP_CPU SHARED ${FFT} 
                                 ${FILTERS}
                                 ${CONV}
-                                ${GATHER})
+                                ${GATHER}
+                                ${EW_CPU_COM_SRCS})
 
 target_link_libraries(DECX_DSP_CPU PRIVATE fft1d_cpu
                                    PRIVATE fft2d_cpu

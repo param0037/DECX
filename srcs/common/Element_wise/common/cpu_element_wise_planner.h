@@ -49,7 +49,7 @@ namespace decx
 
 class decx::cpu_ElementWise1D_planner : public decx::element_wise_base_1D
 {
-private:
+protected:
     uint32_t _concurrency;
 
     uint64_t _min_thread_proc;
@@ -100,9 +100,9 @@ public:
 };
 
 
-class decx::cpu_ElementWise2D_planner : private decx::element_wise_base_2D
+class decx::cpu_ElementWise2D_planner : public decx::element_wise_base_2D
 {
-private:
+protected:
     uint32_t _concurrency;
 
     uint64_t _min_thread_proc;

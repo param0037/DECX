@@ -185,15 +185,19 @@ struct decx::ResourceHandle
     * @brief :          Register (or checkin) a resource.
     * @param res_ptr :  The resource raw pointer.
     * @param lifespan : The lifespan of the resource, in second.
-    * @param _decon :   The callback function when checkout the resource. 
+    * @param destructor_callback :   The callback function when checkout the resource. 
     *                   Note : This callback function must be in type void func(type*).
     *                   If the function is a member function of a class, plase define it as static.
     */
     template <class _decon_type>
-    void RegisterResource(void* res_ptr, const time_t lifespan, _decon_type* _decon = NULL)
+    void RegisterResource(void* res_ptr, const time_t lifespan, _decon_type* destructor_callback = NULL)
     {
-        this->_res_ptr = res_ptr;
-        this->_res_id = decx::ResourceCheckIn(&this->_res_ptr, lifespan, (res_release_fn)_decon);
+        // Prevent duplicate registration to the same resource
+        if (this->_res_ptr == NULL)
+        {
+            this->_res_ptr = res_ptr;
+            this->_res_id = decx::ResourceCheckIn(&this->_res_ptr, lifespan, (res_release_fn)destructor_callback);
+        }
     }
 
     /*

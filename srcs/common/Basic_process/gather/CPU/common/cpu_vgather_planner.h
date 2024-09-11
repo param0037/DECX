@@ -28,39 +28,55 @@
 * DEALINGS IN THE SOFTWARE.
 */
 
-#include "../../../../common/Basic_process/gather/CPU/common/cpu_vgather_planner.h"
-#include "../../../core/thread_management/thread_arrange.h"
-#include "../../../../common/FMGR/fragment_arrangment.h"
-#include "resample.h"
-#include "../../../../common/Basic_process/gather/CPU/gather_kernels.h"
-#include "../../../core/resources_manager/decx_resource.h"
+#ifndef _CPU_VGATHER_PLANNER_H_
+#define _CPU_VGATHER_PLANNER_H_
+
+#include "../../../../../modules/core/thread_management/thread_arrange.h"
+#include "../../../../Element_wise/common/cpu_element_wise_planner.h"
+#include "../../interpolate_types.h"
+#include "vgather_addr_manager.h"
+#include "../../../../Classes/type_info.h"
 
 
-decx::ResourceHandle g_VGT2D_hdlr;
-
-
-_DECX_API_ void 
-de::dsp::cpu::Resample(de::InputMatrix src, de::InputMatrix map, de::OutputMatrix dst)
+namespace decx
 {
-    de::ResetLastError();
-
-    const decx::_Matrix* _src = dynamic_cast<const decx::_Matrix*>(&src);
-    const decx::_Matrix* _map = dynamic_cast<const decx::_Matrix*>(&map);
-    decx::_Matrix* _dst = dynamic_cast<decx::_Matrix*>(&dst);
-
-    g_VGT2D_hdlr.RegisterResource(new decx::cpu_VGT2D_planner, 5, decx::cpu_VGT2D_planner::release);
-
-    decx::utils::_thr_1D t1D(decx::cpu::_get_permitted_concurrency());
-
-    auto* VGT = g_VGT2D_hdlr.get_resource_raw_ptr<decx::cpu_VGT2D_planner>();
-
-    g_VGT2D_hdlr.lock();
-
-    VGT->plan(decx::cpu::_get_permitted_concurrency(), make_uint2(_dst->Width(), _dst->Height()), 
-        sizeof(float), decx::Interpolate_Types::INTERPOLATE_BILINEAR, make_uint2(_src->Width(), _src->Height()), 
-        de::GetLastError());
-
-    VGT->run((float*)_src->Mat.ptr, (float2*)_map->Mat.ptr, (float*)_dst->Mat.ptr, _map->Pitch(), _dst->Pitch(), &t1D);
-
-    g_VGT2D_hdlr.unlock();
+    class cpu_VGT2D_planner;
 }
+
+
+class decx::cpu_VGT2D_planner : public decx::cpu_ElementWise2D_planner
+{
+protected:
+    // uint2 _thread_dist;
+
+    decx::Interpolate_Types _interpolate_type;
+
+    uint32_t _pitchsrc_v1;
+
+public:
+    cpu_VGT2D_planner() {}
+
+
+    _CRSR_
+    void plan(const uint32_t concurrency, const uint2 dst_dims_v1, const uint8_t datatype_size,
+        const decx::Interpolate_Types intp_type, const uint2 src_dims_v1, de::DH* handle, 
+        uint64_t min_thread_proc = _EW_MIN_THREAD_PROC_DEFAULT_CPU_);
+
+
+    template <typename data_type>
+    void run(const data_type* src, const float2* map, data_type* dst, const uint32_t pitchmat_v1, 
+        const uint32_t pitchdst_v1, decx::utils::_thr_1D* t1D);
+
+
+    static void release(decx::cpu_VGT2D_planner* fake_this);
+
+private:
+    decx::PtrInfo<decx::CPUK::VGT_addr_mgr> _addr_mgrs;
+
+
+    template <typename _data_type>
+    void* find_exec_ptr() const;
+};
+
+
+#endif
