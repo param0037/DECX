@@ -28,53 +28,49 @@
 * DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef _CPU_VGATHER_PLANNER_H_
-#define _CPU_VGATHER_PLANNER_H_
+#ifndef _CUDA_VGATHER_PLANNER_H_
+#define _CUDA_VGATHER_PLANNER_H_
 
-#include "../../../../../modules/core/thread_management/thread_arrange.h"
-#include "../../../../Element_wise/common/cpu_element_wise_planner.h"
+#include "../../../../basic.h"
+#include "../../../../Element_wise/common/cuda_element_wise_planner.h"
 #include "../../interpolate_types.h"
-#include "vgather_addr_manager.h"
-#include "../../../../Classes/type_info.h"
-#include "../../interpolate_types.h"
+#include "../../../../Classes/GPU_Matrix.h"
 
 
 namespace decx
 {
-    class cpu_VGT2D_planner;
+    class cuda_VGT2D_planner;
+
+
+    cudaTextureFilterMode get_filter_mode_by_intp_type(const de::Interpolate_Types type);
 }
 
 
-class decx::cpu_VGT2D_planner : public decx::cpu_ElementWise2D_planner
+class decx::cuda_VGT2D_planner : public decx::cuda_ElementWise2D_planner
 {
-protected:
-    de::Interpolate_Types _interpolate_type;
+private:
+    cudaTextureObject_t _texture;
+    cudaResourceDesc _res_desc;
+    cudaTextureDesc _tex_desc;
+    cudaChannelFormatDesc _channel_fmt;
 
-    uint32_t _pitchsrc_v1;
+
+    de::Interpolate_Types _intp_type;
 
 public:
-    cpu_VGT2D_planner() {}
+    cuda_VGT2D_planner();
+
+    
+    template <typename _type_in, typename _type_out>
+    void plan(const de::Interpolate_Types type, const decx::_matrix_layout* src_layout, const decx::_matrix_layout* dst_layout);
 
 
-    _CRSR_
-    void plan(const uint32_t concurrency, const uint2 dst_dims_v1, const uint8_t datatype_size,
-        const de::Interpolate_Types intp_type, const uint2 src_dims_v1, de::DH* handle, 
-        uint64_t min_thread_proc = _EW_MIN_THREAD_PROC_DEFAULT_CPU_);
-
-
-    template <typename data_type>
-    void run(const data_type* src, const float2* map, data_type* dst, const uint32_t pitchmat_v1, 
-        const uint32_t pitchdst_v1, decx::utils::_thr_1D* t1D);
-
-
-    static void release(decx::cpu_VGT2D_planner* fake_this);
+    template <typename _type_in, typename _type_out>
+    void run(const _type_in* src, const float2* map, _type_out* dst, const uint32_t pitchmap_v1, const uint32_t pitchdst_v1,
+        decx::cuda_stream* S);
 
 private:
-    decx::PtrInfo<decx::CPUK::VGT_addr_mgr> _addr_mgrs;
-
-
-    template <typename _data_type>
-    void* find_exec_ptr() const;
+    uint2 get_src_dims_v1() const;
 };
 
 

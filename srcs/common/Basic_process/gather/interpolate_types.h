@@ -31,7 +31,7 @@
 #ifndef _INTERPOLATE_TYPES_H_
 #define _INTERPOLATE_TYPES_H_
 
-namespace decx
+namespace de
 {
     enum Interpolate_Types{
         INTERPOLATE_BILINEAR = 0,

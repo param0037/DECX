@@ -20,6 +20,11 @@
 
 
 namespace de {
+	enum Interpolate_Types{
+        INTERPOLATE_BILINEAR = 0,
+        INTERPOLATE_NEAREST = 1
+    };
+
 	namespace dsp {
 		namespace cuda {
 			_DECX_API_ de::DH LowPass1D_Ideal(de::GPU_Vector& src, de::GPU_Vector& dst, const size_t cutoff_frequency);
@@ -62,8 +67,12 @@ namespace de {
 			_DECX_API_ de::DH ButterWorth_LP2D(de::Matrix& src, de::Matrix& dst, const float cutoff_freq, const int order);
 
 
-			_DECX_API_ void Resample(de::InputMatrix src, de::InputMatrix map, de::OutputMatrix dst);
+			_DECX_API_ void Resample(de::InputMatrix src, de::InputMatrix map, de::OutputMatrix dst, de::Interpolate_Types interpolate_type);
 		}
+
+		namespace cuda{
+        	_DECX_API_ void Resample(de::InputGPUMatrix src, de::InputGPUMatrix map, de::OutputGPUMatrix dst, de::Interpolate_Types interpolate_type);
+    	}
 	}
 }
 

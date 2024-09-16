@@ -31,7 +31,7 @@
 #include "../../../../common/Basic_process/gather/CPU/common/cpu_vgather_planner.h"
 #include "../../../core/thread_management/thread_arrange.h"
 #include "../../../../common/FMGR/fragment_arrangment.h"
-#include "resample.h"
+#include "../resample.h"
 #include "../../../../common/Basic_process/gather/CPU/gather_kernels.h"
 #include "../../../core/resources_manager/decx_resource.h"
 
@@ -40,7 +40,7 @@ decx::ResourceHandle g_VGT2D_hdlr;
 
 
 _DECX_API_ void 
-de::dsp::cpu::Resample(de::InputMatrix src, de::InputMatrix map, de::OutputMatrix dst)
+de::dsp::cpu::Resample(de::InputMatrix src, de::InputMatrix map, de::OutputMatrix dst, de::Interpolate_Types interpoate_mode)
 {
     de::ResetLastError();
 
@@ -57,7 +57,7 @@ de::dsp::cpu::Resample(de::InputMatrix src, de::InputMatrix map, de::OutputMatri
     g_VGT2D_hdlr.lock();
 
     VGT->plan(decx::cpu::_get_permitted_concurrency(), make_uint2(_dst->Width(), _dst->Height()), 
-        sizeof(float), decx::Interpolate_Types::INTERPOLATE_BILINEAR, make_uint2(_src->Width(), _src->Height()), 
+        sizeof(float), interpoate_mode, make_uint2(_src->Width(), _src->Height()), 
         de::GetLastError());
 
     VGT->run((float*)_src->Mat.ptr, (float2*)_map->Mat.ptr, (float*)_dst->Mat.ptr, _map->Pitch(), _dst->Pitch(), &t1D);

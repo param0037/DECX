@@ -28,5 +28,26 @@
 * DEALINGS IN THE SOFTWARE.
 */
 
-#include "../../../basic.h"
+#ifndef _RESAMPLE_H_
+#define _RESAMPLE_H_
 
+#include "../../../common/Classes/Matrix.h"
+#include "../../../common/Classes/GPU_Matrix.h"
+#include "../../../common/Basic_process/gather/interpolate_types.h"
+
+
+namespace de
+{
+namespace dsp{
+    namespace cpu{
+        _DECX_API_ void Resample(de::InputMatrix src, de::InputMatrix map, de::OutputMatrix dst, de::Interpolate_Types interpoate_mode);
+    }
+
+    namespace cuda{
+        _DECX_API_ void Resample(de::InputGPUMatrix src, de::InputGPUMatrix map, de::OutputGPUMatrix dst, de::Interpolate_Types interpoate_mode);
+    }
+}
+}
+
+
+#endif

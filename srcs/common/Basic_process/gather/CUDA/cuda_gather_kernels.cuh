@@ -28,20 +28,28 @@
 * DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef _RESAMPLE_H_
-#define _RESAMPLE_H_
-
-#include "../../../../common/Classes/Matrix.h"
+#ifndef _CUDA_GATHER_KERNELS_H_
+#define _CUDA_GATHER_KERNELS_H_
 
 
-namespace de
+#include "../../../basic.h"
+#include "../../../../modules/core/cudaStream_management/cudaStream_queue.h"
+
+
+namespace decx
 {
-namespace dsp{
-    namespace cpu{
-        _DECX_API_ void Resample(de::InputMatrix src, de::InputMatrix map, de::OutputMatrix dst);
-    }
+namespace GPUK{
+    void vgather2D_fp32(cudaTextureObject_t tex, const float2* map, float* dst,
+        const uint2 src_dims_v1, const uint2 proc_dims, const uint32_t pitchmap_v1, const uint32_t pitchdst_v,
+        dim3 block, dim3 grid, decx::cuda_stream* S);
+
+
+    void vgather2D_uint8(cudaTextureObject_t tex, const float2* map, uint8_t* dst,
+        const uint2 src_dims_v1, const uint2 proc_dims, const uint32_t pitchmap_v1, const uint32_t pitchdst_v,
+        dim3 block, dim3 grid, decx::cuda_stream* S);
 }
 }
 
 
 #endif
+

@@ -31,6 +31,9 @@ include_guard(GLOBAL)
 
 file(GLOB FFT_SRCS "${DECX_WORLD_ABS_DIR}/srcs/modules/DSP/FFT/CUDA/*.cu")
 file(GLOB CONV_SRCS "${DECX_WORLD_ABS_DIR}/srcs/modules/DSP/convolution/CUDA/*.cu")
+file(GLOB_RECURSE RESAMPLE_SRCS "${DECX_WORLD_ABS_DIR}/srcs/modules/DSP/resample/CUDA/*.cu" 
+                        "${DECX_WORLD_ABS_DIR}/srcs/common/Basic_process/gather/CUDA/*.cu")
+
 add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/modules/DSP/FFT/CUDA/1D" "${DECX_SUBBUILD_BIN_DIR}/fft1d_cuda")
 add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/modules/DSP/FFT/CUDA/2D" "${DECX_SUBBUILD_BIN_DIR}/fft2d_cuda")
 add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/modules/DSP/FFT/CUDA/3D" "${DECX_SUBBUILD_BIN_DIR}/fft3d_cuda")
@@ -38,7 +41,7 @@ add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/modules/DSP/FFT/CUDA/3D" "${DECX_SU
 add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/modules/DSP/convolution/CUDA/2D" "${DECX_SUBBUILD_BIN_DIR}/conv2d_cuda")
 
 
-add_library(DECX_DSP_CUDA SHARED ${FFT_SRCS} ${CONV_SRCS} ${TRP_CUDA_COM_SRCS})
+add_library(DECX_DSP_CUDA SHARED ${FFT_SRCS} ${CONV_SRCS} ${TRP_CUDA_COM_SRCS} ${RESAMPLE_SRCS})
 
 
 target_link_libraries(DECX_DSP_CUDA PRIVATE fft1d_cuda

@@ -34,8 +34,10 @@
 
 #include "../basic.h"
 #include "../../modules/core/allocators.h"
+#ifdef _DECX_CUDA_PARTS_
 #include "../../modules/core/cudaStream_management/cudaEvent_queue.h"
 #include "../../modules/core/cudaStream_management/cudaStream_queue.h"
+#endif
 #include "type_info.h"
 #include "Matrix.h"
 
@@ -82,7 +84,7 @@ namespace de
 }
 
 
-
+#ifdef _DECX_CUDA_PARTS_
 /**
 * The data storage structure is shown below
 *            <-------------- width ------------->
@@ -170,13 +172,13 @@ namespace decx
         uint32_t Pitch() const;
 
 
-        const decx::_matrix_layout& get_layout();
+        const decx::_matrix_layout& get_layout() const;
 
 
-        bool is_init();
+        bool is_init() const;
 
 
-        uint64_t get_total_bytes();
+        uint64_t get_total_bytes() const;
 
 
         de::_DATA_FORMATS_ get_data_format() const;
@@ -185,7 +187,7 @@ namespace decx
         void set_data_format(const de::_DATA_FORMATS_& format);
     };
 }
-
+#endif
 
 
 namespace de

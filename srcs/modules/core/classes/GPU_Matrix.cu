@@ -227,19 +227,19 @@ uint32_t decx::_GPU_Matrix::Pitch() const
 }
 
 
-const decx::_matrix_layout& decx::_GPU_Matrix::get_layout()
+const decx::_matrix_layout& decx::_GPU_Matrix::get_layout() const
 {
     return this->_layout;
 }
 
 
-bool decx::_GPU_Matrix::is_init()
+bool decx::_GPU_Matrix::is_init() const
 {
     return this->_init;
 }
 
 
-uint64_t decx::_GPU_Matrix::get_total_bytes()
+uint64_t decx::_GPU_Matrix::get_total_bytes() const
 {
     return this->total_bytes;
 }

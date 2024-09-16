@@ -76,19 +76,29 @@ public:
     {
 #ifdef _DECX_CPU_PARTS_
 #if defined(__x86_64__) || defined(__i386__)
-    constexpr uint32_t _align_byte = 32;
+        constexpr uint32_t _align_byte = 32;
 #endif
 #if defined(__aarch64__) || defined(__arm__)
-    constexpr uint32_t _align_byte = 16;
+        constexpr uint32_t _align_byte = 16;
 #endif
 #endif
 #ifdef _DECX_CUDA_PARTS_
-    constexpr uint32_t _align_byte = 16;
+        constexpr uint32_t _align_byte = 16;
 #endif
 
-    const uint8_t _ref_size = max(this->_type_in_size, this->_type_out_size);
+        const uint8_t _ref_size = max(this->_type_in_size, this->_type_out_size);
 
-    this->_alignment = _align_byte / _ref_size;
+        if (_ref_size > sizeof(uint8_t)){
+            this->_alignment = _align_byte / _ref_size;
+        }
+        else{
+#ifdef _DECX_CUDA_PARTS_
+            this->_alignment = 4;
+#endif
+#ifdef _DECX_CPU_PARTS_
+            this->_alignment = 8;
+#endif
+        }
     }
 };
 

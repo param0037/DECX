@@ -63,7 +63,6 @@ public:
     template <typename FuncType, typename _type_in, typename _type_out, class ...Args>
     inline void caller_unary(FuncType&& f, const _type_in* src, _type_out* dst, decx::cuda_stream* S, Args&& ...additional)
     {
-        printf("bl;ock: %d, grid : %d\n", this->_block, this->_grid);
         f(src, dst, this->_total_v, this->_block, this->_grid, S, additional...);
     }
 
@@ -77,9 +76,9 @@ public:
 };
 
 
-class decx::cuda_ElementWise2D_planner : decx::element_wise_base_2D
+class decx::cuda_ElementWise2D_planner : public decx::element_wise_base_2D
 {
-private:
+protected:
     dim3 _block, _grid;
 
 public:

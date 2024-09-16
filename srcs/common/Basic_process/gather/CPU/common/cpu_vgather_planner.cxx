@@ -64,7 +64,7 @@ template void* decx::cpu_VGT2D_planner::find_exec_ptr<float>() const;
 
 _CRSR_ void decx::cpu_VGT2D_planner::
 plan(const uint32_t concurrency,    const uint2 dst_dims_v1, 
-     const uint8_t datatype_size,   const decx::Interpolate_Types intp_type, 
+     const uint8_t datatype_size,   const de::Interpolate_Types intp_type, 
      const uint2 src_dims_v1,       
      de::DH* handle,                const uint64_t min_thread_proc)
 {
