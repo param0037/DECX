@@ -30,12 +30,14 @@
 
 
 #include "../configs/config.h"
+#include "Python.h"
 
 
 static PyObject* InitCPUInfo(PyObject* self, PyObject* Py_UNUSED(args))
 {
     De_InitCPUInfo();
     Py_RETURN_NONE;
+    
 }
 
 

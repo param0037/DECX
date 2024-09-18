@@ -69,6 +69,9 @@ public:
     void run(const _type_in* src, const float2* map, _type_out* dst, const uint32_t pitchmap_v1, const uint32_t pitchdst_v1,
         decx::cuda_stream* S);
 
+
+    static void release(decx::cuda_VGT2D_planner* _fake_this);
+
 private:
     uint2 get_src_dims_v1() const;
 };

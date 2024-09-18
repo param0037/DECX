@@ -32,6 +32,52 @@
 #include "../cuda_gather_kernels.cuh"
 
 
+namespace decx{
+namespace GPUK{
+    static void* cu_vgather2D_kernels[3][3] = {
+        {   (void*)decx::GPUK::vgather2D_fp32,
+            NULL,       // type_out = uint8_t
+        }, {
+            NULL,       // type_out = float
+            (void*)decx::GPUK::vgather2D_uint8,
+        }, {
+            NULL,
+            NULL,       // type_out = float
+            (void*)decx::GPUK::vgather2D_uchar4,
+        }
+    };
+
+    template<typename _type_in, typename _type_out>
+    static void* cu_VGT2D_kernel_selector()
+    {
+        void** _1st_array = NULL;
+        if (std::is_same<_type_in, float>::value){
+            _1st_array = decx::GPUK::cu_vgather2D_kernels[0];
+        }
+        else if (std::is_same<_type_in, uint8_t>::value){
+            _1st_array = decx::GPUK::cu_vgather2D_kernels[1];
+        }
+        else if (std::is_same<_type_in, uchar4>::value){
+            _1st_array = decx::GPUK::cu_vgather2D_kernels[2];
+        }
+
+        if (std::is_same<_type_out, float>::value){
+            return _1st_array[0];
+        }
+        else if (std::is_same<_type_out, uint8_t>::value){
+            return _1st_array[1];
+        }
+        else if (std::is_same<_type_out, uchar4>::value){
+            return _1st_array[2];
+        }
+        else{
+            return NULL;
+        }
+    }
+}
+}
+
+
 cudaTextureFilterMode decx::get_filter_mode_by_intp_type(const de::Interpolate_Types type)
 {
     switch (type)
@@ -107,6 +153,7 @@ void decx::cuda_VGT2D_planner::plan(const de::Interpolate_Types type,
 
 template void decx::cuda_VGT2D_planner::plan<float, float>(const de::Interpolate_Types, const decx::_matrix_layout*, const decx::_matrix_layout*);
 template void decx::cuda_VGT2D_planner::plan<uint8_t, uint8_t>(const de::Interpolate_Types, const decx::_matrix_layout*, const decx::_matrix_layout*);
+template void decx::cuda_VGT2D_planner::plan<uchar4, uchar4>(const de::Interpolate_Types, const decx::_matrix_layout*, const decx::_matrix_layout*);
 
 
 template <typename _type_in, typename _type_out>
@@ -117,14 +164,19 @@ void decx::cuda_VGT2D_planner::run(const _type_in* src,             const float2
     this->_res_desc.res.pitch2D.devPtr = (void*)src;
     cudaCreateTextureObject(&this->_texture, &this->_res_desc, &this->_tex_desc, NULL);
 
-    // decx::GPUK::vgather2D_fp32(this->_texture, map, dst, this->get_src_dims_v1(), 
-    //     make_uint2(this->_proc_w_v, this->_proc_dims.y), pitchmap_v1, 
-    //     pitchdst_v1 / this->_alignment, this->_block, this->_grid, S);
+    auto* p_kernel = (decx::GPUK::cuda_vgather_kernel<_type_out>*)decx::GPUK::cu_VGT2D_kernel_selector<_type_in, _type_out>();
 
-    decx::GPUK::vgather2D_uint8(this->_texture, map, (uint8_t*)dst, this->get_src_dims_v1(), 
+    (*p_kernel)(this->_texture, map, (_type_out*)dst, this->get_src_dims_v1(), 
         make_uint2(this->_proc_w_v, this->_proc_dims.y), pitchmap_v1, 
         pitchdst_v1 / this->_alignment, this->_block, this->_grid, S);
 }
 
 template void decx::cuda_VGT2D_planner::run<float, float>(const float*, const float2*, float*, const uint32_t, const uint32_t, decx::cuda_stream*);
 template void decx::cuda_VGT2D_planner::run<uint8_t, uint8_t>(const uint8_t*, const float2*, uint8_t*, const uint32_t, const uint32_t, decx::cuda_stream*);
+template void decx::cuda_VGT2D_planner::run<uchar4, uchar4>(const uchar4*, const float2*, uchar4*, const uint32_t, const uint32_t, decx::cuda_stream*);
+
+
+void decx::cuda_VGT2D_planner::release(decx::cuda_VGT2D_planner* _fake_this)
+{
+    return;
+}

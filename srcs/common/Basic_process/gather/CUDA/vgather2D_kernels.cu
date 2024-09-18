@@ -42,6 +42,10 @@ namespace GPUK{
 
     __global__ void cu_vgather2D_uint8(cudaTextureObject_t tex, const float2* map, uchar4* dst,
         const uint2 src_dims_v1, const uint2 proc_dims, const uint32_t pitchmap_v1, const uint32_t pitchdst_v);
+
+
+    __global__ void cu_vgather2D_uchar4(cudaTextureObject_t tex, const float2* map, float4* dst,
+        const uint2 src_dims_v1, const uint2 proc_dims, const uint32_t pitchmap_v1, const uint32_t pitchdst_v);
 }
 }
 
@@ -210,6 +214,107 @@ cu_vgather2D_uint8(cudaTextureObject_t   tex,
 }
 
 
+
+__global__ void decx::GPUK::
+cu_vgather2D_uchar4(cudaTextureObject_t   tex, 
+                  const float2*         map, 
+                  float4*               dst,
+                  const uint2           src_dims_v1, 
+                  const uint2           proc_dims_v, 
+                  const uint32_t        pitchmap_v1, 
+                  const uint32_t        pitchdst_v)
+{
+    uint32_t tidx = threadIdx.x + blockIdx.x * blockDim.x;
+    uint32_t tidy = threadIdx.y + blockIdx.y * blockDim.y;
+
+    decx::utils::_cuda_vec128 reg;
+    float2 coordinates;
+    float4 normalized_res;
+
+    const uint64_t dex_map = tidy * pitchmap_v1 + tidx * 4;
+    const uint64_t dex_dst = tidy * pitchdst_v + tidx;
+
+    if (tidx < proc_dims_v.x && tidy < proc_dims_v.y)
+    {
+        int32_t predX = 0, predY = 0, pred_all = 0;
+
+        if (tidx * 4 < pitchmap_v1){
+            coordinates = map[dex_map];
+            predX = (coordinates.x > src_dims_v1.x - 1 || coordinates.x < 0);
+            predX = predX - 1;          // 0xFFFFFFFF if pred is 0, 0 otherwise
+            predY = (coordinates.y > src_dims_v1.y - 1 || coordinates.y < 0);
+            predY = predY - 1;
+            pred_all = predX & predY;
+            coordinates.x = __fadd_rn(coordinates.x, 0.5f);
+            coordinates.y = __fadd_rn(coordinates.y, 0.5f);
+            normalized_res = tex2D<float4>(tex, coordinates.x, coordinates.y);
+            normalized_res = decx::utils::cuda::__float_mul4_1(normalized_res, 255.f);
+            reg._arru8_4[0].x = __float2int_rn(normalized_res.x);
+            reg._arru8_4[0].y = __float2int_rn(normalized_res.y);
+            reg._arru8_4[0].z = __float2int_rn(normalized_res.z);
+            reg._arru8_4[0].w = __float2int_rn(normalized_res.w);
+            reg._vi.x = reg._vi.x & pred_all;
+        }
+
+        if (tidx * 4 + 1 < pitchmap_v1){
+            coordinates = map[dex_map + 1];
+            predX = (coordinates.x > src_dims_v1.x - 1 || coordinates.x < 0);
+            predX = predX - 1;          // 0xFFFFFFFF if pred is 0, 0 otherwise
+            predY = (coordinates.y > src_dims_v1.y - 1 || coordinates.y < 0);
+            predY = predY - 1;
+            pred_all = predX & predY;
+            coordinates.x = __fadd_rn(coordinates.x, 0.5f);
+            coordinates.y = __fadd_rn(coordinates.y, 0.5f);
+            normalized_res = tex2D<float4>(tex, coordinates.x, coordinates.y);
+            normalized_res = decx::utils::cuda::__float_mul4_1(normalized_res, 255.f);
+            reg._arru8_4[1].x = __float2int_rn(normalized_res.x);
+            reg._arru8_4[1].y = __float2int_rn(normalized_res.y);
+            reg._arru8_4[1].z = __float2int_rn(normalized_res.z);
+            reg._arru8_4[1].w = __float2int_rn(normalized_res.w);
+            reg._vi.y = reg._vi.y & pred_all;
+        }
+
+        if (tidx * 4 + 2 < pitchmap_v1){
+            coordinates = map[dex_map + 2];
+            predX = (coordinates.x > src_dims_v1.x - 1 || coordinates.x < 0);
+            predX = predX - 1;          // 0xFFFFFFFF if pred is 0, 0 otherwise
+            predY = (coordinates.y > src_dims_v1.y - 1 || coordinates.y < 0);
+            predY = predY - 1;
+            pred_all = predX & predY;
+            coordinates.x = __fadd_rn(coordinates.x, 0.5f);
+            coordinates.y = __fadd_rn(coordinates.y, 0.5f);
+            normalized_res = tex2D<float4>(tex, coordinates.x, coordinates.y);
+            normalized_res = decx::utils::cuda::__float_mul4_1(normalized_res, 255.f);
+            reg._arru8_4[2].x = __float2int_rn(normalized_res.x);
+            reg._arru8_4[2].y = __float2int_rn(normalized_res.y);
+            reg._arru8_4[2].z = __float2int_rn(normalized_res.z);
+            reg._arru8_4[2].w = __float2int_rn(normalized_res.w);
+            reg._vi.z = reg._vi.z & pred_all;
+        }
+
+        if (tidx * 4 + 3 < pitchmap_v1){
+            coordinates = map[dex_map + 3];
+            predX = (coordinates.x > src_dims_v1.x - 1 || coordinates.x < 0);
+            predX = predX - 1;          // 0xFFFFFFFF if pred is 0, 0 otherwise
+            predY = (coordinates.y > src_dims_v1.y - 1 || coordinates.y < 0);
+            predY = predY - 1;
+            pred_all = predX & predY;
+            coordinates.x = __fadd_rn(coordinates.x, 0.5f);
+            coordinates.y = __fadd_rn(coordinates.y, 0.5f);
+            normalized_res = tex2D<float4>(tex, coordinates.x, coordinates.y);
+            normalized_res = decx::utils::cuda::__float_mul4_1(normalized_res, 255.f);
+            reg._arru8_4[3].x = __float2int_rn(normalized_res.x);
+            reg._arru8_4[3].y = __float2int_rn(normalized_res.y);
+            reg._arru8_4[3].z = __float2int_rn(normalized_res.z);
+            reg._arru8_4[3].w = __float2int_rn(normalized_res.w);
+            reg._vi.w = reg._vi.w & pred_all;
+        }
+
+        dst[dex_dst] = reg._vf;
+    }
+}
+
+
 void decx::GPUK::vgather2D_fp32(cudaTextureObject_t tex,        const float2* map,              
                                 float* dst,                     const uint2 src_dims_v1,        
                                 const uint2 proc_dims,          const uint32_t pitchmap_v1,     
@@ -229,4 +334,15 @@ void decx::GPUK::vgather2D_uint8(cudaTextureObject_t tex,        const float2* m
 {
     decx::GPUK::cu_vgather2D_uint8<<<grid, block, 0, S->get_raw_stream_ref()>>>(
         tex, map, (uchar4*)dst, src_dims_v1, proc_dims, pitchmap_v1, pitchdst_v);
+}
+
+
+void decx::GPUK::vgather2D_uchar4(cudaTextureObject_t tex,        const float2* map,              
+                                 uchar4* dst,                    const uint2 src_dims_v1,        
+                                 const uint2 proc_dims,          const uint32_t pitchmap_v1,     
+                                 const uint32_t pitchdst_v,      dim3 block,
+                                 dim3 grid,                      decx::cuda_stream* S)
+{
+    decx::GPUK::cu_vgather2D_uchar4<<<grid, block, 0, S->get_raw_stream_ref()>>>(
+        tex, map, (float4*)dst, src_dims_v1, proc_dims, pitchmap_v1, pitchdst_v);
 }

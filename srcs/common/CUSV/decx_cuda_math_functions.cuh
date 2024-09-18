@@ -148,13 +148,6 @@ namespace utils
         __device__ __inline__ float4
         __float_mul4_1(const float4& a, const float b)
         {
-            /*decx::utils::_cuda_vec128 res;
-            res._vf.x = __fmul_rn(a._vf.x, b);
-            res._vf.y = __fmul_rn(a._vf.y, b);
-            res._vf.z = __fmul_rn(a._vf.z, b);
-            res._vf.w = __fmul_rn(a._vf.w, b);
-            return res;*/
-
             return { __fmul_rn(a.x, b),
                      __fmul_rn(a.y, b),
                      __fmul_rn(a.z, b),

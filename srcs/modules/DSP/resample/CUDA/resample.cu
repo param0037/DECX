@@ -30,17 +30,21 @@
 
 #include "../resample.h"
 #include "../../../../common/Basic_process/gather/CUDA/common/cuda_vgather_planner.h"
+#include "../../../core/resources_manager/decx_resource.h"
+
+namespace decx{
+    static decx::ResourceHandle cu_VGT2D;
+
+    template <typename _type_in, typename _type_out>
+    static void resample2D_caller(const decx::_GPU_Matrix* src, const decx::_GPU_Matrix* map, decx::_GPU_Matrix* dst, 
+            de::Interpolate_Types interpolate_mode, de::DH* handle);
+}
 
 
-_DECX_API_ void de::dsp::cuda::Resample(de::InputGPUMatrix src, de::InputGPUMatrix map, de::OutputGPUMatrix dst,
-    de::Interpolate_Types interpoate_mode)
+template <typename _type_in, typename _type_out>
+void decx::resample2D_caller(const decx::_GPU_Matrix* src, const decx::_GPU_Matrix* map, decx::_GPU_Matrix* dst, 
+    de::Interpolate_Types interpolate_mode, de::DH* handle)
 {
-    de::ResetLastError();
-
-    const decx::_GPU_Matrix* _src = dynamic_cast<const decx::_GPU_Matrix*>(&src);
-    const decx::_GPU_Matrix* _map = dynamic_cast<const decx::_GPU_Matrix*>(&map);
-    decx::_GPU_Matrix* _dst = dynamic_cast<decx::_GPU_Matrix*>(&dst);
-
     decx::cuda_stream* S = NULL;
     decx::cuda_event* E = NULL;
     S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
@@ -54,19 +58,52 @@ _DECX_API_ void de::dsp::cuda::Resample(de::InputGPUMatrix src, de::InputGPUMatr
         return;
     }
 
-    // decx::cuda_VGT2D_planner planner;
-    // planner.plan<float, float>(interpoate_mode, &_src->get_layout(), &_dst->get_layout());
+    decx::cu_VGT2D.lock();
 
-    // planner.run<float, float>((float*)_src->Mat.ptr, (float2*)_map->Mat.ptr, (float*)_dst->Mat.ptr, _map->Pitch(), _dst->Pitch(), S);
+    auto* planner = decx::cu_VGT2D.get_resource_raw_ptr<decx::cuda_VGT2D_planner>();
+    planner->plan<_type_in, _type_out>(interpolate_mode, &src->get_layout(), &dst->get_layout());
 
-    decx::cuda_VGT2D_planner planner;
-    planner.plan<uint8_t, uint8_t>(interpoate_mode, &_src->get_layout(), &_dst->get_layout());
-
-    planner.run<uint8_t, uint8_t>((uint8_t*)_src->Mat.ptr, (float2*)_map->Mat.ptr, (uint8_t*)_dst->Mat.ptr, _map->Pitch(), _dst->Pitch(), S);
+    planner->run<_type_in, _type_out>((_type_in*)src->Mat.ptr, (float2*)map->Mat.ptr, (_type_out*)dst->Mat.ptr, map->Pitch(), dst->Pitch(), S);
 
     E->event_record(S);
     E->synchronize();
 
     E->detach();
     S->detach();
+
+    decx::cu_VGT2D.unlock();
+}
+
+
+_DECX_API_ void de::dsp::cuda::Resample(de::InputGPUMatrix src, de::InputGPUMatrix map, de::OutputGPUMatrix dst,
+    de::Interpolate_Types interpoate_mode)
+{
+    de::ResetLastError();
+
+    const decx::_GPU_Matrix* _src = dynamic_cast<const decx::_GPU_Matrix*>(&src);
+    const decx::_GPU_Matrix* _map = dynamic_cast<const decx::_GPU_Matrix*>(&map);
+    decx::_GPU_Matrix* _dst = dynamic_cast<decx::_GPU_Matrix*>(&dst);
+
+    if (decx::cu_VGT2D._res_ptr == NULL){
+        decx::cu_VGT2D.RegisterResource(new decx::cuda_VGT2D_planner, 5, decx::cuda_VGT2D_planner::release);
+    }
+
+    switch (_src->Type())
+    {
+    case de::_DATA_TYPES_FLAGS_::_FP32_:
+        decx::resample2D_caller<float, float>(_src, _map, _dst, interpoate_mode, de::GetLastError());
+        break;
+
+    case de::_DATA_TYPES_FLAGS_::_UINT8_:
+        decx::resample2D_caller<uint8_t, uint8_t>(_src, _map, _dst, interpoate_mode, de::GetLastError());
+        break;
+
+    case de::_DATA_TYPES_FLAGS_::_UCHAR4_:
+        decx::resample2D_caller<uchar4, uchar4>(_src, _map, _dst, interpoate_mode, de::GetLastError());
+        break;
+    
+    default:
+        break;
+    }
+
 }

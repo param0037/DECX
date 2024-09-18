@@ -277,16 +277,6 @@ static de::Half operator+(de::Half& __a, de::Half& __b)
 #endif
 
 
-
-// typedef __align__(16) union _16b
-// {
-//     float4          _f4vec;
-//     int4            _i4vec;
-// #ifdef _DECX_CUDA_PARTS_
-//     half2_8        _h28vec;
-// #endif
-// };
-
 // REMEMBER! chage it to de::, aligned with the include headers for users
 namespace decx
 {

@@ -73,7 +73,8 @@ namespace de
         _CPLX_CARTESIAN_    = 6,
         _CPLX_POLAR_        = 7,
         _VECTOR4_           = 8,
-        _QUATERNION_        = 9
+        _QUATERNION_        = 9,
+        _VECTOR2_           = 10
     };
 }
 

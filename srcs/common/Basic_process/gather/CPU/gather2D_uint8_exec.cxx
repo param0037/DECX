@@ -32,8 +32,8 @@
 
 
 _THREAD_FUNCTION_ void decx::CPUK::
-gather2D_fp32_exec_bilinear(const float* src_head_ptr,  const float2* __restrict map,
-                            float* __restrict dst,      const uint2 proc_dims_v, 
+gather2D_uint8_exec_bilinear(const uint8_t* src_head_ptr,  const float2* __restrict map,
+                            uint8_t* __restrict dst,      const uint2 proc_dims_v, 
                             const uint32_t Wsrc_v1,     const uint32_t Wmap_v1, 
                             const uint32_t Wdst_v1,     decx::CPUK::VGT_addr_mgr* _addr_info)
 {
@@ -47,29 +47,46 @@ gather2D_fp32_exec_bilinear(const float* src_head_ptr,  const float2* __restrict
         {
             __m256 map_lane1 = _mm256_load_ps((float*)(map + dex_map));
             __m256 map_lane2 = _mm256_load_ps((float*)(map + dex_map + 4));
+
             _addr_info->plan(map_lane1, map_lane2);
 
-            // Left-Top
-            __m256 T = _mm256_i32gather_ps(src_head_ptr, _addr_info->get_addr0(), 4);
-            // Right-Top
-            __m256 tmp = _mm256_i32gather_ps(src_head_ptr, _addr_info->get_addr1(), 4);
+            decx::utils::simd::xmm256_reg row, row_R, res;
+            __m256 T, B;
             __m256 dist_down_x = _addr_info->get_dist_down_X();
-            // Interpolation along X axis
-            T = _mm256_mul_ps(T, _addr_info->get_dist_up_X());
-            T = _mm256_fmadd_ps(tmp, dist_down_x, T);
 
-            __m256 B = _mm256_i32gather_ps(src_head_ptr, _addr_info->get_addr2(), 4);
-            // Right-Top
-            tmp = _mm256_i32gather_ps(src_head_ptr, _addr_info->get_addr3(), 4);
-            // Interpolation along X axis
-            B = _mm256_mul_ps(B, _addr_info->get_dist_up_X());
-            B = _mm256_fmadd_ps(tmp, dist_down_x, B);
+            row._vi = _mm256_i32gather_epi32((int32_t*)src_head_ptr, _addr_info->get_addr0(), 1);
+            row_R._vi = _mm256_and_si256(row._vi, _mm256_set1_epi32(0xFF00));
+            row_R._vi = _mm256_srli_epi32(row_R._vi, 8);
+            row._vi = _mm256_and_si256(row._vi, _mm256_set1_epi32(0xFF));
 
-            __m256 res = _mm256_mul_ps(T, _addr_info->get_dist_up_Y());
-            res = _mm256_fmadd_ps(B, _addr_info->get_dist_down_Y(), res);
+            row._vf = _mm256_cvtepi32_ps(row._vi);
+            row_R._vf = _mm256_cvtepi32_ps(row_R._vi);
+
+            T = _mm256_mul_ps(row._vf, _addr_info->get_dist_up_X());
+            T = _mm256_fmadd_ps(row_R._vf, dist_down_x, T);
             
-            res = _mm256_andnot_ps(_addr_info->get_current_inbound_fp32(), res);
-            _mm256_store_ps(dst + dex_dst, res);
+            // Right-Top
+            row._vi = _mm256_i32gather_epi32((int32_t*)src_head_ptr, _addr_info->get_addr2(), 1);
+            row_R._vi = _mm256_and_si256(row._vi, _mm256_set1_epi32(0xFF00));
+            row_R._vi = _mm256_srli_epi32(row_R._vi, 8);
+            row._vi = _mm256_and_si256(row._vi, _mm256_set1_epi32(0xFF));
+
+            row._vf = _mm256_cvtepi32_ps(row._vi);
+            row_R._vf = _mm256_cvtepi32_ps(row_R._vi);
+
+            B = _mm256_mul_ps(row._vf, _addr_info->get_dist_up_X());
+            B = _mm256_fmadd_ps(row_R._vf, dist_down_x, B);
+
+            res._vf = _mm256_mul_ps(T, _addr_info->get_dist_up_Y());
+            res._vf = _mm256_fmadd_ps(B, _addr_info->get_dist_down_Y(), res._vf);
+            
+            res._vf = _mm256_andnot_ps(_addr_info->get_current_inbound_fp32(), res._vf);
+
+            res._vi = _mm256_cvtps_epi32(res._vf);
+            res._vi = _mm256_shuffle_epi8(_mm256_and_si256(res._vi, _mm256_set1_epi32(0x000000ff)), _mm256_set1_epi32(201851904));
+
+            *((uint32_t*)(dst + dex_dst)) = res._arrui[0];
+            *((uint32_t*)(dst + dex_dst + 4)) = res._arrui[4];
 
             dex_map += 8;
             dex_dst += 8;

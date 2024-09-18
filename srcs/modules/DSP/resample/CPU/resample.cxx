@@ -57,10 +57,10 @@ de::dsp::cpu::Resample(de::InputMatrix src, de::InputMatrix map, de::OutputMatri
     g_VGT2D_hdlr.lock();
 
     VGT->plan(decx::cpu::_get_permitted_concurrency(), make_uint2(_dst->Width(), _dst->Height()), 
-        sizeof(float), interpoate_mode, make_uint2(_src->Width(), _src->Height()), 
+        sizeof(uint8_t), interpoate_mode, make_uint2(_src->Width(), _src->Height()), 
         de::GetLastError());
 
-    VGT->run((float*)_src->Mat.ptr, (float2*)_map->Mat.ptr, (float*)_dst->Mat.ptr, _map->Pitch(), _dst->Pitch(), &t1D);
+    VGT->run((uint8_t*)_src->Mat.ptr, (float2*)_map->Mat.ptr, (uint8_t*)_dst->Mat.ptr, _map->Pitch(), _dst->Pitch(), &t1D);
 
     g_VGT2D_hdlr.unlock();
 }

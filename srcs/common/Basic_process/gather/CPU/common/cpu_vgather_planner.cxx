@@ -37,6 +37,8 @@ namespace decx
     static void* VGT2D_exec_LUT[] = {
         (void*)decx::CPUK::gather2D_fp32_exec_bilinear, // bilinear
         NULL,   // nearest
+        (void*)decx::CPUK::gather2D_uint8_exec_bilinear, // bilinear
+        NULL,
     };
 }
 
@@ -50,9 +52,15 @@ void* decx::cpu_VGT2D_planner::find_exec_ptr() const
     if constexpr (std::is_same_v<float, _data_type>){
         idx = 0 + this->_interpolate_type;
     }
+    else if constexpr (std::is_same_v<uint8_t, _data_type>){
+        idx = 2 + this->_interpolate_type;
+    }
 #elif __cplusplus >= 201103L
     if (std::is_same<float, _data_type>::value){
         idx = 0 + this->_interpolate_type;
+    }
+    else if (std::is_same<uint8_t, _data_type>::value){
+        idx = 2 + this->_interpolate_type;
     }
 #endif
 
@@ -60,6 +68,7 @@ void* decx::cpu_VGT2D_planner::find_exec_ptr() const
 }
 
 template void* decx::cpu_VGT2D_planner::find_exec_ptr<float>() const;
+template void* decx::cpu_VGT2D_planner::find_exec_ptr<uint8_t>() const;
 
 
 _CRSR_ void decx::cpu_VGT2D_planner::
@@ -116,6 +125,9 @@ decx::cpu_VGT2D_planner::run(const data_type* src,          const float2* map,
 }
 
 template void decx::cpu_VGT2D_planner::run<float>(const float*, const float2*, float*, const uint32_t,    
+    const uint32_t, decx::utils::_thr_1D*);
+
+template void decx::cpu_VGT2D_planner::run<uint8_t>(const uint8_t*, const float2*, uint8_t*, const uint32_t,    
     const uint32_t, decx::utils::_thr_1D*);
 
 

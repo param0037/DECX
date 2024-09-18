@@ -49,6 +49,11 @@ namespace CPUK
     _THREAD_FUNCTION_ void gather2D_fp32_exec_bilinear(const float* src_head_ptr, const float2* __restrict map,
         float* __restrict dst, const uint2 proc_dims_v, const uint32_t Wsrc_v1, const uint32_t Wmap_v1, const uint32_t Wdst_v1,
         decx::CPUK::VGT_addr_mgr* _addr_info);
+
+
+    _THREAD_FUNCTION_ void gather2D_uint8_exec_bilinear(const uint8_t* src_head_ptr, const float2* __restrict map,
+        uint8_t* __restrict dst, const uint2 proc_dims_v, const uint32_t Wsrc_v1, const uint32_t Wmap_v1, const uint32_t Wdst_v1,
+        decx::CPUK::VGT_addr_mgr* _addr_info);
 }
 }
 
