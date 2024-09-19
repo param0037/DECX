@@ -28,50 +28,47 @@
 * DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef _CPU_VGATHER_PLANNER_H_
-#define _CPU_VGATHER_PLANNER_H_
+#ifndef _VGT_KERNELS_LUT_SELECTOR_H_
+#define _VGT_KERNELS_LUT_SELECTOR_H_
 
-#include "../../../../../modules/core/thread_management/thread_arrange.h"
-#include "../../../../Element_wise/common/cpu_element_wise_planner.h"
-#include "../../interpolate_types.h"
-#include "vgather_addr_manager.h"
-#include "../../../../Classes/type_info.h"
-#include "../../interpolate_types.h"
-
+#include "interpolate_types.h"
 
 namespace decx
 {
-    class cpu_VGT2D_planner;
+    template<typename _type_in, typename _type_out>
+#ifdef _DECX_CUDA_PARTS_
+    static uint2 VGT2D_kernel_selector()
+#else
+    static uint2 VGT2D_kernel_selector(const de::Interpolate_Types intp_type)
+#endif
+    {
+        uint2 res = {0, 0};
+
+#if __cplusplus >= 201103L
+        if (std::is_same<_type_in, float>::value)           res.x = 0;
+        else if (std::is_same<_type_in, uint8_t>::value)    res.x = 1;
+        else if (std::is_same<_type_in, uchar4>::value)     res.x = 2;
+
+        if (std::is_same<_type_out, float>::value)          res.y = 0;
+        else if (std::is_same<_type_out, uint8_t>::value)   res.y = 1;
+        else if (std::is_same<_type_out, uchar4>::value)    res.y = 2;
+        
+#endif
+#if __cplusplus >= 201703L
+        if constexpr (std::is_same_v<_type_in, float>)          res.x = 0;
+        else if constexpr (std::is_same_v<_type_in, uint8_t>)   res.x = 1;
+        else if constexpr (std::is_same_v<_type_in, uchar4>)    res.x = 2;
+
+        if constexpr (std::is_same_v<_type_out, float>)         res.y = 0;
+        else if constexpr (std::is_same_v<_type_out, uint8_t>)  res.y = 1;
+        else if constexpr (std::is_same_v<_type_out, uchar4>)   res.y = 2;
+        
+#endif
+#ifdef _DECX_CPU_PARTS_
+        res.y = res.y * 2 + (uint32_t)intp_type;
+#endif
+        return res;
+    }
 }
-
-
-class decx::cpu_VGT2D_planner : public decx::cpu_ElementWise2D_planner
-{
-protected:
-    de::Interpolate_Types _interpolate_type;
-
-    uint32_t _pitchsrc_v1;
-
-public:
-    cpu_VGT2D_planner() {}
-
-
-    _CRSR_
-    void plan(const uint32_t concurrency, const uint2 dst_dims_v1, const uint8_t datatype_size,
-        const de::Interpolate_Types intp_type, const uint2 src_dims_v1, de::DH* handle, 
-        uint64_t min_thread_proc = _EW_MIN_THREAD_PROC_DEFAULT_CPU_);
-
-
-    template <typename _type_in, typename _type_out>
-    void run(const _type_in* src, const float2* map, _type_out* dst, const uint32_t pitchmat_v1, 
-        const uint32_t pitchdst_v1, decx::utils::_thr_1D* t1D);
-
-
-    static void release(decx::cpu_VGT2D_planner* fake_this);
-
-private:
-    decx::PtrInfo<decx::CPUK::VGT_addr_mgr> _addr_mgrs;
-};
-
 
 #endif

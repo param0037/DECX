@@ -41,8 +41,8 @@ namespace decx
 {
 namespace CPUK
 {
-    template <typename _data_type>
-    using VGT2D_executor = void(const _data_type*, const float2*, _data_type*, const uint2, const uint32_t, 
+    template <typename _type_in, typename _type_out>
+    using VGT2D_executor = void(const _type_in*, const float2*, _type_out*, const uint2, const uint32_t, 
         const uint32_t, const uint32_t, decx::CPUK::VGT_addr_mgr*);
 
 

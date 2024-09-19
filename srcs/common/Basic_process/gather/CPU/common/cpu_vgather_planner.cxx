@@ -30,45 +30,29 @@
 
 #include "cpu_vgather_planner.h"
 #include "../gather_kernels.h"
-
+#include "../../VGT_kernels_LUT_selector.h"
 
 namespace decx
 {
-    static void* VGT2D_exec_LUT[] = {
-        (void*)decx::CPUK::gather2D_fp32_exec_bilinear, // bilinear
-        NULL,   // nearest
-        (void*)decx::CPUK::gather2D_uint8_exec_bilinear, // bilinear
-        NULL,
+    static void* VGT2D_exec_LUT[6][6] = 
+    {   // float input
+        {   (void*)decx::CPUK::gather2D_fp32_exec_bilinear, // bilinear
+            NULL,   // nearest
+            // other output types ...
+        }, 
+        // uint8_t input
+        {   NULL,       // type_out = float bilinear
+            NULL,       // type_out = float nearest
+            (void*)decx::CPUK::gather2D_uint8_exec_bilinear, // bilinear
+            NULL,       // nearest
+            NULL,
+        }, 
+        // uchar4 input
+        {   NULL,
+
+        }
     };
 }
-
-
-template <typename _data_type>
-void* decx::cpu_VGT2D_planner::find_exec_ptr() const
-{
-    uint32_t idx = 0;
-
-#if __cplusplus >= 201703L
-    if constexpr (std::is_same_v<float, _data_type>){
-        idx = 0 + this->_interpolate_type;
-    }
-    else if constexpr (std::is_same_v<uint8_t, _data_type>){
-        idx = 2 + this->_interpolate_type;
-    }
-#elif __cplusplus >= 201103L
-    if (std::is_same<float, _data_type>::value){
-        idx = 0 + this->_interpolate_type;
-    }
-    else if (std::is_same<uint8_t, _data_type>::value){
-        idx = 2 + this->_interpolate_type;
-    }
-#endif
-
-    return decx::VGT2D_exec_LUT[idx];
-}
-
-template void* decx::cpu_VGT2D_planner::find_exec_ptr<float>() const;
-template void* decx::cpu_VGT2D_planner::find_exec_ptr<uint8_t>() const;
 
 
 _CRSR_ void decx::cpu_VGT2D_planner::
@@ -93,15 +77,16 @@ plan(const uint32_t concurrency,    const uint2 dst_dims_v1,
 }
 
 
-template <typename data_type> void 
-decx::cpu_VGT2D_planner::run(const data_type* src,          const float2* map, 
-                             data_type* dst,                const uint32_t pitchmap_v1,    
+template <typename _type_in, typename _type_out> void 
+decx::cpu_VGT2D_planner::run(const _type_in* src,          const float2* map, 
+                             _type_out* dst,                const uint32_t pitchmap_v1,    
                              const uint32_t pitchdst_v1,    decx::utils::_thr_1D* t1D)
 {
     uint64_t dex_map = 0, dex_dst = 0;
     uint32_t _thr_cnt = 0;
 
-    auto* exec_ptr = (decx::CPUK::VGT2D_executor<data_type>*)this->find_exec_ptr<data_type>();
+    uint2 selector = decx::VGT2D_kernel_selector<_type_in, _type_out>(this->_interpolate_type);
+    auto* exec_ptr = (decx::CPUK::VGT2D_executor<_type_in, _type_out>*)decx::VGT2D_exec_LUT[selector.x][selector.y];
 
     for (int32_t i = 0; i < this->_thread_dist.y; ++i)
     {

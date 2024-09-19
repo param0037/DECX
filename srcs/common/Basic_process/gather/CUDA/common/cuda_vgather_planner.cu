@@ -30,6 +30,7 @@
 
 #include "cuda_vgather_planner.h"
 #include "../cuda_gather_kernels.cuh"
+#include "../../VGT_kernels_LUT_selector.h"
 
 
 namespace decx{
@@ -46,34 +47,6 @@ namespace GPUK{
             (void*)decx::GPUK::vgather2D_uchar4,
         }
     };
-
-    template<typename _type_in, typename _type_out>
-    static void* cu_VGT2D_kernel_selector()
-    {
-        void** _1st_array = NULL;
-        if (std::is_same<_type_in, float>::value){
-            _1st_array = decx::GPUK::cu_vgather2D_kernels[0];
-        }
-        else if (std::is_same<_type_in, uint8_t>::value){
-            _1st_array = decx::GPUK::cu_vgather2D_kernels[1];
-        }
-        else if (std::is_same<_type_in, uchar4>::value){
-            _1st_array = decx::GPUK::cu_vgather2D_kernels[2];
-        }
-
-        if (std::is_same<_type_out, float>::value){
-            return _1st_array[0];
-        }
-        else if (std::is_same<_type_out, uint8_t>::value){
-            return _1st_array[1];
-        }
-        else if (std::is_same<_type_out, uchar4>::value){
-            return _1st_array[2];
-        }
-        else{
-            return NULL;
-        }
-    }
 }
 }
 
@@ -162,9 +135,10 @@ void decx::cuda_VGT2D_planner::run(const _type_in* src,             const float2
                                    const uint32_t pitchdst_v1,      decx::cuda_stream* S)
 {
     this->_res_desc.res.pitch2D.devPtr = (void*)src;
+    uint2 selector = decx::VGT2D_kernel_selector<_type_in, _type_out>();
     cudaCreateTextureObject(&this->_texture, &this->_res_desc, &this->_tex_desc, NULL);
 
-    auto* p_kernel = (decx::GPUK::cuda_vgather_kernel<_type_out>*)decx::GPUK::cu_VGT2D_kernel_selector<_type_in, _type_out>();
+    auto* p_kernel = (decx::GPUK::cuda_vgather_kernel<_type_out>*)decx::GPUK::cu_vgather2D_kernels[selector.x][selector.y];
 
     (*p_kernel)(this->_texture, map, (_type_out*)dst, this->get_src_dims_v1(), 
         make_uint2(this->_proc_w_v, this->_proc_dims.y), pitchmap_v1, 
