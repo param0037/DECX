@@ -1,0 +1,19 @@
+# TODO
+SDL:
+    1. x86 Linux:
+        visit https://packages.debian.org/bookworm/i386/libsdl2-2.0-0/download
+        download from North America mirror source
+        https://packages.debian.org/bookworm/libsdl2-image-2.0-0    # SDL2_image
+    
+    2. aarch64 Linux:
+        (1) from archlinux:
+            https://archlinuxarm.org/packages/aarch64/sdl2          # SDL2
+            https://archlinuxarm.org/packages/aarch64/sdl2_image    # SDL2_image
+
+        (2) from packages.debian.org:
+            https://packages.debian.org/bookworm/libsdl2-2.0-0
+            Slide all the way to the nottom of the page and find arm64
+
+    3. x86 Windows:
+        From sdl.org, or visit github page, prebuilt is available in releases.
+        https://github.com/libsdl-org/SDL/releases

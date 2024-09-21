@@ -28,20 +28,26 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
+export RED='\033[0;31m'
+export GREEN='\033[0;32m'
+export WHITE='\033[0m'
+export YELLOW='\033[0;33m'
 
-function echo_status() 
-{
-    CYAN='\033[0;36m'
-    WHITE='\033[0m'
-    echo -e "${CYAN}[DECX] STATUS: $1${WHITE}"
+
+function echo_status() {
+    echo -e "  DECX    $1"
 }
 
+function echo_warning() {
+    echo -e "${YELLOW}  DECX    $1${WHITE}"
+}
 
-function echo_error() 
-{
-    RED='\033[0;31m'
-    WHITE='\033[0m'
-    echo -e "${RED}[DECX] ERROR: $1${WHITE}"
+function echo_success() {
+    echo -e "${GREEN}  DECX    $1${WHITE}"
+}
+
+function echo_error() {
+    echo -e "${RED}  DECX    $1${WHITE}"
 }
 
 

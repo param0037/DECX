@@ -39,7 +39,7 @@ file(GLOB_RECURSE CV_CORE "${DECX_WORLD_ABS_DIR}/srcs/modules/CV/Image_IO/*.cxx"
 file(GLOB_RECURSE UTILS "${DECX_WORLD_ABS_DIR}/srcs/common/Basic_process/type_statistics/CPU/cmp_max_exec.cxx"
                         "${DECX_WORLD_ABS_DIR}/srcs/common/Basic_process/type_statistics/CPU/cmp_min_exec.cxx"
                         "${DECX_WORLD_ABS_DIR}/srcs/modules/basic_calculations/operators/Maprange_exec.cxx")
-
+message("${SDL_PATH}")
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     link_directories(${SDL_PATH}/lib/x64
@@ -53,5 +53,5 @@ else()
     		     ${SDL_IMAGE_PATH}/lib)
 
     add_library(DECX_CV_CPU SHARED ${CV_CORE} ${UTILS})
-    target_link_libraries(DECX_CV_CPU SDL2.so SDL2_image-2.0.so.0.2.3 DECX_core_CPU.so DECX_BLAS_CPU.so)
+    target_link_libraries(DECX_CV_CPU libSDL2-2.0.so.0 libSDL2_image-2.0.so.0 DECX_core_CPU.so DECX_BLAS_CPU.so)
 endif()

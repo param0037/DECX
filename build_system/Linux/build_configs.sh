@@ -29,6 +29,10 @@
 # DEALINGS IN THE SOFTWARE.
 
 
+full_path=$(realpath $0)
+export PROJECT_PATH_BUILD=$(dirname $(dirname $(dirname $full_path)))
+
+
 function is_executable()
 {
     stat=($(ls -l "$1"))
@@ -61,11 +65,6 @@ source_script ./params/cuda_sm.sh
 
 function list_configs()
 {
-    RED='\033[0;31m'
-    GREEN='\033[0;32m'
-    WHITE='\033[0m'
-    YELLOW='\033[0;33m'
-
     echo "[DECX] Current build configurations : "
     echo "[DECX]   Target host architecture : $DECX_HOST_ARCH"
     if [ $DECX_EXP_C -eq 1 ]; then

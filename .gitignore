@@ -10,3 +10,5 @@ samples/x64
 srcs/.vscode/
 
 /build/
+3rdparty/
+3rdparty_/

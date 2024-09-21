@@ -29,8 +29,23 @@
 # DEALINGS IN THE SOFTWARE.
 
 
-full_path=$(realpath $0)
-PROJECT_PATH_BUILD=$(dirname $(dirname $(dirname $full_path)))
+# full_path=$(realpath $0)
+# PROJECT_PATH_BUILD=$(dirname $(dirname $(dirname $full_path)))
+
+
+function prebuilt_needed()
+{
+    prebuilt_cmd=""
+    if [[ "$1" == *"CV"* ]]; then
+        prebuilt_cmd="$prebuilt_cmd,SDL2,SDL2_Image"
+    fi
+    if [[ $DECX_EXP_PYTHON -eq 1 ]]; then
+        prebuilt_cmd="$prebuilt_cmd,Python"
+    fi
+    echo -n "$prebuilt_cmd"
+}
+
+
 
 # clean
 function clean_single()
@@ -72,7 +87,7 @@ function clean_all()
 
     cd $PROJECT_PATH_BUILD
 
-    echo_status "Cleaned all built"
+    echo_success "Cleaned all built"
 }
 
 
@@ -89,6 +104,9 @@ function clean_optional()
 # config
 function config_single()
 {
+    requirement_statement=$(prebuilt_needed $1)
+    $PROJECT_PATH_BUILD/build_system/Linux/prebuilts_manager.sh $requirement_statement
+
     if [ ! -e "$PROJECT_PATH_BUILD/build" ]; then
         mkdir $PROJECT_PATH_BUILD/build
     fi
@@ -143,6 +161,8 @@ function config_single()
     cmake_config_cmd="$cmake_config_cmd -B $cmake_bin_dir -G\"Unix Makefiles\""
     
     eval $cmake_config_cmd
+
+    echo_success "--------------------------------------------------- Successfully configured $1 ---------------------------------------------------"
 }
 
 
@@ -161,7 +181,7 @@ function config_all()
     
     cd $PROJECT_PATH_BUILD
 
-    echo_status "All config success"
+    echo_success "All config success"
 }
 
 
@@ -188,6 +208,8 @@ function build_single()
         cmake --build $cmake_bin_dir --config Release
     fi
     cp /media/wayne/Disk/DECX_world/build/bin/x64/libDECX_DSP_CPU.so ~/DECX/libs/x64/
+
+    echo_success "--------------------------------------------------- Successfully built $1 ---------------------------------------------------"
 }
 
 
@@ -234,6 +256,7 @@ if [[ $can_run -ne 1 ]]; then
     chmod u+x ./utils.sh
 fi
 source ./utils.sh
+
 
 
 while getopts ":m:c:i:" opt; do
