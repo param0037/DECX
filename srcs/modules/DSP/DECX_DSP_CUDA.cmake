@@ -32,7 +32,8 @@ include_guard(GLOBAL)
 file(GLOB FFT_SRCS "${DECX_WORLD_ABS_DIR}/srcs/modules/DSP/FFT/CUDA/*.cu")
 file(GLOB CONV_SRCS "${DECX_WORLD_ABS_DIR}/srcs/modules/DSP/convolution/CUDA/*.cu")
 file(GLOB_RECURSE RESAMPLE_SRCS "${DECX_WORLD_ABS_DIR}/srcs/modules/DSP/resample/CUDA/*.cu" 
-                        "${DECX_WORLD_ABS_DIR}/srcs/common/Basic_process/gather/CUDA/*.cu")
+                        "${DECX_WORLD_ABS_DIR}/srcs/common/Basic_process/gather/CUDA/*.cu"
+                        "${DECX_WORLD_ABS_DIR}/srcs/common/Element_wise/common/*.cu")
 
 add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/modules/DSP/FFT/CUDA/1D" "${DECX_SUBBUILD_BIN_DIR}/fft1d_cuda")
 add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/modules/DSP/FFT/CUDA/2D" "${DECX_SUBBUILD_BIN_DIR}/fft2d_cuda")

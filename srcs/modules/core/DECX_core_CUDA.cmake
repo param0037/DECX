@@ -47,7 +47,7 @@ else()
 endif()
 
 
-add_library(${PROJECT_NAME} STATIC ${CORE} ${ALLOC} ${CLASSES} ${CUSE} ${DTR} ${CONFIGS} ${FP16})
+add_library(${PROJECT_NAME} SHARED ${CORE} ${ALLOC} ${CLASSES} ${CUSE} ${DTR} ${CONFIGS} ${FP16})
 
 
 set_target_properties(DECX_core_CUDA PROPERTIES CUDA_ARCHITECTURES ${CUDA_TARGET_ARCH})

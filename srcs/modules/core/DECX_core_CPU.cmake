@@ -46,7 +46,7 @@ else()
                      "${DECX_SUBBUILD_BIN_DIR}/configs_x86_64_cpu")
 endif()
 
-add_library(${PROJECT_NAME} STATIC ${CORE} ${CLASSES} ${RESMGR} ${THREAD_POOL} ${CONFIGS})
+add_library(${PROJECT_NAME} SHARED ${CORE} ${CLASSES} ${RESMGR} ${THREAD_POOL} ${CONFIGS})
 
 
 target_link_libraries(DECX_core_CPU PRIVATE allocators_host)

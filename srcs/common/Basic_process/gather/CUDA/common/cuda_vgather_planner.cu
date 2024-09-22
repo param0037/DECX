@@ -92,15 +92,19 @@ void decx::cuda_VGT2D_planner::plan(const de::Interpolate_Types type,
 {
     this->_intp_type = type;
 
-    this->_proc_dims = make_uint2(dst_layout->width, dst_layout->height);
+    // this->_proc_dims = make_uint2(dst_layout->width, dst_layout->height);
+
+    
+
+    // this->_type_in_size = sizeof(_type_in);
+    // this->_type_out_size = sizeof(_type_out);
+    // this->plan_alignment();
+
+    // this->_proc_w_v = decx::utils::ceil<uint32_t>(this->_proc_dims.x, this->_alignment);
+
+    decx::cuda_ElementWise2D_planner::plan(_proc_dims, sizeof(_type_in), sizeof(_type_out));
 
     this->_channel_fmt = cudaCreateChannelDesc<_type_in>();
-
-    this->_type_in_size = sizeof(_type_in);
-    this->_type_out_size = sizeof(_type_out);
-    this->plan_alignment();
-
-    this->_proc_w_v = decx::utils::ceil<uint32_t>(this->_proc_dims.x, this->_alignment);
 
     this->_res_desc.resType = cudaResourceTypePitch2D;
     this->_res_desc.res.pitch2D.desc = _channel_fmt;
