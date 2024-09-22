@@ -133,3 +133,34 @@ function is_numerical()
         return 0
     fi
 }
+
+
+function is_executable()
+{
+    stat=($(ls -l "$1"))
+    if [[ "$stat" == *"x"* ]]; then
+        return 1
+    else
+        return 0
+    fi
+}
+
+function source_script()
+{
+    is_executable $1
+    can_run=$?
+    if [[ $can_run -ne 1 ]]; then
+        chmod u+x $1
+    fi
+    source $1
+}
+
+function run_script()
+{
+    is_executable $1
+    can_run=$?
+    if [[ $can_run -ne 1 ]]; then
+        chmod u+x $1
+    fi
+    $1 $2 $3
+}

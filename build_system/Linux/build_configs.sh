@@ -33,27 +33,14 @@ full_path=$(realpath $0)
 export PROJECT_PATH_BUILD=$(dirname $(dirname $(dirname $full_path)))
 
 
-function is_executable()
-{
-    stat=($(ls -l "$1"))
-    if [[ "$stat" == *"x"* ]]; then
-        return 1
-    else
-        return 0
-    fi
-}
+stat=($(ls -l ./utils.sh))
+if [[ "$stat" == *"x"* ]]; then
+    source ./utils.sh
+else
+    chmod u+x ./utils.sh
+    source ./utils.sh
+fi
 
-function source_script()
-{
-    is_executable $1
-    can_run=$?
-    if [[ $can_run -ne 1 ]]; then
-        chmod u+x $1
-    fi
-    source $1
-}
-
-source_script ./utils.sh
 source_script ./params/param_lists.sh
 source_script ./params/exp_lang.sh
 source_script ./params/host_arch.sh

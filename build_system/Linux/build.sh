@@ -46,19 +46,18 @@ function prebuilt_needed()
 }
 
 
-
 # clean
 function clean_single()
 {
     # Clean the generated asm sources
     if [[ "BLAS_CPU,DSP_CPU" == *"$1"* ]]; then
         echo_status "Deleted generated platform dependent asm files for SVML"
-        chmod u+x $PROJECT_PATH_BUILD/srcs/common/SIMD/x86_64/asm_preproc_SVML.sh
-        $PROJECT_PATH_BUILD/srcs/common/SIMD/x86_64/asm_preproc_SVML.sh -c NOP
+        # chmod u+x $PROJECT_PATH_BUILD/srcs/common/SIMD/x86_64/asm_preproc_SVML.sh
+        run_script $PROJECT_PATH_BUILD/srcs/common/SIMD/x86_64/asm_preproc_SVML.sh -c NOP
     fi
     if [ "$1" = "core_CPU" ]; then
-        chmod u+x $PROJECT_PATH_BUILD/srcs/modules/core/configs/x86_64/asm_preproc_configs.sh
-        $PROJECT_PATH_BUILD/srcs/modules/core/configs/x86_64/asm_preproc_configs.sh -c NOP
+        # chmod u+x $PROJECT_PATH_BUILD/srcs/modules/core/configs/x86_64/asm_preproc_configs.sh
+        run_script $PROJECT_PATH_BUILD/srcs/modules/core/configs/x86_64/asm_preproc_configs.sh -c NOP
     fi
 
     cmake_bin_dir="$PROJECT_PATH_BUILD/build/DECX_$1"
@@ -105,7 +104,7 @@ function clean_optional()
 function config_single()
 {
     requirement_statement=$(prebuilt_needed $1)
-    $PROJECT_PATH_BUILD/build_system/Linux/prebuilts_manager.sh $requirement_statement
+    run_script $PROJECT_PATH_BUILD/build_system/Linux/prebuilts_manager.sh $requirement_statement
 
     if [ ! -e "$PROJECT_PATH_BUILD/build" ]; then
         mkdir $PROJECT_PATH_BUILD/build
@@ -114,12 +113,12 @@ function config_single()
     # If is DSP_CPU, configure asm sources for math intrinsics
     if [[ "BLAS_CPU,DSP_CPU" == *"$1"* ]]; then
         echo_status "Generated platform dependent asm files for SVML"
-        $PROJECT_PATH_BUILD/srcs/common/SIMD/x86_64/asm_preproc_SVML.sh -i NOP
+        run_script $PROJECT_PATH_BUILD/srcs/common/SIMD/x86_64/asm_preproc_SVML.sh -i NOP
     fi
     # If is core_CPU, configure asm sources for CPU configuration
     if [ "$1" = "core_CPU" ]; then
         if [ "$DECX_HOST_ARCH" = "x86_64" ]; then
-            $PROJECT_PATH_BUILD/srcs/modules/core/configs/x86_64/asm_preproc_configs.sh -i NOP
+            run_script $PROJECT_PATH_BUILD/srcs/modules/core/configs/x86_64/asm_preproc_configs.sh -i NOP
         fi
     fi
 
