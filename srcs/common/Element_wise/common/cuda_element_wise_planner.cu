@@ -50,6 +50,15 @@ plan(const uint64_t total, const uint8_t type_in_size, const uint8_t type_out_si
 }
 
 
+bool decx::cuda_ElementWise2D_planner::
+changed(const uint2 proc_dims, const uint8_t type_in_size, const uint8_t type_out_size) const
+{
+    uint32_t cmp_proc_dims = (bool)(proc_dims.x ^ this->_proc_dims.x);
+    cmp_proc_dims ^= (bool)(proc_dims.y ^ this->_proc_dims.y);
+
+    
+}
+
 
 void decx::cuda_ElementWise2D_planner::
 plan(const uint2 proc_dims, const uint8_t type_in_size, const uint8_t type_out_size)

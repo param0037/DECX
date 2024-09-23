@@ -81,6 +81,8 @@ class decx::cuda_ElementWise2D_planner : public decx::element_wise_base_2D
 protected:
     dim3 _block, _grid;
 
+    bool changed(const uint2 proc_dims, const uint8_t type_in_size, const uint8_t type_out_size) const;
+
 public:
     cuda_ElementWise2D_planner() {}
 
