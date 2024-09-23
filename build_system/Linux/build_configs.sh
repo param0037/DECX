@@ -166,6 +166,62 @@ function parallel_build()
 }
 
 
+function build() {
+    conf
+    mk
+}
+
+
+function rebuild() {
+    clean
+    conf
+    mk
+}
+
+
+function release() {
+    set_module all
+    clean
+    conf
+    mk
+    install
+}
+
+
+function install()
+{
+    install_dir=$PROJECT_PATH_BUILD/install
+    if [ ! -e "$install_dir" ]; then
+        mkdir $install_dir
+    fi
+
+    cp -r $PROJECT_PATH_BUILD/srcs/includes $install_dir/includes
+    echo_status "Install includes successfully"
+
+    if [ ! -e "$install_dir/lib" ]; then
+        mkdir $install_dir/lib
+    fi
+
+    cp -r $PROJECT_PATH_BUILD/build/bin/$DECX_HOST_ARCH \
+          $install_dir/lib/
+    echo_status "Install libs successfully"
+
+    echo "Installing dependencies"
+    
+    SDL2_DIR=$PROJECT_PATH_BUILD/3rdparty/SDL2/$DECX_HOST_ARCH/Linux/lib
+    if [ -d "$SDL2_DIR" ]; then
+        cp -r $SDL2_DIR/* $install_dir/lib/$DECX_HOST_ARCH
+        echo_status "Installed SDL2 libs"
+    fi
+    
+    SDL2_Image_DIR=$PROJECT_PATH_BUILD/3rdparty/SDL2_Image/$DECX_HOST_ARCH/Linux/lib
+    if [ -d "$SDL2_Image_DIR" ]; then
+        cp -r $SDL2_Image_DIR/* $install_dir/lib/$DECX_HOST_ARCH
+        echo_status "Install SDL2_Image libs"
+    fi
+}
+
+
 DECX_PARALLEL_BUILD=1
 echo_status "Enable parallel build by default"
 
