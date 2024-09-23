@@ -30,7 +30,7 @@
 
 #include "gather_kernels.h"
 
-#if 0
+#if 1
 _THREAD_FUNCTION_ void decx::CPUK::
 gather2D_uint8_exec_bilinear(const uint8_t* src_head_ptr,  const float2* __restrict map,
                             uint8_t* __restrict dst,      const uint2 proc_dims_v, 

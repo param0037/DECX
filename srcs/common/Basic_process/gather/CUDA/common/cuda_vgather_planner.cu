@@ -90,16 +90,6 @@ template <typename _type_in, typename _type_out>
 void decx::cuda_VGT2D_planner::plan(const de::Interpolate_Types type, 
     const decx::_matrix_layout* src_layout, const decx::_matrix_layout* dst_layout)
 {
-    // this->_intp_type = type;
-
-    // this->_proc_dims = make_uint2(dst_layout->width, dst_layout->height);
-
-    // this->_type_in_size = sizeof(_type_in);
-    // this->_type_out_size = sizeof(_type_out);
-    // this->plan_alignment();
-
-    // this->_proc_w_v = decx::utils::ceil<uint32_t>(this->_proc_dims.x, this->_alignment);
-
     decx::cuda_ElementWise2D_planner::plan(make_uint2(dst_layout->width, dst_layout->height), sizeof(_type_in), sizeof(_type_out));
 
     this->_channel_fmt = cudaCreateChannelDesc<_type_in>();
@@ -120,10 +110,6 @@ void decx::cuda_VGT2D_planner::plan(const de::Interpolate_Types type,
         this->_tex_desc.readMode = cudaReadModeNormalizedFloat;
     }
     this->_tex_desc.normalizedCoords = 0;
-
-    // this->_block = dim3(32, 32);
-    // this->_grid = dim3(decx::utils::ceil<uint32_t>(this->_proc_w_v, 32),
-    //                    decx::utils::ceil<uint32_t>(this->_proc_dims.y, 8));
 }
 
 template void decx::cuda_VGT2D_planner::plan<float, float>(const de::Interpolate_Types, const decx::_matrix_layout*, const decx::_matrix_layout*);

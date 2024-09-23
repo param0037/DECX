@@ -56,6 +56,9 @@ protected:
 
     decx::utils::frag_manager _fmgr;
 
+    bool changed(const uint32_t conc, const uint64_t total, const uint8_t _type_in_size, const uint8_t _type_out_size,
+        const uint64_t min_thread_proc) const;
+
 public:
     cpu_ElementWise1D_planner() {}
 
@@ -108,6 +111,9 @@ protected:
     uint64_t _min_thread_proc;
 
     decx::utils::frag_manager _fmgr_WH[2];
+
+    bool changed(const uint32_t conc, const uint2 proc_dims, const uint8_t _type_in_size, const uint8_t _type_out_size,
+        const uint64_t min_thread_proc) const;
 
 public:
     cpu_ElementWise2D_planner() {}

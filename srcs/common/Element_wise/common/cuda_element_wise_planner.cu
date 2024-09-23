@@ -54,30 +54,36 @@ bool decx::cuda_ElementWise2D_planner::
 changed(const uint2 proc_dims, const uint8_t type_in_size, const uint8_t type_out_size) const
 {
     uint32_t cmp_proc_dims = (bool)(proc_dims.x ^ this->_proc_dims.x);
-    cmp_proc_dims ^= (bool)(proc_dims.y ^ this->_proc_dims.y);
-
+    cmp_proc_dims |= (bool)(proc_dims.y ^ this->_proc_dims.y);
     
+    uint32_t cmp_type_size = (((uint32_t)type_in_size << 8) | this->_type_in_size) ^ 
+                             (((uint32_t)type_out_size << 8) | this->_type_out_size);
+    
+    return cmp_proc_dims | cmp_type_size;
 }
 
 
 void decx::cuda_ElementWise2D_planner::
 plan(const uint2 proc_dims, const uint8_t type_in_size, const uint8_t type_out_size)
 {
-    this->_type_in_size = type_in_size;
-    this->_type_out_size = type_out_size;
+    if (this->changed(proc_dims, type_in_size, type_out_size))
+    {
+        this->_type_in_size = type_in_size;
+        this->_type_out_size = type_out_size;
 
-    this->plan_alignment();
+        this->plan_alignment();
 
-    if (decx::cuda::_get_cuda_prop().maxThreadsPerBlock < 1024){
-        this->_block = dim3(32, 8);
+        if (decx::cuda::_get_cuda_prop().maxThreadsPerBlock < 1024){
+            this->_block = dim3(32, 8);
+        }
+        else{
+            this->_block = dim3(32, 32);
+        }
+
+        this->_proc_dims = proc_dims;
+        this->_proc_w_v = decx::utils::ceil<uint32_t>(this->_proc_dims.x, this->_alignment);
+
+        this->_grid = dim3(decx::utils::ceil<uint32_t>(this->_proc_w_v, this->_block.x),
+                        decx::utils::ceil<uint32_t>(this->_proc_dims.y, this->_block.y));
     }
-    else{
-        this->_block = dim3(32, 32);
-    }
-
-    this->_proc_dims = proc_dims;
-    this->_proc_w_v = decx::utils::ceil<uint32_t>(this->_proc_dims.x, this->_alignment);
-
-    this->_grid = dim3(decx::utils::ceil<uint32_t>(this->_proc_w_v, this->_block.x),
-                       decx::utils::ceil<uint32_t>(this->_proc_dims.y, this->_block.y));
 }
