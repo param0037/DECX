@@ -84,7 +84,7 @@ decx::dsp::GPUK::cu_filter2D_NB_fp32(const float4* __restrict  src,
     __shared__ float4 _row[_CU_FILTER2D_FP32_BLOCK_Y_][_row_cover_x_v4 + _ext_w_v4 + 1];
 
     const uint32_t _k_loop_w_v4 = decx::utils::ceil<uint32_t>(kernel_dims.x - 1, 4);
-    //const uint32_t _k_loop_w_L = (kernel_dims.x - 1) % 4 ? (kernel_dims.x - 1) % 4 : 4;
+    
     decx::utils::_cuda_vec128 _recv[2];
     _recv[0]._vf = decx::utils::vec4_set1_fp32(0);
     _recv[1]._vf = decx::utils::vec4_set1_fp32(0);
@@ -173,7 +173,7 @@ decx::dsp::GPUK::cu_filter2D_BC_fp32(const float4* __restrict  src,
     __shared__ float4 _row[_CU_FILTER2D_FP32_BLOCK_Y_][_row_cover_x_v4 + _ext_w_v4 + 1];
 
     const uint32_t _k_loop_w_v4 = decx::utils::ceil<uint32_t>(kernel_dims.x - 1, 4);
-    //const uint32_t _k_loop_w_L = (kernel_dims.x - 1) % 4 ? (kernel_dims.x - 1) % 4 : 4;
+    
     decx::utils::_cuda_vec128 _recv[2];
     _recv[0]._vf = decx::utils::vec4_set1_fp32(0);
     _recv[1]._vf = decx::utils::vec4_set1_fp32(0);

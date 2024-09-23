@@ -38,17 +38,22 @@ void decx::vis::Blt_Matrix2SDL_UC4(decx::_Matrix* src, SDL_Surface* dst)
     int* dst_data_ptr = (int*)dst->pixels;
     int* src_data_ptr = (int*)src->Mat.ptr;
     
-    uint64_t dex_src = 0, dex_dst = 0;
+    // uint64_t dex_src = 0, dex_dst = 0;
+    
+    // for (int i = 0; i < src->Height(); ++i) {
+    //     dex_src = (uint64_t)src->Pitch() * (uint64_t)i;
+    //     dex_dst = (uint64_t)dst->pitch * (uint64_t)i / 4;
+    //     for (int j = 0; j < src->Width(); ++j) {
+    //         dst_data_ptr[dex_dst] = src_data_ptr[dex_src];
+    //         ++dex_src;
+    //         ++dex_dst;
+    //     }
+    // }
 
-    for (int i = 0; i < src->Height(); ++i) {
-        dex_src = (uint64_t)src->Pitch() * (uint64_t)i;
-        dex_dst = (uint64_t)dst->pitch * (uint64_t)i / 4;
-        for (int j = 0; j < src->Width(); ++j) {
-            dst_data_ptr[dex_dst] = src_data_ptr[dex_src];
-            ++dex_src;
-            ++dex_dst;
-        }
-    }
+    dst->pixels = src_data_ptr;
+    dst->pitch = src->Pitch() * sizeof(uchar4);
+    dst->h = src->Height();
+    dst->w = src->Width();
 }
 
 
@@ -96,6 +101,11 @@ void decx::vis::Blt_Matrix2SDL_UC1(decx::_Matrix* src, SDL_Surface* dst)
             ++dex_dst;
         }
     }
+
+    // dst->pixels = src_data_ptr;
+    // dst->pitch = src->Pitch() * sizeof(uint8_t);
+    // dst->h = src->Height();
+    // dst->w = src->Width();
 }
 
 

@@ -229,6 +229,10 @@ void de::vis::ShowImg(de::Matrix& src, const char* window_name)
     case de::_DATA_TYPES_FLAGS_::_UINT8_:
         image_surface = SDL_CreateRGBSurface(0, _src->Width(), _src->Height(), 32,
             0x000000ff, 0x0000ff00, 0x00ff0000, 0xff000000);
+        
+        // image_surface = SDL_CreateRGBSurfaceWithFormat(0, _src->Width(), _src->Height(), 8,
+        //     SDL_PIXELFORMAT_INDEX8);
+
         // copy data from decx::_Matrix::Mat.ptr to SDL_Surface::pixels
         decx::vis::Blt_Matrix2SDL_UC1(_src, image_surface);
 
