@@ -53,7 +53,9 @@ protected:
     uint32_t _pitchsrc_v1;
 
 public:
-    cpu_VGT2D_planner() {}
+    cpu_VGT2D_planner() {
+        memset(this, 0, sizeof(decx::cpu_VGT2D_planner));
+    }
 
 
     _CRSR_
@@ -70,7 +72,7 @@ public:
     static void release(decx::cpu_VGT2D_planner* fake_this);
 
 private:
-    decx::PtrInfo<decx::CPUK::VGT_addr_mgr> _addr_mgrs;
+    decx::PtrInfo<void> _addr_mgrs;
 };
 
 

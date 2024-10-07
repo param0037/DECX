@@ -215,23 +215,33 @@ void de::vis::ShowImg(de::Matrix& src, const char* window_name)
     SDL_Surface* image_surface = NULL;
 
     decx::vis::displayed_img_array.emplace_back();
+    SDL_Color* platte = new SDL_Color[256];
+    for (uint32_t i = 0; i < 256; ++i){
+        platte[i].r = i;
+        platte[i].g = i;
+        platte[i].b = i;
+        platte[i].a = SDL_ALPHA_OPAQUE;
+    }
+
+
     switch (_src->Type())
-    {
+    {   // A R G B
     case de::_DATA_TYPES_FLAGS_::_UCHAR4_:
         image_surface = SDL_CreateRGBSurface(0, _src->Width(), _src->Height(), 32, 
-            0x000000ff, 0x0000ff00, 0x00ff0000, 0xff000000);
-        // copy data from decx::_Matrix::Mat.ptr to SDL_Surface::pixels
+            // 0xff000000, 0x00ff0000, 0x0000ff00, 0x000000ff);
+            // 0x00ff0000, 0x000ff00, 0x000000ff, 0xff000000);
+            0x000000ff, 0x000ff00, 0x00ff0000, 0xff000000);
+            
         decx::vis::Blt_Matrix2SDL_UC4(_src, image_surface);
 
         decx::vis::displayed_img_array.back().Create_from_surface(image_surface, window_name);
         break;
 
     case de::_DATA_TYPES_FLAGS_::_UINT8_:
-        image_surface = SDL_CreateRGBSurface(0, _src->Width(), _src->Height(), 32,
-            0x000000ff, 0x0000ff00, 0x00ff0000, 0xff000000);
-        
-        // image_surface = SDL_CreateRGBSurfaceWithFormat(0, _src->Width(), _src->Height(), 8,
-        //     SDL_PIXELFORMAT_INDEX8);
+        image_surface = SDL_CreateRGBSurfaceWithFormat(0, _src->Width(), _src->Height(), 8,
+            SDL_PIXELFORMAT_INDEX8);
+
+        SDL_SetPaletteColors(image_surface->format->palette, platte, 0, 256);
 
         // copy data from decx::_Matrix::Mat.ptr to SDL_Surface::pixels
         decx::vis::Blt_Matrix2SDL_UC1(_src, image_surface);
@@ -241,4 +251,6 @@ void de::vis::ShowImg(de::Matrix& src, const char* window_name)
     default:
         break;
     }
+
+    delete[] platte;
 }

@@ -61,6 +61,8 @@ endif()
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+include_directories("${DECX_WORLD_ABS_DIR}/srcs/modules/core/")
+
 # Configure the paths
 include("../../config_paths.cmake")
 # include to add compile definitions to the target

@@ -5,7 +5,7 @@
 # 
 # This is a part of the open source project named "DECX", a high-performance scientific
 # computational library. This project follows the MIT License. For more information 
-# please visit https:
+# please visit https://github.com/param0037/DECX.
 # 
 # Copyright (c) 2021 Wayne Anderson
 # 
@@ -33,6 +33,10 @@ file(GLOB_RECURSE CLASSES "${DECX_WORLD_ABS_DIR}/srcs/modules/core/classes/*.cxx
 file(GLOB_RECURSE RESMGR "${DECX_WORLD_ABS_DIR}/srcs/modules/core/resources_manager/*.cxx")
 file(GLOB_RECURSE CONFIGS "${DECX_WORLD_ABS_DIR}/srcs/modules/core/configs/*.cxx")
 file(GLOB_RECURSE THREAD_POOL "${DECX_WORLD_ABS_DIR}/srcs/modules/core/thread_management/*.cxx")
+file(GLOB_RECURSE GEN "${DECX_WORLD_ABS_DIR}/srcs/modules/core/generator/*.cxx")
+
+include("${DECX_WORLD_ABS_DIR}/srcs/common/Element_wise/elementwise_com.cmake")
+
 add_subdirectory(${DECX_WORLD_ABS_DIR}/srcs/modules/core/allocators/CPU
                  ${DECX_SUBBUILD_BIN_DIR}/allocators_host)
 
@@ -46,7 +50,8 @@ else()
                      "${DECX_SUBBUILD_BIN_DIR}/configs_x86_64_cpu")
 endif()
 
-add_library(${PROJECT_NAME} SHARED ${CORE} ${CLASSES} ${RESMGR} ${THREAD_POOL} ${CONFIGS})
+add_library(${PROJECT_NAME} SHARED 
+    ${CORE} ${CLASSES} ${RESMGR} ${THREAD_POOL} ${CONFIGS} ${GEN} ${EW_CPU_COM_SRCS})
 
 
 target_link_libraries(DECX_core_CPU PRIVATE allocators_host)

@@ -38,7 +38,7 @@
 #include "classes_util.h"
 #include "type_info.h"
 #include "Matrix.h"
-
+#include "../../common/Array/Dynamic_Array.h"
 
 namespace de
 {
@@ -54,28 +54,20 @@ namespace de
         MatrixArray
     {
     protected:
+        // Expose data pointer and matrix layout descriptor to users.
         _SHADOW_ATTRIBUTE_(void**) _exp_data_ptr;
-        _SHADOW_ATTRIBUTE_(decx::_matrix_layout) _exp_matrix_dscr;
 
     public:
         uint32_t ArrayNumber;
 
 
-        virtual uint32_t Width() const = 0;
+        virtual uint32_t Width(const uint32_t matrix_id) const = 0;
 
 
-        virtual uint32_t Height() const = 0;
+        virtual uint32_t Height(const uint32_t matrix_id) const = 0;
 
 
         virtual uint32_t MatrixNumber() const = 0;
-
-
-        /*virtual float*      ptr_fp32(const uint row, const uint col, const uint _seq) = 0;
-        virtual double*     ptr_fp64(const uint row, const uint col, const uint _seq) = 0;
-        virtual int*        ptr_int32(const uint row, const uint col, const uint _seq) = 0;
-        virtual de::CPf*    ptr_cpl32(const uint row, const uint col, const uint _seq) = 0;
-        virtual de::Half*   ptr_fp16(const uint row, const uint col, const uint _seq) = 0;
-        virtual uint8_t*    ptr_uint8(const uint row, const uint col, const uint _seq) = 0;*/
 
 
         virtual de::MatrixArray& SoftCopy(de::MatrixArray& src) = 0;
@@ -102,11 +94,11 @@ namespace de
 * |xxxxxxxxxxxxxxxxx   |
 * |xxxxxxxxxxxxxxxxx   | height
 * |xxxxxxxxxxxxxxxxx   |
-* |¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª|¡ª¡ª
+* |ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½|ï¿½ï¿½ï¿½ï¿½
 * |xxxxxxxxxxxxxxxxx   |
 * |xxxxxxxxxxxxxxxxx   | height
 * |xxxxxxxxxxxxxxxxx   |
-*  ¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª ¡ª¡ª
+*  ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 */
 
 namespace decx
@@ -121,36 +113,27 @@ namespace decx
         void alloc_data_space();
 
 
-        void _attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, uint width, uint height, uint MatrixNum);
+        void _attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, uint32_t width, uint32_t height, uint32_t MatrixNum);
 
 
-        decx::_matrix_layout _layout;
+        decx::utils::Dynamic_Array<decx::_matrix_layout> _layouts;
 
         bool _init;
+        uint8_t _single_element_size;
+
+        de::_DATA_TYPES_FLAGS_ type;
+
+        uint32_t _matrix_number;
 
     public:
         
-        decx::PtrInfo<void> MatArr;
-        decx::PtrInfo<void*> MatptrArr;
-
-        //uint width, height;
-
-        size_t element_num, _element_num,
-            total_bytes,    // The real total bytes of the MatrixArray memory block, ATTENTION : NO '_' at the front
-            ArrayNumber;    // The number of matrices that share the same sizes
-
-        size_t plane, _plane;
-
-        de::_DATA_TYPES_FLAGS_ type;
-        uint8_t _single_element_size;
-
-        //uint pitch,            // the true width (NOT IN BYTES)
-        //    _height;        // the true height
+        // decx::PtrInfo<void> MatArr;
+        decx::utils::Dynamic_Array<decx::PtrInfo<void>> MatptrArr;
 
         void construct(const de::_DATA_TYPES_FLAGS_ _type, uint32_t width, uint32_t height, uint32_t MatrixNum);
 
 
-        void re_construct(const de::_DATA_TYPES_FLAGS_ _type, uint32_t width, uint32_t height, uint32_t MatrixNum);
+        void re_construct(const de::_DATA_TYPES_FLAGS_ _type, uint32_t width, uint32_t height, const uint32_t matrix_id);
 
 
         _MatrixArray();
@@ -159,21 +142,13 @@ namespace decx
         _MatrixArray(const de::_DATA_TYPES_FLAGS_ _type, uint32_t width, uint32_t height, uint32_t MatrixNum);
 
 
-        virtual uint32_t Width() const;
+        virtual uint32_t Width(const uint32_t matrix_id) const;
 
 
-        virtual uint32_t Height() const;
+        virtual uint32_t Height(const uint32_t matrix_id) const;
 
 
         virtual uint32_t MatrixNumber() const;
-
-
-        /*virtual float*      ptr_fp32(const uint row, const uint col, const uint _seq);
-        virtual double*     ptr_fp64(const uint row, const uint col, const uint _seq);
-        virtual int*        ptr_int32(const uint row, const uint col, const uint _seq);
-        virtual de::CPf*    ptr_cpl32(const uint row, const uint col, const uint _seq);
-        virtual de::Half*   ptr_fp16(const uint row, const uint col, const uint _seq);
-        virtual uint8_t*    ptr_uint8(const uint row, const uint col, const uint _seq);*/
 
 
         virtual de::MatrixArray& SoftCopy(de::MatrixArray& src);
@@ -188,19 +163,16 @@ namespace decx
         virtual void Reinterpret(const de::_DATA_TYPES_FLAGS_ _new_type);
         
 
-        uint32_t Pitch() const;
+        uint32_t Pitch(const uint32_t matrix_id) const;
 
 
         uint32_t Array_num() const;
 
 
-        const decx::_matrix_layout& get_layout() const;
+        const decx::_matrix_layout& get_layout(const uint32_t matrix_id) const;
 
 
         bool is_init() const;
-
-
-        uint64_t get_total_bytes() const;
     };
 
 }

@@ -7,7 +7,7 @@
 #
 # This is a part of the open source project named "DECX", a high-performance scientific
 # computational library. This project follows the MIT License. For more information
-# please visit https:
+# please visit https://github.com/param0037/DECX.
 #
 # Copyright (c) 2021 Wayne Anderson
 #
@@ -27,10 +27,6 @@
 # FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
-
-
-# full_path=$(realpath $0)
-# PROJECT_PATH_BUILD=$(dirname $(dirname $(dirname $full_path)))
 
 
 function prebuilt_needed()
@@ -104,6 +100,7 @@ function clean_optional()
 function config_single()
 {
     requirement_statement=$(prebuilt_needed $1)
+    
     run_script $PROJECT_PATH_BUILD/build_system/Linux/prebuilts_manager.sh $requirement_statement
 
     if [ ! -e "$PROJECT_PATH_BUILD/build" ]; then
@@ -117,7 +114,8 @@ function config_single()
     fi
     # If is core_CPU, configure asm sources for CPU configuration
     if [ "$1" = "core_CPU" ]; then
-        if [ "$DECX_HOST_ARCH" = "x86_64" ]; then
+        if [ "$DECX_HOST_ARCH" = "x64" ]; then
+            echo_status "generating x86-64 CPUID assembly"
             run_script $PROJECT_PATH_BUILD/srcs/modules/core/configs/x86_64/asm_preproc_configs.sh -i NOP
         fi
     fi
@@ -206,7 +204,7 @@ function build_single()
     else
         cmake --build $cmake_bin_dir --config Release
     fi
-    cp /media/wayne/Disk/DECX_world/build/bin/x64/libDECX_DSP_CPU.so ~/DECX/libs/x64/
+    cp /media/wayne/Disk/DECX_world/build/bin/x64/libDECX_core_CPU.so ~/DECX/libs/x64/
 
     echo_success "--------------------------------------------------- Successfully built $1 ---------------------------------------------------"
 }

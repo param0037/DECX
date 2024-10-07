@@ -11,7 +11,16 @@
 #define _DECXNUMBER_H_
 
 
-#include "../basic_proc/type_cast.h"
+#include "../basic.h"
+
+
+namespace de
+{
+    _DECX_API_ de::Half Float2Half(const float& __x);
+
+
+    _DECX_API_ float Half2Float(const de::Half& __x);
+}
 
 
 namespace de

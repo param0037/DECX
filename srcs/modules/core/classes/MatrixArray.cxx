@@ -34,44 +34,34 @@
 
 void decx::_MatrixArray::alloc_data_space()
 {
-    if (decx::alloc::_host_virtual_page_malloc<void>(&this->MatArr, this->total_bytes)) {
-        Print_Error_Message(4, "Fail to allocate memory for MatrixArray on host\n");
-        return;
-    }
+    for (uint32_t i = 0; i < this->_matrix_number; ++i){
+        const auto* p_layout = this->_layouts[i];
+        this->MatptrArr.emplace_back();
 
-    if (decx::alloc::_host_virtual_page_malloc<void*>(&this->MatptrArr, this->ArrayNumber * sizeof(void*))) {
-        Print_Error_Message(4, "Fail to allocate memory for pointer array on host\n");
-        return;
-    }
-    this->MatptrArr.ptr[0] = this->MatArr.ptr;
-    for (int i = 1; i < this->ArrayNumber; ++i) {
-        this->MatptrArr.ptr[i] = (void*)((uchar*)this->MatptrArr.ptr[i - 1] + this->_plane * this->_single_element_size);
+        const uint64_t alloc_bytes = (uint64_t)p_layout->height * (uint64_t)p_layout->pitch;
+        if (decx::alloc::_host_virtual_page_malloc<void>(this->MatptrArr[i], alloc_bytes)) {
+            Print_Error_Message(4, "Fail to allocate memory for MatrixArray on host\n");
+            return;
+        }
     }
 }
-
-
 
 
 void decx::_MatrixArray::re_alloc_data_space()
 {
-    if (decx::alloc::_host_virtual_page_realloc<void>(&this->MatArr, this->total_bytes)) {
-        Print_Error_Message(4, "Fail to allocate memory for MatrixArray on host\n");
-        return;
-    }
+    this->MatptrArr.clear();
 
-    memset(this->MatArr.ptr, 0, this->total_bytes);
+    for (uint32_t i = 0; i < this->_matrix_number; ++i){
+        const auto* p_layout = this->_layouts[i];
+        this->MatptrArr.emplace_back();
 
-    if (decx::alloc::_host_virtual_page_malloc<void*>(&this->MatptrArr, this->ArrayNumber * sizeof(void*))) {
-        Print_Error_Message(4, "Fail to allocate memory for pointer array on host\n");
-        return;
-    }
-    this->MatptrArr.ptr[0] = this->MatArr.ptr;
-    for (int i = 1; i < this->ArrayNumber; ++i) {
-        this->MatptrArr.ptr[i] = (void*)((uchar*)this->MatptrArr.ptr[i - 1] + this->_plane * this->_single_element_size);
+        const uint64_t alloc_bytes = (uint64_t)p_layout->height * (uint64_t)p_layout->pitch;
+        if (decx::alloc::_host_virtual_page_malloc<void>(this->MatptrArr[i], alloc_bytes)) {
+            Print_Error_Message(4, "Fail to allocate memory for MatrixArray on host\n");
+            return;
+        }
     }
 }
-
-
 
 
 void decx::_MatrixArray::construct(const de::_DATA_TYPES_FLAGS_ _type, uint _width, uint _height, uint _MatrixNum)
@@ -83,28 +73,9 @@ void decx::_MatrixArray::construct(const de::_DATA_TYPES_FLAGS_ _type, uint _wid
 
 
 
-void decx::_MatrixArray::re_construct(const de::_DATA_TYPES_FLAGS_ _type, uint _width, uint _height, uint _MatrixNum)
+void decx::_MatrixArray::re_construct(const de::_DATA_TYPES_FLAGS_ _type, uint _width, uint _height, const uint32_t matrix_id)
 {
-    // If all the parameters are the same, it is meaningless to re-construt the data
-    if (this->type != type || this->_layout.width != _width || this->_layout.height != _height || 
-        this->ArrayNumber != _MatrixNum)
-    {
-        const size_t pre_size = this->total_bytes;
-
-        this->_attribute_assign(_type, _width, _height, _MatrixNum);
-
-        if (this->total_bytes > pre_size) {
-            decx::alloc::_host_virtual_page_dealloc(&this->MatArr);
-
-            this->alloc_data_space();
-        }
-        else {
-            this->MatptrArr.ptr[0] = this->MatArr.ptr;
-            for (int i = 1; i < this->ArrayNumber; ++i) {
-                this->MatptrArr.ptr[i] = (void*)((uchar*)this->MatptrArr.ptr[i - 1] + this->_plane * this->_single_element_size);
-            }
-        }
-    }
+    
 }
 
 
@@ -113,32 +84,24 @@ void decx::_MatrixArray::_attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, u
 {
     this->type = _type;
 
-    this->_layout._attribute_assign(_type, _width, _height);
-    this->ArrayNumber = MatrixNum;
+    uint64_t _total_alloc_bytes = 0;
 
-    this->_single_element_size = this->_layout._single_element_size;
+    for (int32_t i = 0; i < MatrixNum; ++i){
+        this->_layouts.emplace_back();
+        auto* layout_ptr = this->_layouts.back();
+        layout_ptr->_attribute_assign(_type, _width, _height);
 
-    this->_init = true;
+        uint64_t _mat_size = (uint64_t)layout_ptr->width * (uint64_t)layout_ptr->height;
+        _total_alloc_bytes += _mat_size * layout_ptr->_single_element_size;
+    }
 
-    this->_init = _type != de::_DATA_TYPES_FLAGS_::_VOID_;
-
-    this->plane = static_cast<size_t>(_width) * static_cast<size_t>(_height);
-    this->_plane = static_cast<size_t>(this->_layout.pitch) * static_cast<size_t>(this->_layout.height);
-
-    this->element_num = static_cast<size_t>(this->plane) * static_cast<size_t>(MatrixNum);
-    this->_element_num = static_cast<size_t>(this->_plane) * static_cast<size_t>(MatrixNum);
-
-    this->total_bytes = (this->_element_num) * this->_layout._single_element_size;
+    this->_single_element_size = this->_layouts.front()->_single_element_size;
 }
-
 
 
 
 decx::_MatrixArray::_MatrixArray()
 {
-    this->_exp_data_ptr = &this->MatptrArr.ptr;
-    this->_exp_matrix_dscr = &this->_layout;
-
     this->_attribute_assign(de::_DATA_TYPES_FLAGS_::_VOID_, 0, 0, 0);
     this->_init = false;
 }
@@ -147,61 +110,19 @@ decx::_MatrixArray::_MatrixArray()
 
 decx::_MatrixArray::_MatrixArray(const de::_DATA_TYPES_FLAGS_ _type, uint W, uint H, uint MatrixNum)
 {
-    this->_exp_data_ptr = &this->MatptrArr.ptr;
-    this->_exp_matrix_dscr = &this->_layout;
-
     this->_attribute_assign(_type, W, H, MatrixNum);
 
     this->alloc_data_space();
 }
 
 
-uint32_t decx::_MatrixArray::Width() const { return this->_layout.width; }
+uint32_t decx::_MatrixArray::Width(const uint32_t matrix_id) const { return this->_layouts[matrix_id]->height; }
 
 
-uint32_t decx::_MatrixArray::Height() const { return this->_layout.height; }
+uint32_t decx::_MatrixArray::Height(const uint32_t matrix_id) const { return this->_layouts[matrix_id]->height; }
 
 
 uint32_t decx::_MatrixArray::MatrixNumber() const { return this->ArrayNumber; }
-
-//
-//float* decx::_MatrixArray::ptr_fp32(const uint row, const uint col, const uint _seq)
-//{
-//    float* __ptr = reinterpret_cast<float*>(this->MatptrArr.ptr[_seq]);
-//    return (__ptr + (size_t)row * this->_layout.pitch + col);
-//}
-//
-//int* decx::_MatrixArray::ptr_int32(const uint row, const uint col, const uint _seq)
-//{
-//    int* __ptr = reinterpret_cast<int*>(this->MatptrArr.ptr[_seq]);
-//    return (__ptr + (size_t)row * this->_layout.pitch + col);
-//}
-//
-//double* decx::_MatrixArray::ptr_fp64(const uint row, const uint col, const uint _seq)
-//{
-//    double* __ptr = reinterpret_cast<double*>(this->MatptrArr.ptr[_seq]);
-//    return (__ptr + (size_t)row * this->_layout.pitch + col);
-//}
-//
-//de::CPf* decx::_MatrixArray::ptr_cpl32(const uint row, const uint col, const uint _seq)
-//{
-//    de::CPf* __ptr = reinterpret_cast<de::CPf*>(this->MatptrArr.ptr[_seq]);
-//    return (__ptr + (size_t)row * this->_layout.pitch + col);
-//}
-//
-//
-//de::Half* decx::_MatrixArray::ptr_fp16(const uint row, const uint col, const uint _seq)
-//{
-//    de::Half* __ptr = reinterpret_cast<de::Half*>(this->MatptrArr.ptr[_seq]);
-//    return (__ptr + (size_t)row * this->_layout.pitch + col);
-//}
-//
-//
-//uint8_t* decx::_MatrixArray::ptr_uint8(const uint row, const uint col, const uint _seq)
-//{
-//    uint8_t* __ptr = reinterpret_cast<uint8_t*>(this->MatptrArr.ptr[_seq]);
-//    return (__ptr + (size_t)row * this->_layout.pitch + col);
-//}
 
 
 #if _CPP_EXPORT_ENABLED_
@@ -232,9 +153,12 @@ de::MatrixArray* de::CreateMatrixArrayPtr(const de::_DATA_TYPES_FLAGS_ _type, ui
 
 void decx::_MatrixArray::release()
 {
-    decx::alloc::_host_virtual_page_dealloc(&this->MatArr);
-
-    decx::alloc::_host_virtual_page_dealloc(&this->MatptrArr);
+    for (int32_t i = 0; i < this->_matrix_number; ++i) {
+        decx::alloc::_host_virtual_page_dealloc(this->MatptrArr[i]);
+    }
+    
+    this->_layouts.~Dynamic_Array();
+    this->MatptrArr.~Dynamic_Array();
 }
 
 
@@ -255,20 +179,20 @@ de::MatrixArray& decx::_MatrixArray::SoftCopy(de::MatrixArray& src)
 {
     const decx::_MatrixArray& ref_src = dynamic_cast<decx::_MatrixArray&>(src);
 
-    this->MatArr.block = ref_src.MatArr.block;
+    this->_layouts = ref_src._layouts;
 
-    this->_attribute_assign(ref_src.type, ref_src._layout.width, ref_src._layout.height, ref_src.ArrayNumber);
-
-    decx::alloc::_host_virtual_page_malloc_same_place(&this->MatArr);
+    for (int32_t i = 0; i < _matrix_number; ++i){
+        decx::alloc::_host_virtual_page_malloc_same_place(this->MatptrArr[i]);
+    }
 
     return *this;
 }
 
 
 
-uint32_t decx::_MatrixArray::Pitch() const
+uint32_t decx::_MatrixArray::Pitch(const uint32_t matrix_id) const
 {
-    return this->_layout.pitch;
+    return this->_layouts[matrix_id]->pitch;
 }
 
 
@@ -278,9 +202,9 @@ uint32_t decx::_MatrixArray::Array_num() const
 }
 
 
-const decx::_matrix_layout& decx::_MatrixArray::get_layout() const
+const decx::_matrix_layout& decx::_MatrixArray::get_layout(const uint32_t matrix_id) const
 {
-    return this->_layout;
+    return *this->_layouts[matrix_id];
 }
 
 
@@ -288,12 +212,6 @@ const decx::_matrix_layout& decx::_MatrixArray::get_layout() const
 bool decx::_MatrixArray::is_init() const
 {
     return this->_init;
-}
-
-
-uint64_t decx::_MatrixArray::get_total_bytes() const
-{
-    return this->total_bytes;
 }
 
 

@@ -27,3 +27,37 @@
 * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
 * DEALINGS IN THE SOFTWARE.
 */
+
+#ifndef _EIGENVALUE_H_
+#define _EIGENVALUE_H_
+
+#include <basic.h>
+#include <Classes/Matrix.h>
+#include <thread_management/thread_arrange.h>
+
+namespace decx
+{
+namespace blas{
+    template <typename _data_type>
+    class cpu_eig_bisection;
+}
+}
+
+template <typename _data_type>
+class decx::blas::cpu_eig_bisection
+{
+private:
+    decx::_matrix_layout _layout;
+    _data_type _max_err;
+
+    const _data_type* _diag = NULL;
+    const _data_type* _off_diag = NULL;
+
+public:
+    cpu_eig_bisection() {}
+
+
+    void extract_diagonal();
+};
+
+#endif

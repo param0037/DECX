@@ -60,6 +60,12 @@ namespace de
         _DECX_API_ void Extend(de::Vector& src, de::Vector& dst, const uint32_t left, const uint32_t right,
             const de::extend_label border_type, de::Number val = de::Number());
     }
+
+    namespace blas{
+        namespace cuda{
+            _DECX_API_ void Extend(de::InputGPUMatrix src, de::OutputGPUMatrix dst, const uint32_t R, const uint32_t L, const uint32_t T, const uint32_t B);
+        }
+    }
 }
 
 

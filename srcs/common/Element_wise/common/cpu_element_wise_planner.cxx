@@ -132,12 +132,12 @@ cpu_ElementWise2D_planner::plan(const uint32_t conc,
         else{
             if (this->_proc_dims.y < this->_concurrency){
                 decx::utils::thread2D_arrangement_advisor(&this->_thread_dist, this->_concurrency, this->_proc_dims);
-                decx::utils::frag_manager_gen(this->_fmgr_WH, this->_proc_w_v, this->_thread_dist.x);
+                decx::utils::frag_manager_gen_Nx(this->_fmgr_WH, this->_proc_dims.x, this->_thread_dist.x, this->_alignment);
                 decx::utils::frag_manager_gen(this->_fmgr_WH + 1, this->_proc_dims.y, this->_thread_dist.y);
             }
             else{
                 this->_thread_dist = make_uint2(1, this->_concurrency);
-                decx::utils::frag_manager_gen(this->_fmgr_WH, this->_proc_w_v, 1);
+                decx::utils::frag_manager_gen_Nx(this->_fmgr_WH, this->_proc_dims.x, 1, this->_alignment);
                 decx::utils::frag_manager_gen(this->_fmgr_WH + 1, this->_proc_dims.y, this->_concurrency);
             }
         }

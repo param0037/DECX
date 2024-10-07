@@ -5,7 +5,7 @@
 # 
 # This is a part of the open source project named "DECX", a high-performance scientific
 # computational library. This project follows the MIT License. For more information 
-# please visit https:
+# please visit https://github.com/param0037/DECX.
 # 
 # Copyright (c) 2021 Wayne Anderson
 # 
@@ -28,8 +28,14 @@
 
 include_guard(GLOBAL)
 
+include_directories("${DECX_WORLD_ABS_DIR}/srcs/common/")
+include("${DECX_WORLD_ABS_DIR}/srcs/common/FMGR/FMGR_COM.cmake")
+
+
 if (DEFINED DECX_BUILD_WITH_CUDA)
-    file(GLOB_RECURSE EW_CUDA_COM_SRCS "${DECX_WORLD_ABS_DIR}/srcs/common/Element_wise/*.cu")
+    file(GLOB_RECURSE NET_EW_CUDA_COM_SRCS "${DECX_WORLD_ABS_DIR}/srcs/common/Element_wise/*.cu")
+    list(APPEND EW_CUDA_COM_SRCS ${FMGR_CUDA_COM_SRCS} ${NET_EW_CUDA_COM_SRCS})
 else()
-    file(GLOB_RECURSE EW_CPU_COM_SRCS "${DECX_WORLD_ABS_DIR}/srcs/common/Element_wise/*.cxx")
+    file(GLOB_RECURSE NET_EW_CPU_COM_SRCS "${DECX_WORLD_ABS_DIR}/srcs/common/Element_wise/*.cxx")
+    list(APPEND EW_CPU_COM_SRCS ${FMGR_CPU_COM_SRCS} ${NET_EW_CPU_COM_SRCS})
 endif()

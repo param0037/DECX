@@ -92,7 +92,11 @@ public:
      * @return _Ty* pointer of the epscified element. If there is no element in the array
      * the return value will be unexpected
      */
-    _Ty* operator[](const size_t _index);
+    _Ty* operator[](const uint64_t _index);
+
+
+    const _Ty* operator[](const uint64_t _index) const;
+
 
     /**
      * @brief Insert element on the back of the array (placement new)
@@ -118,6 +122,9 @@ public:
      * @return void, return none
      */
     void del(const uint64_t index);
+
+
+    decx::utils::Dynamic_Array<_Ty>& operator=(const decx::utils::Dynamic_Array<_Ty>* _src);
 
 
     /**
@@ -196,6 +203,12 @@ _Ty* decx::utils::Dynamic_Array<_Ty>::operator[](const size_t _index)
     return this->_begin_ptr + _index;
 }
 
+template <typename _Ty>
+const _Ty* decx::utils::Dynamic_Array<_Ty>::operator[](const size_t _index) const
+{
+    return this->_begin_ptr + _index;
+}
+
 
 template <typename _Ty>
 void decx::utils::Dynamic_Array<_Ty>::del(const uint64_t index)
@@ -215,6 +228,11 @@ void decx::utils::Dynamic_Array<_Ty>::del(const uint64_t index)
     }
 }
 
+template <typename _Ty> decx::utils::Dynamic_Array<_Ty>& 
+decx::utils::Dynamic_Array<_Ty>::operator=(const decx::utils::Dynamic_Array<_Ty>* _src)
+{
+    memcpy(this, &_src, sizeof(decx::utils::Dynamic_Array<_Ty>));
+}
 
 template <typename _Ty>
 uint64_t decx::utils::Dynamic_Array<_Ty>::size() const

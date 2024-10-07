@@ -44,7 +44,7 @@ decx::vis::CPUK::_BGR2Gray_UC42UC(const float* __restrict    src,
     const __m128i _shuffle_var = _mm_setr_epi8(0, 4, 8, 12, 1, 5, 9, 13, 2, 6, 10, 14, 3, 7, 11, 15);
     __m128i __recv;
     __m128i __res, __buf;
-
+    
     for (int i = 0; i < dims.y; ++i) {
         glo_dex_src = i * pitchsrc;
         glo_dex_dst = i * pitchdst / 4;
@@ -55,16 +55,16 @@ decx::vis::CPUK::_BGR2Gray_UC42UC(const float* __restrict    src,
             __recv = _mm_shuffle_epi8(__recv, _shuffle_var);
 
             __buf = _mm_cvtepu8_epi32(__recv);
-            __res = _mm_mullo_epi32(__buf, _mm_set1_epi32(19595));
+            __res = _mm_mullo_epi32(__buf, _mm_set1_epi32(7472));          // LSB B
 
             __buf = _mm_cvtepu8_epi32(_mm_shuffle_epi32(__recv, 0b01010101));
-            __buf = _mm_mullo_epi32(__buf, _mm_set1_epi32(38469));
+            __buf = _mm_mullo_epi32(__buf, _mm_set1_epi32(38469));          // G
             __res = _mm_add_epi32(__buf, __res);
 
             __buf = _mm_cvtepu8_epi32(_mm_shuffle_epi32(__recv, 0b10101010));
-            __buf = _mm_mullo_epi32(__buf, _mm_set1_epi32(7472));
+            __buf = _mm_mullo_epi32(__buf, _mm_set1_epi32(19595));           // R
             __res = _mm_add_epi32(__buf, __res);
-
+                                                                            // MSB A
             __buf = _mm_srli_epi32(__res, 16);
             __res = _mm_shuffle_epi8(__buf, _shuffle_var);
             dst[glo_dex_dst] = *((float*)&__res);
@@ -256,7 +256,7 @@ decx::vis::CPUK::_RGB2YUV_UC42UC4(const float* __restrict     src,
             _IO._vf = _mm256_load_ps(src + glo_dex_src);
             // R
             // [[R0 R1 R2 R3], [R4 R5 R6 R7], [R0 R1 R2 R3], [R4 R5 R6 R7]] <16-bit>
-            _reg256._vi = _mm256_and_si256(_mm256_shuffle_epi8(_IO._vi, _mm256_set1_epi64x(0x000c000800040000)), cvtu8_u16_mask);
+            _reg256._vi = _mm256_and_si256(_mm256_shuffle_epi8(_IO._vi, _mm256_set1_epi64x(0x000c000800040000)), cvtu8_u16_mask);       // 0x000c000800040000
             _reg256._vi = _mm256_permutevar8x32_epi32(_reg256._vi, shuffle_var2);
 
             _YU_res._vi = _mm256_mullo_epi16(_reg256._vi, _mm256_setr_epi32(5046349, 5046349, 5046349, 5046349, 
@@ -274,7 +274,7 @@ decx::vis::CPUK::_RGB2YUV_UC42UC4(const float* __restrict     src,
 
             // B
             // [[B0 B1 B2 B3], [B4 B5 B6 B7], [B0 B1 B2 B3], [B4 B5 B6 B7]] <16-bit>
-            _reg256._vi = _mm256_and_si256(_mm256_shuffle_epi8(_IO._vi, _mm256_set1_epi64x(0x000e000a00060002)), cvtu8_u16_mask);
+            _reg256._vi = _mm256_and_si256(_mm256_shuffle_epi8(_IO._vi, _mm256_set1_epi64x(0x000e000a00060002)), cvtu8_u16_mask);       // 0x000e000a00060002
             _reg256._vi = _mm256_permutevar8x32_epi32(_reg256._vi, shuffle_var2);
 
             _YU_res._vi = _mm256_add_epi16(_mm256_mullo_epi16(_reg256._vi, _mm256_setr_epi32(1900573, 1900573, 1900573, 1900573, 
@@ -314,13 +314,12 @@ decx::vis::CPUK::_RGB2YUV_UC42UC4(const float* __restrict     src,
 
 
 
-
 _THREAD_FUNCTION_ void 
 decx::vis::CPUK::_YUV2RGB_UC42UC4(const float* __restrict     src,
-                                     float* __restrict           dst, 
-                                     const int2                  dims, 
-                                     const uint32_t              pitchsrc, 
-                                     const uint32_t              pitchdst)
+                                  float* __restrict           dst, 
+                                  const int2                  dims, 
+                                  const uint32_t              pitchsrc, 
+                                  const uint32_t              pitchdst)
 {
     uint64_t glo_dex_src = 0, glo_dex_dst = 0;
 
@@ -341,7 +340,7 @@ decx::vis::CPUK::_YUV2RGB_UC42UC4(const float* __restrict     src,
             _IO._vf = _mm256_load_ps(src + glo_dex_src);
             // Y
             // [[R0 R1 R2 R3], [R4 R5 R6 R7], [R0 R1 R2 R3], [R4 R5 R6 R7]] <16-bit>
-            _reg256._vi = _mm256_and_si256(_mm256_shuffle_epi8(_IO._vi, _mm256_set1_epi64x(0x000c000800040000)), cvtu8_u16_mask);
+            _reg256._vi = _mm256_and_si256(_mm256_shuffle_epi8(_IO._vi, _mm256_set1_epi64x(0x000c000800040000)), cvtu8_u16_mask);       // 0x000c000800040000
             _RG_res._vi = _mm256_permutevar8x32_epi32(_reg256._vi, shuffle_var2);
 
             _B_res._vi = _mm256_castsi256_si128(_RG_res._vi);
@@ -361,7 +360,7 @@ decx::vis::CPUK::_YUV2RGB_UC42UC4(const float* __restrict     src,
             
             // Cb (V)
             // [[B0 B1 B2 B3], [B4 B5 B6 B7], [B0 B1 B2 B3], [B4 B5 B6 B7]] <16-bit>
-            _reg256._vi = _mm256_and_si256(_mm256_shuffle_epi8(_IO._vi, _mm256_set1_epi64x(0x000e000a00060002)), cvtu8_u16_mask);
+            _reg256._vi = _mm256_and_si256(_mm256_shuffle_epi8(_IO._vi, _mm256_set1_epi64x(0x000e000a00060002)), cvtu8_u16_mask);       // 0x000e000a00060002
             _reg256._vi = _mm256_permutevar8x32_epi32(_reg256._vi, shuffle_var2);
             _reg256._vi = _mm256_sub_epi16(_reg256._vi, _mm256_set1_epi16(128));
 
@@ -400,7 +399,6 @@ decx::vis::CPUK::_YUV2RGB_UC42UC4(const float* __restrict     src,
         }
     }
 }
-
 
 
 

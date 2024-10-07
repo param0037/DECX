@@ -43,17 +43,22 @@ namespace CPUK
 {
     template <typename _type_in, typename _type_out>
     using VGT2D_executor = void(const _type_in*, const float2*, _type_out*, const uint2, const uint32_t, 
-        const uint32_t, const uint32_t, decx::CPUK::VGT_addr_mgr*);
+        const uint32_t, const uint32_t, void*);
 
 
     _THREAD_FUNCTION_ void gather2D_fp32_exec_bilinear(const float* src_head_ptr, const float2* __restrict map,
         float* __restrict dst, const uint2 proc_dims_v, const uint32_t Wsrc_v1, const uint32_t Wmap_v1, const uint32_t Wdst_v1,
-        decx::CPUK::VGT_addr_mgr* _addr_info);
+        void* _addr_info);
+
+
+    _THREAD_FUNCTION_ void gather2D_fp32_exec_nearest(const float* src_head_ptr, const float2* __restrict map,
+        float* __restrict dst, const uint2 proc_dims_v, const uint32_t Wsrc_v1, const uint32_t Wmap_v1, const uint32_t Wdst_v1,
+        void* _addr_info);
 
 
     _THREAD_FUNCTION_ void gather2D_uint8_exec_bilinear(const uint8_t* src_head_ptr, const float2* __restrict map,
         uint8_t* __restrict dst, const uint2 proc_dims_v, const uint32_t Wsrc_v1, const uint32_t Wmap_v1, const uint32_t Wdst_v1,
-        decx::CPUK::VGT_addr_mgr* _addr_info);
+        void* _addr_info);
 }
 }
 

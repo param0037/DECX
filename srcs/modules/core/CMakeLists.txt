@@ -5,7 +5,7 @@
 # 
 # This is a part of the open source project named "DECX", a high-performance scientific
 # computational library. This project follows the MIT License. For more information 
-# please visit https:
+# please visit https://github.com/param0037/DECX.
 # 
 # Copyright (c) 2021 Wayne Anderson
 # 
@@ -53,13 +53,14 @@ else()
     project(DECX_core_CPU LANGUAGES CXX)
 endif()
 
-
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # include to add compile definitions to the target
 include("../../config_paths.cmake")
 include("../../compile_defs.cmake")
+
+include_directories("${DECX_WORLD_ABS_DIR}/srcs/modules/core/")
 
 if(_DECX_CUDA_MODULE_)
     include("DECX_core_CUDA.cmake")

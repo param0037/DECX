@@ -17,16 +17,6 @@
 #include "../classes/class_utils.h"
 
 
-namespace de
-{
-    _DECX_API_ de::Half Float2Half(const float& __x);
-
-
-    _DECX_API_ float Half2Float(const de::Half& __x);
-}
-
-
-
 namespace de {
 
     enum TypeCast_Method {

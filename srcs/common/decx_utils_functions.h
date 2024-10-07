@@ -49,14 +49,14 @@ namespace decx
         * plus one when the input value reaches the critical points (e.g.
         * 2, 4, 8, 16, 32...)
         */
-        static int _GetHighest_abd(size_t __x) noexcept;
+        static int _GetHighest_abd(uint64_t __x) noexcept;
 
         /*
         * @brief : The '_abd' suffix means that the return value WILL
         * plus one when the input value reaches the critical points (e.g.
         * 2, 4, 8, 16, 32...)
         */
-        static int _GetHighest(size_t __x) noexcept;
+        static int _GetHighest(uint64_t __x) noexcept;
 
 
         /*
@@ -111,7 +111,7 @@ __host__ __device__
         /**
          * NOrmally, src_len should not larger than dst_len
         */
-        template <size_t dst_len>
+        template <uint64_t dst_len>
         static void decx_strcpy(char (&dst)[dst_len], const char* src);
 
         /*
@@ -121,7 +121,7 @@ __host__ __device__
         * @param _pitch : The width of the virtal square
         */
         template <typename _In_Type, typename _Out_Type>
-        static _Out_Type* ptr_shift_xy(_In_Type* _initial_ptr, const size_t __x, const size_t __y, const size_t _pitch);
+        static _Out_Type* ptr_shift_xy(_In_Type* _initial_ptr, const uint64_t __x, const uint64_t __y, const uint64_t _pitch);
 
         /*
         * @param _initial_ptr : The pointer where start to offset
@@ -129,7 +129,7 @@ __host__ __device__
         * @param _pitch : The width of the virtal square
         */
         template <typename _In_Type, typename _Out_Type>
-        static _Out_Type* ptr_shift_xy(_In_Type* _initial_ptr, const uint2 offset_xy, const size_t _pitch);
+        static _Out_Type* ptr_shift_xy(_In_Type* _initial_ptr, const uint2 offset_xy, const uint64_t _pitch);
 
 
         /*
@@ -139,7 +139,7 @@ __host__ __device__
         * @param _pitch : The width of the virtal square
         */
         template <typename _Ty>
-        static void ptr_shift_xy_inplace(_Ty** _initial_ptr, const uint __x, const uint __y, const size_t _pitch);
+        static void ptr_shift_xy_inplace(_Ty** _initial_ptr, const uint __x, const uint __y, const uint64_t _pitch);
 
         /*
         * @param _initial_ptr : The pointer where start to offset
@@ -147,14 +147,14 @@ __host__ __device__
         * @param _pitch : The width of the virtal square
         */
         template <typename _Ty>
-        static void ptr_shift_xy_inplace(_Ty** _initial_ptr, const uint2 offset_xy, const size_t _pitch);
+        static void ptr_shift_xy_inplace(_Ty** _initial_ptr, const uint2 offset_xy, const uint64_t _pitch);
     }
 }
 
 
 
 
-static int decx::utils::_GetHighest_abd(size_t __x) noexcept
+static int decx::utils::_GetHighest_abd(uint64_t __x) noexcept
 {
     --__x;
     int res = 0;
@@ -216,7 +216,7 @@ decx::utils::align(_Ty __x, const uint32_t _alignment)
 }
 
 
-static int _GetHighest(size_t __x) noexcept
+static int _GetHighest(uint64_t __x) noexcept
 {
     int res = 0;
     while (__x) {
@@ -228,7 +228,7 @@ static int _GetHighest(size_t __x) noexcept
 
 
 
-static int decx::utils::_GetHighest(size_t __x) noexcept
+static int decx::utils::_GetHighest(uint64_t __x) noexcept
 {
     int res = 0;
     while (__x) {
@@ -241,7 +241,7 @@ static int decx::utils::_GetHighest(size_t __x) noexcept
 
 
 
-template <size_t dst_len>
+template <uint64_t dst_len>
 static void decx::utils::decx_strcpy(char (&dst)[dst_len], const char* src)
 {
 #ifdef _MSC_VER
@@ -256,33 +256,33 @@ static void decx::utils::decx_strcpy(char (&dst)[dst_len], const char* src)
 
 
 template <typename _In_Type, typename _Out_Type> static FORCEINLINE
-_Out_Type* decx::utils::ptr_shift_xy(_In_Type* _initial_ptr, const size_t __x, const size_t __y, const size_t _pitch)
+_Out_Type* decx::utils::ptr_shift_xy(_In_Type* _initial_ptr, const uint64_t __y, const uint64_t __x, const uint64_t _pitch)
 {
-    return reinterpret_cast<_Out_Type*>(_initial_ptr) + (size_t)__x * _pitch + (size_t)__y;
+    return reinterpret_cast<_Out_Type*>(_initial_ptr) + (uint64_t)__y * _pitch + (uint64_t)__x;
 }
 
 
 
 template <typename _In_Type, typename _Out_Type> static FORCEINLINE
-_Out_Type* decx::utils::ptr_shift_xy(_In_Type* _initial_ptr, const uint2 offset_xy, const size_t _pitch)
+_Out_Type* decx::utils::ptr_shift_xy(_In_Type* _initial_ptr, const uint2 offset_xy, const uint64_t _pitch)
 {
-    return reinterpret_cast<_Out_Type*>(_initial_ptr) + (size_t)offset_xy.x * _pitch + (size_t)offset_xy.y;
+    return reinterpret_cast<_Out_Type*>(_initial_ptr) + (uint64_t)offset_xy.x * _pitch + (uint64_t)offset_xy.y;
 }
 
 
 
 template <typename _Ty> static FORCEINLINE
-void decx::utils::ptr_shift_xy_inplace(_Ty** _initial_ptr, const uint __x, const uint __y, const size_t _pitch)
+void decx::utils::ptr_shift_xy_inplace(_Ty** _initial_ptr, const uint __x, const uint __y, const uint64_t _pitch)
 {
-    *_initial_ptr += (size_t)__x * _pitch + (size_t)__y;
+    *_initial_ptr += (uint64_t)__x * _pitch + (uint64_t)__y;
 }
 
 
 
 template <typename _Ty> static FORCEINLINE
-void decx::utils::ptr_shift_xy_inplace(_Ty** _initial_ptr, const uint2 offset_xy, const size_t _pitch)
+void decx::utils::ptr_shift_xy_inplace(_Ty** _initial_ptr, const uint2 offset_xy, const uint64_t _pitch)
 {
-    *_initial_ptr += (size_t)offset_xy.x * _pitch + (size_t)offset_xy.y;
+    *_initial_ptr += (uint64_t)offset_xy.x * _pitch + (uint64_t)offset_xy.y;
 }
 
 

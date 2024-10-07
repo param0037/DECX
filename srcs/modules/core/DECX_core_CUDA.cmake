@@ -5,7 +5,7 @@
 # 
 # This is a part of the open source project named "DECX", a high-performance scientific
 # computational library. This project follows the MIT License. For more information 
-# please visit https:
+# please visit https://github.com/param0037/DECX.
 # 
 # Copyright (c) 2021 Wayne Anderson
 # 

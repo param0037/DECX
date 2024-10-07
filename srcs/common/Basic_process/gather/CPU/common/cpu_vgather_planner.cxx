@@ -37,7 +37,7 @@ namespace decx
     static void* VGT2D_exec_LUT[6][6] = 
     {   // float input
         {   (void*)decx::CPUK::gather2D_fp32_exec_bilinear, // bilinear
-            NULL,   // nearest
+            (void*)decx::CPUK::gather2D_fp32_exec_nearest,   // nearest
             // other output types ...
         }, 
         // uint8_t input
@@ -65,14 +65,27 @@ plan(const uint32_t concurrency,    const uint2 dst_dims_v1,
     
     this->_interpolate_type = intp_type;
     
-    if (decx::alloc::_host_virtual_page_malloc(&this->_addr_mgrs, this->_concurrency * sizeof(decx::CPUK::VGT_addr_mgr))){
+    const uint32_t addr_mgr_size = (int32_t)this->_interpolate_type ? sizeof(decx::CPUK::VGT_nearest_addr_mgr) : 
+                                        sizeof(decx::CPUK::VGT_bilinear_addr_mgr);
+
+    if (decx::alloc::_host_virtual_page_realloc(&this->_addr_mgrs, this->_concurrency * addr_mgr_size)){
         decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION,
             ALLOC_FAIL);
         return;
     }
 
-    for (int32_t i = 0; i < this->_concurrency; ++i){
-        this->_addr_mgrs.ptr[i].set_src_dims(src_dims_v1);
+    if (this->_interpolate_type == de::Interpolate_Types::INTERPOLATE_BILINEAR)
+    {
+        auto* p_addr_mgr = (decx::CPUK::VGT_bilinear_addr_mgr*)this->_addr_mgrs.ptr;
+        for (int32_t i = 0; i < this->_concurrency; ++i){
+            p_addr_mgr[i].set_src_dims(src_dims_v1);
+        }
+    }
+    else{
+        auto* p_addr_mgr = (decx::CPUK::VGT_nearest_addr_mgr*)this->_addr_mgrs.ptr;
+        for (int32_t i = 0; i < this->_concurrency; ++i){
+            p_addr_mgr[i].set_src_dims(src_dims_v1);
+        }
     }
 }
 
@@ -84,6 +97,9 @@ decx::cpu_VGT2D_planner::run(const _type_in* src,          const float2* map,
 {
     uint64_t dex_map = 0, dex_dst = 0;
     uint32_t _thr_cnt = 0;
+
+    const uint32_t addr_mgr_size = (int32_t)this->_interpolate_type ? sizeof(decx::CPUK::VGT_nearest_addr_mgr) : 
+                                        sizeof(decx::CPUK::VGT_bilinear_addr_mgr);
 
     uint2 selector = decx::VGT2D_kernel_selector<_type_in, _type_out>(this->_interpolate_type);
     auto* exec_ptr = (decx::CPUK::VGT2D_executor<_type_in, _type_out>*)decx::VGT2D_exec_LUT[selector.x][selector.y];
@@ -99,7 +115,7 @@ decx::cpu_VGT2D_planner::run(const _type_in* src,          const float2* map,
                         i < this->_thread_dist.y - 1 ? this->_fmgr_WH[1].frag_len : this->_fmgr_WH[1].last_frag_len);
 
             t1D->_async_thread[_thr_cnt] = decx::cpu::register_task_default(exec_ptr, src, map + dex_map, dst + dex_dst, 
-                proc_dims_v, this->_pitchsrc_v1, pitchmap_v1, pitchdst_v1, this->_addr_mgrs.ptr + _thr_cnt);
+                proc_dims_v, this->_pitchsrc_v1, pitchmap_v1, pitchdst_v1, (uint8_t*)this->_addr_mgrs.ptr + _thr_cnt * addr_mgr_size);
             
             dex_map += this->_fmgr_WH[0].frag_len * this->_alignment;
             dex_dst += this->_fmgr_WH[0].frag_len * this->_alignment;

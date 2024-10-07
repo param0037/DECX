@@ -60,11 +60,18 @@ private:
         uint8_t     _u8;
         int32_t     _i32;
         de::Half    _fp16;
+
+        _data() {
+            memset(this, 0, sizeof(_data));
+        }
     };
     _data _number;
     int32_t _data_type_flag;
 
 public:
+    Number() {
+        this->_data_type_flag = de::_DATA_TYPES_FLAGS_::_VOID_;
+    }
 
     int32_t Type() const{
         return this->_data_type_flag;

@@ -14,6 +14,7 @@
 
 #include "../basic.h"
 #include "class_utils.h"
+#include "DecxNumber.h"
 
 
 #ifdef __cplusplus
@@ -54,10 +55,10 @@ namespace de
         Matrix() {}
 
 
-        virtual uint Width() const = 0;
+        virtual uint32_t Width() const = 0;
 
 
-        virtual uint Height() const = 0;
+        virtual uint32_t Height() const = 0;
 
 
         template <typename _ptr_type>
@@ -102,6 +103,13 @@ namespace de
 
     _DECX_API_ de::Matrix& CreateMatrixRef(const de::_DATA_TYPES_FLAGS_ type, const uint32_t _width, const uint32_t _height,
         const de::_DATA_FORMATS_ format = de::_NA_);
+
+    namespace cpu{
+        _DECX_API_ void Generate(de::OutputMatrix mat, const de::_DATA_TYPES_FLAGS_ type_out, const de::Number val = de::Number());
+
+        _DECX_API_ void Random(de::OutputMatrix mat, const de::_DATA_TYPES_FLAGS_ type_out, const uint32_t width, const uint32_t height, const int32_t seed, const de::Point2D_d range);
+
+    }
 }
 #endif
 
