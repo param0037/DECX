@@ -35,78 +35,78 @@
 
 namespace decx
 {
-    namespace alloc {
-        /*
-        * This is a struct, which represents a buffer, and the two state words
-        * indicates the states.
-        */
-        template<class T>
-        struct MIF
-        {
-            /* This is the number of the size of the buffer that this->mem is pointing to,
-            in bytes. */
-            T* mem;
-
-            bool
-                /* If true, the this buffer is loaded with data most recently. Otherwise, the
-                data in it is relatively old. This state can be set by a function called
-                decx::utils::set_mutex_memory_state<_Ty1, _Ty2>(MIF*, MIF*) */
-                leading,
-
-                /* If true, this buffer is currently being used by calculation units (e.g. CUDA kernels)
-                This function is commonly used where device concurrency is needed. Otherwise, this buffer
-                is idle. */
-                _using;
-
-            MIF() {
-                leading = false;
-                _using = false;
-                mem = NULL;
-            }
-
-            MIF(T* _ptr) {
-                leading = false;
-                _using = false;
-                mem = _ptr;
-            }
-
-
-            MIF(T* _ptr, const bool _leading) {
-                leading = _leading;
-                _using = false;
-                mem = _ptr;
-            }
-        };
-    }
-
-
-    namespace utils
+namespace alloc {
+    /*
+    * This is a struct, which represents a buffer, and the two state words
+    * indicates the states.
+    */
+    template<class T>
+    struct MIF
     {
-        template <typename _Ty1, typename _Ty2>
-        static inline void set_mutex_memory_state(decx::alloc::MIF<_Ty1>* _set_leading, decx::alloc::MIF<_Ty2>* _set_lagging);
+        /* This is the number of the size of the buffer that this->mem is pointing to,
+        in bytes. */
+        T* mem;
+
+        bool
+            /* If true, the this buffer is loaded with data most recently. Otherwise, the
+            data in it is relatively old. This state can be set by a function called
+            decx::utils::set_mutex_memory_state<_Ty1, _Ty2>(MIF*, MIF*) */
+            leading,
+
+            /* If true, this buffer is currently being used by calculation units (e.g. CUDA kernels)
+            This function is commonly used where device concurrency is needed. Otherwise, this buffer
+            is idle. */
+            _using;
+
+        MIF() {
+            leading = false;
+            _using = false;
+            mem = NULL;
+        }
+
+        MIF(T* _ptr) {
+            leading = false;
+            _using = false;
+            mem = _ptr;
+        }
 
 
-        template <typename _Ty1, typename _Ty2, typename _Ty3>
-        static inline void set_mutex_memory3_using(decx::alloc::MIF<_Ty1>* _proc_A, decx::alloc::MIF<_Ty2>* _proc_B,
-            decx::alloc::MIF<_Ty3>* _proc_C);
+        MIF(T* _ptr, const bool _leading) {
+            leading = _leading;
+            _using = false;
+            mem = _ptr;
+        }
+    };
+}
 
 
-        template <typename _Ty1, typename _Ty2, typename _Ty3>
-        static inline void set_mutex_memory3_idle(decx::alloc::MIF<_Ty1>* _proc_A, decx::alloc::MIF<_Ty2>* _proc_B,
-            decx::alloc::MIF<_Ty3>* _proc_C);
+namespace utils
+{
+    template <typename _Ty1, typename _Ty2>
+    static inline void set_mutex_memory_state(decx::alloc::MIF<_Ty1>* _set_leading, decx::alloc::MIF<_Ty2>* _set_lagging);
 
 
-        template <typename _Ty1, typename _Ty2, typename _Ty3>
-        static inline void set_mutex_memory2_using(decx::alloc::MIF<_Ty1>* _proc_A, decx::alloc::MIF<_Ty2>* _proc_B);
+    template <typename _Ty1, typename _Ty2, typename _Ty3>
+    static inline void set_mutex_memory3_using(decx::alloc::MIF<_Ty1>* _proc_A, decx::alloc::MIF<_Ty2>* _proc_B,
+        decx::alloc::MIF<_Ty3>* _proc_C);
 
 
-        template <typename _Ty1, typename _Ty2, typename _Ty3>
-        static inline void set_mutex_memory2_idle(decx::alloc::MIF<_Ty1>* _proc_A, decx::alloc::MIF<_Ty2>* _proc_B);
+    template <typename _Ty1, typename _Ty2, typename _Ty3>
+    static inline void set_mutex_memory3_idle(decx::alloc::MIF<_Ty1>* _proc_A, decx::alloc::MIF<_Ty2>* _proc_B,
+        decx::alloc::MIF<_Ty3>* _proc_C);
 
 
-        template <typename _Ty1, typename _Ty2>
-        inline void inverse_mutex_memory_state(decx::alloc::MIF<_Ty1>* _MIF1, decx::alloc::MIF<_Ty2>* _MIF2);
-    }
+    template <typename _Ty1, typename _Ty2, typename _Ty3>
+    static inline void set_mutex_memory2_using(decx::alloc::MIF<_Ty1>* _proc_A, decx::alloc::MIF<_Ty2>* _proc_B);
+
+
+    template <typename _Ty1, typename _Ty2, typename _Ty3>
+    static inline void set_mutex_memory2_idle(decx::alloc::MIF<_Ty1>* _proc_A, decx::alloc::MIF<_Ty2>* _proc_B);
+
+
+    template <typename _Ty1, typename _Ty2>
+    inline void inverse_mutex_memory_state(decx::alloc::MIF<_Ty1>* _MIF1, decx::alloc::MIF<_Ty2>* _MIF2);
+}
 }
 
 
@@ -128,7 +128,6 @@ inline void decx::utils::inverse_mutex_memory_state(decx::alloc::MIF<_Ty1>* _MIF
 }
 
 
-
 template <typename _Ty1, typename _Ty2, typename _Ty3>
 inline void decx::utils::set_mutex_memory3_using(decx::alloc::MIF<_Ty1>* _proc_A, decx::alloc::MIF<_Ty2>* _proc_B,
     decx::alloc::MIF<_Ty3>* _proc_C)
@@ -137,7 +136,6 @@ inline void decx::utils::set_mutex_memory3_using(decx::alloc::MIF<_Ty1>* _proc_A
     _proc_B->_using = true;
     _proc_C->_using = true;
 }
-
 
 
 template <typename _Ty1, typename _Ty2, typename _Ty3>
@@ -180,6 +178,10 @@ namespace decx
 struct decx::utils::double_buffer_manager
 {
     decx::alloc::MIF<void> _MIF1, _MIF2;
+
+    double_buffer_manager() {
+        memset(this, 0, sizeof(decx::utils::double_buffer_manager));
+    }
 
     double_buffer_manager(void* _tmp1, void* _tmp2) {
         this->_MIF1.mem = _tmp1;

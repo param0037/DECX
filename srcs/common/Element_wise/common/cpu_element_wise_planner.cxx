@@ -70,11 +70,11 @@ decx::cpu_ElementWise1D_planner::plan(const uint32_t conc,
         this->_concurrency = conc;
 
         if (this->_total / this->_concurrency > this->_min_thread_proc){
-            decx::utils::frag_manager_gen(&this->_fmgr, _total_v, this->_concurrency);
+            decx::utils::frag_manager_gen_Nx(&this->_fmgr, this->_total, this->_concurrency, this->_alignment);
         }
         else{
             const uint32_t real_conc = decx::utils::ceil<uint64_t>(this->_total, this->_min_thread_proc);
-            decx::utils::frag_manager_gen(&this->_fmgr, _total_v, real_conc);
+            decx::utils::frag_manager_gen_Nx(&this->_fmgr, this->_total, real_conc, this->_alignment);
         }
     }
 }

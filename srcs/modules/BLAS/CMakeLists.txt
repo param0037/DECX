@@ -80,6 +80,8 @@ else()
     link_directories(${DECX_WORLD_ABS_DIR}/build/bin/${_DECX_HOST_ARCH_})
 endif()
 
+include_directories("${DECX_WORLD_ABS_DIR}/srcs/modules/core/")
+
 # Create library
 if(_DECX_CUDA_MODULE_)
     include("DECX_BLAS_CUDA.cmake")

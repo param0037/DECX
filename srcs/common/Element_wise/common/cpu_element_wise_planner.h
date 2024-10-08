@@ -65,6 +65,9 @@ public:
     void plan(const uint32_t conc, const uint64_t total, const uint8_t _type_in_size, const uint8_t _type_out_size,
         const uint64_t min_thread_proc = _EW_MIN_THREAD_PROC_DEFAULT_CPU_);
 
+
+    const decx::utils::frag_manager* get_fmgr() const {return &this->_fmgr;}
+
     
     template <typename FuncType, typename _type_in, typename _type_out, class ...Args>
     inline void caller_unary(FuncType&& f, const _type_in* src, _type_out* dst, decx::utils::_thr_1D* t1D, Args&& ...additional)
@@ -73,11 +76,12 @@ public:
         _type_out* loc_dst = dst;
 
         for (int32_t i = 0; i < this->_fmgr.frag_num; ++i){
-            const uint64_t _proc_len_v = i < this->_fmgr.frag_num - 1 ? this->_fmgr.frag_len : this->_fmgr.last_frag_len;
-            t1D->_async_thread[i] = decx::cpu::register_task_default(f, loc_src, loc_dst, _proc_len_v, additional...);
+            const uint64_t _proc_len_v1 = i < this->_fmgr.frag_num - 1 ? this->_fmgr.frag_len : this->_fmgr.last_frag_len;
+            t1D->_async_thread[i] = decx::cpu::register_task_default(f, loc_src, loc_dst, 
+                decx::utils::ceil<uint64_t>(_proc_len_v1, this->_alignment), additional...);
 
-            loc_src += _proc_len_v * this->_alignment;
-            loc_dst += _proc_len_v * this->_alignment;
+            loc_src += _proc_len_v1;
+            loc_dst += _proc_len_v1;
         }
 
         t1D->__sync_all_threads(make_uint2(0, this->_fmgr.frag_num));
@@ -90,11 +94,12 @@ public:
         uint64_t dex_src = 0, dex_dst = 0;
 
         for (int32_t i = 0; i < this->_fmgr.frag_num; ++i){
-            const uint64_t _proc_len_v = i < this->_fmgr.frag_num - 1 ? this->_fmgr.frag_len : this->_fmgr.last_frag_len;
-            t1D->_async_thread[i] = decx::cpu::register_task_default(f, src1 + dex_src, src2 + dex_src, dst + dex_dst, _proc_len_v, additional...);
+            const uint64_t _proc_len_v1 = i < this->_fmgr.frag_num - 1 ? this->_fmgr.frag_len : this->_fmgr.last_frag_len;
+            t1D->_async_thread[i] = decx::cpu::register_task_default(f, src1 + dex_src, src2 + dex_src, dst + dex_dst, 
+                decx::utils::ceil<uint64_t>(_proc_len_v1, this->_alignment), additional...);
 
-            dex_src += _proc_len_v * this->_alignment;
-            dex_dst += _proc_len_v * this->_alignment;
+            dex_src += _proc_len_v1;
+            dex_dst += _proc_len_v1;
         }
 
         t1D->__sync_all_threads(make_uint2(0, this->_fmgr.frag_num));

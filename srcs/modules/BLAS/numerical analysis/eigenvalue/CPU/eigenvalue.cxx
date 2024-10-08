@@ -28,36 +28,52 @@
 * DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef _EIGENVALUE_H_
-#define _EIGENVALUE_H_
-
-#include <basic.h>
 #include <Classes/Matrix.h>
-#include <thread_management/thread_arrange.h>
+#include "eigenvalue.h"
 
-namespace decx
+
+namespace de
 {
 namespace blas{
-    template <typename _data_type>
-    class cpu_eig_bisection;
+namespace cpu{
+    _DECX_API_ void Eigenvalue(de::InputMatrix src, float** a, float** b);
+}
 }
 }
 
-template <typename _data_type>
-class decx::blas::cpu_eig_bisection
+_DECX_API_ void de::blas::cpu::Eigenvalue(de::InputMatrix src, float** a, float** b)
 {
-private:
-    decx::_matrix_layout _layout;
-    _data_type _max_err;
+    de::ResetLastError();
 
-    const _data_type* _diag = NULL;
-    const _data_type* _off_diag = NULL;
+    const decx::_Matrix* _src = dynamic_cast<const decx::_Matrix*>(&src);
 
-public:
-    cpu_eig_bisection() {}
+    decx::blas::cpu_eig_bisection<float> planner;
+    const uint32_t conc = decx::cpu::_get_permitted_concurrency();
+    planner.Init(conc, &_src->get_layout(), 0.001, de::GetLastError());
+
+    decx::utils::_thread_arrange_1D t1D(conc);
+
+    // planner.extract_diagonal((float*)_src->Mat.ptr, &t1D);
+
+    *a = planner.get_diag();
+    *b = planner.get_off_diag();
+
+    // planner.calc_Gerschgorin_bound(&t1D);
+
+    planner.plan(_src, &t1D, de::GetLastError());
+    printf("bound : (%f, %f)\n", planner.get_Gerschgorin_L() , planner.get_Gerschgorin_U());
+
+    clock_t s, e;
+    s = clock();
+    planner.iter_bisection();
+    e = clock();
 
 
-    void extract_diagonal();
-};
+    auto* read_buf = planner._double_buffer.get_lagging_ptr<decx::blas::eig_bisect_interval<float>>();
+    for (int i = 0; i < planner._eig_count_actual; ++i){
+        if (read_buf[i].is_valid())
+            printf("(%f, %f), count(LU) = %d, %d\n", read_buf[i]._l, read_buf[i]._u, read_buf[i]._count_l, read_buf[i]._count_u);
+    }
 
-#endif
+    printf("time spent msec : %lf\n", (double)(e - s) / (double)CLOCKS_PER_SEC * 1000);
+}

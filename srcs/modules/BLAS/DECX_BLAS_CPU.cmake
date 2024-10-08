@@ -34,6 +34,7 @@ if(${_DECX_HOST_ARCH_} STREQUAL "x64")
     file(GLOB_RECURSE BP "${DECX_WORLD_ABS_DIR}/srcs/modules/BLAS/Basic_process/*.cxx")
     file(GLOB_RECURSE EW "${DECX_WORLD_ABS_DIR}/srcs/modules/BLAS/Arithmetic/*.cxx")
     include("${DECX_WORLD_ABS_DIR}/srcs/common/SIMD/x86_64/intrin_x86_64.cmake")
+    file(GLOB_RECURSE EIG "${DECX_WORLD_ABS_DIR}/srcs/modules/BLAS/numerical analysis/*.cxx")
 else()
 file(GLOB_RECURSE BP "${DECX_WORLD_ABS_DIR}/srcs/modules/BLAS/Basic_process/extension/*.cxx")
 endif()
@@ -61,7 +62,7 @@ include("${DECX_WORLD_ABS_DIR}/srcs/common/Element_wise/elementwise_com.cmake")
 add_library(DECX_BLAS_CPU SHARED ${GEMM}                    ${BP} ${EW}
                                  ${EXT_CPU_COM_SRCS}        ${FMGR_CPU_COM_SRCS}
                                  ${TRP_CPU_COM_SRCS}        ${INTRIN_X86_64}
-                                 ${TYPECAST_CPU_COM_SRCS}   ${EW_CPU_COM_SRCS})
+                                 ${TYPECAST_CPU_COM_SRCS}   ${EW_CPU_COM_SRCS} ${EIG})
 
 target_link_libraries(DECX_BLAS_CPU PRIVATE gemm_fp32_cpu
                                     PRIVATE gemm_64b_cpu

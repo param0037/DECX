@@ -92,6 +92,14 @@ namespace blas {
 }
 
 
+namespace de
+{
+namespace blas{
+namespace cpu{
+    _DECX_API_ void Eigenvalue(de::InputMatrix src, float** a, float** b);
+}
+}
+}
 
 namespace de
 {

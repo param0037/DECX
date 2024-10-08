@@ -52,6 +52,10 @@ namespace decx
         template<typename T>
         static int _host_virtual_page_malloc(decx::PtrInfo<T>* ptr_info, uint64_t size, const bool set_zero = true);
 
+        
+        template<typename T>
+        static int _host_virtual_page_malloc_lazy(decx::PtrInfo<T>* ptr_info, uint64_t size, const bool set_zero = true);
+
 #if defined(_DECX_CUDA_PARTS_)
         template<typename T>
         static int _device_malloc(decx::PtrInfo<T>* ptr_info, uint64_t size, bool _set_zero = false, decx::cuda_stream* S = NULL);
@@ -67,7 +71,7 @@ namespace decx
 #endif
 
         template<typename T>
-        static int _host_virtual_page_realloc(decx::PtrInfo<T>* ptr_info, uint64_t size);
+        static int _host_virtual_page_realloc(decx::PtrInfo<T>* ptr_info, uint64_t size, const bool set_zero = true);
 
 #if defined(_DECX_CUDA_PARTS_)
         template<typename T>
@@ -107,7 +111,6 @@ static void decx::alloc::_host_virtual_page_dealloc(decx::PtrInfo<T>* ptr_info) 
 
 
 
-
 #if defined(_DECX_CUDA_PARTS_)
 template<typename T>
 static void decx::alloc::_device_dealloc(decx::PtrInfo<T>* ptr_info) {
@@ -129,6 +132,24 @@ static int decx::alloc::_host_virtual_page_malloc(decx::PtrInfo<T>* ptr_info, ui
     return ans;
 }
 
+
+/**
+ * @brief If the required size is less than the size already allocated, the function WILL NOT allocate
+ * any space.
+*/
+template<typename T>
+static int decx::alloc::_host_virtual_page_malloc_lazy(decx::PtrInfo<T>* ptr_info, uint64_t size, const bool set_zero)
+{
+    if (ptr_info){
+        if (ptr_info->block){
+            if (ptr_info->block->block_size < size){
+                int32_t ans = _host_virtual_page_realloc(ptr_info, size);
+                return ans;
+            }
+        }
+    }
+    return decx::alloc::_host_virtual_page_malloc(ptr_info, size, set_zero);
+}
 
 
 template<typename T>
@@ -172,7 +193,7 @@ static void decx::alloc::_device_malloc_same_place(decx::PtrInfo<T>* ptr_info)
 
 
 template<typename T>
-int decx::alloc::_host_virtual_page_realloc(decx::PtrInfo<T>* ptr_info, uint64_t size)
+int decx::alloc::_host_virtual_page_realloc(decx::PtrInfo<T>* ptr_info, uint64_t size, const bool set_zero)
 {
     if (ptr_info->block != NULL) {
         if (ptr_info->block->_ptr != NULL) {            // if it is previously allocated
@@ -182,6 +203,9 @@ int decx::alloc::_host_virtual_page_realloc(decx::PtrInfo<T>* ptr_info, uint64_t
     // reallocate new memory of new size
     int ans = decx::alloc::_alloc_Hv(&ptr_info->block, size);
     ptr_info->ptr = reinterpret_cast<T*>(ptr_info->block->_ptr);
+    if (set_zero) {
+        memset(ptr_info->ptr, 0, size);
+    }
 
     return ans;
 }
