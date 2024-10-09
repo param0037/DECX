@@ -28,7 +28,7 @@
 * DEALINGS IN THE SOFTWARE.
 */
 
-#include "../eig_utils_kernels.h"
+#include "eig_utils_kernels.h"
 
 
 template <bool _is_last>

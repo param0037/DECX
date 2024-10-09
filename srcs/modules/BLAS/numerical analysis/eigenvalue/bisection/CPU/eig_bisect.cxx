@@ -28,7 +28,7 @@
 * DEALINGS IN THE SOFTWARE.
 */
 
-#include "eigenvalue.h"
+#include "eig_bisect.h"
 #include <thread_management/thread_pool.h>
 #include "eig_utils_kernels.h"
 
@@ -49,7 +49,8 @@ decx::blas::cpu_eig_bisection<_data_type>::Init(const uint32_t conc,
 
     this->_layout = *layout;
     this->_concurrency = conc;
-    this->_max_err = max_err;
+    // this->_max_err = max_err;
+    this->_iter_scheduler.set_max_err(max_err);
 
     if (this->_layout.width != this->_layout.width){
         decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_DimsNotMatching,
@@ -162,18 +163,26 @@ void decx::blas::cpu_eig_bisection<_data_type>::plan(const decx::_Matrix* mat, d
     // Caclulate the Gerschgorin boundary (the boundary including all possible eigenvalues)
     this->calc_Gerschgorin_bound(t1D);
 
-    this->_max_interval_num = (uint32_t)ceilf(
-        ((float)this->_Gerschgorin_U - (float)this->_Gerschgorin_L) / (float)this->_max_err);
+    this->_iter_scheduler.init((_data_type*)this->_diag.ptr, 
+                               (_data_type*)this->_off_diag.ptr, 
+                               this->_layout.width,
+                               this->_Gerschgorin_L, 
+                               this->_Gerschgorin_U, 
+                               handle);
+    Check_Runtime_Error(handle);
 
-    if (decx::alloc::_host_virtual_page_malloc_lazy(&this->_stack, 
-        2 * this->_max_interval_num * sizeof(decx::blas::cpu_eig_bisection<_data_type>))){
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION,
-            ALLOC_FAIL);
-        return;
-    }
+    // this->_max_interval_num = (uint32_t)ceilf(
+    //     ((float)this->_Gerschgorin_U - (float)this->_Gerschgorin_L) / (float)this->_max_err);
 
-    this->_double_buffer = decx::utils::double_buffer_manager(this->_stack.ptr, this->_stack.ptr + this->_max_interval_num);
-    this->_double_buffer.reset_buffer1_leading();
+    // if (decx::alloc::_host_virtual_page_malloc_lazy(&this->_stack, 
+    //     2 * this->_max_interval_num * sizeof(decx::blas::cpu_eig_bisection<_data_type>))){
+    //     decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION,
+    //         ALLOC_FAIL);
+    //     return;
+    // }
+
+    // this->_double_buffer = decx::utils::double_buffer_manager(this->_stack.ptr, this->_stack.ptr + this->_max_interval_num);
+    // this->_double_buffer.reset_buffer1_leading();
 }
 
 template void decx::blas::cpu_eig_bisection<float>::plan(const decx::_Matrix*, decx::utils::_thread_arrange_1D*, de::DH*);
@@ -187,56 +196,10 @@ void decx::blas::eig_bisect_interval<float>::count_violent(const float* diag, co
 }
 
 
-template <>
-void decx::blas::cpu_eig_bisection<float>::iter_bisection()
+template <typename _data_type>
+void decx::blas::cpu_eig_bisection<_data_type>::iter_bisection()
 {
-    float interval_gap = this->_Gerschgorin_U - this->_Gerschgorin_L;
-    uint32_t current_stack_vaild_num = 1;
-
-    auto* p_1st_interval = this->_double_buffer.get_buffer1<decx::blas::eig_bisect_interval<float>>();
-    p_1st_interval->set(this->_Gerschgorin_L, this->_Gerschgorin_U);
-    p_1st_interval->count_violent((float*)this->_diag.ptr, (float*)this->_off_diag.ptr, this->_layout.width);
-    
-    // printf("p_1st_interval : (%d, %d)\n", p_1st_interval->_count_l, p_1st_interval->_count_u);
-
-    if (p_1st_interval->is_valid())
-    {
-    while(interval_gap > this->_max_err)
-    {
-        uint32_t last_valid_num = current_stack_vaild_num;
-        current_stack_vaild_num = 0;
-
-        auto* p_read = this->_double_buffer.get_leading_ptr<decx::blas::eig_bisect_interval<float>>();
-        auto* p_write = this->_double_buffer.get_lagging_ptr<decx::blas::eig_bisect_interval<float>>();
-        uint32_t write_dex = 0;
-        
-        for (int32_t i = 0; i < last_valid_num; ++i)
-        {
-            const auto* p_current_interval = p_read + i;
-            if (p_current_interval->is_valid()) {
-                const float l = p_current_interval->_l;
-                const float u = p_current_interval->_u;
-                const float _mid = (l + u) / 2.f;
-
-                // Count for the middle point
-                uint32_t _count_mid = 0;
-                decx::blas::CPUK::count_eigv_fp32((float*)this->_diag.ptr, (float*)this->_off_diag.ptr, &_count_mid, _mid, this->_layout.width);
-
-                (p_write + write_dex)->set(l, _mid);
-                (p_write + write_dex)->_count_l = p_current_interval->_count_l;
-                (p_write + write_dex)->_count_u = _count_mid;
-                ++write_dex;
-                
-                (p_write + write_dex)->set(_mid, u);
-                (p_write + write_dex)->_count_l = _count_mid;
-                (p_write + write_dex)->_count_u = p_current_interval->_count_u;
-                ++write_dex;
-                current_stack_vaild_num += 2;
-            }
-        }
-        interval_gap /= 2.f;
-        this->_double_buffer.update_states();
-    }
-    }
-    this->_eig_count_actual = current_stack_vaild_num;
+    this->_iter_scheduler.iter((_data_type*)this->_diag.ptr, (_data_type*)this->_off_diag.ptr, this->_layout.width);
 }
+
+template void decx::blas::cpu_eig_bisection<float>::iter_bisection();

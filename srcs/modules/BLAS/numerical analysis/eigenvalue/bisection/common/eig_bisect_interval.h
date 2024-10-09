@@ -28,52 +28,55 @@
 * DEALINGS IN THE SOFTWARE.
 */
 
-#include <Classes/Matrix.h>
-#include "eigenvalue.h"
+#ifndef _EIG_BISECT_INTERVAL_
+#define _EIG_BISECT_INTERVAL_
 
-
-namespace de
+namespace decx
 {
 namespace blas{
-namespace cpu{
-    _DECX_API_ void Eigenvalue(de::InputMatrix src, float** a, float** b);
-}
+    template <typename _data_type>
+    struct eig_bisect_interval;
 }
 }
 
-_DECX_API_ void de::blas::cpu::Eigenvalue(de::InputMatrix src, float** a, float** b)
+#ifdef _DECX_CPU_PARTS_
+#define _EIG_INTERVAL_ALIGN_ __align__(decx::utils::align<uint32_t>(2 * sizeof(_data_type) + 8, 4))
+#endif
+#ifdef _DECX_CUDA_PARTS_
+#define _EIG_INTERVAL_ALIGN_ __align__(decx::utils::align<uint32_t>(2 * sizeof(_data_type) + 8, 16))
+#endif
+
+
+template <typename _data_type> 
+struct _EIG_INTERVAL_ALIGN_ decx::blas::eig_bisect_interval
+// struct decx::blas::eig_bisect_interval
 {
-    de::ResetLastError();
+    _data_type _l;
+    _data_type _u;
+    uint32_t _count_l, _count_u;
 
-    const decx::_Matrix* _src = dynamic_cast<const decx::_Matrix*>(&src);
-
-    decx::blas::cpu_eig_bisection<float> planner;
-    const uint32_t conc = decx::cpu::_get_permitted_concurrency();
-    planner.Init(conc, &_src->get_layout(), 0.001, de::GetLastError());
-
-    decx::utils::_thread_arrange_1D t1D(conc);
-
-    // planner.extract_diagonal((float*)_src->Mat.ptr, &t1D);
-
-    *a = planner.get_diag();
-    *b = planner.get_off_diag();
-
-    // planner.calc_Gerschgorin_bound(&t1D);
-
-    planner.plan(_src, &t1D, de::GetLastError());
-    printf("bound : (%f, %f)\n", planner.get_Gerschgorin_L() , planner.get_Gerschgorin_U());
-
-    clock_t s, e;
-    s = clock();
-    planner.iter_bisection();
-    e = clock();
+#ifdef _DECX_CUDA_PARTS_
+    __host__ __device__
+#endif
+    eig_bisect_interval() : _l(0), _u(0), _count_l(0), _count_u(0) {}
 
 
-    auto* read_buf = planner._double_buffer.get_lagging_ptr<decx::blas::eig_bisect_interval<float>>();
-    for (int i = 0; i < planner._eig_count_actual; ++i){
-        if (read_buf[i].is_valid())
-            printf("(%f, %f), count(LU) = %d, %d\n", read_buf[i]._l, read_buf[i]._u, read_buf[i]._count_l, read_buf[i]._count_u);
+#ifdef _DECX_CUDA_PARTS_
+    __host__ __device__
+#endif
+    void set(const _data_type l, const _data_type u) {
+        this->_l = l;
+        this->_u = u;
+        this->_count_l = 0;
+        this->_count_u = 0;
     }
 
-    printf("time spent msec : %lf\n", (double)(e - s) / (double)CLOCKS_PER_SEC * 1000);
-}
+
+    void count_violent(const _data_type* diag, const _data_type* off_diag, const uint32_t N);
+
+
+    bool is_valid() const { return (this->_count_u - this->_count_l) > 0; }
+};
+
+
+#endif

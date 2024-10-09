@@ -33,46 +33,17 @@
 
 #include <basic.h>
 #include <Classes/Matrix.h>
-#include <thread_management/thread_arrange.h>
-#include <double_buffer.h>
 #include <Element_wise/common/cpu_element_wise_planner.h>
+#include "cpu_eig_bisect_iter_HPC.h"
+
 
 namespace decx
 {
 namespace blas{
     template <typename _data_type>
     class cpu_eig_bisection;
-
-
-    template <typename _data_type>
-    struct eig_bisect_interval;
 }
 }
-
-template <typename _data_type>
-struct decx::blas::eig_bisect_interval
-{
-    _data_type _l;
-    _data_type _u;
-    uint32_t _count_l, _count_u;
-
-
-    eig_bisect_interval() : _l(0), _u(0), _count_l(0), _count_u(0) {}
-
-
-    void set(const _data_type l, const _data_type u) {
-        this->_l = l;
-        this->_u = u;
-        this->_count_l = 0;
-        this->_count_u = 0;
-    }
-
-
-    void count_violent(const _data_type* diag, const _data_type* off_diag, const uint32_t N);
-
-
-    bool is_valid() const { return (this->_count_u - this->_count_l) > 0; }
-};
 
 
 template <typename _data_type>
@@ -80,7 +51,7 @@ class decx::blas::cpu_eig_bisection
 {
 private:
     decx::_matrix_layout _layout;
-    _data_type _max_err;
+    // _data_type _max_err;    //
 
     decx::PtrInfo<_data_type> _diag;
     decx::PtrInfo<_data_type> _off_diag;
@@ -89,10 +60,10 @@ private:
 
     uint8_t _alignment;
 
-    decx::PtrInfo<decx::blas::eig_bisect_interval<_data_type>> _stack;
+    // decx::PtrInfo<decx::blas::eig_bisect_interval<_data_type>> _stack;  //
 public:
-    decx::utils::double_buffer_manager _double_buffer;
-    uint32_t _eig_count_actual;
+    // decx::utils::double_buffer_manager _double_buffer;      //
+    // uint32_t _eig_count_actual;     //
 private:
     uint32_t _aligned_N;
 
@@ -102,7 +73,9 @@ private:
 
     decx::PtrInfo<_data_type> _shared_mem;
 
-    uint32_t _max_interval_num;
+    // uint32_t _max_interval_num;     //
+
+    decx::blas::cpu_eig_bisect_iter_HPC<_data_type> _iter_scheduler;
 
 public:
     cpu_eig_bisection() {
@@ -130,6 +103,16 @@ public:
 
 
     void iter_bisection();
+
+
+    const decx::blas::eig_bisect_interval<_data_type>* get_valid_intervals_array()
+    {
+        return this->_iter_scheduler.get_valid_intervals_array();
+    }
+
+    uint32_t get_eig_count() const{
+        return this->_iter_scheduler.get_eig_count();
+    }
 };
 
 #endif
