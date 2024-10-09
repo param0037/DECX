@@ -51,7 +51,6 @@ class decx::blas::cpu_eig_bisection
 {
 private:
     decx::_matrix_layout _layout;
-    // _data_type _max_err;    //
 
     decx::PtrInfo<_data_type> _diag;
     decx::PtrInfo<_data_type> _off_diag;
@@ -60,20 +59,12 @@ private:
 
     uint8_t _alignment;
 
-    // decx::PtrInfo<decx::blas::eig_bisect_interval<_data_type>> _stack;  //
-public:
-    // decx::utils::double_buffer_manager _double_buffer;      //
-    // uint32_t _eig_count_actual;     //
-private:
     uint32_t _aligned_N;
 
     decx::cpu_ElementWise1D_planner _diag_extractor;
-
     uint32_t _concurrency;
 
     decx::PtrInfo<_data_type> _shared_mem;
-
-    // uint32_t _max_interval_num;     //
 
     decx::blas::cpu_eig_bisect_iter_HPC<_data_type> _iter_scheduler;
 

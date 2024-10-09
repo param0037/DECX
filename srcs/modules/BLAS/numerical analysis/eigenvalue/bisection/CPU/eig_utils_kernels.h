@@ -47,6 +47,10 @@ namespace CPUK {
  
     _THREAD_FUNCTION_ void count_eigv_fp32(const float* __restrict diag, const float* __restrict off_diag, uint32_t* __restrict count, 
         const float x, const uint32_t N);
+
+
+    _THREAD_FUNCTION_ __m256i count_v8_eigv_fp32(const float* __restrict diag, const float* __restrict off_diag, uint32_t* __restrict count, 
+        const float* x, const uint32_t N);
 }
 }
 }

@@ -170,19 +170,6 @@ void decx::blas::cpu_eig_bisection<_data_type>::plan(const decx::_Matrix* mat, d
                                this->_Gerschgorin_U, 
                                handle);
     Check_Runtime_Error(handle);
-
-    // this->_max_interval_num = (uint32_t)ceilf(
-    //     ((float)this->_Gerschgorin_U - (float)this->_Gerschgorin_L) / (float)this->_max_err);
-
-    // if (decx::alloc::_host_virtual_page_malloc_lazy(&this->_stack, 
-    //     2 * this->_max_interval_num * sizeof(decx::blas::cpu_eig_bisection<_data_type>))){
-    //     decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION,
-    //         ALLOC_FAIL);
-    //     return;
-    // }
-
-    // this->_double_buffer = decx::utils::double_buffer_manager(this->_stack.ptr, this->_stack.ptr + this->_max_interval_num);
-    // this->_double_buffer.reset_buffer1_leading();
 }
 
 template void decx::blas::cpu_eig_bisection<float>::plan(const decx::_Matrix*, decx::utils::_thread_arrange_1D*, de::DH*);

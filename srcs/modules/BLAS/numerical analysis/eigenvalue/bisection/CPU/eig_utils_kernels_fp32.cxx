@@ -29,6 +29,7 @@
 */
 
 #include "eig_utils_kernels.h"
+#include <SIMD/intrinsics_ops.h>
 
 
 template <bool _is_last>
@@ -100,4 +101,34 @@ count_eigv_fp32(const float* __restrict diag,
         if (d < 0) ++_count;
     }
     *count = _count;
+}
+
+
+
+_THREAD_CALL_ __m256i decx::blas::CPUK::
+count_v8_eigv_fp32(const float* __restrict  diag, 
+                const float* __restrict     off_diag, 
+                uint32_t* __restrict        count, 
+                const float*                x,
+                const uint32_t              N)
+{
+    decx::utils::simd::xmm256_reg d_v8, count_v8;
+    const __m256 x_v8 = _mm256_loadu_ps(x);
+    count_v8._vi = _mm256_setzero_si256();
+    d_v8._vf = _mm256_set1_ps(1.f);
+    
+    for (int32_t i = 0; i < N; ++i)
+    {
+        __m256 off_diag_v8 = _mm256_broadcast_ss(off_diag + i);
+        __m256 diag_v8 = _mm256_broadcast_ss(diag + i);
+
+        off_diag_v8 = _mm256_mul_ps(off_diag_v8, off_diag_v8);
+        off_diag_v8 = _mm256_div_ps(off_diag_v8, d_v8._vf);
+
+        d_v8._vf = _mm256_sub_ps(diag_v8, _mm256_add_ps(x_v8, off_diag_v8));
+        __m256i sign_crit = _mm256_and_si256(d_v8._vi, _mm256_set1_epi32(0x80000000));
+        sign_crit = _mm256_srli_epi32(sign_crit, 31);
+        count_v8._vi = _mm256_add_epi32(count_v8._vi, sign_crit);
+    }
+    return count_v8._vi;
 }
