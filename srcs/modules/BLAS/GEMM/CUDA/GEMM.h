@@ -33,11 +33,11 @@
 #define _CUDA_GEMM_H_
 
 
-#include "../../../../common/Classes/Matrix.h"
-#include "../../../../common/Classes/Vector.h"
-#include "../../../../common/Classes/GPU_Matrix.h"
-#include "../../../../common/Classes/GPU_Vector.h"
-#include "../../../../common/Classes/Number.h"
+#include <Classes/Matrix.h>
+#include <Classes/Vector.h>
+#include <Classes/GPU_Matrix.h>
+#include <Classes/GPU_Vector.h>
+#include <Classes/Number.h>
 
 #define _DECX_MODULE_NAME_ NAMEQ
 #define _DECX_COMMON_KERNLE_(kernel_name, sufix) kernel_name##sufix

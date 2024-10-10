@@ -32,9 +32,9 @@
 #ifndef _REDUCE_KERNEL_UTILS_CUH_
 #define _REDUCE_KERNEL_UTILS_CUH_
 
-#include "../../basic.h"
-#include "../../CUSV/decx_cuda_vectypes_ops.cuh"
-#include "../../CUSV/decx_cuda_math_functions.cuh"
+#include <basic.h>
+#include <CUSV/decx_cuda_vectypes_ops.cuh>
+#include <CUSV/decx_cuda_math_functions.cuh>
 
 
 #define _REDUCE1D_BLOCK_DIM_ 32 * 8

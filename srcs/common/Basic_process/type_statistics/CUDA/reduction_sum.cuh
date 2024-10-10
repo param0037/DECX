@@ -20,42 +20,42 @@
 
 namespace decx
 {
-    namespace bp {
-        namespace GPUK {
-            __global__
+namespace bp {
+    namespace GPUK {
+        __global__
+        /*
+        * This kernel function contains multiply-add operation
+        * @param thr_num : The threads number is half of the total length
+        */
+        void cu_sum_vec4_fp32(float4* A, float4* B, const size_t thr_num, const size_t dst_len);
+
+
+        __global__
+        /*
+        * This kernel function contains multiply-add operation
+        * @param thr_num : The threads number is half of the total length
+        */
+        void cu_sum_vec8_fp16(float4* A, float4* B, const size_t thr_num, const size_t dst_len);
+
+
+
+        __global__
+        /*
+        * This kernel function contains multiply-add operation
+        * @param thr_num : The threads number is half of the total length
+        */
+        void cu_sum_vec8_fp16_accu_fp16_output(float4* A, float4* B, const size_t thr_num, const size_t dst_len);
+
+
+
+        __global__
             /*
-            * This kernel function contains multiply-add operation
-            * @param thr_num : The threads number is half of the total length
-            */
-            void cu_sum_vec4_fp32(float4* A, float4* B, const size_t thr_num, const size_t dst_len);
-
-
-            __global__
-            /*
-            * This kernel function contains multiply-add operation
-            * @param thr_num : The threads number is half of the total length
-            */
-            void cu_sum_vec8_fp16(float4* A, float4* B, const size_t thr_num, const size_t dst_len);
-
-
-
-            __global__
-            /*
-            * This kernel function contains multiply-add operation
-            * @param thr_num : The threads number is half of the total length
-            */
-            void cu_sum_vec8_fp16_accu_fp16_output(float4* A, float4* B, const size_t thr_num, const size_t dst_len);
-
-
-
-            __global__
-                /*
-            * This kernel function contains multiply-add operation
-            * @param thr_num : The threads number is half of the total length
-            */
-            void cu_sum_vec8_fp16_accu_fp32_output(float4* A, float4* B, const size_t thr_num, const size_t dst_len);
-        }
+        * This kernel function contains multiply-add operation
+        * @param thr_num : The threads number is half of the total length
+        */
+        void cu_sum_vec8_fp16_accu_fp32_output(float4* A, float4* B, const size_t thr_num, const size_t dst_len);
     }
+}
 }
 
 

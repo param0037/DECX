@@ -28,13 +28,12 @@
 * DEALINGS IN THE SOFTWARE.
 */
 
-
 #ifndef _REDUCE_SUM_CUH_
 #define _REDUCE_SUM_CUH_
 
 #include "reduce_kernel_utils.cuh"
-#include "../Scan_CUDA/scan.cuh"
-#include "../../Classes/classes_util.h"
+#include "../../Scan_CUDA/scan.cuh"
+#include <Classes/classes_util.h>
 
 
 namespace decx

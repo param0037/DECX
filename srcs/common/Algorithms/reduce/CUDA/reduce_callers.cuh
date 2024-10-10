@@ -35,7 +35,7 @@
 
 #include "reduce_sum.cuh"
 #include "reduce_cmp.cuh"
-#include "../../Classes/classes_util.h"
+#include <Classes/classes_util.h>
 
 
 /**

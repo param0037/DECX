@@ -32,20 +32,20 @@
 #ifndef _MATRIX_REDUCE_H_
 #define _MATRIX_REDUCE_H_
 
-#include "../../../common/Classes/Matrix.h"
-#include "../../../common/Classes/GPU_Matrix.h"
-#include "../../../common/Classes/Vector.h"
-#include "../../../common/Classes/GPU_Vector.h"
-#include "../../../modules/core/configs/config.h"
-#include "../../../common/Classes/classes_util.h"
-#include "../../../common/Classes/Number.h"
+#include <Classes/Matrix.h>
+#include <Classes/GPU_Matrix.h>
+#include <Classes/Vector.h>
+#include <Classes/GPU_Vector.h>
+#include <configs/config.h>
+#include <Classes/classes_util.h>
+#include <Classes/Number.h>
 
-#include "../../../common/Basic_process/type_statistics/reduce_method.h"
+#include <Basic_process/type_statistics/reduce_method.h>
 
 #ifdef _DECX_CUDA_PARTS_
-#include "../../../common/Algorithms/Reduce_CUDA/reduce_callers.cuh"
-#include "../../../common/Classes/GPU_Matrix.h"
-#include "../../../modules/core/cudaStream_management/cudaEvent_queue.h"
+#include <Algorithms/reduce/CUDA/reduce_callers.cuh>
+#include <Classes/GPU_Matrix.h>
+#include <cudaStream_management/cudaEvent_queue.h>
 #endif
 
 

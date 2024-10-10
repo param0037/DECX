@@ -34,12 +34,12 @@
 
 
 #include "../DP_kernels.cuh"
-#include "../../../../../common/Algorithms/Reduce_CUDA/reduce_callers.cuh"
-#include "../../../../../common/Algorithms/Reduce_CUDA/reduce_sum.cuh"
-#include "../../../../../common/Algorithms/Reduce_CUDA/reduce_callers.cuh"
-#include "../../../../core/allocators.h"
-#include "../../../../../common/Classes/Matrix.h"
-#include "../../../../../common/Classes/Vector.h"
+#include <Algorithms/reduce/CUDA/reduce_callers.cuh>
+#include <Algorithms/reduce/CUDA/reduce_sum.cuh>
+#include <Algorithms/reduce/CUDA/reduce_callers.cuh>
+#include <allocators.h>
+#include <Classes/Matrix.h>
+#include <Classes/Vector.h>
 
 
 namespace decx
@@ -96,11 +96,6 @@ public:
 
     template <bool _is_reduce_h>
     void generate_config(const uint2 proc_dims, decx::cuda_stream* S, const uint32_t _fp16_accu = 0);
-
-
-    /*template <bool _is_reduce_h>
-    void generate_config(decx::PtrInfo<void> dev_A, decx::PtrInfo<void> dev_B, const uint2 proc_dims,
-        decx::cuda_stream* S, const uint32_t _fp16_accu = 0);*/
 
 
     template <bool _is_reduce_h>

@@ -26,6 +26,8 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
 # DEALINGS IN THE SOFTWARE.
 
+include_directories("${DECX_WORLD_ABS_DIR}/srcs/common/")
+include_directories("${DECX_WORLD_ABS_DIR}/srcs/modules/core/")
 
 file(GLOB_RECURSE SRCS "*.cu")
 

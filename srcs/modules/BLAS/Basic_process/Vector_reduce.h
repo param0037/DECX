@@ -32,12 +32,12 @@
 #ifndef _VECTOR_REDUCE_H_
 #define _VECTOR_REDUCE_H_
 
-#include "../../../common/Classes/Vector.h"
+#include <Classes/Vector.h>
 #include "../../../modules/core/configs/config.h"
-#include "../../../common/Classes/classes_util.h"
+#include <Classes/classes_util.h>
 #ifdef _DECX_CUDA_PARTS_
-#include "../../../common/Algorithms/Reduce_CUDA/reduce_callers.cuh"
-#include "../../../common/Classes/GPU_Vector.h"
+#include <Algorithms/reduce/CUDA/reduce_callers.cuh>
+#include <Classes/GPU_Vector.h>
 #include "../../../modules/core/cudaStream_management/cudaEvent_queue.h"
 #endif
 

@@ -34,9 +34,9 @@
 
 
 #include "../DP_kernels.cuh"
-#include "../../../../../common/Algorithms/Reduce_CUDA/reduce_sum.cuh"
-#include "../../../../../common/Algorithms/Reduce_CUDA/reduce_callers.cuh"
-#include "../../../../core/allocators.h"
+#include <Algorithms/reduce/CUDA/reduce_sum.cuh>
+#include <Algorithms/reduce/CUDA/reduce_callers.cuh>
+#include <allocators.h>
 
 
 namespace decx

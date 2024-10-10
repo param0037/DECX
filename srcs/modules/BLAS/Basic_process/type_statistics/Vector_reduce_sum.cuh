@@ -13,13 +13,13 @@
 #define _VECTOR_REDUCE_SUM_CUH_
 
 
-#include "../../../../common/Algorithms/Reduce_CUDA/reduce_callers.cuh"
-#include "../../../../common/Classes/Vector.h"
-#include "../../../../common/Classes/GPU_Vector.h"
-#include "../../../../modules/core/configs/config.h"
-#include "../../../../modules/core/cudaStream_management/cudaEvent_queue.h"
-#include "../../../../common/Classes/classes_util.h"
-#include "../../../../common/Classes/Number.h"
+#include <Algorithms/reduce/CUDA/reduce_callers.cuh>
+#include <Classes/Vector.h>
+#include <Classes/GPU_Vector.h>
+#include <configs/config.h>
+#include <cudaStream_management/cudaEvent_queue.h>
+#include <Classes/classes_util.h>
+#include <Classes/Number.h>
 
 
 namespace decx

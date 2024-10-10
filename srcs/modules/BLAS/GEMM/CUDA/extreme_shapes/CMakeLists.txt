@@ -27,7 +27,7 @@
 # DEALINGS IN THE SOFTWARE.
 
 
-include("${DECX_WORLD_ABS_DIR}/srcs/common/Algorithms/Reduce_CUDA/reduce_cuda.cmake")
+include("${DECX_WORLD_ABS_DIR}/srcs/common/Algorithms/reduce/CUDA/reduce_cuda.cmake")
 file(GLOB SRCS "*.cu")
 
 set(LIBRARY_OUTPUT_PATH ${DECX_SUBBUILD_BIN_DIR})

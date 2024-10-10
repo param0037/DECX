@@ -31,8 +31,8 @@
 
 #include "GEMM.h"
 #include "extreme_shapes/VMM_callers.cuh"
-#include "../../../core/cudaStream_management/cudaStream_queue.h"
-#include "../../../core/cudaStream_management/cudaEvent_queue.h"
+#include <cudaStream_management/cudaStream_queue.h>
+#include <cudaStream_management/cudaEvent_queue.h>
 
 
 #define _VMM_MAT_MUL_VEC_ true

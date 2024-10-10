@@ -74,67 +74,7 @@ init(const _data_type*  p_diag,
 
 template void decx::blas::cpu_eig_bisect_iter_HPC<float>::init(const float*, const float*, const uint32_t, const float, const float, de::DH*);
 
-#if 0
-template <>
-void decx::blas::cpu_eig_bisect_iter_HPC<float>::iter(const float* p_diag, const float* p_off_diag, const uint32_t N)
-{
-    auto* p_1st_interval = this->_double_buffer.get_buffer1<decx::blas::eig_bisect_interval<float>>();
-    
-    if (p_1st_interval->is_valid())
-    {
-    while(this->_current_interval_gap > this->_max_err)
-    {
-        uint32_t last_valid_num = this->_current_stack_vaild_num;
-        this->_current_stack_vaild_num = 0;
 
-        auto* p_read = this->_double_buffer.get_leading_ptr<decx::blas::eig_bisect_interval<float>>();
-        auto* p_write = this->_double_buffer.get_lagging_ptr<decx::blas::eig_bisect_interval<float>>();
-        uint32_t write_dex = 0;
-        
-        for (int32_t i = 0; i < last_valid_num; ++i)
-        {
-            const auto* p_current_interval = p_read + i;
-            if (p_current_interval->is_valid()) {
-                const float l = p_current_interval->_l;
-                const float u = p_current_interval->_u;
-                const float _mid = (l + u) / 2.f;
-
-                // Count for the middle point
-                uint32_t _count_mid = 0;
-                decx::blas::CPUK::count_eigv_fp32(p_diag, p_off_diag, &_count_mid, _mid, N);
-
-                (p_write + write_dex)->set(l, _mid);
-                (p_write + write_dex)->_count_l = p_current_interval->_count_l;
-                (p_write + write_dex)->_count_u = _count_mid;
-                ++write_dex;
-                
-                (p_write + write_dex)->set(_mid, u);
-                (p_write + write_dex)->_count_l = _count_mid;
-                (p_write + write_dex)->_count_u = p_current_interval->_count_u;
-                ++write_dex;
-                this->_current_stack_vaild_num += 2;
-            }
-        }
-        this->_current_interval_gap /= 2.f;
-        this->_double_buffer.update_states();
-    }
-    }
-
-    // Final check to filter out the invalid interval(s)
-    auto* p_read = this->_double_buffer.get_leading_ptr<decx::blas::eig_bisect_interval<float>>();
-    auto* p_write = this->_double_buffer.get_lagging_ptr<decx::blas::eig_bisect_interval<float>>();
-    uint32_t STG_dex = 0;
-    for (int i = 0; i < this->_current_stack_vaild_num; ++i){
-        if (p_read[i].is_valid()){
-            _mm_storeu_ps((float*)(p_write + STG_dex), _mm_loadu_ps((float*)(p_read + i)));
-            ++STG_dex;
-        }
-    }
-    
-    this->_eig_count_actual = STG_dex;
-    this->_double_buffer.update_states();
-}
-#else
 template <>
 void decx::blas::cpu_eig_bisect_iter_HPC<float>::iter(const float* p_diag, const float* p_off_diag, const uint32_t N)
 {
@@ -210,7 +150,7 @@ void decx::blas::cpu_eig_bisect_iter_HPC<float>::iter(const float* p_diag, const
     this->_eig_count_actual = STG_dex;
     this->_double_buffer.update_states();
 }
-#endif
+
 
 
 template <typename _data_type>

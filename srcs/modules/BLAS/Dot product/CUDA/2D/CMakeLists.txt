@@ -27,7 +27,11 @@
 # DEALINGS IN THE SOFTWARE.
 
 
-include("${DECX_WORLD_ABS_DIR}/srcs/common/Algorithms/Reduce_CUDA/reduce_cuda.cmake")
+include("${DECX_WORLD_ABS_DIR}/srcs/common/Algorithms/reduce/CUDA/reduce_cuda.cmake")
+
+include_directories("${DECX_WORLD_ABS_DIR}/srcs/modules/core/")
+include_directories("${DECX_WORLD_ABS_DIR}/srcs/common/")
+
 file(GLOB_RECURSE SRCS "*.cu")
 
 set(LIBRARY_OUTPUT_PATH ${DECX_SUBBUILD_BIN_DIR})

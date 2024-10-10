@@ -12,7 +12,6 @@
 #include "reduction_sum.cuh"
 
 
-
 __global__
 /*
 * This kernel function contains multiply-add operation

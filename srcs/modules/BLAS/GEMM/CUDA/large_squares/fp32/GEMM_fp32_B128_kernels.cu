@@ -42,7 +42,7 @@ cu_GEMM_fp32_kernel_32_128_128(const float* __restrict A,   const float* __restr
     constexpr uint32_t _loc_LDG_Ax = 32 / 2;
     constexpr uint32_t _loc_LDG_Ay = 256 / _loc_LDG_Ax;
     constexpr uint32_t _LDG_HB_step = 32 / 8;
-    constexpr uint32_t _LDG_HA_step = 128 / _loc_LDG_Ay;
+    // constexpr uint32_t _LDG_HA_step = 128 / _loc_LDG_Ay;
 
     const uint32_t tidx = threadIdx.x + blockIdx.x * blockDim.x;
     const uint32_t tidy = threadIdx.y + blockIdx.y * blockDim.y;
@@ -165,7 +165,7 @@ cu_GEMM_fp32_F_kernel_32_128_128(const float* __restrict A,       const float* _
     constexpr uint32_t _loc_LDG_Ax = 32 / 2;
     constexpr uint32_t _loc_LDG_Ay = 256 / _loc_LDG_Ax;
     constexpr uint32_t _LDG_HB_step = 32 / 8;
-    constexpr uint32_t _LDG_HA_step = 128 / _loc_LDG_Ay;
+    // constexpr uint32_t _LDG_HA_step = 128 / _loc_LDG_Ay;
 
     const uint32_t tidx = threadIdx.x + blockIdx.x * blockDim.x;
     const uint32_t tidy = threadIdx.y + blockIdx.y * blockDim.y;

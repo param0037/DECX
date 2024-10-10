@@ -13,11 +13,11 @@
 
 
 #include "../Matrix_reduce.h"
-#include "../../../../common/FP16/float_half_convert.h"
-#include "../../../../common/Classes/Matrix.h"
-#include "../../../../common/Classes/Vector.h"
-#include "../../../../common/Classes/GPU_Matrix.h"
-#include "../../../../common/Classes/GPU_Vector.h"
+#include <FP16/float_half_convert.h>
+#include <Classes/Matrix.h>
+#include <Classes/Vector.h>
+#include <Classes/GPU_Matrix.h>
+#include <Classes/GPU_Vector.h>
 
 
 namespace decx

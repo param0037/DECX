@@ -33,10 +33,10 @@
 #define _DP1D_CUH_
 
 
-#include "../../../../common/Classes/Vector.h"
-#include "../../../../common/Classes/Matrix.h"
-#include "../../../../common/Classes/GPU_Vector.h"
-#include "../../../../common/Classes/Number.h"
+#include <Classes/Vector.h>
+#include <Classes/Matrix.h>
+#include <Classes/GPU_Vector.h>
+#include <Classes/Number.h>
 #include "../../Basic_process/Matrix_reduce.h"
 
 

@@ -28,68 +28,8 @@
 * DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef _CPU_EIG_BISECT_ITER_HPC_H_
-#define _CPU_EIG_BISECT_ITER_HPC_H_
-
-#include <basic.h>
-#include <thread_management/thread_arrange.h>
-#include <double_buffer.h>
-#include "../common/eig_bisect_interval.h"
-#include <allocators.h>
-#include <Element_wise/common/cpu_element_wise_planner.h>
-
-
-namespace decx
-{
-namespace blas{
-    template <typename _data_type>
-    class cpu_eig_bisect_iter_HPC;
-}
-}
-
-
-template <typename _data_type>
-class decx::blas::cpu_eig_bisect_iter_HPC
-{
-private:
-    decx::PtrInfo<decx::blas::eig_bisect_interval<_data_type>> _interval_stack;
-    decx::PtrInfo<_data_type> _count_buffer;
-
-    decx::utils::double_buffer_manager _double_buffer;
-    uint32_t _eig_count_actual;
-
-    uint32_t _max_interval_num;
-
-    _data_type _max_err;
-
-    _data_type _current_interval_gap;
-    uint32_t _current_stack_vaild_num;
-
-    decx::cpu_ElementWise1D_planner _update_interval;
-    decx::cpu_ElementWise1D_planner _count_intervals;
-
-public:
-    cpu_eig_bisect_iter_HPC() {}
-
-
-    void set_max_err(const _data_type max_err) {
-        this->_max_err = max_err;
-    }
-
-
-    void init(const _data_type* p_diag, const _data_type* p_off_diag, const uint32_t N, const _data_type L, const _data_type U, de::DH* handle);
-
-
-    void iter(const _data_type* p_diag, const _data_type* p_off_diag, const uint32_t N);
-
-
-    const decx::blas::eig_bisect_interval<_data_type>* get_valid_intervals_array();
-
-
-    uint32_t get_eig_count() const{
-        return this->_eig_count_actual;
-    }
-};
+#ifndef _CPU_REDUCE_PLANNER_H_
+#define _CPU_REDUCE_PLANNER_H_
 
 
 #endif

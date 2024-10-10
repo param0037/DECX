@@ -30,7 +30,7 @@
 
 
 #include "reduce_cmp.cuh"
-#include "../../CUSV/decx_cuda_math_functions.cuh"
+#include <CUSV/decx_cuda_math_functions.cuh>
 
 
 template <bool _is_max>

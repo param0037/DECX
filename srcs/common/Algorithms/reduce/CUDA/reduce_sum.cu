@@ -30,8 +30,7 @@
 
 
 #include "reduce_callers.cuh"
-#include "../../../modules/core/allocators.h"
-
+#include <allocators.h>
 
 
 void decx::reduce::cuda_reduce1D_sum_fp32_caller_Async(decx::reduce::cuda_reduce1D_configs<float>* _kp_configs, decx::cuda_stream* S)

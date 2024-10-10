@@ -33,9 +33,9 @@
 #define _DP1D_CALLERS_CUH_
 
 
-#include "../../../../../common/Classes/Vector.h"
-#include "../../../../../common/Classes/GPU_Vector.h"
-#include "../../../../../common/Classes/Number.h"
+#include <Classes/Vector.h>
+#include <Classes/GPU_Vector.h>
+#include <Classes/Number.h>
 #include "DP1D_config.cuh"
 
 

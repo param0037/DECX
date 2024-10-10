@@ -34,7 +34,7 @@
 
 
 #include "reduce_kernel_utils.cuh"
-#include "../Scan_CUDA/scan.cuh"
+#include "../../Scan_CUDA/scan.cuh"
 
 
 namespace decx

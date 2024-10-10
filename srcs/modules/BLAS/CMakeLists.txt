@@ -61,8 +61,6 @@ endif()
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-include_directories("${DECX_WORLD_ABS_DIR}/srcs/modules/core/")
-
 # Configure the paths
 include("../../config_paths.cmake")
 # include to add compile definitions to the target
@@ -81,6 +79,7 @@ else()
 endif()
 
 include_directories("${DECX_WORLD_ABS_DIR}/srcs/modules/core/")
+include_directories("${DECX_WORLD_ABS_DIR}/srcs/common/")
 
 # Create library
 if(_DECX_CUDA_MODULE_)

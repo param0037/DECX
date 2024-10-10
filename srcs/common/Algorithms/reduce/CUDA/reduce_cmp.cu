@@ -30,7 +30,7 @@
 
 
 #include "reduce_callers.cuh"
-#include "../../../modules/core/allocators.h"
+#include <allocators.h>
 
 
 template <bool _is_max>

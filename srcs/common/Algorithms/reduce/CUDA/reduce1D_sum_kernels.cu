@@ -30,7 +30,7 @@
 
 
 #include "reduce_sum.cuh"
-#include "../../CUSV/CUDA_cpf32.cuh"
+#include <CUSV/CUDA_cpf32.cuh>
 
 
 __global__ void
