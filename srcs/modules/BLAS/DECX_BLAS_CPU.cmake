@@ -39,6 +39,8 @@ else()
 file(GLOB_RECURSE BP "${DECX_WORLD_ABS_DIR}/srcs/modules/BLAS/Basic_process/extension/*.cxx")
 endif()
 
+include("${DECX_WORLD_ABS_DIR}/srcs/common/Algorithms/reduce/CPU/reduce_cpu.cmake")
+
 # Combine these kernel objects to GEMM_xxx_cpu.lib later
 add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/modules/BLAS/GEMM/CPU/fp32" "${DECX_SUBBUILD_BIN_DIR}/gemm_fp32_cpu")
 add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/modules/BLAS/GEMM/CPU/fp64" "${DECX_SUBBUILD_BIN_DIR}/gemm_64b_cpu")
@@ -62,7 +64,7 @@ include("${DECX_WORLD_ABS_DIR}/srcs/common/Element_wise/elementwise_com.cmake")
 add_library(DECX_BLAS_CPU SHARED ${GEMM}                    ${BP} ${EW}
                                  ${EXT_CPU_COM_SRCS}        ${FMGR_CPU_COM_SRCS}
                                  ${TRP_CPU_COM_SRCS}        ${INTRIN_X86_64}
-                                 ${TYPECAST_CPU_COM_SRCS}   ${EW_CPU_COM_SRCS} ${EIG})
+                                 ${TYPECAST_CPU_COM_SRCS}   ${EW_CPU_COM_SRCS} ${EIG} ${REDUCE_CPU_SRCS})
 
 target_link_libraries(DECX_BLAS_CPU PRIVATE gemm_fp32_cpu
                                     PRIVATE gemm_64b_cpu

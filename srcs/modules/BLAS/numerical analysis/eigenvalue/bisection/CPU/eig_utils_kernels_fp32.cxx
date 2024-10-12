@@ -132,3 +132,32 @@ count_v8_eigv_fp32(const float* __restrict  diag,
     }
     return count_v8._vi;
 }
+
+
+
+_THREAD_FUNCTION_ void decx::blas::CPUK::
+count_intervals_fp32_v8(const float* __restrict p_diag, 
+                        const float* __restrict p_off_diag,
+                        const float* __restrict p_count_buf, 
+                        const decx::blas::eig_bisect_interval<float>* __restrict p_read_interval, 
+                        decx::blas::eig_bisect_interval<float>* __restrict       p_write_interval, 
+                        const uint32_t          N, 
+                        const uint32_t          proc_len)
+{
+    for (int32_t i = 0; i < decx::utils::ceil<uint32_t>(proc_len, 8); ++i)
+    {
+        decx::utils::simd::xmm256_reg _count_mid;
+        _count_mid._vi = decx::blas::CPUK::count_v8_eigv_fp32(
+            p_diag, p_off_diag, NULL, p_count_buf + i * 8, N);
+
+        // _count_mid._vi = _mm256_set1_epi32(37);
+        
+#pragma unroll
+        for (int k = 0; k < 8; ++k){
+            if (i * 8 + k < proc_len){
+                (p_write_interval + (i * 8 + k) * 2)->_count_u = _count_mid._arrui[k];
+                (p_write_interval + (i * 8 + k) * 2 + 1)->_count_l = _count_mid._arrui[k];
+            }
+        }
+    }
+}

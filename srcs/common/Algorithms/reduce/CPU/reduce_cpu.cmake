@@ -28,4 +28,4 @@
 
 include_guard(GLOBAL)
 
-file(GLOB REDUCE_CUDA_SRCS "${DECX_WORLD_ABS_DIR}/srcs/common/Algorithms/reduce/CUDA/*.cu")
+file(GLOB REDUCE_CPU_SRCS "${DECX_WORLD_ABS_DIR}/srcs/common/Algorithms/reduce/CPU/*.cxx")

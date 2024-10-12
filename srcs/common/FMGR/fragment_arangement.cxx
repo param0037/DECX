@@ -31,82 +31,120 @@
 
 #include "fragment_arrangment.h"
 
-_DECX_API_
+
 bool decx::utils::frag_manager_gen(decx::utils::frag_manager* src, const uint64_t _tot, const uint64_t _frag_num)
 {
     src->total = _tot;
-    src->frag_num = _frag_num;
-    src->is_left = _tot % _frag_num;
-    bool res;
-    if (src->is_left) {
-        src->frag_len = _tot / _frag_num;
-        src->frag_left_over = _tot - (_frag_num - 1) * src->frag_len;
-        res = false;
-    }
-    else {
-        src->frag_len = _tot / _frag_num;
-        src->frag_left_over = 0;
-        res = true;
-    }
-    src->last_frag_len = src->is_left ? src->frag_left_over : src->frag_len;
-    return res;
-}
 
-
-_DECX_API_
-bool decx::utils::frag_manager_gen_from_fragLen(decx::utils::frag_manager* src, const uint64_t _tot, const uint64_t _frag_len)
-{
-    src->total = _tot;
-    src->frag_len = _frag_len;
-    bool res;
-    if (_tot % _frag_len) {     // is left
-        src->is_left = true;
-        src->frag_num = _tot / _frag_len + 1;
-        src->frag_left_over = _tot % _frag_len;
-        res = false;
-    }
-    else {
-        src->is_left = false;
-        src->frag_num = _tot / _frag_len;
-        src->frag_left_over = _tot % _frag_len;
-        res = true;
-    }
-    src->last_frag_len = src->is_left ? src->frag_left_over : src->frag_len;
-    return res;
-}
-
-
-_DECX_API_
-bool decx::utils::frag_manager_gen_Nx(decx::utils::frag_manager* src, const uint64_t _tot,
-    const uint64_t _frag_num, const uint32_t N)
-{
-    src->total = _tot;
-    src->frag_num = _frag_num;
-    bool res;
-    if (_tot % N) {
-        src->is_left = true;
-        uint32_t new_tot = _tot / N;
-        src->frag_len = new_tot / _frag_num * N;
-        src->frag_left_over = _tot - (_frag_num - 1) * src->frag_len;
-        res = false;
-    }
-    else {
-        uint32_t new_tot = _tot / N;
-        if (new_tot % _frag_num) {
-            src->is_left = true;
-            src->frag_len = new_tot / _frag_num * N;
+    if (_tot > _frag_num)
+    {
+        src->frag_num = _frag_num;
+        src->is_left = _tot % _frag_num;
+        bool res;
+        if (src->is_left) {
+            src->frag_len = _tot / _frag_num;
             src->frag_left_over = _tot - (_frag_num - 1) * src->frag_len;
             res = false;
         }
         else {
-            src->is_left = false;
             src->frag_len = _tot / _frag_num;
             src->frag_left_over = 0;
             res = true;
         }
+        src->last_frag_len = src->is_left ? src->frag_left_over : src->frag_len;
+        return res;
     }
+    else{
+        src->frag_num = _tot;
+        src->frag_len = 1;
+        src->frag_left_over = 0;
+        src->is_left = 0;
+        src->last_frag_len = 1;
+        return 0;
+    }
+}
+
+
+bool decx::utils::frag_manager_gen_from_fragLen(decx::utils::frag_manager* src, const uint64_t _tot, const uint64_t _frag_len)
+{
+    // src->total = _tot;
+    // src->frag_len = _frag_len;
+    // bool res;
+    // if (_tot % _frag_len) {     // is left
+    //     src->is_left = true;
+    //     src->frag_num = _tot / _frag_len + 1;
+    //     src->frag_left_over = _tot % _frag_len;
+    //     res = false;
+    // }
+    // else {
+    //     src->is_left = false;
+    //     src->frag_num = _tot / _frag_len;
+    //     src->frag_left_over = _tot % _frag_len;
+    //     res = true;
+    // }
+    // src->last_frag_len = src->is_left ? src->frag_left_over : src->frag_len;
+    // return res;
+
+    src->total = _tot;
+
+    if (_tot > _frag_len)
+    {
+        src->frag_len = _frag_len;
+        src->is_left = _tot % _frag_len;
+        src->frag_num = _tot / _frag_len;
+        src->last_frag_len = _tot - (src->frag_num - 1) * src->frag_len;
+        return src->is_left;
+    }
+    else{
+        src->frag_num = 1;
+        src->frag_len = _tot;
+        src->is_left = 0;
+        src->last_frag_len = src->frag_len;
+        return 0;
+    }
+}
+
+
+bool decx::utils::frag_manager_gen_Nx(decx::utils::frag_manager* src, const uint64_t _tot,
+    const uint64_t _frag_num, const uint32_t N)
+{
+    // src->total = _tot;
+    // src->frag_num = _frag_num;
+    // bool res;
+    // if (_tot % N) {
+    //     src->is_left = true;
+    //     uint32_t new_tot = _tot / N;
+    //     src->frag_len = new_tot / _frag_num * N;
+    //     src->frag_left_over = _tot - (_frag_num - 1) * src->frag_len;
+    //     res = false;
+    // }
+    // else {
+    //     uint32_t new_tot = _tot / N;
+    //     if (new_tot % _frag_num) {
+    //         src->is_left = true;
+    //         src->frag_len = new_tot / _frag_num * N;
+    //         src->frag_left_over = _tot - (_frag_num - 1) * src->frag_len;
+    //         res = false;
+    //     }
+    //     else {
+    //         src->is_left = false;
+    //         src->frag_len = _tot / _frag_num;
+    //         src->frag_left_over = 0;
+    //         res = true;
+    //     }
+    // }
+    // src->last_frag_len = src->is_left ? src->frag_left_over : src->frag_len;
+    // return res;
+
+    uint64_t aligned_tot = decx::utils::ceil<uint64_t>(_tot, N);
+    decx::utils::frag_manager_gen(src, aligned_tot, _frag_num);
+
+    src->frag_len *= N;
+    src->total = _tot;
+    src->frag_left_over = src->total - (src->frag_num - 1) * src->frag_len;
     src->last_frag_len = src->is_left ? src->frag_left_over : src->frag_len;
-    return res;
+
+    return src->is_left;
 }
 
 

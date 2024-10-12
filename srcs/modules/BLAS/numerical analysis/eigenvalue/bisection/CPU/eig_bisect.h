@@ -35,6 +35,7 @@
 #include <Classes/Matrix.h>
 #include <Element_wise/common/cpu_element_wise_planner.h>
 #include "cpu_eig_bisect_iter_HPC.h"
+#include <Algorithms/reduce/CPU/cpu_reduce_planner.h>
 
 
 namespace decx
@@ -65,6 +66,8 @@ private:
     uint32_t _concurrency;
 
     decx::PtrInfo<_data_type> _shared_mem;
+
+    decx::reduce::cpu_Reduce1D_Planner _Gersch_bound_founder;
 
     decx::blas::cpu_eig_bisect_iter_HPC<_data_type> _iter_scheduler;
 

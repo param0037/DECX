@@ -44,7 +44,7 @@ void decx::dsp::fft::_cuda_FFT3D_planner<_data_type>::plan(const decx::_tensor_l
     this->_input_typesize = _src_layout->_single_element_size;
     this->_output_typesize = _dst_layout->_single_element_size;
 
-    constexpr uint8_t _alignment = 8 / sizeof(_data_type);
+    // constexpr uint8_t _alignment = 8 / sizeof(_data_type);
 
     this->_FFT_H.plan(this->_signal_dims.z);
     this->_FFT_D.plan(this->_signal_dims.x);

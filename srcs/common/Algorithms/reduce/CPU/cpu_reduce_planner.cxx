@@ -27,3 +27,83 @@
 * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
 * DEALINGS IN THE SOFTWARE.
 */
+
+
+#include "cpu_reduce_planner.h"
+
+
+void decx::reduce::cpu_Reduce1D_Planner::mask_gen_256b(const uint32_t l)
+{
+    uint32_t i;
+    switch (this->_type_in_size)
+    {
+    case 4:
+        for (i = 0; i < 8 - l; ++i){
+            this->_mask._arrui[i] = 0xffffffffU;
+        } break;
+    case 8:
+        for (i = 0; i < 4 - l; ++i){
+            this->_mask._arrull[i] = 0xffffffffffffffffU;
+        } break;
+    case 1:
+        for (i = 0; i < 32 - l; ++i){
+            this->_mask._arruc[i] = 255;
+        } break;
+    default: break;
+    }
+}
+
+
+void decx::reduce::cpu_Reduce1D_Planner::mask_gen_128b(const uint32_t l)
+{
+    uint32_t i;
+    switch (this->_type_in_size)
+    {
+    case 4:
+        for (i = 0; i < 4 - l; ++i){
+            this->_mask._vmm128[0]._arrui[i] = 0xffffffffU;
+        } break;
+    case 8:
+        for (i = 0; i < 2 - l; ++i){
+            this->_mask._vmm128[0]._arrull[i] = 0xffffffffffffffffU;
+        } break;
+    case 1:
+        for (i = 0; i < 16 - l; ++i){
+            this->_mask._vmm128[0]._arruc[i] = 255;
+        } break;
+    default: break;
+    }
+}
+
+
+void decx::reduce::cpu_Reduce1D_Planner::
+plan(const uint32_t conc,           const uint64_t total, 
+     const uint8_t type_size_in,    const uint8_t type_size_out,
+     de::DH* handle,                const int64_t size_shared_mem,
+     const uint64_t min_thread_proc)
+{
+    decx::cpu_ElementWise1D_planner::plan(conc, total, type_size_in, type_size_out, min_thread_proc);
+
+    uint64_t shared_mem_size = 0;
+    if (size_shared_mem == -1){
+        shared_mem_size = (this->_concurrency + 1) * this->_type_out_size;
+    }
+    else{
+        shared_mem_size = size_shared_mem;
+    }
+
+    // Plus one to contain the result in the back
+    if (decx::alloc::_host_virtual_page_malloc_lazy(&this->_shared_memory, shared_mem_size)) {
+        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION, ALLOC_FAIL);
+        return;
+    }
+
+    const uint32_t _L = this->_total_v * this->_alignment - this->_total;
+    
+#if defined(__x86_64__) || defined(__i386__)
+        this->mask_gen_256b(_L);
+#endif
+#if defined(__aarch64__) || defined(__arm__)
+        this->mask_gen_128b(_L);
+#endif
+}

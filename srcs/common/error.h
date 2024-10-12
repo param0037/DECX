@@ -124,14 +124,11 @@ namespace decx
             handle->error_type = decx::DECX_error_types::DECX_SUCCESS;
         }
 
-        //template <bool _print_to_console = false, int _console_color = 4>
+
         static void handle_error_info_modify(de::DH* handle, decx::DECX_error_types _error_type, const char* _err_statement) 
         {
             handle->error_type = _error_type;
             decx::utils::decx_strcpy<100>(handle->error_string, _err_statement);
-            /*if (_print_to_console) {
-                Print_Error_Message(_console_color, _err_statement);
-            }*/
         }
     }
 }

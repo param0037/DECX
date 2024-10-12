@@ -79,6 +79,9 @@ decx::blas::cpu_eig_bisection<_data_type>::Init(const uint32_t conc,
 
     // Initialize the diagonal extractor
     this->_diag_extractor.plan(this->_concurrency, this->_layout.width, sizeof(_data_type), sizeof(_data_type));
+
+    this->_Gersch_bound_founder.plan(this->_concurrency, this->_layout.width, 
+        sizeof(_data_type), sizeof(_data_type), handle, (this->_concurrency + 1) * sizeof(_data_type) * 2, 1);
 }
 
 template void decx::blas::cpu_eig_bisection<float>::Init(const uint32_t, const decx::_matrix_layout*, const float, de::DH*);
@@ -121,6 +124,7 @@ template void decx::blas::cpu_eig_bisection<float>::extract_diagonal(const float
 template <typename _data_type>
 void decx::blas::cpu_eig_bisection<_data_type>::calc_Gerschgorin_bound(decx::utils::_thread_arrange_1D* t1D)
 {
+#if 0
     const uint32_t& frag_num = this->_diag_extractor.get_fmgr()->frag_num;
     const uint32_t& frag_len = this->_diag_extractor.get_fmgr()->frag_len;
 
@@ -149,6 +153,25 @@ void decx::blas::cpu_eig_bisection<_data_type>::calc_Gerschgorin_bound(decx::uti
         val = u_ptr[i];
         if (this->_Gerschgorin_U < val) this->_Gerschgorin_U = val;
     }
+#else
+    const uint32_t& frag_num = this->_Gersch_bound_founder.get_distribution()->frag_num;
+
+    // Reduction between threads
+    _data_type* u_ptr = this->_Gersch_bound_founder.get_shared_mem<_data_type>();
+    _data_type* l_ptr = u_ptr + frag_num;
+
+    this->_Gersch_bound_founder.caller_VVOO(decx::blas::CPUK::Gerschgorin_bound_fp32,
+        this->_diag.ptr, this->_off_diag.ptr, u_ptr, l_ptr, t1D);
+
+    this->_Gerschgorin_L = l_ptr[0];
+    this->_Gerschgorin_U = u_ptr[0];
+    for (int32_t i = 1; i < frag_num; ++i){
+        _data_type val = l_ptr[i];
+        if (this->_Gerschgorin_L > val) this->_Gerschgorin_L = val;
+        val = u_ptr[i];
+        if (this->_Gerschgorin_U < val) this->_Gerschgorin_U = val;
+    }
+#endif
 }
 
 template void decx::blas::cpu_eig_bisection<float>::calc_Gerschgorin_bound(decx::utils::_thread_arrange_1D*);

@@ -204,7 +204,7 @@ void decx::utils::Fixed_Length_Array<_Ty>::define_capacity(const size_t length)
 {
     if (this->_data != NULL) {
         free(this->_data);
-        this->_data == NULL;
+        this->_data = NULL;
     }
     this->_data = (_Ty*)malloc(length * sizeof(_Ty));
 

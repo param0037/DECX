@@ -31,6 +31,48 @@
 #include "cpu_eig_bisect_iter_HPC.h"
 #include "eig_utils_kernels.h"
 
+// TODO: Optimize FMGR
+
+template <typename _data_type>
+void decx::blas::cpu_eig_bisect_count_interval<_data_type>::set_count_num(const uint64_t proc_len)
+{
+    if (this->_total != proc_len) {
+        this->_total = proc_len;
+        this->_total_v = decx::utils::ceil<uint64_t>(this->_total, this->_alignment);
+
+        if (this->_total / this->_concurrency > this->_min_thread_proc){
+            decx::utils::frag_manager_gen_Nx(&this->_fmgr, this->_total, this->_concurrency, this->_alignment);
+        }
+        else{
+            const uint32_t real_conc = decx::utils::ceil<uint64_t>(this->_total, this->_min_thread_proc);
+            decx::utils::frag_manager_gen_Nx(&this->_fmgr, this->_total, real_conc, this->_alignment);
+            // printf("[%d, %d, %d]\n", this->_total, real_conc, this->_alignment);
+        }
+    }
+    // printf("[%d, %d, %d]\n", this->_fmgr.frag_num, this->_fmgr.frag_len, this->_fmgr.frag_left_over);
+}
+
+template void decx::blas::cpu_eig_bisect_count_interval<float>::set_count_num(const uint64_t);
+
+
+template <>
+void decx::blas::cpu_eig_bisect_count_interval<float>::count_intervals(decx::utils::_thread_arrange_1D* t1D)
+{
+    uint64_t dex = 0;
+    
+    for (int32_t i = 0; i < this->_fmgr.frag_num; ++i){
+        const uint64_t _proc_len_v1 = i < this->_fmgr.frag_num - 1 ? this->_fmgr.frag_len : this->_fmgr.last_frag_len;
+        
+        t1D->_async_thread[i] = decx::cpu::register_task_default(decx::blas::CPUK::count_intervals_fp32_v8, 
+            this->_p_diag, this->_p_off_diag, this->_p_count_buf + dex, this->_p_read_interval + dex,
+            this->_p_write_interval + dex * 2, this->_N, _proc_len_v1);
+
+        dex += _proc_len_v1;
+    }
+
+    t1D->__sync_all_threads(make_uint2(0, this->_fmgr.frag_num));
+}
+
 
 template <typename _data_type> void 
 decx::blas::cpu_eig_bisect_iter_HPC<_data_type>::
@@ -70,14 +112,20 @@ init(const _data_type*  p_diag,
     p_1st_interval->count_violent(p_diag, p_off_diag, N);
 
     this->_current_stack_vaild_num = 1;
+
+    this->_count_intervals = decx::blas::cpu_eig_bisect_count_interval<_data_type>(p_diag, p_off_diag, this->_count_buffer.ptr, N);
+    this->_count_intervals.plan(decx::cpu::_get_permitted_concurrency(), 1, sizeof(_data_type), sizeof(_data_type), 1);
 }
 
 template void decx::blas::cpu_eig_bisect_iter_HPC<float>::init(const float*, const float*, const uint32_t, const float, const float, de::DH*);
 
 
+
 template <>
 void decx::blas::cpu_eig_bisect_iter_HPC<float>::iter(const float* p_diag, const float* p_off_diag, const uint32_t N)
 {
+    decx::utils::_thr_1D t1D(decx::cpu::_get_permitted_concurrency());
+
     auto* p_1st_interval = this->_double_buffer.get_buffer1<decx::blas::eig_bisect_interval<float>>();
     
     if (p_1st_interval->is_valid())
@@ -115,7 +163,7 @@ void decx::blas::cpu_eig_bisect_iter_HPC<float>::iter(const float* p_diag, const
                 ++_now_valid_num;
             }
         }
-
+#if 0
         // Count for the middle point
         for (int32_t i = 0; i < decx::utils::ceil<uint32_t>(_now_valid_num, 8); ++i)
         {
@@ -130,7 +178,14 @@ void decx::blas::cpu_eig_bisect_iter_HPC<float>::iter(const float* p_diag, const
                 }
             }
         }
+#else
+        this->_count_intervals.set_interval_buffers(p_read, p_write);
 
+        this->_count_intervals.set_count_num(_now_valid_num);
+        
+
+        this->_count_intervals.count_intervals(&t1D);
+#endif
         this->_current_interval_gap /= 2.f;
         this->_double_buffer.update_states();
     }

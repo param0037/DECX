@@ -117,30 +117,30 @@ struct decx::utils::unpitched_frac_mapping
 
 namespace decx
 {
-    namespace utils
-    {
-        struct frag_manager;
+namespace utils
+{
+    struct frag_manager;
 
-        /**
-        * Ensuring that frag_manager::frag_num = _frag_num, but, frag_manager::frag_len depends on _tot
-        * @return If can be divided into integer, return true, otherwise return false
-        */
-        _DECX_API_ bool frag_manager_gen(decx::utils::frag_manager *src, const uint64_t _tot, const uint64_t _frag_num);
-
-
-        /**
-        * Ensuring that frag_manager::frag_len = _frag_len, but, frag_manager::frag_num depends on _tot
-        * @return If can be divided into integer, return true, otherwise return false
-        */
-        _DECX_API_ bool frag_manager_gen_from_fragLen(decx::utils::frag_manager* src, const uint64_t _tot, const uint64_t _frag_len);
+    /**
+    * Ensuring that frag_manager::frag_num = _frag_num, but, frag_manager::frag_len depends on _tot
+    * @return If can be divided into integer, return true, otherwise return false
+    */
+    bool frag_manager_gen(decx::utils::frag_manager *src, const uint64_t _tot, const uint64_t _frag_num);
 
 
-        /**
-        * Ensuring that frag_manager::frag_len can be divided by N into integer, but, frag_manager::frag_left_over might not
-        * @return If can be divided into integer, return true, otherwise return false
-        */
-        _DECX_API_ bool frag_manager_gen_Nx(decx::utils::frag_manager* src, const uint64_t _tot, const uint64_t _frag_num, const uint N);
-    }
+    /**
+    * Ensuring that frag_manager::frag_len = _frag_len, but, frag_manager::frag_num depends on _tot
+    * @return If can be divided into integer, return true, otherwise return false
+    */
+    bool frag_manager_gen_from_fragLen(decx::utils::frag_manager* src, const uint64_t _tot, const uint64_t _frag_len);
+
+
+    /**
+    * Ensuring that frag_manager::frag_len can be divided by N into integer, but, frag_manager::frag_left_over might not
+    * @return If can be divided into integer, return true, otherwise return false
+    */
+    bool frag_manager_gen_Nx(decx::utils::frag_manager* src, const uint64_t _tot, const uint64_t _frag_num, const uint N);
+}
 }
 
 
@@ -150,7 +150,7 @@ struct decx::utils::frag_manager
     uint64_t total;                 // The total length to be cut
     uint32_t frag_num;              // How many fragments should generate
     uint32_t frag_len;              // The length of each fragment
-    uint32_t frag_left_over;        // The length of the leftover fragment (if left)
+    uint32_t frag_left_over;        // The length of the leftover fragment (if left)        // ABD soon
     uint32_t last_frag_len;         // The length of the very last fragment
 };
 

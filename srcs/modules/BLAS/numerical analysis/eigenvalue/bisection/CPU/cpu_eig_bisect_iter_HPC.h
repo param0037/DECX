@@ -44,8 +44,53 @@ namespace decx
 namespace blas{
     template <typename _data_type>
     class cpu_eig_bisect_iter_HPC;
+
+
+    template <typename _data_type>
+    class cpu_eig_bisect_count_interval;
 }
 }
+
+
+template <typename _data_type>
+class decx::blas::cpu_eig_bisect_count_interval : public decx::cpu_ElementWise1D_planner
+{
+private:
+    const _data_type* _p_diag; 
+    const _data_type* _p_off_diag;
+    const _data_type* _p_count_buf;
+    const decx::blas::eig_bisect_interval<_data_type>* _p_read_interval;
+    decx::blas::eig_bisect_interval<_data_type>* _p_write_interval;
+
+    uint32_t _N;
+
+public:
+    cpu_eig_bisect_count_interval() {}
+
+
+    cpu_eig_bisect_count_interval(const _data_type* p_diag, 
+                                  const _data_type* p_off_diag,
+                                  const _data_type* p_count_buf,
+                                  const uint32_t N) :
+    _p_diag(p_diag),
+    _p_off_diag(p_off_diag),
+    _p_count_buf(p_count_buf),
+    _N(N)
+    {}
+
+
+    void set_count_num(const uint64_t proc_len);
+
+
+    void set_interval_buffers(const decx::blas::eig_bisect_interval<_data_type>* p_read,
+        decx::blas::eig_bisect_interval<_data_type>* p_write) {
+        this->_p_read_interval = p_read;
+        this->_p_write_interval = p_write;
+    }
+
+
+    void count_intervals(decx::utils::_thread_arrange_1D* t1D);
+};
 
 
 template <typename _data_type>
@@ -65,8 +110,8 @@ private:
     _data_type _current_interval_gap;
     uint32_t _current_stack_vaild_num;
 
-    decx::cpu_ElementWise1D_planner _update_interval;
-    decx::cpu_ElementWise1D_planner _count_intervals;
+    decx::blas::cpu_eig_bisect_count_interval<_data_type> _update_interval;
+    decx::blas::cpu_eig_bisect_count_interval<_data_type> _count_intervals;
 
 public:
     cpu_eig_bisect_iter_HPC() {}

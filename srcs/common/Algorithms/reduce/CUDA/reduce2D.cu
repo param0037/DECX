@@ -30,7 +30,7 @@
 
 
 #include "reduce_callers.cuh"
-#include "../../../modules/core/allocators.h"
+#include <allocators.h>
 
 
 #define _CU_REDUCE2D_MEM_ALIGN_8B_ 2

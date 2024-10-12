@@ -89,9 +89,11 @@ namespace simd
 #endif
         float       _arrf[4];
         int32_t     _arri[4];
+        uint32_t    _arrui[4];
         int16_t     _arrs[8];
         double      _arrd[2];
         uint64_t    _arrull[2];
+        uint8_t     _arruc[16];
     }_mmv128;
 
 
@@ -102,6 +104,7 @@ namespace simd
         uint64_t    _arrull[4];
         uint32_t    _arrui[8];
         int32_t     _arri[8];
+        uint8_t     _arruc[32];
 
         decx::utils::simd::xmm128_reg _vmm128[2];
 

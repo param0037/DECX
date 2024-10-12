@@ -29,6 +29,7 @@
 */
 
 #include <basic.h>
+#include "../common/eig_bisect_interval.h"
 #include <thread_management/thread_pool.h>
 
 
@@ -51,6 +52,12 @@ namespace CPUK {
 
     _THREAD_FUNCTION_ __m256i count_v8_eigv_fp32(const float* __restrict diag, const float* __restrict off_diag, uint32_t* __restrict count, 
         const float* x, const uint32_t N);
+
+    
+    _THREAD_FUNCTION_ void count_intervals_fp32_v8(const float* __restrict p_diag, const float* __restrict p_off_diag,
+        const float* __restrict p_count_buf, const decx::blas::eig_bisect_interval<float>* __restrict p_read_interval, 
+        decx::blas::eig_bisect_interval<float>* __restrict p_write_interval, const uint32_t N, const uint32_t proc_len);
 }
 }
 }
+
