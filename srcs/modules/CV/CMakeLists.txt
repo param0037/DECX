@@ -65,6 +65,9 @@ include("../../config_paths.cmake")
 # include to add compile definitions to the target
 include("${DECX_WORLD_ABS_DIR}/srcs/compile_defs.cmake")
 
+# include the sommon sources
+include("${DECX_WORLD_ABS_DIR}/srcs/common/FMGR/FMGR_COM.cmake")
+
 # Set the link directories
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     link_directories(${DECX_WORLD_ABS_DIR}/build/bin/${_DECX_HOST_ARCH_}/Release)

@@ -33,13 +33,13 @@ file(GLOB_RECURSE CV_CORE "${DECX_WORLD_ABS_DIR}/srcs/modules/CV/*.cu")
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     link_directories(${SDL_PATH}/lib/x64)
 
-    add_library(DECX_CV_CUDA SHARED ${CV_CORE})
+    add_library(DECX_CV_CUDA SHARED ${CV_CORE} ${FMGR_CUDA_COM_SRCS})
     target_link_libraries(DECX_CV_CUDA PUBLIC DECX_core_CUDA.lib DECX_BLAS_CUDA.lib DECX_CV_CPU.lib)
     
 else()
     link_directories(${SDL_PATH}/lib)
 
-    add_library(DECX_CV_CUDA SHARED ${CV_CORE})
+    add_library(DECX_CV_CUDA SHARED ${CV_CORE} ${FMGR_CUDA_COM_SRCS})
     target_link_libraries(DECX_CV_CUDA PUBLIC DECX_core_CUDA.so DECX_BLAS_CUDA.so DECX_CV_CPU.so)
 endif()
 

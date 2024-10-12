@@ -45,13 +45,13 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     link_directories(${SDL_PATH}/lib/x64
                     ${SDL_IMAGE_PATH}/lib/x64)
 
-    add_library(DECX_CV_CPU SHARED ${CV_CORE} ${UTILS})
+    add_library(DECX_CV_CPU SHARED ${CV_CORE} ${UTILS} ${FMGR_CPU_COM_SRCS})
     target_link_libraries(DECX_CV_CPU SDL2.lib SDL2main.lib SDL2test.lib SDL2_image.lib DECX_core_CPU.lib DECX_BLAS_CPU.lib)
     
 else()
     link_directories(${SDL_PATH}/lib
     		     ${SDL_IMAGE_PATH}/lib)
 
-    add_library(DECX_CV_CPU SHARED ${CV_CORE} ${UTILS})
+    add_library(DECX_CV_CPU SHARED ${CV_CORE} ${UTILS} ${FMGR_CPU_COM_SRCS})
     target_link_libraries(DECX_CV_CPU libSDL2-2.0.so.0 libSDL2_image-2.0.so.0 DECX_core_CPU.so DECX_BLAS_CPU.so)
 endif()
