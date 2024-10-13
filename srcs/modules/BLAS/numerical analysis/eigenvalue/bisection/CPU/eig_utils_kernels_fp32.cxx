@@ -134,7 +134,6 @@ count_v8_eigv_fp32(const float* __restrict  diag,
 }
 
 
-
 _THREAD_FUNCTION_ void decx::blas::CPUK::
 count_intervals_fp32_v8(const float* __restrict p_diag, 
                         const float* __restrict p_off_diag,
@@ -150,8 +149,6 @@ count_intervals_fp32_v8(const float* __restrict p_diag,
         _count_mid._vi = decx::blas::CPUK::count_v8_eigv_fp32(
             p_diag, p_off_diag, NULL, p_count_buf + i * 8, N);
 
-        // _count_mid._vi = _mm256_set1_epi32(37);
-        
 #pragma unroll
         for (int k = 0; k < 8; ++k){
             if (i * 8 + k < proc_len){

@@ -37,6 +37,7 @@
 #include "../common/eig_bisect_interval.h"
 #include <allocators.h>
 #include <Element_wise/common/cpu_element_wise_planner.h>
+#include <Algorithms/reduce/CPU/cpu_reduce_planner.h>
 
 
 namespace decx
@@ -110,7 +111,7 @@ private:
     _data_type _current_interval_gap;
     uint32_t _current_stack_vaild_num;
 
-    decx::blas::cpu_eig_bisect_count_interval<_data_type> _update_interval;
+    decx::reduce::cpu_Reduce1D_Planner _update_interval;
     decx::blas::cpu_eig_bisect_count_interval<_data_type> _count_intervals;
 
 public:

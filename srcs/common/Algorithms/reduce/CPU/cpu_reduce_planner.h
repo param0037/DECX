@@ -74,6 +74,10 @@ public:
         _type_out* p_out2, decx::utils::_thr_1D* t1D, Args&& ...additional);
 
 
+    template <typename FuncType, typename... Args>
+    void caller(FuncType&& f, decx::utils::_thr_1D* t1D, Args&&... args);
+
+
     template <typename _ptr_type>
     _ptr_type* get_shared_mem() {
         return (_ptr_type*)this->_shared_memory.ptr;
@@ -90,20 +94,32 @@ caller_VVOO(FuncType&&             f,
             _type_out*             p_out1, 
             _type_out*             p_out2, 
             decx::utils::_thr_1D*  t1D,
-            Args&&                 ...additional)
+            Args&&                 ...static_vars)
 {
     const _type_in* loc_p_in1 = p_in1, *loc_p_in2 = p_in2;
     _type_out* loc_p_out1 = p_out1, *loc_p_out2 = p_out2;
 
     for (int32_t i = 0; i < this->_fmgr.frag_num; ++i){
-        const uint64_t _proc_len_v1 = i < this->_fmgr.frag_num - 1 ? this->_fmgr.frag_len : this->_fmgr.last_frag_len;
+        const uint64_t _proc_len_v1 = this->_fmgr.get_frag_len_by_id(i);
         t1D->_async_thread[i] = decx::cpu::register_task_default(
-            f, loc_p_in1, loc_p_in2, loc_p_out1, loc_p_out2, _proc_len_v1, additional...);
-
+            f, loc_p_in1, loc_p_in2, loc_p_out1, loc_p_out2, _proc_len_v1, static_vars...);
+        // printf("%llu, %llu, %llu, %llu, %llu\n", loc_p_in1, loc_p_in2, loc_p_out1, loc_p_out2, _proc_len_v1);
         loc_p_in1 += _proc_len_v1;
         loc_p_in2 += _proc_len_v1;
         ++loc_p_out1;
         ++loc_p_out2;
+    }
+    t1D->__sync_all_threads(make_uint2(0, this->_fmgr.frag_num));
+}
+
+
+template <typename FuncType, typename... Args> inline void 
+decx::reduce::cpu_Reduce1D_Planner::caller(FuncType&& f, 
+                                           decx::utils::_thr_1D* t1D, 
+                                           Args&&... args)
+{
+    for (int32_t i = 0; i < this->_fmgr.get_frag_num(); ++i){
+        t1D->_async_thread[i] = decx::cpu::register_task_default(f, args.value(i)...);
     }
     t1D->__sync_all_threads(make_uint2(0, this->_fmgr.frag_num));
 }

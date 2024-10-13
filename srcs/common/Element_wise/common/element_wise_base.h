@@ -48,7 +48,65 @@ namespace decx
 {
     class element_wise_base_1D;
     class element_wise_base_2D;
+
+    enum EW_Caller_Argument_Type{
+        EW_ARG_UNCHANGED = 0,
+        EW_ARG_UPDATED,
+    };
+
+    template <decx::EW_Caller_Argument_Type ArgType, 
+              typename _data_type, 
+              typename FuncType> class EW_Arg;
 }
+
+
+template <decx::EW_Caller_Argument_Type ArgType, 
+          typename _data_type, 
+          typename FuncType>
+class decx::EW_Arg
+{
+    using T_updator = _data_type(const int32_t);
+
+    _data_type _arg;
+    FuncType _updator;
+
+public:
+    EW_Arg(_data_type arg, FuncType updator) :
+        _arg(arg), _updator(updator) {}
+
+
+    EW_Arg(FuncType updator) :
+        _updator(updator) {}
+
+
+    _data_type value(const int32_t i) {
+        if 
+#if __cplusplus >= 201703L
+        constexpr 
+#endif
+        (ArgType == decx::EW_Caller_Argument_Type::EW_ARG_UPDATED){
+            return this->_updator(i);
+        }else{
+            return this->_arg;
+        }
+    }
+};
+
+
+namespace decx
+{
+    template <EW_Caller_Argument_Type ArgType, typename _data_type, typename FuncType>
+    inline decx::EW_Arg<ArgType, _data_type, FuncType> EW_Arg_helper(_data_type val, FuncType func){
+        return decx::EW_Arg<ArgType, _data_type, FuncType>(val, func);
+    }
+
+
+    template <EW_Caller_Argument_Type ArgType, typename _data_type, typename FuncType>
+    inline decx::EW_Arg<ArgType, _data_type, FuncType> EW_Arg_helper(FuncType func){
+        return decx::EW_Arg<ArgType, _data_type, FuncType>(func);
+    }
+}
+
 
 #ifdef _DECX_CPU_PARTS_
 #if defined(__x86_64__) || defined(__i386__)
@@ -109,7 +167,6 @@ protected:
     uint2 _proc_dims;
     uint32_t _proc_w_v;
 };
-
 
 
 

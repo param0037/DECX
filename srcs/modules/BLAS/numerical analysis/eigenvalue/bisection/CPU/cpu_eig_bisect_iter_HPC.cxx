@@ -46,10 +46,8 @@ void decx::blas::cpu_eig_bisect_count_interval<_data_type>::set_count_num(const 
         else{
             const uint32_t real_conc = decx::utils::ceil<uint64_t>(this->_total, this->_min_thread_proc);
             decx::utils::frag_manager_gen_Nx(&this->_fmgr, this->_total, real_conc, this->_alignment);
-            // printf("[%d, %d, %d]\n", this->_total, real_conc, this->_alignment);
         }
     }
-    // printf("[%d, %d, %d]\n", this->_fmgr.frag_num, this->_fmgr.frag_len, this->_fmgr.frag_left_over);
 }
 
 template void decx::blas::cpu_eig_bisect_count_interval<float>::set_count_num(const uint64_t);
@@ -58,30 +56,27 @@ template void decx::blas::cpu_eig_bisect_count_interval<float>::set_count_num(co
 template <>
 void decx::blas::cpu_eig_bisect_count_interval<float>::count_intervals(decx::utils::_thread_arrange_1D* t1D)
 {
-    uint64_t dex = 0;
-    
-    for (int32_t i = 0; i < this->_fmgr.frag_num; ++i){
-        const uint64_t _proc_len_v1 = i < this->_fmgr.frag_num - 1 ? this->_fmgr.frag_len : this->_fmgr.last_frag_len;
-        
-        t1D->_async_thread[i] = decx::cpu::register_task_default(decx::blas::CPUK::count_intervals_fp32_v8, 
-            this->_p_diag, this->_p_off_diag, this->_p_count_buf + dex, this->_p_read_interval + dex,
-            this->_p_write_interval + dex * 2, this->_N, _proc_len_v1);
+    using T_interval = decx::blas::eig_bisect_interval<float>;
 
-        dex += _proc_len_v1;
-    }
+    const uint32_t frag_len = this->_fmgr.get_frag_len();
 
-    t1D->__sync_all_threads(make_uint2(0, this->_fmgr.frag_num));
+    this->caller(decx::blas::CPUK::count_intervals_fp32_v8,
+        t1D,
+        decx::EW_Arg_helper<EW_ARG_UNCHANGED, const float*>     (this->_p_diag,     [](){}),
+        decx::EW_Arg_helper<EW_ARG_UNCHANGED, const float*>     (this->_p_off_diag, [](){}),
+        decx::EW_Arg_helper<EW_ARG_UPDATED,   const float*>     ([&](const int32_t i){return this->_p_count_buf + i * frag_len;}),
+        decx::EW_Arg_helper<EW_ARG_UPDATED,   const T_interval*>([&](const int32_t i){return this->_p_read_interval + i * frag_len;}),
+        decx::EW_Arg_helper<EW_ARG_UPDATED,   T_interval*>      ([&](const int32_t i){return this->_p_write_interval + i * frag_len * 2;}),
+        decx::EW_Arg_helper<EW_ARG_UNCHANGED, uint32_t>         (this->_N, [](){}),
+        decx::EW_Arg_helper<EW_ARG_UPDATED,   uint32_t>         ([&](const int32_t i){return this->get_fmgr()->get_frag_len_by_id(i);}));
 }
 
 
 template <typename _data_type> void 
 decx::blas::cpu_eig_bisect_iter_HPC<_data_type>::
-init(const _data_type*  p_diag, 
-     const _data_type*  p_off_diag, 
-     const uint32_t     N, 
-     const _data_type   L, 
-     const _data_type   U, 
-     de::DH*            handle)
+init(const _data_type*  p_diag,         const _data_type* p_off_diag, 
+     const uint32_t N,                  const _data_type L, 
+     const _data_type U,                de::DH* handle)
 {
     this->_current_interval_gap = U - L;
 
@@ -163,29 +158,13 @@ void decx::blas::cpu_eig_bisect_iter_HPC<float>::iter(const float* p_diag, const
                 ++_now_valid_num;
             }
         }
-#if 0
-        // Count for the middle point
-        for (int32_t i = 0; i < decx::utils::ceil<uint32_t>(_now_valid_num, 8); ++i)
-        {
-            decx::utils::simd::xmm256_reg _count_mid;
-            _count_mid._vi = decx::blas::CPUK::count_v8_eigv_fp32(p_diag, p_off_diag, NULL, this->_count_buffer.ptr + i * 8, N);
-            
-            #pragma unroll
-            for (int k = 0; k < 8; ++k){
-                if (i * 8 + k < _now_valid_num){
-                    (p_write + (i * 8 + k) * 2)->_count_u = _count_mid._arrui[k];
-                    (p_write + (i * 8 + k) * 2 + 1)->_count_l = _count_mid._arrui[k];
-                }
-            }
-        }
-#else
+        
         this->_count_intervals.set_interval_buffers(p_read, p_write);
 
         this->_count_intervals.set_count_num(_now_valid_num);
         
-
         this->_count_intervals.count_intervals(&t1D);
-#endif
+        
         this->_current_interval_gap /= 2.f;
         this->_double_buffer.update_states();
     }
