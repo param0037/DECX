@@ -124,9 +124,6 @@ template void decx::blas::cpu_eig_bisection<float>::extract_diagonal(const float
 template <typename _data_type>
 void decx::blas::cpu_eig_bisection<_data_type>::calc_Gerschgorin_bound(decx::utils::_thread_arrange_1D* t1D)
 {
-    using decx::EW_Caller_Argument_Type::EW_ARG_UNCHANGED;
-    using decx::EW_Caller_Argument_Type::EW_ARG_UPDATED;
-
     const decx::utils::frag_manager* p_dist = this->_Gersch_bound_founder.get_distribution();
     const uint32_t& frag_num = p_dist->frag_num;
 
@@ -136,11 +133,11 @@ void decx::blas::cpu_eig_bisection<_data_type>::calc_Gerschgorin_bound(decx::uti
 
     this->_Gersch_bound_founder.caller(decx::blas::CPUK::Gerschgorin_bound_fp32,
         t1D,
-        decx::EW_Arg_helper<EW_ARG_UPDATED, const float*>([this, p_dist](const int32_t i){return this->_diag.ptr + i * p_dist->get_frag_len();}),
-        decx::EW_Arg_helper<EW_ARG_UPDATED, const float*>([this, p_dist](const int32_t i){return this->_off_diag.ptr + i * p_dist->get_frag_len();}),
-        decx::EW_Arg_helper<EW_ARG_UPDATED, float*>      ([u_ptr](const int32_t i)->float*{return u_ptr + i;}),
-        decx::EW_Arg_helper<EW_ARG_UPDATED, float*>      ([l_ptr](const int32_t i)->float*{return l_ptr + i;}),
-        decx::EW_Arg_helper<EW_ARG_UPDATED, uint32_t>    ([p_dist](const int32_t i){return p_dist->get_frag_len_by_id(i);}));
+        decx::TArg_var<const float*>([this, p_dist](const int32_t i){return this->_diag.ptr + i * p_dist->get_frag_len();}),
+        decx::TArg_var<const float*>([this, p_dist](const int32_t i){return this->_off_diag.ptr + i * p_dist->get_frag_len();}),
+        decx::TArg_var<float*>      ([u_ptr](const int32_t i)->float*{return u_ptr + i;}),
+        decx::TArg_var<float*>      ([l_ptr](const int32_t i)->float*{return l_ptr + i;}),
+        decx::TArg_var<uint32_t>    ([p_dist](const int32_t i){return p_dist->get_frag_len_by_id(i);}));
     
     this->_Gerschgorin_L = l_ptr[0];
     this->_Gerschgorin_U = u_ptr[0];

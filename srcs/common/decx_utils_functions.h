@@ -291,8 +291,8 @@ void decx::utils::ptr_shift_xy_inplace(_Ty** _initial_ptr, const uint2 offset_xy
 #define DECX_PTR_SHF_XY decx::utils::ptr_shift_xy
 #define DECX_PTR_SHF_XY_INP decx::utils::ptr_shift_xy_inplace
 
-#define DECX_PTR_SHF_XY_SAME_TYPE(_src_ptr, _offset_x, _offset_y, _pitch) \
-    (_src_ptr) + (_offset_x) * (_pitch) + (_offset_y)
+#define DECX_PTR_SHF_XY_SAME_TYPE(_src_ptr, _offset_y, _offset_x, _pitch) \
+    (_src_ptr) + (_offset_y) * (_pitch) + (_offset_x)
 
 
 #endif

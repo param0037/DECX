@@ -74,8 +74,8 @@ public:
         _type_out* p_out2, decx::utils::_thr_1D* t1D, Args&& ...additional);
 
 
-    template <typename FuncType, typename... Args>
-    void caller(FuncType&& f, decx::utils::_thr_1D* t1D, Args&&... args);
+    // template <typename FuncType, typename... Args>
+    // void caller(FuncType&& f, decx::utils::_thr_1D* t1D, Args&&... args);
 
 
     template <typename _ptr_type>
@@ -113,16 +113,16 @@ caller_VVOO(FuncType&&             f,
 }
 
 
-template <typename FuncType, typename... Args> inline void 
-decx::reduce::cpu_Reduce1D_Planner::caller(FuncType&& f, 
-                                           decx::utils::_thr_1D* t1D, 
-                                           Args&&... args)
-{
-    for (int32_t i = 0; i < this->_fmgr.get_frag_num(); ++i){
-        t1D->_async_thread[i] = decx::cpu::register_task_default(f, args.value(i)...);
-    }
-    t1D->__sync_all_threads(make_uint2(0, this->_fmgr.frag_num));
-}
+// template <typename FuncType, typename... Args> inline void 
+// decx::reduce::cpu_Reduce1D_Planner::caller(FuncType&& f, 
+//                                            decx::utils::_thr_1D* t1D, 
+//                                            Args&&... args)
+// {
+//     for (int32_t i = 0; i < this->_fmgr.get_frag_num(); ++i){
+//         t1D->_async_thread[i] = decx::cpu::register_task_default(f, args.value(i)...);
+//     }
+//     t1D->__sync_all_threads(make_uint2(0, this->_fmgr.frag_num));
+// }
 
 
 #endif

@@ -55,7 +55,6 @@ namespace type_cast
 }
 
 
-
 namespace de {
     namespace cpu 
     {

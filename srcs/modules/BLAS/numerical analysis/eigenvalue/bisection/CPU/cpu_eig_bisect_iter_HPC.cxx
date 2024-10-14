@@ -31,7 +31,6 @@
 #include "cpu_eig_bisect_iter_HPC.h"
 #include "eig_utils_kernels.h"
 
-// TODO: Optimize FMGR
 
 template <typename _data_type>
 void decx::blas::cpu_eig_bisect_count_interval<_data_type>::set_count_num(const uint64_t proc_len)
@@ -62,13 +61,13 @@ void decx::blas::cpu_eig_bisect_count_interval<float>::count_intervals(decx::uti
 
     this->caller(decx::blas::CPUK::count_intervals_fp32_v8,
         t1D,
-        decx::EW_Arg_helper<EW_ARG_UNCHANGED, const float*>     (this->_p_diag,     [](){}),
-        decx::EW_Arg_helper<EW_ARG_UNCHANGED, const float*>     (this->_p_off_diag, [](){}),
-        decx::EW_Arg_helper<EW_ARG_UPDATED,   const float*>     ([&](const int32_t i){return this->_p_count_buf + i * frag_len;}),
-        decx::EW_Arg_helper<EW_ARG_UPDATED,   const T_interval*>([&](const int32_t i){return this->_p_read_interval + i * frag_len;}),
-        decx::EW_Arg_helper<EW_ARG_UPDATED,   T_interval*>      ([&](const int32_t i){return this->_p_write_interval + i * frag_len * 2;}),
-        decx::EW_Arg_helper<EW_ARG_UNCHANGED, uint32_t>         (this->_N, [](){}),
-        decx::EW_Arg_helper<EW_ARG_UPDATED,   uint32_t>         ([&](const int32_t i){return this->get_fmgr()->get_frag_len_by_id(i);}));
+        decx::TArg_still<const float*>     (this->_p_diag),
+        decx::TArg_still<const float*>     (this->_p_off_diag),
+        decx::TArg_var<const float*>     ([&](const int32_t i){return this->_p_count_buf + i * frag_len;}),
+        decx::TArg_var<const T_interval*>([&](const int32_t i){return this->_p_read_interval + i * frag_len;}),
+        decx::TArg_var<T_interval*>      ([&](const int32_t i){return this->_p_write_interval + i * frag_len * 2;}),
+        decx::TArg_still<uint32_t>         (this->_N),
+        decx::TArg_var<uint32_t>         ([&](const int32_t i){return this->get_fmgr()->get_frag_len_by_id(i);}));
 }
 
 

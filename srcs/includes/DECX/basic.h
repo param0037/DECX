@@ -90,6 +90,8 @@ namespace de
 	namespace cpu {
 		_DECX_API_ void DecxSetThreadingNum(const uint64_t _thread_num);
 	}
+
+	de::DH* GetLastError();
 }
 
 

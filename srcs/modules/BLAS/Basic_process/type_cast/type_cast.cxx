@@ -29,10 +29,7 @@
 */
 
 #include "type_cast.h"
-#include "../../../../common/Element_wise/common/cpu_element_wise_planner.h"
-
-
-
+#include <Element_wise/common/cpu_element_wise_planner.h>
 
 
 _DECX_API_

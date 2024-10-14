@@ -179,9 +179,13 @@ static void decx::type_cast::typecast1D_general_caller(
 {
     _planner->plan(decx::cpu::_get_permitted_concurrency(), proc_len, sizeof(_type_in), sizeof(_type_out));
 
-    _planner->caller_unary(_kernel_ptr, src, dst, t1D);
+    _planner->caller(_kernel_ptr,
+        t1D,
+        decx::TArg_var<const _type_in*>(_TARG_PTR_INC_(src, _planner->get_fmgr()->get_frag_len())),
+        decx::TArg_var<_type_out*>(_TARG_PTR_INC_(dst, _planner->get_fmgr()->get_frag_len())),
+        decx::TArg_var<uint64_t>([&](const int32_t i){return _planner->get_proc_len_v_by_id(i);})
+    );
 }
-
 
 
 template <typename _type_in, typename _type_out>
@@ -194,7 +198,18 @@ static void decx::type_cast::typecast2D_general_caller(
 {
     _planner->plan(decx::cpu::_get_permitted_concurrency(), proc_dims, sizeof(_type_in), sizeof(_type_out));
 
-    _planner->caller_unary(_kernel_ptr, src, dst, Wsrc, Wdst, t1D);
+    _planner->caller(_kernel_ptr,
+        t1D,
+        decx::TArg_var<const _type_in*>([&](const int32_t i, const int32_t j){
+            const uint2 xy = _planner->get_proc_dims_by_id(0, 0);
+            return DECX_PTR_SHF_XY_SAME_TYPE(src, i * xy.y, j * xy.x, Wsrc);}),
+        decx::TArg_var<_type_out*>([&](const int32_t i, const int32_t j){
+            const uint2 xy = _planner->get_proc_dims_by_id(0, 0);
+            return DECX_PTR_SHF_XY_SAME_TYPE(dst, i * xy.y, j * xy.x, Wdst);}),
+        decx::TArg_var<uint2>([&](const int32_t i, const int32_t j){return _planner->get_proc_dims_v_by_id(i, j);}),
+        decx::TArg_still<uint32_t>(Wsrc),
+        decx::TArg_still<uint32_t>(Wdst)
+    );
 }
 
 

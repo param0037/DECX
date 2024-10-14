@@ -59,11 +59,21 @@ mat_arithmetic_caller_VVO(const decx::_Matrix*  A,
         // Do the plan
         _planner.plan(t1D.total_thread, proc_len_flatten_v1, sizeof(float), sizeof(float));
         // Call the kernel
-        _planner.caller_binary((arithmetic_kernels_1D_VVO<float, float, float>*)_kernel_ptr,
-                               (float*)A->Mat.ptr, 
-                               (float*)B->Mat.ptr, 
-                               (float*)dst->Mat.ptr,
-                               &t1D);
+        // _planner.caller_binary((arithmetic_kernels_1D_VVO<float, float, float>*)_kernel_ptr,
+        //                        (float*)A->Mat.ptr, 
+        //                        (float*)B->Mat.ptr, 
+        //                        (float*)dst->Mat.ptr,
+        //                        &t1D);
+        _planner.caller(
+            (arithmetic_kernels_1D_VVO<float, float, float>*)_kernel_ptr,
+            &t1D,
+            decx::TArg_var<const float*>([&](const int32_t i){return (const float*)A->Mat.ptr + i * _planner.get_fmgr()->get_frag_len();}),
+            decx::TArg_var<const float*>([&](const int32_t i){return (const float*)B->Mat.ptr + i * _planner.get_fmgr()->get_frag_len();}),
+            decx::TArg_var<float*>([&](const int32_t i){return (float*)dst->Mat.ptr + i * _planner.get_fmgr()->get_frag_len();}),
+            decx::TArg_var<uint64_t>([&](const int32_t i){
+                return decx::utils::ceil<uint64_t>(_planner.get_fmgr()->get_frag_len_by_id(i), _planner.get_alignment());})
+        );
+        
         break;
     
     case de::_DATA_TYPES_FLAGS_::_FP64_:
@@ -71,11 +81,22 @@ mat_arithmetic_caller_VVO(const decx::_Matrix*  A,
 
         _planner.plan(t1D.total_thread, proc_len_flatten_v1, sizeof(double), sizeof(double));
 
-        _planner.caller_binary((arithmetic_kernels_1D_VVO<double, double, double>*)_kernel_ptr,
-                               (double*)A->Mat.ptr, 
-                               (double*)B->Mat.ptr, 
-                               (double*)dst->Mat.ptr,
-                               &t1D);
+        // _planner.caller_binary((arithmetic_kernels_1D_VVO<double, double, double>*)_kernel_ptr,
+        //                        (double*)A->Mat.ptr, 
+        //                        (double*)B->Mat.ptr, 
+        //                        (double*)dst->Mat.ptr,
+        //                        &t1D);
+
+        _planner.caller(
+            (arithmetic_kernels_1D_VVO<double, double, double>*)_kernel_ptr,
+            &t1D,
+            decx::TArg_var<const double*>([&](const int32_t i){return (const double*)A->Mat.ptr + i * _planner.get_fmgr()->get_frag_len();}),
+            decx::TArg_var<const double*>([&](const int32_t i){return (const double*)B->Mat.ptr + i * _planner.get_fmgr()->get_frag_len();}),
+            decx::TArg_var<double*>([&](const int32_t i){return (double*)dst->Mat.ptr + i * _planner.get_fmgr()->get_frag_len();}),
+            decx::TArg_var<uint64_t>([&](const int32_t i){
+                return decx::utils::ceil<uint64_t>(_planner.get_fmgr()->get_frag_len_by_id(i), _planner.get_alignment());})
+        );
+
         break;
 
     default:
@@ -146,7 +167,7 @@ vec_arithmetic_caller_VVO(const decx::_Vector*  A,
 
     decx::cpu_ElementWise1D_planner _planner;
     decx::utils::_thr_1D t1D(decx::cpu::_get_permitted_concurrency());
-
+    
     const int32_t _kernel_dex = decx::blas::_find_arith_kernel_id<0>(arith_flag);
     void* _kernel_ptr = NULL;
 
@@ -157,11 +178,16 @@ vec_arithmetic_caller_VVO(const decx::_Vector*  A,
 
         _planner.plan(t1D.total_thread, A->Len(), sizeof(float), sizeof(float));
 
-        _planner.caller_binary((arithmetic_kernels_1D_VVO<float, float, float>*)_kernel_ptr,
-                                (float*)A->Vec.ptr, 
-                                (float*)B->Vec.ptr, 
-                                (float*)dst->Vec.ptr, 
-                                &t1D);
+        _planner.caller(
+            (arithmetic_kernels_1D_VVO<float, float, float>*)_kernel_ptr,
+            &t1D,
+            decx::TArg_var<const float*>([&](const int32_t i){return (const float*)A->Vec.ptr + i * _planner.get_fmgr()->get_frag_len();}),
+            decx::TArg_var<const float*>([&](const int32_t i){return (const float*)B->Vec.ptr + i * _planner.get_fmgr()->get_frag_len();}),
+            decx::TArg_var<float*>([&](const int32_t i){return (float*)dst->Vec.ptr + i * _planner.get_fmgr()->get_frag_len();}),
+            decx::TArg_var<uint64_t>([&](const int32_t i){
+                return decx::utils::ceil<uint64_t>(_planner.get_fmgr()->get_frag_len_by_id(i), _planner.get_alignment());})
+        );
+
         break;
 
     case de::_DATA_TYPES_FLAGS_::_FP64_:
@@ -174,6 +200,17 @@ vec_arithmetic_caller_VVO(const decx::_Vector*  A,
                                 (double*)B->Vec.ptr, 
                                 (double*)dst->Vec.ptr, 
                                 &t1D);
+
+        _planner.caller(
+            (arithmetic_kernels_1D_VVO<double, double, double>*)_kernel_ptr,
+            &t1D,
+            decx::TArg_var<const double*>([&](const int32_t i){return (const double*)A->Vec.ptr + i * _planner.get_fmgr()->get_frag_len();}),
+            decx::TArg_var<const double*>([&](const int32_t i){return (const double*)B->Vec.ptr + i * _planner.get_fmgr()->get_frag_len();}),
+            decx::TArg_var<double*>([&](const int32_t i){return (double*)dst->Vec.ptr + i * _planner.get_fmgr()->get_frag_len();}),
+            decx::TArg_var<uint64_t>([&](const int32_t i){
+                return decx::utils::ceil<uint64_t>(_planner.get_fmgr()->get_frag_len_by_id(i), _planner.get_alignment());})
+        );
+
         break;
     
     default:
@@ -182,7 +219,6 @@ vec_arithmetic_caller_VVO(const decx::_Vector*  A,
         break;
     }
 }
-
 
 
 void decx::blas::
@@ -206,10 +242,15 @@ vec_arithmetic_caller_VO(const decx::_Vector*  src,
 
         _planner.plan(t1D.total_thread, src->Len(), sizeof(float), sizeof(float));
 
-        _planner.caller_unary((arithmetic_kernels_1D_VO<float, float>*)_kernel_ptr,
-                                (float*)src->Vec.ptr, 
-                                (float*)dst->Vec.ptr, 
-                                &t1D);
+        _planner.caller(
+            (arithmetic_kernels_1D_VO<float, float>*)_kernel_ptr,
+            &t1D,
+            decx::TArg_var<const float*>([&](const int32_t i){return (const float*)src->Vec.ptr + i * _planner.get_fmgr()->get_frag_len();}),
+            decx::TArg_var<float*>([&](const int32_t i){return (float*)dst->Vec.ptr + i * _planner.get_fmgr()->get_frag_len();}),
+            decx::TArg_var<uint64_t>([&](const int32_t i){
+                return decx::utils::ceil<uint64_t>(_planner.get_fmgr()->get_frag_len_by_id(i), _planner.get_alignment());})
+        );
+        
         break;
 
     case de::_DATA_TYPES_FLAGS_::_FP64_:
@@ -217,10 +258,15 @@ vec_arithmetic_caller_VO(const decx::_Vector*  src,
 
         _planner.plan(t1D.total_thread, src->Len(), sizeof(double), sizeof(double));
 
-        _planner.caller_unary((arithmetic_kernels_1D_VO<double, double>*)_kernel_ptr,
-                                (double*)src->Vec.ptr, 
-                                (double*)dst->Vec.ptr, 
-                                &t1D);
+        _planner.caller(
+            (arithmetic_kernels_1D_VO<double, double>*)_kernel_ptr,
+            &t1D,
+            decx::TArg_var<const double*>([&](const int32_t i){return (const double*)src->Vec.ptr + i * _planner.get_fmgr()->get_frag_len();}),
+            decx::TArg_var<double*>([&](const int32_t i){return (double*)dst->Vec.ptr + i * _planner.get_fmgr()->get_frag_len();}),
+            decx::TArg_var<uint64_t>([&](const int32_t i){
+                return decx::utils::ceil<uint64_t>(_planner.get_fmgr()->get_frag_len_by_id(i), _planner.get_alignment());})
+        );
+
         break;
     
     default:

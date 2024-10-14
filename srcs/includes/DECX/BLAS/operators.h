@@ -34,8 +34,12 @@ namespace de
 
         SUB = 0x06,
         DIV = 0x07,
-        
-        OP_INV = 0x40
+        // ... 0-31, 32 unique arithmetics
+        // Place all the cinv kernels to the end, making it easier to accomplish more in the future.
+
+        OP_INV = 0x40   // 64
+        // So, any arithmetic IDs ranging from [0, 31], when bitwise-or with OP_INV(64)
+        // is equivalent to add 64.
     };
 }
 

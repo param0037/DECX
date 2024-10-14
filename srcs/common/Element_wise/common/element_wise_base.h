@@ -31,16 +31,19 @@
 #ifndef _ELEMENT_WISE_BASE_H_
 #define _ELEMENT_WISE_BASE_H_
 
-#include "../../basic.h"
-#include "../../FMGR/fragment_arrangment.h"
-#include "../../../modules/core/configs/config.h"
+#include <basic.h>
+#include <FMGR/fragment_arrangment.h>
+#include <configs/config.h>
+
+#include <thread_argument.h>
+
 #ifdef _DECX_CPU_PARTS_
-#include "../../../modules/core/thread_management/thread_arrange.h"
-#include "../../../modules/core/thread_management/thread_pool.h"
+#include <thread_management/thread_arrange.h>
+#include <thread_management/thread_pool.h>
 #endif
 #ifdef _DECX_CUDA_PARTS_
-#include "../../../modules/core/cudaStream_management/cudaEvent_queue.h"
-#include "../../../modules/core/cudaStream_management/cudaStream_queue.h"
+#include <cudaStream_management/cudaEvent_queue.h>
+#include <cudaStream_management/cudaStream_queue.h>
 #endif
 
 
@@ -48,63 +51,6 @@ namespace decx
 {
     class element_wise_base_1D;
     class element_wise_base_2D;
-
-    enum EW_Caller_Argument_Type{
-        EW_ARG_UNCHANGED = 0,
-        EW_ARG_UPDATED,
-    };
-
-    template <decx::EW_Caller_Argument_Type ArgType, 
-              typename _data_type, 
-              typename FuncType> class EW_Arg;
-}
-
-
-template <decx::EW_Caller_Argument_Type ArgType, 
-          typename _data_type, 
-          typename FuncType>
-class decx::EW_Arg
-{
-    using T_updator = _data_type(const int32_t);
-
-    _data_type _arg;
-    FuncType _updator;
-
-public:
-    EW_Arg(_data_type arg, FuncType updator) :
-        _arg(arg), _updator(updator) {}
-
-
-    EW_Arg(FuncType updator) :
-        _updator(updator) {}
-
-
-    _data_type value(const int32_t i) {
-        if 
-#if __cplusplus >= 201703L
-        constexpr 
-#endif
-        (ArgType == decx::EW_Caller_Argument_Type::EW_ARG_UPDATED){
-            return this->_updator(i);
-        }else{
-            return this->_arg;
-        }
-    }
-};
-
-
-namespace decx
-{
-    template <EW_Caller_Argument_Type ArgType, typename _data_type, typename FuncType>
-    inline decx::EW_Arg<ArgType, _data_type, FuncType> EW_Arg_helper(_data_type val, FuncType func){
-        return decx::EW_Arg<ArgType, _data_type, FuncType>(val, func);
-    }
-
-
-    template <EW_Caller_Argument_Type ArgType, typename _data_type, typename FuncType>
-    inline decx::EW_Arg<ArgType, _data_type, FuncType> EW_Arg_helper(FuncType func){
-        return decx::EW_Arg<ArgType, _data_type, FuncType>(func);
-    }
 }
 
 

@@ -42,9 +42,9 @@ Arithmetic(de::InputVector A, de::InputVector B, de::OutputVector dst, const int
     const decx::_Vector* _A = dynamic_cast<const decx::_Vector*>(&A);
     const decx::_Vector* _B = dynamic_cast<const decx::_Vector*>(&B);
     decx::_Vector* _dst = dynamic_cast<decx::_Vector*>(&dst);
-
+    
     if ((arith_flag > de::MAX && arith_flag < de::SUB) || 
-        (arith_flag > de::MAX | de::OP_INV && arith_flag < de::SUB | de::OP_INV)){
+        (arith_flag > (de::MAX | de::OP_INV) && arith_flag < (de::SUB | de::OP_INV))){  // (3, 6) U (64, 50)
         decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_ErrorFlag,
             "Sine or Cosine are not binary operators");
     }
@@ -64,7 +64,7 @@ Arithmetic(de::InputVector src, de::OutputVector dst, const int32_t arith_flag)
     decx::_Vector* _dst = dynamic_cast<decx::_Vector*>(&dst);
 
     if ((arith_flag > de::MAX && arith_flag < de::SUB) || 
-        (arith_flag > de::MAX | de::OP_INV && arith_flag < de::SUB | de::OP_INV)){
+        (arith_flag > (de::MAX | de::OP_INV) && arith_flag < (de::SUB | de::OP_INV))){
         decx::blas::vec_arithmetic_caller_VO(_src, _dst, arith_flag, de::GetLastError());
     }
     else{
@@ -85,7 +85,7 @@ Arithmetic(de::InputMatrix A, de::InputMatrix B, de::OutputMatrix dst, const int
     decx::_Matrix* _dst = dynamic_cast<decx::_Matrix*>(&dst);
 
     if ((arith_flag > de::MAX && arith_flag < de::SUB) || 
-        (arith_flag > de::MAX | de::OP_INV && arith_flag < de::SUB | de::OP_INV)){
+        (arith_flag > (de::MAX | de::OP_INV) && arith_flag < (de::SUB | de::OP_INV))){
         decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_UNSUPPORTED_TYPE,
             "Sine or Cosine are not binary operators");
     }
@@ -105,7 +105,7 @@ Arithmetic(de::InputMatrix src, de::OutputMatrix dst, const int32_t arith_flag)
     decx::_Matrix* _dst = dynamic_cast<decx::_Matrix*>(&dst);
 
     if ((arith_flag > de::MAX && arith_flag < de::SUB) || 
-        (arith_flag > de::MAX | de::OP_INV && arith_flag < de::SUB | de::OP_INV)){
+        (arith_flag > (de::MAX | de::OP_INV) && arith_flag < (de::SUB | de::OP_INV))){
         decx::blas::mat_arithmetic_caller_VO(_src, _dst, arith_flag, de::GetLastError());
     }
     else{
