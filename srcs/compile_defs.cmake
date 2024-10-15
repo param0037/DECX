@@ -81,7 +81,6 @@ endif()
 
 if (${CMAKE_PROJECT_NAME} MATCHES "CPU")
     add_compile_definitions(_DECX_CPU_PARTS_)
-    message("add_compile_definitions(_DECX_CPU_PARTS_)")
     if ("${_DECX_HOST_ARCH_} " STREQUAL "x64 ")
         set(CXX_FLAGS -mfma -mavx2 -mavx)
     endif()

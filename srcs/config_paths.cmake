@@ -38,10 +38,15 @@ get_filename_component(DECX_WORLD_ABS_DIR ${DECX_WORLD_ABS_DIR_} DIRECTORY)
 # Set subdirectory build directory
 set(DECX_SUBBUILD_BIN_DIR ${CMAKE_BINARY_DIR}/${CMAKE_CXX_COMPILER_ID}/${_DECX_HOST_ARCH_})
 
+
+cmake_host_system_information(RESULT HOST_OS_NAME QUERY OS_NAME)
+message(STATUS "=========================== Building on host, OS name = ${HOST_OS_NAME} ===========================")
+
+
 # Set library output path
 set(LIBRARY_OUTPUT_PATH ${DECX_WORLD_ABS_DIR}/build/bin/${_DECX_HOST_ARCH_})
 
 if (${CMAKE_PROJECT_NAME} MATCHES "CV")
-    set(SDL_PATH ${DECX_WORLD_ABS_DIR}/3rdparty/SDL2/${_DECX_HOST_ARCH_}/${CMKAE_SYSTEM_NAME})
-    set(SDL_IMAGE_PATH ${DECX_WORLD_ABS_DIR}/3rdparty/SDL2_Image/${_DECX_HOST_ARCH_}/${CMKAE_SYSTEM_NAME})
+    set(SDL_PATH ${DECX_WORLD_ABS_DIR}/3rdparty/SDL2/${_DECX_HOST_ARCH_}/${HOST_OS_NAME})
+    set(SDL_IMAGE_PATH ${DECX_WORLD_ABS_DIR}/3rdparty/SDL2_Image/${_DECX_HOST_ARCH_}/${HOST_OS_NAME})
 endif()

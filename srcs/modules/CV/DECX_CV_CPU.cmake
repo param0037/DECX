@@ -39,16 +39,16 @@ file(GLOB_RECURSE CV_CORE "${DECX_WORLD_ABS_DIR}/srcs/modules/CV/Image_IO/*.cxx"
 file(GLOB_RECURSE UTILS "${DECX_WORLD_ABS_DIR}/srcs/common/Basic_process/type_statistics/CPU/cmp_max_exec.cxx"
                         "${DECX_WORLD_ABS_DIR}/srcs/common/Basic_process/type_statistics/CPU/cmp_min_exec.cxx"
                         "${DECX_WORLD_ABS_DIR}/srcs/modules/basic_calculations/operators/Maprange_exec.cxx")
-message("${SDL_PATH}")
+message(STATUS "SDL is found in path : ${SDL_PATH}")
 
-if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+if(${HOST_OS_NAME} STREQUAL "Windows")
     link_directories(${SDL_PATH}/lib/x64
                     ${SDL_IMAGE_PATH}/lib/x64)
 
     add_library(DECX_CV_CPU SHARED ${CV_CORE} ${UTILS} ${FMGR_CPU_COM_SRCS})
     target_link_libraries(DECX_CV_CPU SDL2.lib SDL2main.lib SDL2test.lib SDL2_image.lib DECX_core_CPU.lib DECX_BLAS_CPU.lib)
     
-else()
+elseif(${HOST_OS_NAME} STREQUAL "Linux")
     link_directories(${SDL_PATH}/lib
     		     ${SDL_IMAGE_PATH}/lib)
 
