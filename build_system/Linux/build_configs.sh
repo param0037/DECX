@@ -29,7 +29,7 @@
 # DEALINGS IN THE SOFTWARE.
 
 
-full_path=$(realpath $0)
+full_path=$(realpath ${BASH_SOURCE[0]})
 export PROJECT_PATH_BUILD=$(dirname $(dirname $(dirname $full_path)))
 
 
