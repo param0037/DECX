@@ -107,6 +107,10 @@ public:
     uint32_t get_eig_count() const{
         return this->_iter_scheduler.get_eig_count();
     }
+
+    void reset() {
+        this->_iter_scheduler.reset(this->_diag.ptr, this->_off_diag.ptr, this->_layout.width, this->_Gerschgorin_L, this->_Gerschgorin_U);
+    }
 };
 
 #endif

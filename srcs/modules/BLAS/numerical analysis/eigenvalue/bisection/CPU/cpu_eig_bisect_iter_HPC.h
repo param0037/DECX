@@ -126,13 +126,14 @@ private:
 
     _data_type _max_err;
 
-    _data_type _current_interval_gap;
     uint32_t _current_stack_vaild_num;
 
     // decx::reduce::cpu_Reduce1D_Planner _update_interval;
     decx::blas::cpu_eig_bisect_count_interval<_data_type> _count_intervals;
 
 public:
+    _data_type _current_interval_gap;
+
     cpu_eig_bisect_iter_HPC() {}
 
 
@@ -152,6 +153,18 @@ public:
 
     uint32_t get_eig_count() const{
         return this->_current_stack_vaild_num;
+    }
+
+
+    void reset(const _data_type* p_diag, const _data_type* p_off_diag, const uint32_t N, const _data_type L, const _data_type U) 
+    {
+        auto* p_1st_interval = this->_interval_stack.ptr;
+        p_1st_interval[0].set(L, U);
+        p_1st_interval[0].count_violent(p_diag, p_off_diag, N);
+        this->_mid_points.ptr[0] = (U + L) / 2.f;
+
+        this->_current_stack_vaild_num = 1;
+        this->_current_interval_gap = U - L;
     }
 };
 

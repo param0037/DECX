@@ -82,7 +82,7 @@ decx::blas::cpu_eig_bisection<_data_type>::Init(const uint32_t conc,
 
     this->_Gersch_bound_founder.plan(this->_concurrency, this->_layout.width, 
         sizeof(_data_type), sizeof(_data_type), 1);
-    this->_Gersch_bound_founder.alloc_shared_mem((this->_concurrency + 1) * sizeof(_data_type) * 2, handle);
+    this->_Gersch_bound_founder.alloc_shared_mem((this->_concurrency + 1) * sizeof(_data_type) * 200, handle);
 }
 
 template void decx::blas::cpu_eig_bisection<float>::Init(const uint32_t, const decx::_matrix_layout*, const float, de::DH*);
@@ -107,7 +107,7 @@ void decx::blas::cpu_eig_bisection<_data_type>::extract_diagonal(const _data_typ
             decx::blas::CPUK::extract_diag_fp32<false> :
             decx::blas::CPUK::extract_diag_fp32<true>;
 
-        const uint32_t proc_len = i < frag_num - 1 ? frag_len : this->_diag_extractor.get_fmgr()->last_frag_len;
+        const uint32_t proc_len = this->_diag_extractor.get_proc_len_by_id(i);
         
         t1D->_async_thread[i] = decx::cpu::register_task_default(f, loc_ptr, p_diag, p_off_diag, proc_len, this->_layout.pitch);
 

@@ -220,31 +220,30 @@ void decx::blas::cpu_eig_bisect_iter_HPC<float>::iter(const float* p_diag, const
 
     auto* p_1st_interval = this->_interval_stack.ptr;
     
-    if (p_1st_interval->is_valid())
-    {
+    //if (p_1st_interval->is_valid())
+    // {
     while(this->_current_interval_gap > this->_max_err)
     {
-        printf("now count : %d\n", this->_current_stack_vaild_num);
-        printf("[%d, %d]\n", this->_count_intervals.get_fmgr()->frag_len, this->_count_intervals.get_fmgr()->frag_num);
+        // printf("now count : %d\n", this->_current_stack_vaild_num);
+        // printf("[%d, %d]\n", this->_count_intervals.get_fmgr()->frag_len, this->_count_intervals.get_fmgr()->frag_num);
         this->_count_intervals.set_count_num(this->_current_stack_vaild_num);
         this->_count_intervals.count_intervals(&this->_current_stack_vaild_num, &t1D);
 
         this->_current_interval_gap /= 2.f;
     }
-    }
+    //}
 
-    // // Final check to filter out the invalid interval(s)
-    // auto* p_read = this->_double_buffer.get_leading_ptr<decx::blas::eig_bisect_interval<float>>();
-    // auto* p_write = this->_double_buffer.get_lagging_ptr<decx::blas::eig_bisect_interval<float>>();
-    // uint32_t STG_dex = 0;
-    // for (int i = 0; i < this->_current_stack_vaild_num; ++i){
-    //     if (p_read[i].is_valid()){
-    //         _mm_storeu_ps((float*)(p_write + STG_dex), _mm_loadu_ps((float*)(p_read + i)));
-    //         ++STG_dex;
-    //     }
-    // }
+    // Final check to filter out the invalid interval(s)
+    auto* p_read = this->_interval_stack.ptr;
+    uint32_t STG_dex = 0;
+    for (int i = 0; i < this->_current_stack_vaild_num; ++i){
+        if (p_read[i].is_valid()){
+            // _mm_storeu_ps((float*)(p_write + STG_dex), _mm_loadu_ps((float*)(p_read + i)));
+            ++STG_dex;
+        }
+    }
     
-    // this->_eig_count_actual = STG_dex;
+    this->_eig_count_actual = STG_dex;
     // this->_double_buffer.update_states();
 }
 

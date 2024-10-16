@@ -65,18 +65,22 @@ _DECX_API_ void de::blas::cpu::Eigenvalue(de::InputMatrix src, float** a, float*
 
     clock_t s, e;
     s = clock();
-    planner.iter_bisection();
+    for (int i = 0; i < 1000; ++i) {
+        planner.iter_bisection();
+        planner.reset();
+    }
     e = clock();
 
 
     auto* read_buf = planner.get_valid_intervals_array();
     printf("planner.get_eig_count() : %d\n", planner.get_eig_count());
-
+    int32_t id = 0;
     for (int i = 0; i < planner.get_eig_count(); ++i){
         if (read_buf[i].is_valid()) {
-            printf("[%d] (%f, %f), count(LU) = %d, %d\n", i, read_buf[i]._l, read_buf[i]._u, read_buf[i]._count_l, read_buf[i]._count_u);
+            printf("[%d] (%f, %f), count(LU) = %d, %d\n", id, read_buf[i]._l, read_buf[i]._u, read_buf[i]._count_l, read_buf[i]._count_u);
+            ++id;
         }
     }
 
-    printf("time spent msec : %lf\n", (double)(e - s) / (double)CLOCKS_PER_SEC * 1000);
+    printf("time spent msec : %lf\n", (double)(e - s) / (double)CLOCKS_PER_SEC * 1000 / 1000);
 }

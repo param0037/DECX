@@ -108,8 +108,8 @@ bool decx::utils::frag_manager_gen_from_fragLen(decx::utils::frag_manager* src, 
 bool decx::utils::frag_manager_gen_Nx(decx::utils::frag_manager* src, const uint64_t _tot,
     const uint64_t _frag_num, const uint32_t N)
 {
-    src->total = _tot;
     if (_tot < N){
+        src->total = _tot;
         src->frag_num = 1;
         src->frag_len = _tot;
         src->frag_left_over = 0;
@@ -121,7 +121,7 @@ bool decx::utils::frag_manager_gen_Nx(decx::utils::frag_manager* src, const uint
     decx::utils::frag_manager_gen(src, aligned_tot, _frag_num);
 
     src->frag_len *= N;
-    
+    src->total = _tot;
     src->frag_left_over = src->total - (src->frag_num - 1) * src->frag_len;
     src->last_frag_len = src->is_left ? src->frag_left_over : src->frag_len;
 
