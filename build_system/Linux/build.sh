@@ -240,7 +240,7 @@ function build_optional()
 
 
 
-stat=($(ls -l ./utils.sh))
+stat=($(ls -l $PROJECT_PATH_BUILD/build_system/Linux/utils.sh))
 can_run=0
 if [[ "$stat" == *"x"* ]]; then
     can_run=1
@@ -250,9 +250,9 @@ fi
 
 
 if [[ $can_run -ne 1 ]]; then
-    chmod u+x ./utils.sh
+    chmod u+x $PROJECT_PATH_BUILD/build_system/Linux/utils.sh
 fi
-source ./utils.sh
+source $PROJECT_PATH_BUILD/build_system/Linux/utils.sh
 
 
 
