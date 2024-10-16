@@ -54,15 +54,20 @@ namespace blas{
 
 
 template <typename _data_type>
-class decx::blas::cpu_eig_bisect_count_interval : public decx::reduce::cpu_Reduce1D_Planner
+class decx::blas::cpu_eig_bisect_count_interval : public decx::cpu_ElementWise1D_planner
 {
-private:
+public:
     using T_interval = decx::blas::eig_bisect_interval<_data_type>;
-
+private:
     const _data_type* _p_diag; 
     const _data_type* _p_off_diag;
-    decx::PtrInfo<_data_type> _count_buffer;
-    T_interval* _p_interval;
+
+    decx::PtrInfo<uint32_t> _count_buffer;
+
+    decx::PtrInfo<_data_type> _mid_arr_buf;
+    _data_type* _p_midps;            // Outer ptr of which contents should be updated
+
+    T_interval* _p_interval;            // Outer ptr of which contents should be updated
     decx::PtrInfo<T_interval> _intrv_buf;
 
     uint32_t _N;
@@ -73,10 +78,14 @@ public:
 
     cpu_eig_bisect_count_interval(const _data_type* p_diag, 
                                   const _data_type* p_off_diag,
+                                  _data_type* p_midps,
+                                  T_interval* p_interval,
                                   const uint32_t N) :
     _p_diag(p_diag),
     _p_off_diag(p_off_diag),
-    _N(N)
+    _N(N),
+    _p_midps(p_midps),
+    _p_interval(p_interval)
     {}
 
 
@@ -90,12 +99,18 @@ public:
         this->_p_interval = p_read;
     }
 
-    void count_intervals(decx::utils::_thread_arrange_1D* t1D);
+    void count_intervals(uint32_t* p_num, decx::utils::_thread_arrange_1D* t1D);
 
     
-    _THREAD_FUNCTION_ 
-    void update_intrv(T_interval* p_buf0, T_interval* p_buf1, _data_type* p_count_buf, const uint32_t N, const uint32_t proc_len);
+    _THREAD_FUNCTION_ static
+    void update_intrv(decx::blas::cpu_eig_bisect_count_interval<_data_type>* _fake_this,
+        const T_interval* intrv_outer, T_interval* intrv_buf, const _data_type* midps_src, _data_type* midps_dst,
+        const uint32_t N, const uint32_t proc_len, uint32_t* p_valid_num);
 };
+
+template<> void decx::blas::cpu_eig_bisect_count_interval<float>::update_intrv(decx::blas::cpu_eig_bisect_count_interval<float>* _fake_this,
+        const T_interval* intrv_outer, T_interval* intrv_buf, const float* midps_src, float* midps_dst,
+        const uint32_t N, const uint32_t proc_len, uint32_t* p_valid_num);
 
 
 template <typename _data_type>
@@ -103,9 +118,8 @@ class decx::blas::cpu_eig_bisect_iter_HPC
 {
 private:
     decx::PtrInfo<decx::blas::eig_bisect_interval<_data_type>> _interval_stack;
-    // decx::PtrInfo<_data_type> _count_buffer;
+    decx::PtrInfo<_data_type> _mid_points;
 
-    decx::utils::double_buffer_manager _double_buffer;
     uint32_t _eig_count_actual;
 
     uint32_t _max_interval_num;
@@ -115,7 +129,7 @@ private:
     _data_type _current_interval_gap;
     uint32_t _current_stack_vaild_num;
 
-    decx::reduce::cpu_Reduce1D_Planner _update_interval;
+    // decx::reduce::cpu_Reduce1D_Planner _update_interval;
     decx::blas::cpu_eig_bisect_count_interval<_data_type> _count_intervals;
 
 public:
@@ -137,7 +151,7 @@ public:
 
 
     uint32_t get_eig_count() const{
-        return this->_eig_count_actual;
+        return this->_current_stack_vaild_num;
     }
 };
 

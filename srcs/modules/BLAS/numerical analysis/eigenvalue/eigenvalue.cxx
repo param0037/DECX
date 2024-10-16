@@ -74,7 +74,7 @@ _DECX_API_ void de::blas::cpu::Eigenvalue(de::InputMatrix src, float** a, float*
 
     for (int i = 0; i < planner.get_eig_count(); ++i){
         if (read_buf[i].is_valid()) {
-            printf("(%f, %f), count(LU) = %d, %d\n", read_buf[i]._l, read_buf[i]._u, read_buf[i]._count_l, read_buf[i]._count_u);
+            printf("[%d] (%f, %f), count(LU) = %d, %d\n", i, read_buf[i]._l, read_buf[i]._u, read_buf[i]._count_l, read_buf[i]._count_u);
         }
     }
 

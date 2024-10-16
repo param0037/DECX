@@ -35,13 +35,19 @@
 template <typename _data_type>
 void decx::blas::cpu_eig_bisect_count_interval<_data_type>::init(const uint64_t max_intrv_num, de::DH* handle)
 {
-    const uint64_t buf_size = max_intrv_num * 2 * sizeof(decx::blas::eig_bisect_interval<_data_type>);
-    if (decx::alloc::_host_virtual_page_malloc(&this->_intrv_buf, buf_size)){
+    if (decx::alloc::_host_virtual_page_malloc(&this->_intrv_buf, max_intrv_num * 2 * sizeof(T_interval))){
         decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION,
             ALLOC_FAIL);
         return;
     }
-    if (decx::alloc::_host_virtual_page_malloc(&this->_count_buffer, max_intrv_num)){
+
+    if (decx::alloc::_host_virtual_page_malloc(&this->_mid_arr_buf, max_intrv_num * 2 * sizeof(_data_type))){
+        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION,
+            ALLOC_FAIL);
+        return;
+    }
+    
+    if (decx::alloc::_host_virtual_page_malloc(&this->_count_buffer, 1200 * sizeof(int32_t))){
         decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION,
             ALLOC_FAIL);
         return;
@@ -72,65 +78,95 @@ template void decx::blas::cpu_eig_bisect_count_interval<float>::set_count_num(co
 
 
 template <>
-void decx::blas::cpu_eig_bisect_count_interval<float>::count_intervals(decx::utils::_thread_arrange_1D* t1D)
+void decx::blas::cpu_eig_bisect_count_interval<float>::count_intervals(uint32_t* p_num, decx::utils::_thread_arrange_1D* t1D)
 {
-    
-
     const uint32_t frag_len = this->_fmgr.get_frag_len();
 
-    // this->caller(decx::blas::CPUK::count_intervals_fp32_v8,
-    //     t1D,
-    //     decx::TArg_still<const float*>     (this->_p_diag),
-    //     decx::TArg_still<const float*>     (this->_p_off_diag),
-    //     decx::TArg_var<const float*>     ([&](const int32_t i){return this->_p_count_buf + i * frag_len;}),
-    //     decx::TArg_var<const T_interval*>([&](const int32_t i){return this->_p_read_interval + i * frag_len;}),
-    //     decx::TArg_var<T_interval*>      ([&](const int32_t i){return this->_p_write_interval + i * frag_len * 2;}),
-    //     decx::TArg_still<uint32_t>         (this->_N),
-    //     decx::TArg_var<uint32_t>         ([&](const int32_t i){return this->get_fmgr()->get_frag_len_by_id(i);}));
+    this->caller(update_intrv,
+        t1D,
+        decx::TArg_still<decx::blas::cpu_eig_bisect_count_interval<float>*>    (this),
+        decx::TArg_var<const T_interval*>  ([&](const int32_t i){return this->_p_interval + i * frag_len;}),
+        decx::TArg_var<T_interval*>  ([&](const int32_t i){return this->_intrv_buf.ptr + i * frag_len * 2;}),
+        decx::TArg_var<const float*>  ([&](const int32_t i){return this->_p_midps + i * frag_len;}),
+        decx::TArg_var<float*>        ([&](const int32_t i){return this->_mid_arr_buf.ptr + i * frag_len * 2;}),
+        decx::TArg_still<uint32_t>    (this->_N),
+        decx::TArg_var<uint32_t>      ([&](const int32_t i){return this->get_fmgr()->get_frag_len_by_id(i);}),
+        decx::TArg_var<uint32_t*>      ([&](const int32_t i){return this->_count_buffer.ptr + i;})
+    );
+
+    uint32_t _valid_num = 0;
+    uint32_t* _count_res_buf = (uint32_t*)this->_count_buffer.ptr;
+
+    const auto* _loc_pread_intrv = this->_intrv_buf.ptr;
+    auto* _loc_pwrite_intrv = this->_p_interval;
+
+    const auto* _loc_pread_midp = this->_mid_arr_buf.ptr;
+    auto* _loc_pwrite_midp = this->_p_midps;
+
+    for (int i = 0; i < this->_fmgr.frag_num; ++i){
+        const uint32_t _this_count = _count_res_buf[i];
+        _valid_num += _this_count;
+
+        memcpy(_loc_pwrite_intrv, _loc_pread_intrv, sizeof(T_interval) * _this_count);
+        memcpy(_loc_pwrite_midp, _loc_pread_midp, sizeof(float) * _this_count);
+
+        _loc_pread_intrv += this->get_proc_len_by_id(i) * 2;
+        _loc_pwrite_intrv += _this_count;
+        _loc_pread_midp += this->get_proc_len_by_id(i) * 2;
+        _loc_pwrite_midp += _this_count;
+    }
+    p_num[0] = _valid_num;
 }
 
 
-template <> _THREAD_FUNCTION_ void 
+template<> _THREAD_FUNCTION_ void 
 decx::blas::cpu_eig_bisect_count_interval<float>::
-update_intrv(T_interval* p_buf0, T_interval* p_buf1, float* p_count_buf, const uint32_t N, const uint32_t proc_len)
+update_intrv(decx::blas::cpu_eig_bisect_count_interval<float>* _fake_this,
+             const T_interval*        intrv_outer,
+             T_interval*        intrv_buf, 
+             const float*       midps_src, 
+             float*             midps_dst,
+             const uint32_t     N, 
+             const uint32_t     proc_len,
+             uint32_t*           p_valid_num)
 {
+    int32_t _next_valid_num = 0;
+
     for (int32_t i = 0; i < decx::utils::ceil<uint32_t>(proc_len, 8); ++i)
     {
         decx::utils::simd::xmm256_reg _count_mid;
         _count_mid._vi = decx::blas::CPUK::count_v8_eigv_fp32(
-            this->_p_diag, this->_p_off_diag, NULL, p_count_buf + i * 8, N);
+            _fake_this->_p_diag, _fake_this->_p_off_diag, NULL, midps_src + i * 8, N);
 
 #pragma unroll
-        for (int k = 0; k < 8; ++k){
-            if (i * 8 + k < proc_len){
-                (p_buf0 + (i * 8 + k) * 2)->_count_u = _count_mid._arrui[k];
-                (p_buf0 + (i * 8 + k) * 2 + 1)->_count_l = _count_mid._arrui[k];
+        for (int k = 0; k < 8; ++k)
+        {
+        if (i * 8 + k < proc_len)
+        {
+            const auto* p_current_interval = intrv_outer + i * 8 + k;
+            
+            if (p_current_interval->is_valid()) {
+                const float l = p_current_interval->_l;
+                const float u = p_current_interval->_u;
+
+                const float _mid = (l + u) / 2.f;
+
+                (intrv_buf + _next_valid_num)->set(l, _mid);
+                (intrv_buf + _next_valid_num)->_count_l = p_current_interval->_count_l;
+                (intrv_buf + _next_valid_num)->_count_u = _count_mid._arrui[k];
+                midps_dst[_next_valid_num] = (_mid + l) / 2.f;
+                ++_next_valid_num;
+                
+                (intrv_buf + _next_valid_num)->set(_mid, u);
+                (intrv_buf + _next_valid_num)->_count_u = p_current_interval->_count_u;
+                (intrv_buf + _next_valid_num)->_count_l = _count_mid._arrui[k];
+                midps_dst[_next_valid_num] = (u + _mid) / 2.f;
+                ++_next_valid_num;
             }
         }
-    }
-
-    for (int32_t i = 0; i < proc_len; ++i)
-    {
-        const auto* p_current_interval = p_read + i;
-        if (p_current_interval->is_valid()) {
-            const float l = p_current_interval->_l;
-            const float u = p_current_interval->_u;
-
-            const float _mid = (l + u) / 2.f;
-            this->_count_buffer.ptr[_now_valid_num] = _mid;
-
-            this->_current_stack_vaild_num += 2;
-
-            (p_write + write_dex)->set(l, _mid);
-            (p_write + write_dex)->_count_l = p_current_interval->_count_l;
-            ++write_dex;
-            (p_write + write_dex)->set(_mid, u);
-            (p_write + write_dex)->_count_u = p_current_interval->_count_u;
-            ++write_dex;
-
-            ++_now_valid_num;
         }
     }
+    *p_valid_num = _next_valid_num;
 }
 
 
@@ -146,33 +182,31 @@ init(const _data_type*  p_diag,         const _data_type* p_off_diag,
 
     // Allocate the interval stack
     if (decx::alloc::_host_virtual_page_malloc_lazy(&this->_interval_stack, 
-        2 * this->_max_interval_num * sizeof(decx::blas::eig_bisect_interval<_data_type>))){
+        this->_max_interval_num * sizeof(decx::blas::eig_bisect_interval<_data_type>))){
         decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION,
             ALLOC_FAIL);
         return;
     }
-    this->_double_buffer = decx::utils::double_buffer_manager(this->_interval_stack.ptr, this->_interval_stack.ptr + this->_max_interval_num);
-
+    
     // Allocate the count buffer
     const uint32_t max_mid_count_num = decx::utils::align<uint32_t>(this->_max_interval_num - 1, 8);
-    if (decx::alloc::_host_virtual_page_malloc_lazy(&this->_count_buffer, this->_max_interval_num * sizeof(_data_type))){
+    if (decx::alloc::_host_virtual_page_malloc_lazy(&this->_mid_points, this->_max_interval_num * sizeof(_data_type))){
         decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION,
             ALLOC_FAIL);
         return;
     }
 
-    // Initialize the double buffer to be buffer1 leading
-    this->_double_buffer.reset_buffer1_leading();
-
-    auto* p_1st_interval = this->_double_buffer.get_buffer1<decx::blas::eig_bisect_interval<_data_type>>();
-    p_1st_interval->set(L, U);
-    p_1st_interval->count_violent(p_diag, p_off_diag, N);
-    this->_count_buffer.ptr[0] = (U - L) / 2.f;
+    auto* p_1st_interval = this->_interval_stack.ptr;
+    p_1st_interval[0].set(L, U);
+    p_1st_interval[0].count_violent(p_diag, p_off_diag, N);
+    this->_mid_points.ptr[0] = (U + L) / 2.f;
 
     this->_current_stack_vaild_num = 1;
 
-    this->_count_intervals = decx::blas::cpu_eig_bisect_count_interval<_data_type>(p_diag, p_off_diag, this->_count_buffer.ptr, N);
+    this->_count_intervals = decx::blas::cpu_eig_bisect_count_interval<_data_type>(
+        p_diag, p_off_diag, this->_mid_points.ptr, p_1st_interval, N);
     this->_count_intervals.plan(decx::cpu::_get_permitted_concurrency(), 1, sizeof(_data_type), sizeof(_data_type), 1);
+    this->_count_intervals.init(1024, handle);
 }
 
 template void decx::blas::cpu_eig_bisect_iter_HPC<float>::init(const float*, const float*, const uint32_t, const float, const float, de::DH*);
@@ -184,68 +218,34 @@ void decx::blas::cpu_eig_bisect_iter_HPC<float>::iter(const float* p_diag, const
 {
     decx::utils::_thr_1D t1D(decx::cpu::_get_permitted_concurrency());
 
-    auto* p_1st_interval = this->_double_buffer.get_buffer1<decx::blas::eig_bisect_interval<float>>();
+    auto* p_1st_interval = this->_interval_stack.ptr;
     
     if (p_1st_interval->is_valid())
     {
     while(this->_current_interval_gap > this->_max_err)
     {
-        uint32_t last_valid_num = this->_current_stack_vaild_num;
-        this->_current_stack_vaild_num = 0;
+        printf("now count : %d\n", this->_current_stack_vaild_num);
+        printf("[%d, %d]\n", this->_count_intervals.get_fmgr()->frag_len, this->_count_intervals.get_fmgr()->frag_num);
+        this->_count_intervals.set_count_num(this->_current_stack_vaild_num);
+        this->_count_intervals.count_intervals(&this->_current_stack_vaild_num, &t1D);
 
-        auto* p_read = this->_double_buffer.get_leading_ptr<decx::blas::eig_bisect_interval<float>>();
-        auto* p_write = this->_double_buffer.get_lagging_ptr<decx::blas::eig_bisect_interval<float>>();
-        uint32_t write_dex = 0;
-
-        uint32_t _now_valid_num = 0;
-        
-        for (int32_t i = 0; i < last_valid_num; ++i)
-        {
-            const auto* p_current_interval = p_read + i;
-            if (p_current_interval->is_valid()) {
-                const float l = p_current_interval->_l;
-                const float u = p_current_interval->_u;
-
-                const float _mid = (l + u) / 2.f;
-                this->_count_buffer.ptr[_now_valid_num] = _mid;
-
-                this->_current_stack_vaild_num += 2;
-
-                (p_write + write_dex)->set(l, _mid);
-                (p_write + write_dex)->_count_l = p_current_interval->_count_l;
-                ++write_dex;
-                (p_write + write_dex)->set(_mid, u);
-                (p_write + write_dex)->_count_u = p_current_interval->_count_u;
-                ++write_dex;
-
-                ++_now_valid_num;
-            }
-        }
-        
-        this->_count_intervals.set_interval_buffers(p_read, p_write);
-
-        this->_count_intervals.set_count_num(_now_valid_num);
-        
-        this->_count_intervals.count_intervals(&t1D);
-        
         this->_current_interval_gap /= 2.f;
-        this->_double_buffer.update_states();
     }
     }
 
-    // Final check to filter out the invalid interval(s)
-    auto* p_read = this->_double_buffer.get_leading_ptr<decx::blas::eig_bisect_interval<float>>();
-    auto* p_write = this->_double_buffer.get_lagging_ptr<decx::blas::eig_bisect_interval<float>>();
-    uint32_t STG_dex = 0;
-    for (int i = 0; i < this->_current_stack_vaild_num; ++i){
-        if (p_read[i].is_valid()){
-            _mm_storeu_ps((float*)(p_write + STG_dex), _mm_loadu_ps((float*)(p_read + i)));
-            ++STG_dex;
-        }
-    }
+    // // Final check to filter out the invalid interval(s)
+    // auto* p_read = this->_double_buffer.get_leading_ptr<decx::blas::eig_bisect_interval<float>>();
+    // auto* p_write = this->_double_buffer.get_lagging_ptr<decx::blas::eig_bisect_interval<float>>();
+    // uint32_t STG_dex = 0;
+    // for (int i = 0; i < this->_current_stack_vaild_num; ++i){
+    //     if (p_read[i].is_valid()){
+    //         _mm_storeu_ps((float*)(p_write + STG_dex), _mm_loadu_ps((float*)(p_read + i)));
+    //         ++STG_dex;
+    //     }
+    // }
     
-    this->_eig_count_actual = STG_dex;
-    this->_double_buffer.update_states();
+    // this->_eig_count_actual = STG_dex;
+    // this->_double_buffer.update_states();
 }
 
 
@@ -254,7 +254,7 @@ template <typename _data_type>
 const decx::blas::eig_bisect_interval<_data_type>* 
 decx::blas::cpu_eig_bisect_iter_HPC<_data_type>::get_valid_intervals_array()
 {
-    return this->_double_buffer.get_leading_ptr<decx::blas::eig_bisect_interval<_data_type>>();
+    return this->_interval_stack.ptr;
 }
 
 template const decx::blas::eig_bisect_interval<float>* 

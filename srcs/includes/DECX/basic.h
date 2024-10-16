@@ -20,9 +20,9 @@
 #ifdef __cplusplus
 #include <iostream>
 #include <initializer_list>
-typedef unsigned int uint32_t;
-typedef unsigned long long uint64_t;
-typedef unsigned char uint8_t;
+// typedef unsigned int uint32_t;
+// typedef unsigned long long uint64_t;
+// typedef unsigned char uint8_t;
 #endif
 
 #ifdef _C_CONTEXT_

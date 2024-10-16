@@ -81,7 +81,8 @@ decx::blas::cpu_eig_bisection<_data_type>::Init(const uint32_t conc,
     this->_diag_extractor.plan(this->_concurrency, this->_layout.width, sizeof(_data_type), sizeof(_data_type));
 
     this->_Gersch_bound_founder.plan(this->_concurrency, this->_layout.width, 
-        sizeof(_data_type), sizeof(_data_type), handle, (this->_concurrency + 1) * sizeof(_data_type) * 2, 1);
+        sizeof(_data_type), sizeof(_data_type), 1);
+    this->_Gersch_bound_founder.alloc_shared_mem((this->_concurrency + 1) * sizeof(_data_type) * 2, handle);
 }
 
 template void decx::blas::cpu_eig_bisection<float>::Init(const uint32_t, const decx::_matrix_layout*, const float, de::DH*);

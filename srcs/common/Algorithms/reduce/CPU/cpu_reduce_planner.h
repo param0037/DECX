@@ -65,17 +65,16 @@ public:
     }
 
 
+    _CRSR_ void alloc_shared_mem(const uint64_t size, de::DH* handle);
+
+
     void plan(const uint32_t conc, const uint64_t total, const uint8_t type_size_in, const uint8_t type_size_out,
-        de::DH* handle, const int64_t size_shared_mem=-1, const uint64_t min_thread_proc=_EW_MIN_THREAD_PROC_DEFAULT_CPU_);
+        const uint64_t min_thread_proc=_EW_MIN_THREAD_PROC_DEFAULT_CPU_);
 
 
-    template <typename FuncType, typename _type_in, typename _type_out, class ...Args>
-    void caller_VVOO(FuncType&& f, const _type_in* p_in1, const _type_in* p_in2, _type_out* p_out1, 
-        _type_out* p_out2, decx::utils::_thr_1D* t1D, Args&& ...additional);
-
-
-    // template <typename FuncType, typename... Args>
-    // void caller(FuncType&& f, decx::utils::_thr_1D* t1D, Args&&... args);
+    // template <typename FuncType, typename _type_in, typename _type_out, class ...Args>
+    // void caller_VVOO(FuncType&& f, const _type_in* p_in1, const _type_in* p_in2, _type_out* p_out1, 
+    //     _type_out* p_out2, decx::utils::_thr_1D* t1D, Args&& ...additional);
 
 
     template <typename _ptr_type>
@@ -85,32 +84,32 @@ public:
 };
 
 
-template <typename FuncType,  typename _type_in, 
-          typename _type_out, class ...Args>
-inline void decx::reduce::cpu_Reduce1D_Planner::
-caller_VVOO(FuncType&&             f, 
-            const _type_in*        p_in1, 
-            const _type_in*        p_in2, 
-            _type_out*             p_out1, 
-            _type_out*             p_out2, 
-            decx::utils::_thr_1D*  t1D,
-            Args&&                 ...static_vars)
-{
-    const _type_in* loc_p_in1 = p_in1, *loc_p_in2 = p_in2;
-    _type_out* loc_p_out1 = p_out1, *loc_p_out2 = p_out2;
+// template <typename FuncType,  typename _type_in, 
+//           typename _type_out, class ...Args>
+// inline void decx::reduce::cpu_Reduce1D_Planner::
+// caller_VVOO(FuncType&&             f, 
+//             const _type_in*        p_in1, 
+//             const _type_in*        p_in2, 
+//             _type_out*             p_out1, 
+//             _type_out*             p_out2, 
+//             decx::utils::_thr_1D*  t1D,
+//             Args&&                 ...static_vars)
+// {
+//     const _type_in* loc_p_in1 = p_in1, *loc_p_in2 = p_in2;
+//     _type_out* loc_p_out1 = p_out1, *loc_p_out2 = p_out2;
 
-    for (int32_t i = 0; i < this->_fmgr.frag_num; ++i){
-        const uint64_t _proc_len_v1 = this->_fmgr.get_frag_len_by_id(i);
-        t1D->_async_thread[i] = decx::cpu::register_task_default(
-            f, loc_p_in1, loc_p_in2, loc_p_out1, loc_p_out2, _proc_len_v1, static_vars...);
-        // printf("%llu, %llu, %llu, %llu, %llu\n", loc_p_in1, loc_p_in2, loc_p_out1, loc_p_out2, _proc_len_v1);
-        loc_p_in1 += _proc_len_v1;
-        loc_p_in2 += _proc_len_v1;
-        ++loc_p_out1;
-        ++loc_p_out2;
-    }
-    t1D->__sync_all_threads(make_uint2(0, this->_fmgr.frag_num));
-}
+//     for (int32_t i = 0; i < this->_fmgr.frag_num; ++i){
+//         const uint64_t _proc_len_v1 = this->_fmgr.get_frag_len_by_id(i);
+//         t1D->_async_thread[i] = decx::cpu::register_task_default(
+//             f, loc_p_in1, loc_p_in2, loc_p_out1, loc_p_out2, _proc_len_v1, static_vars...);
+//         // printf("%llu, %llu, %llu, %llu, %llu\n", loc_p_in1, loc_p_in2, loc_p_out1, loc_p_out2, _proc_len_v1);
+//         loc_p_in1 += _proc_len_v1;
+//         loc_p_in2 += _proc_len_v1;
+//         ++loc_p_out1;
+//         ++loc_p_out2;
+//     }
+//     t1D->__sync_all_threads(make_uint2(0, this->_fmgr.frag_num));
+// }
 
 
 // template <typename FuncType, typename... Args> inline void 
