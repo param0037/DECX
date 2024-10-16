@@ -54,14 +54,16 @@ namespace blas{
 
 
 template <typename _data_type>
-class decx::blas::cpu_eig_bisect_count_interval : public decx::cpu_ElementWise1D_planner
+class decx::blas::cpu_eig_bisect_count_interval : public decx::reduce::cpu_Reduce1D_Planner
 {
 private:
+    using T_interval = decx::blas::eig_bisect_interval<_data_type>;
+
     const _data_type* _p_diag; 
     const _data_type* _p_off_diag;
-    const _data_type* _p_count_buf;
-    const decx::blas::eig_bisect_interval<_data_type>* _p_read_interval;
-    decx::blas::eig_bisect_interval<_data_type>* _p_write_interval;
+    decx::PtrInfo<_data_type> _count_buffer;
+    T_interval* _p_interval;
+    decx::PtrInfo<T_interval> _intrv_buf;
 
     uint32_t _N;
 
@@ -71,26 +73,28 @@ public:
 
     cpu_eig_bisect_count_interval(const _data_type* p_diag, 
                                   const _data_type* p_off_diag,
-                                  const _data_type* p_count_buf,
                                   const uint32_t N) :
     _p_diag(p_diag),
     _p_off_diag(p_off_diag),
-    _p_count_buf(p_count_buf),
     _N(N)
     {}
+
+
+    void init(const uint64_t max_intrv_num, de::DH* handle);
 
 
     void set_count_num(const uint64_t proc_len);
 
 
-    void set_interval_buffers(const decx::blas::eig_bisect_interval<_data_type>* p_read,
-        decx::blas::eig_bisect_interval<_data_type>* p_write) {
-        this->_p_read_interval = p_read;
-        this->_p_write_interval = p_write;
+    void set_interval_buffers(decx::blas::eig_bisect_interval<_data_type>* p_read) {
+        this->_p_interval = p_read;
     }
 
-
     void count_intervals(decx::utils::_thread_arrange_1D* t1D);
+
+    
+    _THREAD_FUNCTION_ 
+    void update_intrv(T_interval* p_buf0, T_interval* p_buf1, _data_type* p_count_buf, const uint32_t N, const uint32_t proc_len);
 };
 
 
@@ -99,7 +103,7 @@ class decx::blas::cpu_eig_bisect_iter_HPC
 {
 private:
     decx::PtrInfo<decx::blas::eig_bisect_interval<_data_type>> _interval_stack;
-    decx::PtrInfo<_data_type> _count_buffer;
+    // decx::PtrInfo<_data_type> _count_buffer;
 
     decx::utils::double_buffer_manager _double_buffer;
     uint32_t _eig_count_actual;

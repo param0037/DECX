@@ -33,6 +33,25 @@
 
 
 template <typename _data_type>
+void decx::blas::cpu_eig_bisect_count_interval<_data_type>::init(const uint64_t max_intrv_num, de::DH* handle)
+{
+    const uint64_t buf_size = max_intrv_num * 2 * sizeof(decx::blas::eig_bisect_interval<_data_type>);
+    if (decx::alloc::_host_virtual_page_malloc(&this->_intrv_buf, buf_size)){
+        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION,
+            ALLOC_FAIL);
+        return;
+    }
+    if (decx::alloc::_host_virtual_page_malloc(&this->_count_buffer, max_intrv_num)){
+        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION,
+            ALLOC_FAIL);
+        return;
+    }
+}
+
+template void decx::blas::cpu_eig_bisect_count_interval<float>::init(const uint64_t, de::DH*);
+
+
+template <typename _data_type>
 void decx::blas::cpu_eig_bisect_count_interval<_data_type>::set_count_num(const uint64_t proc_len)
 {
     if (this->_total != proc_len) {
@@ -55,19 +74,63 @@ template void decx::blas::cpu_eig_bisect_count_interval<float>::set_count_num(co
 template <>
 void decx::blas::cpu_eig_bisect_count_interval<float>::count_intervals(decx::utils::_thread_arrange_1D* t1D)
 {
-    using T_interval = decx::blas::eig_bisect_interval<float>;
+    
 
     const uint32_t frag_len = this->_fmgr.get_frag_len();
 
-    this->caller(decx::blas::CPUK::count_intervals_fp32_v8,
-        t1D,
-        decx::TArg_still<const float*>     (this->_p_diag),
-        decx::TArg_still<const float*>     (this->_p_off_diag),
-        decx::TArg_var<const float*>     ([&](const int32_t i){return this->_p_count_buf + i * frag_len;}),
-        decx::TArg_var<const T_interval*>([&](const int32_t i){return this->_p_read_interval + i * frag_len;}),
-        decx::TArg_var<T_interval*>      ([&](const int32_t i){return this->_p_write_interval + i * frag_len * 2;}),
-        decx::TArg_still<uint32_t>         (this->_N),
-        decx::TArg_var<uint32_t>         ([&](const int32_t i){return this->get_fmgr()->get_frag_len_by_id(i);}));
+    // this->caller(decx::blas::CPUK::count_intervals_fp32_v8,
+    //     t1D,
+    //     decx::TArg_still<const float*>     (this->_p_diag),
+    //     decx::TArg_still<const float*>     (this->_p_off_diag),
+    //     decx::TArg_var<const float*>     ([&](const int32_t i){return this->_p_count_buf + i * frag_len;}),
+    //     decx::TArg_var<const T_interval*>([&](const int32_t i){return this->_p_read_interval + i * frag_len;}),
+    //     decx::TArg_var<T_interval*>      ([&](const int32_t i){return this->_p_write_interval + i * frag_len * 2;}),
+    //     decx::TArg_still<uint32_t>         (this->_N),
+    //     decx::TArg_var<uint32_t>         ([&](const int32_t i){return this->get_fmgr()->get_frag_len_by_id(i);}));
+}
+
+
+template <> _THREAD_FUNCTION_ void 
+decx::blas::cpu_eig_bisect_count_interval<float>::
+update_intrv(T_interval* p_buf0, T_interval* p_buf1, float* p_count_buf, const uint32_t N, const uint32_t proc_len)
+{
+    for (int32_t i = 0; i < decx::utils::ceil<uint32_t>(proc_len, 8); ++i)
+    {
+        decx::utils::simd::xmm256_reg _count_mid;
+        _count_mid._vi = decx::blas::CPUK::count_v8_eigv_fp32(
+            this->_p_diag, this->_p_off_diag, NULL, p_count_buf + i * 8, N);
+
+#pragma unroll
+        for (int k = 0; k < 8; ++k){
+            if (i * 8 + k < proc_len){
+                (p_buf0 + (i * 8 + k) * 2)->_count_u = _count_mid._arrui[k];
+                (p_buf0 + (i * 8 + k) * 2 + 1)->_count_l = _count_mid._arrui[k];
+            }
+        }
+    }
+
+    for (int32_t i = 0; i < proc_len; ++i)
+    {
+        const auto* p_current_interval = p_read + i;
+        if (p_current_interval->is_valid()) {
+            const float l = p_current_interval->_l;
+            const float u = p_current_interval->_u;
+
+            const float _mid = (l + u) / 2.f;
+            this->_count_buffer.ptr[_now_valid_num] = _mid;
+
+            this->_current_stack_vaild_num += 2;
+
+            (p_write + write_dex)->set(l, _mid);
+            (p_write + write_dex)->_count_l = p_current_interval->_count_l;
+            ++write_dex;
+            (p_write + write_dex)->set(_mid, u);
+            (p_write + write_dex)->_count_u = p_current_interval->_count_u;
+            ++write_dex;
+
+            ++_now_valid_num;
+        }
+    }
 }
 
 
@@ -104,6 +167,7 @@ init(const _data_type*  p_diag,         const _data_type* p_off_diag,
     auto* p_1st_interval = this->_double_buffer.get_buffer1<decx::blas::eig_bisect_interval<_data_type>>();
     p_1st_interval->set(L, U);
     p_1st_interval->count_violent(p_diag, p_off_diag, N);
+    this->_count_buffer.ptr[0] = (U - L) / 2.f;
 
     this->_current_stack_vaild_num = 1;
 
