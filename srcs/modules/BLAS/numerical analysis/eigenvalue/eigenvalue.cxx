@@ -65,10 +65,10 @@ _DECX_API_ void de::blas::cpu::Eigenvalue(de::InputMatrix src, float** a, float*
 
     clock_t s, e;
     s = clock();
-    for (int i = 0; i < 1000; ++i) {
+    // for (int i = 0; i < 1000; ++i) {
         planner.iter_bisection();
-        planner.reset();
-    }
+        // planner.reset();
+    // }
     e = clock();
 
 
@@ -82,5 +82,5 @@ _DECX_API_ void de::blas::cpu::Eigenvalue(de::InputMatrix src, float** a, float*
         }
     }
 
-    printf("time spent msec : %lf\n", (double)(e - s) / (double)CLOCKS_PER_SEC * 1000 / 1000);
+    printf("time spent msec : %lf\n", (double)(e - s) / (double)CLOCKS_PER_SEC * 1000 / 1);
 }

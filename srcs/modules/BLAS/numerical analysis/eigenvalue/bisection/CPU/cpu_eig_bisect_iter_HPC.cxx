@@ -146,22 +146,28 @@ update_intrv(decx::blas::cpu_eig_bisect_count_interval<float>* _fake_this,
             const auto* p_current_interval = intrv_outer + i * 8 + k;
             
             if (p_current_interval->is_valid()) {
+                const uint32_t count_mid1 = _count_mid._arrui[k];
+
                 const float l = p_current_interval->_l;
                 const float u = p_current_interval->_u;
 
                 const float _mid = (l + u) / 2.f;
 
-                (intrv_buf + _next_valid_num)->set(l, _mid);
-                (intrv_buf + _next_valid_num)->_count_l = p_current_interval->_count_l;
-                (intrv_buf + _next_valid_num)->_count_u = _count_mid._arrui[k];
-                midps_dst[_next_valid_num] = (_mid + l) / 2.f;
-                ++_next_valid_num;
+                if (count_mid1 - p_current_interval->_count_l > 0) {
+                    (intrv_buf + _next_valid_num)->set(l, _mid);
+                    (intrv_buf + _next_valid_num)->_count_l = p_current_interval->_count_l;
+                    (intrv_buf + _next_valid_num)->_count_u = count_mid1;
+                    midps_dst[_next_valid_num] = (_mid + l) / 2.f;
+                    ++_next_valid_num;
+                }
                 
-                (intrv_buf + _next_valid_num)->set(_mid, u);
-                (intrv_buf + _next_valid_num)->_count_u = p_current_interval->_count_u;
-                (intrv_buf + _next_valid_num)->_count_l = _count_mid._arrui[k];
-                midps_dst[_next_valid_num] = (u + _mid) / 2.f;
-                ++_next_valid_num;
+                if (p_current_interval->_count_u - count_mid1 > 0){
+                    (intrv_buf + _next_valid_num)->set(_mid, u);
+                    (intrv_buf + _next_valid_num)->_count_u = p_current_interval->_count_u;
+                    (intrv_buf + _next_valid_num)->_count_l = count_mid1;
+                    midps_dst[_next_valid_num] = (u + _mid) / 2.f;
+                    ++_next_valid_num;
+                }
             }
         }
         }
