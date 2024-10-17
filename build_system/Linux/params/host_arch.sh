@@ -29,7 +29,7 @@
 # DEALINGS IN THE SOFTWARE.
 
 # Entry from dir=../
-source_script ./utils.sh
+source_script $BUILD_SYSTEM_DIR/Linux/utils.sh
 
 # Set the host architecture
 function host_arch()

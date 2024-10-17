@@ -48,11 +48,9 @@ function clean_single()
     # Clean the generated asm sources
     if [[ "BLAS_CPU,DSP_CPU" == *"$1"* ]]; then
         echo_status "Deleted generated platform dependent asm files for SVML"
-        # chmod u+x $PROJECT_PATH_BUILD/srcs/common/SIMD/x86_64/asm_preproc_SVML.sh
         run_script $PROJECT_PATH_BUILD/srcs/common/SIMD/x86_64/asm_preproc_SVML.sh -c NOP
     fi
     if [ "$1" = "core_CPU" ]; then
-        # chmod u+x $PROJECT_PATH_BUILD/srcs/modules/core/configs/x86_64/asm_preproc_configs.sh
         run_script $PROJECT_PATH_BUILD/srcs/modules/core/configs/x86_64/asm_preproc_configs.sh -c NOP
     fi
 
@@ -101,7 +99,7 @@ function config_single()
 {
     requirement_statement=$(prebuilt_needed $1)
     
-    run_script $PROJECT_PATH_BUILD/build_system/Linux/prebuilts_manager.sh $requirement_statement
+    run_script $BUILD_SYSTEM_DIR/prebuilts_manager.sh $requirement_statement
 
     if [ ! -e "$PROJECT_PATH_BUILD/build" ]; then
         mkdir $PROJECT_PATH_BUILD/build
@@ -240,7 +238,7 @@ function build_optional()
 
 
 
-stat=($(ls -l $PROJECT_PATH_BUILD/build_system/Linux/utils.sh))
+stat=($(ls -l $BUILD_SYSTEM_DIR/Linux/utils.sh))
 can_run=0
 if [[ "$stat" == *"x"* ]]; then
     can_run=1
@@ -250,9 +248,9 @@ fi
 
 
 if [[ $can_run -ne 1 ]]; then
-    chmod u+x $PROJECT_PATH_BUILD/build_system/Linux/utils.sh
+    chmod u+x $BUILD_SYSTEM_DIR/Linux/utils.sh
 fi
-source $PROJECT_PATH_BUILD/build_system/Linux/utils.sh
+source $BUILD_SYSTEM_DIR/Linux/utils.sh
 
 
 

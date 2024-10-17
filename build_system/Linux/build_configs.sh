@@ -31,23 +31,25 @@
 
 full_path=$(realpath ${BASH_SOURCE[0]})
 export PROJECT_PATH_BUILD=$(dirname $(dirname $(dirname $full_path)))
+# Define the absolute path of the build system
+export BUILD_SYSTEM_DIR=$PROJECT_PATH_BUILD/build_system
 
 
-stat=($(ls -l $PROJECT_PATH_BUILD/build_system/Linux/utils.sh))
+stat=($(ls -l $BUILD_SYSTEM_DIR/Linux/utils.sh))
 if [[ "$stat" == *"x"* ]]; then
-    source $PROJECT_PATH_BUILD/build_system/Linux/utils.sh
+    source $BUILD_SYSTEM_DIR/Linux/utils.sh
 else
-    chmod u+x $PROJECT_PATH_BUILD/build_system/Linux/utils.sh
-    source $PROJECT_PATH_BUILD/build_system/Linux/utils.sh
+    chmod u+x $BUILD_SYSTEM_DIR/Linux/utils.sh
+    source $BUILD_SYSTEM_DIR/Linux/utils.sh
 fi
 
-source_script $PROJECT_PATH_BUILD/build_system/Linux/params/param_lists.sh
-source_script $PROJECT_PATH_BUILD/build_system/Linux/params/exp_lang.sh
-source_script $PROJECT_PATH_BUILD/build_system/Linux/params/host_arch.sh
-source_script $PROJECT_PATH_BUILD/build_system/Linux/params/cxx_ver.sh
-source_script $PROJECT_PATH_BUILD/build_system/Linux/params/toolchain.sh
-source_script $PROJECT_PATH_BUILD/build_system/Linux/params/set_module.sh
-source_script $PROJECT_PATH_BUILD/build_system/Linux/params/cuda_sm.sh
+source_script $BUILD_SYSTEM_DIR/Linux/params/param_lists.sh
+source_script $BUILD_SYSTEM_DIR/Linux/params/exp_lang.sh
+source_script $BUILD_SYSTEM_DIR/Linux/params/host_arch.sh
+source_script $BUILD_SYSTEM_DIR/Linux/params/cxx_ver.sh
+source_script $BUILD_SYSTEM_DIR/Linux/params/toolchain.sh
+source_script $BUILD_SYSTEM_DIR/Linux/params/set_module.sh
+source_script $BUILD_SYSTEM_DIR/Linux/params/cuda_sm.sh
 
 
 function list_configs()
@@ -97,7 +99,7 @@ function list_configs()
 
 function conf()
 {
-    source_script $PROJECT_PATH_BUILD/build_system/Linux/utils.sh
+    source_script $BUILD_SYSTEM_DIR/Linux/utils.sh
 
     is_aarch64 $DECX_HOST_ARCH
     if [ $? -eq 1 ]; then
@@ -108,45 +110,45 @@ function conf()
     fi
 
     if [ -z $1 ]; then
-        $PROJECT_PATH_BUILD/build_system/Linux/build.sh -i $DECX_CURRENT_BUILD_MODULE
+        $BUILD_SYSTEM_DIR/Linux/build.sh -i $DECX_CURRENT_BUILD_MODULE
     else
         validate_module_name $1
         if [ $? -eq 0 ]; then
             echo_error "The indicated module does not exist"
         fi
-        $PROJECT_PATH_BUILD/build_system/Linux/build.sh -i $1
+        $BUILD_SYSTEM_DIR/Linux/build.sh -i $1
     fi
 }
 
 
 function mk()
 {
-    source_script $PROJECT_PATH_BUILD/build_system/Linux/utils.sh
+    source_script $BUILD_SYSTEM_DIR/Linux/utils.sh
 
     if [ -z $1 ]; then
-        $PROJECT_PATH_BUILD/build_system/Linux/build.sh -m $DECX_CURRENT_BUILD_MODULE
+        $BUILD_SYSTEM_DIR/Linux/build.sh -m $DECX_CURRENT_BUILD_MODULE
     else
         validate_module_name $1
         if [ $? -eq 0 ]; then
             echo_error "The indicated module does not exist"
         fi
-        $PROJECT_PATH_BUILD/build_system/Linux/build.sh -m $1
+        $BUILD_SYSTEM_DIR/Linux/build.sh -m $1
     fi
 }
 
 
 function clean()
 {
-    source_script $PROJECT_PATH_BUILD/build_system/Linux/utils.sh
+    source_script $BUILD_SYSTEM_DIR/Linux/utils.sh
 
     if [ -z $1 ]; then
-        $PROJECT_PATH_BUILD/build_system/Linux/build.sh -c $DECX_CURRENT_BUILD_MODULE
+        $BUILD_SYSTEM_DIR/Linux/build.sh -c $DECX_CURRENT_BUILD_MODULE
     else
         validate_module_name $1
         if [ $? -eq 0 ]; then
             echo_error "The indicated module does not exist"
         fi
-        $PROJECT_PATH_BUILD/build_system/Linux/build.sh -c $1
+        $BUILD_SYSTEM_DIR/Linux/build.sh -c $1
     fi
 }
 

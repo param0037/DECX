@@ -28,7 +28,7 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-source_script ./utils.sh
+source_script $BUILD_SYSTEM_DIR/Linux/utils.sh
 
 # Set C++ version
 function cxx_ver()
