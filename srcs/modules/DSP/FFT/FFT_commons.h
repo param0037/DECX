@@ -178,7 +178,6 @@ static bool decx::dsp::fft::_radix_apart(uint64_t __x, std::vector<uint32_t>* re
 {
     //the order is important
     static uint8_t prime[4] = { 5, 4, 3, 2 };
-    uint64_t tmp = 0;
 
     bool __continue = true;
     bool round_not_f = true;
@@ -255,7 +254,6 @@ namespace decx
 static bool decx::dsp::check_apart(int __x)
 {
     int prime[4] = { 5, 4, 3, 2 };
-    int tmp = 0;
     // ���ж���һ��ȫ���Ҳ������ʵģ�break��whileѭ�����������?
     bool __continue = true;
     bool round_not_f = true;
