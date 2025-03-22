@@ -80,13 +80,19 @@
  * Develop in Visual studio, these x86 SIMD files are accessible
  * even using a <> to include.
 */
+// For newer CUDA toolkit, NVCC is not compatible with intrinsics headers.
+// Hence avoid accessibility to those headers in NVCC context.
+// And make sure no CUDA source depends on CPU intrinsics in later development.
+// Instead, compile all intrinsics in pure CPU compiler context and expose interfaces to CUDA.
+#ifndef __CUDACC_RDC__
 #include <immintrin.h>
 #include <mmintrin.h>
 #ifndef __GNUC__
 #include <intrin.h>
 #endif
 #include <xmmintrin.h>
-#endif
+#endif	// #ifndef __CUDACC_RDC__
+#endif	// #if defined(__x86_64__)
 
 #if defined(__aarch64__)
 /**
