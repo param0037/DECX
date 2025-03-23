@@ -42,7 +42,7 @@ namespace GPUK{
     void vgather2D_fp32(cudaTextureObject_t tex, const float2* map, float* dst,
         const uint2 src_dims_v1, const uint2 proc_dims, const uint32_t pitchmap_v1, const uint32_t pitchdst_v,
         dim3 block, dim3 grid, decx::cuda_stream* S);
-
+        
 
     void vgather2D_uint8(cudaTextureObject_t tex, const float2* map, uint8_t* dst,
         const uint2 src_dims_v1, const uint2 proc_dims, const uint32_t pitchmap_v1, const uint32_t pitchdst_v,

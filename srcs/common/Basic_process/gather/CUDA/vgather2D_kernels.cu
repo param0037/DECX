@@ -40,6 +40,10 @@ namespace GPUK{
         const uint2 src_dims_v1, const uint2 proc_dims, const uint32_t pitchmap_v1, const uint32_t pitchdst_v);
 
 
+    __global__ void cu_vgather2D_fp32_1(const float2* map, float4* dst,
+        const uint2 src_dims_v1, const uint2 proc_dims, const uint32_t pitchmap_v1, const uint32_t pitchdst_v);
+
+
     __global__ void cu_vgather2D_uint8(cudaTextureObject_t tex, const float2* map, uchar4* dst,
         const uint2 src_dims_v1, const uint2 proc_dims, const uint32_t pitchmap_v1, const uint32_t pitchdst_v);
 
@@ -129,6 +133,35 @@ cu_vgather2D_fp32(cudaTextureObject_t   tex,
 }
 
 
+__global__ void decx::GPUK::
+cu_vgather2D_fp32_1(
+                  const float2*         map, 
+                  float4*               dst,
+                  const uint2           src_dims_v1, 
+                  const uint2           proc_dims_v, 
+                  const uint32_t        pitchmap_v1, 
+                  const uint32_t        pitchdst_v)
+{
+    uint32_t tidx = threadIdx.x + blockIdx.x * blockDim.x;
+    uint32_t tidy = threadIdx.y + blockIdx.y * blockDim.y;
+
+    decx::utils::_cuda_vec128 reg;
+    float2 coordinates;
+
+    const uint64_t dex_map = tidy * pitchmap_v1 + tidx * 4;
+    const uint64_t dex_dst = tidy * pitchdst_v + tidx;
+
+    if (tidx < proc_dims_v.x && tidy < proc_dims_v.y)
+    {
+        int32_t predX = 0, predY = 0, pred_all = 0;
+
+        reg._vf.x = 255;
+        reg._vf.y = 255;
+        reg._vf.z = 255;
+        reg._vf.w = 255;
+        dst[dex_dst] = reg._vf;
+    }
+}
 
 __global__ void decx::GPUK::
 cu_vgather2D_uint8(cudaTextureObject_t   tex, 
@@ -324,7 +357,6 @@ void decx::GPUK::vgather2D_fp32(cudaTextureObject_t tex,        const float2* ma
     decx::GPUK::cu_vgather2D_fp32<<<grid, block, 0, S->get_raw_stream_ref()>>>(
         tex, map, (float4*)dst, src_dims_v1, proc_dims, pitchmap_v1, pitchdst_v);
 }
-
 
 void decx::GPUK::vgather2D_uint8(cudaTextureObject_t tex,        const float2* map,              
                                  uint8_t* dst,                   const uint2 src_dims_v1,        

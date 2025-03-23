@@ -27,9 +27,8 @@
 
 #ifdef _C_CONTEXT_
 #include <stdio.h>
-#include <stdint.h>
 #endif
-
+#include <stdint.h>
 
 typedef unsigned char uchar;
 typedef unsigned int uint;

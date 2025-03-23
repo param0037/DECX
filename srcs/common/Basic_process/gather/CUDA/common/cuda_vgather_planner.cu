@@ -32,7 +32,6 @@
 #include "../cuda_gather_kernels.cuh"
 #include "../../VGT_kernels_LUT_selector.h"
 
-
 namespace decx{
 namespace GPUK{
     static void* cu_vgather2D_kernels[3][3] = {

@@ -73,8 +73,8 @@ if (${CMAKE_PROJECT_NAME} MATCHES "CUDA")
 
     add_compile_definitions(_DECX_CUDA_PARTS_)
 
-    set(CUDA_TARGET_ARCH "75")
-    set(CUDA_ARCH_COMPILE_FLAGS "sm_75;compute_75")
+    set(CUDA_TARGET_ARCH ${_DECX_CUDA_SM_})
+    set(CUDA_ARCH_COMPILE_FLAGS "sm_${_DECX_CUDA_SM_};compute_${_DECX_CUDA_COMPUTE_}")
 
     set(DECX_BUILD_WITH_CUDA "Y")
 endif()
