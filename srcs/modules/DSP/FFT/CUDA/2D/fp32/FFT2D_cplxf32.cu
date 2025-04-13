@@ -132,7 +132,7 @@ void decx::dsp::fft::_cuda_FFT2D_planner<float>::Forward(decx::_GPU_Matrix* src,
                              this->get_buffer_dims().x, 
                              this->get_buffer_dims().y, 
                              S);
-    
+
     double_buffer.update_states();
 
     decx::dsp::fft::FFT2D_C2C_cplxf_1way_caller<_FFT2D_END_(de::CPf)>(&double_buffer,

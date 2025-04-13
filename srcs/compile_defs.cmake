@@ -122,3 +122,5 @@ elseif("${CMAKE_PROJECT_NAME} " STREQUAL "DECX_NN_CUDA ")
     add_compile_definitions(_DECX_NN_CUDA_)
 
 endif()
+
+add_compile_definitions(_MODULE_NAME_=${CMAKE_PROJECT_NAME})

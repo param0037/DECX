@@ -31,9 +31,20 @@
 
 #include "transpose_kernels.cuh"
 
+namespace decx
+{
+namespace blas{
+    namespace GPUK 
+    {
+        // [32, 32]
+        __global__ void _comm_cuda_kernel_variant_(cu_transpose2D_b4_dense, _MODULE_NAME_)(const float* __restrict src, float* __restrict dst,
+            const uint32_t pitchsrc_v2, const uint32_t pitchdst_v2, const uint2 proc_dim_dst);
+    }
+}
+}
 
-__global__ void 
-decx::blas::GPUK::cu_transpose2D_b4_dense(const float* __restrict src, 
+__global__ void  decx::blas::GPUK::
+_comm_cuda_kernel_variant_(cu_transpose2D_b4_dense, _MODULE_NAME_)(const float* __restrict src, 
                                       float* __restrict dst,
                                       const uint32_t pitchsrc_v1, 
                                       const uint32_t pitchdst_v1, 
@@ -76,4 +87,21 @@ decx::blas::GPUK::cu_transpose2D_b4_dense(const float* __restrict src,
             if (tidy * 4 + i < proc_dim_dst.y) { dst[dex + pitchdst_v1 * i] = _regs._arrf[i]; }
         }
     }
+}
+
+
+void 
+decx::blas::transpose2D_b4_dense(const float* src, 
+                               float* dst, 
+                               const uint2 proc_dims_dst,
+                               const uint32_t pitchsrc, 
+                               const uint32_t pitchdst, 
+                               decx::cuda_stream* S)
+{
+    dim3 transp_thread_0(32, 8);
+    dim3 transp_grid_0(decx::utils::ceil<uint>(proc_dims_dst.y, 32),
+        decx::utils::ceil<uint>(proc_dims_dst.x, 32));
+
+    decx::blas::GPUK::_comm_cuda_kernel_variant_(cu_transpose2D_b4_dense, _MODULE_NAME_) << <transp_grid_0, transp_thread_0, 0, S->get_raw_stream_ref() >> > (
+        src, dst, pitchsrc, pitchdst, proc_dims_dst);
 }

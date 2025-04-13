@@ -87,11 +87,25 @@
 #ifdef _MSC_VER
 #define __STDCALL__ __stdcall
 #define __VECTORCALL__ __vectorcall
+#define __COMM_FUNC__
 #endif
-#ifdef __GNUC__
+
+#if defined(__GNUC__) || defined(__clang__)
 #define __STDCALL__
 #define __VECTORCALL__
+#define __COMM_FUNC__ __attribute__((visibility("hidden")))
 #endif
+
+/**
+ * @brief CUDA NVCC compiler will generate __cudaRegisterLinkedBinary_xxx for 
+ *        each kernel function. For common kernels used among different shared libs,
+ *        the symbols are repeated and cause unexpected cudaErrors when calling these
+ *        kernels. Thus defining a kernel name variant is necessary.
+ * @param kernel_name Name of the kernel function.
+ * @param module_name Name of the compiling module (Should be the top-level one).
+ */
+#define stitch_impl(kernel_name, module_name) kernel_name##_##module_name
+#define _comm_cuda_kernel_variant_(x1, x2) stitch_impl(x1, x2)
 
 
 #if defined(__linux__) || defined(__GNUC__)

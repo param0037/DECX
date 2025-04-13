@@ -32,7 +32,11 @@ include_guard(GLOBAL)
 # include to add compile definitions to the target
 include("${DECX_WORLD_ABS_DIR}/srcs/compile_defs.cmake")
 
-file(GLOB_RECURSE BP_SRCS "${DECX_WORLD_ABS_DIR}/srcs/modules/BLAS/Basic_process/*.cu")
+file(GLOB_RECURSE BP_SRCS "${DECX_WORLD_ABS_DIR}/srcs/modules/BLAS/Basic_process/extension/*.cu"
+                          "${DECX_WORLD_ABS_DIR}/srcs/modules/BLAS/Basic_process/type_cast/*.cu"
+                          "${DECX_WORLD_ABS_DIR}/srcs/modules/BLAS/Basic_process/type_statistics/*.cu"
+                          "${DECX_WORLD_ABS_DIR}/srcs/modules/BLAS/Basic_process/transpose/*.cu")
+
 file(GLOB GEMM_SRCS "${DECX_WORLD_ABS_DIR}/srcs/modules/BLAS/GEMM/CUDA/*.cu")
 file(GLOB DP "${DECX_WORLD_ABS_DIR}/srcs/modules/BLAS/Dot product/CUDA/*.cu")
 file(GLOB ARITH "${DECX_WORLD_ABS_DIR}/srcs/modules/BLAS/Arithmetic/*.cu")
@@ -42,18 +46,20 @@ add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/modules/BLAS/GEMM/CUDA/large_square
 
 add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/modules/BLAS/Dot product/CUDA/1D" "${DECX_SUBBUILD_BIN_DIR}/DP1D")
 add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/modules/BLAS/Dot product/CUDA/2D" "${DECX_SUBBUILD_BIN_DIR}/DP2D")
+add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/common/Basic_process/transpose" "${DECX_SUBBUILD_BIN_DIR}/TRP_CUDA")
 
 
 include("${DECX_WORLD_ABS_DIR}/srcs/common/FMGR/FMGR_COM.cmake")
 include("${DECX_WORLD_ABS_DIR}/srcs/common/Basic_process/extension/extension_com.cmake")
-include("${DECX_WORLD_ABS_DIR}/srcs/common/Basic_process/transpose/transpose_com.cmake")
+# include("${DECX_WORLD_ABS_DIR}/srcs/common/Basic_process/transpose/transpose_com.cmake")
 include("${DECX_WORLD_ABS_DIR}/srcs/common/Basic_process/type_cast/typecast_com.cmake")
 include("${DECX_WORLD_ABS_DIR}/srcs/common/Element_wise/elementwise_com.cmake")
 
 
-add_library(DECX_BLAS_CUDA SHARED ${GEMM_SRCS}   ${DP}        ${BP_SRCS} 
+add_library(DECX_BLAS_CUDA SHARED #${GEMM_SRCS}   
+                                  ${DP}        ${BP_SRCS}
                                   ${EXT_CUDA_COM_SRCS}        ${FMGR_CUDA_COM_SRCS}
-                                  ${FILL_CUDA_COM_SRCS}       ${TRP_CUDA_COM_SRCS} 
+                                  ${FILL_CUDA_COM_SRCS}
                                   ${TYPECAST_CUDA_COM_SRCS}   ${EW_CUDA_COM_SRCS}
                                   ${ARITH})
 
@@ -63,6 +69,7 @@ set_target_properties(DECX_BLAS_CUDA PROPERTIES CUDA_RESOLVE_DEVICE_SYMBOLS ON)
 target_link_libraries(DECX_BLAS_CUDA PRIVATE gemm_cuda_extreme_shape
                                      PRIVATE gemm_cuda_large_squares
                                      PRIVATE DP1D_cuda
+                                     PRIVATE TRP_CUDA
                                      PRIVATE DP2D_cuda)
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
