@@ -96,6 +96,8 @@
 #define __COMM_FUNC__ __attribute__((visibility("hidden")))
 #endif
 
+
+#define __CONCAT_IMPL(kernel_name, module_name) kernel_name##_##module_name
 /**
  * @brief CUDA NVCC compiler will generate __cudaRegisterLinkedBinary_xxx for 
  *        each kernel function. For common kernels used among different shared libs,
@@ -104,9 +106,8 @@
  * @param kernel_name Name of the kernel function.
  * @param module_name Name of the compiling module (Should be the top-level one).
  */
-#define stitch_impl(kernel_name, module_name) kernel_name##_##module_name
-#define _comm_cuda_kernel_variant_(x1, x2) stitch_impl(x1, x2)
-
+#define _REGISTER_COMM_KERNEL_WITH_LIB_(x1, x2) __CONCAT_IMPL(x1, x2)
+#define _UNIQUE_KERNEL_NAME_(kernel) _REGISTER_COMM_KERNEL_WITH_LIB_(kernel, _MODULE_NAME_)
 
 #if defined(__linux__) || defined(__GNUC__)
 #define Linux
