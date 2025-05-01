@@ -30,11 +30,9 @@ file(GLOB_RECURSE SRCS "*.cxx")
 
 # include to add compile definitions to the target
 include("${DECX_WORLD_ABS_DIR}/srcs/compile_defs.cmake")
-# include common sources
-include("${DECX_WORLD_ABS_DIR}/srcs/common/Basic_process/transpose/transpose_com.cmake")
 
 include("${DECX_WORLD_ABS_DIR}/srcs/common/SIMD/x86_64/intrin_x86_64.cmake")
 
 set(LIBRARY_OUTPUT_PATH ${DECX_SUBBUILD_BIN_DIR})
 
-add_library(fft1d_cpu STATIC ${SRCS} ${TRP_CPU_COM_SRCS} ${INTRIN_X86_64})
+add_library(fft1d_cpu STATIC ${SRCS} ${INTRIN_X86_64})

@@ -26,10 +26,21 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
 # DEALINGS IN THE SOFTWARE.
 
-include_guard(GLOBAL)
+# include to add compile definitions to the target
+include("${DECX_WORLD_ABS_DIR}/srcs/compile_defs.cmake")
+
+set(LIBRARY_OUTPUT_PATH ${DECX_SUBBUILD_BIN_DIR})
 
 if (DEFINED DECX_BUILD_WITH_CUDA)
-    file(GLOB_RECURSE TRP_CUDA_COM_SRCS "${DECX_WORLD_ABS_DIR}/srcs/common/Basic_process/transpose/CUDA/*.cu")
+    file(GLOB_RECURSE SRCS "*.cu")
+
+    add_library(VGT_CUDA STATIC ${SRCS})
+
+    set_target_properties(VGT_CUDA PROPERTIES CUDA_ARCHITECTURES ${CUDA_TARGET_ARCH})
+    set_target_properties(VGT_CUDA PROPERTIES CUDA_RESOLVE_DEVICE_SYMBOLS ON)
+
 else()
-    file(GLOB_RECURSE TRP_CPU_COM_SRCS "${DECX_WORLD_ABS_DIR}/srcs/common/Basic_process/transpose/CPU/*.cxx")
+    file(GLOB_RECURSE SRCS "*.cxx")
+
+    add_library(VGT_CPU STATIC ${SRCS})
 endif()

@@ -46,21 +46,22 @@ add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/modules/BLAS/GEMM/CUDA/large_square
 
 add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/modules/BLAS/Dot product/CUDA/1D" "${DECX_SUBBUILD_BIN_DIR}/DP1D")
 add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/modules/BLAS/Dot product/CUDA/2D" "${DECX_SUBBUILD_BIN_DIR}/DP2D")
+
+# Common srcs
 add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/common/Basic_process/transpose" "${DECX_SUBBUILD_BIN_DIR}/TRP_CUDA")
+add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/common/Element_wise" "${DECX_SUBBUILD_BIN_DIR}/EW_CUDA")
+add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/common/FMGR" "${DECX_SUBBUILD_BIN_DIR}/FMGR_CUDA")
 
 
-include("${DECX_WORLD_ABS_DIR}/srcs/common/FMGR/FMGR_COM.cmake")
 include("${DECX_WORLD_ABS_DIR}/srcs/common/Basic_process/extension/extension_com.cmake")
-# include("${DECX_WORLD_ABS_DIR}/srcs/common/Basic_process/transpose/transpose_com.cmake")
 include("${DECX_WORLD_ABS_DIR}/srcs/common/Basic_process/type_cast/typecast_com.cmake")
-include("${DECX_WORLD_ABS_DIR}/srcs/common/Element_wise/elementwise_com.cmake")
 
 
-add_library(DECX_BLAS_CUDA SHARED #${GEMM_SRCS}   
+add_library(DECX_BLAS_CUDA SHARED ${GEMM_SRCS}   
                                   ${DP}        ${BP_SRCS}
-                                  ${EXT_CUDA_COM_SRCS}        ${FMGR_CUDA_COM_SRCS}
+                                  ${EXT_CUDA_COM_SRCS}
                                   ${FILL_CUDA_COM_SRCS}
-                                  ${TYPECAST_CUDA_COM_SRCS}   ${EW_CUDA_COM_SRCS}
+                                  ${TYPECAST_CUDA_COM_SRCS}
                                   ${ARITH})
 
 set_target_properties(DECX_BLAS_CUDA PROPERTIES CUDA_ARCHITECTURES ${CUDA_TARGET_ARCH})
@@ -70,18 +71,9 @@ target_link_libraries(DECX_BLAS_CUDA PRIVATE gemm_cuda_extreme_shape
                                      PRIVATE gemm_cuda_large_squares
                                      PRIVATE DP1D_cuda
                                      PRIVATE TRP_CUDA
-                                     PRIVATE DP2D_cuda)
+                                     PRIVATE DP2D_cuda
+                                     PRIVATE EW_CUDA
+                                     PRIVATE FMGR_CUDA)
 
-if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    message(STATUS "Building on Windows")
-    target_link_libraries(DECX_BLAS_CUDA PUBLIC DECX_core_CPU.lib
-                                         PUBLIC DECX_core_CUDA.lib)
-
-elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    message(STATUS "Building on Linux")
-    target_link_libraries(DECX_BLAS_CUDA PUBLIC DECX_core_CPU.so
-                                         PUBLIC DECX_core_CUDA.so)
-    
-elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-else()
-endif()
+target_link_libraries(DECX_BLAS_CUDA PUBLIC DECX_core_CPU
+                                     PUBLIC DECX_core_CUDA)

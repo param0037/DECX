@@ -5,7 +5,7 @@
 # 
 # This is a part of the open source project named "DECX", a high-performance scientific
 # computational library. This project follows the MIT License. For more information 
-# please visit https://github.com/param0037/DECX.
+# please visit https:
 # 
 # Copyright (c) 2021 Wayne Anderson
 # 
@@ -26,16 +26,21 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
 # DEALINGS IN THE SOFTWARE.
 
-include_guard(GLOBAL)
 
-include_directories("${DECX_WORLD_ABS_DIR}/srcs/common/")
-include("${DECX_WORLD_ABS_DIR}/srcs/common/FMGR/FMGR_COM.cmake")
+# include to add compile definitions to the target
+include("${DECX_WORLD_ABS_DIR}/srcs/compile_defs.cmake")
 
+include_directories("${DECX_WORLD_ABS_DIR}/srcs/common")
+
+set(LIBRARY_OUTPUT_PATH ${DECX_SUBBUILD_BIN_DIR})
 
 if (DEFINED DECX_BUILD_WITH_CUDA)
-    file(GLOB_RECURSE NET_EW_CUDA_COM_SRCS "${DECX_WORLD_ABS_DIR}/srcs/common/Element_wise/*.cu")
-    list(APPEND EW_CUDA_COM_SRCS ${FMGR_CUDA_COM_SRCS} ${NET_EW_CUDA_COM_SRCS})
+    file(GLOB_RECURSE SRCS "*.cu")
+    add_library(FMGR_CUDA STATIC ${SRCS})
+    
+    set_target_properties(FMGR_CUDA PROPERTIES CUDA_ARCHITECTURES ${CUDA_TARGET_ARCH})
+    set_target_properties(FMGR_CUDA PROPERTIES CUDA_RESOLVE_DEVICE_SYMBOLS ON)
 else()
-    file(GLOB_RECURSE NET_EW_CPU_COM_SRCS "${DECX_WORLD_ABS_DIR}/srcs/common/Element_wise/*.cxx")
-    list(APPEND EW_CPU_COM_SRCS ${FMGR_CPU_COM_SRCS} ${NET_EW_CPU_COM_SRCS})
+    file(GLOB_RECURSE SRCS "*.cxx")
+    add_library(FMGR_CPU STATIC ${SRCS})
 endif()

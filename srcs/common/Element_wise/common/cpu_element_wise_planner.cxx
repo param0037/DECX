@@ -31,7 +31,7 @@
 #include "cpu_element_wise_planner.h"
 
 
-bool
+__COMM_FUNC__ bool
 decx::cpu_ElementWise1D_planner::changed(const uint32_t conc,
                                       const uint64_t total, 
                                       const uint8_t type_in_size, 
@@ -48,7 +48,7 @@ decx::cpu_ElementWise1D_planner::changed(const uint32_t conc,
 }
 
 
-void 
+__COMM_FUNC__ void 
 decx::cpu_ElementWise1D_planner::plan(const uint32_t conc,
                                       const uint64_t total, 
                                       const uint8_t type_in_size, 
@@ -80,7 +80,7 @@ decx::cpu_ElementWise1D_planner::plan(const uint32_t conc,
 }
 
 
-bool
+__COMM_FUNC__ bool
 decx::cpu_ElementWise2D_planner::changed(const uint32_t conc,
                                       const uint2 proc_dims, 
                                       const uint8_t type_in_size, 
@@ -99,7 +99,7 @@ decx::cpu_ElementWise2D_planner::changed(const uint32_t conc,
 }
 
 
-void decx::
+__COMM_FUNC__ void decx::
 cpu_ElementWise2D_planner::plan(const uint32_t conc, 
                                 const uint2 proc_dims, 
                                 const uint8_t type_in_size, 

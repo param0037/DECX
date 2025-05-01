@@ -32,13 +32,11 @@ include_guard(GLOBAL)
 file(GLOB FFT_SRCS "${DECX_WORLD_ABS_DIR}/srcs/modules/DSP/FFT/CUDA/*.cu")
 file(GLOB CONV_SRCS "${DECX_WORLD_ABS_DIR}/srcs/modules/DSP/convolution/CUDA/*.cu")
 file(GLOB_RECURSE RESAMPLE_SRCS "${DECX_WORLD_ABS_DIR}/srcs/modules/DSP/resample/CUDA/*.cu")
-                        # "${DECX_WORLD_ABS_DIR}/srcs/common/Basic_process/gather/CUDA/*.cu"
-                        # "${DECX_WORLD_ABS_DIR}/srcs/common/Element_wise/common/*.cu")
 
 add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/modules/DSP/FFT/CUDA/1D" "${DECX_SUBBUILD_BIN_DIR}/fft1d_cuda")
 add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/modules/DSP/FFT/CUDA/2D" "${DECX_SUBBUILD_BIN_DIR}/fft2d_cuda")
 add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/modules/DSP/FFT/CUDA/3D" "${DECX_SUBBUILD_BIN_DIR}/fft3d_cuda")
-add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/common/Basic_process/gather/CUDA" "${DECX_SUBBUILD_BIN_DIR}/VGT_CUDA")
+add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/common/Basic_process/gather" "${DECX_SUBBUILD_BIN_DIR}/VGT_CUDA")
 add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/common/Basic_process/transpose/" "${DECX_SUBBUILD_BIN_DIR}/TRP_CUDA")
 add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/common/Element_wise/" "${DECX_SUBBUILD_BIN_DIR}/EW_CUDA")
 add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/modules/DSP/convolution/CUDA/2D" "${DECX_SUBBUILD_BIN_DIR}/conv2d_cuda")
@@ -60,17 +58,17 @@ set_target_properties(DECX_DSP_CUDA PROPERTIES CUDA_ARCHITECTURES ${CUDA_TARGET_
 set_target_properties(DECX_DSP_CUDA PROPERTIES CUDA_RESOLVE_DEVICE_SYMBOLS ON)
 
 
-if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+# if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     # Must tell NVCC and Host linker to consider multiple implementations of common CUDA source file
     # They will automatically generate symbols of __cudaRegisterLinkBinary with different names.
-    target_link_libraries(DECX_DSP_CUDA PUBLIC DECX_BLAS_CUDA.lib)
-    target_link_libraries(DECX_DSP_CUDA PUBLIC DECX_core_CUDA.lib)
+    target_link_libraries(DECX_DSP_CUDA PUBLIC DECX_BLAS_CUDA)
+    target_link_libraries(DECX_DSP_CUDA PUBLIC DECX_core_CUDA)
 
-elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+# elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     # Must tell NVCC and Host linker to consider multiple implementations of common CUDA source file
     # They will automatically generate symbols of __cudaRegisterLinkBinary with different names.
-    target_link_libraries(DECX_DSP_CUDA PUBLIC DECX_BLAS_CUDA.so)
-    target_link_libraries(DECX_DSP_CUDA PUBLIC DECX_core_CUDA.so)
-    
-else()
-endif()
+    # target_link_libraries(DECX_DSP_CUDA PUBLIC DECX_BLAS_CUDA.so)
+    # target_link_libraries(DECX_DSP_CUDA PUBLIC DECX_core_CUDA.so)
+    # 
+# else()
+# endif()

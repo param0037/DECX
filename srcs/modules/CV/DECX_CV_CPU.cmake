@@ -41,17 +41,24 @@ file(GLOB_RECURSE UTILS "${DECX_WORLD_ABS_DIR}/srcs/common/Basic_process/type_st
                         "${DECX_WORLD_ABS_DIR}/srcs/modules/basic_calculations/operators/Maprange_exec.cxx")
 message(STATUS "SDL is found in path : ${SDL_PATH}")
 
+
+# include the sommon sources
+add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/common/FMGR/" "${DECX_SUBBUILD_BIN_DIR}/FMGR_CPU")
+
+
 if(${HOST_OS_NAME} STREQUAL "Windows")
     link_directories(${SDL_PATH}/lib/x64
                     ${SDL_IMAGE_PATH}/lib/x64)
 
-    add_library(DECX_CV_CPU SHARED ${CV_CORE} ${UTILS} ${FMGR_CPU_COM_SRCS})
-    target_link_libraries(DECX_CV_CPU SDL2.lib SDL2main.lib SDL2test.lib SDL2_image.lib DECX_core_CPU.lib DECX_BLAS_CPU.lib)
+    add_library(DECX_CV_CPU SHARED ${CV_CORE} ${UTILS})
+    target_link_libraries(DECX_CV_CPU PUBLIC SDL2.lib SDL2main.lib SDL2test.lib SDL2_image.lib DECX_core_CPU.lib DECX_BLAS_CPU.lib)
     
 elseif(${HOST_OS_NAME} STREQUAL "Linux")
     link_directories(${SDL_PATH}/lib
     		     ${SDL_IMAGE_PATH}/lib)
 
-    add_library(DECX_CV_CPU SHARED ${CV_CORE} ${UTILS} ${FMGR_CPU_COM_SRCS})
-    target_link_libraries(DECX_CV_CPU libSDL2-2.0.so.0 libSDL2_image-2.0.so.0 DECX_core_CPU.so DECX_BLAS_CPU.so)
+    add_library(DECX_CV_CPU SHARED ${CV_CORE} ${UTILS})
+    target_link_libraries(DECX_CV_CPU PUBLIC libSDL2-2.0.so libSDL2_image-2.0.so DECX_core_CPU.so DECX_BLAS_CPU.so)
 endif()
+
+target_link_libraries(DECX_CV_CPU PRIVATE FMGR_CPU)

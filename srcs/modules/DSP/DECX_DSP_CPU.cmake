@@ -32,39 +32,31 @@ file(GLOB FFT "${DECX_WORLD_ABS_DIR}/srcs/modules/DSP/FFT/CPU/*.cxx")
 file(GLOB FILTERS "${DECX_WORLD_ABS_DIR}/srcs/modules/DSP/filters/CPU/*.cxx")
 file(GLOB CONV "${DECX_WORLD_ABS_DIR}/srcs/modules/DSP/convolution/CPU/*.cxx")
 
-file(GLOB_RECURSE GATHER "${DECX_WORLD_ABS_DIR}/srcs/common/Basic_process/gather/CPU/*.cxx"
-                 "${DECX_WORLD_ABS_DIR}/srcs/modules/DSP/resample/CPU/*.cxx")
+file(GLOB_RECURSE GATHER "${DECX_WORLD_ABS_DIR}/srcs/modules/DSP/resample/CPU/*.cxx")
 
-include("${DECX_WORLD_ABS_DIR}/srcs/common/Element_wise/elementwise_com.cmake")
-
+add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/common/Element_wise" "${DECX_SUBBUILD_BIN_DIR}/EW_CPU")
+add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/common/FMGR" "${DECX_SUBBUILD_BIN_DIR}/FMGR_CPU")
 add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/modules/DSP/FFT/CPU/1D" "${DECX_SUBBUILD_BIN_DIR}/fft1d_cpu")
 add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/modules/DSP/FFT/CPU/2D" "${DECX_SUBBUILD_BIN_DIR}/fft2d_cpu")
 add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/modules/DSP/FFT/CPU/3D" "${DECX_SUBBUILD_BIN_DIR}/fft3d_cpu")
 add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/modules/DSP/FFT/CPU/FFT_common" "${DECX_SUBBUILD_BIN_DIR}/fft_common_cpu")
 add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/modules/DSP/convolution/CPU/2D" "${DECX_SUBBUILD_BIN_DIR}/conv2d_cpu")
+add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/common/Basic_process/gather" "${DECX_SUBBUILD_BIN_DIR}/VGT_CPU")
 
 
 add_library(DECX_DSP_CPU SHARED ${FFT} 
                                 ${FILTERS}
                                 ${CONV}
-                                ${GATHER}
-                                ${EW_CPU_COM_SRCS})
+                                ${GATHER})
 
 target_link_libraries(DECX_DSP_CPU PRIVATE fft1d_cpu
                                    PRIVATE fft2d_cpu
                                    PRIVATE fft3d_cpu
                                    PRIVATE fft_common_cpu
-                                   PRIVATE conv2d_cpu)
+                                   PRIVATE conv2d_cpu
+                                   PRIVATE FMGR_CPU
+                                   PRIVATE EW_CPU
+                                   PRIVATE VGT_CPU)
 
-
-if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    target_link_libraries(DECX_DSP_CPU PUBLIC DECX_core_CPU.lib)
-    target_link_libraries(DECX_DSP_CPU PUBLIC DECX_BLAS_CPU.lib)
-
-elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    target_link_libraries(DECX_DSP_CPU PUBLIC DECX_core_CPU.so)
-    target_link_libraries(DECX_DSP_CPU PUBLIC DECX_BLAS_CPU.so)
-    
-else()
-    message(STATUS "Building on unknown platform. Failed, not supported!")
-endif()
+target_link_libraries(DECX_DSP_CPU PUBLIC DECX_core_CPU)
+target_link_libraries(DECX_DSP_CPU PUBLIC DECX_BLAS_CPU)

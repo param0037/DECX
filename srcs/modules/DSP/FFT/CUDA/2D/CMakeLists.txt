@@ -30,8 +30,6 @@ file(GLOB_RECURSE SRCS "*.cu")
 
 # include to add compile definitions to the target
 include("${DECX_WORLD_ABS_DIR}/srcs/compile_defs.cmake")
-# include common sources
-# include("${DECX_WORLD_ABS_DIR}/srcs/common/Basic_process/transpose/transpose_com.cmake")
 
 set(LIBRARY_OUTPUT_PATH ${DECX_SUBBUILD_BIN_DIR})
 

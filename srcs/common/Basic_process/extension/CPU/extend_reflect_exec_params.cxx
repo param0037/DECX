@@ -380,12 +380,12 @@ __m128i decx::bp::e_rfct_exep_get_blend_b16(const decx::bp::extend_reflect_exec_
     __m128i blend = _mm_setzero_si128();
     for (int i = 8 - _src->_L_v8_L; i < 8; ++i) {
 #ifdef _MSC_VER
-        blend.m128i_i8[i * 2] = 0xFF;
-        blend.m128i_i8[i * 2 + 1] = 0xFF;
+        blend.m128i_i8[i * 2] = (uint8_t)0xFF;
+        blend.m128i_i8[i * 2 + 1] = (uint8_t)0xFF;
 #endif
 #ifdef __GNUC__
-        ((uint8_t*)&blend)[i * 2] = 0xFF;
-        ((uint8_t*)&blend)[i * 2 + 1] = 0xFF;
+        ((uint8_t*)&blend)[i * 2] = (uint8_t)0xFF;
+        ((uint8_t*)&blend)[i * 2 + 1] = (uint8_t)0xFF;
 #endif
     }
 

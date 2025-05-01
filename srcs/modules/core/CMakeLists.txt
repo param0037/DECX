@@ -61,6 +61,7 @@ include("../../config_paths.cmake")
 include("../../compile_defs.cmake")
 
 include_directories("${DECX_WORLD_ABS_DIR}/srcs/modules/core/")
+include_directories("${DECX_WORLD_ABS_DIR}/srcs/common")
 
 if(_DECX_CUDA_MODULE_)
     include("DECX_core_CUDA.cmake")

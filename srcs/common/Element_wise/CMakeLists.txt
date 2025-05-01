@@ -26,14 +26,20 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
 # DEALINGS IN THE SOFTWARE.
 
-file(GLOB_RECURSE SRCS "${DECX_WORLD_ABS_DIR}/srcs/common/Element_wise/*.cu")
 
 # include to add compile definitions to the target
 include("${DECX_WORLD_ABS_DIR}/srcs/compile_defs.cmake")
 
+include_directories("${DECX_WORLD_ABS_DIR}/srcs/common/")
+
 set(LIBRARY_OUTPUT_PATH ${DECX_SUBBUILD_BIN_DIR})
 
-add_library(EW_CUDA STATIC ${SRCS})
-
-set_target_properties(EW_CUDA PROPERTIES CUDA_ARCHITECTURES ${CUDA_TARGET_ARCH})
-set_target_properties(EW_CUDA PROPERTIES CUDA_RESOLVE_DEVICE_SYMBOLS ON)
+if (DEFINED DECX_BUILD_WITH_CUDA)
+    file(GLOB_RECURSE SRCS "${DECX_WORLD_ABS_DIR}/srcs/common/Element_wise/*.cu")
+    add_library(EW_CUDA STATIC ${SRCS})
+    set_target_properties(EW_CUDA PROPERTIES CUDA_ARCHITECTURES ${CUDA_TARGET_ARCH})
+    set_target_properties(EW_CUDA PROPERTIES CUDA_RESOLVE_DEVICE_SYMBOLS ON)
+else()
+    file(GLOB_RECURSE SRCS "${DECX_WORLD_ABS_DIR}/srcs/common/Element_wise/*.cxx")
+    add_library(EW_CPU OBJECT ${SRCS})
+endif()

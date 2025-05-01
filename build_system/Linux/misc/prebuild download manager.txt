@@ -1,7 +1,8 @@
 # TODO
 SDL:
     1. x86 Linux:
-        visit https://packages.debian.org/bookworm/i386/libsdl2-2.0-0/download
+        # visit https://packages.debian.org/bookworm/i386/libsdl2-2.0-0/download
+        visit https://packages.debian.org/bookworm/amd64/libsdl2-2.0-0/download
         download from North America mirror source
         https://packages.debian.org/bookworm/libsdl2-image-2.0-0    # SDL2_image
     

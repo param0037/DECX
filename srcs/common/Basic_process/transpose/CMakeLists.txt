@@ -26,15 +26,19 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
 # DEALINGS IN THE SOFTWARE.
 
-file(GLOB_RECURSE SRCS "${DECX_WORLD_ABS_DIR}/srcs/common/Basic_process/transpose/CUDA/*.cu")
-
 # include to add compile definitions to the target
 include("${DECX_WORLD_ABS_DIR}/srcs/compile_defs.cmake")
 
 set(LIBRARY_OUTPUT_PATH ${DECX_SUBBUILD_BIN_DIR})
 
-add_library(TRP_CUDA STATIC ${SRCS})
+if(_DECX_CUDA_MODULE_)
+    file(GLOB_RECURSE SRCS "${DECX_WORLD_ABS_DIR}/srcs/common/Basic_process/transpose/CUDA/*.cu")
 
-message(STATUS "CUDA_TARGET_ARCH : ${CUDA_TARGET_ARCH}")
-set_target_properties(TRP_CUDA PROPERTIES CUDA_ARCHITECTURES ${CUDA_TARGET_ARCH})
-set_target_properties(TRP_CUDA PROPERTIES CUDA_RESOLVE_DEVICE_SYMBOLS ON)
+    add_library(TRP_CUDA STATIC ${SRCS})
+
+    set_target_properties(TRP_CUDA PROPERTIES CUDA_ARCHITECTURES ${CUDA_TARGET_ARCH})
+    set_target_properties(TRP_CUDA PROPERTIES CUDA_RESOLVE_DEVICE_SYMBOLS ON)
+else()
+    file(GLOB_RECURSE SRCS "${DECX_WORLD_ABS_DIR}/srcs/common/Basic_process/transpose/CPU/*.cxx")
+    add_library(TRP_CPU STATIC ${SRCS})
+endif()

@@ -89,7 +89,7 @@ function download_n_install_SDL2()
     is_aarch64 $DECX_HOST_ARCH
     aarch64_case=$?
     if [ $aarch64_case -eq 0 ]; then
-        url=http://ftp.us.debian.org/debian/pool/main/libs/libsdl2/libsdl2-2.0-0_2.26.5+dfsg-1_i386.deb
+        url=http://http.us.debian.org/debian/pool/main/libs/libsdl2/libsdl2-2.0-0_2.26.5+dfsg-1_amd64.deb
     else
         url=http://mirror.archlinuxarm.org/aarch64/extra/sdl2-2.30.7-1-aarch64.pkg.tar.xz
     fi
@@ -102,8 +102,8 @@ function download_n_install_SDL2()
     extracted_folder=$(extract_downloads $package_name_download)
 
     if [ $aarch64_case -eq 0 ]; then    # Execute x86-SLD2 installation procedures
-        cp -r ./$extracted_folder/usr/lib/i386-linux-gnu ../
-        mv ../i386-linux-gnu ../lib
+        cp -r ./$extracted_folder/usr/lib/x86_64-linux-gnu ../
+        mv ../x86_64-linux-gnu ../lib
     else                                # Execute aarch64-SLD2 installation procedures
         cp -r ./$extracted_folder/usr/lib ../
     fi
@@ -118,7 +118,7 @@ function download_n_install_SDL2_Image()
     is_aarch64 $DECX_HOST_ARCH
     aarch64_case=$?
     if [ $aarch64_case -eq 0 ]; then
-        url=http://ftp.us.debian.org/debian/pool/main/libs/libsdl2-image/libsdl2-image-2.0-0_2.6.3+dfsg-1_i386.deb
+        url=http://ftp.us.debian.org/debian/pool/main/libs/libsdl2-image/libsdl2-image-2.0-0_2.6.3+dfsg-1_amd64.deb
     else
         url=http://mirror.archlinuxarm.org/aarch64/extra/sdl2_image-2.8.2-5-aarch64.pkg.tar.xz
     fi
@@ -131,8 +131,8 @@ function download_n_install_SDL2_Image()
     extracted_folder=$(extract_downloads $package_name_download)
 
     if [ $aarch64_case -eq 0 ]; then    # Execute x86-SLD2 installation procedures
-        cp -r ./$extracted_folder/usr/lib/i386-linux-gnu ../
-        mv ../i386-linux-gnu ../lib
+        cp -r ./$extracted_folder/usr/lib/x86_64-linux-gnu ../
+        mv ../x86_64-linux-gnu ../lib
     else                                # Execute aarch64-SLD2 installation procedures
         cp -r ./$extracted_folder/usr/lib ../
     fi

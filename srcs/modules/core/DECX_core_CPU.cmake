@@ -35,10 +35,10 @@ file(GLOB_RECURSE CONFIGS "${DECX_WORLD_ABS_DIR}/srcs/modules/core/configs/*.cxx
 file(GLOB_RECURSE THREAD_POOL "${DECX_WORLD_ABS_DIR}/srcs/modules/core/thread_management/*.cxx")
 file(GLOB_RECURSE GEN "${DECX_WORLD_ABS_DIR}/srcs/modules/core/generator/*.cxx")
 
-include("${DECX_WORLD_ABS_DIR}/srcs/common/Element_wise/elementwise_com.cmake")
 
-add_subdirectory(${DECX_WORLD_ABS_DIR}/srcs/modules/core/allocators/CPU
-                 ${DECX_SUBBUILD_BIN_DIR}/allocators_host)
+add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/modules/core/allocators/CPU" "${DECX_SUBBUILD_BIN_DIR}/allocators_host")
+add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/common/Element_wise" "${DECX_SUBBUILD_BIN_DIR}/EW_CPU")
+add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/common/FMGR" "${DECX_SUBBUILD_BIN_DIR}/FMGR_CPU")
 
 
 message("Now building for ${_DECX_HOST_ARCH_}")
@@ -51,10 +51,12 @@ else()
 endif()
 
 add_library(${PROJECT_NAME} SHARED 
-    ${CORE} ${CLASSES} ${RESMGR} ${THREAD_POOL} ${CONFIGS} ${GEN} ${EW_CPU_COM_SRCS})
+    ${CORE} ${CLASSES} ${RESMGR} ${THREAD_POOL} ${CONFIGS} ${GEN})
 
 
-target_link_libraries(DECX_core_CPU PRIVATE allocators_host)
+target_link_libraries(DECX_core_CPU PRIVATE allocators_host
+                                    PRIVATE EW_CPU
+                                    PRIVATE FMGR_CPU)
 
 
 if("${_DECX_HOST_ARCH_} " STREQUAL "aarch64 ")

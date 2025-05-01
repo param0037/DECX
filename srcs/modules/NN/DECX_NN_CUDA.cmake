@@ -36,13 +36,17 @@ add_library(DECX_NN_CUDA SHARED ${NN_CORE} ${UTILS})
 
 set_target_properties(DECX_NN_CUDA PROPERTIES CUDA_ARCHITECTURES "75")
 
+add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/common/Basic_process/transpose" "${DECX_SUBBUILD_BIN_DIR}/TRP_CUDA")
 
-if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    target_link_libraries(DECX_NN_CUDA DECX_core_CPU.lib)
-    target_link_libraries(DECX_NN_CUDA DECX_core_CUDA.lib)
+target_link_libraries(DECX_NN_CUDA PRIVATE TRP_CUDA)
 
-elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    message(STATUS "Building on Linux")
-    target_link_libraries(DECX_NN_CUDA DECX_core_CPU.so)
-    target_link_libraries(DECX_NN_CUDA DECX_core_CUDA.so)
-endif()
+# if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    target_link_libraries(DECX_NN_CUDA PUBLIC DECX_core_CPU)
+    target_link_libraries(DECX_NN_CUDA PUBLIC DECX_core_CUDA)
+
+# elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    # message(STATUS "Building on Linux")
+    # target_link_libraries(DECX_NN_CUDA DECX_core_CPU.so)
+    # target_link_libraries(DECX_NN_CUDA DECX_core_CUDA.so)
+# endif()
+# 

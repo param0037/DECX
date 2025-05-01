@@ -31,11 +31,9 @@ file(GLOB_RECURSE SRCS "*.cxx")
 # include to add compile definitions to the target
 include("${DECX_WORLD_ABS_DIR}/srcs/compile_defs.cmake")
 
-include("${DECX_WORLD_ABS_DIR}/srcs/common/FMGR/FMGR_COM.cmake")
 include("${DECX_WORLD_ABS_DIR}/srcs/common/Basic_process/extension/extension_com.cmake")
 
 set(LIBRARY_OUTPUT_PATH ${DECX_SUBBUILD_BIN_DIR})
 
 add_library(conv2d_cpu STATIC ${SRCS}
-                              ${FMGR_CPU_COM_SRCS}
                               ${EXT_CPU_COM_SRCS})

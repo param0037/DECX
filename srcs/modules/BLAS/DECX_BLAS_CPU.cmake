@@ -49,26 +49,31 @@ if(${_DECX_HOST_ARCH_} STREQUAL "x64")
     
 endif()
 
+# Common srcs
+add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/common/Basic_process/transpose" "${DECX_SUBBUILD_BIN_DIR}/TRP_CPU")
+add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/common/Element_wise" "${DECX_SUBBUILD_BIN_DIR}/EW_CPU")
+add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/common/FMGR" "${DECX_SUBBUILD_BIN_DIR}/FMGR_CPU")
+
 # include common sources
-include("${DECX_WORLD_ABS_DIR}/srcs/common/FMGR/FMGR_COM.cmake")
 include("${DECX_WORLD_ABS_DIR}/srcs/common/Basic_process/extension/extension_com.cmake")
 
 
 # Some parts of DECX_BLAS_CPU is not designed to support aarch64 yet, this will be done in the future
 if(${_DECX_HOST_ARCH_} STREQUAL "x64")
-include("${DECX_WORLD_ABS_DIR}/srcs/common/Basic_process/transpose/transpose_com.cmake")
 include("${DECX_WORLD_ABS_DIR}/srcs/common/Basic_process/type_cast/typecast_com.cmake")
-include("${DECX_WORLD_ABS_DIR}/srcs/common/Element_wise/elementwise_com.cmake")
 
 
 add_library(DECX_BLAS_CPU SHARED ${GEMM}                    ${BP} ${EW}
-                                 ${EXT_CPU_COM_SRCS}        ${FMGR_CPU_COM_SRCS}
-                                 ${TRP_CPU_COM_SRCS}        ${INTRIN_X86_64}
-                                 ${TYPECAST_CPU_COM_SRCS}   ${EW_CPU_COM_SRCS} ${EIG} ${REDUCE_CPU_SRCS})
+                                 ${EXT_CPU_COM_SRCS} 
+                                 ${INTRIN_X86_64}
+                                 ${TYPECAST_CPU_COM_SRCS} ${EIG} ${REDUCE_CPU_SRCS})
 
 target_link_libraries(DECX_BLAS_CPU PRIVATE gemm_fp32_cpu
                                     PRIVATE gemm_64b_cpu
-                                    PRIVATE gemm_cplxd_cpu)
+                                    PRIVATE gemm_cplxd_cpu
+                                    PRIVATE TRP_CPU
+                                    PRIVATE EW_CPU
+                                    PRIVATE FMGR_CPU)
 else()
 add_library(DECX_BLAS_CPU SHARED ${GEMM}                ${BP} 
                                  ${EXT_CPU_COM_SRCS}    ${FMGR_CPU_COM_SRCS})
@@ -78,9 +83,4 @@ target_link_libraries(DECX_BLAS_CPU PRIVATE gemm_fp32_cpu
                                     # PRIVATE gemm_cplxd_cpu)
 endif()
 
-
-if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    target_link_libraries(DECX_BLAS_CPU PUBLIC DECX_core_CPU.lib)
-else()
-    target_link_libraries(DECX_BLAS_CPU PUBLIC DECX_core_CPU.so)
-endif()
+target_link_libraries(DECX_BLAS_CPU PUBLIC DECX_core_CPU)
