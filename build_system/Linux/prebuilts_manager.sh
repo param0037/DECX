@@ -81,18 +81,23 @@ function extract_downloads()
 
 
 # Should have entered Tmp dir
-function download_n_install_SDL2()
+function download_n_install()
 {
-    prebuilt_name="SDL2"
+    prebuilt_name="$1"
     echo_status "Envoke wget to download $prebuilt_name"
 
-    is_aarch64 $DECX_HOST_ARCH
-    aarch64_case=$?
-    if [ $aarch64_case -eq 0 ]; then
-        url=http://http.us.debian.org/debian/pool/main/libs/libsdl2/libsdl2-2.0-0_2.26.5+dfsg-1_amd64.deb
-    else
-        url=http://mirror.archlinuxarm.org/aarch64/extra/sdl2-2.30.7-1-aarch64.pkg.tar.xz
-    fi
+    mkdir ./tmp
+    cd ./tmp
+
+    url=$2
+
+    # is_aarch64 $DECX_HOST_ARCH
+    # aarch64_case=$?
+    # if [ $aarch64_case -eq 0 ]; then
+    #     url=http://http.us.debian.org/debian/pool/main/libs/libsdl2/libsdl2-2.0-0_2.26.5+dfsg-1_amd64.deb
+    # else
+    #     url=http://mirror.archlinuxarm.org/aarch64/extra/sdl2-2.30.7-1-aarch64.pkg.tar.xz
+    # fi
 
     package_name_download=${url##*/}
 
@@ -101,41 +106,38 @@ function download_n_install_SDL2()
 
     extracted_folder=$(extract_downloads $package_name_download)
 
-    if [ $aarch64_case -eq 0 ]; then    # Execute x86-SLD2 installation procedures
-        cp -r ./$extracted_folder/usr/lib/x86_64-linux-gnu ../
-        mv ../x86_64-linux-gnu ../lib
-    else                                # Execute aarch64-SLD2 installation procedures
-        cp -r ./$extracted_folder/usr/lib ../
-    fi
-}
+    cd ../
 
-# Should have entered Tmp dir
-function download_n_install_SDL2_Image()
-{
-    prebuilt_name="SDL2_Image"
-    echo_status "Envoke wget to download $prebuilt_name"
+    # find ./tmp/$extracted_folder -type f -exec cp --backup=numbered -t ./ {} +
+    
+    while IFS= read -r -d '' file; do
+        file_type=$(file -b $file)
+        # Target only .so file(s)
+        if [[ "$file_type" == *"shared object"* ]] || [[ "$file_type" == *"dynamic lib"* ]]; then
+            if [[ "$file" == *"$1"* ]]; then
+                echo_status "Found shared object: $file"
+                cp --backup=numbered $file ./lib$1.so
+            fi
+        fi
+    done < <(find ./ -type f -print0)
 
-    is_aarch64 $DECX_HOST_ARCH
-    aarch64_case=$?
-    if [ $aarch64_case -eq 0 ]; then
-        url=http://ftp.us.debian.org/debian/pool/main/libs/libsdl2-image/libsdl2-image-2.0-0_2.6.3+dfsg-1_amd64.deb
-    else
-        url=http://mirror.archlinuxarm.org/aarch64/extra/sdl2_image-2.8.2-5-aarch64.pkg.tar.xz
-    fi
+    # Clean the tmp
+    echo_status "Download $prebuilt_name done, cleaning the caches"
+    rm -rf ./tmp
 
-    package_name_download=${url##*/}
-
-    wget $url
-    echo_status "Installing $prebuilt_name"
-
-    extracted_folder=$(extract_downloads $package_name_download)
-
-    if [ $aarch64_case -eq 0 ]; then    # Execute x86-SLD2 installation procedures
-        cp -r ./$extracted_folder/usr/lib/x86_64-linux-gnu ../
-        mv ../x86_64-linux-gnu ../lib
-    else                                # Execute aarch64-SLD2 installation procedures
-        cp -r ./$extracted_folder/usr/lib ../
-    fi
+    while IFS= read -r -d '' file; do
+        soname=""
+        if command -v readelf &>/dev/null; then
+            soname=$(readelf -d $file | awk -F'[][]' '/SONAME/ {print $2}')
+            ln -s $file $soname
+        elif command -v objdump &>/dev/null; then
+            soname=$(objdump -p $file | awk '/SONAME/ {print $2}')
+        else
+            echo_error "No readelf or objdump is found"
+        fi
+        ln -s $file $soname
+        echo_status "Create link $soname for $file"
+    done < <(find ./ -type f -print0)
 }
 
 
@@ -158,7 +160,7 @@ function download_n_install_Python3()
 }
 
 
-function download_prebuilts()
+function setup_prebuilts()
 {
     prebuilt_name=$1        # Get prebuilt name from the parameter
     
@@ -166,25 +168,21 @@ function download_prebuilts()
     is_prebuilt_exist $prebuilt_name        # Check if this dependency exists
     
     if [ $? -eq 0 ]; then
-        prebuilt_tmp_dir=$PROJECT_PATH_BUILD/3rdparty/$prebuilt_name/$DECX_HOST_ARCH/Linux
-        mkdir $prebuilt_tmp_dir
-        prebuilt_tmp_dir=$prebuilt_tmp_dir/tmp
-        mkdir $prebuilt_tmp_dir
+        prebuilt_dir=$PROJECT_PATH_BUILD/3rdparty/$prebuilt_name/$DECX_HOST_ARCH/Linux
+        mkdir $prebuilt_dir
+        # prebuilt_tmp_dir=$prebuilt_tmp_dir/tmp
+        # mkdir $prebuilt_tmp_dir
+
+        cd $prebuilt_dir
 
         # Enter Tmp dir
-        echo_status "Entering directory $prebuilt_tmp_dir"
-        cd $prebuilt_tmp_dir
+        echo_status "Entering directory $prebuilt_dir"
+        # cd $prebuilt_tmp_dir
 
         # Unpack & install it
-        install_cmd=download_n_install_$prebuilt_name
-        eval $install_cmd       # Install the prebuilts
-
-        cd ../../
-        echo_status "Leaving directory $prebuilt_tmp_dir"
-
-        # Clean the tmp
-        echo_status "Download $prebuilt_name done, cleaning the caches"
-        rm -rf ./Linux/tmp
+        # install_cmd=download_n_install_$prebuilt_name
+        # eval $install_cmd       # Install the prebuilts
+        download_n_install $prebuilt_name $2
     fi
 }
 
@@ -214,7 +212,8 @@ function manage_prebuilt()
     echo_status "Entering directory: $lib_path_dir"
     cd $lib_path_dir
 
-    download_prebuilts $prebuilt_name
+    # download_prebuilts $prebuilt_name
+    setup_prebuilts $prebuilt_name $2
 
     path_n_filename=$(realpath "$0")
     current_path=$(dirname "$path_n_filename")
@@ -288,10 +287,24 @@ IFS=',' read -ra array <<< "$1"
 for element in "${array[@]}"; do
     case $element in
     "SDL2")
-        manage_prebuilt SDL2
+        is_aarch64 $DECX_HOST_ARCH
+        aarch64_case=$?
+        if [ $aarch64_case -eq 0 ]; then
+            url=http://http.us.debian.org/debian/pool/main/libs/libsdl2/libsdl2-2.0-0_2.26.5+dfsg-1_amd64.deb
+        else
+            url=http://mirror.archlinuxarm.org/aarch64/extra/sdl2-2.30.7-1-aarch64.pkg.tar.xz
+        fi
+        manage_prebuilt SDL2-2.0 $url
         ;;
-    "SDL2_Image")
-        manage_prebuilt SDL2_Image
+    "SDL2_image")
+        is_aarch64 $DECX_HOST_ARCH
+        aarch64_case=$?
+        if [ $aarch64_case -eq 0 ]; then
+            url=http://ftp.us.debian.org/debian/pool/main/libs/libsdl2-image/libsdl2-image-2.0-0_2.6.3+dfsg-1_amd64.deb
+        else
+            url=http://mirror.archlinuxarm.org/aarch64/extra/sdl2_image-2.8.2-5-aarch64.pkg.tar.xz
+        fi
+        manage_prebuilt SDL2_image-2.0 $url
         ;;
     "Python")
         if [ "$DECX_HOST_ARCH" = "aarch64" ]; then

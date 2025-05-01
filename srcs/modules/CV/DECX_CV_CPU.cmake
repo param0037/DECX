@@ -31,7 +31,6 @@ include_guard(GLOBAL)
 include_directories(${DECX_WORLD_ABS_DIR}/srcs/extern/SDL2)
 include_directories(${DECX_WORLD_ABS_DIR}/srcs/extern/SDL2_image)
 
-
 file(GLOB_RECURSE CV_CORE "${DECX_WORLD_ABS_DIR}/srcs/modules/CV/Image_IO/*.cxx"
                           "${DECX_WORLD_ABS_DIR}/srcs/modules/CV/edge_detection/*.cxx"
                           "${DECX_WORLD_ABS_DIR}/srcs/modules/CV/utils/*.cxx")
@@ -54,11 +53,10 @@ if(${HOST_OS_NAME} STREQUAL "Windows")
     target_link_libraries(DECX_CV_CPU PUBLIC SDL2.lib SDL2main.lib SDL2test.lib SDL2_image.lib DECX_core_CPU.lib DECX_BLAS_CPU.lib)
     
 elseif(${HOST_OS_NAME} STREQUAL "Linux")
-    link_directories(${SDL_PATH}/lib
-    		     ${SDL_IMAGE_PATH}/lib)
+    link_directories(${SDL_PATH} ${SDL_IMAGE_PATH})
 
     add_library(DECX_CV_CPU SHARED ${CV_CORE} ${UTILS})
-    target_link_libraries(DECX_CV_CPU PUBLIC libSDL2-2.0.so libSDL2_image-2.0.so DECX_core_CPU.so DECX_BLAS_CPU.so)
+    target_link_libraries(DECX_CV_CPU PUBLIC SDL2-2.0 SDL2_image-2.0 DECX_core_CPU.so DECX_BLAS_CPU.so)
 endif()
 
 target_link_libraries(DECX_CV_CPU PRIVATE FMGR_CPU)

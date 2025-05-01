@@ -33,7 +33,7 @@ function prebuilt_needed()
 {
     prebuilt_cmd=""
     if [[ "$1" == *"CV"* ]]; then
-        prebuilt_cmd="$prebuilt_cmd,SDL2,SDL2_Image"
+        prebuilt_cmd="$prebuilt_cmd,SDL2,SDL2_image"
     fi
     if [[ $DECX_EXP_PYTHON -eq 1 ]]; then
         prebuilt_cmd="$prebuilt_cmd,Python"

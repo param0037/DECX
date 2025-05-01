@@ -47,6 +47,6 @@ message(STATUS "=========================== Building on host, OS name = ${HOST_O
 set(LIBRARY_OUTPUT_PATH ${DECX_WORLD_ABS_DIR}/build/bin/${_DECX_HOST_ARCH_})
 
 if (${CMAKE_PROJECT_NAME} MATCHES "CV")
-    set(SDL_PATH ${DECX_WORLD_ABS_DIR}/3rdparty/SDL2/${_DECX_HOST_ARCH_}/${HOST_OS_NAME})
-    set(SDL_IMAGE_PATH ${DECX_WORLD_ABS_DIR}/3rdparty/SDL2_Image/${_DECX_HOST_ARCH_}/${HOST_OS_NAME})
+    set(SDL_PATH ${DECX_WORLD_ABS_DIR}/3rdparty/SDL2-2.0/${_DECX_HOST_ARCH_}/${HOST_OS_NAME})
+    set(SDL_IMAGE_PATH ${DECX_WORLD_ABS_DIR}/3rdparty/SDL2_image-2.0/${_DECX_HOST_ARCH_}/${HOST_OS_NAME})
 endif()
