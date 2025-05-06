@@ -81,7 +81,7 @@ public:
 
     const uint8_t get_alignment() const {return this->_alignment;}
 
-    
+
     template <typename FuncType, typename... Args> inline void 
     caller(FuncType&& f, decx::utils::_thr_1D* t1D, Args&&... args)
     {
