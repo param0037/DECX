@@ -59,11 +59,6 @@ mat_arithmetic_caller_VVO(const decx::_Matrix*  A,
         // Do the plan
         _planner.plan(t1D.total_thread, proc_len_flatten_v1, sizeof(float), sizeof(float));
         // Call the kernel
-        // _planner.caller_binary((arithmetic_kernels_1D_VVO<float, float, float>*)_kernel_ptr,
-        //                        (float*)A->Mat.ptr, 
-        //                        (float*)B->Mat.ptr, 
-        //                        (float*)dst->Mat.ptr,
-        //                        &t1D);
         _planner.caller(
             (arithmetic_kernels_1D_VVO<float, float, float>*)_kernel_ptr,
             &t1D,
@@ -80,12 +75,6 @@ mat_arithmetic_caller_VVO(const decx::_Matrix*  A,
         _kernel_ptr = g_arithmetic_cpu_kernel_LUT[1][_kernel_dex];
 
         _planner.plan(t1D.total_thread, proc_len_flatten_v1, sizeof(double), sizeof(double));
-
-        // _planner.caller_binary((arithmetic_kernels_1D_VVO<double, double, double>*)_kernel_ptr,
-        //                        (double*)A->Mat.ptr, 
-        //                        (double*)B->Mat.ptr, 
-        //                        (double*)dst->Mat.ptr,
-        //                        &t1D);
 
         _planner.caller(
             (arithmetic_kernels_1D_VVO<double, double, double>*)_kernel_ptr,
@@ -131,21 +120,29 @@ mat_arithmetic_caller_VO(const decx::_Matrix*  src,
 
         _planner.plan(t1D.total_thread, proc_len_flatten_v1, sizeof(float), sizeof(float));
 
-        _planner.caller_unary((arithmetic_kernels_1D_VO<float, float>*)_kernel_ptr,
-                              (float*)src->Mat.ptr, 
-                              (float*)dst->Mat.ptr,
-                              &t1D);
+        _planner.caller(
+            (arithmetic_kernels_1D_VO<float, float>*)_kernel_ptr,
+            &t1D,
+            decx::TArg_var<const float*>([&](const int32_t i){return (const float*)src->Mat.ptr + i * _planner.get_fmgr()->get_frag_len();}),
+            decx::TArg_var<float*>([&](const int32_t i){return (float*)dst->Mat.ptr + i * _planner.get_fmgr()->get_frag_len();}),
+            decx::TArg_var<uint64_t>([&](const int32_t i){
+                return decx::utils::ceil<uint64_t>(_planner.get_fmgr()->get_frag_len_by_id(i), _planner.get_alignment());})
+        );
         break;
     
     case de::_DATA_TYPES_FLAGS_::_FP64_:
         _kernel_ptr = g_arithmetic_cpu_kernel_LUT[1][_kernel_dex];
 
         _planner.plan(t1D.total_thread, proc_len_flatten_v1, sizeof(double), sizeof(double));
-
-        _planner.caller_unary((arithmetic_kernels_1D_VO<double, double>*)_kernel_ptr,
-                              (double*)src->Mat.ptr, 
-                              (double*)dst->Mat.ptr,
-                              &t1D);
+        
+        _planner.caller(
+            (arithmetic_kernels_1D_VO<double, double>*)_kernel_ptr,
+            &t1D,
+            decx::TArg_var<const double*>([&](const int32_t i){return (const double*)src->Mat.ptr + i * _planner.get_fmgr()->get_frag_len();}),
+            decx::TArg_var<double*>([&](const int32_t i){return (double*)dst->Mat.ptr + i * _planner.get_fmgr()->get_frag_len();}),
+            decx::TArg_var<uint64_t>([&](const int32_t i){
+                return decx::utils::ceil<uint64_t>(_planner.get_fmgr()->get_frag_len_by_id(i), _planner.get_alignment());})
+        );
         break;
 
     default:
@@ -194,12 +191,6 @@ vec_arithmetic_caller_VVO(const decx::_Vector*  A,
         _kernel_ptr = g_arithmetic_cpu_kernel_LUT[1][_kernel_dex];
 
         _planner.plan(t1D.total_thread, A->Len(), sizeof(double), sizeof(double));
-
-        _planner.caller_binary((arithmetic_kernels_1D_VVO<double, double, double>*)_kernel_ptr,
-                                (double*)A->Vec.ptr, 
-                                (double*)B->Vec.ptr, 
-                                (double*)dst->Vec.ptr, 
-                                &t1D);
 
         _planner.caller(
             (arithmetic_kernels_1D_VVO<double, double, double>*)_kernel_ptr,

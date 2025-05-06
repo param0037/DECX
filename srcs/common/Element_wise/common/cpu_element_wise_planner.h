@@ -82,42 +82,6 @@ public:
     const uint8_t get_alignment() const {return this->_alignment;}
 
     
-    template <typename FuncType, typename _type_in, typename _type_out, class ...Args>
-    inline void caller_unary(FuncType&& f, const _type_in* src, _type_out* dst, decx::utils::_thr_1D* t1D, Args&& ...additional)
-    {
-        const _type_in* loc_src = src;
-        _type_out* loc_dst = dst;
-
-        for (int32_t i = 0; i < this->_fmgr.frag_num; ++i){
-            const uint64_t _proc_len_v1 = i < this->_fmgr.frag_num - 1 ? this->_fmgr.frag_len : this->_fmgr.last_frag_len;
-            t1D->_async_thread[i] = decx::cpu::register_task_default(f, loc_src, loc_dst, 
-                decx::utils::ceil<uint64_t>(_proc_len_v1, this->_alignment), additional...);
-            
-            loc_src += _proc_len_v1;
-            loc_dst += _proc_len_v1;
-        }
-
-        t1D->__sync_all_threads(make_uint2(0, this->_fmgr.frag_num));
-    }
-
-
-    template <typename FuncType, typename _type_in, typename _type_out, class ...Args>
-    inline void caller_binary(FuncType&& f, const _type_in* src1, const _type_in* src2, _type_out* dst, decx::utils::_thr_1D* t1D, Args&& ...additional)
-    {
-        uint64_t dex_src = 0, dex_dst = 0;
-
-        for (int32_t i = 0; i < this->_fmgr.frag_num; ++i){
-            const uint64_t _proc_len_v1 = i < this->_fmgr.frag_num - 1 ? this->_fmgr.frag_len : this->_fmgr.last_frag_len;
-            t1D->_async_thread[i] = decx::cpu::register_task_default(f, src1 + dex_src, src2 + dex_src, dst + dex_dst, 
-                decx::utils::ceil<uint64_t>(_proc_len_v1, this->_alignment), additional...);
-
-            dex_src += _proc_len_v1;
-            dex_dst += _proc_len_v1;
-        }
-
-        t1D->__sync_all_threads(make_uint2(0, this->_fmgr.frag_num));
-    }
-
     template <typename FuncType, typename... Args> inline void 
     caller(FuncType&& f, decx::utils::_thr_1D* t1D, Args&&... args)
     {
