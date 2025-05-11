@@ -32,7 +32,7 @@
 #include "../../../common/Element_wise/common/cpu_element_wise_planner.h"
 #include "../../../common/Element_wise/Arithmetics/arithmetic_kernels.h"
 
-
+#define MODULE_TAG "blas::cpu"
 
 _DECX_API_ void de::blas::cpu::
 Arithmetic(de::InputVector A, de::InputVector B, de::OutputVector dst, const int32_t arith_flag)
@@ -72,8 +72,6 @@ Arithmetic(de::InputVector src, de::OutputVector dst, const int32_t arith_flag)
             "The indicated arithmetoc is not a unary operator");
     }
 }
-
-
 
 _DECX_API_ void de::blas::cpu::
 Arithmetic(de::InputMatrix A, de::InputMatrix B, de::OutputMatrix dst, const int32_t arith_flag)

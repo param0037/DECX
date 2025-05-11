@@ -28,7 +28,7 @@
 
 include_guard(GLOBAL)
 
-file(GLOB CORE "${DECX_WORLD_ABS_DIR}/srcs/modules/core/*.cxx")
+file(GLOB CORE "${DECX_WORLD_ABS_DIR}/srcs/modules/core/*.cxx" "${DECX_WORLD_ABS_DIR}/srcs/modules/core/*.c")
 file(GLOB_RECURSE CLASSES "${DECX_WORLD_ABS_DIR}/srcs/modules/core/classes/*.cxx")
 file(GLOB_RECURSE RESMGR "${DECX_WORLD_ABS_DIR}/srcs/modules/core/resources_manager/*.cxx")
 file(GLOB_RECURSE CONFIGS "${DECX_WORLD_ABS_DIR}/srcs/modules/core/configs/*.cxx")

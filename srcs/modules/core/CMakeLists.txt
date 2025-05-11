@@ -50,7 +50,7 @@ if(_DECX_CUDA_MODULE_)
     set(CUDA_TARGET_ARCH ${_DECX_CUDA_SM_})
     set(CUDA_ARCH_COMPILE_FLAGS "sm_${_DECX_CUDA_SM_};compute_${_DECX_CUDA_COMPUTE_}")
 else()
-    project(DECX_core_CPU LANGUAGES CXX)
+    project(DECX_core_CPU LANGUAGES CXX C)
 endif()
 
 set(CMAKE_CXX_STANDARD 11)

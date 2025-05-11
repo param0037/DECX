@@ -40,8 +40,6 @@
 #include <Windows.h>
 #endif
 
-
-
 #ifdef Windows
 #define SetConsoleColor(_color_flag)    \
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), _color_flag)   \
@@ -54,7 +52,7 @@
 #define SetConsoleColor(_color_flag)        \
     printf("\033[0;32;31m");                \
 
-#define ResetConsoleColor printf("\033[m");
+#define ResetConsoleColor printf("\033[m")
 #endif
 
 /**
@@ -62,13 +60,12 @@
 *   error   : 4 (red)
 *   warning : 6 (bright yellow)
 */
-#define Print_Error_Message(_color, _statement)     \
+#define Print_Error_Message(_color, msg)       \
 {                                                   \
     SetConsoleColor(_color);                        \
-    printf("%s", _statement);                       \
+    printf("%s\n", msg);                       \
     ResetConsoleColor;                              \
 }
-
 
 #ifdef _DECX_CUDA_PARTS_
 static inline const char* _cudaGetErrorEnum(cudaError_t error) noexcept
