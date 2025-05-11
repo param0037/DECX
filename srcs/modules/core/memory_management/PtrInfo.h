@@ -68,6 +68,23 @@ struct decx::PtrInfo
 
         return _dst;
     }
+
+    int32_t IsValid()
+    {
+        return this->ptr != NULL ? 1 : 0;
+    }
+
+    template <typename _Out_Ptr = _Ty>
+    _Out_Ptr* GetRawPtr()
+    {
+        return (_Out_Ptr*)this->ptr;
+    }
+
+    template <typename _Out_Ptr = _Ty>
+    const _Out_Ptr* GetRawPtrConst() const
+    {
+        return (const _Out_Ptr*)this->ptr;
+    }
 };
 
 
@@ -85,6 +102,23 @@ struct decx::Ptr2D_Info
     {
         this->_dims = dims;
         this->_ptr = _ptr_info;
+    }
+
+    int32_t IsValid()
+    {
+        return this->_ptr.IsValid();
+    }
+
+    template <typename _Out_Ptr = _Ty>
+    _Out_Ptr* GetRawPtr()
+    {
+        return (_Out_Ptr*)(this->_ptr.ptr);
+    }
+
+    template <typename _Out_Ptr = _Ty>
+    const _Out_Ptr* GetRawPtrConst() const
+    {
+        return (const _Out_Ptr*)(this->_ptr.ptr);
     }
 };
 
