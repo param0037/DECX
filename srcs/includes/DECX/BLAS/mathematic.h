@@ -66,6 +66,12 @@ namespace de
 
         _DECX_API_ de::DH Atan(de::Matrix& src, de::Matrix& dst);
     }
+
+    namespace blas{
+        namespace cpu{
+            _DECX_API_ void GQRF(de::Matrix& src, de::Matrix& Q, de::Matrix& R);
+        }
+    }
 }
 
 

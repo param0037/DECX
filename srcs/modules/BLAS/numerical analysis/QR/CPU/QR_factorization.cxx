@@ -31,61 +31,19 @@
 #include "../QR_factorization.h"
 #include "Basic_process/transpose/CPU/transpose2D_config.h"
 #include "../../../../core/thread_management/thread_arrange.h"
+#include "householder_reflector.h"
+#include "blocked_GQR_planner.h"
+
 
 static decx::Ptr2D_Info<float> z;
 
-static void Col_HouseHolder_proc_fp32(const float* p_col, const uint32_t len, const uint32_t local_idx, float* V_col)
-{
-    float sum = 0, norm2_post_x0 = 0;
-    for (int i = local_idx; i < len; ++i){
-        const float x = p_col[i];
-        sum += x;
-        if (i > local_idx)
-            norm2_post_x0 += x * x;
-    }
-    if (fabs(sum) > 1e-3){
-        const float x0 = p_col[local_idx];
-        const float sign = (x0 < 0) ? 1 : -1;
-        V_col[local_idx] = x0 - sign * sqrt(norm2_post_x0 + x0 * x0);
-        
-        // normalize
-        const float norm2_v = sqrt(norm2_post_x0 + V_col[local_idx] * V_col[local_idx]);
-        for (int i = local_idx; i < len; ++i){
-            V_col[local_idx] = V_col[local_idx] / norm2_v;
-        }
-    }
-}
 
 // Transposed, col is row, row is col
 static void Blocked_QR_HouseHolder_fp32(const float* src, const uint2 panel_dims, const uint32_t panel_pitch,
     float* V, float* W, uint2* res_dims, const uint32_t pitch_IWY)
 {
     for (int i = 0; i < panel_dims.x; ++i){
-        Col_HouseHolder_proc_fp32(src + i * panel_pitch, panel_dims.y, i, V + i * panel_pitch);
-        // Calculate W
-        if (i == 0){
-            for (int k = 0; k < panel_dims.y; ++k){
-                W[k] = V[k] * 2.0;
-            }
-            // Make z an I matrix
-            for (int j = 0; j < panel_dims.y; ++j){
-                z._ptr.ptr[j * z._dims.x + j] = 1.0;
-            }
-        }
-        else{
-            const float* p_V_col_last = V + (i - 1) * panel_pitch;
-            float* p_W_col = W + i * panel_pitch;
-            const float* p_V_col = p_V_col_last + panel_pitch;
-
-            for (int j = 0; j < panel_dims.y; ++j){
-                float* p_z_col = z._ptr.ptr + j * z._dims.x;
-                const float multiplier = p_V_col_last[j];
-                for (int k = 0; k < panel_dims.y; ++k){
-                    p_z_col[k] -= multiplier * p_z_col[k];
-                    p_W_col[k] = 2.0 * p_z_col[k] * p_V_col[k];
-                }
-            }
-        }
+        decx::blas::householder_calc_v8_fp32(src + ((i >> 3) << 3), V + ((i >> 3) << 3), panel_dims.y - i, i);
     }
 }
 
@@ -97,27 +55,31 @@ _DECX_API_ void de::blas::cpu::GQRF(de::Matrix& src, de::Matrix& Q, de::Matrix& 
     decx::_Matrix* _Q = dynamic_cast<decx::_Matrix*>(&Q);
     decx::_Matrix* _R = dynamic_cast<decx::_Matrix*>(&R);
 
-    const uint32_t src_pitch = decx::utils::align<uint32_t>(_src->Height(), 8);
-    const uint2 src_dims = make_uint2(_src->Height(), _src->Width());
-    decx::PtrInfo<float> buffer;
-    decx::alloc::_host_virtual_page_malloc(&buffer, src_pitch * src_dims.y * sizeof(float));
+    decx::blas::Blocked_GQR_planner<float> _planner;
 
-    const uint32_t block_dim = 4;
-
-    const uint2 z_dims = make_uint2(decx::utils::align<uint32_t>(_src->Width(), 8), _src->Width());
-    decx::alloc::_host_virtual_page_malloc(&z._ptr, z_dims.x * z_dims.y * sizeof(float));
-    z._dims = z_dims;
-
-    // Transpose and store to buffer
-    decx::blas::_cpu_transpose_config tp_config;
     decx::utils::_thr_1D t1D(decx::cpu::_get_permitted_concurrency());
-    tp_config.config(sizeof(float), decx::cpu::_get_permitted_concurrency(), src_dims, handle);
-    tp_config.transpose_4b_caller((float*)_src->Mat.ptr, buffer.ptr, _src->Pitch(), src_pitch, &t1D);
 
-    for (int32_t i = 0; i < src_dims.x / block_dim; ++i)
-    {
+    _planner.Config(make_uint2(3, _src->Height()), handle);
+    
+    for (int i = 0; i < _src->Width() / 3; ++i) {
+        if (i == 0) {
+            // Flush buffers
+            _planner.FlushAllTiles();
 
+            // // Load to panel
+            _planner.LoadSrcTile(_src->Mat.GetRawPtr<float>(), i, _src->Pitch(), &t1D);
+
+            // // Calculate block householder
+            _planner.Process_HouseHolder();
+        }
     }
 
-    decx::alloc::_host_virtual_page_dealloc(&buffer);
+    const float* V = _planner.GetV();
+    // const float* V = _planner.GetTile();
+    for (int j = 0; j < 3; ++j) {
+        for (int i = 0; i < _src->Height(); ++i) {
+            printf("%f, ", V[j * 8 + i]);
+        }
+        printf("\n");
+    }
 }

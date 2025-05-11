@@ -30,23 +30,78 @@
 
 #include <basic.h>
 #include <vector_defines.h>
+#include <allocators.h>
+#include <SIMD/intrinsics_ops.h>
+#include <Basic_process/transpose/CPU/transpose2D_config.h>
 
 
 namespace decx
 {
-    namespace blas{
-        class Blocked_GQRF_planner;
-    }
+namespace blas
+{
+    template <typename _data_type>
+    class Blocked_GQR_planner;
+}
 }
 
 
-class decx::blas::Blocked_GQRF_planner
+template <typename _data_type>
+class decx::blas::Blocked_GQR_planner
 {
 private:
-    uint32_t _block_dim;
-    uint2 _src_dims;
+    uint2 _block_dims;
 
-public:
+    uint32_t _align_bytes;
+
+    decx::Ptr2D_Info<_data_type> _src_tile;
+    uint64_t _tile_size;
+    
+    // Matrix combined with colums of Householder reflectors
+    decx::Ptr2D_Info<_data_type> _V_tile;
+    decx::Ptr2D_Info<_data_type> _W_tile;
+
+
+    decx::PtrInfo<void> _simd_post_masks;
+
+    decx::blas::_cpu_transpose_config _tp_ldg_config;
+
+private:
+    void Process_SingleCol_HH(const float* __restrict p_col,
+        float* __restrict p_V,
+        const uint32_t local_col_id, const uint32_t proc_len_v1);
+
+
+    int32_t GetPostMask(const uint32_t L_front, void* p_in) const;
     
 
+    void ApplyRefactors(const float* Vk, float* panel_next, const uint32_t local_col_id, const uint2 submat_dims);
+
+public:
+    Blocked_GQR_planner() {
+        memset(this, 0, sizeof(decx::blas::Blocked_GQR_planner<_data_type>));
+    }
+
+
+    void _CRSR_ Config(const uint2 block_dims, de::DH* handle);
+
+
+    void FlushAllTiles();
+
+
+    void LoadSrcTile(const _data_type* src, uint32_t block_id, const uint32_t pitchsrc_v1,
+        decx::utils::_thr_1D* t1D);
+
+
+    void Process_HouseHolder();
+
+
+    const _data_type* GetV() const
+    {
+        return this->_V_tile.GetRawPtrConst();
+    }
+
+    const _data_type* GetTile() const
+    {
+        return this->_src_tile.GetRawPtrConst();
+    }
 };
