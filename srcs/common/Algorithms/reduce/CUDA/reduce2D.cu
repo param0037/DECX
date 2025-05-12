@@ -39,6 +39,8 @@
 #define _CU_REDUCE2D_MEM_ALIGN_1B_ 16
 
 
+#define MODULE_TAG "comm::cuda"
+
 
 template <typename _type_in>
 template <bool _src_from_device>
@@ -294,12 +296,12 @@ void decx::reduce::cuda_reduce2D_1way_configs<_type_in>::generate_configs(const 
     }
     
     if (decx::alloc::_device_malloc(&this->_d_tmp1._ptr, this->_d_tmp1._dims.x * this->_d_tmp1._dims.y * _alloc_typesize, true, S)) {
-        Print_Error_Message(4, DEV_ALLOC_FAIL);
+        DECX_LOG_ERR(DEV_ALLOC_FAIL);
         return;
     }
 
     if (decx::alloc::_device_malloc(&this->_d_tmp2._ptr, this->_d_tmp2._dims.x * this->_d_tmp2._dims.y * _alloc_typesize, true, S)) {
-        Print_Error_Message(4, DEV_ALLOC_FAIL);
+        DECX_LOG_ERR(DEV_ALLOC_FAIL);
         return;
     }
 
@@ -374,12 +376,12 @@ void decx::reduce::cuda_reduce2D_1way_configs<_type_in>::generate_configs(decx::
     this->_d_tmp1._dims = this->_d_tmp2._dims;
 
     if (decx::alloc::_device_malloc(&this->_d_tmp1._ptr, this->_d_tmp1._dims.x * this->_d_tmp1._dims.y * _alloc_typesize, true, S)) {
-        Print_Error_Message(4, DEV_ALLOC_FAIL);
+        DECX_LOG_ERR(DEV_ALLOC_FAIL);
         return;
     }
 
     if (decx::alloc::_device_malloc(&this->_d_tmp2._ptr, this->_d_tmp2._dims.x * this->_d_tmp2._dims.y * _alloc_typesize, true, S)) {
-        Print_Error_Message(4, DEV_ALLOC_FAIL);
+        DECX_LOG_ERR(DEV_ALLOC_FAIL);
         return;
     }
 

@@ -30,6 +30,8 @@
 
 #include "../../../common/Classes/GPU_TensorArray.h"
 
+#define MODULE_TAG "core::class"
+
 void decx::_GPU_TensorArray::_attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, const uint _width, const uint _height, const uint _depth, const uint _tensor_num)
 {
     this->type = _type;
@@ -111,7 +113,7 @@ void decx::_GPU_TensorArray::alloc_data_space()
     }
 
     if (decx::alloc::_device_malloc(&this->TensArr, this->total_bytes, true, S)) {
-        Print_Error_Message(4, "Fail to allocate memory for GPU_TensorArray on device\n");
+        DECX_LOG_ERR("Fail to allocate memory for GPU_TensorArray on device\n");
         exit(-1);
     }
 
@@ -151,7 +153,7 @@ void decx::_GPU_TensorArray::re_alloc_data_space()
     }
 
     if (decx::alloc::_device_realloc(&this->TensArr, this->total_bytes)) {
-        Print_Error_Message(4, "Fail to re-allocate memory for GPU_TensorArray on device\n");
+        DECX_LOG_ERR("Fail to re-allocate memory for GPU_TensorArray on device\n");
         exit(-1);
     }
 

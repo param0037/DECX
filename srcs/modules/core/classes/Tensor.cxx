@@ -31,6 +31,7 @@
 
 #include "../../../common/Classes/Tensor.h"
 
+#define MODULE_TAG "core::class"
 
 void decx::_tensor_layout::_attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, const uint32_t _width,
     const uint32_t _height, const uint32_t _depth)
@@ -99,7 +100,7 @@ void decx::_Tensor::_attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, const 
 void decx::_Tensor::alloc_data_space()
 {
     if (decx::alloc::_host_virtual_page_malloc<void>(&this->Tens, this->total_bytes)) {
-        Print_Error_Message(4, "Tensor malloc failed! Please check if there is enough space in your RAM.");
+        DECX_LOG_ERR("Tensor malloc failed! Please check if there is enough space in your RAM.");
         exit(-1);
     }
 

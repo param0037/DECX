@@ -31,6 +31,7 @@
 
 #include "../../../common/Classes/MatrixArray.h"
 
+#define MODULE_TAG "core::class"
 
 void decx::_MatrixArray::alloc_data_space()
 {
@@ -40,7 +41,7 @@ void decx::_MatrixArray::alloc_data_space()
 
         const uint64_t alloc_bytes = (uint64_t)p_layout->height * (uint64_t)p_layout->pitch;
         if (decx::alloc::_host_virtual_page_malloc<void>(this->MatptrArr[i], alloc_bytes)) {
-            Print_Error_Message(4, "Fail to allocate memory for MatrixArray on host\n");
+            DECX_LOG_ERR("Fail to allocate memory for MatrixArray on host\n");
             return;
         }
     }
@@ -57,7 +58,7 @@ void decx::_MatrixArray::re_alloc_data_space()
 
         const uint64_t alloc_bytes = (uint64_t)p_layout->height * (uint64_t)p_layout->pitch;
         if (decx::alloc::_host_virtual_page_malloc<void>(this->MatptrArr[i], alloc_bytes)) {
-            Print_Error_Message(4, "Fail to allocate memory for MatrixArray on host\n");
+            DECX_LOG_ERR("Fail to allocate memory for MatrixArray on host\n");
             return;
         }
     }

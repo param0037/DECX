@@ -55,6 +55,7 @@ extern "C"{
 }
 #endif
 
+// MODULE_TAG should be defined first
 #define DECX_LOG_ERR(...)       DECX_Log_Console_Exec(LOG_ERROR, MODULE_TAG, __FUNCTION__, __VA_ARGS__)
 #define DECX_LOG_WARN(...)      DECX_Log_Console_Exec(LOG_WARNING, MODULE_TAG, __FUNCTION__, __VA_ARGS__)
 #define DECX_LOG_NOTICE(...)    DECX_Log_Console_Exec(LOG_NOTICE, MODULE_TAG, __FUNCTION__, __VA_ARGS__)

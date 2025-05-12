@@ -32,6 +32,7 @@
 #include "cudaStream_queue.h"
 #include "../allocators.h"
 
+#define MODULE_TAG "core::cuda"
 
 decx::cudaStream_Queue::cudaStream_Queue()
 {
@@ -40,7 +41,7 @@ decx::cudaStream_Queue::cudaStream_Queue()
     
     // allocate host memory (page-locked) for decx::cuda_stream
     if (decx::alloc::_host_virtual_page_malloc(&this->_cuda_stream_arr, _CS_STREAM_Q_INIT_SIZE_ * sizeof(decx::cuda_stream))) {
-        Print_Error_Message(4, "Failed to allocate space for cudaStream on host\n");
+        DECX_LOG_ERR("Failed to allocate space for cudaStream on host\n");
         exit(-1);
     }
 }
@@ -54,7 +55,7 @@ decx::cuda_stream* decx::cudaStream_Queue::add_stream_physical(const int flag)
         // physically alloc space for new area
         if (decx::alloc::_alloc_Hv(&(tmp_ptr.block),
             (this->true_capacity + _CS_STREAM_Q_INIT_SIZE_) * sizeof(decx::cuda_stream))) {
-            Print_Error_Message(4, "Failed to allocate space for cudaStream on host\n");
+            DECX_LOG_ERR("Failed to allocate space for cudaStream on host\n");
             exit(-1);
         }
         tmp_ptr.ptr = reinterpret_cast<decx::cuda_stream*>(tmp_ptr.block->_ptr);

@@ -42,6 +42,7 @@ set(DECX_SUBBUILD_BIN_DIR ${CMAKE_BINARY_DIR}/${CMAKE_CXX_COMPILER_ID}/${_DECX_H
 cmake_host_system_information(RESULT HOST_OS_NAME QUERY OS_NAME)
 message(STATUS "=========================== Building on host, OS name = ${HOST_OS_NAME} ===========================")
 
+include_directories("${DECX_WORLD_ABS_DIR}/srcs/common")
 
 # Set library output path
 set(LIBRARY_OUTPUT_PATH ${DECX_WORLD_ABS_DIR}/build/bin/${_DECX_HOST_ARCH_})

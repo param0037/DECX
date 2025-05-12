@@ -31,6 +31,7 @@
 
 #include "DP2D_1way.cuh"
 
+#define MODULE_TAG "blas::cuda"
 
 // --------------------------------------------- DP2D-1way -----------------------------------------------
 
@@ -114,7 +115,7 @@ void decx::blas::cuda_DP2D_configs<_type_in>::generate_config(const uint2 proc_d
                 _is_reduce_h ? this->_proc_dims.y : this->_proc_dims.x, _CU_REDUCE1D_MEM_ALIGN_4B_) * _CU_REDUCE1D_MEM_ALIGN_4B_ * sizeof(_type_in);
         }
         if (decx::alloc::_device_malloc(&this->_dev_dst, _alloc_dst_size, true, S)) {
-            Print_Error_Message(4, DEV_ALLOC_FAIL);
+            DECX_LOG_ERR(DEV_ALLOC_FAIL);
             return;
         }*/
         this->_post_proc_needed = false;
@@ -134,7 +135,7 @@ void decx::blas::cuda_DP2D_configs<_type_in>::alloc_buffers(decx::cuda_stream* S
 {
     if (decx::alloc::_device_malloc(&this->_dev_A, this->_dev_mat_dims.x * this->_dev_mat_dims.y * sizeof(_type_in), true, S) ||
         decx::alloc::_device_malloc(&this->_dev_B, this->_dev_mat_dims.x * this->_dev_mat_dims.y * sizeof(_type_in), true, S)) {
-        Print_Error_Message(4, DEV_ALLOC_FAIL);
+        DECX_LOG_ERR(DEV_ALLOC_FAIL);
         return;
     }
     // Allocation for dst
@@ -149,7 +150,7 @@ void decx::blas::cuda_DP2D_configs<_type_in>::alloc_buffers(decx::cuda_stream* S
                 _is_reduce_h ? this->_proc_dims.y : this->_proc_dims.x, _CU_REDUCE1D_MEM_ALIGN_4B_) * sizeof(_type_in);
         }
         if (decx::alloc::_device_malloc(&this->_dev_dst, _alloc_dst_size, true, S)) {
-            Print_Error_Message(4, DEV_ALLOC_FAIL);
+            DECX_LOG_ERR(DEV_ALLOC_FAIL);
             return;
         }
     }

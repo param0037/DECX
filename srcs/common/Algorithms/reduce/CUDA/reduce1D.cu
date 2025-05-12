@@ -32,6 +32,8 @@
 #include "reduce_callers.cuh"
 #include <allocators.h>
 
+#define MODULE_TAG "comm::cuda"
+
 
 template <typename _type_in, typename _type_postproc>
 bool decx::reduce::reduce2D_flatten_postproc_configs_gen(decx::reduce::cuda_reduce1D_configs<_type_postproc>*   _configs_ptr,
@@ -190,12 +192,12 @@ void decx::reduce::cuda_reduce1D_configs<_type_in>::generate_configs(const uint6
     }
 
     if (decx::alloc::_device_malloc(&this->_d_tmp1, _aligned_proc_len * sizeof(_type_in), true, S)) {
-        Print_Error_Message(4, DEV_ALLOC_FAIL);
+        DECX_LOG_ERR(DEV_ALLOC_FAIL);
         return;
     }
 
     if (decx::alloc::_device_malloc(&this->_d_tmp2, _first_grid_len * sizeof(_type_in), true, S)) {
-        Print_Error_Message(4, DEV_ALLOC_FAIL);
+        DECX_LOG_ERR(DEV_ALLOC_FAIL);
         return;
     }
 
@@ -241,12 +243,12 @@ void decx::reduce::cuda_reduce1D_configs<_type_in>::generate_configs(decx::PtrIn
     this->_proc_src = dev_src.ptr;
 
     if (decx::alloc::_device_malloc(&this->_d_tmp1, _first_grid_len * sizeof(_type_in), true, S)) {
-        Print_Error_Message(4, DEV_ALLOC_FAIL);
+        DECX_LOG_ERR(DEV_ALLOC_FAIL);
         return;
     }
 
     if (decx::alloc::_device_malloc(&this->_d_tmp2, _first_grid_len * sizeof(_type_in), true, S)) {
-        Print_Error_Message(4, DEV_ALLOC_FAIL);
+        DECX_LOG_ERR(DEV_ALLOC_FAIL);
         return;
     }
 

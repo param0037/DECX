@@ -38,28 +38,29 @@
 #define _CUDA_SCAN2D_ALIGN_4B_ 4
 #define _CUDA_SCAN2D_ALIGN_1B_ 16
 
+#define MODULE_TAG "comm::cuda"
 
 namespace decx
 {
-    namespace scan
+namespace scan
+{
+    struct cuda_scan2D_key_param_configs
     {
-        struct cuda_scan2D_key_param_configs
-        {
-            /*
-            * Denotes the memory alignment of source matrix and destinated matrix
-            */
-            uint32_t _align_src, _align_dst;
+        /*
+        * Denotes the memory alignment of source matrix and destinated matrix
+        */
+        uint32_t _align_src, _align_dst;
 
-            /*
-            * Packaged processed vector length
-            */
-            uint32_t proc_VL_H, proc_VL_V;
-            uint32_t _auxiliary_proc_V;
+        /*
+        * Packaged processed vector length
+        */
+        uint32_t proc_VL_H, proc_VL_V;
+        uint32_t _auxiliary_proc_V;
 
-            template <typename _type_in, typename _type_out>
-            void _generate_configs(const bool _is_full_scan);
-        };
-    }
+        template <typename _type_in, typename _type_out>
+        void _generate_configs(const bool _is_full_scan);
+    };
+}
 }
 
 
@@ -139,17 +140,17 @@ void decx::scan::cuda_scan2D_config::generate_scan_config(const uint2 _proc_dims
     this->_dev_tmp._dims = _dev_dst._dims;
 
     if (decx::alloc::_device_malloc(&this->_dev_src._ptr, this->_dev_src._dims.x * this->_dev_src._dims.y * sizeof(_type_in), true, S)) {
-        Print_Error_Message(4, DEV_ALLOC_FAIL);
+        DECX_LOG_ERR(DEV_ALLOC_FAIL);
         return;
     }
     if (decx::alloc::_device_malloc(&this->_dev_dst._ptr, this->_dev_dst._dims.x * this->_dev_dst._dims.y * sizeof(_type_out), true, S)) {
-        Print_Error_Message(4, DEV_ALLOC_FAIL);
+        DECX_LOG_ERR(DEV_ALLOC_FAIL);
         return;
     }
 
     if (std::is_same<_type_in, uint8_t>::value) {
         if (decx::alloc::_device_malloc(&this->_dev_tmp._ptr, this->_dev_tmp._dims.x * this->_dev_tmp._dims.y * sizeof(de::Half), true, S)) {
-            Print_Error_Message(4, DEV_ALLOC_FAIL);
+            DECX_LOG_ERR(DEV_ALLOC_FAIL);
             return;
         }
     }
@@ -158,7 +159,7 @@ void decx::scan::cuda_scan2D_config::generate_scan_config(const uint2 _proc_dims
         this->_scan_v_grid.x * this->_scan_v_grid.y);
 
     if (decx::alloc::_device_malloc(&this->_dev_status, _larger_status_size * sizeof(float4), true, S)) {
-        Print_Error_Message(4, DEV_ALLOC_FAIL);
+        DECX_LOG_ERR(DEV_ALLOC_FAIL);
         return;
     }
 }
@@ -201,7 +202,7 @@ void decx::scan::cuda_scan2D_config::generate_scan_config(decx::Ptr2D_Info<void>
 
         if (std::is_same<_type_in, uint8_t>::value) { 
             if (decx::alloc::_device_malloc(&this->_dev_tmp._ptr, this->_dev_tmp._dims.x * this->_dev_tmp._dims.y * sizeof(ushort), true, S)) {
-                Print_Error_Message(4, DEV_ALLOC_FAIL);
+                DECX_LOG_ERR(DEV_ALLOC_FAIL);
                 return;
             }
         }
@@ -211,7 +212,7 @@ void decx::scan::cuda_scan2D_config::generate_scan_config(decx::Ptr2D_Info<void>
         this->_scan_v_grid.x * this->_scan_v_grid.y);
 
     if (decx::alloc::_device_malloc(&this->_dev_status, _larger_status_size * sizeof(float4), true, S)) {
-        Print_Error_Message(4, DEV_ALLOC_FAIL);
+        DECX_LOG_ERR(DEV_ALLOC_FAIL);
         return;
     }
 }

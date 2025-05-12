@@ -32,7 +32,7 @@
 #include "scan_caller.h"
 #include "../../../modules/core/allocators.h"
 
-
+#define MODULE_TAG "comm::cuda"
 
 template <uint32_t _align, typename _type_in, typename _type_out>
 void decx::scan::cuda_scan1D_config::generate_scan_config(const uint64_t _proc_length, decx::cuda_stream* S, const int scan_mode)
@@ -44,23 +44,23 @@ void decx::scan::cuda_scan1D_config::generate_scan_config(const uint64_t _proc_l
     this->_block_num = decx::utils::ceil<uint64_t>(this->_length / _align, _WARP_SCAN_BLOCK_SIZE_);
 
     if (decx::alloc::_device_malloc(&this->_dev_dst, this->_length * sizeof(_type_out), true, S)) {
-        Print_Error_Message(4, DEV_ALLOC_FAIL);
+        DECX_LOG_ERR(DEV_ALLOC_FAIL);
         return;
     }
 
     if (decx::alloc::_device_malloc(&this->_dev_tmp, this->_length * sizeof(de::Half), true, S)) {
-        Print_Error_Message(4, DEV_ALLOC_FAIL);
+        DECX_LOG_ERR(DEV_ALLOC_FAIL);
         return;
     }
 
 
     if (decx::alloc::_device_malloc(&this->_dev_status, this->_block_num * sizeof(float4), true, S)) {
-        Print_Error_Message(4, DEV_ALLOC_FAIL);
+        DECX_LOG_ERR(DEV_ALLOC_FAIL);
         return;
     }
 
     if (decx::alloc::_device_malloc(&this->_dev_src, this->_length * sizeof(_type_in), true, S)) {
-        Print_Error_Message(4, DEV_ALLOC_FAIL);
+        DECX_LOG_ERR(DEV_ALLOC_FAIL);
         return;
     }
 }
@@ -88,13 +88,13 @@ void decx::scan::cuda_scan1D_config::generate_scan_config(decx::PtrInfo<void>   
     this->_dev_src = dev_src;
     if (std::is_same<_type_in, uint8_t>::value) {
         if (decx::alloc::_device_malloc(&this->_dev_tmp, this->_length * sizeof(de::Half), true, S)) {
-            Print_Error_Message(4, DEV_ALLOC_FAIL);
+            DECX_LOG_ERR(DEV_ALLOC_FAIL);
             return;
         }
     }
 
     if (decx::alloc::_device_malloc(&this->_dev_status, this->_block_num * sizeof(float4), true, S)) {
-        Print_Error_Message(4, DEV_ALLOC_FAIL);
+        DECX_LOG_ERR(DEV_ALLOC_FAIL);
         return;
     }
 }

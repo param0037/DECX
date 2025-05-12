@@ -32,6 +32,8 @@
 #include "DP1D_config.cuh"
 
 
+#define MODULE_TAG "blas::cuda"
+
 
 template <typename _type_in>
 decx::blas::cuda_DP1D_configs<_type_in>::cuda_DP1D_configs()
@@ -73,7 +75,7 @@ decx::blas::cuda_DP1D_configs<_type_in>::cuda_DP1D_configs(const uint64_t _proc_
     if (decx::alloc::_device_malloc(&this->_dev_A, _proc_len_v * _proc_align * sizeof(_type_in), true, S) ||
         decx::alloc::_device_malloc(&this->_dev_B, _proc_len_v * _proc_align * sizeof(_type_in), true, S)) {
 
-        Print_Error_Message(4, DEV_ALLOC_FAIL);
+        DECX_LOG_ERR(DEV_ALLOC_FAIL);
         return;
     }
 
@@ -98,7 +100,7 @@ decx::blas::cuda_DP1D_configs<_type_in>::cuda_DP1D_configs(const uint64_t _proc_
     }
     else {
         if (decx::alloc::_device_malloc(&this->_dev_dst, 1 * ele_size_dst)) {
-            Print_Error_Message(4, DEV_ALLOC_FAIL);
+            DECX_LOG_ERR(DEV_ALLOC_FAIL);
             return;
         }
         this->_post_proc_needed = false;
@@ -207,7 +209,7 @@ decx::blas::cuda_DP1D_configs<_type_in>::cuda_DP1D_configs(decx::PtrInfo<void> d
     }
     else {
         if (decx::alloc::_device_malloc(&this->_dev_dst, 1 * ele_size_dst)) {
-            Print_Error_Message(4, DEV_ALLOC_FAIL);
+            DECX_LOG_ERR(DEV_ALLOC_FAIL);
             return;
         }
         this->_post_proc_needed = false;

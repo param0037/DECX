@@ -31,6 +31,7 @@
 
 #include "thread_pool.h"
 
+#define MODULE_TAG "core::cpu"
 
 void decx::ThreadPool::_find_task_queue_id(size_t* id)
 {
@@ -155,7 +156,7 @@ decx::ThreadPool::ThreadPool(const int thread_num, const bool start_at_begin)
 void decx::ThreadPool::add_thread(const int add_thread_num)
 {
     if (this->current_thread_num + add_thread_num > this->_max_thr_num) {
-        Print_Error_Message(4, "Error : there are already too many threads in the pool\n");
+        DECX_LOG_ERR("there are already too many threads in the pool\n");
         return;
     }
     else {

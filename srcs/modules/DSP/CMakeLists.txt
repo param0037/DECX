@@ -82,8 +82,6 @@ endif()
 include_directories("${DECX_WORLD_ABS_DIR}/srcs/modules/core/")
 include_directories("${DECX_WORLD_ABS_DIR}/srcs/common/")
 
-include_directories("${DECX_WORLD_ABS_DIR}/srcs/modules/core/")
-include_directories("${DECX_WORLD_ABS_DIR}/srcs/common/")
 
 if(_DECX_CUDA_MODULE_)
     include(DECX_DSP_CUDA.cmake)

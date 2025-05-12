@@ -32,6 +32,7 @@
 #include "Image_GUI.h"
 #include "Image_IO.h"
 
+#define MODULE_TAG "cv::cpu"
 
 decx::vis::ImgShow_workplace::ImgShow_workplace()
 {
@@ -52,7 +53,7 @@ int decx::vis::ImgShow_workplace::Create_from_file_path(const char* img_path, co
 {
     this->image = IMG_Load(img_path);
     if (this->image == NULL) {
-        Print_Error_Message(4, IMAGE_LOAD_FAIL);
+        DECX_LOG_ERR(IMAGE_LOAD_FAIL);
         return -1;
     }
 

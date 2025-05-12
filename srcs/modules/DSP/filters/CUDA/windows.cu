@@ -33,6 +33,7 @@
 #include "../../../core/cudaStream_management/cudaEvent_package.h"
 #include "../../../core/cudaStream_management/cudaStream_package.h"
 
+#define MODULE_TAG "dsp::cuda"
 
 __global__ void
 decx::dsp::GPUK::cu_Gaussian_Window1D_cpl32(const float4* __restrict         src,
@@ -429,7 +430,7 @@ de::dsp::cuda::Gaussian_Window2D(
     else {
         if (!(p < 1.f && p > -1.f)) {
             decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_INVALID_PARAM, INVALID_PARAM);
-            Print_Error_Message(4, INVALID_PARAM);
+            DECX_LOG_ERR(INVALID_PARAM);
             return handle;
         }
         decx::dsp::GPUK::cu_Gaussian_Window2D_cpl32 << <grid, gpu_thread, 0, S->get_raw_stream_ref() >> > (

@@ -32,6 +32,9 @@
 #include "DP2D_1way_callers.cuh"
 
 
+#define MODULE_TAG "blas::cuda"
+
+
 template <bool _is_reduce_h>
 const void* decx::blas::cuda_DP2D_1way_fp32_caller_Async(decx::blas::cuda_DP2D_configs<float>* _configs, decx::cuda_stream* S)
 {
@@ -220,7 +223,7 @@ void decx::blas::matrix_dot_1way_fp32(decx::_Matrix* A, decx::_Matrix* B, decx::
     const void* res_ptr = decx::blas::cuda_DP2D_1way_fp32_caller_Async<_is_reduce_h>(&_configs, S);
 
     if (res_ptr == NULL) {
-        Print_Error_Message(4, INTERNAL_ERROR);
+        DECX_LOG_ERR(DEV_ALLOC_FAIL);
         return;
     }
     const uint64_t _cpy_size = (_is_reduce_h ? A->Height() : A->Width()) * sizeof(float);
@@ -271,7 +274,7 @@ void decx::blas::matrix_dot_1way_fp16(decx::_Matrix* A, decx::_Matrix* B, decx::
     const void* res_ptr = decx::blas::cuda_DP2D_1way_fp16_caller_Async<_is_reduce_h>(&_configs, _fp16_accu, S);
 
     if (res_ptr == NULL) {
-        Print_Error_Message(4, INTERNAL_ERROR);
+        DECX_LOG_ERR("res_ptr is NULL");
         return;
     }
     const uint8_t _dst_ele_size = _fp16_accu == decx::Fp16_Accuracy_Levels::Fp16_Accurate_L1 ? sizeof(float) : sizeof(de::Half);

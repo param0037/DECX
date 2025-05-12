@@ -30,6 +30,7 @@
 
 #include "../../../common/Classes/TensorArray.h"
 
+#define MODULE_TAG "core::class"
 
 void decx::_TensorArray::_attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, const uint _width, const uint _height, const uint _depth, const uint _tensor_num)
 {
@@ -76,14 +77,14 @@ uint decx::_TensorArray::TensorNum() const
 void decx::_TensorArray::alloc_data_space()
 {
     if (decx::alloc::_host_virtual_page_malloc<void>(&this->TensArr, this->total_bytes)) {
-        Print_Error_Message(4, "Fail to allocate memory for TensorArray on host\n");
+        DECX_LOG_ERR("Fail to allocate memory for TensorArray on host\n");
         exit(-1);
     }
 
     memset(this->TensArr.ptr, 0, this->total_bytes);
 
     if (decx::alloc::_host_virtual_page_malloc<void*>(&this->TensptrArr, this->tensor_num * sizeof(void*))) {
-        Print_Error_Message(4, "Fail to allocate memory for TensorArray on host\n");
+        DECX_LOG_ERR("Fail to allocate memory for TensorArray on host\n");
         return;
     }
     this->TensptrArr.ptr[0] = this->TensArr.ptr;
@@ -97,14 +98,14 @@ void decx::_TensorArray::alloc_data_space()
 void decx::_TensorArray::re_alloc_data_space()
 {
     if (decx::alloc::_host_virtual_page_realloc<void>(&this->TensArr, this->total_bytes)) {
-        Print_Error_Message(4, "Fail to allocate memory for TensorArray on host\n");
+        DECX_LOG_ERR("Fail to allocate memory for TensorArray on host\n");
         exit(-1);
     }
 
     memset(this->TensArr.ptr, 0, this->total_bytes);
 
     if (decx::alloc::_host_virtual_page_realloc<void*>(&this->TensptrArr, this->tensor_num * sizeof(void*))) {
-        Print_Error_Message(4, "Fail to allocate memory for TensorArray on host\n");
+        DECX_LOG_ERR("Fail to allocate memory for TensorArray on host\n");
         return;
     }
     this->TensptrArr.ptr[0] = this->TensArr.ptr;

@@ -31,6 +31,8 @@
 
 #include "compare.h"
 
+#define MODULE_TAG "comm::cpu"
+
 
 de::DH de::cpu::Max(de::Matrix& src, void* res)
 {
@@ -86,7 +88,7 @@ de::DH de::cpu::Max(de::Vector& src, void* res)
     if (!decx::cpu::_is_CPU_init()) {
         decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CPU_not_init,
             CPU_NOT_INIT);
-        Print_Error_Message(4, CPU_NOT_INIT);
+            DECX_LOG_ERR(CPU_NOT_INIT);
         return handle;
     }
     if (res == NULL) {
@@ -179,7 +181,7 @@ de::DH de::cpu::Min(de::Vector& src, void* res)
     if (!decx::cpu::_is_CPU_init()) {
         decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CPU_not_init,
             CPU_NOT_INIT);
-        Print_Error_Message(4, CPU_NOT_INIT);
+            DECX_LOG_ERR(CPU_NOT_INIT);
         return handle;
     }
     if (res == NULL) {

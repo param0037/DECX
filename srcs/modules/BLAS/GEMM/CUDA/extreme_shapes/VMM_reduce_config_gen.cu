@@ -31,6 +31,7 @@
 #include "../../../Dot product/CUDA/2D/DP2D_1way.cuh"
 #include "VMM_callers.cuh"
 
+#define MODULE_TAG "blas::cuda"
 
 template <bool _is_reduce_h>
 void decx::blas::generate_VMM_config_fp32(decx::blas::cuda_DP2D_configs<float>* _configs, const uint2 proc_dims, decx::cuda_stream* S)
@@ -38,12 +39,12 @@ void decx::blas::generate_VMM_config_fp32(decx::blas::cuda_DP2D_configs<float>* 
     _configs->generate_config<_is_reduce_h>(proc_dims, S);
 
     if (decx::alloc::_device_malloc(&(_configs->_dev_A), _configs->_dev_mat_dims.x * _configs->_dev_mat_dims.y * sizeof(float), true, S)) {
-        Print_Error_Message(4, DEV_ALLOC_FAIL);
+        DECX_LOG_ERR(DEV_ALLOC_FAIL);
         return;
     }
     if (decx::alloc::_device_malloc(&(_configs->_dev_B), decx::utils::align(_is_reduce_h ? proc_dims.x : proc_dims.y, _CU_REDUCE1D_MEM_ALIGN_4B_)
         * sizeof(float), true, S)) {
-        Print_Error_Message(4, DEV_ALLOC_FAIL);
+        DECX_LOG_ERR(DEV_ALLOC_FAIL);
         return;
     }
     if (!_configs->postproc_needed()) {
@@ -51,7 +52,7 @@ void decx::blas::generate_VMM_config_fp32(decx::blas::cuda_DP2D_configs<float>* 
         _alloc_dst_size = decx::utils::align<uint32_t>(_is_reduce_h ? proc_dims.y : proc_dims.x, _CU_REDUCE1D_MEM_ALIGN_4B_) * sizeof(float);
 
         if (decx::alloc::_device_malloc(&(_configs->_dev_dst), _alloc_dst_size, true, S)) {
-            Print_Error_Message(4, DEV_ALLOC_FAIL);
+            DECX_LOG_ERR(DEV_ALLOC_FAIL);
             return;
         }
     }
@@ -68,12 +69,12 @@ void decx::blas::generate_VMM_config_fp16(decx::blas::cuda_DP2D_configs<de::Half
     _configs->generate_config<_is_reduce_h>(proc_dims, S, _fp16_accu);
 
     if (decx::alloc::_device_malloc(&(_configs->_dev_A), _configs->_dev_mat_dims.x * _configs->_dev_mat_dims.y * sizeof(de::Half), true, S)) {
-        Print_Error_Message(4, DEV_ALLOC_FAIL);
+        DECX_LOG_ERR(DEV_ALLOC_FAIL);
         return;
     }
     if (decx::alloc::_device_malloc(&(_configs->_dev_B), decx::utils::align(_is_reduce_h ? proc_dims.x : proc_dims.y, _CU_REDUCE1D_MEM_ALIGN_4B_)
         * sizeof(de::Half), true, S)) {
-        Print_Error_Message(4, DEV_ALLOC_FAIL);
+        DECX_LOG_ERR(DEV_ALLOC_FAIL);
         return;
     }
     if (!_configs->postproc_needed()) {
@@ -85,7 +86,7 @@ void decx::blas::generate_VMM_config_fp16(decx::blas::cuda_DP2D_configs<de::Half
             _alloc_dst_size = decx::utils::align<uint32_t>(proc_dims.x, _CU_REDUCE1D_MEM_ALIGN_4B_) * sizeof(de::Half);
         }
         if (decx::alloc::_device_malloc(&_configs->_dev_dst, _alloc_dst_size, true, S)) {
-            Print_Error_Message(4, DEV_ALLOC_FAIL);
+            DECX_LOG_ERR(DEV_ALLOC_FAIL);
             return;
         }
     }

@@ -28,7 +28,7 @@
 * DEALINGS IN THE SOFTWARE.
 */
 
-#include "log_console.h"
+#include <log_console.h>
 #include <stdarg.h>
 #include <time.h>
 

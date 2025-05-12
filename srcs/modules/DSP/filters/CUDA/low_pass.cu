@@ -31,6 +31,7 @@
 
 #include "low_pass.cuh"
 
+#define MODULE_TAG "dsp::cuda"
 
 __global__ void
 decx::dsp::GPUK::cu_ideal_LP1D_cpl32(const float4* __restrict src, 
@@ -104,7 +105,7 @@ de::dsp::cuda::LowPass1D_Ideal(de::GPU_Vector& src, de::GPU_Vector& dst, const s
 
     const size_t max_freq = _src->length / 2;
     if (cutoff_frequency > max_freq) {
-        Print_Error_Message(4, INVALID_PARAM);
+        DECX_LOG_ERR(INVALID_PARAM);
         decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_INVALID_PARAM, INVALID_PARAM);
         return handle;
     }
@@ -148,7 +149,7 @@ de::dsp::cuda::LowPass2D_Ideal(de::GPU_Matrix& src, de::GPU_Matrix& dst, const d
 
     const uint2 max_freq = make_uint2(_src->Width() / 2, _src->Height() / 2);
     if (cutoff_frequency.x > max_freq.x || cutoff_frequency.y > max_freq.y) {
-        Print_Error_Message(4, INVALID_PARAM);
+        DECX_LOG_ERR(INVALID_PARAM);
         decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_INVALID_PARAM, INVALID_PARAM);
         return handle;
     }

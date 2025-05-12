@@ -38,6 +38,7 @@
 #define _VMM_MAT_MUL_VEC_ true
 #define _VMM_VEC_MUL_MAT_ false
 
+#define MODULE_TAG "blas::cuda"
 
 namespace decx
 {
@@ -81,7 +82,7 @@ static void decx::blas::_VMM_caller_fp32(decx::_Vector* vec, decx::_Matrix* mat,
 
     const void* res_ptr = decx::_VMM_fp32_caller_async<_is_reduce_h>(&_configs, S);
     if (res_ptr == NULL) {
-        Print_Error_Message(4, INTERNAL_ERROR);
+        DECX_LOG_ERR(DEV_ALLOC_FAIL);
         return;
     }
     const uint64_t _cpy_size = (_is_reduce_h ? mat->Height() : mat->Width()) * sizeof(float);
@@ -124,7 +125,7 @@ static void decx::blas::_VMM_caller_fp16(decx::_Vector* vec, decx::_Matrix* mat,
 
     const void* res_ptr = decx::_VMM_fp16_caller_async<_is_reduce_h>(&_configs, S, _fp16_accu);
     if (res_ptr == NULL) {
-        Print_Error_Message(4, INTERNAL_ERROR);
+        DECX_LOG_ERR(DEV_ALLOC_FAIL);
         return;
     }
     const uint64_t _cpy_size = (_is_reduce_h ? mat->Height() : mat->Width()) * 

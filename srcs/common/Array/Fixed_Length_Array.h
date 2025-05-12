@@ -35,7 +35,9 @@
 
 #include "../basic.h"
 
-
+#ifndef MODULE_TAG
+#define MODULE_TAG ""
+#endif
 
 namespace decx
 {
@@ -186,7 +188,7 @@ decx::utils::Fixed_Length_Array<_Ty>::Fixed_Length_Array(const size_t length)
     this->_data = NULL;
     this->_data = (_Ty*)malloc(length * sizeof(_Ty));
     if (this->_data == NULL) {
-        Print_Error_Message(4, "Error : Internal error\n");
+        DECX_LOG_ERR("malloc failed, this->_data is NULL");
         exit(-1);
     }
     this->_memory_capacity = length;
@@ -209,7 +211,7 @@ void decx::utils::Fixed_Length_Array<_Ty>::define_capacity(const size_t length)
     this->_data = (_Ty*)malloc(length * sizeof(_Ty));
 
     if (this->_data == NULL) {
-        Print_Error_Message(4, "Error : Internal error\n");
+        DECX_LOG_ERR("malloc failed, this->_data is NULL");
         exit(-1);
     }
     this->_memory_capacity = length;
@@ -249,7 +251,7 @@ template<typename... Args>
 void decx::utils::Fixed_Length_Array<_Ty>::emplace_back(Args&&... args)
 {
     if (!this->check_vaild_space_req()) {
-        Print_Error_Message(4, "Error : Internal error\n");
+        DECX_LOG_ERR("Buffer already full, with allocated length=%d current length=%d", this->_memory_capacity, this->_current_length);
         exit(-1);
     }
     if (this->_current_length == 0) {

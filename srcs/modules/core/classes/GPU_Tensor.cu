@@ -31,6 +31,7 @@
 
 #include "../../../common/Classes/GPU_Tensor.h"
 
+#define MODULE_TAG "core::class"
 
 void decx::_tensor_layout::_attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, const uint32_t _width,
     const uint32_t _height, const uint32_t _depth)
@@ -128,7 +129,7 @@ void decx::_GPU_Tensor::alloc_data_space()
         return;
     }
     if (decx::alloc::_device_malloc(&this->Tens, this->total_bytes, true, S)) {
-        Print_Error_Message(4, "Tensor malloc failed! Please check if there is enough space in your device.");
+        DECX_LOG_ERR("Tensor malloc failed! Please check if there is enough space in your device.");
         exit(-1);
     }
 
@@ -145,7 +146,7 @@ void decx::_GPU_Tensor::alloc_data_space()
 void decx::_GPU_Tensor::re_alloc_data_space(decx::cuda_stream* S)
 {
     if (decx::alloc::_device_realloc(&this->Tens, this->total_bytes, true, S)) {
-        Print_Error_Message(4, "Tensor malloc failed! Please check if there is enough space in your device.");
+        DECX_LOG_ERR("Tensor malloc failed! Please check if there is enough space in your device.");
         exit(-1);
     }
 }
