@@ -90,15 +90,6 @@ function download_n_install()
     cd ./tmp
 
     url=$2
-
-    # is_aarch64 $DECX_HOST_ARCH
-    # aarch64_case=$?
-    # if [ $aarch64_case -eq 0 ]; then
-    #     url=http://http.us.debian.org/debian/pool/main/libs/libsdl2/libsdl2-2.0-0_2.26.5+dfsg-1_amd64.deb
-    # else
-    #     url=http://mirror.archlinuxarm.org/aarch64/extra/sdl2-2.30.7-1-aarch64.pkg.tar.xz
-    # fi
-
     package_name_download=${url##*/}
 
     wget $url
@@ -108,8 +99,6 @@ function download_n_install()
 
     cd ../
 
-    # find ./tmp/$extracted_folder -type f -exec cp --backup=numbered -t ./ {} +
-    
     while IFS= read -r -d '' file; do
         file_type=$(file -b $file)
         # Target only .so file(s)
@@ -284,34 +273,20 @@ function install_libpython_NoCross()
 
 
 IFS=',' read -ra array <<< "$1"
-for element in "${array[@]}"; do
-    case $element in
-    "SDL2")
-        is_aarch64 $DECX_HOST_ARCH
-        aarch64_case=$?
-        if [ $aarch64_case -eq 0 ]; then
-            url=http://http.us.debian.org/debian/pool/main/libs/libsdl2/libsdl2-2.0-0_2.26.5+dfsg-1_amd64.deb
-        else
-            url=http://mirror.archlinuxarm.org/aarch64/extra/sdl2-2.30.7-1-aarch64.pkg.tar.xz
-        fi
-        manage_prebuilt SDL2-2.0 $url
-        ;;
-    "SDL2_image")
-        is_aarch64 $DECX_HOST_ARCH
-        aarch64_case=$?
-        if [ $aarch64_case -eq 0 ]; then
-            url=http://ftp.us.debian.org/debian/pool/main/libs/libsdl2-image/libsdl2-image-2.0-0_2.6.3+dfsg-1_amd64.deb
-        else
-            url=http://mirror.archlinuxarm.org/aarch64/extra/sdl2_image-2.8.2-5-aarch64.pkg.tar.xz
-        fi
-        manage_prebuilt SDL2_image-2.0 $url
-        ;;
-    "Python")
-        if [ "$DECX_HOST_ARCH" = "aarch64" ]; then
-            manage_prebuilt Python3
-        else
-            install_libpython_NoCross
-        fi
-        ;;
-    esac
+for pkg_name_req in "${array[@]}"; do
+
+    if [ -z $pkg_name_req ]; then
+        continue
+    fi
+
+    is_aarch64 $DECX_HOST_ARCH
+    aarch64_case=$?
+    if [ $aarch64_case -eq 0 ]; then
+        arch="x64"
+    else
+        arch="aarch64"
+    fi
+    url=$(python3 $PROJECT_PATH_BUILD/build_system/prebuild_url.py -file=$PROJECT_PATH_BUILD/build_system/packages_info.json -pkg=$pkg_name_req -os=Linux -arch=$arch)
+    manage_prebuilt $pkg_name_req $url
+    
 done
