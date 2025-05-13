@@ -98,7 +98,6 @@ function clean_optional()
 function config_single()
 {
     requirement_statement=$(prebuilt_needed $1)
-    
     run_script $BUILD_SYSTEM_DIR/Linux/prebuilts_manager.sh $requirement_statement
 
     if [ ! -e "$PROJECT_PATH_BUILD/build" ]; then

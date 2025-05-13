@@ -1,0 +1,25 @@
+{
+    "SDL2": {
+        "Version": "2-2.0",
+        "Windows": {
+            "x64": "",
+            "aarch64": ""
+        },
+        "Linux": {
+            "x64": "http://http.us.debian.org/debian/pool/main/libs/libsdl2/libsdl2-2.0-0_2.26.5+dfsg-1_amd64.deb",
+            "aarch64": "http://mirror.archlinuxarm.org/aarch64/extra/sdl2-2.30.7-1-aarch64.pkg.tar.xz"
+        }
+    },
+
+    "SDL2_image": {
+        "Version": "2-2.0",
+        "Windows": {
+            "x64": "",
+            "aarch64": ""
+        },
+        "Linux": {
+            "x64": "http://ftp.us.debian.org/debian/pool/main/libs/libsdl2-image/libsdl2-image-2.0-0_2.6.3+dfsg-1_amd64.deb",
+            "aarch64": "http://mirror.archlinuxarm.org/aarch64/extra/sdl2_image-2.8.2-5-aarch64.pkg.tar.xz"
+        }
+    }
+}
