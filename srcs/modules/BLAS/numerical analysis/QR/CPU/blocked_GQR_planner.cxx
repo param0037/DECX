@@ -149,14 +149,13 @@ void decx::blas::Blocked_GQR_planner<_data_type>::Process_HouseHolder()
 
     for (int i = 0; i < this->_block_dims.x; ++i) {
         // Calculate householder reflector
-        // printf("i : %d\n", i);
-        this->Process_SingleCol_HH(p_src_tile + i * panel_pitch + (i/8), 
-                                   p_V_tile + i * panel_pitch + (i/8), 
+        this->Process_SingleCol_HH(p_src_tile + i * panel_pitch + (i/8)*8, 
+                                   p_V_tile + i * panel_pitch + (i/8)*8, 
                                    this->_block_dims.y - i, i);
         if (i < this->_block_dims.x - 1) {
             // Update rest of the panel
-            this->ApplyRefactors(p_V_tile + this->_V_tile._dims.x * i + (i/8), 
-                                 p_src_tile + this->_src_tile._dims.x * (i+1) + (i/8),
+            this->ApplyRefactors(p_V_tile + this->_V_tile._dims.x * i + (i/8)*8, 
+                                 p_src_tile + this->_src_tile._dims.x * (i+1) + (i/8)*8,
                                  i, make_uint2(_block_dims.x - i - 1, _block_dims.y - i));
         }
     }
