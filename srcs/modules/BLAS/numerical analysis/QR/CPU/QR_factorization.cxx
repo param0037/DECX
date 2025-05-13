@@ -35,18 +35,6 @@
 #include "blocked_GQR_planner.h"
 
 
-static decx::Ptr2D_Info<float> z;
-
-
-// Transposed, col is row, row is col
-static void Blocked_QR_HouseHolder_fp32(const float* src, const uint2 panel_dims, const uint32_t panel_pitch,
-    float* V, float* W, uint2* res_dims, const uint32_t pitch_IWY)
-{
-    for (int i = 0; i < panel_dims.x; ++i){
-        decx::blas::householder_calc_v8_fp32(src + ((i >> 3) << 3), V + ((i >> 3) << 3), panel_dims.y - i, i);
-    }
-}
-
 _DECX_API_ void de::blas::cpu::GQRF(de::Matrix& src, de::Matrix& Q, de::Matrix& R)
 {
     de::DH* handle = de::GetLastError();
@@ -59,9 +47,11 @@ _DECX_API_ void de::blas::cpu::GQRF(de::Matrix& src, de::Matrix& Q, de::Matrix& 
 
     decx::utils::_thr_1D t1D(decx::cpu::_get_permitted_concurrency());
 
-    _planner.Config(make_uint2(3, _src->Height()), handle);
+    const uint32_t block_dim = 64;
+
+    _planner.Config(make_uint2(block_dim, _src->Height()), handle);
     
-    for (int i = 0; i < _src->Width() / 3; ++i) {
+    for (int i = 0; i < _src->Width() / block_dim; ++i) {
         if (i == 0) {
             // Flush buffers
             _planner.FlushAllTiles();
@@ -77,7 +67,7 @@ _DECX_API_ void de::blas::cpu::GQRF(de::Matrix& src, de::Matrix& Q, de::Matrix& 
     const float* V = _planner.GetV();
     // const float* V = _planner.GetTile();
     for (int j = 0; j < 3; ++j) {
-        for (int i = 0; i < _src->Height(); ++i) {
+        for (int i = 0; i < 6; ++i) {
             printf("%f, ", V[j * 8 + i]);
         }
         printf("\n");

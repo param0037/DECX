@@ -76,6 +76,16 @@ private:
 
     void ApplyRefactors(const float* Vk, float* panel_next, const uint32_t local_col_id, const uint2 submat_dims);
 
+
+    _THREAD_GENERAL_
+    static uint32_t calc_proc_len_v(const uint32_t local_col_id, const uint8_t alignment, const uint32_t proc_len_v1)
+    {
+        uint32_t left = local_col_id % (uint32_t)alignment;
+        uint32_t is_left = left == 0 ? 0 : 1;
+        uint32_t post_length = proc_len_v1 - is_left;
+        return decx::utils::ceil<uint32_t>(post_length, alignment) + is_left;
+    }
+
 public:
     Blocked_GQR_planner() {
         memset(this, 0, sizeof(decx::blas::Blocked_GQR_planner<_data_type>));

@@ -140,58 +140,6 @@ decx::blas::Blocked_GQR_planner<_data_type>::GetPostMask(const uint32_t L_front,
 template int32_t decx::blas::Blocked_GQR_planner<float>::GetPostMask(const uint32_t L_front, void* p_in) const;
 
 
-template <>
-void decx::blas::Blocked_GQR_planner<float>::Process_SingleCol_HH(
-                            const float* __restrict p_col,
-                            float* __restrict       p_V,
-                            const uint32_t          proc_len_v1,
-                            const uint32_t          local_col_id)
-{
-    int32_t rval = 0;
-    const uint32_t L_front = local_col_id % 8;
-    const uint32_t proc_len_v8 = calc_proc_len_v(local_col_id, 8, proc_len_v1);
-    const float x0 = p_col[L_front];
-    decx::utils::simd::xmm256_reg mask;
-    rval |= this->GetPostMask(L_front, (void*)(&mask));
-
-    // Calculate norm2 ^ 2
-    float pow2_sum_post = 0;
-    __m256 sum_v8 = _mm256_setzero_ps();
-    for (int i = 0; i < proc_len_v8; ++i) {
-        __m256 eles_v8 = _mm256_load_ps(p_col + (i << 3));
-        if (i == 0) {
-            eles_v8 = _mm256_and_ps(eles_v8, mask._vf);
-        }
-        sum_v8 = _mm256_fmadd_ps(eles_v8, eles_v8, sum_v8);
-    }
-    pow2_sum_post = decx::utils::simd::_mm256_h_sum(sum_v8);
-
-    float x_norm2 = sqrtf(pow2_sum_post);
-    if (x_norm2 < 1e-3) {
-        return;
-    }
-    if (proc_len_v1 == this->_block_dims.x && local_col_id == this->_block_dims.x - 1){
-        return;
-    }
-
-    float sign = x0 < 0.f ? 1 : -1;
-    pow2_sum_post -= x0 * x0;
-    float v0 = p_col[L_front] - sign * x_norm2;
-    pow2_sum_post += v0 * v0;
-    pow2_sum_post = sqrtf(pow2_sum_post);
-
-    const float _1_pow2_sum_post = 1.f / pow2_sum_post;
-    for (int i = 0; i < proc_len_v8; ++i) {
-        __m256 eles_v8 = _mm256_load_ps(p_col + (i << 3));
-        eles_v8 = _mm256_mul_ps(eles_v8, _mm256_set1_ps(_1_pow2_sum_post));
-        _mm256_store_ps(p_V + (i << 3), eles_v8);
-    }
-    p_V[L_front] = v0 / pow2_sum_post;
-    __m256 eles_v8 = _mm256_load_ps(p_V);
-    _mm256_store_ps(p_V, _mm256_and_ps(mask._vf, eles_v8));
-}
-
-
 template <typename _data_type>
 void decx::blas::Blocked_GQR_planner<_data_type>::Process_HouseHolder()
 {
@@ -201,7 +149,10 @@ void decx::blas::Blocked_GQR_planner<_data_type>::Process_HouseHolder()
 
     for (int i = 0; i < this->_block_dims.x; ++i) {
         // Calculate householder reflector
-        this->Process_SingleCol_HH(p_src_tile + i * panel_pitch + (i/8), p_V_tile + i * panel_pitch + (i/8), this->_block_dims.y - i, i);
+        // printf("i : %d\n", i);
+        this->Process_SingleCol_HH(p_src_tile + i * panel_pitch + (i/8), 
+                                   p_V_tile + i * panel_pitch + (i/8), 
+                                   this->_block_dims.y - i, i);
         if (i < this->_block_dims.x - 1) {
             // Update rest of the panel
             this->ApplyRefactors(p_V_tile + this->_V_tile._dims.x * i + (i/8), 
@@ -229,48 +180,3 @@ void decx::blas::Blocked_GQR_planner<_data_type>::LoadSrcTile(
 }
 
 template void decx::blas::Blocked_GQR_planner<float>::LoadSrcTile(const float* src, const uint32_t block_id, const uint32_t pitchsrc_v1, decx::utils::_thr_1D* t1D);
-
-
-template <typename _data_type>
-void decx::blas::Blocked_GQR_planner<_data_type>::ApplyRefactors(const float*   Vk, 
-                                                                 float*         panel_next, 
-                                                                 const uint32_t local_col_id,
-                                                                 const uint2    submat_dims)
-{
-    const uint32_t alignment = this->_align_bytes / sizeof(_data_type);
-
-    int32_t rval = 0;
-    const uint32_t L_front = local_col_id % alignment;
-    const uint32_t proc_len_v8 = calc_proc_len_v(local_col_id, alignment, submat_dims.y);
-    decx::utils::simd::xmm256_reg mask;
-    rval |= this->GetPostMask(L_front, (void*)(&mask));
-
-    for (int i = 0; i < submat_dims.x; ++i) {
-        __m256 sum_v8 = _mm256_setzero_ps();
-        float* next_panel_col = panel_next + this->_src_tile._dims.x * i;
-        for (int k = 0; k < proc_len_v8; ++k) {
-            __m256 vk_v8 = _mm256_load_ps(Vk + (k * alignment));
-            __m256 AR_v8 = _mm256_load_ps(next_panel_col + (k * alignment));
-            if (k == 0) {
-                vk_v8 = _mm256_and_ps(vk_v8, mask._vf);
-                AR_v8 = _mm256_and_ps(AR_v8, mask._vf);
-            }
-            sum_v8 = _mm256_fmadd_ps(vk_v8, AR_v8, sum_v8);
-        }
-        float res = decx::utils::simd::_mm256_h_sum(sum_v8);
-        res *= -2;
-        for (int k = 0; k < proc_len_v8; ++k) {
-            __m256 vk_v8 = _mm256_load_ps(Vk + (k * alignment));
-            __m256 AR_v8 = _mm256_load_ps(next_panel_col + (k * alignment));
-            if (k == 0) {
-                vk_v8 = _mm256_and_ps(vk_v8, mask._vf);
-                AR_v8 = _mm256_and_ps(AR_v8, mask._vf);
-            }
-            AR_v8 = _mm256_fmadd_ps(_mm256_set1_ps(res), vk_v8, AR_v8);
-            _mm256_store_ps(next_panel_col + (k * alignment), AR_v8);
-        }
-    }
-}
-
-template void decx::blas::Blocked_GQR_planner<float>::ApplyRefactors(const float*, float*, 
-    const uint32_t, const uint2);
