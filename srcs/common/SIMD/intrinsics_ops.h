@@ -231,11 +231,12 @@ namespace utils{
 namespace simd{
     static uint32_t _get_cpu_simd_align_bytes()
     {
+        uint32_t align_byte = 32;
 #if defined(__x86_64__) || defined(__i386__)
-        const uint32_t align_byte = 32;
+        align_byte = 32;
 #endif
 #if defined(__aarch64__) || defined(__arm__)
-        const uint32_t align_byte = 16;
+        align_byte = 16;
 #endif
         return align_byte;
     }

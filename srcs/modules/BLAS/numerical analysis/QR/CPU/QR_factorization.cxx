@@ -67,8 +67,8 @@ _DECX_API_ void de::blas::cpu::GQRF(de::Matrix& src, de::Matrix& Q, de::Matrix& 
     const float* V = _planner.GetV();
     // const float* V = _planner.GetTile();
     for (int j = 0; j < 3; ++j) {
-        for (int i = 0; i < 6; ++i) {
-            printf("%f, ", V[j * 8 + i]);
+        for (int i = 0; i < 10; ++i) {
+            printf("%f, ", V[j * decx::utils::align<uint32_t>(src.Height(), 8) + i]);
         }
         printf("\n");
     }

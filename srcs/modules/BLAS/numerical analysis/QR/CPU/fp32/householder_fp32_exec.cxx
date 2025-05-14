@@ -73,16 +73,15 @@ void decx::blas::Blocked_GQR_planner<float>::Process_SingleCol_HH(
     pow2_sum_post = sqrtf(pow2_sum_post);
 
     const float _1_pow2_sum_post = 1.f / pow2_sum_post;
-    // for (int i = 0; i < proc_len_v8; ++i) {
-    //     __m256 eles_v8 = _mm256_load_ps(p_col + (i << 3));
-    //     eles_v8 = _mm256_mul_ps(eles_v8, _mm256_set1_ps(_1_pow2_sum_post));
-    //     _mm256_store_ps(p_V + (i << 3), eles_v8);
-    // }
+    for (int i = 0; i < proc_len_v8; ++i) {
+        __m256 eles_v8 = _mm256_load_ps(p_col + (i << 3));
+        eles_v8 = _mm256_mul_ps(eles_v8, _mm256_set1_ps(_1_pow2_sum_post));
+        _mm256_store_ps(p_V + (i << 3), eles_v8);
+    }
     p_V[L_front] = v0 / pow2_sum_post;
     __m256 eles_v8 = _mm256_load_ps(p_V);
     _mm256_store_ps(p_V, _mm256_and_ps(mask._vf, eles_v8));
 }
-
 
 
 template <>

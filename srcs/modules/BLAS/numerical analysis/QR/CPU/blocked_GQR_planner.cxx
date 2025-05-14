@@ -28,7 +28,6 @@
 * DEALINGS IN THE SOFTWARE.
 */
 
-// #define _DECX_CPU_PARTS_
 #include "blocked_GQR_planner.h"
 
 static decx::utils::simd::xmm256_reg post_mask256_gen_v8(const uint8_t L_front)
@@ -40,6 +39,7 @@ static decx::utils::simd::xmm256_reg post_mask256_gen_v8(const uint8_t L_front)
     }
     return mask;
 }
+
 
 template <typename _data_type>
 void decx::blas::Blocked_GQR_planner<_data_type>::Config(const uint2 block_dims, de::DH* handle)
@@ -154,9 +154,10 @@ void decx::blas::Blocked_GQR_planner<_data_type>::Process_HouseHolder()
                                    this->_block_dims.y - i, i);
         if (i < this->_block_dims.x - 1) {
             // Update rest of the panel
-            this->ApplyRefactors(p_V_tile + this->_V_tile._dims.x * i + (i/8)*8, 
-                                 p_src_tile + this->_src_tile._dims.x * (i+1) + (i/8)*8,
-                                 i, make_uint2(_block_dims.x - i - 1, _block_dims.y - i));
+            this->ApplyRefactors(p_V_tile + panel_pitch * i + (i/8)*8, 
+                                 p_src_tile + panel_pitch * (i+1) + (i/8)*8,
+                                 i, 
+                                 make_uint2(_block_dims.x - i - 1, _block_dims.y - i));
         }
     }
 }
