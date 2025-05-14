@@ -34,6 +34,7 @@
 #include "householder_reflector.h"
 #include "blocked_GQR_planner.h"
 
+#define MODULE_TAG "debug"
 
 _DECX_API_ void de::blas::cpu::GQRF(de::Matrix& src, de::Matrix& Q, de::Matrix& R)
 {
