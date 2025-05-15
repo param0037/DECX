@@ -30,13 +30,20 @@
 
 
 #include "../cpu_GEMM_config.h"
-#include "../GEMM_callers.h"
 #include "../matrix_B_arrange.h"
 #include "GEMM_cplxd_kernels.h"
 
 
-decx::ResourceHandle decx::blas::g_cpu_GEMM_cplxd_planner;
-
+namespace decx
+{
+namespace blas
+{
+    template <bool _ABC> static
+        void GEMM_cplxd_caller(const de::CPd* A, const de::CPd* B, de::CPd* dst, const decx::_matrix_layout* layout_A,
+            const decx::_matrix_layout* layout_dst, const uint32_t Llen, const decx::utils::frag_manager* f_mgrH,
+            const decx::blas::GEMM_blocking_config* _thread_configs, decx::utils::_thr_2D* t1D, const de::CPd* C = NULL);
+}
+}
 
 
 template <bool _ABC> void 
@@ -112,7 +119,6 @@ void decx::blas::cpu_GEMM_planner<de::CPd>::Run<true>(decx::_Matrix* A, decx::_M
 }
 
 
-
 template <> template <>
 void decx::blas::cpu_GEMM_planner<de::CPd>::Run<true>(decx::_Matrix* A, decx::_Matrix* B, 
     decx::_Matrix* C, decx::_Matrix* dst, decx::utils::_thread_arrange_2D* t2D)
@@ -131,51 +137,3 @@ void decx::blas::cpu_GEMM_planner<de::CPd>::Run<true>(decx::_Matrix* A, decx::_M
         (de::CPd*)dst->Mat.ptr, this->_layout_A,
         &dst->get_layout(), A->Width(), this->_fmgr_WH_dst, this->_thread_config.ptr, t2D, (de::CPd*)C->Mat.ptr);
 }
-
-
-
-
-template <bool _ABC>
-void decx::blas::GEMM_cplxd(decx::_Matrix* A, decx::_Matrix* B, decx::_Matrix* dst, de::DH* handle,
-    decx::_Matrix* C)
-{
-    if (decx::blas::g_cpu_GEMM_cplxd_planner._res_ptr == NULL) {
-        decx::blas::g_cpu_GEMM_cplxd_planner.RegisterResource(new decx::blas::cpu_GEMM_planner<de::CPd>,
-            5, &decx::blas::cpu_GEMM_planner<de::CPd>::Release);
-    }
-
-    decx::blas::g_cpu_GEMM_cplxd_planner.lock();
-
-    const uint32_t _conc = decx::cpu::_get_permitted_concurrency();
-    //const uint32_t _conc = 1;
-
-    auto* _planner = decx::blas::g_cpu_GEMM_cplxd_planner.get_resource_raw_ptr<decx::blas::cpu_GEMM_planner<de::CPd>>();
-
-    // Validate the sizes of the matrices
-    if constexpr (_ABC) {
-        decx::blas::cpu_GEMM_planner<de::CPd>::Validate(handle, &A->get_layout(), &B->get_layout(), &C->get_layout());
-    }
-    else {
-        decx::blas::cpu_GEMM_planner<de::CPd>::Validate(handle, &A->get_layout(), &B->get_layout());
-    }
-    Check_Runtime_Error(handle);
-
-    // Plan if changed
-    if (_planner->Changed(_conc, &A->get_layout(), &B->get_layout())) {
-        _planner->plan(decx::cpu::_get_permitted_concurrency(), &A->get_layout(), &B->get_layout(), de::GetLastError());
-        Check_Runtime_Error(handle);
-    }
-
-    decx::utils::_thread_arrange_2D t2D(_planner->GetThreadDist_B().y, _planner->GetThreadDist_B().x);
-    if constexpr (_ABC) {
-        _planner->Run<true>(A, B, C, dst, &t2D);
-    }
-    else {
-        _planner->Run<true>(A, B, dst, &t2D);
-    }
-
-    decx::blas::g_cpu_GEMM_cplxd_planner.unlock();
-}
-
-template void decx::blas::GEMM_cplxd<true>(decx::_Matrix*, decx::_Matrix*, decx::_Matrix*, de::DH*, decx::_Matrix*);
-template void decx::blas::GEMM_cplxd<false>(decx::_Matrix*, decx::_Matrix*, decx::_Matrix*, de::DH*, decx::_Matrix*);

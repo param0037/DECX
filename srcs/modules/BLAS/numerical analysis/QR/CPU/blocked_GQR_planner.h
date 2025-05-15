@@ -60,7 +60,6 @@ private:
     decx::Ptr2D_Info<_data_type> _V_tile;
     decx::Ptr2D_Info<_data_type> _W_tile;
 
-
     decx::PtrInfo<void> _simd_post_masks;
 
     decx::blas::_cpu_transpose_config _tp_ldg_config;

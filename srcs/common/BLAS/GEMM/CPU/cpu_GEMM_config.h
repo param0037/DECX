@@ -32,17 +32,28 @@
 #ifndef _CPU_GEMM_CONFIG_H_
 #define _CPU_GEMM_CONFIG_H_
 
-#include "../GEMM_utils.h"
-#include "../../../core/resources_manager/decx_resource.h"
+#include <resources_manager/decx_resource.h>
+#include <FMGR/fragment_arrangment.h>
+#include <Classes/Matrix.h>
+#include <thread_management/thread_arrange.h>
+#include "matrix_B_arrange.h"
+
 
 namespace decx {
-    namespace blas {
-        template <typename _data_type>
-        class cpu_GEMM_planner;
+namespace blas {
+    template <typename _data_type>
+    class cpu_GEMM_planner;
 
 
-        struct GEMM_blocking_config;
+    struct GEMM_blocking_config;
+
+
+    namespace CPUK {
+        typedef void 
+        (*GEMM_64b_kernel)(const double* __restrict, const double* __restrict, double* __restrict, 
+        const decx::blas::GEMM_blocking_config*, const uint32_t, const uint32_t, const uint32_t, const double* __restrict);
     }
+}
 }
 
 
@@ -116,14 +127,5 @@ struct decx::blas::GEMM_blocking_config
     decx::utils::frag_manager _fmgr_H;
 };
 
-
-namespace decx
-{
-    namespace blas {
-        extern decx::ResourceHandle g_cpu_GEMM_fp32_planner;
-        extern decx::ResourceHandle g_cpu_GEMM_64b_planner;
-        extern decx::ResourceHandle g_cpu_GEMM_cplxd_planner;
-    }
-}
 
 #endif

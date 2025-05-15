@@ -33,10 +33,10 @@
 #define _MATRIX_B_ARRANGE_H_
 
 
-#include "../../../../common/Classes/Matrix.h"
-#include "../GEMM_utils.h"
-#include "../../../core/thread_management/thread_arrange.h"
-#include "../../../core/thread_management/thread_pool.h"
+#include <Classes/Matrix.h>
+#include <thread_management/thread_arrange.h>
+#include <thread_management/thread_pool.h>
+#include <FMGR/fragment_arrangment.h>
 
 
 namespace decx

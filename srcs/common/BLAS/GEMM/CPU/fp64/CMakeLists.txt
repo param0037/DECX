@@ -33,4 +33,4 @@ include("${DECX_WORLD_ABS_DIR}/srcs/compile_defs.cmake")
 
 set(LIBRARY_OUTPUT_PATH ${DECX_SUBBUILD_BIN_DIR})
 
-add_library(gemm_64b_cpu OBJECT ${SRCS})
+add_library(GEMM_64B_CPU OBJECT ${SRCS})

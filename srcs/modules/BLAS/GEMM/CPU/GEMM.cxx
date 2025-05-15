@@ -29,7 +29,6 @@
 */
 
 
-#include "matrix_B_arrange.h"
 #include "GEMM_callers.h"
 
 
@@ -44,7 +43,6 @@ namespace blas {
     }
 }
 }
-
 
 
 _DECX_API_ void de::blas::cpu::GEMM(de::Matrix& A, de::Matrix& B, de::Matrix& dst)
@@ -70,7 +68,7 @@ _DECX_API_ void de::blas::cpu::GEMM(de::Matrix& A, de::Matrix& B, de::Matrix& ds
         break;
 
     case de::_DATA_TYPES_FLAGS_::_COMPLEX_F64_:
-        //decx::blas::GEMM_cplxd<false>(_A, _B, _dst, de::GetLastError());
+        decx::blas::GEMM_cplxd<false>(_A, _B, _dst, de::GetLastError());
         break;
 
     default:

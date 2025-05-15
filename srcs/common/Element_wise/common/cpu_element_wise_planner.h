@@ -41,8 +41,8 @@
 
 namespace decx
 {
-    class __COMM_FUNC__ cpu_ElementWise1D_planner;
-    class __COMM_FUNC__ cpu_ElementWise2D_planner;
+    class  cpu_ElementWise1D_planner;
+    class  cpu_ElementWise2D_planner;
 }
 
 

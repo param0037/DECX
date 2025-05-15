@@ -26,12 +26,19 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
 # DEALINGS IN THE SOFTWARE.
 
-file(GLOB_RECURSE SRCS "*.cxx")
+file(GLOB SRCS "*.cxx")
 
 # include to add compile definitions to the target
 include("${DECX_WORLD_ABS_DIR}/srcs/compile_defs.cmake")
 
+add_subdirectory("fp32/" "${DECX_SUBBUILD_BIN_DIR}/common/BLAS/CPU/GEMM/GEMM_FP32_CPU")
+add_subdirectory("fp64/" "${DECX_SUBBUILD_BIN_DIR}/common/BLAS/CPU/GEMM/GEMM_64B_CPU")
+add_subdirectory("cplxd/" "${DECX_SUBBUILD_BIN_DIR}/common/BLAS/CPU/GEMM/GEMM_CPLXD_CPU")
+
 set(LIBRARY_OUTPUT_PATH ${DECX_SUBBUILD_BIN_DIR})
 
+add_library(GEMM_CPU STATIC ${SRCS})
 
-add_library(gemm_cplxd_cpu OBJECT ${SRCS})
+target_link_libraries(GEMM_CPU PRIVATE GEMM_FP32_CPU
+                               PRIVATE GEMM_64B_CPU
+                               PRIVATE GEMM_CPLXD_CPU)
