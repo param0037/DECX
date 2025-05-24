@@ -29,42 +29,44 @@
 */
 
 
-#ifndef _MEMPOOL_HV_H_
-#define _MEMPOOL_HV_H_
-
-#include "../../../common/basic.h"
-#include "MemChunk_Hv.h"
+#ifndef _MEMORY_POOL_D_H_
+#define _MEMORY_POOL_D_H_
 
 
-class decx::MemPool_Hv
+#include <basic.h>
+#include "MemChunk_D.h"
+
+
+
+class decx::MemPool_D
 {
 public:
-    std::vector<decx::MemChunkSet_Hv> mem_chunk_set_list;
+    std::vector<decx::MemChunkSet_D> mem_chunk_set_list;
     int list_length;
 
     std::mutex _mtx;
+
 private:
     /**
      * @brief Construct a new MemPool_Hf object
      *
      */
-    MemPool_Hv();
-
-    
-    MemPool_Hv(const decx::MemPool_Hv&);
-
-    
-    decx::MemPool_Hv& operator=(const decx::MemPool_Hv&);
+    MemPool_D();
 
 
-    ~MemPool_Hv();
+    MemPool_D(const decx::MemPool_D&);
+    decx::MemPool_D& operator=(const decx::MemPool_D&);
 
 
-    static decx::MemPool_Hv* _instance;
+    ~MemPool_D();
+
+
+    static decx::MemPool_D* _instance;
 
 public:
 
-    static decx::MemPool_Hv* GetInstance();
+    static decx::MemPool_D* GetInstance();
+
 
     /**
      * @brief allocate a memory for user, recycle as much as possible
@@ -81,7 +83,6 @@ public:
      */
     void deallocate(decx::MemBlock* _ptr);
 
-
     /**
      * @brief Register another parallel user of this decx::MemBlock
      *
@@ -91,6 +92,7 @@ public:
 
 
     void release();
+    
 
 private:
     /**
@@ -99,8 +101,8 @@ private:
      * @param req_size Indicated by users.
      * @param _ptr The destinated decx::MemBlock ptr.
      * @param begin_dex The index where the system start to search the decx::MemChunkSet
-     * @return true Found an idle block
-     * @return false Haven't found any idle block
+     * @return true : Found an idle block;
+     *           false : Haven't found any idle block
      */
     bool search_for_idle(size_t req_size, int begin_dex, decx::MemBlock** _ptr);
 
@@ -109,8 +111,9 @@ private:
 
 namespace decx
 {
-    //extern decx::MemPool_Hv* mem_pool_Hv;
+    //extern decx::MemPool_D* mem_pool_D;
 }
+
 
 
 #endif

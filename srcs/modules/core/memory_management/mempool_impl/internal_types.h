@@ -29,25 +29,27 @@
 */
 
 
-#include "_allocator.h"
+#ifndef _INTERNAL_TYPES_H_
+#define _INTERNAL_TYPES_H_
 
+#include "_aligned_allocators.h"
 
-
-int decx::alloc::_alloc_Hv(decx::MemBlock** _ptr, size_t req_size)
+namespace decx
 {
-    decx::MemPool_Hv* _mempool_ptr = decx::MemPool_Hv::GetInstance();
+    class MemChunk_Hv;
 
-    _mempool_ptr->allocate(req_size, _ptr);
-    if ((*_ptr)->_ptr == NULL) {
-        return -1;
-    }
-    return 0;
+    class MemChunk_D;
+
+
+    class MemChunkSet_Hv;
+
+    class MemChunkSet_D;
+
+
+    class MemPool_Hv;
+
+    class MemPool_D;
 }
 
 
-void decx::alloc::_alloc_Hv_same_place(decx::MemBlock** _ptr)
-{
-    decx::MemPool_Hv* _mempool_ptr = decx::MemPool_Hv::GetInstance();
-
-    _mempool_ptr->register_reference(*_ptr);
-}
+#endif

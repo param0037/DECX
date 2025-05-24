@@ -29,16 +29,6 @@
 
 file(GLOB_RECURSE MEMPOOL "../*.cxx")
 
-# add_compile_definitions(_DECX_CPU_PARTS_)
-# add_compile_definitions(_DECX_CORE_CPU_)
-
-
-# if(CMAKE_CROSSCOMPILING)
-#     add_compile_definitions(__aarch64__)
-# else()
-#     add_compile_definitions(__x86_64__)
-# endif()
-
 include("${DECX_WORLD_ABS_DIR}/srcs/compile_defs.cmake")
 
 set(LIBRARY_OUTPUT_PATH ${DECX_SUBBUILD_BIN_DIR})

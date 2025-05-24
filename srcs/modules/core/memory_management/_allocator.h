@@ -28,45 +28,38 @@
 * DEALINGS IN THE SOFTWARE.
 */
 
+
 /**
-* Memory deallocators are defined in this header
+* Memory allocators are defined in this header
 */
 
+#ifndef _ALLOCATOR_H_
+#define _ALLOCATOR_H_
 
-#ifndef __DEALLOCATORS_H_
-#define __DEALLOCATORS_H_
 
-
-#include "../memory_management/MemoryPool_Hv.h"
+#include "mempool_impl/MemoryPool_Hv.h"
 #ifdef _DECX_CUDA_PARTS_
-#include "../memory_management/MemoryPool_D.h"
+#include "mempool_impl/MemoryPool_D.h"
+#include <cudaStream_management/cudaStream_queue.h>
 #endif
-#include "../../../common/Handle/decx_handle.h"
-#include "../memory_management/PtrInfo.h"
+#include <Handle/decx_handle.h>
 
 
-namespace decx
+extern "C"
 {
-    namespace alloc
-    {
-        _DECX_API_ void _dealloc_Hv(decx::MemBlock* _ptr);
-
-        template <typename _Ty>
-        static void _host_virtual_page_dealloc(decx::PtrInfo<_Ty>* ptr_info);
-
-        _DECX_API_ void _dealloc_Hf(decx::MemBlock* _ptr);
-
-
-        template <typename _Ty>
-        static void _host_fixed_page_dealloc(decx::PtrInfo<_Ty>* ptr_info);
-
-
-        _DECX_API_ void _dealloc_D(decx::MemBlock* _ptr);
-
-
-        template <typename _Ty>
-        static void _device_dealloc(decx::PtrInfo<_Ty>* ptr_info);
-    }
+    _DECX_API_ int32_t DecxAllocPagable(void** pMemBlock, uint64_t req_size, void** pRawPtrObtained);
+    _DECX_API_ int32_t DecxAllocPagableRef(void* pMemBlock, void** pRawPtrObtained);
+    _DECX_API_ int32_t DecxFreePagable(void* pMemBlock);
+    _DECX_API_ int32_t DecxMemset(void* pMemBlock, const uint64_t size, const uint8_t value);
+    _DECX_API_ int32_t DecxReallocPagable(void** pMemBlock, uint64_t new_size, void** pRawPtrObtained);
+    _DECX_API_ int32_t DecxMemIndexGetRawPtr(void* pMemBlock, void** pRawPtrObtained);
+#ifdef _DECX_CUDA_PARTS_
+    _DECX_API_ int32_t DecxAllocCUDA(void** pMemBlock, uint64_t req_size, void** pRawPtrObtained);
+    _DECX_API_ int32_t DecxAllocCUDARef(void* pMemBlock, void** pRawPtrObtained);
+    _DECX_API_ int32_t DecxReallocCUDA(void** pMemBlock, uint64_t new_size, void** pRawPtrObtained);
+    _DECX_API_ int32_t DecxFreeCUDA(void* pMemBlock);
+    _DECX_API_ int32_t DecxCUDAMemset(void* pMemBlock, const uint64_t size, const uint8_t value, decx::cuda_stream* S);
+#endif
 }
 
 #endif

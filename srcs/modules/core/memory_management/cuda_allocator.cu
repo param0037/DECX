@@ -30,22 +30,76 @@
 
 
 #include "_allocator.h"
+#include <decx_alloc_interface.h>
+#include <log_console.h>
 
 
-int decx::alloc::_alloc_D(decx::MemBlock** _ptr, size_t req_size)
+#define MODULE_TAG "DecxAlloc"
+
+
+_DECX_API_ int32_t DecxAllocCUDA(void** pMemBlock, uint64_t req_size, void** pRawPtrObtained)
 {
-    decx::MemPool_D* _mempool_ptr = decx::MemPool_D::GetInstance();
-    _mempool_ptr->allocate(req_size, _ptr);
+    *pMemBlock = nullptr;
+    *pRawPtrObtained = nullptr;
 
-    if ((*_ptr)->_ptr == NULL) {
+    decx::MemBlock** p_MB = (decx::MemBlock**)pMemBlock;
+
+    decx::MemPool_D* _mempool_ptr = decx::MemPool_D::GetInstance();
+    _mempool_ptr->allocate(req_size, p_MB);
+
+    if ((*p_MB)->_ptr == NULL) {
         return -1;
     }
+    *pRawPtrObtained = (*p_MB)->_ptr;
     return 0;
 }
 
 
-void decx::alloc::_alloc_D_same_place(decx::MemBlock** _ptr)
+_DECX_API_ int32_t DecxAllocCUDARef(void* pMemBlock, void** pRawPtrObtained)
+{
+    *pRawPtrObtained = nullptr;
+    if (pMemBlock == nullptr){
+        DECX_LOG_ERR("Failed to allocate pagable reference, input mempool index is NULL");
+        return -1;
+    }
+
+    decx::MemBlock* p_MB = (decx::MemBlock*)pMemBlock;
+
+    decx::MemPool_D* _mempool_ptr = decx::MemPool_D::GetInstance();
+    _mempool_ptr->register_reference(p_MB);
+
+    *pRawPtrObtained = p_MB->_ptr;
+    return 0;
+}
+
+
+_DECX_API_ int32_t DecxFreeCUDA(void* pMemBlock)
 {
     decx::MemPool_D* _mempool_ptr = decx::MemPool_D::GetInstance();
-    _mempool_ptr->register_reference(*_ptr);
+    _mempool_ptr->deallocate((decx::MemBlock*)pMemBlock);
+
+    return 0;
+}
+
+_DECX_API_ int32_t DecxReallocCUDA(void** pMemBlock, uint64_t new_size, void** pRawPtrObtained)
+{
+    int32_t rval = 0;
+    rval = DecxFreeCUDA(*pMemBlock);
+    if (rval){
+        return -1;
+    }
+    rval |= DecxAllocCUDA(pMemBlock, new_size, pRawPtrObtained);
+    return rval;
+}
+
+_DECX_API_ int32_t DecxCUDAMemset(void* pMemBlock, const uint64_t size, const uint8_t value, decx::cuda_stream* S)
+{
+    decx::MemBlock* _ptr = (decx::MemBlock*)pMemBlock;
+    if (S == nullptr){
+        checkCudaErrors(cudaMemset(_ptr->_ptr, value, size));
+    }
+    else{
+        checkCudaErrors(cudaMemsetAsync(_ptr->_ptr, value, size, S->get_raw_stream_ref()));
+    }
+    return 0;
 }

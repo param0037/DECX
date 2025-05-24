@@ -32,8 +32,7 @@
 #ifndef __ALIGNED_ALLOCATORS_H_
 #define __ALIGNED_ALLOCATORS_H_
 
-#include "../../../common/basic.h"
-
+#include <basic.h>
 
 namespace decx
 {
@@ -55,7 +54,6 @@ namespace decx
 #endif
     }
 }
-
 
 
 #ifdef _DECX_CORE_CPU_
@@ -87,10 +85,6 @@ void decx::alloc::aligned_free_Hv(void* _ptr)
 }
 
 
-
-// 若是CUDA，成员变量memory_type才有意义，否则空在那里，初始化一个0
-// 但是class_creation 函数就会改变，加上cpu::, cuda::的命名空间加以区分
-// 用户在both的条件下可以调用任意函数创造主类，Matrix，Vector等，但在只有cpu的情况下只能调用cpu::名下的creation函数创造类。
 void* decx::alloc::aligned_malloc_Hf(size_t size, size_t alignment)
 {
     if (alignment & (alignment - 1)) {
@@ -119,9 +113,7 @@ void* decx::alloc::aligned_malloc_Hf(size_t size, size_t alignment)
 
 void decx::alloc::aligned_free_Hf(void* _ptr)
 {
-    //checkCudaErrors(cudaFreeHost((void*)(((void**)_ptr)[-1])));
     free((void*)(((void**)_ptr)[-1]));
-    //VirtualFree((void*)(((void**)_ptr)[-1]), 0, MEM_RELEASE);
 }
 
 

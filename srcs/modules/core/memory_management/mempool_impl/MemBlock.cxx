@@ -1,4 +1,4 @@
-/**
+﻿/**
 *   ----------------------------------------------------------------------------------
 *   Author : Wayne Anderson
 *   Date   : 2021.04.16
@@ -29,22 +29,40 @@
 */
 
 
-#include "_memset.h"
-
-//
-//_DECX_API_ void decx::alloc::Memset_H(decx::MemBlock* _ptr, const size_t size, const int value)
-//{
-//    memset(_ptr->_ptr, value, size);
-//}
+#include "MemBlock.h"
 
 
-
-_DECX_API_ void decx::alloc::Memset_D(decx::MemBlock* _ptr, const size_t size, const int value, cudaStream_t* S)
+decx::MemBlock::MemBlock(size_t size, bool idle, decx::MemLoc* mem_loc, uchar* ptr,
+    decx::MemBlock* prev, decx::MemBlock* next)
 {
-    if (S == NULL) {
-        checkCudaErrors(cudaMemset(_ptr->_ptr, value, size));
-    }
-    else {
-        checkCudaErrors(cudaMemsetAsync(_ptr->_ptr, value, size, *S));
-    }
+    this->block_size = size;
+    this->_idle = idle;
+    this->_ptr = ptr;
+
+    this->_prev = prev;
+    this->_next = next;
+
+    this->_loc.x = mem_loc->x;
+    this->_loc.y = mem_loc->y;
+    this->_loc.z = mem_loc->z;
+
+    this->_ref_times = 0;
+}
+
+
+
+void decx::MemBlock::CopyTo(decx::MemBlock* dst)
+{
+    dst->_loc.x = this->_loc.x;
+    dst->_loc.y = this->_loc.y;
+    dst->_loc.z = this->_loc.z;
+
+    dst->_ptr = this->_ptr;
+    dst->_prev = this->_prev;
+    dst->_next = this->_next;
+
+    dst->_ref_times = this->_ref_times;
+    dst->_idle = this->_idle;
+
+    dst->block_size = this->block_size;
 }

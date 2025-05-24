@@ -32,7 +32,6 @@
 #include "MemChunk_Hv.h"
 
 
-
 decx::MemChunk_Hv::MemChunk_Hv(int pool_dex, int chunk_set_dex)
 {
     this->chunk_size = 0;
