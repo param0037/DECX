@@ -49,35 +49,50 @@ template <typename _data_type>
 class decx::blas::Blocked_GQR_planner
 {
 private:
-    uint2 _block_dims;
+    uint2                                       _block_dims;
+    uint32_t                                    _align_bytes;
 
-    uint32_t _align_bytes;
-
-    decx::Ptr2D_Info<_data_type> _src_tile;
-    uint64_t _tile_size;
+    decx::Ptr2D_Info<_data_type>                _src_tile;
+    uint64_t                                    _tile_size;
     
     // Matrix combined with colums of Householder reflectors
-    decx::Ptr2D_Info<_data_type> _V_tile;
-    decx::Ptr2D_Info<_data_type> _W_tile;
+    decx::Ptr2D_Info<_data_type>                _V_tile;
+    decx::Ptr2D_Info<_data_type>                _W_tile;
+    decx::Ptr2D_Info<_data_type>                _IWY;
 
-    decx::PtrInfo<void> _simd_post_masks;
+    decx::PtrInfo<void>                         _simd_post_masks;
 
-    decx::blas::_cpu_transpose_config _tp_ldg_config;
+    decx::blas::_cpu_transpose_config           _tp_ldg_config;
+
+    decx::PtrInfo<decx::utils::frag_manager>    _fmgrs_apply_HH;
+
 
 private:
-    void Process_SingleCol_HH(const float* __restrict p_col,
-        float* __restrict p_V,
+    inline uint32_t GetAlignedStartOffsetPanel(const uint32_t local_col_id, const uint32_t panel_pitch) {
+        const uint32_t alignment = this->_align_bytes / sizeof(_data_type);
+        return (local_col_id / alignment) * alignment + local_col_id * panel_pitch;
+    }
+
+private:
+    void Process_SingleCol_HH(const _data_type* __restrict p_col,
+        _data_type* __restrict p_V,
+        const uint32_t local_col_id, const uint32_t proc_len_v1);
+
+
+    static void UpdateW(decx::blas::Blocked_GQR_planner<_data_type>* fake_this, 
+        const _data_type* __restrict pV_now, const _data_type* __restrict pV_last, _data_type* __restrict pW,
         const uint32_t local_col_id, const uint32_t proc_len_v1);
 
 
     int32_t GetPostMask(const uint32_t L_front, void* p_in) const;
     
 
-    void ApplyRefactors(const float* Vk, float* panel_next, const uint32_t local_col_id, const uint2 submat_dims);
-
+    static void ApplyRefactors(decx::blas::Blocked_GQR_planner<_data_type>* fake_this,
+        const _data_type* Vk, _data_type* panel_next, const uint32_t local_col_id, const uint2 submat_dims);
+    
 
     _THREAD_GENERAL_
-    static uint32_t calc_proc_len_v(const uint32_t local_col_id, const uint8_t alignment, const uint32_t proc_len_v1)
+    static uint32_t CalcProcLenV(const uint32_t local_col_id, const uint8_t alignment, const uint32_t proc_len_v1)
     {
         uint32_t left = local_col_id % (uint32_t)alignment;
         uint32_t post_length = proc_len_v1 - (alignment - left);

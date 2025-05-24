@@ -29,6 +29,7 @@
 */
 
 #include "blocked_GQR_planner.h"
+#include <Element_wise/common/cpu_element_wise_planner.h>
 
 static decx::utils::simd::xmm256_reg post_mask256_gen_v8(const uint8_t L_front)
 {
@@ -52,19 +53,16 @@ void decx::blas::Blocked_GQR_planner<_data_type>::Config(const uint2 block_dims,
     this->_src_tile._dims.x = decx::utils::align<uint32_t>(block_dims.y, alignment);
     this->_src_tile._dims.y = block_dims.x;
     this->_tile_size = (uint64_t)this->_src_tile._dims.x * (uint64_t)this->_src_tile._dims.y * sizeof(_data_type);
-    if (decx::alloc::_host_virtual_page_malloc(&(this->_src_tile._ptr), this->_tile_size)){
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION, ALLOC_FAIL);
+    if (this->_src_tile.AllocPagable()){
         return;
     }
     // Allocate V_tile
     this->_V_tile._dims = this->_src_tile._dims;
-    if (decx::alloc::_host_virtual_page_malloc(&(this->_V_tile._ptr), this->_tile_size)){
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION, ALLOC_FAIL);
+    if (this->_V_tile.AllocPagable()){
         return;
     }
     this->_W_tile._dims = this->_src_tile._dims;
-    if (decx::alloc::_host_virtual_page_malloc(&(this->_W_tile._ptr), this->_tile_size)){
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION, ALLOC_FAIL);
+    if (this->_W_tile.AllocPagable()){
         return;
     }
     // Allocate array for masks
@@ -80,8 +78,20 @@ void decx::blas::Blocked_GQR_planner<_data_type>::Config(const uint2 block_dims,
     }
 
     // Plan for the transpose config
-    this->_tp_ldg_config.config(sizeof(_data_type), 1, 
-        this->_block_dims, handle);
+    this->_tp_ldg_config.config(sizeof(_data_type), 1, this->_block_dims, handle);
+
+    if (decx::alloc::_host_virtual_page_malloc(&this->_fmgrs_apply_HH, (this->_block_dims.x - 1) * sizeof(decx::utils::frag_manager))){
+        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION, ALLOC_FAIL);
+        return;
+    }
+    for (int32_t i = 0; i < block_dims.x - 1; ++i){
+        decx::utils::frag_manager_gen(this->_fmgrs_apply_HH.ptr + i, this->_block_dims.x - i - 1, 16);
+    }
+
+    this->_IWY._dims = make_uint2(decx::utils::align<uint32_t>(this->_block_dims.y, alignment), this->_block_dims.y);
+    if (this->_IWY.AllocPagable()){
+        return;
+    }
 }
 
 template void decx::blas::Blocked_GQR_planner<float>::Config(const uint2 block_dims, de::DH* handle);
@@ -147,17 +157,35 @@ void decx::blas::Blocked_GQR_planner<_data_type>::Process_HouseHolder()
     _data_type* p_V_tile = this->_V_tile.template GetRawPtr<_data_type>();
     const uint32_t panel_pitch = this->_src_tile._dims.x;
 
-    for (int i = 0; i < this->_block_dims.x; ++i) {
+    decx::utils::_thr_1D t1D(16);
+
+    for (int col_id = 0; col_id < this->_block_dims.x; ++col_id) {
         // Calculate householder reflector
-        this->Process_SingleCol_HH(p_src_tile + i * panel_pitch + (i/8)*8, 
-                                   p_V_tile + i * panel_pitch + (i/8)*8, 
-                                   this->_block_dims.y - i, i);
-        if (i < this->_block_dims.x - 1) {
-            // Update rest of the panel
-            this->ApplyRefactors(p_V_tile + panel_pitch * i + (i/8)*8, 
-                                 p_src_tile + panel_pitch * (i+1) + (i/8)*8,
-                                 i, 
-                                 make_uint2(_block_dims.x - i - 1, _block_dims.y - i));
+        this->Process_SingleCol_HH(p_src_tile + this->GetAlignedStartOffsetPanel(col_id, panel_pitch), 
+                                   p_V_tile + this->GetAlignedStartOffsetPanel(col_id, panel_pitch), 
+                                   this->_block_dims.y - col_id, col_id);
+
+        if (col_id < this->_block_dims.x - 1) {
+            const decx::utils::frag_manager* fmgr = this->_fmgrs_apply_HH.ptr + col_id;
+            
+            const _data_type* pV = p_V_tile + this->GetAlignedStartOffsetPanel(col_id, panel_pitch);
+            _data_type* pPanel = p_src_tile + this->GetAlignedStartOffsetPanel(col_id, panel_pitch);
+            
+            decx::cpu_ElementWise1D_planner::
+            sCaller(decx::blas::Blocked_GQR_planner<_data_type>::ApplyRefactors, fmgr, &t1D, 
+                decx::TArg_still<decx::blas::Blocked_GQR_planner<_data_type>*>(this),
+                decx::TArg_var<const _data_type*>([&](const int32_t i){return pV + i * fmgr->get_frag_len() * panel_pitch;}),
+                decx::TArg_var<_data_type*>      ([&](const int32_t i){return pPanel + i * fmgr->get_frag_len() * panel_pitch;}),
+                decx::TArg_still<int32_t>(col_id),
+                decx::TArg_var<uint2>([&](const int32_t i){return make_uint2(fmgr->get_frag_len_by_id(i), _block_dims.y - col_id);})
+            );
+
+            // // Update rest of the panel
+            // ApplyRefactors(this,
+            //     p_V_tile + panel_pitch * col_id + (col_id/8)*8, 
+            //                      p_src_tile + panel_pitch * (col_id+1) + (col_id/8)*8,
+            //                      col_id, 
+            //                      make_uint2(_block_dims.x - col_id - 1, _block_dims.y - col_id));
         }
     }
 }

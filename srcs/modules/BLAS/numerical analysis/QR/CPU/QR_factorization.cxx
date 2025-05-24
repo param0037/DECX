@@ -48,7 +48,7 @@ _DECX_API_ void de::blas::cpu::GQRF(de::Matrix& src, de::Matrix& Q, de::Matrix& 
 
     decx::utils::_thr_1D t1D(decx::cpu::_get_permitted_concurrency());
 
-    const uint32_t block_dim = 64;
+    const uint32_t block_dim = 512;
 
     _planner.Config(make_uint2(block_dim, _src->Height()), handle);
     
@@ -65,12 +65,12 @@ _DECX_API_ void de::blas::cpu::GQRF(de::Matrix& src, de::Matrix& Q, de::Matrix& 
         }
     }
 
-    const float* V = _planner.GetV();
-    // const float* V = _planner.GetTile();
-    for (int j = 0; j < 3; ++j) {
-        for (int i = 0; i < 10; ++i) {
-            printf("%f, ", V[j * decx::utils::align<uint32_t>(src.Height(), 8) + i]);
-        }
-        printf("\n");
-    }
+    // const float* V = _planner.GetV();
+    // // const float* V = _planner.GetTile();
+    // for (int j = 0; j < 3; ++j) {
+    //     for (int i = 0; i < 10; ++i) {
+    //         printf("%f, ", V[j * decx::utils::align<uint32_t>(src.Height(), 8) + i]);
+    //     }
+    //     printf("\n");
+    // }
 }

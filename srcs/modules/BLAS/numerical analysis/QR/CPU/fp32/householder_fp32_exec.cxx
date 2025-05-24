@@ -41,7 +41,7 @@ void decx::blas::Blocked_GQR_planner<float>::Process_SingleCol_HH(
 {
     int32_t rval = 0;
     const uint32_t L_front = local_col_id % 8;
-    const uint32_t proc_len_v8 = decx::blas::Blocked_GQR_planner<float>::calc_proc_len_v(local_col_id, 8, proc_len_v1);
+    const uint32_t proc_len_v8 = decx::blas::Blocked_GQR_planner<float>::CalcProcLenV(local_col_id, 8, proc_len_v1);
     const float x0 = p_col[L_front];
     decx::utils::simd::xmm256_reg mask;
     rval |= this->GetPostMask(L_front, (void*)(&mask));
@@ -85,22 +85,25 @@ void decx::blas::Blocked_GQR_planner<float>::Process_SingleCol_HH(
 
 
 template <>
-void decx::blas::Blocked_GQR_planner<float>::ApplyRefactors(const float*   Vk, 
-                                                            float*         panel_next, 
-                                                            const uint32_t local_col_id,
-                                                            const uint2    submat_dims)
+void decx::blas::Blocked_GQR_planner<float>::
+ApplyRefactors(decx::blas::Blocked_GQR_planner<float>* fake_this,
+               const float*   Vk, 
+               float*         panel_next, 
+               const uint32_t local_col_id,
+               const uint2    submat_dims)
 {
-    const uint32_t alignment = this->_align_bytes / sizeof(float);
+    const uint32_t alignment = fake_this->_align_bytes / sizeof(float);
 
     int32_t rval = 0;
     const uint32_t L_front = local_col_id % alignment;
-    const uint32_t proc_len_v8 = calc_proc_len_v(local_col_id, alignment, submat_dims.y);
+    const uint32_t proc_len_v8 = CalcProcLenV(local_col_id, alignment, submat_dims.y);
     decx::utils::simd::xmm256_reg mask;
-    rval |= this->GetPostMask(L_front, (void*)(&mask));
+    rval |= fake_this->GetPostMask(L_front, (void*)(&mask));
 
+// #pragma omp parallel for
     for (int i = 0; i < submat_dims.x; ++i) {
         __m256 sum_v8 = _mm256_setzero_ps();
-        float* next_panel_col = panel_next + this->_src_tile._dims.x * i;
+        float* next_panel_col = panel_next + fake_this->_src_tile._dims.x * i;
         for (int k = 0; k < proc_len_v8; ++k) {
             __m256 vk_v8 = _mm256_load_ps(Vk + (k * alignment));
             __m256 AR_v8 = _mm256_load_ps(next_panel_col + (k * alignment));
@@ -122,5 +125,22 @@ void decx::blas::Blocked_GQR_planner<float>::ApplyRefactors(const float*   Vk,
             AR_v8 = _mm256_fmadd_ps(_mm256_set1_ps(res), vk_v8, AR_v8);
             _mm256_store_ps(next_panel_col + (k * alignment), AR_v8);
         }
+    }
+}
+
+
+template <> void 
+decx::blas::Blocked_GQR_planner<float>::UpdateW(decx::blas::Blocked_GQR_planner<float>* fake_this,
+                                                const float* __restrict pV_now, 
+                                                const float* __restrict pV_last, 
+                                                float* __restrict pW,
+                                                const uint32_t local_col_id, 
+                                                const uint32_t proc_len_v1)
+{
+    const uint32_t alignment = fake_this->_align_bytes / sizeof(float);
+
+    const uint32_t proc_len_v8 = CalcProcLenV(local_col_id, alignment, proc_len_v1);
+    if (local_col_id == 0){
+        
     }
 }

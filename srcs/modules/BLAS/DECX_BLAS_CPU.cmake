@@ -55,11 +55,14 @@ include("${DECX_WORLD_ABS_DIR}/srcs/common/Basic_process/extension/extension_com
 if(${_DECX_HOST_ARCH_} STREQUAL "x64")
 include("${DECX_WORLD_ABS_DIR}/srcs/common/Basic_process/type_cast/typecast_com.cmake")
 
+find_package(OpenMP REQUIRED)
 
 add_library(DECX_BLAS_CPU SHARED ${GEMM}                    ${BP} ${EW}
                                  ${EXT_CPU_COM_SRCS} 
                                  ${INTRIN_X86_64}
                                  ${TYPECAST_CPU_COM_SRCS} ${EIG} ${REDUCE_CPU_SRCS})
+
+# target_link_libraries(DECX_BLAS_CPU PRIVATE OpenMP::OpenMP_CXX)
 
 target_link_libraries(DECX_BLAS_CPU PRIVATE GEMM_CPU
                                     PRIVATE TRP_CPU

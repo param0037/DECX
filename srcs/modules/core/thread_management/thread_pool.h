@@ -125,7 +125,7 @@ namespace decx {
             
             decx::ThreadTaskQueue* tmp_task_que = decx::cpu::_get_task_queue_(id);
             tmp_task_que->_mtx.lock();
-            std::future<void> fut = decx::emplace_back(tmp_task_que, std::forward<FuncType>(f), std::forward<Args>(args)...);
+            std::future<void> fut = decx::InsertTaskBack(tmp_task_que, std::forward<FuncType>(f), std::forward<Args>(args)...);
             tmp_task_que->_mtx.unlock();
             tmp_task_que->_cv.notify_one();
 
@@ -133,34 +133,17 @@ namespace decx {
         }
 
 
-#ifdef _DECX_CORE_CPU_
         template <class FuncType, class ...Args>
-        static std::future<void> register_task_maximum_utilize(decx::ThreadPool* _tp, FuncType&& f, Args&& ...args)
+        static std::future<void> register_task_by_id(FuncType&& f, const uint32_t id, Args&& ...args)
         {
-            uint64_t id;
-            _tp->_find_task_queue_id(&id);
-
-            decx::ThreadTaskQueue* tmp_task_que = &(_tp->_task_schd[id]);
+            decx::ThreadTaskQueue* tmp_task_que = decx::cpu::_get_task_queue_(id);
             tmp_task_que->_mtx.lock();
-            std::future<void> fut = decx::emplace_back(tmp_task_que, std::forward<FuncType>(f), std::forward<Args>(args)...);
+            std::future<void> fut = decx::InsertTaskBack(tmp_task_que, std::forward<FuncType>(f), std::forward<Args>(args)...);
             tmp_task_que->_mtx.unlock();
             tmp_task_que->_cv.notify_one();
 
             return fut;
         }
-
-
-
-        template <class FuncType, class ...Args>
-        std::future<void> register_task_by_id(decx::ThreadPool* _tp, uint64_t id, FuncType&& f, Args&& ...args)
-        {
-            decx::ThreadTaskQueue* tmp_task_que = &(_tp->_task_schd[id]);
-            std::future<void> fut = decx::emplace_back(std::forward<FuncType>(f), std::forward<Args>(args)...);
-            tmp_task_que->_cv.notify_one();
-
-            return fut;
-        }
-#endif
     }
 }
 

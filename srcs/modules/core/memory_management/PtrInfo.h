@@ -120,6 +120,20 @@ struct decx::Ptr2D_Info
     {
         return (const _Out_Ptr*)(this->_ptr.ptr);
     }
+
+
+    int32_t AllocPagable(const uint32_t element_size = sizeof(_Ty), de::DH* handle = nullptr, const bool zero_initialize = true)
+    {
+        const uint64_t size_alloca = (uint64_t)this->_dims.x * (uint64_t)this->_dims.y * element_size;
+        int32_t rval = decx::alloc::_host_virtual_page_malloc(&this->_ptr, size_alloca, zero_initialize);
+        if (rval != 0){
+            if (handle != nullptr){
+                decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION, ALLOC_FAIL);
+            }
+            DECX_LOG_ERR("Failed to alloc pagable memory, size required= %llu", size_alloca);
+        }
+        return rval;
+    }
 };
 
 
