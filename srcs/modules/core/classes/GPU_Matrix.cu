@@ -29,7 +29,10 @@
 */
 
 
-#include "../../../common/Classes/GPU_Matrix.h"
+#include <Classes/GPU_Matrix.h>
+#include <cudaStream_management/cudaStream_queue.h>
+#include <cudaStream_management/cudaEvent_queue.h>
+#define MODULE_TAG "GPU_Matrix"
 
 
 void decx::_matrix_layout::_attribute_assign(const de::_DATA_TYPES_FLAGS_ type, const uint _width, const uint _height)
@@ -61,30 +64,23 @@ void decx::_matrix_layout::_attribute_assign(const de::_DATA_TYPES_FLAGS_ type, 
 }
 
 
-
 void decx::_GPU_Matrix::alloc_data_space()
 {
     decx::cuda_stream* S = NULL;
     S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
     if (S == NULL) {
-        SetConsoleColor(4);
-        printf("Internal error.\n");
-        ResetConsoleColor;
+        DECX_LOG_ERR("Failed to get cuda stream from queue");
         return;
     }
     decx::cuda_event* E = NULL;
     E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
     if (E == NULL) {
-        SetConsoleColor(4);
-        printf("Internal error.\n");
-        ResetConsoleColor;
+        DECX_LOG_ERR("Failed to get cuda event from queue");
         return;
     }
     
-    if (decx::alloc::_device_malloc(&this->Mat, this->total_bytes, true, S)) {
-        SetConsoleColor(4);
-        printf("Matrix malloc failed! Please check if there is enough space in your device.\n");
-        ResetConsoleColor;
+    if (this->Mat.Allocate(this->total_bytes, CUDA_DEVICE, de::GetLastError(), true, S)) {
+        DECX_LOG_ERR("Matrix malloc failed! Please check if there is enough space in your device")
         return;
     }
 
@@ -99,7 +95,7 @@ void decx::_GPU_Matrix::alloc_data_space()
 
 void decx::_GPU_Matrix::re_alloc_data_space(decx::cuda_stream* S)
 {
-    if (decx::alloc::_device_realloc(&this->Mat, this->total_bytes, true, S)) {
+    if (this->Mat.Reallocate(this->total_bytes, true, S)) {
         return;
     }
 }
@@ -149,7 +145,6 @@ void decx::_GPU_Matrix::_attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, co
 }
 
 
-
 uint32_t decx::_GPU_Matrix::Width() const
 {
     return this->_layout.width;
@@ -183,7 +178,7 @@ decx::_GPU_Matrix::_GPU_Matrix()
 
 void decx::_GPU_Matrix::release()
 {
-    decx::alloc::_device_dealloc(&this->Mat);
+    this->Mat.Free();
 }
 
 
@@ -200,15 +195,14 @@ void decx::_GPU_Matrix::Reinterpret(const de::_DATA_TYPES_FLAGS_ _new_type)
 }
 
 
-
 de::GPU_Matrix& decx::_GPU_Matrix::SoftCopy(de::GPU_Matrix& src)
 {
     decx::_GPU_Matrix& ref_src = dynamic_cast<decx::_GPU_Matrix&>(src);
 
-    this->Mat.block = ref_src.Mat.block;
-
     this->_attribute_assign(ref_src.type, ref_src._layout.width, ref_src._layout.height);
-    decx::alloc::_device_malloc_same_place(&this->Mat);
+    
+    this->Mat = ref_src.Mat;
+    this->Mat.AllocateRef();
 
     return *this;
 }
@@ -218,7 +212,6 @@ de::_DATA_FORMATS_ decx::_GPU_Matrix::Format() const
 {
     return this->_format;
 }
-
 
 
 uint32_t decx::_GPU_Matrix::Pitch() const
@@ -243,7 +236,6 @@ uint64_t decx::_GPU_Matrix::get_total_bytes() const
 {
     return this->total_bytes;
 }
-
 
 
 de::_DATA_FORMATS_ decx::_GPU_Matrix::get_data_format() const
@@ -278,7 +270,6 @@ de::GPU_Matrix& de::CreateGPUMatrixRef(const de::_DATA_TYPES_FLAGS_ _type, const
 }
 
 
-
 de::GPU_Matrix* de::CreateGPUMatrixPtr(const de::_DATA_TYPES_FLAGS_ _type, const uint width, const uint height,
     const de::_DATA_FORMATS_ format)
 {
@@ -286,13 +277,12 @@ de::GPU_Matrix* de::CreateGPUMatrixPtr(const de::_DATA_TYPES_FLAGS_ _type, const
 }
 
 
-
 _DECX_API_ de::DH de::cuda::PinMemory(de::Matrix& src)
 {
     de::DH handle;
 
     decx::_Matrix* _src = dynamic_cast<decx::_Matrix*>(&src);
-    cudaError_t _err = cudaHostRegister(_src->Mat.ptr, _src->get_total_bytes(), cudaHostRegisterPortable);
+    cudaError_t _err = cudaHostRegister(_src->Mat.GetRawPtr(), _src->get_total_bytes(), cudaHostRegisterPortable);
     if (_err != cudaSuccess) {
         if (_err == cudaErrorHostMemoryAlreadyRegistered) {
             decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_HOST_MEM_REGISTERED, HOST_MEM_REGISTERED);
@@ -311,7 +301,7 @@ _DECX_API_ de::DH de::cuda::UnpinMemory(de::Matrix& src)
     de::DH handle;
 
     decx::_Matrix* _src = dynamic_cast<decx::_Matrix*>(&src);
-    cudaError_t _err = cudaHostUnregister(_src->Mat.ptr);
+    cudaError_t _err = cudaHostUnregister(_src->Mat.GetRawPtr());
 
     if (_err != cudaSuccess) {
         if (_err == cudaErrorHostMemoryNotRegistered) {

@@ -93,7 +93,7 @@ namespace decx
         bool _init;
 
     public:
-        decx::PtrInfo<void> MatArr;
+        decx::PtrInfo<uint8_t> MatArr;
         decx::PtrInfo<void*> MatptrArr;
 
         de::_DATA_TYPES_FLAGS_ type;

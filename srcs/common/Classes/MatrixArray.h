@@ -128,7 +128,7 @@ namespace decx
     public:
         
         // decx::PtrInfo<void> MatArr;
-        decx::utils::Dynamic_Array<decx::PtrInfo<void>> MatptrArr;
+        decx::utils::Dynamic_Array<decx::PtrInfo<uint8_t>> MatptrArr;
 
         void construct(const de::_DATA_TYPES_FLAGS_ _type, uint32_t width, uint32_t height, uint32_t MatrixNum);
 

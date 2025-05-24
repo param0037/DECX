@@ -33,8 +33,8 @@
 #define _TENSORARRAY_H_
 
 
-#include "../basic.h"
-#include "../../modules/core/allocators.h"
+#include <basic.h>
+#include <decx_alloc_interface.h>
 #include "classes_util.h"
 #include "Tensor.h"
 
@@ -48,7 +48,7 @@ namespace de
         TensorArray
     {
     protected:
-        _SHADOW_ATTRIBUTE_(void**) _exp_data_ptr;
+        void** _exp_data_ptr;
         _SHADOW_ATTRIBUTE_(decx::_tensor_layout) _exp_tensor_dscr;
 
     public:
@@ -65,13 +65,6 @@ namespace de
 
 
         virtual uint32_t TensorNum() const = 0;
-
-
-        /*virtual float* ptr_fp32(const int x, const int y, const int z, const int tensor_id) = 0;
-        virtual int* ptr_int32(const int x, const int y, const int z, const int tensor_id) = 0;
-        virtual de::Half* ptr_fp16(const int x, const int y, const int z, const int tensor_id) = 0;
-        virtual double* ptr_fp64(const int x, const int y, const int z, const int tensor_id) = 0;
-        virtual uint8_t* ptr_uint8(const int x, const int y, const int z, const int tensor_id) = 0;*/
 
 
         virtual de::TensorArray& SoftCopy(de::TensorArray& src) = 0;
@@ -147,7 +140,7 @@ namespace decx
     public:
 
         // The data pointer
-        decx::PtrInfo<void> TensArr;
+        decx::PtrInfo<uint8_t> TensArr;
         // The pointer array for the pointers of each tensor in the TensorArray
         decx::PtrInfo<void*> TensptrArr;
 

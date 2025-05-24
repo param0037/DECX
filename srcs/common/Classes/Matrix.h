@@ -126,7 +126,7 @@ namespace de
         Matrix
     {
     protected:
-        _SHADOW_ATTRIBUTE_(void*) _exp_data_ptr;
+        void* _exp_data_ptr;
         _SHADOW_ATTRIBUTE_(decx::_matrix_layout) _matrix_dscr;
 
     public:
@@ -208,7 +208,7 @@ namespace decx
 
     public:
         
-        decx::PtrInfo<void> Mat;
+        decx::PtrInfo<uint8_t> Mat;
 
 
         void construct(const de::_DATA_TYPES_FLAGS_ type, uint32_t width, uint32_t height, const de::_DATA_FORMATS_ format = de::_NA_);

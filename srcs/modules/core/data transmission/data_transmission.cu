@@ -76,8 +76,8 @@ decx::bp::Memcpy_Vec(decx::_Vector* _host_vec,      decx::_GPU_Vector* _device_v
             return;
         }
 
-        checkCudaErrors(cudaMemcpyAsync((uint8_t*)_device_vec->Vec.ptr + start_src * _sizeof,
-            (uint8_t*)_host_vec->Vec.ptr + start_dst * _sizeof,
+        checkCudaErrors(cudaMemcpyAsync((uint8_t*)_device_vec->Vec.GetRawPtr() + start_src * _sizeof,
+            (uint8_t*)_host_vec->Vec.GetRawPtr() + start_dst * _sizeof,
             cpy_len * _sizeof, cudaMemcpyHostToDevice, S->get_raw_stream_ref()));
     }
     else {
@@ -87,8 +87,8 @@ decx::bp::Memcpy_Vec(decx::_Vector* _host_vec,      decx::_GPU_Vector* _device_v
             return;
         }
 
-        checkCudaErrors(cudaMemcpyAsync((uint8_t*)_host_vec->Vec.ptr + start_src * _sizeof,
-            (uint8_t*)_device_vec->Vec.ptr + start_dst * _sizeof,
+        checkCudaErrors(cudaMemcpyAsync((uint8_t*)_host_vec->Vec.GetRawPtr() + start_src * _sizeof,
+            (uint8_t*)_device_vec->Vec.GetRawPtr() + start_dst * _sizeof,
             cpy_len * _sizeof, cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
     }
 
@@ -146,9 +146,9 @@ decx::bp::Memcpy_Mat(decx::_Matrix* _host_mat,          decx::_GPU_Matrix* _devi
         }
 
         checkCudaErrors(cudaMemcpy2DAsync(
-            DECX_PTR_SHF_XY<void, uint8_t>(_device_mat->Mat.ptr, make_uint2(start_dst.y, start_dst.x * _sizeof), _device_mat->Pitch() * _sizeof),
+            DECX_PTR_SHF_XY<void, uint8_t>(_device_mat->Mat.GetRawPtr(), make_uint2(start_dst.y, start_dst.x * _sizeof), _device_mat->Pitch() * _sizeof),
             _device_mat->Pitch() * _sizeof,
-            DECX_PTR_SHF_XY<void, uint8_t>(_host_mat->Mat.ptr, make_uint2(start_src.y, start_src.x * _sizeof), _host_mat->Pitch() * _sizeof),
+            DECX_PTR_SHF_XY<void, uint8_t>(_host_mat->Mat.GetRawPtr(), make_uint2(start_src.y, start_src.x * _sizeof), _host_mat->Pitch() * _sizeof),
             _host_mat->Pitch() * _sizeof,
             cpy_size.x * _sizeof,
             cpy_size.y,
@@ -163,9 +163,9 @@ decx::bp::Memcpy_Mat(decx::_Matrix* _host_mat,          decx::_GPU_Matrix* _devi
         }
 
         checkCudaErrors(cudaMemcpy2DAsync(
-            DECX_PTR_SHF_XY<void, uint8_t>(_host_mat->Mat.ptr, make_uint2(start_src.y, start_src.x * _sizeof), _host_mat->Pitch() * _sizeof),
+            DECX_PTR_SHF_XY<void, uint8_t>(_host_mat->Mat.GetRawPtr(), make_uint2(start_src.y, start_src.x * _sizeof), _host_mat->Pitch() * _sizeof),
             _host_mat->Pitch() * _sizeof,
-            DECX_PTR_SHF_XY<void, uint8_t>(_device_mat->Mat.ptr, make_uint2(start_dst.y, start_dst.x * _sizeof), _device_mat->Pitch() * _sizeof),
+            DECX_PTR_SHF_XY<void, uint8_t>(_device_mat->Mat.GetRawPtr(), make_uint2(start_dst.y, start_dst.x * _sizeof), _device_mat->Pitch() * _sizeof),
             _device_mat->Pitch() * _sizeof,
             cpy_size.x * _sizeof,
             cpy_size.y,
@@ -219,10 +219,10 @@ decx::bp::Memcpy_Tens(decx::_Tensor* _host_tensor,              decx::_GPU_Tenso
 
     if (_memcpy_flag == de::DECX_Memcpy_Flags::DECX_MEMCPY_H2D) 
     {
-        params.srcPtr = make_cudaPitchedPtr(_host_tensor->Tens.ptr, _host_tensor->get_layout().dpitch * _sizeof,
+        params.srcPtr = make_cudaPitchedPtr(_host_tensor->Tens.GetRawPtr(), _host_tensor->get_layout().dpitch * _sizeof,
             _host_tensor->Depth() * _sizeof, _host_tensor->get_layout().wpitch);
 
-        params.dstPtr = make_cudaPitchedPtr(_device_tensor->Tens.ptr, _device_tensor->get_layout().dpitch * _sizeof,
+        params.dstPtr = make_cudaPitchedPtr(_device_tensor->Tens.GetRawPtr(), _device_tensor->get_layout().dpitch * _sizeof,
             _device_tensor->Depth() * _sizeof, _device_tensor->get_layout().wpitch);
 
         src_dims.x = _host_tensor->Depth();
@@ -236,10 +236,10 @@ decx::bp::Memcpy_Tens(decx::_Tensor* _host_tensor,              decx::_GPU_Tenso
         params.kind = cudaMemcpyHostToDevice;
     }
     else {
-        params.dstPtr = make_cudaPitchedPtr(_host_tensor->Tens.ptr, _host_tensor->get_layout().dpitch * _sizeof,
+        params.dstPtr = make_cudaPitchedPtr(_host_tensor->Tens.GetRawPtr(), _host_tensor->get_layout().dpitch * _sizeof,
             _host_tensor->Depth() * _sizeof, _host_tensor->get_layout().wpitch);
 
-        params.srcPtr = make_cudaPitchedPtr(_device_tensor->Tens.ptr, _device_tensor->get_layout().dpitch * _sizeof,
+        params.srcPtr = make_cudaPitchedPtr(_device_tensor->Tens.GetRawPtr(), _device_tensor->get_layout().dpitch * _sizeof,
             _device_tensor->Depth() * _sizeof, _device_tensor->get_layout().wpitch);
 
         src_dims.x = _device_tensor->Depth();

@@ -126,6 +126,17 @@ static uint32_t calc_proc_len_v(const uint32_t    local_col_id,
     return decx::utils::ceil<uint32_t>(post_length, alignment) + is_left;
 }
 
+template <typename _data_type> void
+decx::blas::Blocked_GQR_planner<_data_type>::Release()
+{
+    this->_src_tile.FreePagable();
+    this->_V_tile.FreePagable();
+    this->_IWY.FreePagable();
+    this->_W_tile.FreePagable();
+}
+
+template void decx::blas::Blocked_GQR_planner<float>::Release();
+
 
 template <typename _data_type> int32_t 
 decx::blas::Blocked_GQR_planner<_data_type>::GetPostMask(const uint32_t L_front, void* p_in) const

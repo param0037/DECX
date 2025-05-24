@@ -32,11 +32,11 @@
 #ifndef _GPU_MATRIX_H_
 #define _GPU_MATRIX_H_
 
-#include "../basic.h"
-#include "../../modules/core/allocators.h"
+#include <basic.h>
+#include <PtrInfo.h>
 #ifdef _DECX_CUDA_PARTS_
-#include "../../modules/core/cudaStream_management/cudaEvent_queue.h"
-#include "../../modules/core/cudaStream_management/cudaStream_queue.h"
+#include <cudaStream_management/cudaEvent_queue.h>
+#include <cudaStream_management/cudaStream_queue.h>
 #endif
 #include "type_info.h"
 #include "Matrix.h"
@@ -127,7 +127,7 @@ namespace decx
 
     public:
         
-        decx::PtrInfo<void> Mat;
+        decx::PtrInfo<uint8_t> Mat;
 
 
         void construct(const de::_DATA_TYPES_FLAGS_ _type, uint32_t width, uint32_t height, 

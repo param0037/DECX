@@ -52,13 +52,13 @@ private:
     uint2                                       _block_dims;
     uint32_t                                    _align_bytes;
 
-    decx::Ptr2D_Info<_data_type>                _src_tile;
+    decx::Ptr2D_Info_v1<_data_type>                _src_tile;
     uint64_t                                    _tile_size;
     
     // Matrix combined with colums of Householder reflectors
-    decx::Ptr2D_Info<_data_type>                _V_tile;
-    decx::Ptr2D_Info<_data_type>                _W_tile;
-    decx::Ptr2D_Info<_data_type>                _IWY;
+    decx::Ptr2D_Info_v1<_data_type>                _V_tile;
+    decx::Ptr2D_Info_v1<_data_type>                _W_tile;
+    decx::Ptr2D_Info_v1<_data_type>                _IWY;
 
     decx::PtrInfo<void>                         _simd_post_masks;
 
@@ -127,4 +127,7 @@ public:
     {
         return this->_src_tile.GetRawPtrConst();
     }
+
+
+    void Release();
 };

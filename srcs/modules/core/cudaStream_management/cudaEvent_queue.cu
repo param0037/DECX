@@ -40,7 +40,7 @@ decx::cudaEvent_Queue::cudaEvent_Queue()
     this->true_capacity = _CS_STREAM_Q_INIT_SIZE_;
     
     // allocate host memory (page-locked) for decx::cuda_stream
-    if (decx::alloc::_host_virtual_page_malloc(&this->_cuda_event_arr, _CS_STREAM_Q_INIT_SIZE_ * sizeof(decx::cuda_stream))) {
+    if (this->_cuda_event_arr.Allocate(_CS_STREAM_Q_INIT_SIZE_ * sizeof(decx::cuda_stream), PAGABLE)) {
         DECX_LOG_ERR("Failed to allocate space for cudaStream on host, cudaEvent_Queue init fail\n");
         exit(-1);
     }
@@ -53,42 +53,40 @@ decx::cuda_event* decx::cudaEvent_Queue::add_event_physical(const int flag)
         // assign a temporary pointer
         decx::PtrInfo<decx::cuda_event> tmp_ptr;
         // physically alloc space for new area
-        if (decx::alloc::_alloc_Hv(&(tmp_ptr.block),
-            (this->true_capacity + _CS_STREAM_Q_INIT_SIZE_) * sizeof(decx::cuda_stream))) {
+        if (tmp_ptr.Allocate((this->true_capacity + _CS_STREAM_Q_INIT_SIZE_) * sizeof(decx::cuda_stream), PAGABLE)) {
             DECX_LOG_ERR("Failed to allocate space for cudaStream on host, cudaEvent_Queue fail to add event\n");
             exit(-1);
         }
-        tmp_ptr.ptr = reinterpret_cast<decx::cuda_event*>(tmp_ptr.block->_ptr);
 
         // copy the old data from this to temp
-        memcpy(tmp_ptr.ptr, this->_cuda_event_arr.ptr, this->true_capacity * sizeof(decx::cuda_event));
+        memcpy(tmp_ptr.GetRawPtr(), this->_cuda_event_arr.GetRawPtr(), this->true_capacity * sizeof(decx::cuda_event));
         // refresh this->true_capacity
         this->true_capacity += _CS_STREAM_Q_INIT_SIZE_;
         // deallocate the old memory space
-        decx::alloc::_dealloc_Hv(this->_cuda_event_arr.block);
+        this->_cuda_event_arr.Free();
         // assign the new one to the class
         this->_cuda_event_arr = tmp_ptr;
 
         // alloc one from back (push_back())
-        new(this->_cuda_event_arr.ptr + this->_cuda_event_num) decx::cuda_event(flag);
+        new(this->_cuda_event_arr + this->_cuda_event_num) decx::cuda_event(flag);
         // increament on this->_cuda_stream_num
         ++this->_cuda_event_num;
     }
     else {
         // alloc one from back (push_back())
-        new(this->_cuda_event_arr.ptr + this->_cuda_event_num) decx::cuda_event(flag);
+        new(this->_cuda_event_arr + this->_cuda_event_num) decx::cuda_event(flag);
         // increament on this->_cuda_stream_num
         ++this->_cuda_event_num;
     }
 
-    return (this->_cuda_event_arr.ptr + this->_cuda_event_num - 1);
+    return (this->_cuda_event_arr + this->_cuda_event_num - 1);
 }
 
 
 bool decx::cudaEvent_Queue::_find_idle_event(uint* res_dex, const int flag)
 {
     for (int i = 0; i < this->_cuda_event_num; ++i) {
-        decx::cuda_event* _tmpS = this->_cuda_event_arr.ptr + i;
+        decx::cuda_event* _tmpS = this->_cuda_event_arr + i;
         if (!_tmpS->_is_occupied && _tmpS->_event_flag == flag) {
             *res_dex = i;
             //_tmpS->attach();
@@ -107,7 +105,7 @@ decx::cuda_event* decx::cudaEvent_Queue::event_accessor_ptr(const int flag)
 
     decx::cuda_event* res_ptr = NULL;
     if (this->_find_idle_event(&dex, flag)) {        // found an idle stream
-        res_ptr = this->_cuda_event_arr.ptr + dex;
+        res_ptr = this->_cuda_event_arr + dex;
     }
     else {          // all the streams are occupied
         res_ptr = this->add_event_physical(flag);
@@ -125,7 +123,7 @@ decx::cuda_event& decx::cudaEvent_Queue::event_accessor_ref(const int flag)
     uint dex = 0;
     decx::cuda_event* res_ptr = NULL;
     if (this->_find_idle_event(&dex, flag)) {        // found an idle stream
-        res_ptr = this->_cuda_event_arr.ptr + dex;
+        res_ptr = this->_cuda_event_arr + dex;
     }
     else {          // all the streams are occupied
         res_ptr = this->add_event_physical(flag);
@@ -140,16 +138,16 @@ void decx::cudaEvent_Queue::release()
 {
     // call cudaStreamDestroy on each stream
     for (int i = 0; i < this->_cuda_event_num; ++i) {
-        (this->_cuda_event_arr.ptr + i)->release();
+        (this->_cuda_event_arr + i)->release();
     }
     // deallocte the stream array
-    decx::alloc::_dealloc_Hv(this->_cuda_event_arr.block);
+    this->_cuda_event_arr.Free();
 }
 
 
 decx::cudaEvent_Queue::~cudaEvent_Queue()
 {
-    decx::alloc::_dealloc_Hv(this->_cuda_event_arr.block);
+    this->_cuda_event_arr.Free();
 }
 
 

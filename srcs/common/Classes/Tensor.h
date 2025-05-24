@@ -132,7 +132,7 @@ namespace de
         Tensor
     {
     protected:
-        _SHADOW_ATTRIBUTE_(void*) _exp_data_ptr;
+        void* _exp_data_ptr;
         _SHADOW_ATTRIBUTE_(decx::_tensor_layout) _exp_tensor_dscr;
 
     public:
@@ -183,7 +183,7 @@ namespace decx
         decx::_tensor_layout _layout;
 
 
-        decx::PtrInfo<void> Tens;
+        decx::PtrInfo<uint8_t> Tens;
         uint64_t element_num;        // is the number of all the ACTIVE elements
         uint64_t total_bytes;        // is the size of ALL(including pitch) elements
 

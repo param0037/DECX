@@ -32,7 +32,6 @@
 #ifndef _PTR_INFO_H_
 #define _PTR_INFO_H_
 
-
 #include <include.h>
 #include <log_console.h>
 #include <decx_alloc_interface.h>
@@ -94,9 +93,9 @@ public:
 
 
 #ifdef _DECX_CUDA_PARTS_
-    int32_t Allocate(const uint64_t size, const DecxMemoryType_e alloc_type, const bool zero_initialize = true, decx::cuda_stream* S = nullptr)
+    int32_t Allocate(const uint64_t size, const DecxMemoryType_e alloc_type, de::DH* handle = nullptr, const bool zero_initialize = true, decx::cuda_stream* S = nullptr)
 #else
-    int32_t Allocate(const uint64_t size, const DecxMemoryType_e alloc_type, const bool zero_initialize = true)
+    int32_t Allocate(const uint64_t size, const DecxMemoryType_e alloc_type, de::DH* handle = nullptr, const bool zero_initialize = true)
 #endif
     {
         this->_mem_type = alloc_type;
@@ -104,18 +103,26 @@ public:
 
         switch (alloc_type)
         {
-        case DecxMemoryType_e::PAGABLE:
+        case PAGABLE:
             rval |= DecxAllocPagable(&this->block, size, (void**)(&this->ptr));
             if (zero_initialize){
                 rval |= DecxMemset(this->block, size, 0);
             }
+            if (handle != nullptr && rval != 0){
+                decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION, ALLOC_FAIL);
+            }
+            break;
 
 #ifdef _DECX_CUDA_PARTS_
-        case DecxMemoryType_e::CUDA_DEVICE:
+        case CUDA_DEVICE:
             rval |= DecxAllocCUDA(&this->block, size, (void**)(&this->ptr));
             if (zero_initialize){
                 rval |= DecxCUDAMemset(this->block, size, 0, S);
             }
+            if (handle != nullptr && rval != 0){
+                decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_CUDA_ALLOCATION, DEV_ALLOC_FAIL);
+            }
+            break;
 #endif
 
         default:
@@ -161,11 +168,11 @@ public:
     {
         switch (this->_mem_type)
         {
-        case DecxMemoryType_e::PAGABLE:
+        case PAGABLE:
             return DecxFreePagable(this->block);
 
 #ifdef _DECX_CUDA_PARTS_
-        case DecxMemoryType_e::CUDA_DEVICE:
+        case CUDA_DEVICE:
             return DecxFreeCUDA(this->block);
 #endif
         
@@ -186,6 +193,12 @@ public:
     _Ty& operator[](const uint64_t idx)
     {
         return *(this->GetRawPtr<_Ty>() + idx);
+    }
+
+
+    const _Ty& operator[](const uint64_t idx) const
+    {
+        return *(this->GetRawPtrConst<_Ty>() + idx);
     }
     
 
@@ -239,6 +252,13 @@ public:
     }
 
 
+    template <typename _Out_Ptr = _Ty>
+    _Out_Ptr* GetRawPtrConst() const
+    {
+        return this->_ptr.template GetRawPtrConst<_Out_Ptr>();
+    }
+
+
 #ifdef _DECX_CUDA_PARTS_
     int32_t Allocate(const DecxMemoryType_e mem_type,   const uint32_t element_size = sizeof(_Ty), 
                      de::DH* handle = nullptr,          const bool zero_initialize = true,
@@ -250,15 +270,10 @@ public:
     {
         const uint64_t size_alloca = (uint64_t)this->_dims.x * (uint64_t)this->_dims.y * element_size;
 #ifdef _DECX_CUDA_PARTS_
-        int32_t rval = this->_ptr.Allocate(size_alloca, mem_type, S);
+        int32_t rval = this->_ptr.Allocate(size_alloca, mem_type, handle, zero_initialize, S);
 #else
-        int32_t rval = this->_ptr.Allocate(size_alloca, mem_type);
+        int32_t rval = this->_ptr.Allocate(size_alloca, mem_type, handle, zero_initialize);
 #endif
-        if (rval != 0){
-            if (handle != nullptr){
-                decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION, ALLOC_FAIL);
-            }
-        }
         return rval;
     }
 
@@ -308,6 +323,12 @@ public:
     _Ty& operator[](const uint64_t idx)
     {
         return *(this->GetRawPtr<_Ty>() + idx);
+    }
+
+    
+    const _Ty& operator[](const uint64_t idx) const
+    {
+        return *(this->GetRawPtrConst<_Ty>() + idx);
     }
 };
 

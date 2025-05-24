@@ -63,9 +63,9 @@ extern "C"{
     DECX_Log_Console_Exec(LVL_TAG, MDL_TAG, FUNC, msg);             \
 }
 
-#ifndef MODULE_TAG
-#define MODULE_TAG "DecxInternal"
-#endif
+// #ifndef MODULE_TAG
+// #define MODULE_TAG "DecxInternal"
+// #endif
 
 // MODULE_TAG should be defined first
 #define DECX_LOG_ERR(...)       DECX_LOG(LOG_ERROR,   MODULE_TAG, __FUNCTION__, __VA_ARGS__)

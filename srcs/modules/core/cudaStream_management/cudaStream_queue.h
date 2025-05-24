@@ -33,10 +33,10 @@
 #define _CUDASTREAM_QUEUE_CUH_
 
 
-#include "../../../common/basic.h"
+#include <basic.h>
 #include "cudaStream_package.h"
-#include "../decx_alloc_interface.h"
-#include "../memory_management/PtrInfo.h"
+#include <decx_alloc_interface.h>
+#include <PtrInfo.h>
 
 
 #define _CS_STREAM_Q_INIT_SIZE_ 10
@@ -87,8 +87,6 @@ public:
 
     ~cudaStream_Queue();
 };
-
-
 
 
 namespace decx

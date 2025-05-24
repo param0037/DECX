@@ -20,7 +20,7 @@ namespace de
     class _DECX_API_ Vector
     {
     protected:
-        _SHADOW_ATTRIBUTE_(void*) _exp_data_ptr;
+        void* _exp_data_ptr;
 
     public:
         Vector() {}
@@ -32,7 +32,7 @@ namespace de
         template <typename _ptr_type>
         _ptr_type* ptr(const uint64_t _idx)
         {
-            return ((_ptr_type*)*this->_exp_data_ptr) + _idx;
+            return ((_ptr_type*)this->_exp_data_ptr) + _idx;
         }
 
 

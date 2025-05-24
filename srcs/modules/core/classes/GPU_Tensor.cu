@@ -29,9 +29,10 @@
 */
 
 
-#include "../../../common/Classes/GPU_Tensor.h"
-
-#define MODULE_TAG "core::class"
+#include <Classes/GPU_Tensor.h>
+#include <cudaStream_management/cudaEvent_queue.h>
+#include <cudaStream_management/cudaStream_queue.h>
+#define MODULE_TAG "GPU_Tensor"
 
 void decx::_tensor_layout::_attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, const uint32_t _width,
     const uint32_t _height, const uint32_t _depth)
@@ -115,22 +116,18 @@ void decx::_GPU_Tensor::alloc_data_space()
     decx::cuda_stream* S = NULL;
     S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
     if (S == NULL) {
-        SetConsoleColor(4);
-        printf("Internal error.\n");
-        ResetConsoleColor;
+        DECX_LOG_ERR("Failed to get cuda stream from queue");
         return;
     }
     decx::cuda_event* E = NULL;
     E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
     if (E == NULL) {
-        SetConsoleColor(4);
-        printf("Internal error.\n");
-        ResetConsoleColor;
+        DECX_LOG_ERR("Failed to get cuda event from queue");
         return;
     }
-    if (decx::alloc::_device_malloc(&this->Tens, this->total_bytes, true, S)) {
-        DECX_LOG_ERR("Tensor malloc failed! Please check if there is enough space in your device.");
-        exit(-1);
+    
+    if (this->Tens.Allocate(this->total_bytes, CUDA_DEVICE, de::GetLastError(), true, S)) {
+        DECX_LOG_ERR("Tensor malloc failed! Please check if there is enough space in your device");
     }
 
     E->event_record(S);
@@ -142,15 +139,13 @@ void decx::_GPU_Tensor::alloc_data_space()
 
 
 
-
 void decx::_GPU_Tensor::re_alloc_data_space(decx::cuda_stream* S)
 {
-    if (decx::alloc::_device_realloc(&this->Tens, this->total_bytes, true, S)) {
+    if (this->Tens.Reallocate(this->total_bytes)) {
         DECX_LOG_ERR("Tensor malloc failed! Please check if there is enough space in your device.");
         exit(-1);
     }
 }
-
 
 
 void decx::_GPU_Tensor::construct(const de::_DATA_TYPES_FLAGS_ _type, const uint32_t _width, const uint32_t _height, const uint32_t _depth)
@@ -159,7 +154,6 @@ void decx::_GPU_Tensor::construct(const de::_DATA_TYPES_FLAGS_ _type, const uint
 
     this->alloc_data_space();
 }
-
 
 
 
@@ -182,16 +176,12 @@ void decx::_GPU_Tensor::re_construct(const de::_DATA_TYPES_FLAGS_ _type, const u
 }
 
 
-
-
 decx::_GPU_Tensor::_GPU_Tensor(const de::_DATA_TYPES_FLAGS_ _type, const uint32_t _width, const uint32_t _height, const uint32_t _depth)
 {
     this->_attribute_assign(_type, _width, _height, _depth);
 
     this->alloc_data_space();
 }
-
-
 
 
 decx::_GPU_Tensor::_GPU_Tensor()
@@ -202,25 +192,21 @@ decx::_GPU_Tensor::_GPU_Tensor()
 
 
 
-
 de::GPU_Tensor& decx::_GPU_Tensor::SoftCopy(de::GPU_Tensor& src)
 {
     decx::_GPU_Tensor& ref_src = dynamic_cast<decx::_GPU_Tensor &>(src);
 
-    this->Tens.block = ref_src.Tens.block;
-
     this->_attribute_assign(ref_src.type, ref_src._layout.width, ref_src._layout.height, ref_src._layout.depth);
 
-    decx::alloc::_device_malloc_same_place(&this->Tens);
+    this->Tens.AllocateRef();
 
     return *this;
 }
 
 
-
 void decx::_GPU_Tensor::release()
 {
-    decx::alloc::_device_dealloc(&this->Tens);
+    this->Tens.Free();
 }
 
 
@@ -290,7 +276,7 @@ _DECX_API_ de::DH de::cuda::PinMemory(de::Tensor& src)
     de::DH handle;
 
     decx::_Tensor* _src = dynamic_cast<decx::_Tensor*>(&src);
-    cudaError_t _err = cudaHostRegister(_src->Tens.ptr, _src->get_total_bytes(), cudaHostRegisterPortable);
+    cudaError_t _err = cudaHostRegister(_src->Tens.GetRawPtr(), _src->get_total_bytes(), cudaHostRegisterPortable);
     if (_err != cudaSuccess) {
         if (_err == cudaErrorHostMemoryAlreadyRegistered) {
             decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_HOST_MEM_REGISTERED, HOST_MEM_REGISTERED);
@@ -309,7 +295,7 @@ _DECX_API_ de::DH de::cuda::UnpinMemory(de::Tensor& src)
     de::DH handle;
 
     decx::_Tensor* _src = dynamic_cast<decx::_Tensor*>(&src);
-    cudaError_t _err = cudaHostUnregister(_src->Tens.ptr);
+    cudaError_t _err = cudaHostUnregister(_src->Tens.GetRawPtr());
 
     if (_err != cudaSuccess) {
         if (_err == cudaErrorHostMemoryNotRegistered) {

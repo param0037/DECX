@@ -73,4 +73,8 @@ _DECX_API_ void de::blas::cpu::GQRF(de::Matrix& src, de::Matrix& Q, de::Matrix& 
     //     }
     //     printf("\n");
     // }
+
+    _planner.Release();
+
+    
 }
