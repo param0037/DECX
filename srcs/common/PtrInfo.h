@@ -79,6 +79,14 @@ public:
     }
 
 
+    template<typename _type_out>
+    explicit operator _type_out() { return (_type_out)this->ptr; }
+
+
+    template<typename _type_out>
+    explicit operator _type_out() const { return (_type_out)this->ptr; }
+
+
     template <typename _Out_Ptr = _Ty>
     _Out_Ptr* GetRawPtr()
     {
@@ -133,9 +141,9 @@ public:
 
 
     #ifdef _DECX_CUDA_PARTS_
-    int32_t Reallocate(const uint64_t size, const bool zero_initialize = true, decx::cuda_stream* S = nullptr)
+    int32_t Reallocate(const uint64_t size, de::DH* handle = nullptr, const bool zero_initialize = true, decx::cuda_stream* S = nullptr, const bool lazy_alloc = false)
 #else
-    int32_t Reallocate(const uint64_t size, const bool zero_initialize = true)
+    int32_t Reallocate(const uint64_t size, de::DH* handle = nullptr, const bool zero_initialize = true, const bool lazy_alloc = false)
 #endif
     {
         int32_t rval = 0;
@@ -143,17 +151,29 @@ public:
         switch (this->_mem_type)
         {
         case DecxMemoryType_e::PAGABLE:
-            rval |= DecxReallocPagable(&this->block, size, (void**)(&this->ptr));
+            if (lazy_alloc)
+                rval |= DecxReallocPagableLazy(&this->block, size, (void**)(&this->ptr));
+            else
+                rval |= DecxReallocPagable(&this->block, size, (void**)(&this->ptr));
             if (zero_initialize){
                 rval |= DecxMemset(this->block, size, 0);
+            }
+            if (handle != nullptr && rval != 0){
+                decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION, ALLOC_FAIL);
             }
         return rval;
 
 #ifdef _DECX_CUDA_PARTS_
         case DecxMemoryType_e::CUDA_DEVICE:
-            rval |= DecxReallocCUDA(&this->block, size, (void**)(&this->ptr));
+            if (lazy_alloc)
+                rval |= DecxReallocCUDALazy(&this->block, size, (void**)(&this->ptr));
+            else
+                rval |= DecxReallocCUDA(&this->block, size, (void**)(&this->ptr));
             if (zero_initialize){
                 rval |= DecxCUDAMemset(this->block, size, 0, S);
+            }
+            if (handle != nullptr && rval != 0){
+                decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_CUDA_ALLOCATION, DEV_ALLOC_FAIL);
             }
         return rval;
 #endif
@@ -251,6 +271,12 @@ public:
         return this->_ptr.template GetRawPtr<_Out_Ptr>();
     }
 
+    void SetDims(const uint2 dims) {this->_dims = dims;}
+    void SetDims(const uint32_t x, const uint32_t y) {this->_dims.x = x; this->_dims.y = y; }
+
+
+    const uint2& getDims() const {return this->_dims; }
+    
 
     template <typename _Out_Ptr = _Ty>
     _Out_Ptr* GetRawPtrConst() const
@@ -280,23 +306,18 @@ public:
     
 #ifdef _DECX_CUDA_PARTS_
     int32_t Reallocate(const uint32_t element_size = sizeof(_Ty),   de::DH* handle = nullptr,
-                    const bool zero_initialize = true,           decx::cuda_stream* S = nullptr)
+                    const bool zero_initialize = true,           decx::cuda_stream* S = nullptr, const bool lazy_alloc = false)
 #else
     int32_t Reallocate(const uint32_t element_size = sizeof(_Ty),   de::DH* handle = nullptr,
-                    const bool zero_initialize = true)
+                    const bool zero_initialize = true,              const bool lazy_alloc = false)
 #endif
     {
         const uint64_t size_alloca = (uint64_t)this->_dims.x * (uint64_t)this->_dims.y * element_size;
 #ifdef _DECX_CUDA_PARTS_
-        int32_t rval = this->_ptr.Reallocate(size_alloca, S);
+        int32_t rval = this->_ptr.Reallocate(size_alloca, handle, zero_initialize, S, lazy_alloc);
 #else
-        int32_t rval = this->_ptr.Reallocate(size_alloca);
+        int32_t rval = this->_ptr.Reallocate(size_alloca, handle, zero_initialize, lazy_alloc);
 #endif
-        if (rval != 0){
-            if (handle != nullptr){
-                decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION, ALLOC_FAIL);
-            }
-        }
         return rval;
     }
 
