@@ -120,12 +120,12 @@ public:
 
     const _data_type* GetV() const
     {
-        return this->_V_tile.GetRawPtrConst();
+        return this->_V_tile.template GetRawPtrConst<_data_type>();
     }
 
     const _data_type* GetTile() const
     {
-        return this->_src_tile.GetRawPtrConst();
+        return this->_src_tile.template GetRawPtrConst<_data_type>();
     }
 
 

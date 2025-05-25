@@ -125,6 +125,9 @@ decx::blas::Blocked_GQR_planner<_data_type>::Release()
     this->_V_tile.Free();
     this->_IWY.Free();
     this->_W_tile.Free();
+    this->_fmgrs_apply_HH.Free();
+    this->_simd_post_masks.Free();
+    decx::blas::_cpu_transpose_config::release(&this->_tp_ldg_config);
 }
 
 template void decx::blas::Blocked_GQR_planner<float>::Release();
