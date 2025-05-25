@@ -19,7 +19,7 @@ namespace de
     class _DECX_API_ TensorArray
     {
     protected:
-        void* _exp_data_ptr;
+        void** _exp_data_ptr;
         _SHADOW_ATTRIBUTE_(de::TensorLayout) _exp_tensor_dscr;
 
     public:

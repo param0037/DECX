@@ -230,7 +230,7 @@ de::GPU_TensorArray& decx::_GPU_TensorArray::SoftCopy(const de::GPU_TensorArray&
 
     this->TensArr.AllocateRef();
 
-    this->TensptrArr.Reallocate(this->tensor_num * sizeof(void*), PAGABLE);
+    this->TensptrArr.Reallocate(this->tensor_num * sizeof(void*), de::GetLastError());
     this->TensptrArr[0] = this->TensArr.GetRawPtr();
     for (uint i = 1; i < this->tensor_num; ++i) {
         this->TensptrArr[i] = (uint8_t*)this->TensptrArr[i - 1] + this->_gap * this->_layout._single_element_size;

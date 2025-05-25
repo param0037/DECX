@@ -104,6 +104,7 @@ void decx::_Vector::re_construct(const de::_DATA_TYPES_FLAGS_ _type, size_t leng
             // deallocate according to the current memory pool first
             this->Vec.Free();
             this->alloc_data_space();
+            this->_exp_data_ptr = this->Vec.GetRawPtr();
         }
     }
 }
@@ -111,18 +112,17 @@ void decx::_Vector::re_construct(const de::_DATA_TYPES_FLAGS_ _type, size_t leng
 
 decx::_Vector::_Vector()
 {
-    this->_exp_data_ptr = this->Vec.GetRawPtr();
     this->_attribute_assign(de::_DATA_TYPES_FLAGS_::_VOID_, 0);
     this->_init = false;
+    this->_exp_data_ptr = this->Vec.GetRawPtr();
 }
 
 
 decx::_Vector::_Vector(const de::_DATA_TYPES_FLAGS_ _type, size_t length)
 {
-    this->_exp_data_ptr = this->Vec.GetRawPtr();
     this->_attribute_assign(_type, length);
-
     this->alloc_data_space();
+    this->_exp_data_ptr = this->Vec.GetRawPtr();
 }
 
 
@@ -162,6 +162,7 @@ de::Vector* de::CreateVectorPtr(const de::_DATA_TYPES_FLAGS_ _type, size_t len)
 void decx::_Vector::release()
 {
     this->Vec.Free();
+    this->_exp_data_ptr = nullptr;
 }
 
 
@@ -172,6 +173,7 @@ de::Vector& decx::_Vector::SoftCopy(de::Vector& src)
     this->_attribute_assign(ref_src.type, ref_src.length);
 
     this->Vec.AllocateRef();
+    this->_exp_data_ptr = this->Vec.GetRawPtr();
 
     return *this;
 }

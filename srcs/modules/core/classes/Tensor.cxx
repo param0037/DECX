@@ -110,6 +110,7 @@ void decx::_Tensor::alloc_data_space()
 void decx::_Tensor::re_alloc_data_space()
 {
     this->Tens.Reallocate(this->total_bytes);
+    this->_exp_data_ptr = nullptr;
 }
 
 
@@ -117,7 +118,6 @@ void decx::_Tensor::re_alloc_data_space()
 void decx::_Tensor::construct(const de::_DATA_TYPES_FLAGS_ _type, const uint32_t _width, const uint32_t _height, const uint32_t _depth)
 {
     this->_attribute_assign(_type, _width, _height, _depth);
-
     this->alloc_data_space();
 }
 
@@ -136,30 +136,25 @@ void decx::_Tensor::re_construct(const de::_DATA_TYPES_FLAGS_ _type, const uint3
             // deallocate according to the current memory pool first
             this->Tens.Free();
             this->alloc_data_space();
+            this->_exp_data_ptr = this->Tens.GetRawPtr();
         }
     }
 }
 
 
-
 decx::_Tensor::_Tensor(const de::_DATA_TYPES_FLAGS_ _type, const uint32_t _width, const uint32_t _height, const uint32_t _depth)
 {
-    this->_exp_data_ptr = this->Tens.GetRawPtr();
     this->_exp_tensor_dscr = &this->_layout;
-
     this->_attribute_assign(_type, _width, _height, _depth);
-
     this->alloc_data_space();
+    this->_exp_data_ptr = this->Tens.GetRawPtr();
 }
-
-
 
 
 void decx::_Tensor::release()
 {
     this->Tens.Free();
 }
-
 
 
 de::_DATA_TYPES_FLAGS_ decx::_Tensor::Type() const
@@ -237,7 +232,8 @@ de::Tensor& decx::_Tensor::SoftCopy(de::Tensor& src)
 
     this->Tens = ref_src.Tens;
     this->Tens.AllocateRef();
-
+    this->_exp_data_ptr = this->Tens.GetRawPtr();
+    
     return *this;
 }
 

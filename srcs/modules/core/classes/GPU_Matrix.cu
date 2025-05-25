@@ -95,7 +95,7 @@ void decx::_GPU_Matrix::alloc_data_space()
 
 void decx::_GPU_Matrix::re_alloc_data_space(decx::cuda_stream* S)
 {
-    if (this->Mat.Reallocate(this->total_bytes, true, S)) {
+    if (this->Mat.Reallocate(this->total_bytes, de::GetLastError(), true, S)) {
         return;
     }
 }

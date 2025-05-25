@@ -139,7 +139,7 @@ void decx::_GPU_Vector::re_alloc_data_space()
         return;
     }
 
-    if (this->Vec.Reallocate(this->total_bytes, true, S)) {
+    if (this->Vec.Reallocate(this->total_bytes, de::GetLastError(), true, S)) {
         DECX_LOG_ERR("Vector on GPU malloc failed! Please check if there is enough space in your device");
         return;
     }
