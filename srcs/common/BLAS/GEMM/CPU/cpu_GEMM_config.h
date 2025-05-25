@@ -71,7 +71,7 @@ private:
                                *_layout_C;      // = NULL if not applicable
     decx::PtrInfo<decx::blas::GEMM_blocking_config> _thread_config;
 
-    decx::Ptr2D_Info<void> _arranged_B;
+    decx::Ptr2D_Info<uint8_t> _arranged_B;
 
     /**
     * Fragment manager for matrix B arrangement

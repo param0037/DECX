@@ -57,22 +57,11 @@ decx::blas::cpu_GEMM_planner<_data_type>::_plan_for_B_arrangement(de::DH* handle
     decx::utils::thread2D_arrangement_advisor(&this->_thread_dist_B, this->_concurrency,
         make_uint2(this->_layout_B->height, this->_layout_B->width));
 
-    this->_arranged_B._dims = make_uint2(this->_layout_B->height * _alignment_2x,
-        decx::utils::ceil<uint32_t>(this->_layout_B->width, _alignment_2x));
+    this->_arranged_B.SetDims(make_uint2(this->_layout_B->height * _alignment_2x,
+        decx::utils::ceil<uint32_t>(this->_layout_B->width, _alignment_2x)));
+    this->_arranged_B.Allocate(PAGABLE, sizeof(_data_type), handle);
 
-    if (decx::alloc::_host_virtual_page_malloc(&this->_arranged_B._ptr, 
-        this->_arranged_B._dims.x * this->_arranged_B._dims.y * sizeof(_data_type))) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION,
-            ALLOC_FAIL);
-        return;
-    }
-
-    if (decx::alloc::_host_virtual_page_malloc(&this->_thread_config, 
-        this->_concurrency * sizeof(decx::blas::GEMM_blocking_config))) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION,
-            ALLOC_FAIL);
-        return;
-    }
+    this->_thread_config.Allocate(this->_concurrency * sizeof(decx::blas::GEMM_blocking_config), PAGABLE, handle);
 
     // plan for fragment manager for matrix B arrangement
     decx::utils::frag_manager_gen_Nx(this->_fmgr_WH_B, 
@@ -124,7 +113,7 @@ decx::blas::cpu_GEMM_planner<_data_type>::_plan_for_exectutors(const bool _cplxf
                                         i < this->_thread_dist_dst.y - 1 ? this->_fmgr_WH_dst[1].frag_len : this->_fmgr_WH_dst[1].last_frag_len);
         for (uint32_t j = 0; j < this->_thread_dist_dst.x - 1; ++j)
         {
-            auto* conf_ptr = &((decx::blas::GEMM_blocking_config*)this->_thread_config.ptr)[this->_thread_dist_dst.x * i + j];
+            auto* conf_ptr = this->_thread_config + this->_thread_dist_dst.x * i + j;
 
             decx::utils::frag_manager_gen_from_fragLen(&conf_ptr->_fmgr_H, proc_dims_v.y, BH);
             decx::utils::frag_manager_gen_from_fragLen(&conf_ptr->_fmgr_W, proc_dims_v.x, BW);
@@ -132,7 +121,7 @@ decx::blas::cpu_GEMM_planner<_data_type>::_plan_for_exectutors(const bool _cplxf
         }
         proc_dims_v.x = this->_fmgr_WH_dst[0].last_frag_len;
 
-        auto* conf_ptr = &((decx::blas::GEMM_blocking_config*)this->_thread_config.ptr)[this->_thread_dist_dst.x * (i + 1) - 1];
+        auto* conf_ptr = this->_thread_config + this->_thread_dist_dst.x * (i + 1) - 1;
 
         decx::utils::frag_manager_gen_from_fragLen(&conf_ptr->_fmgr_H, proc_dims_v.y, BH);
         decx::utils::frag_manager_gen_from_fragLen(&conf_ptr->_fmgr_W, proc_dims_v.x, BW);
@@ -260,8 +249,8 @@ template uint2 decx::blas::cpu_GEMM_planner<de::CPd>::GetThreadDist_dst() const;
 template <typename _data_type>
 void decx::blas::cpu_GEMM_planner<_data_type>::Release(decx::blas::cpu_GEMM_planner<_data_type>* _fake_this)
 {
-    decx::alloc::_host_virtual_page_dealloc(&_fake_this->_arranged_B._ptr);
-    decx::alloc::_host_virtual_page_dealloc(&_fake_this->_thread_config);
+    _fake_this->_arranged_B.Free();
+    _fake_this->_thread_config.Free();
 }
 
 template void decx::blas::cpu_GEMM_planner<float>::Release(decx::blas::cpu_GEMM_planner<float>* _fake_this);

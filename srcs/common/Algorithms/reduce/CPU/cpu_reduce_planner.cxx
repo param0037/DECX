@@ -97,9 +97,5 @@ plan(const uint32_t conc,           const uint64_t total,
 void decx::reduce::cpu_Reduce1D_Planner::
 alloc_shared_mem(const uint64_t size, de::DH* handle)
 {
-    if (decx::alloc::_host_virtual_page_malloc(&this->_shared_memory, size)){
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION,
-            ALLOC_FAIL);
-        return;
-    }
+    this->_shared_memory.Allocate(size, PAGABLE, handle);
 }

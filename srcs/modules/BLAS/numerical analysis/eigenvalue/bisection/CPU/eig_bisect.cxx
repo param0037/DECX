@@ -59,23 +59,13 @@ decx::blas::cpu_eig_bisection<_data_type>::Init(const uint32_t conc,
     }
 
     this->_aligned_N = decx::utils::align<uint32_t>(this->_layout.width, this->_alignment);
-    if (decx::alloc::_host_virtual_page_realloc(&this->_diag, this->_aligned_N * sizeof(_data_type))){
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION,
-            ALLOC_FAIL);
-        return;
-    }
+    this->_diag.Allocate(this->_aligned_N * sizeof(_data_type), PAGABLE, handle);
+
     // Puls one to fit the process of finding Gerschgorin boundary.
-    if (decx::alloc::_host_virtual_page_realloc(&this->_off_diag, (this->_aligned_N + 1) * sizeof(_data_type))){
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION,
-            ALLOC_FAIL);
-        return;
-    }
+    this->_off_diag.Allocate((this->_aligned_N + 1) * sizeof(_data_type), PAGABLE, handle);
+
     // Allocate the shared memory.
-    if (decx::alloc::_host_virtual_page_realloc(&this->_shared_mem, 4 * this->_concurrency * sizeof(_data_type))) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION,
-            ALLOC_FAIL);
-        return;
-    }
+    this->_shared_mem.Allocate(4 * this->_concurrency * sizeof(_data_type), PAGABLE, handle);
 
     // Initialize the diagonal extractor
     this->_diag_extractor.plan(this->_concurrency, this->_layout.width, sizeof(_data_type), sizeof(_data_type));
@@ -95,8 +85,8 @@ void decx::blas::cpu_eig_bisection<_data_type>::extract_diagonal(const _data_typ
     using diag_extractor = void(const _data_type*, _data_type*, _data_type*, const uint32_t, const uint32_t);
 
     const _data_type* loc_ptr = src;
-    _data_type* p_diag = this->_diag.ptr;
-    _data_type* p_off_diag = this->_off_diag.ptr + 1;       // Shift one entry since b_0 = 0
+    _data_type* p_diag = this->_diag.GetRawPtr();
+    _data_type* p_off_diag = this->_off_diag + 1;       // Shift one entry since b_0 = 0
 
     const uint32_t& frag_num = this->_diag_extractor.get_fmgr()->frag_num;
     const uint32_t& frag_len = this->_diag_extractor.get_fmgr()->frag_len;
@@ -134,8 +124,8 @@ void decx::blas::cpu_eig_bisection<_data_type>::calc_Gerschgorin_bound(decx::uti
 
     this->_Gersch_bound_founder.caller(decx::blas::CPUK::Gerschgorin_bound_fp32,
         t1D,
-        decx::TArg_var<const float*>([this, p_dist](const int32_t i){return this->_diag.ptr + i * p_dist->get_frag_len();}),
-        decx::TArg_var<const float*>([this, p_dist](const int32_t i){return this->_off_diag.ptr + i * p_dist->get_frag_len();}),
+        decx::TArg_var<const float*>([this, p_dist](const int32_t i){return this->_diag + i * p_dist->get_frag_len();}),
+        decx::TArg_var<const float*>([this, p_dist](const int32_t i){return this->_off_diag + i * p_dist->get_frag_len();}),
         decx::TArg_var<float*>      ([u_ptr](const int32_t i)->float*{return u_ptr + i;}),
         decx::TArg_var<float*>      ([l_ptr](const int32_t i)->float*{return l_ptr + i;}),
         decx::TArg_var<uint32_t>    ([p_dist](const int32_t i){return p_dist->get_frag_len_by_id(i);}));
@@ -158,12 +148,12 @@ void decx::blas::cpu_eig_bisection<_data_type>::plan(const decx::_Matrix* mat, d
     de::DH* handle)
 {
     // Extract diagonal and off-diagonal elements
-    this->extract_diagonal((_data_type*)mat->Mat.ptr, t1D);
+    this->extract_diagonal((_data_type*)mat->Mat, t1D);
     // Caclulate the Gerschgorin boundary (the boundary including all possible eigenvalues)
     this->calc_Gerschgorin_bound(t1D);
 
-    this->_iter_scheduler.init((_data_type*)this->_diag.ptr, 
-                               (_data_type*)this->_off_diag.ptr, 
+    this->_iter_scheduler.init((_data_type*)this->_diag, 
+                               (_data_type*)this->_off_diag, 
                                this->_layout.width,
                                this->_Gerschgorin_L, 
                                this->_Gerschgorin_U, 
@@ -185,7 +175,7 @@ void decx::blas::eig_bisect_interval<float>::count_violent(const float* diag, co
 template <typename _data_type>
 void decx::blas::cpu_eig_bisection<_data_type>::iter_bisection()
 {
-    this->_iter_scheduler.iter((_data_type*)this->_diag.ptr, (_data_type*)this->_off_diag.ptr, this->_layout.width);
+    this->_iter_scheduler.iter((_data_type*)this->_diag, (_data_type*)this->_off_diag, this->_layout.width);
 }
 
 template void decx::blas::cpu_eig_bisection<float>::iter_bisection();

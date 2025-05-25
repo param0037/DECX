@@ -240,7 +240,7 @@ transpose_8b_caller(const double* src,
         {
             t1D->_async_thread[i * this->_thread_dist2D.x + j] = decx::cpu::register_task_default(
                 decx::blas::CPUK::transpose_8b_kernel, src_loc, dst_loc,
-                &this->_blocking_configs.ptr[this->_thread_dist2D.x * i + j], pitchsrc_v1, pitchdst_v1);
+                &this->_blocking_configs[this->_thread_dist2D.x * i + j], pitchsrc_v1, pitchdst_v1);
 
             src_loc += this->_fmgr_W.frag_len;
             dst_loc += this->_fmgr_W.frag_len * pitchdst_v1;
@@ -270,7 +270,7 @@ transpose_8b_MC_caller(const double* src,           double* dst,
         {
             t1D->_async_thread[i * this->_thread_dist2D.x + j] = decx::cpu::register_task_default(
                 decx::blas::CPUK::transpose_8b_kernel_MC, src_loc, dst_loc,
-                &this->_blocking_configs.ptr[this->_thread_dist2D.x * i + j], 
+                &this->_blocking_configs[this->_thread_dist2D.x * i + j], 
                 pitchsrc_v1, pitchdst_v1, ch_num, gch_src_v1, gch_dst_v1);
 
             src_loc += this->_fmgr_W.frag_len;

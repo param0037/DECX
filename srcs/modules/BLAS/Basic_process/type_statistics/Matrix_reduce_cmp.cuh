@@ -326,7 +326,7 @@ static void decx::reduce::matrix_reduce2D_full_cmp_fp32(decx::_Matrix* src, de::
     const bool _more_than_flatten = decx::reduce::reduce2D_flatten_postproc_configs_gen<float, float>(&_kp_configs, alloc_dims.x, proc_dims_v1, S);
 
     // set the filling value
-    _kp_configs.set_fill_val(((float*)src->Mat.ptr)[0]);
+    _kp_configs.set_fill_val((src->Mat.GetRawPtr<float>())[0]);
 
     // Call the kernels
     // Obtain the pointer where the final value is stored
@@ -501,7 +501,7 @@ static void decx::reduce::matrix_reduce2D_full_cmp_u8(decx::_Matrix* src, de::Nu
     const bool _more_than_flatten = decx::reduce::reduce2D_flatten_postproc_configs_gen<uint8_t, uint8_t>(&_kp_configs, alloc_dims.x, proc_dims_v1, S);
 
     // set the filling value
-    _kp_configs.set_fill_val(((uint8_t*)src->Mat.ptr)[0]);
+    _kp_configs.set_fill_val((src->Mat.GetRawPtr<uint8_t>())[0]);
 
     // Call the kernels
     // Obtain the pointer where the final value is stored
@@ -558,7 +558,7 @@ static void decx::reduce::matrix_reduce2D_full_cmp_fp64(decx::_Matrix* src, de::
     const bool _more_than_flatten = decx::reduce::reduce2D_flatten_postproc_configs_gen<double, double>(&_kp_configs, alloc_dims.x, proc_dims_v1, S);
 
     // set the filling value
-    _kp_configs.set_fill_val(((double*)src->Mat.ptr)[0]);
+    _kp_configs.set_fill_val((src->Mat.GetRawPtr<double>())[0]);
 
     // Call the kernels
     // Obtain the pointer where the final value is stored

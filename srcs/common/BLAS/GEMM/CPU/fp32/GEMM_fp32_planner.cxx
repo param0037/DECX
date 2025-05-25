@@ -121,9 +121,9 @@ void decx::blas::cpu_GEMM_planner<float>::Run<false>(decx::_Matrix* A, decx::_Ma
     decx::utils::_thread_arrange_2D* t2D)
 {
     // Arrange matrix B
-    decx::blas::matrix_B_arrange_fp32((float*)B->Mat.ptr, 
-        (float*)this->_arranged_B._ptr.ptr,
-        // (float*)dst->Mat.ptr,
+    decx::blas::matrix_B_arrange_fp32(B->Mat.GetRawPtr<float>(), 
+        this->_arranged_B.GetRawPtr<float>(),
+        // dst->Mat.GetRawPtr<float>(),
         B->Pitch(), 
         B->Height(), this->_fmgr_WH_B, t2D);
         
@@ -131,11 +131,11 @@ void decx::blas::cpu_GEMM_planner<float>::Run<false>(decx::_Matrix* A, decx::_Ma
     t2D->reshape(this->GetThreadDist_dst().y, this->GetThreadDist_dst().x);
     
     // Execute GEMM
-    decx::blas::GEMM_fp32_caller<false>((float*)A->Mat.ptr, (float*)this->_arranged_B._ptr.ptr, 
-        (float*)dst->Mat.ptr, this->_layout_A,
-        &dst->get_layout(), A->Width(), this->_fmgr_WH_dst, this->_thread_config.ptr, t2D);
+    decx::blas::GEMM_fp32_caller<false>(A->Mat.GetRawPtr<float>(),          this->_arranged_B.GetRawPtr<float>(), 
+                                        dst->Mat.GetRawPtr<float>(),        this->_layout_A,
+                                        &dst->get_layout(), A->Width(),     this->_fmgr_WH_dst, 
+                                        this->_thread_config.GetRawPtr(),   t2D);
 }
-
 
 
 template <> template <>
@@ -143,8 +143,8 @@ void decx::blas::cpu_GEMM_planner<float>::Run<false>(decx::_Matrix* A, decx::_Ma
     decx::utils::_thread_arrange_2D* t2D)
 {
     // Arrange matrix B
-    decx::blas::matrix_B_arrange_fp32((float*)B->Mat.ptr,
-        (float*)this->_arranged_B._ptr.ptr,
+    decx::blas::matrix_B_arrange_fp32(B->Mat.GetRawPtr<float>(),
+        this->_arranged_B.GetRawPtr<float>(),
         B->Pitch(),
         B->Height(), this->_fmgr_WH_B, t2D);
 
@@ -152,7 +152,8 @@ void decx::blas::cpu_GEMM_planner<float>::Run<false>(decx::_Matrix* A, decx::_Ma
     t2D->reshape(this->GetThreadDist_dst().y, this->GetThreadDist_dst().x);
 
     // Execute GEMM
-    decx::blas::GEMM_fp32_caller<true>((float*)A->Mat.ptr, (float*)this->_arranged_B._ptr.ptr,
-        (float*)dst->Mat.ptr, this->_layout_A,
-        &dst->get_layout(), A->Width(), this->_fmgr_WH_dst, this->_thread_config.ptr, t2D, (float*)C->Mat.ptr);
+    decx::blas::GEMM_fp32_caller<true>(A->Mat.GetRawPtr<float>(),       this->_arranged_B.GetRawPtr<float>(),
+                                       dst->Mat.GetRawPtr<float>(),     this->_layout_A,
+                                       &dst->get_layout(), A->Width(),  this->_fmgr_WH_dst, this->_thread_config.GetRawPtr(), 
+                                       t2D,                             C->Mat.GetRawPtr<float>());
 }

@@ -30,7 +30,8 @@
 
 
 #include "transpose2D_config.h"
-
+#include <log_console.h>
+#define MODULE_TAG "TP2D_Config"
 
 namespace decx
 {
@@ -49,13 +50,9 @@ namespace decx
 void decx::blas::_cpu_transpose_config::
 _plan_threading(const decx::blas::_transpose_profiles_bytes* _profile, de::DH* handle)
 {
+    int32_t rval = 0;
     // Use realloc instead to allow multiple configure calling
-    if (decx::alloc::_host_virtual_page_realloc(&this->_blocking_configs,
-        this->_concurrency * sizeof(decx::utils::_blocking2D_fmgrs))) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION,
-            ALLOC_FAIL);
-        return;
-    }
+    rval |= this->_blocking_configs.Reallocate(this->_concurrency * sizeof(decx::utils::_blocking2D_fmgrs), handle);
     
     // Plan the thread distribution
     decx::utils::thread2D_arrangement_advisor(&this->_thread_dist2D, this->_concurrency, this->_src_proc_dims_v1);
@@ -77,11 +74,11 @@ _plan_threading(const decx::blas::_transpose_profiles_bytes* _profile, de::DH* h
                 proc_dims.x = this->_fmgr_W.last_frag_len;
             }
 
-            decx::utils::frag_manager_gen_from_fragLen(&this->_blocking_configs.ptr[_linear_dex]._fmgrH,
+            decx::utils::frag_manager_gen_from_fragLen(&this->_blocking_configs[_linear_dex]._fmgrH,
                                              proc_dims.y,
                                              _profile->_block_H);
 
-            decx::utils::frag_manager_gen_from_fragLen(&this->_blocking_configs.ptr[_linear_dex]._fmgrW,
+            decx::utils::frag_manager_gen_from_fragLen(&this->_blocking_configs[_linear_dex]._fmgrW,
                                              proc_dims.x,
                                              _profile->_block_W);
 
@@ -114,7 +111,7 @@ uint2 decx::blas::_cpu_transpose_config::GetThreadDist2D() const
 void decx::blas::_cpu_transpose_config::
 release(decx::blas::_cpu_transpose_config* _fake_this)
 {
-    decx::alloc::_host_virtual_page_dealloc(&_fake_this->_blocking_configs);
+    _fake_this->_blocking_configs.Free();
 }
 
 

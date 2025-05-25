@@ -49,7 +49,7 @@ namespace reduce{
 class decx::reduce::cpu_Reduce1D_Planner : public decx::cpu_ElementWise1D_planner
 {
 private:
-    decx::PtrInfo<void> _shared_memory;
+    decx::PtrInfo<uint8_t> _shared_memory;
 
     decx::utils::simd::xmm256_reg _mask;
 
@@ -74,7 +74,7 @@ public:
 
     template <typename _ptr_type>
     _ptr_type* get_shared_mem() {
-        return (_ptr_type*)this->_shared_memory.ptr;
+        return (_ptr_type*)this->_shared_memory;
     }
 };
 

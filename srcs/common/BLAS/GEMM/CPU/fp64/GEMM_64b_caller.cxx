@@ -135,18 +135,19 @@ void decx::blas::cpu_GEMM_planner<double>::Run(decx::_Matrix* A, decx::_Matrix* 
     decx::utils::_thread_arrange_2D* t2D)
 {
     // Arrange matrix B
-    decx::blas::matrix_B_arrange_64b<_cplxf>((double*)B->Mat.ptr, 
-        (double*)this->_arranged_B._ptr.ptr,
-        B->Pitch(), 
-        B->Height(), this->_fmgr_WH_B, t2D);
+    decx::blas::matrix_B_arrange_64b<_cplxf>(B->Mat.GetRawPtr<double>(), 
+                                             this->_arranged_B.GetRawPtr<double>(),
+                                             B->Pitch(), 
+                                             B->Height(), this->_fmgr_WH_B, t2D);
 
     // Reshape to adapt the thread distribution of kernels
     t2D->reshape(this->GetThreadDist_dst().y, this->GetThreadDist_dst().x);
 
     // Execute GEMM
-    decx::blas::GEMM_64b_caller<false, _cplxf>((double*)A->Mat.ptr, (double*)this->_arranged_B._ptr.ptr, 
-        (double*)dst->Mat.ptr, this->_layout_A,
-        &dst->get_layout(), A->Width(), this->_fmgr_WH_dst, this->_thread_config.ptr, t2D);
+    decx::blas::GEMM_64b_caller<false, _cplxf>(A->Mat.GetRawPtr<double>(),          this->_arranged_B.GetRawPtr<double>(),
+                                               dst->Mat.GetRawPtr<double>(),        this->_layout_A,
+                                               &dst->get_layout(), A->Width(),      this->_fmgr_WH_dst, 
+                                               this->_thread_config.GetRawPtr(),    t2D);
 }
 
 template void decx::blas::cpu_GEMM_planner<double>::Run<true>(decx::_Matrix*, decx::_Matrix*, decx::_Matrix*, 
@@ -161,8 +162,8 @@ void decx::blas::cpu_GEMM_planner<double>::Run(decx::_Matrix* A, decx::_Matrix* 
     decx::utils::_thread_arrange_2D* t2D)
 {
     // Arrange matrix B
-    decx::blas::matrix_B_arrange_64b<_cplxf>((double*)B->Mat.ptr,
-        (double*)this->_arranged_B._ptr.ptr,
+    decx::blas::matrix_B_arrange_64b<_cplxf>(B->Mat.GetRawPtr<double>(),
+        this->_arranged_B.GetRawPtr<double>(),
         B->Pitch(),
         B->Height(), this->_fmgr_WH_B, t2D);
 
@@ -170,9 +171,10 @@ void decx::blas::cpu_GEMM_planner<double>::Run(decx::_Matrix* A, decx::_Matrix* 
     t2D->reshape(this->GetThreadDist_dst().y, this->GetThreadDist_dst().x);
 
     // Execute GEMM
-    decx::blas::GEMM_64b_caller<true, _cplxf>((double*)A->Mat.ptr, (double*)this->_arranged_B._ptr.ptr,
-        (double*)dst->Mat.ptr, this->_layout_A,
-        &dst->get_layout(), A->Width(), this->_fmgr_WH_dst, this->_thread_config.ptr, t2D, (double*)C->Mat.ptr);
+    decx::blas::GEMM_64b_caller<true, _cplxf>(A->Mat.GetRawPtr<double>(),       this->_arranged_B.GetRawPtr<double>(),
+                                             dst->Mat.GetRawPtr<double>(),             this->_layout_A,
+                                             &dst->get_layout(), A->Width(),    this->_fmgr_WH_dst, 
+                                             this->_thread_config.GetRawPtr(),  t2D, C->Mat.GetRawPtr<double>());
 }
 
 template void decx::blas::cpu_GEMM_planner<double>::Run<true>(decx::_Matrix*, decx::_Matrix*, decx::_Matrix*,

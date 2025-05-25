@@ -104,18 +104,19 @@ void decx::blas::cpu_GEMM_planner<de::CPd>::Run<true>(decx::_Matrix* A, decx::_M
     decx::utils::_thread_arrange_2D* t2D)
 {
     // Arrange matrix B
-    decx::blas::matrix_B_arrange_cplxd((de::CPd*)B->Mat.ptr, 
-        (de::CPd*)this->_arranged_B._ptr.ptr,
-        B->Pitch(), 
-        B->Height(), this->_fmgr_WH_B, t2D);
+    decx::blas::matrix_B_arrange_cplxd(B->Mat.GetRawPtr<de::CPd>(), 
+                                       this->_arranged_B.GetRawPtr<de::CPd>(),
+                                       B->Pitch(), 
+                                       B->Height(), this->_fmgr_WH_B, t2D);
 
     // Reshape to adapt the thread distribution of kernels
     t2D->reshape(this->GetThreadDist_dst().y, this->GetThreadDist_dst().x);
 
     // Execute GEMM
-    decx::blas::GEMM_cplxd_caller<false>((de::CPd*)A->Mat.ptr, (de::CPd*)this->_arranged_B._ptr.ptr, 
-        (de::CPd*)dst->Mat.ptr, this->_layout_A,
-        &dst->get_layout(), A->Width(), this->_fmgr_WH_dst, this->_thread_config.ptr, t2D);
+    decx::blas::GEMM_cplxd_caller<false>(A->Mat.GetRawPtr<de::CPd>(),       this->_arranged_B.GetRawPtr<de::CPd>(), 
+                                          dst->Mat.GetRawPtr<de::CPd>(),    this->_layout_A,
+                                          &dst->get_layout(),               A->Width(), 
+                                          this->_fmgr_WH_dst,               this->_thread_config.GetRawPtr(), t2D);
 }
 
 
@@ -124,16 +125,17 @@ void decx::blas::cpu_GEMM_planner<de::CPd>::Run<true>(decx::_Matrix* A, decx::_M
     decx::_Matrix* C, decx::_Matrix* dst, decx::utils::_thread_arrange_2D* t2D)
 {
     // Arrange matrix B
-    decx::blas::matrix_B_arrange_cplxd((de::CPd*)B->Mat.ptr,
-        (de::CPd*)this->_arranged_B._ptr.ptr,
-        B->Pitch(),
-        B->Height(), this->_fmgr_WH_B, t2D);
+    decx::blas::matrix_B_arrange_cplxd(B->Mat.GetRawPtr<de::CPd>(),
+                                       this->_arranged_B.GetRawPtr<de::CPd>(),
+                                       B->Pitch(),
+                                       B->Height(), this->_fmgr_WH_B, t2D);
 
     // Reshape to adapt the thread distribution of kernels
     t2D->reshape(this->GetThreadDist_dst().y, this->GetThreadDist_dst().x);
 
     // Execute GEMM
-    decx::blas::GEMM_cplxd_caller<true>((de::CPd*)A->Mat.ptr, (de::CPd*)this->_arranged_B._ptr.ptr,
-        (de::CPd*)dst->Mat.ptr, this->_layout_A,
-        &dst->get_layout(), A->Width(), this->_fmgr_WH_dst, this->_thread_config.ptr, t2D, (de::CPd*)C->Mat.ptr);
+    decx::blas::GEMM_cplxd_caller<true>(A->Mat.GetRawPtr<de::CPd>(),        this->_arranged_B.GetRawPtr<de::CPd>(),
+                                        dst->Mat.GetRawPtr<de::CPd>(),      this->_layout_A,
+                                        &dst->get_layout(), A->Width(),     this->_fmgr_WH_dst, 
+                                        this->_thread_config.GetRawPtr(),   t2D, C->Mat.GetRawPtr<de::CPd>());
 }

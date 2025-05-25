@@ -190,8 +190,8 @@ static void decx::vis::_bilateral_uint8_NB(decx::_Matrix* src, decx::_Matrix* ds
     }
     decx::utils::_thr_1D t1D(conc_thr);
 
-    decx::vis::_bilateral_uint8_organiser((double*)src->Mat.ptr, 
-                                          (double*)dst->Mat.ptr,
+    decx::vis::_bilateral_uint8_organiser(src->Mat.GetRawPtr<double>(), 
+                                          dst->Mat.GetRawPtr<double>(),
                                           make_float2(powf(sigmas_raw.x, 2) * 2, powf(sigmas_raw.y, 2) * 2),
                                           make_uint2(dst->Pitch(), dst->Height()), 
                                           neighbor_dims,
@@ -211,8 +211,8 @@ decx::vis::_bilateral_uchar4_NB(decx::_Matrix* src, decx::_Matrix* dst, const ui
     }
     decx::utils::_thr_1D t1D(conc_thr);
 
-    decx::vis::_bilateral_uchar4_organiser((float*)src->Mat.ptr, 
-                                          (float*)dst->Mat.ptr,
+    decx::vis::_bilateral_uchar4_organiser(src->Mat.GetRawPtr<float>(), 
+                                          dst->Mat.GetRawPtr<float>(),
                                           make_float2(powf(sigmas_raw.x, 2) * 2, powf(sigmas_raw.y, 2) * 2),
                                           make_uint2(dst->Pitch(), dst->Height()), 
                                           neighbor_dims,
@@ -240,10 +240,10 @@ static void decx::vis::_bilateral_uint8_BC(decx::_Matrix* src, decx::_Matrix* ds
     {
     case (de::extend_label::_EXTEND_CONSTANT_):
         decx::_cpy2D_anybit_caller<uint8_t>(
-            (uint8_t*)src->Mat.ptr, start_place_src, src->Pitch(), tmp_src_dims.x, make_uint2(src->Width(), src->Height()));
+            src->Mat.GetRawPtr<uint8_t>(), start_place_src, src->Pitch(), tmp_src_dims.x, make_uint2(src->Width(), src->Height()));
         break;
     case (de::extend_label::_EXTEND_REFLECT_):
-        decx::bp::_extend_reflect_b8_2D((uint8_t*)src->Mat.ptr, tmp_src.ptr,
+        decx::bp::_extend_reflect_b8_2D(src->Mat.GetRawPtr<uint8_t>(), tmp_src.ptr,
             make_uint4(neighbor_dims.x / 2, neighbor_dims.x / 2, neighbor_dims.y / 2, neighbor_dims.y / 2),
             src->Pitch(), tmp_src_dims.x, src->Width(), src->Height(), handle);
         break;
@@ -259,7 +259,7 @@ static void decx::vis::_bilateral_uint8_BC(decx::_Matrix* src, decx::_Matrix* ds
     }
     decx::utils::_thr_1D t1D(conc_thr);
 
-    decx::vis::_bilateral_uint8_organiser((double*)tmp_src.ptr, (double*)dst->Mat.ptr,
+    decx::vis::_bilateral_uint8_organiser((double*)tmp_src.ptr, dst->Mat.GetRawPtr<double>(),
                                                    make_float2(powf(sigmas_raw.x, 2) * 2, powf(sigmas_raw.y, 2) * 2),
                                                    make_uint2(dst->Pitch(), dst->Height()), 
                                                    neighbor_dims,
@@ -290,10 +290,10 @@ static void decx::vis::_bilateral_uchar4_BC(decx::_Matrix* src, decx::_Matrix* d
     {
     case (de::extend_label::_EXTEND_CONSTANT_):
         decx::_cpy2D_anybit_caller<float>(
-            (float*)src->Mat.ptr, start_place_src, src->Pitch(), tmp_src_dims.x, make_uint2(src->Width(), src->Height()));
+            src->Mat.GetRawPtr<float>(), start_place_src, src->Pitch(), tmp_src_dims.x, make_uint2(src->Width(), src->Height()));
         break;
     case (de::extend_label::_EXTEND_REFLECT_):
-        decx::bp::_extend_reflect_b32_2D((float*)src->Mat.ptr, tmp_src.ptr,
+        decx::bp::_extend_reflect_b32_2D(src->Mat.GetRawPtr<float>(), tmp_src.ptr,
             make_uint4(neighbor_dims.x / 2, neighbor_dims.x / 2, neighbor_dims.y / 2, neighbor_dims.y / 2),
             src->Pitch(), tmp_src_dims.x, src->Width(), src->Height(), handle);
         break;
@@ -310,7 +310,7 @@ static void decx::vis::_bilateral_uchar4_BC(decx::_Matrix* src, decx::_Matrix* d
     }
     decx::utils::_thr_1D t1D(conc_thr);
 
-    decx::vis::_bilateral_uchar4_organiser((float*)tmp_src.ptr, (float*)dst->Mat.ptr,
+    decx::vis::_bilateral_uchar4_organiser((float*)tmp_src.ptr, dst->Mat.GetRawPtr<float>(),
                                                    make_float2(powf(sigmas_raw.x, 2) * 2, powf(sigmas_raw.y, 2) * 2),
                                                    make_uint2(dst->Pitch(), dst->Height()), 
                                                    neighbor_dims,

@@ -83,12 +83,13 @@ _DECX_API_ int32_t DecxAllocPagableRef(void* pMemBlock, void** pRawPtrObtained);
 _DECX_API_ int32_t DecxFreePagable(void* pMemBlock);
 _DECX_API_ int32_t DecxMemset(void* pMemBlock, const uint64_t size, const uint8_t value);
 _DECX_API_ int32_t DecxReallocPagable(void** pMemBlock, uint64_t new_size, void** pRawPtrObtained);
+_DECX_API_ int32_t DecxReallocPagableLazy(void** pMemBlock, uint64_t new_size, void** pRawPtrObtained);
 _DECX_API_ int32_t DecxMemIndexGetRawPtr(void* pMemBlock, void** pRawPtrObtained);
-
 #ifdef _DECX_CUDA_PARTS_
 _DECX_API_ int32_t DecxAllocCUDA(void** pMemBlock, uint64_t req_size, void** pRawPtrObtained);
 _DECX_API_ int32_t DecxAllocCUDARef(void* pMemBlock, void** pRawPtrObtained);
 _DECX_API_ int32_t DecxReallocCUDA(void** pMemBlock, uint64_t new_size, void** pRawPtrObtained);
+_DECX_API_ int32_t DecxReallocCUDALazy(void** pMemBlock, uint64_t new_size, void** pRawPtrObtained);
 _DECX_API_ int32_t DecxFreeCUDA(void* pMemBlock);
 _DECX_API_ int32_t DecxCUDAMemset(void* pMemBlock, const uint64_t size, const uint8_t value, decx::cuda_stream* S);
 #endif

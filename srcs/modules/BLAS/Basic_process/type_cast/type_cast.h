@@ -45,10 +45,10 @@ namespace decx
 namespace type_cast
 {
     namespace cpu {
-        _DECX_API_ void _type_cast1D_organiser(void* src, void* dst, const uint64_t proc_len, const int32_t cvt_method, de::DH* handle);
+        _DECX_API_ void _type_cast1D_organiser(const void* src, void* dst, const uint64_t proc_len, const int32_t cvt_method, de::DH* handle);
 
 
-        _DECX_API_ void _type_cast2D_organiser(void* src, void* dst, const uint2 proc_dims, const uint32_t Wsrc,
+        _DECX_API_ void _type_cast2D_organiser(const void* src, void* dst, const uint2 proc_dims, const uint32_t Wsrc,
             const uint32_t Wdst, const int cvt_method, de::DH* handle);
     }
 }

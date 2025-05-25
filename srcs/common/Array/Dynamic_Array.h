@@ -32,8 +32,9 @@
 #define _DYNAMIC_ARRAY_H_
 
 
-#include "../basic.h"
-#include "../../modules/core/allocators.h"
+#include <basic.h>
+#include <decx_alloc_interface.h>
+#include <PtrInfo.h>
 
 
 #define Array_Initial_Length 64

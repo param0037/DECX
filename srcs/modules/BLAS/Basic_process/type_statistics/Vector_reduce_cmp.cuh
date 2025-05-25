@@ -78,7 +78,7 @@ static void decx::reduce::vector_reduce_cmp_fp32(decx::_Vector* src, de::Number*
     _kp_configs.set_cmp_or_not(true);
     _kp_configs.generate_configs(src->Len(), S);
 
-    _kp_configs.set_fill_val(((float*)src->Vec.ptr)[0]);
+    _kp_configs.set_fill_val((src->Vec.GetRawPtr<float>())[0]);
 
     checkCudaErrors(cudaMemcpyAsync(_kp_configs.get_src(), src->Vec.ptr, src->Len() * sizeof(float), cudaMemcpyHostToDevice,
         S->get_raw_stream_ref()));
@@ -116,7 +116,7 @@ static void decx::reduce::vector_reduce_cmp_fp64(decx::_Vector* src, de::Number*
     _kp_configs.set_cmp_or_not(true);
     _kp_configs.generate_configs(src->Len(), S);
 
-    _kp_configs.set_fill_val(((double*)src->Vec.ptr)[0]);
+    _kp_configs.set_fill_val((src->Vec.GetRawPtr<double>())[0]);
 
     checkCudaErrors(cudaMemcpyAsync(_kp_configs.get_src(), src->Vec.ptr, src->Len() * sizeof(double), cudaMemcpyHostToDevice,
         S->get_raw_stream_ref()));
@@ -193,7 +193,7 @@ static void decx::reduce::vector_reduce_cmp_u8(decx::_Vector* src, de::Number* r
     _kp_configs.set_cmp_or_not(true);
     _kp_configs.generate_configs(src->Len(), S);
 
-    _kp_configs.set_fill_val(((uint8_t*)src->Vec.ptr)[0]);
+    _kp_configs.set_fill_val((src->Vec.GetRawPtr<uint8_t>())[0]);
 
     checkCudaErrors(cudaMemcpyAsync(_kp_configs.get_src(), src->Vec.ptr, src->Len() * sizeof(uint8_t), cudaMemcpyHostToDevice,
         S->get_raw_stream_ref()));
