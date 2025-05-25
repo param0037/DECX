@@ -279,7 +279,7 @@ public:
     
 
     template <typename _Out_Ptr = _Ty>
-    _Out_Ptr* GetRawPtrConst() const
+    const _Out_Ptr* GetRawPtrConst() const
     {
         return this->_ptr.template GetRawPtrConst<_Out_Ptr>();
     }

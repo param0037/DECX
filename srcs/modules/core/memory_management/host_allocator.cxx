@@ -85,7 +85,9 @@ int32_t _DECX_API_ DecxFreePagable(void* pMemBlock)
 _DECX_API_ int32_t DecxReallocPagable(void** pMemBlock, uint64_t new_size, void** pRawPtrObtained)
 {
     int32_t rval = 0;
-    rval |= DecxFreePagable(*pMemBlock);
+    if (pMemBlock != nullptr) {
+        rval |= DecxFreePagable(*pMemBlock);
+    }
     if (rval){
         return -1;
     }
@@ -117,13 +119,12 @@ int32_t _DECX_API_ DecxMemIndexGetRawPtr(void* pMemBlock, void** pRawPtrObtained
 }
 
 
-_DECX_API_ int32_t DecxReallocPagableLazy(void** pMemBlock, uint64_t new_size, void** pRawPtrObtained)
+int32_t _DECX_API_ DecxReallocPagableLazy(void** pMemBlock, uint64_t new_size, void** pRawPtrObtained)
 {
-    if (pMemBlock == nullptr){
-        DECX_LOG_ERR("Failed to prase since the index handler is NULL");
-        return -1;
-    }
     decx::MemBlock* p_idx_handler = (decx::MemBlock*)pMemBlock;
+    if (pMemBlock == nullptr){
+        return DecxAllocPagable(pMemBlock, new_size, pRawPtrObtained);
+    }
     *pRawPtrObtained = p_idx_handler->_ptr;
     if (new_size > p_idx_handler->block_size){
         return DecxReallocPagable(pMemBlock, new_size, pRawPtrObtained);

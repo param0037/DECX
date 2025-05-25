@@ -84,7 +84,9 @@ _DECX_API_ int32_t DecxFreeCUDA(void* pMemBlock)
 _DECX_API_ int32_t DecxReallocCUDA(void** pMemBlock, uint64_t new_size, void** pRawPtrObtained)
 {
     int32_t rval = 0;
-    rval = DecxFreeCUDA(*pMemBlock);
+    if (pMemBlock != nullptr) {
+        rval |= DecxFreeCUDA(*pMemBlock);
+    }
     if (rval){
         return -1;
     }
@@ -108,8 +110,7 @@ _DECX_API_ int32_t DecxCUDAMemset(void* pMemBlock, const uint64_t size, const ui
 _DECX_API_ int32_t DecxReallocCUDALazy(void** pMemBlock, uint64_t new_size, void** pRawPtrObtained)
 {
     if (pMemBlock == nullptr){
-        DECX_LOG_ERR("Failed to prase since the index handler is NULL");
-        return -1;
+        return DecxAllocCUDA(pMemBlock, new_size, pRawPtrObtained);
     }
     decx::MemBlock* p_idx_handler = (decx::MemBlock*)pMemBlock;
     *pRawPtrObtained = p_idx_handler->_ptr;
