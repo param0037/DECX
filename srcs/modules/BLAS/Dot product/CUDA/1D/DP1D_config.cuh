@@ -78,7 +78,7 @@ private:
     bool _from_dev;
 
 public:
-    decx::PtrInfo<void> _dev_A, _dev_B, _dev_dst;
+    decx::PtrInfo<uint8_t> _dev_A, _dev_B, _dev_dst;
 
     cuda_DP1D_configs();
 
@@ -86,7 +86,7 @@ public:
     cuda_DP1D_configs(const uint64_t _proc_len, decx::cuda_stream* S, const uint32_t _fp16_accu = 0);
 
 
-    cuda_DP1D_configs(decx::PtrInfo<void> dev_A, decx::PtrInfo<void> dev_B, const uint64_t _proc_len,
+    cuda_DP1D_configs(decx::PtrInfo<uint8_t> dev_A, decx::PtrInfo<uint8_t> dev_B, const uint64_t _proc_len,
         decx::cuda_stream* S, const uint32_t _fp16_accu = 0);
 
     /**

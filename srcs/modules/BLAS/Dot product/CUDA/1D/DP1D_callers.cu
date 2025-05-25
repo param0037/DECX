@@ -70,19 +70,19 @@ const void* decx::blas::cuda_DP1D_fp16_caller_Async(decx::blas::cuda_DP1D_config
     {
     case decx::Fp16_Accuracy_Levels::Fp16_Accurate_L1:
         decx::blas::GPUK::cu_block_dot1D_fp16_L1 << <_configs->get_grid_len_k1(), _REDUCE1D_BLOCK_DIM_, 0, S->get_raw_stream_ref() >> > (
-            (float4*)_configs->_dev_A.ptr, (float4*)_configs->_dev_B.ptr, (float*)res_ptr,
+            (float4*)_configs->_dev_A, (float4*)_configs->_dev_B, (float*)res_ptr,
             decx::utils::ceil<uint64_t>(_configs->get_actual_proc_len(), _CU_REDUCE1D_MEM_ALIGN_2B_), _configs->get_actual_proc_len());
         break;
 
     case decx::Fp16_Accuracy_Levels::Fp16_Accurate_L2:
         decx::blas::GPUK::cu_block_dot1D_fp16_L2 << <_configs->get_grid_len_k1(), _REDUCE1D_BLOCK_DIM_, 0, S->get_raw_stream_ref() >> > (
-            (float4*)_configs->_dev_A.ptr, (float4*)_configs->_dev_B.ptr, (__half*)res_ptr,
+            (float4*)_configs->_dev_A, (float4*)_configs->_dev_B, (__half*)res_ptr,
             decx::utils::ceil<uint64_t>(_configs->get_actual_proc_len(), _CU_REDUCE1D_MEM_ALIGN_2B_), _configs->get_actual_proc_len());
         break;
 
     case decx::Fp16_Accuracy_Levels::Fp16_Accurate_L3:
         decx::blas::GPUK::cu_block_dot1D_fp16_L3 << <_configs->get_grid_len_k1(), _REDUCE1D_BLOCK_DIM_, 0, S->get_raw_stream_ref() >> > (
-            (float4*)_configs->_dev_A.ptr, (float4*)_configs->_dev_B.ptr, (__half*)res_ptr,
+            (float4*)_configs->_dev_A, (float4*)_configs->_dev_B, (__half*)res_ptr,
             decx::utils::ceil<uint64_t>(_configs->get_actual_proc_len(), _CU_REDUCE1D_MEM_ALIGN_2B_), _configs->get_actual_proc_len());
         break;
     default:
@@ -131,7 +131,7 @@ const void* decx::blas::cuda_DP1D_fp16_caller_Async(decx::blas::cuda_DP1D_config
         }
     }
     else {
-        return _configs->_dev_dst.ptr;
+        return _configs->_dev_dst.GetRawPtr();
     }
 }
 

@@ -38,7 +38,7 @@
 template <bool _is_reduce_h>
 const void* decx::blas::cuda_DP2D_1way_fp32_caller_Async(decx::blas::cuda_DP2D_configs<float>* _configs, decx::cuda_stream* S)
 {
-    const void* res_ptr = _configs->postproc_needed() ? _configs->get_configs_ptr<float>()->get_src()._ptr.ptr : _configs->_dev_dst.ptr;
+    const void* res_ptr = _configs->postproc_needed() ? _configs->get_configs_ptr<float>()->get_src().GetRawPtrConst() : _configs->_dev_dst.GetRawPtrConst();
 
     if (_is_reduce_h) {
         decx::blas::GPUK::cu_block_dot2D_1way_h_fp32 << < _configs->get_1st_kernel_config(),
@@ -83,7 +83,7 @@ template const void* decx::blas::cuda_DP2D_1way_fp32_caller_Async<false>(decx::b
 
 
 #define _DOT2D_1WAY_H_FP16_PARAM(_dst_type)                                                                 \
-    (float4*)_configs->_dev_A.ptr, (float4*)_configs->_dev_B.ptr, (_dst_type*)res_ptr,                      \
+    (float4*)_configs->_dev_A, (float4*)_configs->_dev_B, (_dst_type*)res_ptr,                              \
     decx::utils::ceil<uint32_t>(_configs->get_actual_proc_dims().x, 8),                                     \
     decx::utils::ceil<uint32_t>(_configs->get_1st_kernel_config().x, (sizeof(float4) / sizeof(_dst_type)))  \
     * (sizeof(float4) / sizeof(_dst_type)),                                                                 \
@@ -91,7 +91,7 @@ template const void* decx::blas::cuda_DP2D_1way_fp32_caller_Async<false>(decx::b
 
 
 #define _DOT2D_1WAY_V_FP16_PARAM(_dst_type)                                                                 \
-    (float4*)_configs->_dev_A.ptr, (float4*)_configs->_dev_B.ptr, (float4*)res_ptr,                         \
+    (float4*)_configs->_dev_A, (float4*)_configs->_dev_B, (float4*)res_ptr,                                 \
     decx::utils::ceil<uint32_t>(_configs->get_actual_proc_dims().x, 8),                                     \
     decx::utils::ceil<uint32_t>(_configs->get_actual_proc_dims().x, (sizeof(float4) / sizeof(_dst_type))),  \
     _configs->get_actual_proc_dims()                                                                        \
@@ -103,10 +103,10 @@ const void* decx::blas::cuda_DP2D_1way_fp16_caller_Async(decx::blas::cuda_DP2D_c
 {
     const void* res_ptr = NULL;
     if (_fp16_accu == decx::Fp16_Accuracy_Levels::Fp16_Accurate_L1) {
-        res_ptr = _configs->postproc_needed() ? _configs->get_configs_ptr<float>()->get_src()._ptr.ptr : _configs->_dev_dst.ptr;
+        res_ptr = _configs->postproc_needed() ? _configs->get_configs_ptr<float>()->get_src().GetRawPtrConst() : _configs->_dev_dst.GetRawPtrConst();
     }
     else {
-        res_ptr = _configs->postproc_needed() ? _configs->get_configs_ptr<de::Half>()->get_src()._ptr.ptr : _configs->_dev_dst.ptr;
+        res_ptr = _configs->postproc_needed() ? _configs->get_configs_ptr<de::Half>()->get_src().GetRawPtrConst() : _configs->_dev_dst.GetRawPtrConst();
     }
 
     if (_is_reduce_h) {
@@ -171,7 +171,7 @@ const void* decx::blas::cuda_DP2D_1way_fp16_caller_Async(decx::blas::cuda_DP2D_c
         }
     }
     else {
-        return _configs->_dev_dst.ptr;
+        return _configs->_dev_dst.GetRawPtr();
     }
 }
 
