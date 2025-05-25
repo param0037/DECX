@@ -38,6 +38,7 @@ file(GLOB_RECURSE GEN "${DECX_WORLD_ABS_DIR}/srcs/modules/core/generator/*.cxx")
 
 add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/common/Element_wise" "${DECX_SUBBUILD_BIN_DIR}/EW_CPU")
 add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/common/FMGR" "${DECX_SUBBUILD_BIN_DIR}/FMGR_CPU")
+add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/modules/core/memory_management/CPU" "${DECX_SUBBUILD_BIN_DIR}/modules/core/mem_pool_host")
 
 
 message("Now building for ${_DECX_HOST_ARCH_}")
@@ -54,6 +55,7 @@ add_library(${PROJECT_NAME} SHARED
 
 
 target_link_libraries(DECX_core_CPU PRIVATE EW_CPU
+                                    PRIVATE mem_pool_host
                                     PRIVATE FMGR_CPU)
 
 
