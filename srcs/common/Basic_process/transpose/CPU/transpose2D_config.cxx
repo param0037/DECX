@@ -52,7 +52,7 @@ _plan_threading(const decx::blas::_transpose_profiles_bytes* _profile, de::DH* h
 {
     int32_t rval = 0;
     // Use realloc instead to allow multiple configure calling
-    rval |= this->_blocking_configs.Reallocate(this->_concurrency * sizeof(decx::utils::_blocking2D_fmgrs), handle);
+    rval |= this->_blocking_configs.Allocate(this->_concurrency * sizeof(decx::utils::_blocking2D_fmgrs), PAGABLE, handle);
     
     // Plan the thread distribution
     decx::utils::thread2D_arrangement_advisor(&this->_thread_dist2D, this->_concurrency, this->_src_proc_dims_v1);
