@@ -63,7 +63,7 @@ cu_GEMM_cplxd_kernel_16_32_64(const double2* __restrict A,   const double2* __re
                             const uint32_t pitchB_v1,    const uint32_t pitchdst_v1)
 {
     constexpr uint32_t _loc_LDG_Ax = 16 / 1;
-    constexpr uint32_t _loc_LDG_Ay = 256 / _loc_LDG_Ax;
+    // constexpr uint32_t _loc_LDG_Ay = 256 / _loc_LDG_Ax;
     constexpr uint32_t _LDG_HB_step = 16 / 8;
     
     const uint32_t tidx = threadIdx.x + blockIdx.x * blockDim.x;
@@ -166,7 +166,7 @@ cu_GEMM_cplxd_F_kernel_16_32_64(const double2* __restrict A,    const double2* _
                                 const uint32_t pitchdst_v1)
 {
     constexpr uint32_t _loc_LDG_Ax = 16 / 1;
-    constexpr uint32_t _loc_LDG_Ay = 256 / _loc_LDG_Ax;
+    // constexpr uint32_t _loc_LDG_Ay = 256 / _loc_LDG_Ax;
     constexpr uint32_t _LDG_HB_step = 16 / 8;
     
     const uint32_t tidx = threadIdx.x + blockIdx.x * blockDim.x;

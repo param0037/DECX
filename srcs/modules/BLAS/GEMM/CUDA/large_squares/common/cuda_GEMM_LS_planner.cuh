@@ -85,7 +85,7 @@ class decx::blas::cuda_GEMM_LS_planner
 private:
     uint2 _proc_dims;
 
-    decx::Ptr2D_Info<uint8_t> _AT;
+    decx::Ptr2D_Info<void> _AT;
 
     decx::_matrix_layout _A_layout;
     decx::_matrix_layout _B_layout;

@@ -67,13 +67,13 @@ namespace decx
 template <bool _is_reduce_h>
 static void* decx::_VMM_fp32_caller_async(decx::blas::cuda_DP2D_configs<float>* _configs, decx::cuda_stream* S)
 {
-    const void* res_ptr = _configs->postproc_needed() ? _configs->get_configs_ptr<float>()->get_src()._ptr.ptr : _configs->_dev_dst.ptr;
+    const void* res_ptr = _configs->postproc_needed() ? (void*)_configs->get_configs_ptr<float>()->get_src() : (void*)_configs->_dev_dst;
     
     if (_is_reduce_h) {
         decx::GPUK::cu_mat_m_vec_fp32 << < _configs->get_1st_kernel_config(),
             dim3(_REDUCE2D_BLOCK_DIM_X_, _REDUCE2D_BLOCK_DIM_Y_), 0, S->get_raw_stream_ref() >> > (
-                (float4*)_configs->_dev_A.ptr,
-                (float4*)_configs->_dev_B.ptr,
+                (float4*)_configs->_dev_A,
+                (float4*)_configs->_dev_B,
                 (float*)res_ptr,
                 decx::utils::ceil<uint32_t>(_configs->get_actual_proc_dims().x, 4),
                 decx::utils::ceil<uint32_t>(_configs->get_1st_kernel_config().x, 4) * 4,
@@ -82,8 +82,8 @@ static void* decx::_VMM_fp32_caller_async(decx::blas::cuda_DP2D_configs<float>* 
     else {
         decx::GPUK::cu_vec_m_mat_fp32 << < _configs->get_1st_kernel_config(),
             dim3(_REDUCE2D_BLOCK_DIM_X_, _REDUCE2D_BLOCK_DIM_Y_), 0, S->get_raw_stream_ref() >> > (
-                (float*)_configs->_dev_B.ptr,
-                (float4*)_configs->_dev_A.ptr,
+                (float*)_configs->_dev_B,
+                (float4*)_configs->_dev_A,
                 (float4*)res_ptr,
                 decx::utils::ceil<uint32_t>(_configs->get_actual_proc_dims().x, 4),
                 decx::utils::ceil<uint32_t>(_configs->get_actual_proc_dims().x, 4),
@@ -102,13 +102,13 @@ static void* decx::_VMM_fp32_caller_async(decx::blas::cuda_DP2D_configs<float>* 
         return _postproc_configs->get_dst();
     }
     else {
-        return _configs->_dev_dst.ptr;
+        return (void*)_configs->_dev_dst;
     }
 }
 
 
 #define _VMM_1WAY_H_FP16_PARAM(_dst_type)                                                                   \
-    (float4*)_configs->_dev_A.ptr, (float4*)_configs->_dev_B.ptr, (_dst_type*)res_ptr,                      \
+    (float4*)_configs->_dev_A, (float4*)_configs->_dev_B, (_dst_type*)res_ptr,                              \
     decx::utils::ceil<uint32_t>(_configs->get_actual_proc_dims().x, 8),                                     \
     decx::utils::ceil<uint32_t>(_configs->get_1st_kernel_config().x, (sizeof(float4) / sizeof(_dst_type)))  \
     * (sizeof(float4) / sizeof(_dst_type)),                                                                 \
@@ -116,7 +116,7 @@ static void* decx::_VMM_fp32_caller_async(decx::blas::cuda_DP2D_configs<float>* 
 
 
 #define _VMM_1WAY_V_FP16_PARAM(_dst_type)                                                                   \
-    (__half*)_configs->_dev_B.ptr, (float4*)_configs->_dev_A.ptr, (float4*)res_ptr,                         \
+    (__half*)_configs->_dev_B, (float4*)_configs->_dev_A, (float4*)res_ptr,                                 \
     decx::utils::ceil<uint32_t>(_configs->get_actual_proc_dims().x, 8),                                     \
     decx::utils::ceil<uint32_t>(_configs->get_actual_proc_dims().x, (sizeof(float4) / sizeof(_dst_type))),  \
     _configs->get_actual_proc_dims()                                                                        \
@@ -129,10 +129,10 @@ static void* decx::_VMM_fp16_caller_async(decx::blas::cuda_DP2D_configs<de::Half
 {
     const void* res_ptr = NULL;
     if (_fp16_accu == decx::Fp16_Accuracy_Levels::Fp16_Accurate_L1) {
-        res_ptr = _configs->postproc_needed() ? _configs->get_configs_ptr<float>()->get_src()._ptr.ptr : _configs->_dev_dst.ptr;
+        res_ptr = _configs->postproc_needed() ? (void*)_configs->get_configs_ptr<float>()->get_src() : (void*)_configs->_dev_dst;
     }
     else {
-        res_ptr = _configs->postproc_needed() ? _configs->get_configs_ptr<de::Half>()->get_src()._ptr.ptr : _configs->_dev_dst.ptr;
+        res_ptr = _configs->postproc_needed() ? (void*)_configs->get_configs_ptr<de::Half>()->get_src() : (void*)_configs->_dev_dst;
     }
     
     if (_is_reduce_h) {
@@ -197,7 +197,7 @@ static void* decx::_VMM_fp16_caller_async(decx::blas::cuda_DP2D_configs<de::Half
         }
     }
     else {
-        return _configs->_dev_dst.ptr;
+        return (void*)_configs->_dev_dst;
     }
 }
 

@@ -64,7 +64,7 @@ static void decx::reduce::vector_reduce_sum_fp32(decx::_Vector* src, de::Number*
     decx::reduce::cuda_reduce1D_configs<float> _kp_configs;
     _kp_configs.generate_configs(src->Len(), S);
 
-    checkCudaErrors(cudaMemcpyAsync(_kp_configs.get_src(), src->Vec.ptr, src->Len() * sizeof(float), cudaMemcpyHostToDevice,
+    checkCudaErrors(cudaMemcpyAsync(_kp_configs.get_src(), (void*)src->Vec, src->Len() * sizeof(float), cudaMemcpyHostToDevice,
         S->get_raw_stream_ref()));
 
     decx::reduce::cuda_reduce1D_sum_fp32_caller_Async(&_kp_configs, S);
@@ -95,7 +95,7 @@ static void decx::reduce::vector_reduce_sum_u8_i32(decx::_Vector* src, de::Numbe
     decx::reduce::cuda_reduce1D_configs<uint8_t> _kp_configs;
     _kp_configs.generate_configs(src->Len(), S);
 
-    checkCudaErrors(cudaMemcpyAsync(_kp_configs.get_src(), src->Vec.ptr, src->Len() * sizeof(uint8_t), cudaMemcpyHostToDevice,
+    checkCudaErrors(cudaMemcpyAsync(_kp_configs.get_src(), (void*)src->Vec, src->Len() * sizeof(uint8_t), cudaMemcpyHostToDevice,
         S->get_raw_stream_ref()));
 
     decx::reduce::cuda_reduce1D_sum_u8_i32_caller_Async(&_kp_configs, S);
@@ -127,7 +127,7 @@ static void decx::reduce::vector_reduce_sum_fp16(decx::_Vector* src, de::Number*
     _kp_configs.set_fp16_accuracy(_fp16_accu);
     _kp_configs.generate_configs(src->Len(), S);
 
-    checkCudaErrors(cudaMemcpyAsync(_kp_configs.get_src(), src->Vec.ptr, src->Len() * sizeof(de::Half), cudaMemcpyHostToDevice,
+    checkCudaErrors(cudaMemcpyAsync(_kp_configs.get_src(), (void*)src->Vec, src->Len() * sizeof(de::Half), cudaMemcpyHostToDevice,
         S->get_raw_stream_ref()));
 
     decx::reduce::cuda_reduce1D_sum_fp16_caller_Async(&_kp_configs, S, _fp16_accu);

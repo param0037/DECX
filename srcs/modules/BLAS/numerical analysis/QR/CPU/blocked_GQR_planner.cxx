@@ -54,14 +54,14 @@ void decx::blas::Blocked_GQR_planner<_data_type>::Config(const uint2 block_dims,
     // Allocate src_tile
     this->_src_tile.SetDims(decx::utils::align<uint32_t>(block_dims.y, alignment),
                             block_dims.x);
-    this->_tile_size = (uint64_t)this->_src_tile.getDims().x * (uint64_t)this->_src_tile.getDims().y * sizeof(_data_type);
+    this->_tile_size = (uint64_t)this->_src_tile.GetDims().x * (uint64_t)this->_src_tile.GetDims().y * sizeof(_data_type);
     rval |= this->_src_tile.Allocate(PAGABLE, sizeof(_data_type), handle);
 
     // Allocate V_tile
-    this->_V_tile.SetDims(this->_src_tile.getDims());
+    this->_V_tile.SetDims(this->_src_tile.GetDims());
     rval |= this->_V_tile.Allocate(PAGABLE, sizeof(_data_type), handle);
 
-    this->_W_tile.SetDims(this->_src_tile.getDims());
+    this->_W_tile.SetDims(this->_src_tile.GetDims());
     rval |= this->_W_tile.Allocate(PAGABLE, sizeof(_data_type), handle);
 
     // Allocate array for masks
@@ -161,7 +161,7 @@ void decx::blas::Blocked_GQR_planner<_data_type>::Process_HouseHolder()
 {
     _data_type* p_src_tile = this->_src_tile.template GetRawPtr<_data_type>();
     _data_type* p_V_tile = this->_V_tile.template GetRawPtr<_data_type>();
-    const uint32_t panel_pitch = this->_src_tile.getDims().x;
+    const uint32_t panel_pitch = this->_src_tile.GetDims().x;
 
     decx::utils::_thr_1D t1D(16);
 
@@ -209,7 +209,7 @@ void decx::blas::Blocked_GQR_planner<_data_type>::LoadSrcTile(
     this->_tp_ldg_config.transpose_4b_caller(src + block_id * pitchsrc_v1 + block_id * this->_block_dims.x, 
         this->_src_tile.template GetRawPtr<_data_type>(), 
         pitchsrc_v1, 
-        this->_src_tile.getDims().x, 
+        this->_src_tile.GetDims().x, 
         t1D);
 }
 

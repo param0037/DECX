@@ -115,10 +115,10 @@ void decx::reduce::cuda_reduce1D_configs<_type_in>::_calc_kernel_param_packs()
 
     read_ptr = this->_proc_src;
     if (_src_from_device) {
-        write_ptr = this->_d_tmp1.ptr;
+        write_ptr = (void*)this->_d_tmp1;
     }
     else {
-        write_ptr = this->_d_tmp2.ptr;
+        write_ptr = (void*)this->_d_tmp2;
         this->inverse_mutex_MIF_states();
     }
     
@@ -191,20 +191,15 @@ void decx::reduce::cuda_reduce1D_configs<_type_in>::generate_configs(const uint6
         _first_grid_len = decx::utils::ceil<uint64_t>(_aligned_proc_len / _CU_REDUCE1D_MEM_ALIGN_8B_, _REDUCE1D_BLOCK_DIM_);
     }
 
-    if (decx::alloc::_device_malloc(&this->_d_tmp1, _aligned_proc_len * sizeof(_type_in), true, S)) {
-        DECX_LOG_ERR(DEV_ALLOC_FAIL);
-        return;
-    }
+    int32_t rval = 0;
+    rval |= this->_d_tmp1.Allocate(_aligned_proc_len * sizeof(_type_in), CUDA_DEVICE, de::GetLastError(), true, S);
 
-    if (decx::alloc::_device_malloc(&this->_d_tmp2, _first_grid_len * sizeof(_type_in), true, S)) {
-        DECX_LOG_ERR(DEV_ALLOC_FAIL);
-        return;
-    }
+    rval |= this->_d_tmp2.Allocate(_first_grid_len * sizeof(_type_in), CUDA_DEVICE, de::GetLastError(), true, S);
 
-    this->_MIF_tmp1 = decx::alloc::MIF<void>(this->_d_tmp1.ptr, true);
-    this->_MIF_tmp2 = decx::alloc::MIF<void>(this->_d_tmp2.ptr, false);
+    this->_MIF_tmp1 = decx::alloc::MIF<void>((void*)this->_d_tmp1, true);
+    this->_MIF_tmp2 = decx::alloc::MIF<void>((void*)this->_d_tmp2, false);
 
-    this->_proc_src = this->_d_tmp1.ptr;
+    this->_proc_src = (void*)this->_d_tmp1;
     this->_calc_kernel_param_packs<false>();
     this->_proc_dst = this->get_leading_MIF().mem;
 }
@@ -240,20 +235,14 @@ void decx::reduce::cuda_reduce1D_configs<_type_in>::generate_configs(decx::PtrIn
         _first_grid_len = decx::utils::ceil<uint64_t>(_aligned_proc_len / _CU_REDUCE1D_MEM_ALIGN_8B_, _REDUCE1D_BLOCK_DIM_);
     }
 
-    this->_proc_src = dev_src.ptr;
+    this->_proc_src = (void*)dev_src;
 
-    if (decx::alloc::_device_malloc(&this->_d_tmp1, _first_grid_len * sizeof(_type_in), true, S)) {
-        DECX_LOG_ERR(DEV_ALLOC_FAIL);
-        return;
-    }
+    int32_t rval = 0;
+    rval |= this->_d_tmp1.Allocate(_first_grid_len * sizeof(_type_in), CUDA_DEVICE, de::GetLastError(), true, S);
+    rval |= this->_d_tmp2.Allocate(_first_grid_len * sizeof(_type_in), CUDA_DEVICE, de::GetLastError(), true, S);
 
-    if (decx::alloc::_device_malloc(&this->_d_tmp2, _first_grid_len * sizeof(_type_in), true, S)) {
-        DECX_LOG_ERR(DEV_ALLOC_FAIL);
-        return;
-    }
-
-    this->_MIF_tmp1 = decx::alloc::MIF<void>(this->_d_tmp1.ptr, true);
-    this->_MIF_tmp2 = decx::alloc::MIF<void>(this->_d_tmp2.ptr, false);
+    this->_MIF_tmp1 = decx::alloc::MIF<void>((void*)this->_d_tmp1, true);
+    this->_MIF_tmp2 = decx::alloc::MIF<void>((void*)this->_d_tmp2, false);
 
     this->_calc_kernel_param_packs<true>();
 
@@ -426,8 +415,8 @@ template decx::reduce::RWPK_2D& decx::reduce::cuda_reduce1D_configs<int32_t>::ge
 template <typename _type_in>
 void decx::reduce::cuda_reduce1D_configs<_type_in>::release_buffer()
 {
-    decx::alloc::_device_dealloc(&this->_d_tmp1);
-    decx::alloc::_device_dealloc(&this->_d_tmp2);
+    this->_d_tmp1.Free();
+    this->_d_tmp2.Free();
 }
 
 template void decx::reduce::cuda_reduce1D_configs<float>::release_buffer();

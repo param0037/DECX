@@ -103,7 +103,7 @@ ApplyRefactors(decx::blas::Blocked_GQR_planner<float>* fake_this,
 // #pragma omp parallel for
     for (int i = 0; i < submat_dims.x; ++i) {
         __m256 sum_v8 = _mm256_setzero_ps();
-        float* next_panel_col = panel_next + fake_this->_src_tile.getDims().x * i;
+        float* next_panel_col = panel_next + fake_this->_src_tile.GetDims().x * i;
         for (int k = 0; k < proc_len_v8; ++k) {
             __m256 vk_v8 = _mm256_load_ps(Vk + (k * alignment));
             __m256 AR_v8 = _mm256_load_ps(next_panel_col + (k * alignment));

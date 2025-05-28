@@ -202,10 +202,7 @@ decx::blas::cuda_DP1D_configs<_type_in>::cuda_DP1D_configs(decx::PtrInfo<void> d
         this->_post_proc_needed = true;
     }
     else {
-        if (decx::alloc::_device_malloc(&this->_dev_dst, 1 * ele_size_dst)) {
-            DECX_LOG_ERR(DEV_ALLOC_FAIL);
-            return;
-        }
+        this->_dev_dst.Allocate(1 * ele_size_dst, CUDA_DEVICE, de::GetLastError(), true, S);
         this->_post_proc_needed = false;
     }
 }

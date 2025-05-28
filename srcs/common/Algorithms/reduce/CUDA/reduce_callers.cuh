@@ -180,7 +180,7 @@ template <typename _type_in>
 class decx::reduce::cuda_reduce1D_configs
 {
 private:
-    decx::PtrInfo<uint8_t> _d_tmp1, _d_tmp2;
+    decx::PtrInfo<void> _d_tmp1, _d_tmp2;
 
     _type_in _fill_val;
 

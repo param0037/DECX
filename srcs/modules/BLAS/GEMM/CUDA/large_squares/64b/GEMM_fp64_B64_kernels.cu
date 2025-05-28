@@ -61,9 +61,9 @@ cu_GEMM_fp64_kernel_16_64_64(const double* __restrict A,   const double* __restr
                             const uint32_t pitchB_v1,    const uint32_t pitchdst_v1)
 {
     constexpr uint32_t _loc_LDG_Ax = 16 / 1;
-    constexpr uint32_t _loc_LDG_Ay = 256 / _loc_LDG_Ax;
+    // constexpr uint32_t _loc_LDG_Ay = 256 / _loc_LDG_Ax;
     constexpr uint32_t _LDG_HB_step = 16 / 8;
-    constexpr uint32_t _LDG_HA_step = 64 / _loc_LDG_Ay;
+    // constexpr uint32_t _LDG_HA_step = 64 / _loc_LDG_Ay;
     
     const uint32_t tidx = threadIdx.x + blockIdx.x * blockDim.x;
     const uint32_t tidy = threadIdx.y + blockIdx.y * blockDim.y;
@@ -167,9 +167,9 @@ cu_GEMM_fp64_F_kernel_16_64_64(const double* __restrict A,   const double* __res
                                const uint32_t pitchdst_v1)
 {
     constexpr uint32_t _loc_LDG_Ax = 16 / 1;
-    constexpr uint32_t _loc_LDG_Ay = 256 / _loc_LDG_Ax;
+    // constexpr uint32_t _loc_LDG_Ay = 256 / _loc_LDG_Ax;
     constexpr uint32_t _LDG_HB_step = 16 / 8;
-    constexpr uint32_t _LDG_HA_step = 64 / _loc_LDG_Ay;
+    // constexpr uint32_t _LDG_HA_step = 64 / _loc_LDG_Ay;
     
     const uint32_t tidx = threadIdx.x + blockIdx.x * blockDim.x;
     const uint32_t tidy = threadIdx.y + blockIdx.y * blockDim.y;

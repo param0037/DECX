@@ -38,23 +38,16 @@ void decx::blas::generate_VMM_config_fp32(decx::blas::cuda_DP2D_configs<float>* 
 {
     _configs->generate_config<_is_reduce_h>(proc_dims, S);
 
-    if (decx::alloc::_device_malloc(&(_configs->_dev_A), _configs->_dev_mat_dims.x * _configs->_dev_mat_dims.y * sizeof(float), true, S)) {
-        DECX_LOG_ERR(DEV_ALLOC_FAIL);
-        return;
-    }
-    if (decx::alloc::_device_malloc(&(_configs->_dev_B), decx::utils::align(_is_reduce_h ? proc_dims.x : proc_dims.y, _CU_REDUCE1D_MEM_ALIGN_4B_)
-        * sizeof(float), true, S)) {
-        DECX_LOG_ERR(DEV_ALLOC_FAIL);
-        return;
-    }
+    int32_t rval = 0;
+    rval |= _configs->_dev_A.Allocate(_configs->_dev_mat_dims.x * _configs->_dev_mat_dims.y * sizeof(float), CUDA_DEVICE, de::GetLastError(), true, S);
+    rval |= _configs->_dev_B.Allocate(decx::utils::align(_is_reduce_h ? proc_dims.x : proc_dims.y, _CU_REDUCE1D_MEM_ALIGN_4B_) * sizeof(float), CUDA_DEVICE,
+        de::GetLastError(), true, S);
+
     if (!_configs->postproc_needed()) {
         uint32_t _alloc_dst_size = 0;
         _alloc_dst_size = decx::utils::align<uint32_t>(_is_reduce_h ? proc_dims.y : proc_dims.x, _CU_REDUCE1D_MEM_ALIGN_4B_) * sizeof(float);
 
-        if (decx::alloc::_device_malloc(&(_configs->_dev_dst), _alloc_dst_size, true, S)) {
-            DECX_LOG_ERR(DEV_ALLOC_FAIL);
-            return;
-        }
+        rval |= _configs->_dev_dst.Allocate(_alloc_dst_size, CUDA_DEVICE, de::GetLastError(), true, S);
     }
 }
 
@@ -68,15 +61,11 @@ void decx::blas::generate_VMM_config_fp16(decx::blas::cuda_DP2D_configs<de::Half
 {
     _configs->generate_config<_is_reduce_h>(proc_dims, S, _fp16_accu);
 
-    if (decx::alloc::_device_malloc(&(_configs->_dev_A), _configs->_dev_mat_dims.x * _configs->_dev_mat_dims.y * sizeof(de::Half), true, S)) {
-        DECX_LOG_ERR(DEV_ALLOC_FAIL);
-        return;
-    }
-    if (decx::alloc::_device_malloc(&(_configs->_dev_B), decx::utils::align(_is_reduce_h ? proc_dims.x : proc_dims.y, _CU_REDUCE1D_MEM_ALIGN_4B_)
-        * sizeof(de::Half), true, S)) {
-        DECX_LOG_ERR(DEV_ALLOC_FAIL);
-        return;
-    }
+    int32_t rval = 0;
+    rval |= _configs->_dev_A.Allocate(_configs->_dev_mat_dims.x * _configs->_dev_mat_dims.y * sizeof(de::Half), CUDA_DEVICE, de::GetLastError(), true, S);
+    rval |= _configs->_dev_B.Allocate(decx::utils::align(_is_reduce_h ? proc_dims.x : proc_dims.y, _CU_REDUCE1D_MEM_ALIGN_4B_) * sizeof(de::Half), CUDA_DEVICE,
+        de::GetLastError(), true, S);
+
     if (!_configs->postproc_needed()) {
         uint32_t _alloc_dst_size = 0;
         if (_fp16_accu == decx::Fp16_Accuracy_Levels::Fp16_Accurate_L1) {
@@ -85,10 +74,7 @@ void decx::blas::generate_VMM_config_fp16(decx::blas::cuda_DP2D_configs<de::Half
         else {
             _alloc_dst_size = decx::utils::align<uint32_t>(proc_dims.x, _CU_REDUCE1D_MEM_ALIGN_4B_) * sizeof(de::Half);
         }
-        if (decx::alloc::_device_malloc(&_configs->_dev_dst, _alloc_dst_size, true, S)) {
-            DECX_LOG_ERR(DEV_ALLOC_FAIL);
-            return;
-        }
+        rval |= _configs->_dev_dst.Allocate(_alloc_dst_size, CUDA_DEVICE, de::GetLastError(), true, S);
     }
 }
 

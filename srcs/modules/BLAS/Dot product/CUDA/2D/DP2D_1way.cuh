@@ -85,7 +85,7 @@ private:
     dim3 _first_kernel_config;
 
 public:
-    decx::PtrInfo<uint8_t> _dev_A, _dev_B, _dev_dst;
+    decx::PtrInfo<void> _dev_A, _dev_B, _dev_dst;
 
 
     uint2 _dev_mat_dims;

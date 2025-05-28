@@ -68,19 +68,19 @@ de::cuda::Transpose(de::GPU_Matrix& src, de::GPU_Matrix& dst)
     switch (_src->get_layout()._single_element_size)
     {
     case 1:
-        decx::blas::transpose2D_b1((uint32_t*)_src->Mat.ptr, (uint32_t*)_dst->Mat.ptr,
+        decx::blas::transpose2D_b1((uint32_t*)_src->Mat, (uint32_t*)_dst->Mat,
             make_uint2(_dst->Width(), _dst->Height()), _src->Pitch(), _dst->Pitch(), S);
         break;
     case 2:
-        decx::blas::transpose2D_b2((float4*)_src->Mat.ptr, (float4*)_dst->Mat.ptr, 
+        decx::blas::transpose2D_b2((float4*)_src->Mat, (float4*)_dst->Mat, 
             make_uint2(_dst->Width(), _dst->Height()), _src->Pitch(), _dst->Pitch(), S);
         break;
     case 4:
-        decx::blas::transpose2D_b4((float2*)_src->Mat.ptr, (float2*)_dst->Mat.ptr,
+        decx::blas::transpose2D_b4((float2*)_src->Mat, (float2*)_dst->Mat,
             make_uint2(_dst->Width(), _dst->Height()), _src->Pitch(), _dst->Pitch(), S);
         break;
     case 8:
-        decx::blas::transpose2D_b8((double2*)_src->Mat.ptr, (double2*)_dst->Mat.ptr,
+        decx::blas::transpose2D_b8((double2*)_src->Mat, (double2*)_dst->Mat,
             make_uint2(_dst->Width(), _dst->Height()), _src->Pitch(), _dst->Pitch(), S);
         break;
     default:
@@ -121,7 +121,7 @@ de::cuda::Transpose(de::GPU_Vector& src, de::GPU_Vector& dst)
     S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
 
     if (_src->Type() == de::_DATA_TYPES_FLAGS_::_FP32_ || _src->Type() == de::_DATA_TYPES_FLAGS_::_INT32_) {
-        decx::blas::transpose2D_b4_dense((float*)_src->Vec.ptr, (float*)_dst->Vec.ptr, make_uint2(1133, 1011), 1011, 1133, S);
+        decx::blas::transpose2D_b4_dense((float*)_src->Vec, (float*)_dst->Vec, make_uint2(1133, 1011), 1011, 1133, S);
     }
     else {
         decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_INVALID_PARAM, INVALID_PARAM);

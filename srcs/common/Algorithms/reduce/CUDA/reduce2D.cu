@@ -71,7 +71,7 @@ void decx::reduce::cuda_reduce2D_1way_configs<_type_in>::_calc_kernel_h_param_pa
     }
 
     _rwpk._src = _src_from_device ? 
-                this->get_src()._ptr.ptr : 
+                (void*)this->get_src() : 
                 this->get_leading_ptr();
 
     _rwpk._dst = this->get_lagging_ptr();
@@ -85,7 +85,7 @@ void decx::reduce::cuda_reduce2D_1way_configs<_type_in>::_calc_kernel_h_param_pa
     const uint32_t grid_y = decx::utils::ceil<uint32_t>(this->get_actual_proc_dims().y, _REDUCE2D_BLOCK_DIM_Y_);
 
     uint2 proc_dims_actual = this->get_actual_proc_dims();
-    uint32_t Wdsrc_v_varient = _src_from_device ? this->_Wdsrc : this->get_dtmp1()._dims.x;
+    uint32_t Wdsrc_v_varient = _src_from_device ? this->_Wdsrc : this->get_dtmp1().GetDims().x;
     Wdsrc_v_varient /= _proc_align_tr;
 
     uint32_t Wddst_v1_varient = decx::utils::ceil<uint32_t>(grid_x, _proc_align) * _proc_align;
@@ -190,7 +190,7 @@ void decx::reduce::cuda_reduce2D_1way_configs<_type_in>::_calc_kernel_v_param_pa
     
     const uint32_t Wsrc_v_tr = (_src_from_device ?
                                (this->_Wdsrc) :
-                               (this->get_dtmp1()._dims.x)) / _proc_align_tr;
+                               (this->get_dtmp1().GetDims().x)) / _proc_align_tr;
     
     const uint32_t Wdst_v_tr = decx::utils::ceil<uint32_t>(this->get_actual_proc_dims().x, _proc_align);
 
@@ -209,7 +209,7 @@ void decx::reduce::cuda_reduce2D_1way_configs<_type_in>::_calc_kernel_v_param_pa
     while (true)
     {
         if (_src_from_device) {
-            _rwpk._src = (_loop_times == 0) ? this->get_src()._ptr.ptr : this->get_leading_ptr();
+            _rwpk._src = (_loop_times == 0) ? (const void*)(this->get_src()) : this->get_leading_ptr();
         }
         else {
             _rwpk._src = this->get_leading_ptr();
@@ -258,6 +258,8 @@ template <typename _type_in>
 template <bool _is_reduce_h>
 void decx::reduce::cuda_reduce2D_1way_configs<_type_in>::generate_configs(const uint2 proc_dims, decx::cuda_stream* S, const bool _remain_load_byte)
 {
+    int32_t rval = 0;
+
     this->_proc_dims_actual = proc_dims;
 
     uint32_t _alloc_dim_x, _grid_len_r1;
@@ -278,14 +280,14 @@ void decx::reduce::cuda_reduce2D_1way_configs<_type_in>::generate_configs(const 
 
     if (_is_reduce_h) {
         _grid_len_r1 = decx::utils::ceil<uint64_t>(_reduce_len_s1, _REDUCE2D_BLOCK_DIM_X_);
-        this->_d_tmp2._dims = make_uint2(_grid_len_r1, proc_dims.y);
+        this->_d_tmp2.SetDims(_grid_len_r1, proc_dims.y);
     }
     else {
         _grid_len_r1 = decx::utils::ceil<uint32_t>(proc_dims.y, _REDUCE2D_BLOCK_DIM_Y_);
-        this->_d_tmp2._dims = make_uint2(_alloc_dim_x, _grid_len_r1);
+        this->_d_tmp2.SetDims(_alloc_dim_x, _grid_len_r1);
     }
 
-    this->_d_tmp1._dims = make_uint2(_alloc_dim_x, proc_dims.y);
+    this->_d_tmp1.SetDims(_alloc_dim_x, proc_dims.y);
     
     uint16_t _alloc_typesize;
     if (_remain_load_byte) {
@@ -295,18 +297,11 @@ void decx::reduce::cuda_reduce2D_1way_configs<_type_in>::generate_configs(const 
         _alloc_typesize = sizeof(_type_in) <= 4 ? sizeof(float) : sizeof(double);
     }
     
-    if (decx::alloc::_device_malloc(&this->_d_tmp1._ptr, this->_d_tmp1._dims.x * this->_d_tmp1._dims.y * _alloc_typesize, true, S)) {
-        DECX_LOG_ERR(DEV_ALLOC_FAIL);
-        return;
-    }
+    rval |= this->_d_tmp1.Allocate(CUDA_DEVICE, _alloc_typesize, de::GetLastError(), true, S);
+    rval |= this->_d_tmp2.Allocate(CUDA_DEVICE, _alloc_typesize, de::GetLastError(), true, S);
 
-    if (decx::alloc::_device_malloc(&this->_d_tmp2._ptr, this->_d_tmp2._dims.x * this->_d_tmp2._dims.y * _alloc_typesize, true, S)) {
-        DECX_LOG_ERR(DEV_ALLOC_FAIL);
-        return;
-    }
-
-    this->_MIF_tmp1 = decx::alloc::MIF<void>(this->_d_tmp1._ptr.ptr, true);
-    this->_MIF_tmp2 = decx::alloc::MIF<void>(this->_d_tmp2._ptr.ptr, false);
+    this->_MIF_tmp1 = decx::alloc::MIF<void>((void*)this->_d_tmp1, true);
+    this->_MIF_tmp2 = decx::alloc::MIF<void>((void*)this->_d_tmp2, false);
 
     this->_proc_src = this->_d_tmp1;
 
@@ -358,11 +353,11 @@ void decx::reduce::cuda_reduce2D_1way_configs<_type_in>::generate_configs(decx::
 
     if (_is_reduce_h) {
         _grid_len_r1 = decx::utils::ceil<uint64_t>(_alloc_dim_x / _proc_align, _REDUCE2D_BLOCK_DIM_X_);
-        this->_d_tmp2._dims = make_uint2(_grid_len_r1, proc_dims.y);
+        this->_d_tmp2.SetDims(_grid_len_r1, proc_dims.y);
     }
     else {
         _grid_len_r1 = decx::utils::ceil<uint32_t>(proc_dims.y, _REDUCE2D_BLOCK_DIM_Y_);
-        this->_d_tmp2._dims = make_uint2(_alloc_dim_x, _grid_len_r1);
+        this->_d_tmp2.SetDims(_alloc_dim_x, _grid_len_r1);
     }
 
     uint16_t _alloc_typesize;
@@ -373,22 +368,16 @@ void decx::reduce::cuda_reduce2D_1way_configs<_type_in>::generate_configs(decx::
         _alloc_typesize = sizeof(_type_in) <= 4 ? sizeof(float) : sizeof(double);
     }
 
-    this->_d_tmp1._dims = this->_d_tmp2._dims;
+    this->_d_tmp1.SetDims(this->_d_tmp2.GetDims());
+    
+    int32_t rval = 0;
+    rval |= this->_d_tmp1.Allocate(_alloc_typesize, CUDA_DEVICE, de::GetLastError(), true, S);
+    rval |= this->_d_tmp2.Allocate(_alloc_typesize, CUDA_DEVICE, de::GetLastError(), true, S);
 
-    if (decx::alloc::_device_malloc(&this->_d_tmp1._ptr, this->_d_tmp1._dims.x * this->_d_tmp1._dims.y * _alloc_typesize, true, S)) {
-        DECX_LOG_ERR(DEV_ALLOC_FAIL);
-        return;
-    }
+    this->_MIF_tmp1 = decx::alloc::MIF<void>((void*)this->_d_tmp1, false);
+    this->_MIF_tmp2 = decx::alloc::MIF<void>((void*)this->_d_tmp2, true);
 
-    if (decx::alloc::_device_malloc(&this->_d_tmp2._ptr, this->_d_tmp2._dims.x * this->_d_tmp2._dims.y * _alloc_typesize, true, S)) {
-        DECX_LOG_ERR(DEV_ALLOC_FAIL);
-        return;
-    }
-
-    this->_MIF_tmp1 = decx::alloc::MIF<void>(this->_d_tmp1._ptr.ptr, false);
-    this->_MIF_tmp2 = decx::alloc::MIF<void>(this->_d_tmp2._ptr.ptr, true);
-
-    this->_proc_src._ptr = dev_src;
+    this->_proc_src.SetPtr((void*)dev_src);
     this->_proc_dst = dst_ptr;
 
     // calculate the parameters packs for CUDA kernels
@@ -558,8 +547,8 @@ template void decx::reduce::cuda_reduce2D_1way_configs<uint8_t>::reverse_MIF_sta
 template <typename _Ty>
 void decx::reduce::cuda_reduce2D_1way_configs<_Ty>::release_buffer()
 {
-    decx::alloc::_device_dealloc(&this->_d_tmp1._ptr);
-    decx::alloc::_device_dealloc(&this->_d_tmp2._ptr);
+    this->_d_tmp1.Free();
+    this->_d_tmp2.Free();
 
     this->_rwpks.clear();
 }

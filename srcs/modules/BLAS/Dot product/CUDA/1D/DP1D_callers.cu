@@ -34,10 +34,10 @@
 
 const void* decx::blas::cuda_DP1D_fp32_caller_Async(decx::blas::cuda_DP1D_configs<float>* _configs, decx::cuda_stream* S)
 {
-    const void* res_ptr = _configs->postproc_needed() ? _configs->get_configs_ptr<float>()->get_src() : _configs->_dev_dst.ptr;
+    const void* res_ptr = _configs->postproc_needed() ? _configs->get_configs_ptr<float>()->get_src() : (void*)_configs->_dev_dst;
 
     decx::blas::GPUK::cu_block_dot1D_fp32 << <_configs->get_grid_len_k1(), _REDUCE1D_BLOCK_DIM_, 0, S->get_raw_stream_ref() >> > (
-        (float4*)_configs->_dev_A.ptr, (float4*)_configs->_dev_B.ptr, (float*)res_ptr,
+        (float4*)_configs->_dev_A, (float4*)_configs->_dev_B, (float*)res_ptr,
         decx::utils::ceil<uint64_t>(_configs->get_actual_proc_len(), _CU_REDUCE1D_MEM_ALIGN_4B_), _configs->get_actual_proc_len());
 
     if (_configs->postproc_needed()) {
@@ -56,7 +56,7 @@ const void* decx::blas::cuda_DP1D_fp32_caller_Async(decx::blas::cuda_DP1D_config
         return _postproc_configs->get_dst();
     }
     else {
-        return _configs->_dev_dst.ptr;
+        return (void*)_configs->_dev_dst;
     }
 }
 
@@ -64,7 +64,7 @@ const void* decx::blas::cuda_DP1D_fp32_caller_Async(decx::blas::cuda_DP1D_config
 const void* decx::blas::cuda_DP1D_fp16_caller_Async(decx::blas::cuda_DP1D_configs<de::Half>* _configs, 
     decx::cuda_stream* S, const uint32_t _fp16_accu)
 {
-    const void* res_ptr = _configs->postproc_needed() ? _configs->get_configs_ptr<de::Half>()->get_src() : _configs->_dev_dst.ptr;
+    const void* res_ptr = _configs->postproc_needed() ? _configs->get_configs_ptr<de::Half>()->get_src() : (void*)_configs->_dev_dst;
 
     switch (_fp16_accu)
     {
@@ -141,10 +141,10 @@ const void* decx::blas::cuda_DP1D_fp16_caller_Async(decx::blas::cuda_DP1D_config
 
 const void* decx::blas::cuda_DP1D_fp64_caller_Async(decx::blas::cuda_DP1D_configs<double>* _configs, decx::cuda_stream* S)
 {
-    const void* res_ptr = _configs->postproc_needed() ? _configs->get_configs_ptr<double>()->get_src() : _configs->_dev_dst.ptr;
+    const void* res_ptr = _configs->postproc_needed() ? _configs->get_configs_ptr<double>()->get_src() : (const void*)_configs->_dev_dst;
 
     decx::blas::GPUK::cu_block_dot1D_fp64 << <_configs->get_grid_len_k1(), _REDUCE1D_BLOCK_DIM_, 0, S->get_raw_stream_ref() >> > (
-        (double2*)_configs->_dev_A.ptr, (double2*)_configs->_dev_B.ptr, (double*)res_ptr,
+        (double2*)_configs->_dev_A, (double2*)_configs->_dev_B, (double*)res_ptr,
         decx::utils::ceil<uint64_t>(_configs->get_actual_proc_len(), _CU_REDUCE1D_MEM_ALIGN_8B_), _configs->get_actual_proc_len());
 
     if (_configs->postproc_needed()) {
@@ -163,7 +163,7 @@ const void* decx::blas::cuda_DP1D_fp64_caller_Async(decx::blas::cuda_DP1D_config
         return _postproc_configs->get_dst();
     }
     else {
-        return _configs->_dev_dst.ptr;
+        return (void*)_configs->_dev_dst;
     }
 }
 
@@ -172,10 +172,10 @@ const void* decx::blas::cuda_DP1D_fp64_caller_Async(decx::blas::cuda_DP1D_config
 
 const void* decx::blas::cuda_DP1D_cplxf_caller_Async(decx::blas::cuda_DP1D_configs<double>* _configs, decx::cuda_stream* S)
 {
-    const void* res_ptr = _configs->postproc_needed() ? _configs->get_configs_ptr<double>()->get_src() : _configs->_dev_dst.ptr;
+    const void* res_ptr = _configs->postproc_needed() ? _configs->get_configs_ptr<double>()->get_src() : (const void*)_configs->_dev_dst;
 
     decx::blas::GPUK::cu_block_dot1D_cplxf << <_configs->get_grid_len_k1(), _REDUCE1D_BLOCK_DIM_, 0, S->get_raw_stream_ref() >> > (
-        (float4*)_configs->_dev_A.ptr, (float4*)_configs->_dev_B.ptr, (de::CPf*)res_ptr,
+        (float4*)_configs->_dev_A, (float4*)_configs->_dev_B, (de::CPf*)res_ptr,
         decx::utils::ceil<uint64_t>(_configs->get_actual_proc_len(), _CU_REDUCE1D_MEM_ALIGN_8B_), _configs->get_actual_proc_len());
 
     if (_configs->postproc_needed()) {
@@ -194,6 +194,6 @@ const void* decx::blas::cuda_DP1D_cplxf_caller_Async(decx::blas::cuda_DP1D_confi
         return _postproc_configs->get_dst();
     }
     else {
-        return _configs->_dev_dst.ptr;
+        return (void*)_configs->_dev_dst;
     }
 }

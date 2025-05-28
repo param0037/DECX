@@ -39,7 +39,7 @@ decx::ResourceHandle decx::blas::g_cu_GEMM_fp64_planner;
 template<> void decx::blas::cuda_GEMM_LS_planner<double>::
 run(decx::_GPU_Matrix* A, decx::_GPU_Matrix* B, decx::_GPU_Matrix* dst, decx::cuda_stream* S)
 {
-    decx::blas::GEMM_fp64_16_64_64(A->Mat.ptr, B->Mat.ptr, dst->Mat.ptr, 
+    decx::blas::GEMM_fp64_16_64_64((void*)A->Mat, (void*)B->Mat, (void*)dst->Mat, 
         make_uint2(B->Width(), A->Height()), A->Width(), A->Pitch(), B->Pitch(), dst->Pitch(), S,
         NULL, 1, 1);
 }
@@ -49,16 +49,16 @@ template<> void decx::blas::cuda_GEMM_LS_planner<double>::
 run(decx::_GPU_Matrix* A, decx::_GPU_Matrix* B, decx::_GPU_Matrix* C, decx::_GPU_Matrix* dst, 
         const double alpha, const double beta, decx::cuda_stream* S)
 {
-    decx::blas::GEMM_fp64_16_64_64(A->Mat.ptr, B->Mat.ptr, dst->Mat.ptr, 
+    decx::blas::GEMM_fp64_16_64_64((void*)A->Mat, (void*)B->Mat, (void*)dst->Mat, 
         make_uint2(B->Width(), A->Height()), A->Width(), A->Pitch(), B->Pitch(), dst->Pitch(), S,
-        C->Mat.ptr, alpha, beta);
+        (void*)C->Mat, alpha, beta);
 }
 
 
 template<> void decx::blas::cuda_GEMM_LS_planner<de::CPf>::
 run(decx::_GPU_Matrix* A, decx::_GPU_Matrix* B, decx::_GPU_Matrix* dst, decx::cuda_stream* S)
 {
-    decx::blas::GEMM_cplxf_16_64_64(A->Mat.ptr, B->Mat.ptr, dst->Mat.ptr, 
+    decx::blas::GEMM_cplxf_16_64_64((void*)A->Mat, (void*)B->Mat, (void*)dst->Mat, 
         make_uint2(B->Width(), A->Height()), A->Width(), A->Pitch(), B->Pitch(), dst->Pitch(), S,
         NULL, {1.0, 0}, {1.0, 0});
 }
@@ -68,7 +68,7 @@ template<> void decx::blas::cuda_GEMM_LS_planner<de::CPf>::
 run(decx::_GPU_Matrix* A, decx::_GPU_Matrix* B, decx::_GPU_Matrix* C, decx::_GPU_Matrix* dst, 
         const de::CPf alpha, const de::CPf beta, decx::cuda_stream* S)
 {
-    decx::blas::GEMM_cplxf_16_64_64(A->Mat.ptr, B->Mat.ptr, dst->Mat.ptr, 
+    decx::blas::GEMM_cplxf_16_64_64((void*)A->Mat, (void*)B->Mat, (void*)dst->Mat, 
         make_uint2(B->Width(), A->Height()), A->Width(), A->Pitch(), B->Pitch(), dst->Pitch(), S,
-        C->Mat.ptr, alpha, beta);
+        (void*)C->Mat, alpha, beta);
 }

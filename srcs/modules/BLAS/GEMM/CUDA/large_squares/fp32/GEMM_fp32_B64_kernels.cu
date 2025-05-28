@@ -487,7 +487,7 @@ cu_GEMM_fp32_kernel_64_64_T(const float* __restrict A,   const float* __restrict
     const uint32_t tidy = threadIdx.y + blockIdx.y * blockDim.y;
     const uint32_t tidx_A = threadIdx.x + blockIdx.y * blockDim.x;
 
-    const uint32_t loc_tid_1d = threadIdx.x + threadIdx.y * blockDim.x;
+    // const uint32_t loc_tid_1d = threadIdx.x + threadIdx.y * blockDim.x;
 
     const uint32_t W_v4 = decx::utils::ceil<uint32_t>(proc_dims_v1.x, 4);
     const uint32_t H_v4 = decx::utils::ceil<uint32_t>(proc_dims_v1.y, 4);
@@ -593,7 +593,7 @@ cu_GEMM_fp32_F_kernel_64_64_T(const float* __restrict A,    const float* __restr
     const uint32_t tidy = threadIdx.y + blockIdx.y * blockDim.y;
     const uint32_t tidx_A = threadIdx.x + blockIdx.y * blockDim.x;
 
-    const uint32_t loc_tid_1d = threadIdx.x + threadIdx.y * blockDim.x;
+    // const uint32_t loc_tid_1d = threadIdx.x + threadIdx.y * blockDim.x;
 
     const uint32_t W_v4 = decx::utils::ceil<uint32_t>(proc_dims_v1.x, 4);
     const uint32_t H_v4 = decx::utils::ceil<uint32_t>(proc_dims_v1.y, 4);

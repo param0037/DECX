@@ -123,8 +123,8 @@ decx::blas::cuda_GEMM_LS_planner<float>::plan(const decx::_matrix_layout* A_layo
     const uint2 proc_dims_v1 = make_uint2(this->_B_layout.width, this->_A_layout.height);
 
     const uint32_t pitch_AT = decx::utils::align<uint32_t>(this->_A_layout.height, 128);
-    this->_AT._dims = make_uint2(pitch_AT, this->_B_layout.width);
-    const uint64_t AT_size = this->_AT._dims.x * this->_AT._dims.y * sizeof(float);
+    this->_AT.SetDims(pitch_AT, this->_B_layout.width);
+    const uint64_t AT_size = this->_AT.GetDims().x * this->_AT.GetDims().y * sizeof(float);
 
     uint32_t considered_kernels = 0;
 
@@ -154,12 +154,7 @@ decx::blas::cuda_GEMM_LS_planner<float>::plan(const decx::_matrix_layout* A_layo
     }
 
     if (this->_kernel_id > 3){      // requires a transposed form of matrix A
-        // Assess the remaining device memory
-        if (decx::alloc::_device_malloc(&this->_AT._ptr, AT_size, true, S)){
-            decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION,
-            DEV_ALLOC_FAIL);
-            return;
-        }
+        this->_AT.Allocate(AT_size, CUDA_DEVICE, handle, true, S);
     }
 }
 
@@ -183,8 +178,8 @@ decx::blas::cuda_GEMM_LS_planner<de::Half>::plan(const decx::_matrix_layout* A_l
     const uint2 proc_dims_v1 = make_uint2(this->_B_layout.width, this->_A_layout.height);
 
     const uint32_t pitch_AT = decx::utils::align<uint32_t>(this->_A_layout.height, 256);
-    this->_AT._dims = make_uint2(pitch_AT, this->_B_layout.width);
-    const uint64_t AT_size = this->_AT._dims.x * this->_AT._dims.y * sizeof(de::Half);
+    this->_AT.SetDims(pitch_AT, this->_B_layout.width);
+    const uint64_t AT_size = this->_AT.GetDims().x * this->_AT.GetDims().y * sizeof(de::Half);
 
     uint32_t considered_kernels = 0;
 
@@ -215,11 +210,7 @@ decx::blas::cuda_GEMM_LS_planner<de::Half>::plan(const decx::_matrix_layout* A_l
     
     if (this->_kernel_id > 1){      // requires a transposed form of matrix A
         // Assess the remaining device memory
-        if (decx::alloc::_device_malloc(&this->_AT._ptr, AT_size, true, S)){
-            decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION,
-            DEV_ALLOC_FAIL);
-            return;
-        }
+        this->_AT.Allocate(AT_size, CUDA_DEVICE, handle, true, S);
     }
 }
 
@@ -261,8 +252,8 @@ validate(const decx::_GPU_Matrix* A,    const decx::_GPU_Matrix* B,
 template <typename _data_type>
 void decx::blas::cuda_GEMM_LS_planner<_data_type>::release(decx::blas::cuda_GEMM_LS_planner<_data_type>* _fake_this)
 {
-    if (_fake_this->_AT._ptr.ptr != NULL){
-        decx::alloc::_device_dealloc(&_fake_this->_AT._ptr);
+    if (_fake_this->_AT.IsValid()){
+        _fake_this->_AT.Free();
     }
 }
 

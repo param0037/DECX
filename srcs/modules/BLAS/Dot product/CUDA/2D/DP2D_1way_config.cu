@@ -133,11 +133,10 @@ template <typename _type_in>
 template <bool _is_reduce_h>
 void decx::blas::cuda_DP2D_configs<_type_in>::alloc_buffers(decx::cuda_stream* S, const uint32_t _fp16_accu)
 {
-    if (decx::alloc::_device_malloc(&this->_dev_A, this->_dev_mat_dims.x * this->_dev_mat_dims.y * sizeof(_type_in), true, S) ||
-        decx::alloc::_device_malloc(&this->_dev_B, this->_dev_mat_dims.x * this->_dev_mat_dims.y * sizeof(_type_in), true, S)) {
-        DECX_LOG_ERR(DEV_ALLOC_FAIL);
-        return;
-    }
+    int32_t rval = 0;
+    rval |= this->_dev_A.Allocate(this->_dev_mat_dims.x * this->_dev_mat_dims.y * sizeof(_type_in), CUDA_DEVICE, de::GetLastError(), true, S);
+    rval |= this->_dev_B.Allocate(this->_dev_mat_dims.x * this->_dev_mat_dims.y * sizeof(_type_in), CUDA_DEVICE, de::GetLastError(), true, S);
+
     // Allocation for dst
     if (!this->_post_proc_needed) {
         uint32_t _alloc_dst_size = 0;
@@ -149,10 +148,7 @@ void decx::blas::cuda_DP2D_configs<_type_in>::alloc_buffers(decx::cuda_stream* S
             _alloc_dst_size = decx::utils::align<uint32_t>(
                 _is_reduce_h ? this->_proc_dims.y : this->_proc_dims.x, _CU_REDUCE1D_MEM_ALIGN_4B_) * sizeof(_type_in);
         }
-        if (decx::alloc::_device_malloc(&this->_dev_dst, _alloc_dst_size, true, S)) {
-            DECX_LOG_ERR(DEV_ALLOC_FAIL);
-            return;
-        }
+        this->_dev_dst.Allocate(_alloc_dst_size, CUDA_DEVICE, de::GetLastError(), true, S);
     }
 }
 
@@ -166,11 +162,11 @@ template <typename _type_in>
 void decx::blas::cuda_DP2D_configs<_type_in>::release_buffer()
 {
     if (!this->_from_dev) {
-        decx::alloc::_device_dealloc(&this->_dev_A);
-        decx::alloc::_device_dealloc(&this->_dev_B);
+        this->_dev_A.Free();
+        this->_dev_B.Free();
 
         if (!this->postproc_needed()) {
-            decx::alloc::_device_dealloc(&this->_dev_dst);
+            this->_dev_dst.Free();
             ((decx::reduce::cuda_reduce2D_1way_configs<_type_in>*)this->_post_proc_conf)->release_buffer();
         }
     }
