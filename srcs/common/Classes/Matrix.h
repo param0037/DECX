@@ -208,7 +208,7 @@ namespace decx
 
     public:
         
-        decx::PtrInfo<uint8_t> Mat;
+        decx::PtrInfo<void> Mat;
 
 
         void construct(const de::_DATA_TYPES_FLAGS_ type, uint32_t width, uint32_t height, const de::_DATA_FORMATS_ format = de::_NA_);

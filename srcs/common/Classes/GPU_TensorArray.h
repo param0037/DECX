@@ -134,7 +134,7 @@ namespace decx
     public:
         
         // The data pointer
-        decx::PtrInfo<uint8_t> TensArr;
+        decx::PtrInfo<void> TensArr;
         // The pointer array for the pointers of each tensor in the TensorArray
         decx::PtrInfo<void*> TensptrArr;
 

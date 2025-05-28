@@ -137,7 +137,7 @@ namespace decx
         uint8_t _single_element_size;
 
     
-        decx::PtrInfo<uint8_t> Vec;
+        decx::PtrInfo<void> Vec;
 
 
         void construct(const de::_DATA_TYPES_FLAGS_ _type, uint64_t length);

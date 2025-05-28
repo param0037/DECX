@@ -78,6 +78,14 @@ public:
         return this->ptr != NULL ? 1 : 0;
     }
 
+    decx::PtrInfo<_Ty>& operator=(const decx::PtrInfo<_Ty>& __src)
+    {
+        this->_mem_type = __src._mem_type;
+        this->ptr = __src.ptr;
+        this->block = __src.block;
+        return *this;
+    }
+
 
     template<typename _type_out>
     explicit operator _type_out() { return (_type_out)this->ptr; }
@@ -204,21 +212,30 @@ public:
 
 
     template <typename _type_out = _Ty>
-    _type_out* operator+(const uint64_t offset)
+    typename std::enable_if<!std::is_same<_type_out, void>::value, _type_out>::type*
+    operator+(const uint64_t offset)
     {
         return this->GetRawPtr<_type_out>() + offset;
     }
 
 
-    _Ty& operator[](const uint64_t idx)
+    template <typename _type_out = _Ty>
+    typename std::enable_if<!std::is_same<_type_out, void>::value, _type_out>::type&
+    operator[](const uint64_t idx)
     {
-        return *(this->GetRawPtr<_Ty>() + idx);
+        return *(this->GetRawPtr<_type_out>() + idx);
     }
 
 
-    const _Ty& operator[](const uint64_t idx) const
+    template <typename _type_ptr_in>
+    void SetPtr(_type_ptr_in* _ptr_in) {this->ptr = (_Ty*)_ptr_in; }
+
+
+    template <typename _type_out = _Ty>
+    const typename std::enable_if<!std::is_same<_type_out, const void>::value, _type_out>::type&
+    operator[](const uint64_t idx) const
     {
-        return *(this->GetRawPtrConst<_Ty>() + idx);
+        return *(this->GetRawPtrConst<_type_out>() + idx);
     }
     
 
@@ -274,8 +291,27 @@ public:
     void SetDims(const uint2 dims) {this->_dims = dims;}
     void SetDims(const uint32_t x, const uint32_t y) {this->_dims.x = x; this->_dims.y = y; }
 
+    template <typename _type_ptr_in>
+    void SetPtr(_type_ptr_in* _ptr_in) {this->_ptr.template SetPtr<_type_ptr_in>(_ptr_in); }
 
-    const uint2& getDims() const {return this->_dims; }
+
+    decx::Ptr2D_Info<_Ty>& operator=(const decx::Ptr2D_Info<_Ty>& __src)
+    {
+        this->_ptr = __src._ptr;
+        this->_dims = __src._dims;
+        return *this;
+    }
+
+
+    const uint2& GetDims() const {return this->_dims; }
+
+
+    template<typename _type_out>
+    explicit operator _type_out() { return (_type_out)this->_ptr.template GetRawPtr<_type_out>(); }
+
+
+    template<typename _type_out>
+    explicit operator _type_out() const { return (_type_out)this->_ptr.template GetRawPtrConst<_type_out>(); }
     
 
     template <typename _Out_Ptr = _Ty>
@@ -335,22 +371,53 @@ public:
 
 
     template <typename _type_out = _Ty>
-    _type_out* operator+(const uint64_t offset)
+    typename std::enable_if<!std::is_same<_type_out, void>::value, _type_out>::type*
+    operator+(const uint64_t offset)
     {
         return this->GetRawPtr<_type_out>() + offset;
     }
 
     
-    _Ty& operator[](const uint64_t idx)
+    template <typename _type_out = _Ty>
+    typename std::enable_if<!std::is_same<_type_out, void>::value, _type_out>::type&
+    operator[](const uint64_t idx)
     {
-        return *(this->GetRawPtr<_Ty>() + idx);
+        return *(this->GetRawPtr<_type_out>() + idx);
     }
 
     
-    const _Ty& operator[](const uint64_t idx) const
+    template <typename _type_out = _Ty>
+    const typename std::enable_if<!std::is_same<_type_out, void>::value, _type_out>::type&
+    operator[](const uint64_t idx) const
     {
-        return *(this->GetRawPtrConst<_Ty>() + idx);
+        return *(this->GetRawPtrConst<_type_out>() + idx);
     }
+
+
+#ifdef _DECX_CUDA_PARTS_
+    int32_t Allocate(const uint64_t size, const DecxMemoryType_e alloc_type, de::DH* handle = nullptr, const bool zero_initialize = true, decx::cuda_stream* S = nullptr)
+    {
+        return this->_ptr.Allocate(size, alloc_type, handle, zero_initialize, S);
+    }
+#else
+    int32_t Allocate(const uint64_t size, const DecxMemoryType_e alloc_type, de::DH* handle = nullptr, const bool zero_initialize = true)
+    {
+        return this->_ptr.Allocate(size, alloc_type, handle, zero_initialize);
+    }
+#endif
+
+
+#ifdef _DECX_CUDA_PARTS_
+    int32_t Reallocate(const uint64_t size, de::DH* handle = nullptr, const bool zero_initialize = true, decx::cuda_stream* S = nullptr, const bool lazy_alloc = false)
+    {
+        return this->_ptr.Reallocate(size, handle, zero_initialize, S, lazy_alloc);
+    }
+#else
+    int32_t Reallocate(const uint64_t size, de::DH* handle = nullptr, const bool zero_initialize = true, const bool lazy_alloc = false)
+    {
+        return this->_ptr.Reallocate(size, handle, zero_initialize, lazy_alloc);
+    }
+#endif
 };
 
 

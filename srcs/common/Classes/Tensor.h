@@ -183,7 +183,7 @@ namespace decx
         decx::_tensor_layout _layout;
 
 
-        decx::PtrInfo<uint8_t> Tens;
+        decx::PtrInfo<void> Tens;
         uint64_t element_num;        // is the number of all the ACTIVE elements
         uint64_t total_bytes;        // is the size of ALL(including pitch) elements
 

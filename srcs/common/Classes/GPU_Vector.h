@@ -88,7 +88,7 @@ namespace decx
         uint8_t _single_element_size;
 
 
-        decx::PtrInfo<uint8_t> Vec;
+        decx::PtrInfo<void> Vec;
 
 
         _GPU_Vector();
