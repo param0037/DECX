@@ -51,9 +51,10 @@ typedef void* DecxMemoryHandler_t;
 
 typedef enum
 {
-    PAGABLE = 0,
-    PAGELOCKED = 1,
-    CUDA_DEVICE = 2,
+    MEMTYPE_DEFAULT = 0,
+    PAGABLE         = 1,
+    PAGELOCKED      = 2,
+    CUDA_DEVICE     = 3,
 }DecxMemoryType_e;
 
 
