@@ -135,14 +135,14 @@ load_entire_row_transpose_fp32_zip(const float* __restrict src_head_ptr,
             const uint32_t _phyaddr_H = zip_info->_is_Level2 ? zip_info->get_phyaddr_L2(_start_dex + i) :
                 zip_info->get_phyaddr_L1(_start_dex + i);
             _src_row_ptr = src_head_ptr + _phyaddr_H * _pitch_src;
-            _dst_row_ptr = _double_buffer->get_lagging_ptr<float>() + i * _tiles->_tile_row_pitch;
+            _dst_row_ptr = _double_buffer->GetLaggingBufPtr<float>() + i * _tiles->_tile_row_pitch;
 
             for (uint32_t j = 0; j < _load_len_v4; ++j) {
                 _mm_store_ps(_dst_row_ptr + (j << 2), _mm_load_ps(_src_row_ptr + (j << 2)));
             }
         }
         // Update the status of the double buffer
-        _double_buffer->update_states();
+        _double_buffer->UpdateStatus();
         // In-block transpose
         _tiles->_inblock_transpose_vecDist_2_VecAdj_fp32(_double_buffer);
     }
@@ -175,14 +175,14 @@ load_entire_row_transpose_fp64_zip(const double* __restrict src_head_ptr,
             const uint32_t _phyaddr_H = zip_info->_is_Level2 ? zip_info->get_phyaddr_L2(_start_dex + i) :
                 zip_info->get_phyaddr_L1(_start_dex + i);
             _src_row_ptr = src_head_ptr + _phyaddr_H * _pitch_src;
-            _dst_row_ptr = _double_buffer->get_lagging_ptr<double>() + i * _tiles->_tile_row_pitch;
+            _dst_row_ptr = _double_buffer->GetLaggingBufPtr<double>() + i * _tiles->_tile_row_pitch;
 
             for (uint32_t j = 0; j < _load_len_v2; ++j) {
                 _mm_store_pd(_dst_row_ptr + (j << 1), _mm_load_pd(_src_row_ptr + (j << 1)));
             }
         }
         // Update the status of the double buffer
-        _double_buffer->update_states();
+        _double_buffer->UpdateStatus();
         // In-block transpose
         _tiles->_inblock_transpose_vecDist_2_VecAdj_fp64(_double_buffer);
     }
@@ -216,7 +216,7 @@ load_entire_row_transpose_u8_fp32_zip(const uint8_t* __restrict src_head_ptr,
             const uint32_t _phyaddr_H = zip_info->_is_Level2 ? zip_info->get_phyaddr_L2(_start_dex + i) :
                                                                zip_info->get_phyaddr_L1(_start_dex + i);
             _src_row_ptr = (float*)(src_head_ptr + _phyaddr_H * _pitch_src);
-            _dst_row_ptr = _double_buffer->get_lagging_ptr<float>() + i * _tiles->_tile_row_pitch;
+            _dst_row_ptr = _double_buffer->GetLaggingBufPtr<float>() + i * _tiles->_tile_row_pitch;
 
             for (uint32_t j = 0; j < _load_len_v4; ++j) {
                 _reg._vf = _mm_loadu_ps(_src_row_ptr + j);
@@ -225,7 +225,7 @@ load_entire_row_transpose_u8_fp32_zip(const uint8_t* __restrict src_head_ptr,
             }
         }
         // Update the status of the double buffer
-        _double_buffer->update_states();
+        _double_buffer->UpdateStatus();
         // In-block transpose
         _tiles->_inblock_transpose_vecDist_2_VecAdj_fp32(_double_buffer);
     }
@@ -259,7 +259,7 @@ load_entire_row_transpose_u8_fp64_zip(const uint8_t* __restrict src_head_ptr,
             const uint32_t _phyaddr_H = zip_info->_is_Level2 ? zip_info->get_phyaddr_L2(_start_dex + i) :
                                                                zip_info->get_phyaddr_L1(_start_dex + i);
             _src_row_ptr = (int16_t*)(src_head_ptr + _phyaddr_H * _pitch_src);
-            _dst_row_ptr = _double_buffer->get_lagging_ptr<double>() + i * _tiles->_tile_row_pitch;
+            _dst_row_ptr = _double_buffer->GetLaggingBufPtr<double>() + i * _tiles->_tile_row_pitch;
 
             for (uint32_t j = 0; j < _load_len_v2; ++j) {
                 _reg._arrs[0] = _src_row_ptr[j];
@@ -272,7 +272,7 @@ load_entire_row_transpose_u8_fp64_zip(const uint8_t* __restrict src_head_ptr,
             }
         }
         // Update the status of the double buffer
-        _double_buffer->update_states();
+        _double_buffer->UpdateStatus();
         // In-block transpose
         _tiles->_inblock_transpose_vecDist_2_VecAdj_fp64(_double_buffer);
     }
@@ -306,7 +306,7 @@ load_entire_row_transpose_cplxf_zip(const de::CPf* __restrict src_head_ptr,
             const uint32_t _phyaddr_H = zip_info->_is_Level2 ? zip_info->get_phyaddr_L2(_start_dex + i) :
                                                                zip_info->get_phyaddr_L1(_start_dex + i);
             _src_row_ptr = (double*)src_head_ptr + _phyaddr_H * _pitch_src;
-            _dst_row_ptr = _double_buffer->get_lagging_ptr<double>() + i * _tiles->_tile_row_pitch;
+            _dst_row_ptr = _double_buffer->GetLaggingBufPtr<double>() + i * _tiles->_tile_row_pitch;
 
             for (uint32_t j = 0; j < _load_len_v4; ++j) {
                 _reg._vd = _mm256_load_pd(_src_row_ptr + (j << 2));
@@ -316,7 +316,7 @@ load_entire_row_transpose_cplxf_zip(const de::CPf* __restrict src_head_ptr,
             }
         }
         // Update the status of the double buffer
-        _double_buffer->update_states();
+        _double_buffer->UpdateStatus();
         // In-block transpose
         _tiles->_inblock_transpose_vecDist_2_VecAdj_cplxf(_double_buffer);
     }
@@ -351,7 +351,7 @@ load_entire_row_transpose_cplxd_zip(const de::CPd* __restrict src_head_ptr,
             const uint32_t _phyaddr_H = zip_info->_is_Level2 ? zip_info->get_phyaddr_L2(_start_dex + i) :
                                                                zip_info->get_phyaddr_L1(_start_dex + i);
             _src_row_ptr = src_head_ptr + _phyaddr_H * _pitch_src;
-            _dst_row_ptr = _double_buffer->get_lagging_ptr<de::CPd>() + i * _tiles->_tile_row_pitch;
+            _dst_row_ptr = _double_buffer->GetLaggingBufPtr<de::CPd>() + i * _tiles->_tile_row_pitch;
 
             for (uint32_t j = 0; j < _load_len_v2; ++j) {
                 _reg._vd = _mm256_load_pd((double*)(_src_row_ptr + (j << 1)));
@@ -361,7 +361,7 @@ load_entire_row_transpose_cplxd_zip(const de::CPd* __restrict src_head_ptr,
             }
         }
         // Update the status of the double buffer
-        _double_buffer->update_states();
+        _double_buffer->UpdateStatus();
         // In-block transpose
         _tiles->_inblock_transpose_vecDist_2_VecAdj_cplxd(_double_buffer);
     }
@@ -395,7 +395,7 @@ decx::dsp::fft::CPUK::store_entire_row_transpose_cplxf_zip(decx::utils::double_b
 
         for (uint8_t i = 0; i < _load_H; ++i) 
         {
-            _src_row_ptr = _double_buffer->get_leading_ptr<double>() + i * _tiles->_tile_row_pitch;
+            _src_row_ptr = _double_buffer->GetLeadingBufPtr<double>() + i * _tiles->_tile_row_pitch;
             const uint32_t _phyaddr_H = zip_info->_is_Level2 ? zip_info->get_phyaddr_L2(_start_dex + i) :
                                                                zip_info->get_phyaddr_L1(_start_dex + i);
 
@@ -445,7 +445,7 @@ store_entire_row_transpose_cplxd_zip(decx::utils::double_buffer_manager* __restr
 
         for (uint8_t i = 0; i < _load_H; ++i) 
         {
-            _src_row_ptr = _double_buffer->get_leading_ptr<de::CPd>() + i * _tiles->_tile_row_pitch;
+            _src_row_ptr = _double_buffer->GetLeadingBufPtr<de::CPd>() + i * _tiles->_tile_row_pitch;
             const uint32_t _phyaddr_H = zip_info->_is_Level2 ? zip_info->get_phyaddr_L2(_start_dex + i) :
                                                                zip_info->get_phyaddr_L1(_start_dex + i);
 
@@ -493,7 +493,7 @@ store_entire_row_transpose_cplxf_fp32_zip(decx::utils::double_buffer_manager* __
 
         for (uint8_t i = 0; i < _load_H; ++i) 
         {
-            _src_row_ptr = _double_buffer->get_leading_ptr<double>() + i * _tiles->_tile_row_pitch;
+            _src_row_ptr = _double_buffer->GetLeadingBufPtr<double>() + i * _tiles->_tile_row_pitch;
             const uint32_t _phyaddr_H = zip_info->_is_Level2 ? zip_info->get_phyaddr_L2(_start_dex + i) :
                                                                zip_info->get_phyaddr_L1(_start_dex + i);
 
@@ -539,7 +539,7 @@ store_entire_row_transpose_cplxd_fp64_zip(decx::utils::double_buffer_manager* __
 
         for (uint8_t i = 0; i < _load_H; ++i) 
         {
-            _src_row_ptr = _double_buffer->get_leading_ptr<de::CPd>() + i * _tiles->_tile_row_pitch;
+            _src_row_ptr = _double_buffer->GetLeadingBufPtr<de::CPd>() + i * _tiles->_tile_row_pitch;
             const uint32_t _phyaddr_H = zip_info->_is_Level2 ? zip_info->get_phyaddr_L2(_start_dex + i) :
                                                                zip_info->get_phyaddr_L1(_start_dex + i);
 
@@ -585,7 +585,7 @@ store_entire_row_transpose_cplxf_u8_zip(decx::utils::double_buffer_manager* __re
 
         for (uint8_t i = 0; i < _load_H; ++i) 
         {
-            _src_row_ptr = _double_buffer->get_leading_ptr<double>() + i * _tiles->_tile_row_pitch;
+            _src_row_ptr = _double_buffer->GetLeadingBufPtr<double>() + i * _tiles->_tile_row_pitch;
             const uint32_t _phyaddr_H = zip_info->_is_Level2 ? zip_info->get_phyaddr_L2(_start_dex + i) :
                                                                zip_info->get_phyaddr_L1(_start_dex + i);
 
@@ -636,7 +636,7 @@ store_entire_row_transpose_cplxd_u8_zip(decx::utils::double_buffer_manager* __re
 
         for (uint8_t i = 0; i < _load_H; ++i) 
         {
-            _src_row_ptr = _double_buffer->get_leading_ptr<de::CPd>() + i * _tiles->_tile_row_pitch;
+            _src_row_ptr = _double_buffer->GetLeadingBufPtr<de::CPd>() + i * _tiles->_tile_row_pitch;
             const uint32_t _phyaddr_H = zip_info->_is_Level2 ? zip_info->get_phyaddr_L2(_start_dex + i) :
                                                                zip_info->get_phyaddr_L1(_start_dex + i);
 

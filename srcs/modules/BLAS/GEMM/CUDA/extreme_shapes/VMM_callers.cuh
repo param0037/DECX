@@ -67,7 +67,7 @@ namespace decx
 template <bool _is_reduce_h>
 static void* decx::_VMM_fp32_caller_async(decx::blas::cuda_DP2D_configs<float>* _configs, decx::cuda_stream* S)
 {
-    const void* res_ptr = _configs->postproc_needed() ? (void*)_configs->get_configs_ptr<float>()->get_src() : (void*)_configs->_dev_dst;
+    const void* res_ptr = _configs->postproc_needed() ? (void*)_configs->get_configs_ptr<float>()->GetInputAddr() : (void*)_configs->_dev_dst;
     
     if (_is_reduce_h) {
         decx::GPUK::cu_mat_m_vec_fp32 << < _configs->get_1st_kernel_config(),
@@ -99,7 +99,7 @@ static void* decx::_VMM_fp32_caller_async(decx::blas::cuda_DP2D_configs<float>* 
             decx::reduce::reduce_sum2D_v_fp32_Async(_postproc_configs, S); 
         }
 
-        return _postproc_configs->get_dst();
+        return _postproc_configs->GetOutputAddr();
     }
     else {
         return (void*)_configs->_dev_dst;
@@ -129,10 +129,10 @@ static void* decx::_VMM_fp16_caller_async(decx::blas::cuda_DP2D_configs<de::Half
 {
     const void* res_ptr = NULL;
     if (_fp16_accu == decx::Fp16_Accuracy_Levels::Fp16_Accurate_L1) {
-        res_ptr = _configs->postproc_needed() ? (void*)_configs->get_configs_ptr<float>()->get_src() : (void*)_configs->_dev_dst;
+        res_ptr = _configs->postproc_needed() ? (void*)_configs->get_configs_ptr<float>()->GetInputAddr() : (void*)_configs->_dev_dst;
     }
     else {
-        res_ptr = _configs->postproc_needed() ? (void*)_configs->get_configs_ptr<de::Half>()->get_src() : (void*)_configs->_dev_dst;
+        res_ptr = _configs->postproc_needed() ? (void*)_configs->get_configs_ptr<de::Half>()->GetInputAddr() : (void*)_configs->_dev_dst;
     }
     
     if (_is_reduce_h) {
@@ -185,7 +185,7 @@ static void* decx::_VMM_fp16_caller_async(decx::blas::cuda_DP2D_configs<de::Half
             if (_is_reduce_h)   decx::reduce::reduce_sum2D_h_fp32_Async(_postproc_configs, S);
             else    decx::reduce::reduce_sum2D_v_fp32_Async(_postproc_configs, S);
 
-            return _postproc_configs->get_dst();
+            return _postproc_configs->GetOutputAddr();
         }
         else {
             decx::reduce::cuda_reduce2D_1way_configs<de::Half>* _postproc_configs = _configs->get_configs_ptr<de::Half>();
@@ -193,7 +193,7 @@ static void* decx::_VMM_fp16_caller_async(decx::blas::cuda_DP2D_configs<de::Half
             if (_is_reduce_h)   decx::reduce::reduce_sum2D_h_fp16_Async(_postproc_configs, S, _fp16_accu);
             else    decx::reduce::reduce_sum2D_v_fp16_Async(_postproc_configs, S, _fp16_accu);
 
-            return _postproc_configs->get_dst();
+            return _postproc_configs->GetOutputAddr();
         }
     }
     else {

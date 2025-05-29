@@ -104,7 +104,7 @@ public:
     const decx::utils::frag_manager* get_thread_dist_V() const;
 
 
-    static void release_buffers(decx::dsp::fft::cpu_FFT2D_planner<_data_type>* _fake_this);
+    static void ReleaseBuffers(decx::dsp::fft::cpu_FFT2D_planner<_data_type>* _fake_this);
 
 
     const decx::dsp::fft::FKT1D* get_tile_ptr(const uint32_t _id) const;

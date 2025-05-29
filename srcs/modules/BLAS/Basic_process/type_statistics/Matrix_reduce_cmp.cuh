@@ -85,10 +85,10 @@ static void decx::reduce::matrix_reduce2D_1way_cmp_fp32(decx::_Matrix* src, decx
     }
     
     decx::reduce::cuda_reduce2D_1way_configs<float> _configs;
-    _configs.set_cmp_or_not(true);
+    _configs.CMP(true);
     _configs.generate_configs<_is_reduce_h>(make_uint2(src->Width(), src->Height()), S, true);
     
-    decx::Ptr2D_Info<void> _dt1 = _configs.get_src();
+    decx::Ptr2D_Info<void> _dt1 = _configs.GetInputAddr();
     
     checkCudaErrors(cudaMemcpy2DAsync((void*)_dt1,                      _dt1.GetDims().x * sizeof(float),
                                       (void*)src->Mat,                  src->Pitch() * sizeof(float),
@@ -102,7 +102,7 @@ static void decx::reduce::matrix_reduce2D_1way_cmp_fp32(decx::_Matrix* src, decx
         decx::reduce::reduce_cmp2D_v_fp32_Async<_is_max>(&_configs, S);
     }
 
-    checkCudaErrors(cudaMemcpyAsync((void*)dst->Vec, _configs.get_dst(), dst->Len() * sizeof(float), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
+    checkCudaErrors(cudaMemcpyAsync((void*)dst->Vec, _configs.GetOutputAddr(), dst->Len() * sizeof(float), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
 
     E->event_record(S);
     E->synchronize();
@@ -126,7 +126,7 @@ static void decx::reduce::dev_matrix_reduce2D_1way_cmp_fp32(decx::_GPU_Matrix* s
     }
     
     decx::reduce::cuda_reduce2D_1way_configs<float> _configs;
-    _configs.set_cmp_or_not(true);
+    _configs.CMP(true);
     _configs.generate_configs<_is_reduce_h>(src->Mat, (void*)dst->Vec, src->Pitch(), make_uint2(src->Width(), src->Height()), S, true);
     
     if (_is_reduce_h) {
@@ -158,10 +158,10 @@ static void decx::reduce::matrix_reduce2D_1way_cmp_fp16(decx::_Matrix* src, decx
     }
     
     decx::reduce::cuda_reduce2D_1way_configs<de::Half> _configs;
-    _configs.set_cmp_or_not(true);
+    _configs.CMP(true);
     _configs.generate_configs<_is_reduce_h>(make_uint2(src->Width(), src->Height()), S, true);
     
-    decx::Ptr2D_Info<void> _dt1 = _configs.get_src();
+    decx::Ptr2D_Info<void> _dt1 = _configs.GetInputAddr();
     
     checkCudaErrors(cudaMemcpy2DAsync((void*)_dt1,                      _dt1.GetDims().x * sizeof(de::Half),
                                       (void*)src->Mat,                  src->Pitch() * sizeof(de::Half),
@@ -175,7 +175,7 @@ static void decx::reduce::matrix_reduce2D_1way_cmp_fp16(decx::_Matrix* src, decx
         decx::reduce::reduce_cmp2D_v_fp16_Async<_is_max>(&_configs, S);
     }
 
-    checkCudaErrors(cudaMemcpyAsync((void*)dst->Vec, _configs.get_dst(), dst->Len() * sizeof(de::Half), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
+    checkCudaErrors(cudaMemcpyAsync((void*)dst->Vec, _configs.GetOutputAddr(), dst->Len() * sizeof(de::Half), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
 
     E->event_record(S);
     E->synchronize();
@@ -199,7 +199,7 @@ static void decx::reduce::dev_matrix_reduce2D_1way_cmp_fp16(decx::_GPU_Matrix* s
     }
     
     decx::reduce::cuda_reduce2D_1way_configs<de::Half> _configs;
-    _configs.set_cmp_or_not(true);
+    _configs.CMP(true);
     _configs.generate_configs<_is_reduce_h>(src->Mat, (void*)dst->Vec, src->Pitch(), make_uint2(src->Width(), src->Height()), S, true);
     
     if (_is_reduce_h) {
@@ -230,10 +230,10 @@ static void decx::reduce::matrix_reduce2D_1way_cmp_u8(decx::_Matrix* src, decx::
     }
     
     decx::reduce::cuda_reduce2D_1way_configs<uint8_t> _configs;
-    _configs.set_cmp_or_not(true);
+    _configs.CMP(true);
     _configs.generate_configs<_is_reduce_h>(make_uint2(src->Width(), src->Height()), S, true);
     
-    decx::Ptr2D_Info<void> _dt1 = _configs.get_src();
+    decx::Ptr2D_Info<void> _dt1 = _configs.GetInputAddr();
     
     checkCudaErrors(cudaMemcpy2DAsync((void*)_dt1,                      _dt1.GetDims().x * sizeof(uint8_t),
                                       (void*)src->Mat,                  src->Pitch() * sizeof(uint8_t),
@@ -247,7 +247,7 @@ static void decx::reduce::matrix_reduce2D_1way_cmp_u8(decx::_Matrix* src, decx::
         decx::reduce::reduce_cmp2D_v_u8_Async<_is_max>(&_configs, S);
     }
 
-    checkCudaErrors(cudaMemcpyAsync((void*)dst->Vec, _configs.get_dst(), dst->Len() * sizeof(uint8_t), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
+    checkCudaErrors(cudaMemcpyAsync((void*)dst->Vec, _configs.GetOutputAddr(), dst->Len() * sizeof(uint8_t), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
 
     E->event_record(S);
     E->synchronize();
@@ -271,7 +271,7 @@ static void decx::reduce::dev_matrix_reduce2D_1way_cmp_u8(decx::_GPU_Matrix* src
     }
     
     decx::reduce::cuda_reduce2D_1way_configs<uint8_t> _configs;
-    _configs.set_cmp_or_not(true);
+    _configs.CMP(true);
     _configs.generate_configs<_is_reduce_h>(src->Mat, (void*)dst->Vec, src->Pitch(), make_uint2(src->Width(), src->Height()), S, true);
     
     if (_is_reduce_h) {
@@ -317,14 +317,14 @@ static void decx::reduce::matrix_reduce2D_full_cmp_fp32(decx::_Matrix* src, de::
     const uint2 proc_dims_v1 = make_uint2(src->Width(), src->Height());
 
     decx::reduce::cuda_reduce1D_configs<float> _kp_configs;
-    _kp_configs.set_cmp_or_not(true);
+    _kp_configs.CMP(true);
 
     // Generate the configs for postprocessing of 1D reduction
     // Obtain whether only one flatten kernel is OK
     const bool _more_than_flatten = decx::reduce::reduce2D_flatten_postproc_configs_gen<float, float>(&_kp_configs, alloc_dims.x, proc_dims_v1, S);
 
     // set the filling value
-    _kp_configs.set_fill_val((src->Mat.GetRawPtr<float>())[0]);
+    _kp_configs.SetPaddingValue((src->Mat.GetRawPtr<float>())[0]);
 
     // Call the kernels
     // Obtain the pointer where the final value is stored
@@ -337,7 +337,7 @@ static void decx::reduce::matrix_reduce2D_full_cmp_fp32(decx::_Matrix* src, de::
     E->synchronize();
 
     // Release the buffers so that the configs can be safely destructed
-    _kp_configs.release_buffer();
+    _kp_configs.ReleaseBuffer();
 }
 
 
@@ -373,14 +373,14 @@ static void decx::reduce::matrix_reduce2D_full_cmp_int32(decx::_Matrix* src, de:
     const uint2 proc_dims_v1 = make_uint2(src->Width(), src->Height());
 
     decx::reduce::cuda_reduce1D_configs<int32_t> _kp_configs;
-    _kp_configs.set_cmp_or_not(true);
+    _kp_configs.CMP(true);
 
     // Generate the configs for postprocessing of 1D reduction
     // Obtain whether only one flatten kernel is OK
     const bool _more_than_flatten = decx::reduce::reduce2D_flatten_postproc_configs_gen<int32_t, int32_t>(&_kp_configs, alloc_dims.x, proc_dims_v1, S);
 
     // set the filling value
-    _kp_configs.set_fill_val(((int32_t*)src->Mat)[0]);
+    _kp_configs.SetPaddingValue(((int32_t*)src->Mat)[0]);
 
     // Call the kernels
     // Obtain the pointer where the final value is stored
@@ -393,7 +393,7 @@ static void decx::reduce::matrix_reduce2D_full_cmp_int32(decx::_Matrix* src, de:
     E->synchronize();
 
     // Release the buffers so that the configs can be safely destructed
-    _kp_configs.release_buffer();
+    _kp_configs.ReleaseBuffer();
 }
 
 
@@ -430,14 +430,14 @@ static void decx::reduce::matrix_reduce2D_full_cmp_fp16(decx::_Matrix* src, de::
     const uint2 proc_dims_v1 = make_uint2(src->Width(), src->Height());
 
     decx::reduce::cuda_reduce1D_configs<de::Half> _kp_configs;
-    _kp_configs.set_cmp_or_not(true);
+    _kp_configs.CMP(true);
 
     // Generate the configs for postprocessing of 1D reduction
     // Obtain whether only one flatten kernel is OK
     const bool _more_than_flatten = decx::reduce::reduce2D_flatten_postproc_configs_gen<de::Half, de::Half>(&_kp_configs, alloc_dims.x, proc_dims_v1, S);
 
     // set the filling value
-    _kp_configs.set_fill_val(((de::Half*)src->Mat)[0]);
+    _kp_configs.SetPaddingValue(((de::Half*)src->Mat)[0]);
 
     // Call the kernels
     // Obtain the pointer where the final value is stored
@@ -450,7 +450,7 @@ static void decx::reduce::matrix_reduce2D_full_cmp_fp16(decx::_Matrix* src, de::
     E->synchronize();
 
     // Release the buffers so that the configs can be safely destructed
-    _kp_configs.release_buffer();
+    _kp_configs.ReleaseBuffer();
 }
 
 
@@ -486,14 +486,14 @@ static void decx::reduce::matrix_reduce2D_full_cmp_u8(decx::_Matrix* src, de::Nu
     const uint2 proc_dims_v1 = make_uint2(src->Width(), src->Height());
 
     decx::reduce::cuda_reduce1D_configs<uint8_t> _kp_configs;
-    _kp_configs.set_cmp_or_not(true);
+    _kp_configs.CMP(true);
 
     // Generate the configs for postprocessing of 1D reduction
     // Obtain whether only one flatten kernel is OK
     const bool _more_than_flatten = decx::reduce::reduce2D_flatten_postproc_configs_gen<uint8_t, uint8_t>(&_kp_configs, alloc_dims.x, proc_dims_v1, S);
 
     // set the filling value
-    _kp_configs.set_fill_val((src->Mat.GetRawPtr<uint8_t>())[0]);
+    _kp_configs.SetPaddingValue((src->Mat.GetRawPtr<uint8_t>())[0]);
 
     // Call the kernels
     // Obtain the pointer where the final value is stored
@@ -506,7 +506,7 @@ static void decx::reduce::matrix_reduce2D_full_cmp_u8(decx::_Matrix* src, de::Nu
     E->synchronize();
 
     // Release the buffers so that the configs can be safely destructed
-    _kp_configs.release_buffer();
+    _kp_configs.ReleaseBuffer();
 }
 
 
@@ -541,14 +541,14 @@ static void decx::reduce::matrix_reduce2D_full_cmp_fp64(decx::_Matrix* src, de::
     const uint2 proc_dims_v1 = make_uint2(src->Width(), src->Height());
 
     decx::reduce::cuda_reduce1D_configs<double> _kp_configs;
-    _kp_configs.set_cmp_or_not(true);
+    _kp_configs.CMP(true);
 
     // Generate the configs for postprocessing of 1D reduction
     // Obtain whether only one flatten kernel is OK
     const bool _more_than_flatten = decx::reduce::reduce2D_flatten_postproc_configs_gen<double, double>(&_kp_configs, alloc_dims.x, proc_dims_v1, S);
 
     // set the filling value
-    _kp_configs.set_fill_val((src->Mat.GetRawPtr<double>())[0]);
+    _kp_configs.SetPaddingValue((src->Mat.GetRawPtr<double>())[0]);
 
     // Call the kernels
     // Obtain the pointer where the final value is stored
@@ -561,7 +561,7 @@ static void decx::reduce::matrix_reduce2D_full_cmp_fp64(decx::_Matrix* src, de::
     E->synchronize();
 
     // Release the buffers so that the configs can be safely destructed
-    _kp_configs.release_buffer();
+    _kp_configs.ReleaseBuffer();
 }
 
 
@@ -587,7 +587,7 @@ static void decx::reduce::dev_matrix_reduce2D_full_cmp_fp32(decx::_GPU_Matrix* s
     const uint2 proc_dims_v1 = make_uint2(src->Width(), src->Height());
 
     decx::reduce::cuda_reduce1D_configs<float> _kp_configs;
-    _kp_configs.set_cmp_or_not(true);
+    _kp_configs.CMP(true);
 
     // Generate the configs for postprocessing of 1D reduction
     // Obtain whether only one flatten kernel is OK
@@ -595,7 +595,7 @@ static void decx::reduce::dev_matrix_reduce2D_full_cmp_fp32(decx::_GPU_Matrix* s
 
     float _fill_val = 0;
     checkCudaErrors(cudaMemcpyAsync(&_fill_val, (void*)src->Mat, 1 * sizeof(float), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
-    _kp_configs.set_fill_val(_fill_val);
+    _kp_configs.SetPaddingValue(_fill_val);
 
     // Call the kernels
     // Obtain the pointer where the final value is stored
@@ -608,7 +608,7 @@ static void decx::reduce::dev_matrix_reduce2D_full_cmp_fp32(decx::_GPU_Matrix* s
     E->synchronize();
 
     // Release the buffers so that the configs can be safely destructed
-    _kp_configs.release_buffer();
+    _kp_configs.ReleaseBuffer();
 }
 
 
@@ -633,7 +633,7 @@ static void decx::reduce::dev_matrix_reduce2D_full_cmp_int32(decx::_GPU_Matrix* 
     const uint2 proc_dims_v1 = make_uint2(src->Width(), src->Height());
 
     decx::reduce::cuda_reduce1D_configs<int32_t> _kp_configs;
-    _kp_configs.set_cmp_or_not(true);
+    _kp_configs.CMP(true);
 
     // Generate the configs for postprocessing of 1D reduction
     // Obtain whether only one flatten kernel is OK
@@ -641,7 +641,7 @@ static void decx::reduce::dev_matrix_reduce2D_full_cmp_int32(decx::_GPU_Matrix* 
 
     int32_t _fill_val = 0;
     checkCudaErrors(cudaMemcpyAsync(&_fill_val, (void*)src->Mat, 1 * sizeof(int32_t), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
-    _kp_configs.set_fill_val(_fill_val);
+    _kp_configs.SetPaddingValue(_fill_val);
 
     // Call the kernels
     // Obtain the pointer where the final value is stored
@@ -654,7 +654,7 @@ static void decx::reduce::dev_matrix_reduce2D_full_cmp_int32(decx::_GPU_Matrix* 
     E->synchronize();
 
     // Release the buffers so that the configs can be safely destructed
-    _kp_configs.release_buffer();
+    _kp_configs.ReleaseBuffer();
 }
 
 
@@ -680,7 +680,7 @@ static void decx::reduce::dev_matrix_reduce2D_full_cmp_fp16(decx::_GPU_Matrix* s
     const uint2 proc_dims_v1 = make_uint2(src->Width(), src->Height());
 
     decx::reduce::cuda_reduce1D_configs<de::Half> _kp_configs;
-    _kp_configs.set_cmp_or_not(true);
+    _kp_configs.CMP(true);
 
     // Generate the configs for postprocessing of 1D reduction
     // Obtain whether only one flatten kernel is OK
@@ -688,7 +688,7 @@ static void decx::reduce::dev_matrix_reduce2D_full_cmp_fp16(decx::_GPU_Matrix* s
 
     de::Half _fill_val;
     checkCudaErrors(cudaMemcpyAsync(&_fill_val, (void*)src->Mat, 1 * sizeof(de::Half), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
-    _kp_configs.set_fill_val(_fill_val);
+    _kp_configs.SetPaddingValue(_fill_val);
 
     // Call the kernels
     // Obtain the pointer where the final value is stored
@@ -701,7 +701,7 @@ static void decx::reduce::dev_matrix_reduce2D_full_cmp_fp16(decx::_GPU_Matrix* s
     E->synchronize();
 
     // Release the buffers so that the configs can be safely destructed
-    _kp_configs.release_buffer();
+    _kp_configs.ReleaseBuffer();
 }
 
 
@@ -726,7 +726,7 @@ static void decx::reduce::dev_matrix_reduce2D_full_cmp_u8(decx::_GPU_Matrix* src
     const uint2 proc_dims_v1 = make_uint2(src->Width(), src->Height());
 
     decx::reduce::cuda_reduce1D_configs<uint8_t> _kp_configs;
-    _kp_configs.set_cmp_or_not(true);
+    _kp_configs.CMP(true);
 
     // Generate the configs for postprocessing of 1D reduction
     // Obtain whether only one flatten kernel is OK
@@ -734,7 +734,7 @@ static void decx::reduce::dev_matrix_reduce2D_full_cmp_u8(decx::_GPU_Matrix* src
 
     uint8_t _fill_val;
     checkCudaErrors(cudaMemcpyAsync(&_fill_val, (void*)src->Mat, 1 * sizeof(uint8_t), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
-    _kp_configs.set_fill_val(_fill_val);
+    _kp_configs.SetPaddingValue(_fill_val);
 
     // Call the kernels
     // Obtain the pointer where the final value is stored
@@ -747,7 +747,7 @@ static void decx::reduce::dev_matrix_reduce2D_full_cmp_u8(decx::_GPU_Matrix* src
     E->synchronize();
 
     // Release the buffers so that the configs can be safely destructed
-    _kp_configs.release_buffer();
+    _kp_configs.ReleaseBuffer();
 }
 
 
@@ -773,7 +773,7 @@ static void decx::reduce::dev_matrix_reduce2D_full_cmp_fp64(decx::_GPU_Matrix* s
     const uint2 proc_dims_v1 = make_uint2(src->Width(), src->Height());
 
     decx::reduce::cuda_reduce1D_configs<double> _kp_configs;
-    _kp_configs.set_cmp_or_not(true);
+    _kp_configs.CMP(true);
 
     // Generate the configs for postprocessing of 1D reduction
     // Obtain whether only one flatten kernel is OK
@@ -781,7 +781,7 @@ static void decx::reduce::dev_matrix_reduce2D_full_cmp_fp64(decx::_GPU_Matrix* s
 
     double _fill_val;
     checkCudaErrors(cudaMemcpyAsync(&_fill_val, (void*)src->Mat, 1 * sizeof(double), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
-    _kp_configs.set_fill_val(_fill_val);
+    _kp_configs.SetPaddingValue(_fill_val);
 
     // Call the kernels
     // Obtain the pointer where the final value is stored
@@ -794,7 +794,7 @@ static void decx::reduce::dev_matrix_reduce2D_full_cmp_fp64(decx::_GPU_Matrix* s
     E->synchronize();
 
     // Release the buffers so that the configs can be safely destructed
-    _kp_configs.release_buffer();
+    _kp_configs.ReleaseBuffer();
 }
 
 

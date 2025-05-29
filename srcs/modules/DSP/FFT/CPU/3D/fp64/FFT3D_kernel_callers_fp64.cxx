@@ -52,7 +52,7 @@ _FFT3D_smaller_2rows_cplxd(const _type_in* __restrict src_head_ptr, de::CPd* __r
     
     for (uint32_t i = 0; i < _f_mgr_H.frag_num; ++i) 
     {
-        _double_buffer.reset_buffer1_leading();
+        _double_buffer.ResetBuf1AsLeading();
         if constexpr (std::is_same_v<_type_in, double>)
         {
             // Load and transpose data from global memory
@@ -62,8 +62,8 @@ _FFT3D_smaller_2rows_cplxd(const _type_in* __restrict src_head_ptr, de::CPd* __r
                                                                      start_dex_H, i == (_f_mgr_H.frag_num - 1) ? _f_mgr_H.last_frag_len : 2);
 
             // Call vec4 smaller FFT
-		    decx::dsp::fft::CPUK::_FFT1D_caller_cplxd64_1st_R2C(_double_buffer.get_leading_ptr<double>(), 
-															    _double_buffer.get_lagging_ptr<de::CPd>(),
+		    decx::dsp::fft::CPUK::_FFT1D_caller_cplxd64_1st_R2C(_double_buffer.GetLeadingBufPtr<double>(), 
+															    _double_buffer.GetLaggingBufPtr<de::CPd>(),
 															    _FFT_info->_FFT_info.get_kernel_info_ptr(0));
         }
         else if constexpr (std::is_same_v<_type_in, uint8_t>) {
@@ -74,8 +74,8 @@ _FFT3D_smaller_2rows_cplxd(const _type_in* __restrict src_head_ptr, de::CPd* __r
                                                                         start_dex_H, i == (_f_mgr_H.frag_num - 1) ? _f_mgr_H.last_frag_len : 2);
 
             // Call vec4 smaller FFT
-		    decx::dsp::fft::CPUK::_FFT1D_caller_cplxd64_1st_R2C(_double_buffer.get_leading_ptr<double>(), 
-															    _double_buffer.get_lagging_ptr<de::CPd>(),
+		    decx::dsp::fft::CPUK::_FFT1D_caller_cplxd64_1st_R2C(_double_buffer.GetLeadingBufPtr<double>(), 
+															    _double_buffer.GetLaggingBufPtr<de::CPd>(),
 															    _FFT_info->_FFT_info.get_kernel_info_ptr(0));
         }
         else {
@@ -87,19 +87,19 @@ _FFT3D_smaller_2rows_cplxd(const _type_in* __restrict src_head_ptr, de::CPd* __r
                                                                              i == (_f_mgr_H.frag_num - 1) ? _f_mgr_H.last_frag_len : 2);
 
             // Call vec4 smaller FFT
-		    decx::dsp::fft::CPUK::_FFT1D_caller_cplxd64_1st_C2C(_double_buffer.get_leading_ptr<de::CPd>(), 
-															    _double_buffer.get_lagging_ptr<de::CPd>(),
+		    decx::dsp::fft::CPUK::_FFT1D_caller_cplxd64_1st_C2C(_double_buffer.GetLeadingBufPtr<de::CPd>(), 
+															    _double_buffer.GetLaggingBufPtr<de::CPd>(),
 															    _FFT_info->_FFT_info.get_kernel_info_ptr(0));
         }
-        _double_buffer.update_states();
+        _double_buffer.UpdateStatus();
 
 		for (uint32_t _FFT_index = 1; _FFT_index < _FFT_info->_FFT_info.get_kernel_call_num(); ++_FFT_index) {
-			decx::dsp::fft::CPUK::_FFT1D_caller_cplxd64_mid_C2C(_double_buffer.get_leading_ptr<de::CPd>(), 
-																_double_buffer.get_lagging_ptr<de::CPd>(),
+			decx::dsp::fft::CPUK::_FFT1D_caller_cplxd64_mid_C2C(_double_buffer.GetLeadingBufPtr<de::CPd>(), 
+																_double_buffer.GetLaggingBufPtr<de::CPd>(),
 																_FFT_info->_FFT_info.get_W_table<de::CPd>(),
 																_FFT_info->_FFT_info.get_kernel_info_ptr(_FFT_index));
 
-			_double_buffer.update_states();
+			_double_buffer.UpdateStatus();
 		}
 
         // Store back to global memory
@@ -149,7 +149,7 @@ _IFFT3D_smaller_2rows_cplxd(const de::CPd* __restrict src_head_ptr, _type_out* _
     
     for (uint32_t i = 0; i < _f_mgr_H.frag_num; ++i) 
     {
-        _double_buffer.reset_buffer1_leading();
+        _double_buffer.ResetBuf1AsLeading();
         
         // Load and transpose data from global memory
         decx::dsp::fft::CPUK::
@@ -160,18 +160,18 @@ _IFFT3D_smaller_2rows_cplxd(const de::CPd* __restrict src_head_ptr, _type_out* _
                                                       i == (_f_mgr_H.frag_num - 1) ? _f_mgr_H.last_frag_len : 2);
 
         // Call vec4 smaller FFT
-		decx::dsp::fft::CPUK::_FFT1D_caller_cplxd64_1st_C2C(_double_buffer.get_leading_ptr<de::CPd>(), 
-															_double_buffer.get_lagging_ptr<de::CPd>(),
+		decx::dsp::fft::CPUK::_FFT1D_caller_cplxd64_1st_C2C(_double_buffer.GetLeadingBufPtr<de::CPd>(), 
+															_double_buffer.GetLaggingBufPtr<de::CPd>(),
 															_FFT_info->_FFT_info.get_kernel_info_ptr(0));
-        _double_buffer.update_states();
+        _double_buffer.UpdateStatus();
 
 		for (uint32_t _FFT_index = 1; _FFT_index < _FFT_info->_FFT_info.get_kernel_call_num(); ++_FFT_index) {
-			decx::dsp::fft::CPUK::_FFT1D_caller_cplxd64_mid_C2C(_double_buffer.get_leading_ptr<de::CPd>(), 
-																_double_buffer.get_lagging_ptr<de::CPd>(),
+			decx::dsp::fft::CPUK::_FFT1D_caller_cplxd64_mid_C2C(_double_buffer.GetLeadingBufPtr<de::CPd>(), 
+																_double_buffer.GetLaggingBufPtr<de::CPd>(),
 																_FFT_info->_FFT_info.get_W_table<de::CPd>(),
 																_FFT_info->_FFT_info.get_kernel_info_ptr(_FFT_index));
 
-			_double_buffer.update_states();
+			_double_buffer.UpdateStatus();
 		}
 
         // Store back to global memory

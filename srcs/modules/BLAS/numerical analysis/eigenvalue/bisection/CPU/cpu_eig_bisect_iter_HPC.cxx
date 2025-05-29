@@ -230,7 +230,7 @@ void decx::blas::cpu_eig_bisect_iter_HPC<float>::iter(const float* p_diag, const
     }
     
     this->_eig_count_actual = STG_dex;
-    // this->_double_buffer.update_states();
+    // this->_double_buffer.UpdateStatus();
 }
 
 

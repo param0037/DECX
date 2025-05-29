@@ -159,7 +159,7 @@ template void decx::blas::cuda_DP2D_configs<de::Half>::alloc_buffers<false>(decx
 
 
 template <typename _type_in>
-void decx::blas::cuda_DP2D_configs<_type_in>::release_buffer()
+void decx::blas::cuda_DP2D_configs<_type_in>::ReleaseBuffer()
 {
     if (!this->_from_dev) {
         this->_dev_A.Free();
@@ -167,13 +167,13 @@ void decx::blas::cuda_DP2D_configs<_type_in>::release_buffer()
 
         if (!this->postproc_needed()) {
             this->_dev_dst.Free();
-            ((decx::reduce::cuda_reduce2D_1way_configs<_type_in>*)this->_post_proc_conf)->release_buffer();
+            ((decx::reduce::cuda_reduce2D_1way_configs<_type_in>*)this->_post_proc_conf)->ReleaseBuffer();
         }
     }
 }
 
-template void decx::blas::cuda_DP2D_configs<float>::release_buffer();
-template void decx::blas::cuda_DP2D_configs<de::Half>::release_buffer();
+template void decx::blas::cuda_DP2D_configs<float>::ReleaseBuffer();
+template void decx::blas::cuda_DP2D_configs<de::Half>::ReleaseBuffer();
 
 
 template <typename _type_in>

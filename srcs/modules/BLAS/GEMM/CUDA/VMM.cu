@@ -91,7 +91,7 @@ static void decx::blas::_VMM_caller_fp32(decx::_Vector* vec, decx::_Matrix* mat,
     E->event_record(S);
     E->synchronize();
 
-    _configs.release_buffer();
+    _configs.ReleaseBuffer();
 }
 
 
@@ -135,7 +135,7 @@ static void decx::blas::_VMM_caller_fp16(decx::_Vector* vec, decx::_Matrix* mat,
     E->event_record(S);
     E->synchronize();
 
-    _configs.release_buffer();
+    _configs.ReleaseBuffer();
 }
 
 

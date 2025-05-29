@@ -59,12 +59,12 @@ namespace CPUK
 	{
 		double* _local_dst_ptr = (double*)dst + _call_times * (_sub_FFT_length << 2);
 		
-		const double* _read_ptr = _double_buffer->get_leading_ptr<double>();
-		double* _write_ptr = _double_buffer->get_lagging_ptr<double>();
+		const double* _read_ptr = _double_buffer->GetLeadingBufPtr<double>();
+		double* _write_ptr = _double_buffer->GetLaggingBufPtr<double>();
 
 		_tiles->_inblock_transpose_vecAdj_2_VecDist_cplxf(_double_buffer);
 
-		_read_ptr = _double_buffer->get_leading_ptr<double>();
+		_read_ptr = _double_buffer->GetLeadingBufPtr<double>();
 
 		const uint32_t _int_area_len = (_sub_FFT_length >> 2) << 2;
 		for (uint8_t j = 0; j < _L_v4; ++j)
@@ -92,11 +92,11 @@ namespace CPUK
 	{
 		de::CPd* _local_dst_ptr = dst + _call_times * (_sub_FFT_length << 1);
 		
-		de::CPd* src_test = _double_buffer->get_leading_ptr<de::CPd>();
+		de::CPd* src_test = _double_buffer->GetLeadingBufPtr<de::CPd>();
 
 		_tiles->_inblock_transpose_vecAdj_2_VecDist_cplxd(_double_buffer);
 
-		const de::CPd* _read_ptr = _double_buffer->get_leading_ptr<de::CPd>();
+		const de::CPd* _read_ptr = _double_buffer->GetLeadingBufPtr<de::CPd>();
 
 		const uint32_t _int_area_len = (_sub_FFT_length >> 1) << 1;
 		for (uint8_t j = 0; j < _L_v2; ++j)

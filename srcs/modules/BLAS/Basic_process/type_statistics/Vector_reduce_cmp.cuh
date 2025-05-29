@@ -75,23 +75,23 @@ static void decx::reduce::vector_reduce_cmp_fp32(decx::_Vector* src, de::Number*
     }
 
     decx::reduce::cuda_reduce1D_configs<float> _kp_configs;
-    _kp_configs.set_cmp_or_not(true);
+    _kp_configs.CMP(true);
     _kp_configs.generate_configs(src->Len(), S);
 
-    _kp_configs.set_fill_val((src->Vec.GetRawPtr<float>())[0]);
+    _kp_configs.SetPaddingValue((src->Vec.GetRawPtr<float>())[0]);
 
-    checkCudaErrors(cudaMemcpyAsync(_kp_configs.get_src(), (void*)src->Vec, src->Len() * sizeof(float), cudaMemcpyHostToDevice,
+    checkCudaErrors(cudaMemcpyAsync(_kp_configs.GetInputAddr(), (void*)src->Vec, src->Len() * sizeof(float), cudaMemcpyHostToDevice,
         S->get_raw_stream_ref()));
 
     decx::reduce::cuda_reduce1D_cmp_fp32_caller_Async<_is_max>(&_kp_configs, S);
 
-    checkCudaErrors(cudaMemcpyAsync(res->get_data_ptr<void>(), _kp_configs.get_dst(), 1 * sizeof(float), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
+    checkCudaErrors(cudaMemcpyAsync(res->get_data_ptr<void>(), _kp_configs.GetOutputAddr(), 1 * sizeof(float), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
     res->set_type_flag(de::_DATA_TYPES_FLAGS_::_FP32_);
 
     E->event_record(S);
     E->synchronize();
 
-    _kp_configs.release_buffer();
+    _kp_configs.ReleaseBuffer();
 }
 
 
@@ -113,23 +113,23 @@ static void decx::reduce::vector_reduce_cmp_fp64(decx::_Vector* src, de::Number*
     }
 
     decx::reduce::cuda_reduce1D_configs<double> _kp_configs;
-    _kp_configs.set_cmp_or_not(true);
+    _kp_configs.CMP(true);
     _kp_configs.generate_configs(src->Len(), S);
 
-    _kp_configs.set_fill_val((src->Vec.GetRawPtr<double>())[0]);
+    _kp_configs.SetPaddingValue((src->Vec.GetRawPtr<double>())[0]);
 
-    checkCudaErrors(cudaMemcpyAsync(_kp_configs.get_src(), (void*)src->Vec, src->Len() * sizeof(double), cudaMemcpyHostToDevice,
+    checkCudaErrors(cudaMemcpyAsync(_kp_configs.GetInputAddr(), (void*)src->Vec, src->Len() * sizeof(double), cudaMemcpyHostToDevice,
         S->get_raw_stream_ref()));
 
     decx::reduce::cuda_reduce1D_cmp_fp64_caller_Async<_is_max>(&_kp_configs, S);
     
-    checkCudaErrors(cudaMemcpyAsync(res->get_data_ptr<void>(), _kp_configs.get_dst(), 1 * sizeof(double), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
+    checkCudaErrors(cudaMemcpyAsync(res->get_data_ptr<void>(), _kp_configs.GetOutputAddr(), 1 * sizeof(double), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
     res->set_type_flag(de::_DATA_TYPES_FLAGS_::_FP64_);
 
     E->event_record(S);
     E->synchronize();
 
-    _kp_configs.release_buffer();
+    _kp_configs.ReleaseBuffer();
 }
 
 
@@ -152,23 +152,23 @@ static void decx::reduce::vector_reduce_cmp_fp16(decx::_Vector* src, de::Number*
     }
 
     decx::reduce::cuda_reduce1D_configs<de::Half> _kp_configs;
-    _kp_configs.set_cmp_or_not(true);
+    _kp_configs.CMP(true);
     _kp_configs.generate_configs(src->Len(), S);
 
-    _kp_configs.set_fill_val(((de::Half*)src->Vec)[0]);
+    _kp_configs.SetPaddingValue(((de::Half*)src->Vec)[0]);
 
-    checkCudaErrors(cudaMemcpyAsync(_kp_configs.get_src(), (void*)src->Vec, src->Len() * sizeof(de::Half), cudaMemcpyHostToDevice,
+    checkCudaErrors(cudaMemcpyAsync(_kp_configs.GetInputAddr(), (void*)src->Vec, src->Len() * sizeof(de::Half), cudaMemcpyHostToDevice,
         S->get_raw_stream_ref()));
 
     decx::reduce::cuda_reduce1D_cmp_fp16_caller_Async<_is_max>(&_kp_configs, S);
 
-    checkCudaErrors(cudaMemcpyAsync(res->get_data_ptr<void>(), _kp_configs.get_dst(), 1 * sizeof(de::Half), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
+    checkCudaErrors(cudaMemcpyAsync(res->get_data_ptr<void>(), _kp_configs.GetOutputAddr(), 1 * sizeof(de::Half), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
     res->set_type_flag(de::_DATA_TYPES_FLAGS_::_FP16_);
 
     E->event_record(S);
     E->synchronize();
 
-    _kp_configs.release_buffer();
+    _kp_configs.ReleaseBuffer();
 }
 
 
@@ -190,23 +190,23 @@ static void decx::reduce::vector_reduce_cmp_u8(decx::_Vector* src, de::Number* r
     }
 
     decx::reduce::cuda_reduce1D_configs<uint8_t> _kp_configs;
-    _kp_configs.set_cmp_or_not(true);
+    _kp_configs.CMP(true);
     _kp_configs.generate_configs(src->Len(), S);
 
-    _kp_configs.set_fill_val((src->Vec.GetRawPtr<uint8_t>())[0]);
+    _kp_configs.SetPaddingValue((src->Vec.GetRawPtr<uint8_t>())[0]);
 
-    checkCudaErrors(cudaMemcpyAsync(_kp_configs.get_src(), (void*)src->Vec, src->Len() * sizeof(uint8_t), cudaMemcpyHostToDevice,
+    checkCudaErrors(cudaMemcpyAsync(_kp_configs.GetInputAddr(), (void*)src->Vec, src->Len() * sizeof(uint8_t), cudaMemcpyHostToDevice,
         S->get_raw_stream_ref()));
 
     decx::reduce::cuda_reduce1D_cmp_u8_caller_Async<_is_max>(&_kp_configs, S);
 
-    checkCudaErrors(cudaMemcpyAsync(res->get_data_ptr<void>(), _kp_configs.get_dst(), 1 * sizeof(uint8_t), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
+    checkCudaErrors(cudaMemcpyAsync(res->get_data_ptr<void>(), _kp_configs.GetOutputAddr(), 1 * sizeof(uint8_t), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
     res->set_type_flag(de::_DATA_TYPES_FLAGS_::_UINT8_);
 
     E->event_record(S);
     E->synchronize();
 
-    _kp_configs.release_buffer();
+    _kp_configs.ReleaseBuffer();
 }
 
 
@@ -236,17 +236,17 @@ static void decx::reduce::dev_vector_reduce_cmp_fp64(decx::_GPU_Vector* src, de:
     double _fill_val = 0;
     checkCudaErrors(cudaMemcpyAsync((void*)src->Vec, &_fill_val, 1 * sizeof(double), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
 
-    _kp_configs.set_fill_val(_fill_val);
+    _kp_configs.SetPaddingValue(_fill_val);
 
     decx::reduce::cuda_reduce1D_cmp_fp64_caller_Async<_is_max>(&_kp_configs, S);
 
-    checkCudaErrors(cudaMemcpyAsync(res->get_data_ptr<void>(), _kp_configs.get_dst(), 1 * sizeof(double), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
+    checkCudaErrors(cudaMemcpyAsync(res->get_data_ptr<void>(), _kp_configs.GetOutputAddr(), 1 * sizeof(double), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
     res->set_type_flag(de::_DATA_TYPES_FLAGS_::_FP64_);
 
     E->event_record(S);
     E->synchronize();
 
-    _kp_configs.release_buffer();
+    _kp_configs.ReleaseBuffer();
 }
 
 
@@ -274,17 +274,17 @@ static void decx::reduce::dev_vector_reduce_cmp_fp32(decx::_GPU_Vector* src, de:
     float _fill_val = 0;
     checkCudaErrors(cudaMemcpyAsync(&_fill_val, (void*)src->Vec, 1 * sizeof(float), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
 
-    _kp_configs.set_fill_val(_fill_val);
+    _kp_configs.SetPaddingValue(_fill_val);
 
     decx::reduce::cuda_reduce1D_cmp_fp32_caller_Async<_is_max>(&_kp_configs, S);
     
-    checkCudaErrors(cudaMemcpyAsync(res->get_data_ptr<void>(), _kp_configs.get_dst(), 1 * sizeof(float), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
+    checkCudaErrors(cudaMemcpyAsync(res->get_data_ptr<void>(), _kp_configs.GetOutputAddr(), 1 * sizeof(float), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
     res->set_type_flag(de::_DATA_TYPES_FLAGS_::_FP32_);
 
     E->event_record(S);
     E->synchronize();
 
-    _kp_configs.release_buffer();
+    _kp_configs.ReleaseBuffer();
 }
 
 
@@ -312,17 +312,17 @@ static void decx::reduce::dev_vector_reduce_cmp_fp16(decx::_GPU_Vector* src, de:
     _fill_val.val = 0;
     checkCudaErrors(cudaMemcpyAsync(&_fill_val, (void*)src->Vec, 1 * sizeof(de::Half), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
 
-    _kp_configs.set_fill_val(_fill_val);
+    _kp_configs.SetPaddingValue(_fill_val);
 
     decx::reduce::cuda_reduce1D_cmp_fp16_caller_Async<_is_max>(&_kp_configs, S);
 
-    checkCudaErrors(cudaMemcpyAsync(res->get_data_ptr<void>(), _kp_configs.get_dst(), 1 * sizeof(de::Half), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
+    checkCudaErrors(cudaMemcpyAsync(res->get_data_ptr<void>(), _kp_configs.GetOutputAddr(), 1 * sizeof(de::Half), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
     res->set_type_flag(de::_DATA_TYPES_FLAGS_::_FP16_);
 
     E->event_record(S);
     E->synchronize();
 
-    _kp_configs.release_buffer();
+    _kp_configs.ReleaseBuffer();
 }
 
 
@@ -349,17 +349,17 @@ static void decx::reduce::dev_vector_reduce_cmp_u8(decx::_GPU_Vector* src, de::N
     uint8_t _fill_val = 0;
     checkCudaErrors(cudaMemcpyAsync(&_fill_val, (void*)src->Vec, 1 * sizeof(uint8_t), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
 
-    _kp_configs.set_fill_val(_fill_val);
+    _kp_configs.SetPaddingValue(_fill_val);
 
     decx::reduce::cuda_reduce1D_cmp_u8_caller_Async<_is_max>(&_kp_configs, S);
 
-    checkCudaErrors(cudaMemcpyAsync(res->get_data_ptr<void>(), _kp_configs.get_dst(), 1 * sizeof(uint8_t), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
+    checkCudaErrors(cudaMemcpyAsync(res->get_data_ptr<void>(), _kp_configs.GetOutputAddr(), 1 * sizeof(uint8_t), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
     res->set_type_flag(de::_DATA_TYPES_FLAGS_::_UINT8_);
 
     E->event_record(S);
     E->synchronize();
 
-    _kp_configs.release_buffer();
+    _kp_configs.ReleaseBuffer();
 }
 
 

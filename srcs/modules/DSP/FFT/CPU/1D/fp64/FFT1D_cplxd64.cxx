@@ -51,7 +51,7 @@ void decx::dsp::fft::cpu_FFT1D_planner<double>::Forward(decx::_Vector* src, decx
                                                      (de::CPd*)_double_buffer._MIF1.mem, 
                                                      this, t1D, &_FIMT1D);
 
-        _double_buffer.reset_buffer1_leading();
+        _double_buffer.ResetBuf1AsLeading();
     }
     else {
         decx::dsp::fft::_FFT1D_cplxd64_1st<false, _type_in>((const _type_in*)src->Vec.ptr, 
@@ -64,19 +64,19 @@ void decx::dsp::fft::cpu_FFT1D_planner<double>::Forward(decx::_Vector* src, decx
         if (i < this->get_kernel_call_num() - 1) {
             _FIMT1D.update(this->get_smaller_FFT_info_ptr(i + 1)->get_signal_len());
 
-            decx::dsp::fft::_FFT1D_cplxd64_mid<de::CPd, false>(_double_buffer.get_leading_ptr<const de::CPd>(), 
-                                                          _double_buffer.get_lagging_ptr<de::CPd>(), 
+            decx::dsp::fft::_FFT1D_cplxd64_mid<de::CPd, false>(_double_buffer.GetLeadingBufPtr<const de::CPd>(), 
+                                                          _double_buffer.GetLaggingBufPtr<de::CPd>(), 
                                                           this, t1D, 
                                                           i, &_FIMT1D);
         }
         else {
-            decx::dsp::fft::_FFT1D_cplxd64_mid<de::CPd, true>(_double_buffer.get_leading_ptr<const de::CPd>(), 
+            decx::dsp::fft::_FFT1D_cplxd64_mid<de::CPd, true>(_double_buffer.GetLeadingBufPtr<const de::CPd>(), 
                                                          (de::CPd*)dst->Vec.ptr, 
                                                          this, t1D, 
                                                          i, NULL);
         }
 
-        _double_buffer.update_states();
+        _double_buffer.UpdateStatus();
     }
 }
 
@@ -102,7 +102,7 @@ void decx::dsp::fft::cpu_FFT1D_planner<double>::Inverse(decx::_Vector* src, decx
                                                    (de::CPd*)_double_buffer._MIF1.mem, 
                                                    this, t1D, &_FIMT1D);
 
-        _double_buffer.reset_buffer1_leading();
+        _double_buffer.ResetBuf1AsLeading();
     }
     else {
         decx::dsp::fft::_FFT1D_cplxd64_1st<true, de::CPd>((const de::CPd*)src->Vec.ptr, 
@@ -115,19 +115,19 @@ void decx::dsp::fft::cpu_FFT1D_planner<double>::Inverse(decx::_Vector* src, decx
         if (i < this->get_kernel_call_num() - 1) {
             _FIMT1D.update(this->get_smaller_FFT_info_ptr(i + 1)->get_signal_len());
 
-            decx::dsp::fft::_FFT1D_cplxd64_mid<de::CPd, false>(_double_buffer.get_leading_ptr<const de::CPd>(),
-                                                          _double_buffer.get_lagging_ptr<de::CPd>(), 
+            decx::dsp::fft::_FFT1D_cplxd64_mid<de::CPd, false>(_double_buffer.GetLeadingBufPtr<const de::CPd>(),
+                                                          _double_buffer.GetLaggingBufPtr<de::CPd>(), 
                                                           this, t1D, 
                                                           i, &_FIMT1D);
         }
         else {
-            decx::dsp::fft::_FFT1D_cplxd64_mid<_type_out, false>(_double_buffer.get_leading_ptr<const de::CPd>(),
+            decx::dsp::fft::_FFT1D_cplxd64_mid<_type_out, false>(_double_buffer.GetLeadingBufPtr<const de::CPd>(),
                                                          (_type_out*)dst->Vec.ptr,
                                                          this, t1D, 
                                                          i, NULL);
         }
 
-        _double_buffer.update_states();
+        _double_buffer.UpdateStatus();
     }
 }
 

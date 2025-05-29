@@ -67,8 +67,8 @@ void decx::dsp::fft::_FFT1D_kernel_tile::flush() const
 void decx::dsp::fft::_FFT1D_kernel_tile::
 _inblock_transpose_vecAdj_2_VecDist_cplxf(decx::utils::double_buffer_manager* __restrict _double_buffer) const
 {
-    const double* src = _double_buffer->get_leading_ptr<double>();
-    double* dst = _double_buffer->get_lagging_ptr<double>();
+    const double* src = _double_buffer->GetLeadingBufPtr<double>();
+    double* dst = _double_buffer->GetLaggingBufPtr<double>();
 
     // In-block transpose
     __m128d _reg[2], _transposed[2];
@@ -88,7 +88,7 @@ _inblock_transpose_vecAdj_2_VecDist_cplxf(decx::utils::double_buffer_manager* __
         src += 2;
         dst += 2 * this->_tile_row_pitch;
     }
-    _double_buffer->update_states();
+    _double_buffer->UpdateStatus();
 }
 
 
@@ -96,8 +96,8 @@ _inblock_transpose_vecAdj_2_VecDist_cplxf(decx::utils::double_buffer_manager* __
 void decx::dsp::fft::_FFT1D_kernel_tile::
 _inblock_transpose_vecAdj_2_VecDist_cplxd(decx::utils::double_buffer_manager* __restrict _double_buffer) const
 {
-    const de::CPd* src = _double_buffer->get_leading_ptr<de::CPd>();
-    de::CPd* dst = _double_buffer->get_lagging_ptr<de::CPd>();
+    const de::CPd* src = _double_buffer->GetLeadingBufPtr<de::CPd>();
+    de::CPd* dst = _double_buffer->GetLaggingBufPtr<de::CPd>();
 
     // In-block transpose
     __m256d _reg[2], _transposed[2];
@@ -114,7 +114,7 @@ _inblock_transpose_vecAdj_2_VecDist_cplxd(decx::utils::double_buffer_manager* __
         _mm256_store_pd((double*)(dst + (i << 1) + this->_tile_row_pitch), _transposed[1]);
     }
 
-    _double_buffer->update_states();
+    _double_buffer->UpdateStatus();
 }
 
 
@@ -124,8 +124,8 @@ _inblock_transpose_vecDist_2_VecAdj_fp32(decx::utils::double_buffer_manager* __r
 {
     __m128 _reg[4], _store[4];
 
-    const float* src = _double_buffer->get_leading_ptr<float>();
-    float* dst = _double_buffer->get_lagging_ptr<float>();
+    const float* src = _double_buffer->GetLeadingBufPtr<float>();
+    float* dst = _double_buffer->GetLaggingBufPtr<float>();
 
     for (uint32_t i = 0; i < this->_tile_row_pitch / 4; ++i) {
         _reg[0] = _mm_load_ps(src + (i << 2));
@@ -140,7 +140,7 @@ _inblock_transpose_vecDist_2_VecAdj_fp32(decx::utils::double_buffer_manager* __r
         _mm_store_ps(dst + (i << 4) + 8, _reg[2]);
         _mm_store_ps(dst + (i << 4) + 12, _reg[3]);
     }
-    _double_buffer->update_states();
+    _double_buffer->UpdateStatus();
 }
 
 
@@ -148,8 +148,8 @@ _inblock_transpose_vecDist_2_VecAdj_fp32(decx::utils::double_buffer_manager* __r
 void decx::dsp::fft::_FFT1D_kernel_tile::
 _inblock_transpose_vecDist_2_VecAdj_fp64(decx::utils::double_buffer_manager* __restrict _double_buffer) const
 {
-    const double* src = _double_buffer->get_leading_ptr<double>();
-    double* dst = _double_buffer->get_lagging_ptr<double>();
+    const double* src = _double_buffer->GetLeadingBufPtr<double>();
+    double* dst = _double_buffer->GetLaggingBufPtr<double>();
 
     // In-block transpose
     __m128d _reg[2], _transposed[2];
@@ -165,7 +165,7 @@ _inblock_transpose_vecDist_2_VecAdj_fp64(decx::utils::double_buffer_manager* __r
         _mm_store_pd(dst + (i << 2), _transposed[0]);
         _mm_store_pd(dst + (i << 2) + 2, _transposed[1]);
     }
-    _double_buffer->update_states();
+    _double_buffer->UpdateStatus();
 }
 
 
@@ -173,8 +173,8 @@ _inblock_transpose_vecDist_2_VecAdj_fp64(decx::utils::double_buffer_manager* __r
 void decx::dsp::fft::_FFT1D_kernel_tile::
 _inblock_transpose_vecDist_2_VecAdj_cplxf(decx::utils::double_buffer_manager* __restrict _double_buffer) const
 {
-    const double* src = _double_buffer->get_leading_ptr<double>();
-    double* dst = _double_buffer->get_lagging_ptr<double>();
+    const double* src = _double_buffer->GetLeadingBufPtr<double>();
+    double* dst = _double_buffer->GetLaggingBufPtr<double>();
 
     // In-block transpose
     __m128d _reg[2], _transposed[2];
@@ -192,7 +192,7 @@ _inblock_transpose_vecDist_2_VecAdj_cplxf(decx::utils::double_buffer_manager* __
             _mm_store_pd(dst + (i << 3) + (j << 1) + 4, _transposed[1]);
         }
     }
-    _double_buffer->update_states();
+    _double_buffer->UpdateStatus();
 }
 
 
@@ -200,8 +200,8 @@ _inblock_transpose_vecDist_2_VecAdj_cplxf(decx::utils::double_buffer_manager* __
 void decx::dsp::fft::_FFT1D_kernel_tile::
 _inblock_transpose_vecDist_2_VecAdj_cplxd(decx::utils::double_buffer_manager* __restrict _double_buffer) const
 {
-    const de::CPd* src = _double_buffer->get_leading_ptr<de::CPd>();
-    de::CPd* dst = _double_buffer->get_lagging_ptr<de::CPd>();
+    const de::CPd* src = _double_buffer->GetLeadingBufPtr<de::CPd>();
+    de::CPd* dst = _double_buffer->GetLaggingBufPtr<de::CPd>();
 
     // In-block transpose
     __m256d _reg[2], _transposed[2];
@@ -217,5 +217,5 @@ _inblock_transpose_vecDist_2_VecAdj_cplxd(decx::utils::double_buffer_manager* __
         _mm256_store_pd((double*)(dst + (i << 2)), _transposed[0]);
         _mm256_store_pd((double*)(dst + (i << 2) + 2), _transposed[1]);
     }
-    _double_buffer->update_states();
+    _double_buffer->UpdateStatus();
 }

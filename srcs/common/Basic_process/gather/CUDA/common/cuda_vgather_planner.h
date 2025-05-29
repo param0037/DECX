@@ -73,7 +73,7 @@ public:
     static void release(decx::cuda_VGT2D_planner* _fake_this);
 
 private:
-    uint2 get_src_dims_v1() const;
+    uint2 GetInputAddr_dims_v1() const;
 };
 
 

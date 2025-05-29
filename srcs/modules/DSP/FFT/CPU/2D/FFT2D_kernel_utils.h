@@ -113,7 +113,7 @@ decx::dsp::fft::CPUK::load_entire_row_transpose_fp32(const float* __restrict src
                                                      const uint8_t                                  _load_H)
 {
     const float* _src_row_ptr = src;
-    float* _dst_row_ptr = _double_buffer->get_lagging_ptr<float>();
+    float* _dst_row_ptr = _double_buffer->GetLaggingBufPtr<float>();
 
     for (uint8_t i = 0; i < _load_H; ++i) {
         for (uint32_t j = 0; j < _load_len_v4; ++j) {
@@ -123,7 +123,7 @@ decx::dsp::fft::CPUK::load_entire_row_transpose_fp32(const float* __restrict src
         _dst_row_ptr += _tiles->_tile_row_pitch;
     }
     // Update the status of the double buffer
-    _double_buffer->update_states();
+    _double_buffer->UpdateStatus();
     // In-block transpose
     _tiles->_inblock_transpose_vecDist_2_VecAdj_fp32(_double_buffer);
 }
@@ -139,7 +139,7 @@ load_entire_row_transpose_fp64(const double* __restrict                        s
                                const uint8_t                                  _load_H)
 {
     const double* _src_row_ptr = src;
-    double* _dst_row_ptr = _double_buffer->get_lagging_ptr<double>();
+    double* _dst_row_ptr = _double_buffer->GetLaggingBufPtr<double>();
 
     for (uint8_t i = 0; i < _load_H; ++i) {
         for (uint32_t j = 0; j < _load_len_v2; ++j) {
@@ -149,7 +149,7 @@ load_entire_row_transpose_fp64(const double* __restrict                        s
         _dst_row_ptr += _tiles->_tile_row_pitch;
     }
     // Update the status of the double buffer
-    _double_buffer->update_states();
+    _double_buffer->UpdateStatus();
     // In-block transpose
     _tiles->_inblock_transpose_vecDist_2_VecAdj_fp64(_double_buffer);
 }
@@ -165,7 +165,7 @@ load_entire_row_transpose_u8_fp32(const float* __restrict                       
                                   const uint8_t                                  _load_H)
 {
     const float* _src_row_ptr = src;
-    float* _dst_row_ptr = _double_buffer->get_lagging_ptr<float>();
+    float* _dst_row_ptr = _double_buffer->GetLaggingBufPtr<float>();
 
     decx::utils::simd::xmm128_reg _reg;
 
@@ -179,7 +179,7 @@ load_entire_row_transpose_u8_fp32(const float* __restrict                       
         _dst_row_ptr += _tiles->_tile_row_pitch;
     }
     // Update the status of the double buffer
-    _double_buffer->update_states();
+    _double_buffer->UpdateStatus();
     // In-block transpose
     _tiles->_inblock_transpose_vecDist_2_VecAdj_fp32(_double_buffer);
 }
@@ -195,7 +195,7 @@ load_entire_row_transpose_u8_fp64(const int16_t* __restrict                     
                                   const uint8_t                                  _load_H)
 {
     const int16_t* _src_row_ptr = src;
-    double* _dst_row_ptr = _double_buffer->get_lagging_ptr<double>();
+    double* _dst_row_ptr = _double_buffer->GetLaggingBufPtr<double>();
 
     decx::utils::simd::xmm128_reg _reg;
 
@@ -210,7 +210,7 @@ load_entire_row_transpose_u8_fp64(const int16_t* __restrict                     
         _dst_row_ptr += _tiles->_tile_row_pitch;
     }
     // Update the status of the double buffer
-    _double_buffer->update_states();
+    _double_buffer->UpdateStatus();
     // In-block transpose
     _tiles->_inblock_transpose_vecDist_2_VecAdj_fp64(_double_buffer);
 }
@@ -228,7 +228,7 @@ load_entire_row_transpose_cplxf(const de::CPf* __restrict                       
                                 const uint32_t                                    _signal_length)
 {
     const double* _src_row_ptr = (double*)src;
-    double* _dst_row_ptr = _double_buffer->get_lagging_ptr<double>();
+    double* _dst_row_ptr = _double_buffer->GetLaggingBufPtr<double>();
 
     decx::utils::simd::xmm256_reg _reg;
 
@@ -244,7 +244,7 @@ load_entire_row_transpose_cplxf(const de::CPf* __restrict                       
         _dst_row_ptr += _tiles->_tile_row_pitch;
     }
     // Update the status of the double buffer
-    _double_buffer->update_states();
+    _double_buffer->UpdateStatus();
     // In-block transpose
     _tiles->_inblock_transpose_vecDist_2_VecAdj_cplxf(_double_buffer);
 }
@@ -261,7 +261,7 @@ load_entire_row_transpose_cplxd(const de::CPd* __restrict                       
                                 const uint32_t                                    _signal_length)
 {
     const de::CPd* _src_row_ptr = (de::CPd*)src;
-    de::CPd* _dst_row_ptr = _double_buffer->get_lagging_ptr<de::CPd>();
+    de::CPd* _dst_row_ptr = _double_buffer->GetLaggingBufPtr<de::CPd>();
 
     decx::utils::simd::xmm256_reg _reg;
 
@@ -279,7 +279,7 @@ load_entire_row_transpose_cplxd(const de::CPd* __restrict                       
         _dst_row_ptr += _tiles->_tile_row_pitch;
     }
     // Update the status of the double buffer
-    _double_buffer->update_states();
+    _double_buffer->UpdateStatus();
     // In-block transpose
     _tiles->_inblock_transpose_vecDist_2_VecAdj_cplxd(_double_buffer);
 }
@@ -297,7 +297,7 @@ store_entire_row_transpose_cplxf(decx::utils::double_buffer_manager* __restrict 
     // Directly store back after transposed back to vecDist
     _tiles->_inblock_transpose_vecAdj_2_VecDist_cplxf(_double_buffer);
 
-    const double* _src_row_ptr = _double_buffer->get_leading_ptr<double>();
+    const double* _src_row_ptr = _double_buffer->GetLeadingBufPtr<double>();
     double* _dst_row_ptr = (double*)dst;
 
     decx::utils::simd::xmm256_reg _reg;
@@ -331,7 +331,7 @@ store_entire_row_transpose_cplxd(decx::utils::double_buffer_manager* __restrict 
     // Directly store back after transposed back to vecDist
     _tiles->_inblock_transpose_vecAdj_2_VecDist_cplxd(_double_buffer);
 
-    const de::CPd* _src_row_ptr = _double_buffer->get_leading_ptr<de::CPd>();
+    const de::CPd* _src_row_ptr = _double_buffer->GetLeadingBufPtr<de::CPd>();
     de::CPd* _dst_row_ptr = (de::CPd*)dst;
 
     decx::utils::simd::xmm256_reg _reg;
@@ -364,7 +364,7 @@ decx::dsp::fft::CPUK::store_entire_row_transpose_cplxf_fp32(decx::utils::double_
     // Directly store back after transposed back to vecDist
     _tiles->_inblock_transpose_vecAdj_2_VecDist_cplxf(_double_buffer);
 
-    const double* _src_row_ptr = _double_buffer->get_leading_ptr<double>();
+    const double* _src_row_ptr = _double_buffer->GetLeadingBufPtr<double>();
     float* _dst_row_ptr = dst;
 
     decx::utils::simd::xmm256_reg _reg;
@@ -394,7 +394,7 @@ decx::dsp::fft::CPUK::store_entire_row_transpose_cplxd_fp64(decx::utils::double_
     // Directly store back after transposed back to vecDist
     _tiles->_inblock_transpose_vecAdj_2_VecDist_cplxd(_double_buffer);
 
-    const de::CPd* _src_row_ptr = _double_buffer->get_leading_ptr<de::CPd>();
+    const de::CPd* _src_row_ptr = _double_buffer->GetLeadingBufPtr<de::CPd>();
     double* _dst_row_ptr = dst;
 
     decx::utils::simd::xmm256_reg _reg;
@@ -423,7 +423,7 @@ decx::dsp::fft::CPUK::store_entire_row_transpose_cplxf_u8(decx::utils::double_bu
     // Directly store back after transposed back to vecDist
     _tiles->_inblock_transpose_vecAdj_2_VecDist_cplxf(_double_buffer);
 
-    const double* _src_row_ptr = _double_buffer->get_leading_ptr<double>();
+    const double* _src_row_ptr = _double_buffer->GetLeadingBufPtr<double>();
     int32_t* _dst_row_ptr = dst;
 
     decx::utils::simd::xmm256_reg _reg;
@@ -459,7 +459,7 @@ decx::dsp::fft::CPUK::store_entire_row_transpose_cplxd_u8(decx::utils::double_bu
     // Directly store back after transposed back to vecDist
     _tiles->_inblock_transpose_vecAdj_2_VecDist_cplxd(_double_buffer);
 
-    const de::CPd* _src_row_ptr = _double_buffer->get_leading_ptr<de::CPd>();
+    const de::CPd* _src_row_ptr = _double_buffer->GetLeadingBufPtr<de::CPd>();
     int16_t* _dst_row_ptr = dst;
 
     decx::utils::simd::xmm256_reg _reg;

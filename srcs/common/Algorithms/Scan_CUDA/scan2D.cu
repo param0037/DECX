@@ -227,19 +227,19 @@ int decx::scan::cuda_scan2D_config::get_scan_mode() const
     return this->_scan_mode;
 }
 
-decx::Ptr2D_Info<void> decx::scan::cuda_scan2D_config::get_raw_dev_ptr_src() const {
+decx::Ptr2D_Info<void> decx::scan::cuda_scan2D_config::GetSrcPtr() const {
     return this->_dev_src;
 }
 
-decx::Ptr2D_Info<void> decx::scan::cuda_scan2D_config::get_raw_dev_ptr_dst() const {
+decx::Ptr2D_Info<void> decx::scan::cuda_scan2D_config::GetDstPtr() const {
     return this->_dev_dst;
 }
 
-decx::PtrInfo<void> decx::scan::cuda_scan2D_config::get_raw_dev_ptr_status() const {
+decx::PtrInfo<void> decx::scan::cuda_scan2D_config::GetStatusPtr() const {
     return this->_dev_status;
 }
 
-decx::Ptr2D_Info<void> decx::scan::cuda_scan2D_config::get_raw_dev_ptr_tmp() const {
+decx::Ptr2D_Info<void> decx::scan::cuda_scan2D_config::GetTmpPtr() const {
     return this->_dev_tmp;
 }
 
@@ -256,7 +256,7 @@ dim3 decx::scan::cuda_scan2D_config::get_scan_v_grid() const
 
 
 template <typename _Type_src>
-void decx::scan::cuda_scan2D_config::release_buffer(const bool _refer_dev_classes)
+void decx::scan::cuda_scan2D_config::ReleaseBuffer(const bool _refer_dev_classes)
 {
     if (!_refer_dev_classes) {
         decx::alloc::_device_dealloc(&this->_dev_src._ptr);
@@ -268,17 +268,17 @@ void decx::scan::cuda_scan2D_config::release_buffer(const bool _refer_dev_classe
     }
 }
 
-template void decx::scan::cuda_scan2D_config::release_buffer<float>(const bool _have_dev_classes);
-template void decx::scan::cuda_scan2D_config::release_buffer<de::Half>(const bool _have_dev_classes);
-template void decx::scan::cuda_scan2D_config::release_buffer<uint8_t>(const bool _have_dev_classes);
+template void decx::scan::cuda_scan2D_config::ReleaseBuffer<float>(const bool _have_dev_classes);
+template void decx::scan::cuda_scan2D_config::ReleaseBuffer<de::Half>(const bool _have_dev_classes);
+template void decx::scan::cuda_scan2D_config::ReleaseBuffer<uint8_t>(const bool _have_dev_classes);
 
 
 template <bool _only_scan_h>
 void decx::scan::cuda_scan2D_fp32_caller_Async(const decx::scan::cuda_scan2D_config* _config, decx::cuda_stream* S)
 {
-    decx::Ptr2D_Info<void> src_ptr2D_info = _config->get_raw_dev_ptr_src();
-    decx::PtrInfo<void> status_ptr2D_info = _config->get_raw_dev_ptr_status();
-    decx::Ptr2D_Info<void> dst_ptr2D_info = _config->get_raw_dev_ptr_dst();
+    decx::Ptr2D_Info<void> src_ptr2D_info = _config->GetSrcPtr();
+    decx::PtrInfo<void> status_ptr2D_info = _config->GetStatusPtr();
+    decx::Ptr2D_Info<void> dst_ptr2D_info = _config->GetDstPtr();
     
     dim3 scan_h_grid = _config->get_scan_h_grid();
     dim3 scan_v_grid = _config->get_scan_v_grid();
@@ -367,9 +367,9 @@ template void decx::scan::cuda_scan2D_fp32_caller_Async<false>(const decx::scan:
 
 void decx::scan::cuda_scan2D_v_fp32_caller_Async(const decx::scan::cuda_scan2D_config* _config, decx::cuda_stream* S)
 {
-    decx::Ptr2D_Info<void> src_ptr2D_info = _config->get_raw_dev_ptr_src();
-    decx::PtrInfo<void> status_ptr2D_info = _config->get_raw_dev_ptr_status();
-    decx::Ptr2D_Info<void> dst_ptr2D_info = _config->get_raw_dev_ptr_dst();
+    decx::Ptr2D_Info<void> src_ptr2D_info = _config->GetSrcPtr();
+    decx::PtrInfo<void> status_ptr2D_info = _config->GetStatusPtr();
+    decx::Ptr2D_Info<void> dst_ptr2D_info = _config->GetDstPtr();
     
     dim3 scan_v_grid = _config->get_scan_v_grid();
 
@@ -419,9 +419,9 @@ void decx::scan::cuda_scan2D_v_fp32_caller_Async(const decx::scan::cuda_scan2D_c
 template <bool _only_scan_h>
 void decx::scan::cuda_scan2D_u8_i32_caller_Async(const decx::scan::cuda_scan2D_config* _config, decx::cuda_stream* S)
 {
-    decx::Ptr2D_Info<void> src_ptr2D_info = _config->get_raw_dev_ptr_src();
-    decx::Ptr2D_Info<void> tmp_ptr2D_info = _config->get_raw_dev_ptr_tmp();
-    decx::Ptr2D_Info<void> dst_ptr2D_info = _config->get_raw_dev_ptr_dst();
+    decx::Ptr2D_Info<void> src_ptr2D_info = _config->GetSrcPtr();
+    decx::Ptr2D_Info<void> tmp_ptr2D_info = _config->GetTmpPtr();
+    decx::Ptr2D_Info<void> dst_ptr2D_info = _config->GetDstPtr();
 
     dim3 scan_h_grid = _config->get_scan_h_grid();
     dim3 scan_v_grid = _config->get_scan_v_grid();
@@ -432,7 +432,7 @@ void decx::scan::cuda_scan2D_u8_i32_caller_Async(const decx::scan::cuda_scan2D_c
         // horizontally scan
         decx::scan::GPUK::cu_h_block_exclusive_scan_u8_u16_2D << <scan_h_grid, dim3(32, 8),
             0, S->get_raw_stream_ref() >> > ((float2*)src_ptr2D_info._ptr.ptr,
-                                             (float4*)_config->get_raw_dev_ptr_status().ptr, 
+                                             (float4*)_config->GetStatusPtr().ptr, 
                                              (float4*)tmp_ptr2D_info._ptr.ptr,
                                              src_ptr2D_info._dims.x / 8, 
                                              dst_ptr2D_info._dims.x / 8,
@@ -444,7 +444,7 @@ void decx::scan::cuda_scan2D_u8_i32_caller_Async(const decx::scan::cuda_scan2D_c
         // horizontally decoupled lookback
         decx::scan::GPUK::cu_h_block_DLB_fp16_i32_2D_v8<true> << <scan_h_grid, dim3(32, 8),
             0, S->get_raw_stream_ref() >> > ((float4*)tmp_ptr2D_info._ptr.ptr,
-                                             (float4*)_config->get_raw_dev_ptr_status().ptr,
+                                             (float4*)_config->GetStatusPtr().ptr,
                                              (int4*)dst_ptr2D_info._ptr.ptr,
                                              dst_ptr2D_info._dims.x / 4, 
                                              dst_ptr2D_info._dims.x / 8, 
@@ -453,7 +453,7 @@ void decx::scan::cuda_scan2D_u8_i32_caller_Async(const decx::scan::cuda_scan2D_c
         if (!_only_scan_h) {
         // vertically scan
         decx::scan::GPUK::cu_v_block_exclusive_scan_int32_2D << < scan_v_grid, dim3(32, 8),
-            0, S->get_raw_stream_ref() >> > ((float4*)_config->get_raw_dev_ptr_status().ptr, 
+            0, S->get_raw_stream_ref() >> > ((float4*)_config->GetStatusPtr().ptr, 
                                              (int*)dst_ptr2D_info._ptr.ptr, 
                                              dst_ptr2D_info._dims.x,
                                              scan_v_grid.y,
@@ -461,7 +461,7 @@ void decx::scan::cuda_scan2D_u8_i32_caller_Async(const decx::scan::cuda_scan2D_c
 
         // vertically ddecoupled lookback
         decx::scan::GPUK::cu_v_scan_DLB_int32_2D<true> << <scan_v_grid, dim3(32, 32),
-            0, S->get_raw_stream_ref() >> > ((float4*)_config->get_raw_dev_ptr_status().ptr,
+            0, S->get_raw_stream_ref() >> > ((float4*)_config->GetStatusPtr().ptr,
                                              (int*)dst_ptr2D_info._ptr.ptr,
                                              dst_ptr2D_info._dims.x,
                                              scan_v_grid.y,
@@ -474,7 +474,7 @@ void decx::scan::cuda_scan2D_u8_i32_caller_Async(const decx::scan::cuda_scan2D_c
         // horizontally scan
         decx::scan::GPUK::cu_h_block_inclusive_scan_u8_u16_2D << <scan_h_grid, dim3(32, 8),
             0, S->get_raw_stream_ref() >> > ((float2*)src_ptr2D_info._ptr.ptr,
-                                             (float4*)_config->get_raw_dev_ptr_status().ptr, 
+                                             (float4*)_config->GetStatusPtr().ptr, 
                                              (float4*)tmp_ptr2D_info._ptr.ptr,
                                              src_ptr2D_info._dims.x / 8, 
                                              dst_ptr2D_info._dims.x / 8,
@@ -486,7 +486,7 @@ void decx::scan::cuda_scan2D_u8_i32_caller_Async(const decx::scan::cuda_scan2D_c
         // horizontally decoupled lookback
         decx::scan::GPUK::cu_h_block_DLB_fp16_i32_2D_v8<false> << <scan_h_grid, dim3(32, 8),
             0, S->get_raw_stream_ref() >> > ((float4*)tmp_ptr2D_info._ptr.ptr,
-                                             (float4*)_config->get_raw_dev_ptr_status().ptr,
+                                             (float4*)_config->GetStatusPtr().ptr,
                                              (int4*)dst_ptr2D_info._ptr.ptr,
                                              dst_ptr2D_info._dims.x / 4, 
                                              dst_ptr2D_info._dims.x / 8, 
@@ -496,7 +496,7 @@ void decx::scan::cuda_scan2D_u8_i32_caller_Async(const decx::scan::cuda_scan2D_c
         if (!_only_scan_h) {
         // vertically scan
         decx::scan::GPUK::cu_v_block_inclusive_scan_int32_2D << < scan_v_grid, dim3(32, 8),
-            0, S->get_raw_stream_ref() >> > ((float4*)_config->get_raw_dev_ptr_status().ptr, 
+            0, S->get_raw_stream_ref() >> > ((float4*)_config->GetStatusPtr().ptr, 
                                              (int*)dst_ptr2D_info._ptr.ptr, 
                                              dst_ptr2D_info._dims.x,
                                              scan_v_grid.y,
@@ -504,7 +504,7 @@ void decx::scan::cuda_scan2D_u8_i32_caller_Async(const decx::scan::cuda_scan2D_c
 
         // vertically ddecoupled lookback
         decx::scan::GPUK::cu_v_scan_DLB_int32_2D<false> << <scan_v_grid, dim3(32, 32),
-            0, S->get_raw_stream_ref() >> > ((float4*)_config->get_raw_dev_ptr_status().ptr,
+            0, S->get_raw_stream_ref() >> > ((float4*)_config->GetStatusPtr().ptr,
                                              (int*)dst_ptr2D_info._ptr.ptr,
                                              dst_ptr2D_info._dims.x,
                                              scan_v_grid.y,
@@ -524,9 +524,9 @@ template void decx::scan::cuda_scan2D_u8_i32_caller_Async<false>(const decx::sca
 template <bool _only_scan_h>
 void decx::scan::cuda_scan2D_fp16_fp32_caller_Async(const decx::scan::cuda_scan2D_config* _config, decx::cuda_stream* S)
 {
-    decx::Ptr2D_Info<void> src_ptr2D_info = _config->get_raw_dev_ptr_src();
-    decx::PtrInfo<void> status_ptr2D_info = _config->get_raw_dev_ptr_status();
-    decx::Ptr2D_Info<void> dst_ptr2D_info = _config->get_raw_dev_ptr_dst();
+    decx::Ptr2D_Info<void> src_ptr2D_info = _config->GetSrcPtr();
+    decx::PtrInfo<void> status_ptr2D_info = _config->GetStatusPtr();
+    decx::Ptr2D_Info<void> dst_ptr2D_info = _config->GetDstPtr();
 
     dim3 scan_h_grid = _config->get_scan_h_grid();
     dim3 scan_v_grid = _config->get_scan_v_grid();
@@ -618,9 +618,9 @@ template void decx::scan::cuda_scan2D_fp16_fp32_caller_Async<false>(const decx::
 
 void decx::scan::cuda_scan2D_v_fp16_fp32_caller_Async(const decx::scan::cuda_scan2D_config* _config, decx::cuda_stream* S)
 {
-    decx::Ptr2D_Info<void> src_ptr2D_info = _config->get_raw_dev_ptr_src();
-    decx::PtrInfo<void> status_ptr2D_info = _config->get_raw_dev_ptr_status();
-    decx::Ptr2D_Info<void> dst_ptr2D_info = _config->get_raw_dev_ptr_dst();
+    decx::Ptr2D_Info<void> src_ptr2D_info = _config->GetSrcPtr();
+    decx::PtrInfo<void> status_ptr2D_info = _config->GetStatusPtr();
+    decx::Ptr2D_Info<void> dst_ptr2D_info = _config->GetDstPtr();
 
     dim3 scan_v_grid = _config->get_scan_h_grid();
     dim3 DLB_v_grid = _config->get_scan_v_grid();
@@ -674,10 +674,10 @@ void decx::scan::cuda_scan2D_v_fp16_fp32_caller_Async(const decx::scan::cuda_sca
 
 void decx::scan::cuda_scan2D_v_u8_i32_caller_Async(const decx::scan::cuda_scan2D_config* _config, decx::cuda_stream* S)
 {
-    decx::Ptr2D_Info<void> src_ptr2D_info = _config->get_raw_dev_ptr_src();
-    decx::Ptr2D_Info<void> tmp_ptr2D_info = _config->get_raw_dev_ptr_tmp();
-    decx::PtrInfo<void> status_ptr2D_info = _config->get_raw_dev_ptr_status();
-    decx::Ptr2D_Info<void> dst_ptr2D_info = _config->get_raw_dev_ptr_dst();
+    decx::Ptr2D_Info<void> src_ptr2D_info = _config->GetSrcPtr();
+    decx::Ptr2D_Info<void> tmp_ptr2D_info = _config->GetTmpPtr();
+    decx::PtrInfo<void> status_ptr2D_info = _config->GetStatusPtr();
+    decx::Ptr2D_Info<void> dst_ptr2D_info = _config->GetDstPtr();
 
     dim3 scan_v_grid = _config->get_scan_h_grid();
     dim3 DLB_v_grid = _config->get_scan_v_grid();

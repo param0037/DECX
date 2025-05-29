@@ -69,7 +69,7 @@ cudaTextureFilterMode decx::get_filter_mode_by_intp_type(const de::Interpolate_T
 }
 
 
-uint2 decx::cuda_VGT2D_planner::get_src_dims_v1() const
+uint2 decx::cuda_VGT2D_planner::GetInputAddr_dims_v1() const
 {
     return make_uint2(this->_res_desc.res.pitch2D.width, this->_res_desc.res.pitch2D.height);
 }
@@ -127,7 +127,7 @@ void decx::cuda_VGT2D_planner::run(const _type_in* src,             const float2
 
     auto* p_kernel = (decx::GPUK::cuda_vgather_kernel<_type_out>*)decx::GPUK::cu_vgather2D_kernels[selector.x][selector.y];
 
-    (*p_kernel)(this->_texture, map, (_type_out*)dst, this->get_src_dims_v1(), 
+    (*p_kernel)(this->_texture, map, (_type_out*)dst, this->GetInputAddr_dims_v1(), 
         make_uint2(this->_proc_w_v, this->_proc_dims.y), pitchmap_v1, 
         pitchdst_v1 / this->_alignment, this->_block, this->_grid, S);
 }
