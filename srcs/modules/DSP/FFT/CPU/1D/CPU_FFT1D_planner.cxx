@@ -213,7 +213,7 @@ template const decx::dsp::fft::FKT1D* decx::dsp::fft::cpu_FFT1D_planner<double>:
 template <typename _data_type>
 void* decx::dsp::fft::cpu_FFT1D_planner<_data_type>::get_tmp1_ptr() const
 {
-    return this->_tmp1.ptr;
+    return (void*)this->_tmp1;
 }
 
 template void* decx::dsp::fft::cpu_FFT1D_planner<float>::get_tmp1_ptr() const;
@@ -231,8 +231,8 @@ void decx::dsp::fft::cpu_FFT1D_planner<_data_type>::ReleaseBuffers(decx::dsp::ff
         _fake_this->_smaller_FFTs[i].~cpu_FFT1D_smaller();
     }
 
-    decx::alloc::_host_virtual_page_dealloc(&_fake_this->_tmp1);
-    decx::alloc::_host_virtual_page_dealloc(&_fake_this->_tmp2);
+    _fake_this->_tmp1.Free();
+    _fake_this->_tmp2.Free();
 }
 
 template void decx::dsp::fft::cpu_FFT1D_planner<float>::ReleaseBuffers(decx::dsp::fft::cpu_FFT1D_planner<float>*);
@@ -254,7 +254,7 @@ template decx::dsp::fft::cpu_FFT1D_planner<double>::~cpu_FFT1D_planner();
 template <typename _data_type>
 void* decx::dsp::fft::cpu_FFT1D_planner<_data_type>::get_tmp2_ptr() const
 {
-    return this->_tmp2.ptr;
+    return (void*)this->_tmp2;
 }
 
 template void* decx::dsp::fft::cpu_FFT1D_planner<float>::get_tmp2_ptr() const;
@@ -309,12 +309,9 @@ void decx::dsp::fft::cpu_FFT1D_planner<_data_type>::_allocate_spaces(de::DH* han
     }
 
     const uint64_t _tmp_alloc_size = decx::utils::align<uint64_t>(this->_signal_length, alignment) * sizeof(_data_type) * 2;
-    if (decx::alloc::_host_virtual_page_malloc(&this->_tmp1, _tmp_alloc_size) ||
-        decx::alloc::_host_virtual_page_malloc(&this->_tmp2, _tmp_alloc_size)) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION,
-            ALLOC_FAIL);
-        return;
-    }
+    int32_t rval = 0;
+    rval |= this->_tmp1.Allocate(_tmp_alloc_size, PAGABLE, handle);
+    rval |= this->_tmp2.Allocate(_tmp_alloc_size, PAGABLE, handle);
 }
 
 

@@ -176,12 +176,9 @@ void _CRSR_ decx::dsp::fft::cpu_FFT3D_planner<_data_type>::allocate_buffers(de::
                                           (uint64_t)this->_aligned_proc_dims.y * (uint64_t)_FFTW_2D_reqH),
                                           (uint64_t)this->_aligned_proc_dims.z * (uint64_t)_FFTH_2D_reqH);
 
-    if (decx::alloc::_host_virtual_page_malloc(&this->_tmp1, _buffer_size * sizeof(_data_type) * 2) ||
-        decx::alloc::_host_virtual_page_malloc(&this->_tmp2, _buffer_size * sizeof(_data_type) * 2))
-    {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION, ALLOC_FAIL);
-        return;
-    }
+    int32_t rval = 0;
+    rval |= this->_tmp1.Allocate(_buffer_size * sizeof(_data_type) * 2, PAGABLE, handle);
+    rval |= this->_tmp2.Allocate(_buffer_size * sizeof(_data_type) * 2, PAGABLE, handle);
 
     const uint32_t _concurrency = decx::cpu::_get_permitted_concurrency();
     //const uint32_t _tile_frag_pitch = decx::utils::align<uint32_t>(max(max(this->_signal_dims.x, this->_signal_dims.y), this->_signal_dims.z), 4);
@@ -255,7 +252,7 @@ template bool decx::dsp::fft::cpu_FFT3D_planner<double>::changed(const decx::_te
 template <typename _data_type>
 void* decx::dsp::fft::cpu_FFT3D_planner<_data_type>::get_tmp1_ptr() const
 {
-    return this->_tmp1.ptr;
+    return (void*)this->_tmp1;
 }
 
 template void* decx::dsp::fft::cpu_FFT3D_planner<float>::get_tmp1_ptr() const;
@@ -265,7 +262,7 @@ template void* decx::dsp::fft::cpu_FFT3D_planner<double>::get_tmp1_ptr() const;
 template <typename _data_type>
 void* decx::dsp::fft::cpu_FFT3D_planner<_data_type>::get_tmp2_ptr() const
 {
-    return this->_tmp2.ptr;
+    return (void*)this->_tmp2;
 }
 
 template void* decx::dsp::fft::cpu_FFT3D_planner<float>::get_tmp2_ptr() const;
@@ -275,8 +272,8 @@ template void* decx::dsp::fft::cpu_FFT3D_planner<double>::get_tmp2_ptr() const;
 template <typename _data_type>
 void decx::dsp::fft::cpu_FFT3D_planner<_data_type>::release(decx::dsp::fft::cpu_FFT3D_planner<_data_type>* _fake_this)
 {
-    decx::alloc::_host_virtual_page_dealloc(&_fake_this->_tmp1);
-    decx::alloc::_host_virtual_page_dealloc(&_fake_this->_tmp2);
+    _fake_this->_tmp1.Free();
+    _fake_this->_tmp2.Free();
 
     for (uint32_t i = 0; i < _fake_this->_tiles.size(); ++i) {
         _fake_this->_tiles[i].release();

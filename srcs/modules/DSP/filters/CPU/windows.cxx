@@ -356,8 +356,8 @@ de::dsp::cpu::Gaussian_Window1D(de::Vector& src, de::Vector& dst, const float u,
         decx::utils::frag_manager f_mgr;
         decx::utils::frag_manager_gen(&f_mgr, proc_len, t1D.total_thread);
 
-        const double* _loc_src = reinterpret_cast<const double*>(_src->Vec.ptr);
-        double* _loc_dst = reinterpret_cast<double*>(_dst->Vec.ptr);
+        const double* _loc_src = (const double*)_src->Vec;
+        double* _loc_dst = (double*)_dst->Vec;
         size_t _global_ptr_offset = 0;
 
         for (int i = 0; i < t1D.total_thread - 1; ++i) {
@@ -379,7 +379,7 @@ de::dsp::cpu::Gaussian_Window1D(de::Vector& src, de::Vector& dst, const float u,
         t1D.__sync_all_threads();
     }
     else {
-        decx::dsp::CPUK::Gaussian_Window1D_cpl32((const double*)_src->Vec.ptr, (double*)_dst->Vec.ptr, u, sigma,
+        decx::dsp::CPUK::Gaussian_Window1D_cpl32((const double*)_src->Vec, (double*)_dst->Vec, u, sigma,
             proc_len, _src->length, 0);
     }
 
@@ -409,8 +409,8 @@ de::dsp::cpu::Triangular_Window1D(de::Vector& src, de::Vector& dst, const long l
         decx::utils::frag_manager f_mgr;
         decx::utils::frag_manager_gen(&f_mgr, proc_len, t1D.total_thread);
 
-        const double* _loc_src = reinterpret_cast<const double*>(_src->Vec.ptr);
-        double* _loc_dst = reinterpret_cast<double*>(_dst->Vec.ptr);
+        const double* _loc_src = (const double*)_src->Vec;
+        double* _loc_dst = (double*)_dst->Vec;
         size_t _global_ptr_offset = 0;
 
         for (int i = 0; i < t1D.total_thread - 1; ++i) {
@@ -432,7 +432,7 @@ de::dsp::cpu::Triangular_Window1D(de::Vector& src, de::Vector& dst, const long l
         t1D.__sync_all_threads();
     }
     else {
-        decx::dsp::CPUK::Triangular_Window1D_cpl32((const double*)_src->Vec.ptr, (double*)_dst->Vec.ptr, center, radius,
+        decx::dsp::CPUK::Triangular_Window1D_cpl32((const double*)_src->Vec, (double*)_dst->Vec, center, radius,
             proc_len, _src->length, 0);
     }
 
@@ -475,8 +475,8 @@ de::dsp::cpu::Gaussian_Window2D(de::Matrix& src, de::Matrix& dst, const de::Poin
     }
 
     if (_src->Height() > decx::cpu::_get_permitted_concurrency()) {
-        const double* _loc_src = reinterpret_cast<const double*>(_src->Mat.ptr);
-        double* _loc_dst = reinterpret_cast<double*>(_dst->Mat.ptr);
+        const double* _loc_src = (const double*)_src->Mat;
+        double* _loc_dst = (double*)_dst->Mat;
 
         for (int i = 0; i < t1D.total_thread - 1; ++i) {
             if (_corrolated) {
@@ -517,13 +517,13 @@ de::dsp::cpu::Gaussian_Window2D(de::Matrix& src, de::Matrix& dst, const de::Poin
     }
     else {
         if (_corrolated) {
-            decx::dsp::CPUK::Gaussian_Window2D_cpl32(reinterpret_cast<const double*>(_src->Mat.ptr),
-                reinterpret_cast<double*>(_dst->Mat.ptr), make_float2(u.x, u.y), make_float2(sigma.x, sigma.y), p, _proc_dims, real_bound,
+            decx::dsp::CPUK::Gaussian_Window2D_cpl32((const double*)_src->Mat,
+                (double*)_dst->Mat, make_float2(u.x, u.y), make_float2(sigma.x, sigma.y), p, _proc_dims, real_bound,
                 0, pitch);
         }
         else {
-            decx::dsp::CPUK::Gaussian_Window2D_cpl32_no_corrolation(reinterpret_cast<const double*>(_src->Mat.ptr),
-                reinterpret_cast<double*>(_dst->Mat.ptr), make_float2(u.x, u.y), make_float2(sigma.x, sigma.y), _proc_dims, real_bound,
+            decx::dsp::CPUK::Gaussian_Window2D_cpl32_no_corrolation((const double*)_src->Mat,
+                (double*)_dst->Mat, make_float2(u.x, u.y), make_float2(sigma.x, sigma.y), _proc_dims, real_bound,
                 0, pitch);
         }
     }
@@ -558,8 +558,8 @@ de::dsp::cpu::Cone_Window2D(de::Matrix& src, de::Matrix& dst, const de::Point2D 
     const uint2 real_bound = make_uint2(_src->Width(), _src->Height());
 
     if (_src->Height() > decx::cpu::_get_permitted_concurrency()) {
-        const double* _loc_src = reinterpret_cast<const double*>(_src->Mat.ptr);
-        double* _loc_dst = reinterpret_cast<double*>(_dst->Mat.ptr);
+        const double* _loc_src = (const double*)_src->Mat;
+        double* _loc_dst = (double*)_dst->Mat;
 
         for (int i = 0; i < t1D.total_thread - 1; ++i) {
             t1D._async_thread[i] = decx::cpu::register_task_default( decx::dsp::CPUK::Cone_Window2D_cpl32,
@@ -579,7 +579,7 @@ de::dsp::cpu::Cone_Window2D(de::Matrix& src, de::Matrix& dst, const de::Point2D 
         t1D.__sync_all_threads();
     }
     else {
-        decx::dsp::CPUK::Cone_Window2D_cpl32(reinterpret_cast<const double*>(_src->Mat.ptr), reinterpret_cast<double*>(_dst->Mat.ptr), 
+        decx::dsp::CPUK::Cone_Window2D_cpl32((const double*)_src->Mat, (double*)_dst->Mat, 
             make_uint2(origin.x, origin.y), radius, _proc_dims, real_bound, 0, pitch);
     }
     decx::err::Success(&handle);

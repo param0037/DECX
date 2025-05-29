@@ -102,10 +102,7 @@ void decx::dsp::fft::Rotational_Factors_Table<_data_type>::_alloc_table_from_scr
 
     this->_actual_len = _len;
     this->_alloc_len = decx::utils::align<uint64_t>(_len, alignment);
-    if (decx::alloc::_host_virtual_page_malloc(&_W_table, this->_alloc_len * sizeof(_data_type) * 2, true)) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION, ALLOC_FAIL);
-        return;
-    }
+    this->_W_table.Allocate(this->_alloc_len * sizeof(_data_type) * 2, PAGABLE, handle);
 }
 
 template void decx::dsp::fft::Rotational_Factors_Table<float>::_alloc_table_from_scratch(const uint64_t, de::DH*);
@@ -119,11 +116,8 @@ void decx::dsp::fft::Rotational_Factors_Table<_data_type>::_realloc_table(const 
     const uint64_t new_alloc_len = decx::utils::align<uint64_t>(_new_len, alignment);
     
     if (new_alloc_len > this->_alloc_len) {
-        decx::alloc::_host_virtual_page_dealloc(&this->_W_table);
-        if (decx::alloc::_host_virtual_page_malloc(&this->_W_table, new_alloc_len * sizeof(_data_type) * 2, true)) {
-            decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION, ALLOC_FAIL);
-            return;
-        }
+        this->_W_table.Free();
+        this->_W_table.Allocate(new_alloc_len * sizeof(_data_type) * 2, PAGABLE, handle);
     }
 
     this->_alloc_len = new_alloc_len;
@@ -137,7 +131,7 @@ template void decx::dsp::fft::Rotational_Factors_Table<double>::_realloc_table(c
 template <typename _data_type>
 void decx::dsp::fft::Rotational_Factors_Table<_data_type>::_alloc_table(const uint64_t _len, de::DH *handle)
 {
-    if (this->_W_table.ptr == NULL){
+    if (this->_W_table.IsValid() == 0){
         this->_alloc_table_from_scratch(_len, handle);
     }
     else{
@@ -155,7 +149,7 @@ void decx::dsp::fft::Rotational_Factors_Table<float>::_generate_table(decx::util
     decx::utils::frag_manager _f_mgr_WT;
     decx::utils::frag_manager_gen(&_f_mgr_WT, this->_alloc_len / 4, t1D->total_thread);
     
-    double* _loc_ptr_WT = (double*)this->_W_table.ptr;
+    double* _loc_ptr_WT = (double*)this->_W_table;
     
     for (int i = 0; i < _f_mgr_WT.frag_num - 1; ++i) {
         t1D->_async_thread[i] = decx::cpu::register_task_default(decx::dsp::fft::CPUK::_W_table_gen_cplxf, 
@@ -185,7 +179,7 @@ void decx::dsp::fft::Rotational_Factors_Table<double>::_generate_table(decx::uti
     decx::utils::frag_manager _f_mgr_WT;
     decx::utils::frag_manager_gen(&_f_mgr_WT, this->_alloc_len / 2, t1D->total_thread);
     
-    de::CPd* _loc_ptr_WT = (de::CPd*)this->_W_table.ptr;
+    de::CPd* _loc_ptr_WT = (de::CPd*)this->_W_table;
 
     for (int i = 0; i < _f_mgr_WT.frag_num - 1; ++i) {
         t1D->_async_thread[i] = decx::cpu::register_task_default(decx::dsp::fft::CPUK::_W_table_gen_cplxd, 
@@ -213,7 +207,7 @@ void decx::dsp::fft::Rotational_Factors_Table<double>::_generate_table(decx::uti
 template <typename _data_type>
 void decx::dsp::fft::Rotational_Factors_Table<_data_type>::_release()
 {
-    decx::alloc::_host_virtual_page_dealloc(&this->_W_table);
+    this->_W_table.Free();
 }
 
 template void decx::dsp::fft::Rotational_Factors_Table<float>::_release();

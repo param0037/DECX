@@ -66,7 +66,7 @@ resample_caller(const decx::_Matrix* src, const decx::_Matrix* map, decx::_Matri
         sizeof(uint8_t), intp_type, make_uint2(src->Width(), src->Height()), 
         de::GetLastError());
 
-    VGT->run((_type_in*)src->Mat.ptr, (float2*)map->Mat.ptr, (_type_out*)dst->Mat.ptr, map->Pitch(), dst->Pitch(), &t1D);
+    VGT->run((_type_in*)src->Mat, (float2*)map->Mat, (_type_out*)dst->Mat, map->Pitch(), dst->Pitch(), &t1D);
 
     g_VGT2D_hdlr.unlock();
 }

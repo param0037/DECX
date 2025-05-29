@@ -87,14 +87,14 @@ struct decx::dsp::fft::_FFT1D_kernel_tile
     template <typename _ptr_type>
     _ptr_type* get_tile1() const
     {
-        return (_ptr_type*)this->_tmp_ptr.ptr;
+        return (_ptr_type*)this->_tmp_ptr;
     }
 
 
     template <typename _ptr_type>
     _ptr_type* get_tile2() const
     {
-        return (_ptr_type*)((uint8_t*)this->_tmp_ptr.ptr + this->_total_size / 2);
+        return (_ptr_type*)((uint8_t*)this->_tmp_ptr + this->_total_size / 2);
     }
 
 

@@ -116,7 +116,7 @@ public:
     template <typename _ptr_type>
     const _ptr_type* _get_table_ptr() const
     {
-        return (const _ptr_type*)this->_W_table.ptr;
+        return (const _ptr_type*)this->_W_table;
     }
 
 

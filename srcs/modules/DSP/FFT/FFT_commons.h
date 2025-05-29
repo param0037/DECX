@@ -34,29 +34,27 @@
 
 // include basic dependencies
 
-#include "../../../common/basic.h"
-#include "../../../common/double_buffer.h"
-#include "../../core/memory_management/PtrInfo.h"
-#include "../../core/allocators.h"
-#include "../../../common/Array/Fixed_Length_Array.h"
-#include "../../../common/Classes/type_info.h"
+#include <basic.h>
+#include <double_buffer.h>
+#include <PtrInfo.h>
+#include <Array/Fixed_Length_Array.h>
+#include <Classes/type_info.h>
 
 
 #ifdef _DECX_CPU_PARTS_
-#include "../../core/allocators.h"
-#include "../../core/thread_management/thread_pool.h"
-#include "../../../common/FMGR/fragment_arrangment.h"
-#include "../../core/thread_management/thread_arrange.h"
-#include "../../../common/SIMD/intrinsics_ops.h"
+#include <thread_management/thread_pool.h>
+#include <FMGR/fragment_arrangment.h>
+#include <thread_management/thread_arrange.h>
+#include <SIMD/intrinsics_ops.h>
 #include "CPU/FFT_common/CPU_FFT_defs.h"
 #endif
 
 //
 #ifdef _DECX_CUDA_PARTS_
-#include "../../core/cudaStream_management/cudaEvent_queue.h"
-#include "../../core/cudaStream_management/cudaStream_queue.h"
-#include "../../../common/CUSV/CUDA_cpf32.cuh"
-#include "../../../common/CUSV/CUDA_cpd64.cuh"
+#include <cudaStream_management/cudaEvent_queue.h>
+#include <cudaStream_management/cudaStream_queue.h>
+#include <CUSV/CUDA_cpf32.cuh>
+#include <CUSV/CUDA_cpd64.cuh>
 
 #define _FFT2D_END_(_cplx_type) false, true, _cplx_type
 #define _FFT1D_END_(_cplx_type) _FFT2D_END_(_cplx_type)

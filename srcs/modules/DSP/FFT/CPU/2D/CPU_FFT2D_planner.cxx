@@ -102,14 +102,10 @@ void decx::dsp::fft::cpu_FFT2D_planner<_data_type>::plan(const decx::_matrix_lay
     const uint64_t _alloc_size = max(_aligned_dims.x * this->_signal_dims.y, this->_signal_dims.x * _aligned_dims.y)
         * sizeof(_data_type) * 2;
     
-    if (decx::alloc::_host_virtual_page_malloc(&this->_tmp1, _alloc_size)) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION, ALLOC_FAIL);
-        return;
-    }
-    if (decx::alloc::_host_virtual_page_malloc(&this->_tmp2, _alloc_size)) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION, ALLOC_FAIL);
-        return;
-    }
+    int32_t rval = 0;
+    rval |= this->_tmp1.Allocate(_alloc_size, PAGABLE, handle);
+    rval |= this->_tmp2.Allocate(_alloc_size, PAGABLE, handle);
+
     // Allocate other spaces
     this->_FFT_H.set_length(this->_signal_dims.x, handle);
     Check_Runtime_Error(handle);
@@ -164,7 +160,7 @@ template void decx::dsp::fft::cpu_FFT2D_planner<double>::plan<uint8_t>(const dec
 template <typename _data_type>
 void* decx::dsp::fft::cpu_FFT2D_planner<_data_type>::get_tmp1_ptr() const
 {
-    return this->_tmp1.ptr;
+    return (void*)this->_tmp1;
 }
 
 template void* decx::dsp::fft::cpu_FFT2D_planner<float>::get_tmp1_ptr() const;
@@ -174,7 +170,7 @@ template void* decx::dsp::fft::cpu_FFT2D_planner<double>::get_tmp1_ptr() const;
 template <typename _data_type>
 void* decx::dsp::fft::cpu_FFT2D_planner<_data_type>::get_tmp2_ptr() const
 {
-    return this->_tmp2.ptr;
+    return (void*)this->_tmp2;
 }
 
 template void* decx::dsp::fft::cpu_FFT2D_planner<float>::get_tmp2_ptr() const;
@@ -242,8 +238,8 @@ template const decx::dsp::fft::FKT1D* decx::dsp::fft::cpu_FFT2D_planner<double>:
 template <typename _data_type>
 void decx::dsp::fft::cpu_FFT2D_planner<_data_type>::ReleaseBuffers(decx::dsp::fft::cpu_FFT2D_planner<_data_type>* _fake_this)
 {
-    decx::alloc::_host_virtual_page_dealloc(&_fake_this->_tmp1);
-    decx::alloc::_host_virtual_page_dealloc(&_fake_this->_tmp2);
+    _fake_this->_tmp1.Free();
+    _fake_this->_tmp2.Free();
 
     for (uint32_t i = 0; i < _fake_this->_tiles.size(); ++i) {
         _fake_this->_tiles[i].release();
