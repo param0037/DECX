@@ -68,21 +68,17 @@ plan(const uint32_t concurrency,    const uint2 dst_dims_v1,
     const uint32_t addr_mgr_size = (int32_t)this->_interpolate_type ? sizeof(decx::CPUK::VGT_nearest_addr_mgr) : 
                                         sizeof(decx::CPUK::VGT_bilinear_addr_mgr);
 
-    if (decx::alloc::_host_virtual_page_realloc(&this->_addr_mgrs, this->_concurrency * addr_mgr_size)){
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION,
-            ALLOC_FAIL);
-        return;
-    }
+    this->_addr_mgrs.Allocate(this->_concurrency * addr_mgr_size, PAGABLE, handle);
 
     if (this->_interpolate_type == de::Interpolate_Types::INTERPOLATE_BILINEAR)
     {
-        auto* p_addr_mgr = (decx::CPUK::VGT_bilinear_addr_mgr*)this->_addr_mgrs.ptr;
+        auto* p_addr_mgr = (decx::CPUK::VGT_bilinear_addr_mgr*)this->_addr_mgrs;
         for (int32_t i = 0; i < this->_concurrency; ++i){
             p_addr_mgr[i].set_src_dims(src_dims_v1);
         }
     }
     else{
-        auto* p_addr_mgr = (decx::CPUK::VGT_nearest_addr_mgr*)this->_addr_mgrs.ptr;
+        auto* p_addr_mgr = (decx::CPUK::VGT_nearest_addr_mgr*)this->_addr_mgrs;
         for (int32_t i = 0; i < this->_concurrency; ++i){
             p_addr_mgr[i].set_src_dims(src_dims_v1);
         }
@@ -115,7 +111,7 @@ decx::cpu_VGT2D_planner::run(const _type_in* src,          const float2* map,
                         i < this->_thread_dist.y - 1 ? this->_fmgr_WH[1].frag_len : this->_fmgr_WH[1].last_frag_len);
 
             t1D->_async_thread[_thr_cnt] = decx::cpu::register_task_default(exec_ptr, src, map + dex_map, dst + dex_dst, 
-                proc_dims_v, this->_pitchsrc_v1, pitchmap_v1, pitchdst_v1, (uint8_t*)this->_addr_mgrs.ptr + _thr_cnt * addr_mgr_size);
+                proc_dims_v, this->_pitchsrc_v1, pitchmap_v1, pitchdst_v1, (uint8_t*)this->_addr_mgrs + _thr_cnt * addr_mgr_size);
             
             dex_map += this->_fmgr_WH[0].frag_len * this->_alignment;
             dex_dst += this->_fmgr_WH[0].frag_len * this->_alignment;
@@ -134,5 +130,5 @@ template void decx::cpu_VGT2D_planner::run<uint8_t>(const uint8_t*, const float2
 
 void decx::cpu_VGT2D_planner::release(decx::cpu_VGT2D_planner* fake_this)
 {
-    decx::alloc::_host_virtual_page_dealloc(&fake_this->_addr_mgrs);
+    fake_this->_addr_mgrs.Free();
 }

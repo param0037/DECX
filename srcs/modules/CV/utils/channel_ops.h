@@ -32,9 +32,8 @@
 #ifndef _CV_CLS_MFUNCS_H_
 #define _CV_CLS_MFUNCS_H_
 
-#include "../../../common/basic.h"
-#include "../../../common/Classes/Matrix.h"
-#include "../../core/memory_management/MemBlock.h"
+#include <basic.h>
+#include <Classes/Matrix.h>
 #ifdef _DECX_CPU_PARTS_
 #include "../utils/cvt_colors.h"
 #endif

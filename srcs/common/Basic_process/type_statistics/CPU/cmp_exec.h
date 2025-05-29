@@ -351,36 +351,34 @@ static void decx::bp::_min_max_1D_caller(T_kernel _cmp_kernel, const T_data* src
 
     decx::utils::_thread_arrange_1D t1D(conc_thr);
     decx::PtrInfo<T_data> vec_min, vec_max;
-    if (decx::alloc::_host_virtual_page_malloc(&vec_min, conc_thr * sizeof(T_data))) {
-        return;
-    }
-    if (decx::alloc::_host_virtual_page_malloc(&vec_max, conc_thr * sizeof(T_data))) {
-        return;
-    }
+    int32_t rval = 0;
+    rval |= vec_min.Allocate(conc_thr * sizeof(T_data), PAGABLE, de::GetLastError());
+    rval |= vec_max.Allocate(conc_thr * sizeof(T_data), PAGABLE, de::GetLastError());
+    
     const uint8_t _occupied_length = (len % _align);
 
     const T_data* tmp_src = src;
     const uint64_t proc_len = fr_mgr.frag_len * _align;
     for (int i = 0; i < conc_thr - 1; ++i) {
         t1D._async_thread[i] = decx::cpu::register_task_default(
-            _cmp_kernel, tmp_src, proc_len / _align, vec_min.ptr + i, vec_max.ptr + i, _occupied_length);
+            _cmp_kernel, tmp_src, proc_len / _align, vec_min + i, vec_max + i, _occupied_length);
         tmp_src += proc_len;
     }
     const uint64_t _L = fr_mgr.is_left ? fr_mgr.frag_left_over : fr_mgr.frag_len;
     t1D._async_thread[conc_thr - 1] = decx::cpu::register_task_default(
-        _cmp_kernel, tmp_src, _L, vec_min.ptr + conc_thr - 1, vec_max.ptr + conc_thr - 1, _occupied_length);
+        _cmp_kernel, tmp_src, _L, vec_min + conc_thr - 1, vec_max + conc_thr - 1, _occupied_length);
 
     t1D.__sync_all_threads();
 
     T_data res;
-    _CMP_THREAD_LANE_(< , vec_min.ptr, res, conc_thr);
+    _CMP_THREAD_LANE_(< , vec_min, res, conc_thr);
     *res_min = res;
 
-    _CMP_THREAD_LANE_(> , vec_max.ptr, res, conc_thr);
+    _CMP_THREAD_LANE_(> , vec_max, res, conc_thr);
     *res_max = res;
 
-    decx::alloc::_host_virtual_page_dealloc(&vec_min);
-    decx::alloc::_host_virtual_page_dealloc(&vec_max);
+    vec_max.Free();
+    vec_min.Free();
 }
 
 
@@ -473,12 +471,9 @@ void decx::bp::_min_max_2D_caller(T_kernel _cmp_kernel, const T_data* src, const
 
     decx::utils::_thread_arrange_1D t1D(conc_thr);
     decx::PtrInfo<T_data> vec_min, vec_max;
-    if (decx::alloc::_host_virtual_page_malloc(&vec_min, conc_thr * sizeof(T_data))) {
-        return;
-    }
-    if (decx::alloc::_host_virtual_page_malloc(&vec_max, conc_thr * sizeof(T_data))) {
-        return;
-    }
+    int32_t rval = 0;
+    rval |= vec_min.Allocate(conc_thr * sizeof(T_data), PAGABLE, de::GetLastError());
+    rval |= vec_max.Allocate(conc_thr * sizeof(T_data), PAGABLE, de::GetLastError());
 
     const T_data* tmp_src = src;
     const size_t proc_size = fr_mgr.frag_len * Wsrc;
@@ -486,25 +481,25 @@ void decx::bp::_min_max_2D_caller(T_kernel _cmp_kernel, const T_data* src, const
     {
         t1D._async_thread[i] = decx::cpu::register_task_default(
             _cmp_kernel, tmp_src, make_uint2(decx::utils::ceil<uint32_t>(proc_dims.x, _align), fr_mgr.frag_len), 
-            vec_min.ptr + i, vec_max.ptr + i, Wsrc, _occupied_length);
+            vec_min + i, vec_max + i, Wsrc, _occupied_length);
         tmp_src += proc_size;
     }
     const uint32_t _L = fr_mgr.is_left ? fr_mgr.frag_left_over : fr_mgr.frag_len;
     t1D._async_thread[conc_thr - 1] = decx::cpu::register_task_default(
         _cmp_kernel, tmp_src, make_uint2(decx::utils::ceil<uint32_t>(proc_dims.x, _align), _L), 
-        vec_min.ptr + conc_thr - 1, vec_max.ptr + conc_thr - 1, Wsrc, _occupied_length);
+        vec_min + conc_thr - 1, vec_max + conc_thr - 1, Wsrc, _occupied_length);
 
     t1D.__sync_all_threads();
 
     T_data res;
-    _CMP_THREAD_LANE_(< , vec_min.ptr, res, conc_thr);
+    _CMP_THREAD_LANE_(< , vec_min, res, conc_thr);
     *res_min = res;
 
-    _CMP_THREAD_LANE_(> , vec_max.ptr, res, conc_thr);
+    _CMP_THREAD_LANE_(> , vec_max, res, conc_thr);
     *res_max = res;
 
-    decx::alloc::_host_virtual_page_dealloc(&vec_min);
-    decx::alloc::_host_virtual_page_dealloc(&vec_max);
+    vec_min.Free();
+    vec_max.Free();
 }
 
 

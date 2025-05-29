@@ -64,6 +64,7 @@ include("../../config_paths.cmake")
 
 # include to add compile definitions to the target
 include("${DECX_WORLD_ABS_DIR}/srcs/compile_defs.cmake")
+include_directories("${DECX_WORLD_ABS_DIR}/srcs/modules/core")
 
 # Set the link directories
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
