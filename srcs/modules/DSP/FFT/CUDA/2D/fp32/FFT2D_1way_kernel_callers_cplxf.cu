@@ -54,16 +54,16 @@ void decx::dsp::fft::FFT2D_cplxf_1st_1way_caller(const void* src,
                                                    _FFT_info->get_radix(0),     _FFT_info->get_signal_len(),
                                                    _FFT_info->_pitchsrc / 2,    _FFT_info->_pitchtmp / 2, S);
     }
-    _double_buffer->reset_buffer1_leading();
+    _double_buffer->ResetBuf1AsLeading();
 
     for (uint8_t i = 1; i < _FFT_info->partition_num(); ++i) {
-        decx::dsp::fft::FFT2D_C2C_caller_cplxf<false>(_double_buffer->get_leading_ptr<float4>(),
-                                               _double_buffer->get_lagging_ptr<float4>(),
+        decx::dsp::fft::FFT2D_C2C_caller_cplxf<false>(_double_buffer->GetLeadingBufPtr<float4>(),
+                                               _double_buffer->GetLaggingBufPtr<float4>(),
                                                _FFT_info->get_radix(i),
                                                _FFT_info->get_kernel_info(i),
                                                _FFT_info->_pitchtmp / 2,
                                                _FFT_info->_pitchtmp / 2, S);
-        _double_buffer->update_states();
+        _double_buffer->UpdateStatus();
     }
 }
 
@@ -86,47 +86,47 @@ void decx::dsp::fft::FFT2D_C2C_cplxf_1way_caller(decx::utils::double_buffer_mana
                                                  const decx::dsp::fft::_FFT2D_1way_config* _FFT_info, 
                                                  decx::cuda_stream* S)
 {
-    decx::dsp::fft::FFT2D_1st_C2C_caller_cplxf<_div>(_double_buffer->get_leading_ptr<float4>(),
-                                                    _double_buffer->get_lagging_ptr<float4>(),
+    decx::dsp::fft::FFT2D_1st_C2C_caller_cplxf<_div>(_double_buffer->GetLeadingBufPtr<float4>(),
+                                                    _double_buffer->GetLaggingBufPtr<float4>(),
                                                     _FFT_info->get_radix(0),    _FFT_info->get_signal_len(),
                                                     _FFT_info->_pitchsrc / 2,   _FFT_info->_pitchtmp / 2, S);
-    _double_buffer->update_states();
+    _double_buffer->UpdateStatus();
     for (uint8_t i = 1; i < _FFT_info->partition_num() - 1; ++i) {
         
-        decx::dsp::fft::FFT2D_C2C_caller_cplxf<false>(_double_buffer->get_leading_ptr<float4>(),
-                                               _double_buffer->get_lagging_ptr<float4>(),
+        decx::dsp::fft::FFT2D_C2C_caller_cplxf<false>(_double_buffer->GetLeadingBufPtr<float4>(),
+                                               _double_buffer->GetLaggingBufPtr<float4>(),
                                                _FFT_info->get_radix(i),
                                                _FFT_info->get_kernel_info(i),
                                                _FFT_info->_pitchtmp / 2,
                                                _FFT_info->_pitchtmp / 2, S);
-        _double_buffer->update_states();
+        _double_buffer->UpdateStatus();
     }
     // Here I need to consider the case that only execute once
     if (std::is_same<_type_out, de::CPf>::value) {
-        decx::dsp::fft::FFT2D_C2C_caller_cplxf<_conj>(_double_buffer->get_leading_ptr<float4>(),
-                                               _double_buffer->get_lagging_ptr<float4>(),
+        decx::dsp::fft::FFT2D_C2C_caller_cplxf<_conj>(_double_buffer->GetLeadingBufPtr<float4>(),
+                                               _double_buffer->GetLaggingBufPtr<float4>(),
                                                _FFT_info->get_radix(_FFT_info->partition_num() - 1),
                                                _FFT_info->get_kernel_info(_FFT_info->partition_num() - 1),
                                                _FFT_info->_pitchtmp / 2,
                                                _FFT_info->_pitchtmp / 2, S);
     }
     else if (std::is_same<_type_out, uint8_t>::value) {
-        decx::dsp::fft::IFFT2D_C2R_caller_cplxf_u8(_double_buffer->get_leading_ptr<float4>(),
-                                               _double_buffer->get_lagging_ptr<uchar2>(),
+        decx::dsp::fft::IFFT2D_C2R_caller_cplxf_u8(_double_buffer->GetLeadingBufPtr<float4>(),
+                                               _double_buffer->GetLaggingBufPtr<uchar2>(),
                                                _FFT_info->get_radix(_FFT_info->partition_num() - 1),
                                                _FFT_info->get_kernel_info(_FFT_info->partition_num() - 1),
                                                _FFT_info->_pitchtmp / 2,        // Times 8 cuz 8 uchars in one de::CPf
                                                _FFT_info->_pitchtmp * 8 / 2, S);
     }
     else if (std::is_same<_type_out, float>::value) {
-        decx::dsp::fft::IFFT2D_C2R_caller_cplxf_fp32(_double_buffer->get_leading_ptr<float4>(),
-                                               _double_buffer->get_lagging_ptr<float2>(),
+        decx::dsp::fft::IFFT2D_C2R_caller_cplxf_fp32(_double_buffer->GetLeadingBufPtr<float4>(),
+                                               _double_buffer->GetLaggingBufPtr<float2>(),
                                                _FFT_info->get_radix(_FFT_info->partition_num() - 1),
                                                _FFT_info->get_kernel_info(_FFT_info->partition_num() - 1),
                                                _FFT_info->_pitchtmp / 2,        // Times 2 cuz 2 floats in one de::CPf
                                                _FFT_info->_pitchtmp * 2 / 2, S);
     }
-    _double_buffer->update_states();
+    _double_buffer->UpdateStatus();
 }
 
 template void decx::dsp::fft::FFT2D_C2C_cplxf_1way_caller<_IFFT2D_END_(de::CPf)>(decx::utils::double_buffer_manager*,

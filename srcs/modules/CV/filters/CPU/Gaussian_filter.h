@@ -80,7 +80,7 @@ static void decx::vis::_gaussian_uint8_NB(decx::_Matrix* src, decx::vis::gaussia
     const uint _loop = (kernel_H->_ker_length - 1) / 16;
     ushort reg_WL = (ushort)(kernel_H->_ker_length - _loop * 16);
 
-    decx::vis::_gaussian_H_uint8_caller((double*)src->Mat.ptr, 
+    decx::vis::_gaussian_H_uint8_caller(src->Mat.GetRawPtr<double>(), 
                                         kernel_H->_kernel_data.ptr, 
                                         _Hconv_res.ptr, 
                                         make_uint2(Hconv_res_dims.x / 16, src->Height()), 
@@ -91,7 +91,7 @@ static void decx::vis::_gaussian_uint8_NB(decx::_Matrix* src, decx::vis::gaussia
 
     decx::vis::_gaussian_V_uint8_caller(_Hconv_res.ptr, 
                                         kernel_V->_kernel_data.ptr, 
-                                        (double*)dst->Mat.ptr,
+                                        dst->Mat.GetRawPtr<double>(),
                                         make_uint2(Hconv_res_dims.x / 16, dst->Height()), 
                                         kernel_V->_ker_length, 
                                         Hconv_res_dims.x, 
@@ -124,7 +124,7 @@ static void decx::vis::_gaussian_uint8_BC_zero(decx::_Matrix* src, decx::vis::ga
     }
 
     uint8_t* start_place_src = DECX_PTR_SHF_XY<uint8_t, uint8_t>(tmp_src.ptr, 0, kernel_H->_ker_length / 2, tmp_src_dims.x);
-    decx::_cpy2D_anybit_caller<uint8_t>((uint8_t*)src->Mat.ptr, 
+    decx::_cpy2D_anybit_caller<uint8_t>(src->Mat.GetRawPtr<uint8_t>(), 
                                         start_place_src, 
                                         src->Pitch(), 
                                         tmp_src_dims.x, 
@@ -148,7 +148,7 @@ static void decx::vis::_gaussian_uint8_BC_zero(decx::_Matrix* src, decx::vis::ga
 
     decx::vis::_gaussian_V_uint8_caller(_Hconv_res.ptr, 
                                         kernel_V->_kernel_data.ptr, 
-                                        (double*)dst->Mat.ptr,
+                                        dst->Mat.GetRawPtr<double>(),
                                         make_uint2(Hconv_res_dims.x / 16, dst->Height()), 
                                         kernel_V->_ker_length, 
                                         Hconv_res_dims.x, 
@@ -182,7 +182,7 @@ static void decx::vis::_gaussian_uint8_BC_reflect(decx::_Matrix* src, decx::vis:
     }
 
     uint8_t* start_place_src = DECX_PTR_SHF_XY<uint8_t, uint8_t>(tmp_src.ptr, 0, kernel_H->_ker_length / 2, tmp_src_dims.x);
-    decx::bp::_extend_LR_reflect_b8_2D((uint8_t*)src->Mat.ptr, tmp_src.ptr, make_uint2(kernel_H->_ker_length / 2, kernel_H->_ker_length / 2),
+    decx::bp::_extend_LR_reflect_b8_2D(src->Mat.GetRawPtr<uint8_t>(), tmp_src.ptr, make_uint2(kernel_H->_ker_length / 2, kernel_H->_ker_length / 2),
         src->Pitch(), tmp_src_dims.x, src->Width(), src->Height(), handle);
 
     const uint conc_thr = (uint)decx::cpu::_get_permitted_concurrency();
@@ -205,7 +205,7 @@ static void decx::vis::_gaussian_uint8_BC_reflect(decx::_Matrix* src, decx::vis:
 
     decx::vis::_gaussian_V_uint8_caller(_Hconv_res.ptr, 
                                         kernel_V->_kernel_data.ptr, 
-                                        (double*)dst->Mat.ptr,
+                                        dst->Mat.GetRawPtr<double>(),
                                         make_uint2(Hconv_res_dims.x / 16, dst->Height()), 
                                         kernel_V->_ker_length, 
                                         Hconv_res_dims.x, 
@@ -299,7 +299,7 @@ static void decx::vis::_gaussian_uchar4_NB(decx::_Matrix* src, decx::vis::gaussi
     const uint _loop = (kernel_H->_ker_length - 1) / 4;
     ushort reg_WL = (ushort)(kernel_H->_ker_length - _loop * 4);
 
-    decx::vis::_gaussian_H_uchar4_caller((float*)src->Mat.ptr, 
+    decx::vis::_gaussian_H_uchar4_caller(src->Mat.GetRawPtr<float>(), 
                                         kernel_H->_kernel_data.ptr, 
                                         _Hconv_res.ptr, 
                                         make_uint2(dst->Pitch() / 4, src->Height()), 
@@ -310,7 +310,7 @@ static void decx::vis::_gaussian_uchar4_NB(decx::_Matrix* src, decx::vis::gaussi
 
     decx::vis::_gaussian_V_uint8_caller(_Hconv_res.ptr, 
                                         kernel_V->_kernel_data.ptr, 
-                                        (double*)dst->Mat.ptr,
+                                        dst->Mat.GetRawPtr<double>(),
                                         make_uint2(dst->Pitch() / 4, dst->Height()), 
                                         kernel_V->_ker_length, 
                                         Hconv_res_dims.x, 
@@ -343,7 +343,7 @@ static void decx::vis::_gaussian_uchar4_BC_zero(decx::_Matrix* src, decx::vis::g
     }
 
     float* start_place_src = DECX_PTR_SHF_XY<float, float>(tmp_src.ptr, 0, kernel_H->_ker_length / 2, tmp_src_dims.x);
-    decx::_cpy2D_anybit_caller<float>((float*)src->Mat.ptr, 
+    decx::_cpy2D_anybit_caller<float>(src->Mat.GetRawPtr<float>(), 
                                       start_place_src, 
                                       src->Pitch(), 
                                       tmp_src_dims.x, 
@@ -367,7 +367,7 @@ static void decx::vis::_gaussian_uchar4_BC_zero(decx::_Matrix* src, decx::vis::g
 
     decx::vis::_gaussian_V_uint8_caller(_Hconv_res.ptr, 
                                         kernel_V->_kernel_data.ptr, 
-                                        (double*)dst->Mat.ptr,
+                                        dst->Mat.GetRawPtr<double>(),
                                         make_uint2(decx::utils::ceil<uint32_t>(dst->Pitch(), 4), dst->Height()),
                                         kernel_V->_ker_length, 
                                         Hconv_res_dims.x, 
@@ -402,7 +402,7 @@ static void decx::vis::_gaussian_uchar4_BC_reflect(decx::_Matrix* src, decx::vis
     }
 
     float* start_place_src = DECX_PTR_SHF_XY<float, float>(tmp_src.ptr, 0, kernel_H->_ker_length / 2, tmp_src_dims.x);
-    decx::bp::_extend_LR_reflect_b32_2D((float*)src->Mat.ptr, tmp_src.ptr, make_uint2(kernel_H->_ker_length / 2, kernel_H->_ker_length / 2),
+    decx::bp::_extend_LR_reflect_b32_2D(src->Mat.GetRawPtr<float>(), tmp_src.ptr, make_uint2(kernel_H->_ker_length / 2, kernel_H->_ker_length / 2),
         src->Pitch(), tmp_src_dims.x, src->Width(), src->Height(), handle);
 
     const uint conc_thr = (uint)decx::cpu::_get_permitted_concurrency();
@@ -425,7 +425,7 @@ static void decx::vis::_gaussian_uchar4_BC_reflect(decx::_Matrix* src, decx::vis
     
     decx::vis::_gaussian_V_uint8_caller(_Hconv_res.ptr, 
                                         kernel_V->_kernel_data.ptr, 
-                                        (double*)dst->Mat.ptr,
+                                        dst->Mat.GetRawPtr<double>(),
                                         make_uint2(decx::utils::ceil<uint32_t>(dst->Pitch(), 4), dst->Height()),
                                         kernel_V->_ker_length, 
                                         Hconv_res_dims.x, 

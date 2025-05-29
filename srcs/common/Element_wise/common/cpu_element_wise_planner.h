@@ -37,12 +37,12 @@
 #include "../../../modules/core/thread_management/thread_arrange.h"
 #include "../../../modules/core/thread_management/thread_pool.h"
 #include "element_wise_base.h"
-
+#include <thread_argument.h>
 
 namespace decx
 {
-    class __COMM_FUNC__ cpu_ElementWise1D_planner;
-    class __COMM_FUNC__ cpu_ElementWise2D_planner;
+    class  cpu_ElementWise1D_planner;
+    class  cpu_ElementWise2D_planner;
 }
 
 
@@ -81,14 +81,24 @@ public:
 
     const uint8_t get_alignment() const {return this->_alignment;}
 
-    
+
     template <typename FuncType, typename... Args> inline void 
     caller(FuncType&& f, decx::utils::_thr_1D* t1D, Args&&... args)
     {
         for (int32_t i = 0; i < this->_fmgr.get_frag_num(); ++i){
-            t1D->_async_thread[i] = decx::cpu::register_task_default(f, args.value(i)...);
+            t1D->_async_thread[i] = decx::cpu::register_task_by_id(f, i, args.value(i)...);
         }
         t1D->__sync_all_threads(make_uint2(0, this->_fmgr.frag_num));
+    }
+
+
+    template <typename FuncType, typename... Args> static void 
+    sCaller(FuncType&& f, const decx::utils::frag_manager* fmgr, decx::utils::_thr_1D* t1D, Args&&... args)
+    {
+        for (int32_t i = 0; i < fmgr->get_frag_num(); ++i){
+            t1D->_async_thread[i] = decx::cpu::register_task_by_id(f, i, args.value(i)...);
+        }
+        t1D->__sync_all_threads(make_uint2(0, fmgr->frag_num));
     }
 };
 
@@ -203,5 +213,13 @@ public:
     }
 
 };
+
+
+
+// #define VarArgGen1D(__EW, __VAL, __GAP, __TVAL) \
+//     decx::TArg_var<__TVAL>([&](const int32_t i){return (__TVAL)__VAL + i * (__EW).get_fmgr()->get_frag_len() * (__GAP);})
+
+
+
 
 #endif

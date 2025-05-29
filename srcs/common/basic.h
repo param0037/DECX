@@ -35,7 +35,6 @@
 #include "error.h"
 #include "Handle/decx_handle.h"
 #include "vector_defines.h"
-#include <log_console.h>
 
 #if defined(_DECX_CORE_CUDA_)
 #define CONSTANT_MEM_SIZE 0x10000 / 8

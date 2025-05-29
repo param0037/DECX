@@ -102,7 +102,7 @@ public:
     void alloc_buffers(decx::cuda_stream* S, const uint32_t _fp16_accu);
 
 
-    void release_buffer();
+    void ReleaseBuffer();
 
 
     template <typename _config_type>

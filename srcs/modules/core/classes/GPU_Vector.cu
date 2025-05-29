@@ -29,7 +29,10 @@
 */
 
 
-#include "../../../common/Classes/GPU_Vector.h"
+#include <Classes/GPU_Vector.h>
+#include <cudaStream_management/cudaEvent_queue.h>
+#include <cudaStream_management/cudaStream_queue.h>
+#define MODULE_TAG "GPU_Vector"
 
 
 void decx::_GPU_Vector::_attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, size_t length)
@@ -56,7 +59,6 @@ void decx::_GPU_Vector::_attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, si
     this->_length = decx::utils::ceil<size_t>(length, (size_t)_alignment) * (size_t)_alignment;
     this->total_bytes = this->_length * this->_single_element_size;
 }
-
 
 
 de::_DATA_TYPES_FLAGS_ decx::_GPU_Vector::Type() const
@@ -99,20 +101,18 @@ void decx::_GPU_Vector::alloc_data_space()
     decx::cuda_stream* S = NULL;
     S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
     if (S == NULL) {
-        
+        DECX_LOG_ERR("Failed to get cuda stream from queue");
         return;
     }
     decx::cuda_event* E = NULL;
     E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
     if (E == NULL) {
-        
+        DECX_LOG_ERR("Failed to get cuda event from queue");
         return;
     }
 
-    if (decx::alloc::_device_malloc<void>(&this->Vec, this->total_bytes, true, S)) {
-        SetConsoleColor(4);
-        printf("Vector on GPU malloc failed! Please check if there is enough space in your device.");
-        ResetConsoleColor;
+    if (this->Vec.Allocate(this->total_bytes, CUDA_DEVICE, de::GetLastError(), true, S)) {
+        DECX_LOG_ERR("Vector on GPU malloc failed! Please check if there is enough space in your device");
         return;
     }
 
@@ -129,24 +129,20 @@ void decx::_GPU_Vector::re_alloc_data_space()
     decx::cuda_stream* S = NULL;
     S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
     if (S == NULL) {
-        
+        DECX_LOG_ERR("Failed to get cuda stream from queue");
         return;
     }
     decx::cuda_event* E = NULL;
     E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
     if (E == NULL) {
-        
+        DECX_LOG_ERR("Failed to get cuda event from queue");
         return;
     }
 
-    if (decx::alloc::_device_realloc<void>(&this->Vec, this->total_bytes)) {
-        SetConsoleColor(4);
-        printf("Vector on GPU malloc failed! Please check if there is enough space in your device.");
-        ResetConsoleColor;
+    if (this->Vec.Reallocate(this->total_bytes, de::GetLastError(), true, S)) {
+        DECX_LOG_ERR("Vector on GPU malloc failed! Please check if there is enough space in your device");
         return;
     }
-
-    checkCudaErrors(cudaMemsetAsync(this->Vec.ptr, 0, this->total_bytes, S->get_raw_stream_ref()));
 
     E->event_record(S);
     E->synchronize();
@@ -200,17 +196,16 @@ uint64_t decx::_GPU_Vector::Len() const
 
 void decx::_GPU_Vector::release()
 {
-    decx::alloc::_device_dealloc(&this->Vec);
+    this->Vec.Free();
 }
-
 
 
 de::GPU_Vector& decx::_GPU_Vector::SoftCopy(de::GPU_Vector& src)
 {
     const decx::_GPU_Vector& ref_src = dynamic_cast<decx::_GPU_Vector&>(src);
-
+    this->Vec = ref_src.Vec;
     this->_attribute_assign(ref_src.type, ref_src.length);
-    decx::alloc::_device_malloc_same_place(&this->Vec);
+    this->Vec.AllocateRef();
 
     return *this;
 }
@@ -247,7 +242,7 @@ _DECX_API_ de::DH de::cuda::PinMemory(de::Vector& src)
     de::DH handle;
 
     decx::_Vector* _src = dynamic_cast<decx::_Vector*>(&src);
-    cudaError_t _err = cudaHostRegister(_src->Vec.ptr, _src->get_total_bytes(), cudaHostRegisterPortable);
+    cudaError_t _err = cudaHostRegister(_src->Vec.GetRawPtr(), _src->get_total_bytes(), cudaHostRegisterPortable);
     if (_err != cudaSuccess) {
         if (_err == cudaErrorHostMemoryAlreadyRegistered) {
             decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_HOST_MEM_REGISTERED, HOST_MEM_REGISTERED);
@@ -266,7 +261,7 @@ _DECX_API_ de::DH de::cuda::UnpinMemory(de::Vector& src)
     de::DH handle;
 
     decx::_Vector* _src = dynamic_cast<decx::_Vector*>(&src);
-    cudaError_t _err = cudaHostUnregister(_src->Vec.ptr);
+    cudaError_t _err = cudaHostUnregister(_src->Vec.GetRawPtr());
 
     if (_err != cudaSuccess) {
         if (_err == cudaErrorHostMemoryNotRegistered) {

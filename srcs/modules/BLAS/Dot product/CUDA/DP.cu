@@ -57,7 +57,6 @@ namespace blas
 }
 
 
-
 static void decx::blas::_vector_dot_caller(decx::_Vector* A, decx::_Vector* B, de::Number* res, de::DH* handle, const uint32_t _fp16_accu, const uint32_t _stream_id)
 {
     if (A->Type() == de::_DATA_TYPES_FLAGS_::_FP32_) {

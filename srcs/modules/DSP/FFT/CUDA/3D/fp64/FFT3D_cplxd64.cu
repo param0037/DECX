@@ -42,7 +42,7 @@ template <typename _type_in>
 void decx::dsp::fft::_cuda_FFT3D_planner<double>::Forward(decx::_GPU_Tensor* src, decx::_GPU_Tensor* dst, decx::cuda_stream* S) const
 {
     decx::utils::double_buffer_manager double_buffer(this->get_tmp1_ptr<void>(), this->get_tmp2_ptr<void>());
-    double_buffer.reset_buffer1_leading();
+    double_buffer.ResetBuf1AsLeading();
 
     // Along H
     decx::dsp::fft::FFT2D_cplxd_1st_1way_caller<_type_in, false>(src->Tens.ptr, &double_buffer, 
@@ -52,11 +52,11 @@ void decx::dsp::fft::_cuda_FFT3D_planner<double>::Forward(decx::_GPU_Tensor* src
     const decx::dsp::fft::_cuda_FFT3D_mid_config* _along_W = this->get_midFFT_info();
 #if _CUDA_FFT3D_restrict_coalesce_
     if (this->_sync_dpitchdst_needed) {
-        checkCudaErrors(cudaMemcpy2DAsync(double_buffer.get_lagging_ptr<void>(),    _along_W->_1way_FFT_conf._pitchsrc * sizeof(de::CPd),
-                                          double_buffer.get_leading_ptr<void>(),    src->get_layout().dpitch * sizeof(de::CPd),
+        checkCudaErrors(cudaMemcpy2DAsync(double_buffer.GetLaggingBufPtr<void>(),    _along_W->_1way_FFT_conf._pitchsrc * sizeof(de::CPd),
+                                          double_buffer.GetLeadingBufPtr<void>(),    src->get_layout().dpitch * sizeof(de::CPd),
                                           this->_signal_dims.x * sizeof(de::CPf),   src->get_layout().wpitch * src->Height(),
                                           cudaMemcpyDeviceToDevice,                 S->get_raw_stream_ref()));
-        double_buffer.update_states();
+        double_buffer.UpdateStatus();
     }
 #endif
 
@@ -65,17 +65,17 @@ void decx::dsp::fft::_cuda_FFT3D_planner<double>::Forward(decx::_GPU_Tensor* src
     // Along D
     const decx::dsp::fft::_FFT2D_1way_config* _along_D = this->get_FFT_info(decx::dsp::fft::_FFT_AlongD);
 
-    decx::blas::transpose2D_b16(double_buffer.get_leading_ptr<double2>(), 
-                             double_buffer.get_lagging_ptr<double2>(),
+    decx::blas::transpose2D_b16(double_buffer.GetLeadingBufPtr<double2>(), 
+                             double_buffer.GetLaggingBufPtr<double2>(),
                              make_uint2(_along_D->_pitchtmp, _along_D->get_signal_len()),
                              _along_W->_1way_FFT_conf._pitchdst, 
                              _along_D->_pitchsrc, 
                              S);
-    double_buffer.update_states();
+    double_buffer.UpdateStatus();
     
     decx::dsp::fft::FFT2D_C2C_cplxd_1way_caller<_FFT2D_END_(de::CPd)>(&double_buffer, _along_D, S);
 
-    decx::blas::transpose2D_b16(double_buffer.get_leading_ptr<double2>(), 
+    decx::blas::transpose2D_b16(double_buffer.GetLeadingBufPtr<double2>(), 
                              (double2*)dst->Tens.ptr,
                              make_uint2(dst->Depth(), _along_D->_pitchtmp),
                              _along_D->_pitchdst, 
@@ -92,7 +92,7 @@ template <typename _type_out>
 void decx::dsp::fft::_cuda_FFT3D_planner<double>::Inverse(decx::_GPU_Tensor* src, decx::_GPU_Tensor* dst, decx::cuda_stream* S) const
 {
     decx::utils::double_buffer_manager double_buffer(this->get_tmp1_ptr<void>(), this->get_tmp2_ptr<void>());
-    double_buffer.reset_buffer1_leading();
+    double_buffer.ResetBuf1AsLeading();
 
     // Along H
     decx::dsp::fft::FFT2D_cplxd_1st_1way_caller<de::CPd, true>(src->Tens.ptr, &double_buffer, 
@@ -101,11 +101,11 @@ void decx::dsp::fft::_cuda_FFT3D_planner<double>::Inverse(decx::_GPU_Tensor* src
     // Along W
 #if _CUDA_FFT3D_restrict_coalesce_
     if (this->_sync_dpitchdst_needed) {
-        checkCudaErrors(cudaMemcpy2DAsync(double_buffer.get_lagging_ptr<void>(),    this->_FFT_W._1way_FFT_conf._pitchsrc * sizeof(de::CPd),
-                                          double_buffer.get_leading_ptr<void>(),    src->get_layout().dpitch * sizeof(de::CPd),
+        checkCudaErrors(cudaMemcpy2DAsync(double_buffer.GetLaggingBufPtr<void>(),    this->_FFT_W._1way_FFT_conf._pitchsrc * sizeof(de::CPd),
+                                          double_buffer.GetLeadingBufPtr<void>(),    src->get_layout().dpitch * sizeof(de::CPd),
                                           this->_signal_dims.x * sizeof(de::CPf),   src->get_layout().wpitch * src->Height(),
                                           cudaMemcpyDeviceToDevice,                 S->get_raw_stream_ref()));
-        double_buffer.update_states();
+        double_buffer.UpdateStatus();
     }
 #endif
 
@@ -114,32 +114,32 @@ void decx::dsp::fft::_cuda_FFT3D_planner<double>::Inverse(decx::_GPU_Tensor* src
 
     // Along D
     const decx::dsp::fft::_FFT2D_1way_config* _along_D = this->get_FFT_info(decx::dsp::fft::_FFT_AlongD);
-    decx::blas::transpose2D_b16(double_buffer.get_leading_ptr<double2>(), 
-                             double_buffer.get_lagging_ptr<double2>(),
+    decx::blas::transpose2D_b16(double_buffer.GetLeadingBufPtr<double2>(), 
+                             double_buffer.GetLaggingBufPtr<double2>(),
                              make_uint2(_along_D->_pitchtmp, _along_D->get_signal_len()),
                              _along_W->_1way_FFT_conf._pitchdst, 
                              _along_D->_pitchsrc, 
                              S);
-    double_buffer.update_states();
+    double_buffer.UpdateStatus();
     
     decx::dsp::fft::FFT2D_C2C_cplxd_1way_caller<_IFFT2D_END_(_type_out)>(&double_buffer, _along_D, S);
 
     if (std::is_same<_type_out, de::CPd>::value){
-        decx::blas::transpose2D_b16(double_buffer.get_leading_ptr<double2>(), 
+        decx::blas::transpose2D_b16(double_buffer.GetLeadingBufPtr<double2>(), 
                                  (double2*)dst->Tens.ptr,
                                  make_uint2(dst->Depth(), _along_D->_pitchtmp),
                                  _along_D->_pitchdst, 
                                  dst->get_layout().dpitch, S);
     }
     else if (std::is_same<_type_out, uint8_t>::value) {
-        decx::blas::transpose2D_b1(double_buffer.get_leading_ptr<uint32_t>(), 
+        decx::blas::transpose2D_b1(double_buffer.GetLeadingBufPtr<uint32_t>(), 
                                  (uint32_t*)dst->Tens.ptr,
                                  make_uint2(dst->Depth(), _along_D->_pitchtmp),
                                  _along_D->_pitchdst * 8, 
                                  dst->get_layout().dpitch, S);
     }
     else if (std::is_same<_type_out, double>::value){
-        decx::blas::transpose2D_b8(double_buffer.get_leading_ptr<double2>(), 
+        decx::blas::transpose2D_b8(double_buffer.GetLeadingBufPtr<double2>(), 
                                  (double2*)dst->Tens.ptr,
                                  make_uint2(dst->Depth(), _along_D->_pitchtmp),
                                  _along_D->_pitchdst * 2, 

@@ -36,7 +36,7 @@
 #include "reduce_sum.cuh"
 #include "reduce_cmp.cuh"
 #include <Classes/classes_util.h>
-
+#include <double_buffer.h>
 
 /**
 * To perform parallel reduction, ping-pong buffers are required when there are
@@ -181,12 +181,13 @@ class decx::reduce::cuda_reduce1D_configs
 {
 private:
     decx::PtrInfo<void> _d_tmp1, _d_tmp2;
+    decx::utils::double_buffer_manager _pp_buffers;
 
     _type_in _fill_val;
 
     uint64_t _actual_len;
 
-    decx::alloc::MIF<void> _MIF_tmp1, _MIF_tmp2;
+    // decx::alloc::MIF<void> _MIF_tmp1, _MIF_tmp2;
 
     std::vector<decx::reduce::RWPK_1D<_type_in>> _rwpks;
 
@@ -208,11 +209,12 @@ private:
 
     bool _remain_load_byte;
 
-    void inverse_mutex_MIF_states();
-
     // to private
-    decx::alloc::MIF<void> get_leading_MIF() const;
-    decx::alloc::MIF<void> get_lagging_MIF() const;
+    // decx::alloc::MIF<void> get_leading_MIF() const;
+    // decx::alloc::MIF<void> get_lagging_MIF() const;
+
+    void* GetLeadingBuf();
+    void* GetLaggingBuf();
 
 public:
     cuda_reduce1D_configs();
@@ -242,29 +244,29 @@ public:
     void generate_configs(decx::PtrInfo<void> dev_src, const uint64_t proc_len_v1, decx::cuda_stream* S);
 
 
-    uint64_t get_actual_len() const;
+    uint64_t GetActualLength() const;
 
 
-    void set_fill_val(const _type_in _val);
+    void SetPaddingValue(const _type_in _val);
 
     
-    _type_in get_fill_val() const;
+    _type_in GetPaddingValue() const;
 
 
-    void* get_src();
-    const void* get_dst();
+    void* GetInputAddr();
+    const void* GetOutputAddr();
 
-    std::vector<decx::reduce::RWPK_1D<_type_in>>& get_rwpk();
-    decx::reduce::RWPK_2D& get_rwpk_flatten();
-
-
-    void release_buffer();
+    std::vector<decx::reduce::RWPK_1D<_type_in>>& GetRWPK();
+    decx::reduce::RWPK_2D& GetRWPKFlatten();
 
 
-    void set_fp16_accuracy(const uint32_t _accu_lv);
+    void ReleaseBuffer();
 
 
-    void set_cmp_or_not(const bool _is_cmp);
+    void SetFp16Accuracy(const uint32_t _accu_lv);
+
+
+    void CMP(const bool _is_cmp);
 
 
     ~cuda_reduce1D_configs();
@@ -311,18 +313,17 @@ private:
 
     uint2 _proc_dims_actual;
     
-
     uint32_t _kernel_call_times;
 
-    decx::alloc::MIF<void> _MIF_tmp1, _MIF_tmp2;
+    decx::utils::double_buffer_manager _pp_buffer;
 
     std::vector<decx::reduce::RWPK_2D> _rwpks;
 
     template <bool _src_from_device>
-    void _calc_kernel_h_param_packs(const bool _is_cmp = false);
+    void CalcDPH_KernelParams(const bool _is_cmp = false);
 
     template <bool _src_from_device>
-    void _calc_kernel_v_param_packs(const bool _is_cmp = false);
+    void CalcDPV_KernelParams(const bool _is_cmp = false);
 
     bool _remain_load_byte;
 
@@ -330,19 +331,16 @@ private:
     void* _proc_dst;
 
     // to private
-    decx::Ptr2D_Info<void> get_dtmp1() const;
+    decx::Ptr2D_Info<void>& get_dtmp1();
     // to private
-    decx::Ptr2D_Info<void> get_dtmp2() const;
+    decx::Ptr2D_Info<void>& get_dtmp2();
 
     // to private
     uint2 get_actual_proc_dims() const;
 
     // to private
-    void* get_leading_ptr() const;
-    void* get_lagging_ptr() const;
-
-    // to private
-    void reverse_MIF_states();
+    void* GetLeadingBufPtr();
+    void* GetLaggingBufPtr();
 
 public:
     cuda_reduce2D_1way_configs() {}
@@ -363,20 +361,20 @@ public:
 
 
 
-    decx::Ptr2D_Info<void> get_src() const;
-    void* get_dst() const;
+    decx::Ptr2D_Info<void> GetInputAddr() const;
+    void* GetOutputAddr() const;
 
 
-    const std::vector<decx::reduce::cu_reduce2D_1way_param_pack>& get_rwpks() const;
+    const std::vector<decx::reduce::cu_reduce2D_1way_param_pack>& GetRWPKs() const;
 
 
-    void set_cmp_or_not(const bool _is_cmp);
+    void CMP(const bool _is_cmp);
     
 
-    void set_fp16_accuracy(const uint32_t _fp16_accu);
+    void SetFp16Accuracy(const uint32_t _fp16_accu);
 
 
-    void release_buffer();
+    void ReleaseBuffer();
 
 
     template <bool _is>

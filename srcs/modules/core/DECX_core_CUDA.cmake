@@ -35,8 +35,6 @@ file(GLOB_RECURSE   DTR     "${DECX_WORLD_ABS_DIR}/srcs/modules/core/data transm
 file(GLOB_RECURSE   CONFIGS "${DECX_WORLD_ABS_DIR}/srcs/modules/core/configs/*.cu")
 file(GLOB           FP16    "${DECX_WORLD_ABS_DIR}/srcs/common/FP16/*.cu")
 
-add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/modules/core/allocators/CUDA" 
-                 "${DECX_SUBBUILD_BIN_DIR}/allocators_CUDA")
 
 # Specify the link directory
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
@@ -46,6 +44,7 @@ else()
     message(${LIBRARY_OUTPUT_PATH})
 endif()
 
+add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/modules/core/memory_management/CUDA" "${DECX_SUBBUILD_BIN_DIR}/modules/core/mempool_CUDA")
 
 add_library(${PROJECT_NAME} SHARED ${CORE} ${ALLOC} ${CLASSES} ${CUSE} ${DTR} ${CONFIGS} ${FP16})
 
@@ -53,8 +52,7 @@ add_library(${PROJECT_NAME} SHARED ${CORE} ${ALLOC} ${CLASSES} ${CUSE} ${DTR} ${
 set_target_properties(DECX_core_CUDA PROPERTIES CUDA_ARCHITECTURES ${CUDA_TARGET_ARCH})
 set_target_properties(DECX_core_CUDA PROPERTIES CUDA_RESOLVE_DEVICE_SYMBOLS ON)
 
-
-target_link_libraries(DECX_core_CUDA PRIVATE allocators_CUDA)
+target_link_libraries(DECX_core_CUDA PRIVATE mempool_CUDA)
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     target_link_libraries(DECX_core_CUDA PUBLIC DECX_core_CPU.lib)

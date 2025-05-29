@@ -67,7 +67,7 @@ namespace de
         Vector
     {
     protected:
-        _SHADOW_ATTRIBUTE_(void*) _exp_data_ptr;
+        void* _exp_data_ptr;
 
     public:
         Vector() {}
@@ -79,7 +79,7 @@ namespace de
         template <typename _ptr_type>
         _ptr_type* ptr(const uint64_t _idx)
         {
-            return ((_ptr_type*)*this->_exp_data_ptr) + _idx;
+            return ((_ptr_type*)this->_exp_data_ptr) + _idx;
         }
 
 
@@ -129,7 +129,6 @@ namespace decx
         bool _init;
 
     public:
-        //int _store_type;        // host locked or host virtual-paged
         size_t length,
             _length,    // It is aligned with 8
             total_bytes;
@@ -137,8 +136,7 @@ namespace decx
         de::_DATA_TYPES_FLAGS_ type;
         uint8_t _single_element_size;
 
-        
-
+    
         decx::PtrInfo<void> Vec;
 
 

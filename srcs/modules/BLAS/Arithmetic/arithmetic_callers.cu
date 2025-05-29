@@ -61,9 +61,9 @@ mat_arithmetic_caller_VVO(const decx::_GPU_Matrix*  A,
         _planner.plan(proc_len_flatten_v1, sizeof(float), sizeof(float));
         // Call the kernel
         _planner.caller_binary((arithmetic_kernels_1D_VVO<float, float, float>*)_kernel_ptr,
-                               (float*)A->Mat.ptr, 
-                               (float*)B->Mat.ptr, 
-                               (float*)dst->Mat.ptr,
+                               (float*)A->Mat, 
+                               (float*)B->Mat, 
+                               dst->Mat.GetRawPtr<float>(),
                                S);
         break;
     
@@ -73,9 +73,9 @@ mat_arithmetic_caller_VVO(const decx::_GPU_Matrix*  A,
         _planner.plan(proc_len_flatten_v1, sizeof(double), sizeof(double));
 
         _planner.caller_binary((arithmetic_kernels_1D_VVO<double, double, double>*)_kernel_ptr,
-                               (double*)A->Mat.ptr, 
-                               (double*)B->Mat.ptr, 
-                               (double*)dst->Mat.ptr,
+                               (double*)A->Mat, 
+                               (double*)B->Mat, 
+                               dst->Mat.GetRawPtr<double>(),
                                S);
         break;
 
@@ -112,8 +112,8 @@ mat_arithmetic_caller_VO(const decx::_GPU_Matrix*   src,
         _planner.plan(proc_len_flatten_v1, sizeof(float), sizeof(float));
 
         _planner.caller_unary((arithmetic_kernels_1D_VO<float, float>*)_kernel_ptr,
-                              (float*)src->Mat.ptr, 
-                              (float*)dst->Mat.ptr,
+                              (const float*)src->Mat, 
+                              (float*)dst->Mat,
                               S);
         break;
     
@@ -123,8 +123,8 @@ mat_arithmetic_caller_VO(const decx::_GPU_Matrix*   src,
         _planner.plan(proc_len_flatten_v1, sizeof(double), sizeof(double));
 
         _planner.caller_unary((arithmetic_kernels_1D_VO<double, double>*)_kernel_ptr,
-                              (double*)src->Mat.ptr, 
-                              (double*)dst->Mat.ptr,
+                              (const double*)src->Mat, 
+                              (double*)dst->Mat,
                               S);
         break;
 

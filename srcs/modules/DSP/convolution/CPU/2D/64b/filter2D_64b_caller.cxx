@@ -60,8 +60,8 @@ filter2D_NB_64b(decx::_Matrix* src,
     double* dst_loc = NULL;
     for (uint32_t i = 0; i < t2D->thread_h; ++i)
     {
-        src_loc = (double*)src->Mat.ptr + i * _thread_blocking_conf._fmgrH.frag_len * src->Pitch();
-        dst_loc = (double*)dst->Mat.ptr + i * _thread_blocking_conf._fmgrH.frag_len * dst->Pitch();
+        src_loc = src->Mat.GetRawPtr<double>() + i * _thread_blocking_conf._fmgrH.frag_len * src->Pitch();
+        dst_loc = dst->Mat.GetRawPtr<double>() + i * _thread_blocking_conf._fmgrH.frag_len * dst->Pitch();
 
         for (uint32_t j = 0; j < t2D->thread_w; ++j)
         {
@@ -92,7 +92,7 @@ decx::dsp::cpu_Filter2D_planner<double>::filter2D_B_64b(decx::_Matrix* src,
     decx::dsp::CPUK::conv2_B_kernel_64b* _kernel_ptr = NULL;
 
     if (this->_padding_method == de::extend_label::_EXTEND_CONSTANT_) {
-        decx::bp::_extend_constant_b64_2D((double*)src->Mat.ptr,         (double*)this->_ext_src._ptr.ptr, 0,
+        decx::bp::_extend_constant_b64_2D(src->Mat.GetRawPtr<double>(),         (double*)this->_ext_src._ptr.ptr, 0,
                                           make_uint4(this->_layout_kernel.width >> 1, this->_layout_kernel.width >> 1, 0, 0), 
                                           this->_layout_src.pitch,      this->_ext_src._dims.x, 
                                           this->_layout_src.width,      this->_layout_src.height, NULL);
@@ -109,7 +109,7 @@ decx::dsp::cpu_Filter2D_planner<double>::filter2D_B_64b(decx::_Matrix* src,
         }
     }
     else {
-        decx::bp::_extend_reflect_b64_2D((double*)src->Mat.ptr,          (double*)this->_ext_src._ptr.ptr,
+        decx::bp::_extend_reflect_b64_2D(src->Mat.GetRawPtr<double>(),          (double*)this->_ext_src._ptr.ptr,
                                           make_uint4(this->_layout_kernel.width >> 1, this->_layout_kernel.width >> 1, 0, 0), 
                                           this->_layout_src.pitch,      this->_ext_src._dims.x, 
                                           this->_layout_src.width,      this->_layout_src.height, NULL);
@@ -133,7 +133,7 @@ decx::dsp::cpu_Filter2D_planner<double>::filter2D_B_64b(decx::_Matrix* src,
     for (uint32_t i = 0; i < t2D->thread_h; ++i)
     {
         src_loc = (double*)this->_ext_src._ptr.ptr;
-        dst_loc = (double*)dst->Mat.ptr + _start_row_id * dst->Pitch();
+        dst_loc = dst->Mat.GetRawPtr<double>() + _start_row_id * dst->Pitch();
 
         for (uint32_t j = 0; j < t2D->thread_w; ++j)
         {

@@ -118,16 +118,16 @@ public:
     int get_scan_mode() const;
 
 
-    void* get_raw_dev_ptr_src() const;
+    void* GetSrcPtr() const;
 
-    void* get_raw_dev_ptr_dst() const;
+    void* GetDstPtr() const;
 
-    void* get_raw_dev_ptr_status() const;
+    void* GetStatusPtr() const;
 
-    void* get_raw_dev_ptr_tmp() const;
+    void* GetTmpPtr() const;
 
     template <typename _src_type>
-    void release_buffer(const bool _have_dev_classes);
+    void ReleaseBuffer(const bool _have_dev_classes);
 };
 
 
@@ -216,14 +216,14 @@ public:
 
     int get_scan_mode() const;
 
-    decx::Ptr2D_Info<void> get_raw_dev_ptr_src() const;
+    decx::Ptr2D_Info<void> GetSrcPtr() const;
 
-    decx::Ptr2D_Info<void> get_raw_dev_ptr_dst() const;
+    decx::Ptr2D_Info<void> GetDstPtr() const;
 
-    decx::PtrInfo<void> get_raw_dev_ptr_status() const;
+    decx::PtrInfo<void> GetStatusPtr() const;
 
 
-    decx::Ptr2D_Info<void> get_raw_dev_ptr_tmp() const;
+    decx::Ptr2D_Info<void> GetTmpPtr() const;
 
     dim3 get_scan_h_grid() const;
 
@@ -233,5 +233,5 @@ public:
     /*
     * @param : _refer_dev_classes : Do dev_src and dev_dst refer to exsiting classes (from users)
     */
-    void release_buffer(const bool _refer_dev_classes);
+    void ReleaseBuffer(const bool _refer_dev_classes);
 };

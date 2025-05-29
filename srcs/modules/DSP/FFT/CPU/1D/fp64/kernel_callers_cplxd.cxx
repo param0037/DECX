@@ -165,26 +165,26 @@ decx::dsp::fft::CPUK::_FFT1D_smaller_1st_cplxd64(const _type_in* __restrict					
 															_tiles->get_tile2<de::CPd>(),
 															_FFT_info->get_kernel_info_ptr(0));
 		}
-		_double_buffer.reset_buffer2_leading();
+		_double_buffer.ResetBuf2AsLeading();
 
 		for (uint32_t i = 1; i < _FFT_info->get_kernel_call_num(); ++i) {
-			decx::dsp::fft::CPUK::_FFT1D_caller_cplxd64_mid_C2C(_double_buffer.get_leading_ptr<de::CPd>(), 
-																_double_buffer.get_lagging_ptr<de::CPd>(),
+			decx::dsp::fft::CPUK::_FFT1D_caller_cplxd64_mid_C2C(_double_buffer.GetLeadingBufPtr<de::CPd>(), 
+																_double_buffer.GetLaggingBufPtr<de::CPd>(),
 																_FFT_info->get_W_table<de::CPd>(), 
 																_FFT_info->get_kernel_info_ptr(i));
 
-			_double_buffer.update_states();
+			_double_buffer.UpdateStatus();
 		}
 
 		if (_Twd_info != NULL) 
 		{
-			decx::dsp::fft::CPUK::_FFT1D_Twd_smaller_kernels_v2_1st(_double_buffer.get_leading_ptr<double>(),
-																	_double_buffer.get_lagging_ptr<double>(),
+			decx::dsp::fft::CPUK::_FFT1D_Twd_smaller_kernels_v2_1st(_double_buffer.GetLeadingBufPtr<double>(),
+																	_double_buffer.GetLaggingBufPtr<double>(),
 																	_FFT_info->get_signal_len(),
 																	_call_time_base,
 																	_Twd_info);
 
-			_double_buffer.update_states();
+			_double_buffer.UpdateStatus();
 		}
 
 		if (_call_times < FFT_call_times_v2 - 1 || _L_v2 == 0) {
@@ -251,40 +251,40 @@ decx::dsp::fft::CPUK::_FFT1D_smaller_mid_cplxd64_C2C(const de::CPd* __restrict		
 																(de::CPd*)_tmp2_ptr, 
 																_FFT_info->get_kernel_info_ptr(0));
 
-			_double_buffer.reset_buffer2_leading();
+			_double_buffer.ResetBuf2AsLeading();
 
 			for (uint32_t i = 1; i < _FFT_info->get_kernel_call_num(); ++i) {
-				decx::dsp::fft::CPUK::_FFT1D_caller_cplxd64_mid_C2C(_double_buffer.get_leading_ptr<de::CPd>(), 
-																	_double_buffer.get_lagging_ptr<de::CPd>(), 
+				decx::dsp::fft::CPUK::_FFT1D_caller_cplxd64_mid_C2C(_double_buffer.GetLeadingBufPtr<de::CPd>(), 
+																	_double_buffer.GetLaggingBufPtr<de::CPd>(), 
 																	_FFT_info->get_W_table<de::CPd>(), 
 																	_FFT_info->get_kernel_info_ptr(i));
 
-				_double_buffer.update_states();
+				_double_buffer.UpdateStatus();
 			}
 
 			if (_Twd_info != NULL) {
-				decx::dsp::fft::CPUK::_FFT1D_Twd_smaller_kernels_v2_mid(_double_buffer.get_leading_ptr<de::CPd>(),
-																		_double_buffer.get_lagging_ptr<de::CPd>(),
+				decx::dsp::fft::CPUK::_FFT1D_Twd_smaller_kernels_v2_mid(_double_buffer.GetLeadingBufPtr<de::CPd>(),
+																		_double_buffer.GetLaggingBufPtr<de::CPd>(),
 																		_FFT_info->get_signal_len(),
 																		_call_times_in_warp,
 																		_global_kernel_info->_warp_proc_len * _warp_id + FFT_call_time_start_v1,
 																		_global_kernel_info->_store_pitch,
 																		_Twd_info);
 
-				_double_buffer.update_states();
+				_double_buffer.UpdateStatus();
 			}
 #if __cplusplus >= 201703L
 			if constexpr (std::is_same_v<_type_out, de::CPd>){
 #else
 			if (std::is_same<_type_out, de::CPd>::value) {
 #endif
-				decx::dsp::fft::CPUK::_store_fragment_to_DRAM_cplxd<_conj>(_double_buffer.get_leading_ptr<de::CPd>(), (de::CPd*)_dst_start_ptr, 
+				decx::dsp::fft::CPUK::_store_fragment_to_DRAM_cplxd<_conj>(_double_buffer.GetLeadingBufPtr<de::CPd>(), (de::CPd*)_dst_start_ptr, 
 																		   _call_times_in_warp,						 FFT_call_times_v2, 
 																		   _L_v2,									 _global_kernel_info, 
 																		   _FFT_info->get_signal_len());
 			}
 			else {
-				decx::dsp::fft::CPUK::_store_fragment_to_DRAM_cplxd_fp64(_double_buffer.get_leading_ptr<de::CPd>(), (double*)_dst_start_ptr, 
+				decx::dsp::fft::CPUK::_store_fragment_to_DRAM_cplxd_fp64(_double_buffer.GetLeadingBufPtr<de::CPd>(), (double*)_dst_start_ptr, 
 																	   _call_times_in_warp,							FFT_call_times_v2, 
 																	   _L_v2,										_global_kernel_info, 
 																	   _FFT_info->get_signal_len());

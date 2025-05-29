@@ -35,7 +35,6 @@
 #include <thread_management/thread_arrange.h>
 #include <double_buffer.h>
 #include "../common/eig_bisect_interval.h"
-#include <allocators.h>
 #include <Element_wise/common/cpu_element_wise_planner.h>
 #include <Algorithms/reduce/CPU/cpu_reduce_planner.h>
 

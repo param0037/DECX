@@ -29,7 +29,9 @@
 */
 
 
-#include "../../../common/Classes/Matrix.h"
+#include <Classes/Matrix.h>
+#define MODULE_TAG "Matrix"
+#include <log_console.h>
 
 
 void decx::_matrix_layout::
@@ -64,22 +66,17 @@ _attribute_assign(const de::_DATA_TYPES_FLAGS_ type, const uint32_t _width, cons
 }
 
 
-
-
 void decx::_Matrix::alloc_data_space()
 {
-    if (decx::alloc::_host_virtual_page_malloc<void>(&this->Mat, this->total_bytes)) {
-        
+    if (this->Mat.Allocate(this->total_bytes, PAGABLE)) {
         return;
     }
 }
 
 
-
 void decx::_Matrix::re_alloc_data_space()
 {
-    if (decx::alloc::_host_virtual_page_realloc<void>(&this->Mat, this->total_bytes)) {
-        
+    if (this->Mat.Reallocate(this->total_bytes)) {
         return;
     }
 }
@@ -125,7 +122,6 @@ void decx::_Matrix::construct(const de::_DATA_TYPES_FLAGS_ type, uint32_t _width
 }
 
 
-
 void decx::_Matrix::re_construct(const de::_DATA_TYPES_FLAGS_ type, uint32_t _width, uint32_t _height)
 {
     // If all the parameters are the same, it is meaningless to re-construt the data
@@ -137,12 +133,12 @@ void decx::_Matrix::re_construct(const de::_DATA_TYPES_FLAGS_ type, uint32_t _wi
 
         if (this->total_bytes > pre_size) {
             // deallocate according to the current memory pool first
-            decx::alloc::_host_virtual_page_dealloc(&this->Mat);
+            this->Mat.Free();
             this->alloc_data_space();
         }
+        this->_exp_data_ptr = this->Mat.GetRawPtr();
     }
 }
-
 
 
 void decx::_Matrix::_attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, const uint32_t _width, const uint32_t _height)
@@ -159,30 +155,28 @@ void decx::_Matrix::_attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, const 
 }
 
 
-
-
 void decx::_Matrix::release()
 {
-    decx::alloc::_host_virtual_page_dealloc(&this->Mat);
+    this->Mat.Free();
+    this->_exp_data_ptr = nullptr;
 }
 
 
 decx::_Matrix::_Matrix()
 {
-    this->_exp_data_ptr = &this->Mat.ptr;
     this->_matrix_dscr = &this->_layout;
     this->_attribute_assign(de::_DATA_TYPES_FLAGS_::_VOID_, 0, 0);
     this->_init = false;
+    this->_exp_data_ptr = this->Mat.GetRawPtr();
 }
-
 
 
 decx::_Matrix::_Matrix(const de::_DATA_TYPES_FLAGS_ type, const uint32_t _width, const uint32_t _height,
     de::_DATA_FORMATS_ format)
 {
-    this->_exp_data_ptr = &this->Mat.ptr;
     this->_matrix_dscr = &this->_layout;
     this->construct(type, _width, _height, format);
+    this->_exp_data_ptr = this->Mat.GetRawPtr();
 }
 
 
@@ -199,8 +193,9 @@ uint32_t decx::_Matrix::Height() const
 
 decx::_Matrix::~_Matrix()
 {
-    if (this->Mat.ptr != NULL) {
+    if (this->Mat.IsValid()) {
         this->release();
+        this->_exp_data_ptr = nullptr;
     }
 }
 
@@ -233,11 +228,10 @@ de::Matrix& decx::_Matrix::SoftCopy(de::Matrix& src)
 {
     const decx::_Matrix& ref_src = dynamic_cast<decx::_Matrix&>(src);
 
-    this->Mat.block = ref_src.Mat.block;
-
     this->_attribute_assign(ref_src.type, ref_src._layout.width, ref_src._layout.height);
-
-    decx::alloc::_host_virtual_page_malloc_same_place(&this->Mat);
+    this->Mat = ref_src.Mat;
+    this->Mat.AllocateRef();
+    this->_exp_data_ptr = this->Mat.GetRawPtr();
 
     return *this;
 }

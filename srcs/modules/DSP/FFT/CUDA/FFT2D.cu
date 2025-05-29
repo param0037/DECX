@@ -63,7 +63,7 @@ static void decx::dsp::fft::_FFT2D_caller_cplxf(decx::_GPU_Matrix* src, decx::_G
 {
     if (decx::dsp::fft::cuda_FFT2D_cplxf32_planner._res_ptr == NULL) {
         decx::dsp::fft::cuda_FFT2D_cplxf32_planner.RegisterResource(new decx::dsp::fft::_cuda_FFT2D_planner<float>,
-            5, &decx::dsp::fft::_cuda_FFT2D_planner<float>::release_buffers);
+            5, &decx::dsp::fft::_cuda_FFT2D_planner<float>::ReleaseBuffers);
     }
 
     decx::dsp::fft::cuda_FFT2D_cplxf32_planner.lock();
@@ -95,7 +95,7 @@ static void decx::dsp::fft::_FFT2D_caller_cplxd(decx::_GPU_Matrix* src, decx::_G
 {
     if (decx::dsp::fft::cuda_FFT2D_cplxd64_planner._res_ptr == NULL) {
         decx::dsp::fft::cuda_FFT2D_cplxd64_planner.RegisterResource(new decx::dsp::fft::_cuda_FFT2D_planner<double>,
-            5, &decx::dsp::fft::_cuda_FFT2D_planner<double>::release_buffers);
+            5, &decx::dsp::fft::_cuda_FFT2D_planner<double>::ReleaseBuffers);
     }
 
     decx::dsp::fft::cuda_FFT2D_cplxd64_planner.lock();
@@ -121,7 +121,7 @@ static void decx::dsp::fft::_IFFT2D_caller_cplxf(decx::_GPU_Matrix* src, decx::_
 {
     if (decx::dsp::fft::cuda_IFFT2D_cplxf32_planner._res_ptr == NULL) {
         decx::dsp::fft::cuda_IFFT2D_cplxf32_planner.RegisterResource(new decx::dsp::fft::_cuda_FFT2D_planner<float>,
-            5, &decx::dsp::fft::_cuda_FFT2D_planner<float>::release_buffers);
+            5, &decx::dsp::fft::_cuda_FFT2D_planner<float>::ReleaseBuffers);
     }
 
     decx::dsp::fft::cuda_IFFT2D_cplxf32_planner.lock();
@@ -147,7 +147,7 @@ static void decx::dsp::fft::_IFFT2D_caller_cplxd(decx::_GPU_Matrix* src, decx::_
 {
     if (decx::dsp::fft::cuda_IFFT2D_cplxd64_planner._res_ptr == NULL) {
         decx::dsp::fft::cuda_IFFT2D_cplxd64_planner.RegisterResource(new decx::dsp::fft::_cuda_FFT2D_planner<double>,
-            5, &decx::dsp::fft::_cuda_FFT2D_planner<double>::release_buffers);
+            5, &decx::dsp::fft::_cuda_FFT2D_planner<double>::ReleaseBuffers);
     }
 
     decx::dsp::fft::cuda_IFFT2D_cplxd64_planner.lock();

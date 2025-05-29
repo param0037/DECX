@@ -221,7 +221,7 @@ template void* decx::dsp::fft::cpu_FFT1D_planner<double>::get_tmp1_ptr() const;
 
 
 template <typename _data_type>
-void decx::dsp::fft::cpu_FFT1D_planner<_data_type>::release_buffers(decx::dsp::fft::cpu_FFT1D_planner<_data_type>* _fake_this)
+void decx::dsp::fft::cpu_FFT1D_planner<_data_type>::ReleaseBuffers(decx::dsp::fft::cpu_FFT1D_planner<_data_type>* _fake_this)
 {
     for (uint32_t i = 0; i < _fake_this->_tiles.size(); ++i) {
         _fake_this->_tiles[i].release();
@@ -235,15 +235,15 @@ void decx::dsp::fft::cpu_FFT1D_planner<_data_type>::release_buffers(decx::dsp::f
     decx::alloc::_host_virtual_page_dealloc(&_fake_this->_tmp2);
 }
 
-template void decx::dsp::fft::cpu_FFT1D_planner<float>::release_buffers(decx::dsp::fft::cpu_FFT1D_planner<float>*);
-template void decx::dsp::fft::cpu_FFT1D_planner<double>::release_buffers(decx::dsp::fft::cpu_FFT1D_planner<double>*);
+template void decx::dsp::fft::cpu_FFT1D_planner<float>::ReleaseBuffers(decx::dsp::fft::cpu_FFT1D_planner<float>*);
+template void decx::dsp::fft::cpu_FFT1D_planner<double>::ReleaseBuffers(decx::dsp::fft::cpu_FFT1D_planner<double>*);
 
 
 
 template <typename _data_type>
 decx::dsp::fft::cpu_FFT1D_planner<_data_type>::~cpu_FFT1D_planner()
 {
-    decx::dsp::fft::cpu_FFT1D_planner<_data_type>::release_buffers(this);
+    decx::dsp::fft::cpu_FFT1D_planner<_data_type>::ReleaseBuffers(this);
 }
 
 template decx::dsp::fft::cpu_FFT1D_planner<float>::~cpu_FFT1D_planner();

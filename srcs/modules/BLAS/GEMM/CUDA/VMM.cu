@@ -73,12 +73,12 @@ static void decx::blas::_VMM_caller_fp32(decx::_Vector* vec, decx::_Matrix* mat,
     decx::blas::generate_VMM_config_fp32<_is_reduce_h>(&_configs, make_uint2(mat->Width(), mat->Height()), S);
 
     // Copy matrix data
-    checkCudaErrors(cudaMemcpy2DAsync(_configs._dev_A.ptr,          _configs._dev_mat_dims.x * sizeof(float),
-                                      mat->Mat.ptr,                 mat->Pitch() * sizeof(float), 
+    checkCudaErrors(cudaMemcpy2DAsync((void*)_configs._dev_A,       _configs._dev_mat_dims.x * sizeof(float),
+                                      (void*)mat->Mat,              mat->Pitch() * sizeof(float), 
                                       mat->Width() * sizeof(float), mat->Height(), 
                                       cudaMemcpyHostToDevice,       S->get_raw_stream_ref()));
     // Copy vector data
-    checkCudaErrors(cudaMemcpyAsync(_configs._dev_B.ptr, vec->Vec.ptr, vec->Len() * sizeof(float), cudaMemcpyHostToDevice, S->get_raw_stream_ref()));
+    checkCudaErrors(cudaMemcpyAsync((void*)_configs._dev_B, (void*)vec->Vec, vec->Len() * sizeof(float), cudaMemcpyHostToDevice, S->get_raw_stream_ref()));
 
     const void* res_ptr = decx::_VMM_fp32_caller_async<_is_reduce_h>(&_configs, S);
     if (res_ptr == NULL) {
@@ -86,12 +86,12 @@ static void decx::blas::_VMM_caller_fp32(decx::_Vector* vec, decx::_Matrix* mat,
         return;
     }
     const uint64_t _cpy_size = (_is_reduce_h ? mat->Height() : mat->Width()) * sizeof(float);
-    checkCudaErrors(cudaMemcpyAsync(dst->Vec.ptr, res_ptr, _cpy_size, cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
+    checkCudaErrors(cudaMemcpyAsync((void*)dst->Vec, res_ptr, _cpy_size, cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
 
     E->event_record(S);
     E->synchronize();
 
-    _configs.release_buffer();
+    _configs.ReleaseBuffer();
 }
 
 
@@ -116,12 +116,12 @@ static void decx::blas::_VMM_caller_fp16(decx::_Vector* vec, decx::_Matrix* mat,
     decx::blas::generate_VMM_config_fp16<_is_reduce_h>(&_configs, make_uint2(mat->Width(), mat->Height()), S, _fp16_accu);
 
     // Copy matrix data
-    checkCudaErrors(cudaMemcpy2DAsync(_configs._dev_A.ptr,              _configs._dev_mat_dims.x * sizeof(de::Half),
-                                      mat->Mat.ptr,                     mat->Pitch() * sizeof(de::Half),
+    checkCudaErrors(cudaMemcpy2DAsync((void*)_configs._dev_A,           _configs._dev_mat_dims.x * sizeof(de::Half),
+                                      (void*)mat->Mat,                  mat->Pitch() * sizeof(de::Half),
                                       mat->Width() * sizeof(de::Half),  mat->Height(),
                                       cudaMemcpyHostToDevice,           S->get_raw_stream_ref()));
     // Copy vector data
-    checkCudaErrors(cudaMemcpyAsync(_configs._dev_B.ptr, vec->Vec.ptr, vec->Len() * sizeof(de::Half), cudaMemcpyHostToDevice, S->get_raw_stream_ref()));
+    checkCudaErrors(cudaMemcpyAsync((void*)_configs._dev_B, (void*)vec->Vec, vec->Len() * sizeof(de::Half), cudaMemcpyHostToDevice, S->get_raw_stream_ref()));
 
     const void* res_ptr = decx::_VMM_fp16_caller_async<_is_reduce_h>(&_configs, S, _fp16_accu);
     if (res_ptr == NULL) {
@@ -130,12 +130,12 @@ static void decx::blas::_VMM_caller_fp16(decx::_Vector* vec, decx::_Matrix* mat,
     }
     const uint64_t _cpy_size = (_is_reduce_h ? mat->Height() : mat->Width()) * 
         (_fp16_accu == decx::Fp16_Accuracy_Levels::Fp16_Accurate_L1 ? sizeof(float) : sizeof(de::Half));
-    checkCudaErrors(cudaMemcpyAsync(dst->Vec.ptr, res_ptr, _cpy_size, cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
+    checkCudaErrors(cudaMemcpyAsync((void*)dst->Vec, res_ptr, _cpy_size, cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
 
     E->event_record(S);
     E->synchronize();
 
-    _configs.release_buffer();
+    _configs.ReleaseBuffer();
 }
 
 

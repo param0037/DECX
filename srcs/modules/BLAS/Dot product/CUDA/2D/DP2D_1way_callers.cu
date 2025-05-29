@@ -38,13 +38,13 @@
 template <bool _is_reduce_h>
 const void* decx::blas::cuda_DP2D_1way_fp32_caller_Async(decx::blas::cuda_DP2D_configs<float>* _configs, decx::cuda_stream* S)
 {
-    const void* res_ptr = _configs->postproc_needed() ? _configs->get_configs_ptr<float>()->get_src()._ptr.ptr : _configs->_dev_dst.ptr;
+    const void* res_ptr = _configs->postproc_needed() ? _configs->get_configs_ptr<float>()->GetInputAddr().GetRawPtrConst() : _configs->_dev_dst.GetRawPtrConst();
 
     if (_is_reduce_h) {
         decx::blas::GPUK::cu_block_dot2D_1way_h_fp32 << < _configs->get_1st_kernel_config(),
             dim3(_REDUCE2D_BLOCK_DIM_X_, _REDUCE2D_BLOCK_DIM_Y_), 0, S->get_raw_stream_ref() >> > (
-                (float4*)_configs->_dev_A.ptr,
-                (float4*)_configs->_dev_B.ptr,
+                (float4*)_configs->_dev_A,
+                (float4*)_configs->_dev_B,
                 (float*)res_ptr,
                 decx::utils::ceil<uint32_t>(_configs->get_actual_proc_dims().x, 4),
                 decx::utils::ceil<uint32_t>(_configs->get_1st_kernel_config().x, 4) * 4,
@@ -53,8 +53,8 @@ const void* decx::blas::cuda_DP2D_1way_fp32_caller_Async(decx::blas::cuda_DP2D_c
     else {
         decx::blas::GPUK::cu_block_dot2D_1way_v_fp32 << < _configs->get_1st_kernel_config(),
             dim3(_REDUCE2D_BLOCK_DIM_X_, _REDUCE2D_BLOCK_DIM_Y_), 0, S->get_raw_stream_ref() >> > (
-                (float4*)_configs->_dev_A.ptr,
-                (float4*)_configs->_dev_B.ptr,
+                (float4*)_configs->_dev_A,
+                (float4*)_configs->_dev_B,
                 (float4*)res_ptr,
                 decx::utils::ceil<uint32_t>(_configs->get_actual_proc_dims().x, 4),
                 decx::utils::ceil<uint32_t>(_configs->get_actual_proc_dims().x, 4),
@@ -71,10 +71,10 @@ const void* decx::blas::cuda_DP2D_1way_fp32_caller_Async(decx::blas::cuda_DP2D_c
             decx::reduce::reduce_sum2D_v_fp32_Async(_postproc_configs, S);
         }
 
-        return _postproc_configs->get_dst();
+        return _postproc_configs->GetOutputAddr();
     }
     else {
-        return _configs->_dev_dst.ptr;
+        return (void*)_configs->_dev_dst;
     }
 }
 
@@ -83,7 +83,7 @@ template const void* decx::blas::cuda_DP2D_1way_fp32_caller_Async<false>(decx::b
 
 
 #define _DOT2D_1WAY_H_FP16_PARAM(_dst_type)                                                                 \
-    (float4*)_configs->_dev_A.ptr, (float4*)_configs->_dev_B.ptr, (_dst_type*)res_ptr,                      \
+    (float4*)_configs->_dev_A, (float4*)_configs->_dev_B, (_dst_type*)res_ptr,                              \
     decx::utils::ceil<uint32_t>(_configs->get_actual_proc_dims().x, 8),                                     \
     decx::utils::ceil<uint32_t>(_configs->get_1st_kernel_config().x, (sizeof(float4) / sizeof(_dst_type)))  \
     * (sizeof(float4) / sizeof(_dst_type)),                                                                 \
@@ -91,7 +91,7 @@ template const void* decx::blas::cuda_DP2D_1way_fp32_caller_Async<false>(decx::b
 
 
 #define _DOT2D_1WAY_V_FP16_PARAM(_dst_type)                                                                 \
-    (float4*)_configs->_dev_A.ptr, (float4*)_configs->_dev_B.ptr, (float4*)res_ptr,                         \
+    (float4*)_configs->_dev_A, (float4*)_configs->_dev_B, (float4*)res_ptr,                                 \
     decx::utils::ceil<uint32_t>(_configs->get_actual_proc_dims().x, 8),                                     \
     decx::utils::ceil<uint32_t>(_configs->get_actual_proc_dims().x, (sizeof(float4) / sizeof(_dst_type))),  \
     _configs->get_actual_proc_dims()                                                                        \
@@ -103,10 +103,10 @@ const void* decx::blas::cuda_DP2D_1way_fp16_caller_Async(decx::blas::cuda_DP2D_c
 {
     const void* res_ptr = NULL;
     if (_fp16_accu == decx::Fp16_Accuracy_Levels::Fp16_Accurate_L1) {
-        res_ptr = _configs->postproc_needed() ? _configs->get_configs_ptr<float>()->get_src()._ptr.ptr : _configs->_dev_dst.ptr;
+        res_ptr = _configs->postproc_needed() ? _configs->get_configs_ptr<float>()->GetInputAddr().GetRawPtrConst() : _configs->_dev_dst.GetRawPtrConst();
     }
     else {
-        res_ptr = _configs->postproc_needed() ? _configs->get_configs_ptr<de::Half>()->get_src()._ptr.ptr : _configs->_dev_dst.ptr;
+        res_ptr = _configs->postproc_needed() ? _configs->get_configs_ptr<de::Half>()->GetInputAddr().GetRawPtrConst() : _configs->_dev_dst.GetRawPtrConst();
     }
 
     if (_is_reduce_h) {
@@ -159,7 +159,7 @@ const void* decx::blas::cuda_DP2D_1way_fp16_caller_Async(decx::blas::cuda_DP2D_c
             if (_is_reduce_h)   decx::reduce::reduce_sum2D_h_fp32_Async(_postproc_configs, S);
             else    decx::reduce::reduce_sum2D_v_fp32_Async(_postproc_configs, S);
 
-            return _postproc_configs->get_dst();
+            return _postproc_configs->GetOutputAddr();
         }
         else {
             decx::reduce::cuda_reduce2D_1way_configs<de::Half>* _postproc_configs = _configs->get_configs_ptr<de::Half>();
@@ -167,11 +167,11 @@ const void* decx::blas::cuda_DP2D_1way_fp16_caller_Async(decx::blas::cuda_DP2D_c
             if (_is_reduce_h)   decx::reduce::reduce_sum2D_h_fp16_Async(_postproc_configs, S, _fp16_accu);
             else    decx::reduce::reduce_sum2D_v_fp16_Async(_postproc_configs, S, _fp16_accu);
 
-            return _postproc_configs->get_dst();
+            return _postproc_configs->GetOutputAddr();
         }
     }
     else {
-        return _configs->_dev_dst.ptr;
+        return _configs->_dev_dst.GetRawPtr();
     }
 }
 
@@ -210,13 +210,13 @@ void decx::blas::matrix_dot_1way_fp32(decx::_Matrix* A, decx::_Matrix* B, decx::
 
     // Copy the data from matrices on host to the memory on device
     // Matrix A
-    checkCudaErrors(cudaMemcpy2DAsync(_configs._dev_A.ptr,          _configs._dev_mat_dims.x * sizeof(float),
-                                      A->Mat.ptr,                   A->Pitch() * sizeof(float), 
+    checkCudaErrors(cudaMemcpy2DAsync((void*)_configs._dev_A,       _configs._dev_mat_dims.x * sizeof(float),
+                                      (void*)A->Mat,                A->Pitch() * sizeof(float), 
                                       A->Width() * sizeof(float),   A->Height(), 
                                       cudaMemcpyHostToDevice,       S->get_raw_stream_ref()));
     // Matrix B
-    checkCudaErrors(cudaMemcpy2DAsync(_configs._dev_B.ptr,          _configs._dev_mat_dims.x * sizeof(float),
-                                      B->Mat.ptr,                   B->Pitch() * sizeof(float), 
+    checkCudaErrors(cudaMemcpy2DAsync((void*)_configs._dev_B,       _configs._dev_mat_dims.x * sizeof(float),
+                                      (void*)B->Mat,                B->Pitch() * sizeof(float), 
                                       B->Width() * sizeof(float),   B->Height(), 
                                       cudaMemcpyHostToDevice,       S->get_raw_stream_ref()));
 
@@ -227,7 +227,7 @@ void decx::blas::matrix_dot_1way_fp32(decx::_Matrix* A, decx::_Matrix* B, decx::
         return;
     }
     const uint64_t _cpy_size = (_is_reduce_h ? A->Height() : A->Width()) * sizeof(float);
-    checkCudaErrors(cudaMemcpyAsync(dst->Vec.ptr, res_ptr, _cpy_size, cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
+    checkCudaErrors(cudaMemcpyAsync((void*)dst->Vec, res_ptr, _cpy_size, cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
     
     E->event_record(S);
     E->synchronize();
@@ -261,13 +261,13 @@ void decx::blas::matrix_dot_1way_fp16(decx::_Matrix* A, decx::_Matrix* B, decx::
 
     // Copy the data from matrices on host to the memory on device
     // Matrix A
-    checkCudaErrors(cudaMemcpy2DAsync(_configs._dev_A.ptr,              _configs._dev_mat_dims.x * sizeof(de::Half),
-                                      A->Mat.ptr,                       A->Pitch() * sizeof(de::Half),
+    checkCudaErrors(cudaMemcpy2DAsync((void*)_configs._dev_A,           _configs._dev_mat_dims.x * sizeof(de::Half),
+                                      (void*)A->Mat,                    A->Pitch() * sizeof(de::Half),
                                       A->Width() * sizeof(de::Half),    A->Height(),
                                       cudaMemcpyHostToDevice,           S->get_raw_stream_ref()));
     // Matrix B
-    checkCudaErrors(cudaMemcpy2DAsync(_configs._dev_B.ptr,              _configs._dev_mat_dims.x * sizeof(de::Half),
-                                      B->Mat.ptr,                       B->Pitch() * sizeof(de::Half),
+    checkCudaErrors(cudaMemcpy2DAsync((void*)_configs._dev_B,           _configs._dev_mat_dims.x * sizeof(de::Half),
+                                      (void*)B->Mat,                    B->Pitch() * sizeof(de::Half),
                                       B->Width() * sizeof(de::Half),    B->Height(),
                                       cudaMemcpyHostToDevice,           S->get_raw_stream_ref()));
 
@@ -279,7 +279,7 @@ void decx::blas::matrix_dot_1way_fp16(decx::_Matrix* A, decx::_Matrix* B, decx::
     }
     const uint8_t _dst_ele_size = _fp16_accu == decx::Fp16_Accuracy_Levels::Fp16_Accurate_L1 ? sizeof(float) : sizeof(de::Half);
     const uint64_t _cpy_size = (_is_reduce_h ? A->Height() : A->Width()) * _dst_ele_size;
-    checkCudaErrors(cudaMemcpyAsync(dst->Vec.ptr, res_ptr, _cpy_size, cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
+    checkCudaErrors(cudaMemcpyAsync((void*)dst->Vec, res_ptr, _cpy_size, cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
 
     E->event_record(S);
     E->synchronize();

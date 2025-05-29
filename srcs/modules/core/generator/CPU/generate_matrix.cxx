@@ -51,7 +51,7 @@ static void decx::cpu_generate2D(decx::_Matrix* mat, const _data_type val)
     planner.plan(conc, make_uint2(mat->Width(), mat->Height()), sizeof(_data_type), sizeof(_data_type));
     
     decx::utils::_thread_arrange_1D t1D(conc);
-    planner.fill_caller(decx::CPUK::fill2D_constant_fp32, (_data_type*)mat->Mat.ptr, mat->Pitch(), &t1D, val);
+    planner.fill_caller(decx::CPUK::fill2D_constant_fp32, (_data_type*)mat->Mat.GetRawPtr(), mat->Pitch(), &t1D, val);
 }
 
 
@@ -70,11 +70,11 @@ static void decx::cpu_random2D(decx::_Matrix* mat, const double min, const doubl
     switch (mat->Type())
     {
     case de::_DATA_TYPES_FLAGS_::_FP32_:
-        planner.fill_caller(decx::CPUK::fill2D_rand_fp32, (float*)mat->Mat.ptr, mat->Pitch(), &t1D, (float)min, (float)max);
+        planner.fill_caller(decx::CPUK::fill2D_rand_fp32, (float*)mat->Mat.GetRawPtr(), mat->Pitch(), &t1D, (float)min, (float)max);
         break;
 
     case de::_DATA_TYPES_FLAGS_::_INT32_:
-        planner.fill_caller(decx::CPUK::fill2D_rand_int32, (int32_t*)mat->Mat.ptr, mat->Pitch(), &t1D, (int32_t)min, (int32_t)max);
+        planner.fill_caller(decx::CPUK::fill2D_rand_int32, (int32_t*)mat->Mat.GetRawPtr(), mat->Pitch(), &t1D, (int32_t)min, (int32_t)max);
         break;
     
     default:

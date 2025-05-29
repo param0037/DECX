@@ -61,7 +61,7 @@ static void decx::blas::Transpose_4b(const decx::_Matrix* src, decx::_Matrix* ds
     }
 
     decx::utils::_thread_arrange_1D t1D(_conc);
-    _planner->transpose_4b_caller((float*)src->Mat.ptr, (float*)dst->Mat.ptr, src->Pitch(), dst->Pitch(), &t1D);
+    _planner->transpose_4b_caller(src->Mat.GetRawPtrConst<float>(), dst->Mat.GetRawPtr<float>(), src->Pitch(), dst->Pitch(), &t1D);
 
     decx::blas::g_cpu_transpose_4b_config.unlock();
 }
@@ -86,7 +86,7 @@ static void decx::blas::Transpose_8b(const decx::_Matrix* src, decx::_Matrix* ds
     }
 
     decx::utils::_thread_arrange_1D t1D(_conc);
-    _planner->transpose_8b_caller((double*)src->Mat.ptr, (double*)dst->Mat.ptr, src->Pitch(), dst->Pitch(), &t1D);
+    _planner->transpose_8b_caller(src->Mat.GetRawPtrConst<double>(), dst->Mat.GetRawPtr<double>(), src->Pitch(), dst->Pitch(), &t1D);
 
     decx::blas::g_cpu_transpose_8b_config.unlock();
 }
@@ -110,7 +110,7 @@ static void decx::blas::Transpose_1b(const decx::_Matrix* src, decx::_Matrix* ds
     }
 
     decx::utils::_thread_arrange_1D t1D(_conc);
-    _planner->transpose_1b_caller((uint64_t*)src->Mat.ptr, (uint64_t*)dst->Mat.ptr, 
+    _planner->transpose_1b_caller(src->Mat.GetRawPtrConst<uint64_t>(), dst->Mat.GetRawPtr<uint64_t>(), 
         src->Pitch() / 8, dst->Pitch() / 8, &t1D);
 
     decx::blas::g_cpu_transpose_1b_config.unlock();
@@ -135,7 +135,7 @@ static void decx::blas::Transpose_16b(const decx::_Matrix* src, decx::_Matrix* d
     }
 
     decx::utils::_thread_arrange_1D t1D(_conc);
-    _planner->transpose_16b_caller((de::CPd*)src->Mat.ptr, (de::CPd*)dst->Mat.ptr, src->Pitch(), dst->Pitch(), &t1D);
+    _planner->transpose_16b_caller(src->Mat.GetRawPtrConst<de::CPd>(), dst->Mat.GetRawPtr<de::CPd>(), src->Pitch(), dst->Pitch(), &t1D);
 
     decx::blas::g_cpu_transpose_16b_config.unlock();
 }

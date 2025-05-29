@@ -31,16 +31,16 @@
 #ifndef _CUDA_GEMM_LS_PLANNER_CUH_
 #define _CUDA_GEMM_LS_PLANNER_CUH_
 
-#include "../../../../../../common/basic.h"
-#include "../../../../../core/allocators.h"
-#include "../../../../../../common/Classes/GPU_Matrix.h"
-#include "../../../../../../common/Classes/Number.h"
-#include "../../../../../core/configs/config.h"
-#include "../../../../../../common/error.h"
+#include <basic.h>
+#include <decx_alloc_interface.h>
+#include <Classes/GPU_Matrix.h>
+#include <Classes/Number.h>
+#include <configs/config.h>
+#include <error.h>
 
-#include "../../../../../core/cudaStream_management/cudaStream_queue.h"
-#include "../../../../../core/cudaStream_management/cudaEvent_queue.h"
-#include "../../../../../core/resources_manager/decx_resource.h"
+#include <cudaStream_management/cudaStream_queue.h>
+#include <cudaStream_management/cudaEvent_queue.h>
+#include <resources_manager/decx_resource.h>
 
 namespace decx
 {

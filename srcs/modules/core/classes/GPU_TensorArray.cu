@@ -28,9 +28,9 @@
 * DEALINGS IN THE SOFTWARE.
 */
 
-#include "../../../common/Classes/GPU_TensorArray.h"
+#include <Classes/GPU_TensorArray.h>
 
-#define MODULE_TAG "core::class"
+#define MODULE_TAG "GPU_TensorArray"
 
 void decx::_GPU_TensorArray::_attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, const uint _width, const uint _height, const uint _depth, const uint _tensor_num)
 {
@@ -98,30 +98,26 @@ void decx::_GPU_TensorArray::alloc_data_space()
     decx::cuda_stream* S = NULL;
     S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
     if (S == NULL) {
-        SetConsoleColor(4);
-        printf("Internal error.\n");
-        ResetConsoleColor;
+        DECX_LOG_ERR("Failed to get cuda stream from queue");
         return;
     }
     decx::cuda_event* E = NULL;
     E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
     if (E == NULL) {
-        SetConsoleColor(4);
-        printf("Internal error.\n");
-        ResetConsoleColor;
+        DECX_LOG_ERR("Failed to get cuda event from queue");
         return;
     }
 
-    if (decx::alloc::_device_malloc(&this->TensArr, this->total_bytes, true, S)) {
-        DECX_LOG_ERR("Fail to allocate memory for GPU_TensorArray on device\n");
+    if (this->TensArr.Allocate(this->total_bytes, CUDA_DEVICE, de::GetLastError(), true, S)) {
+        DECX_LOG_ERR("Fail to allocate memory for GPU_TensorArray on device");
         exit(-1);
     }
 
-    this->TensptrArr.ptr = (void**)malloc(this->tensor_num * sizeof(void*));
-    this->TensptrArr.ptr[0] = this->TensArr.ptr;
+    this->TensptrArr.Allocate(this->tensor_num * sizeof(void*), PAGABLE);
+    this->TensptrArr[0] = this->TensArr.GetRawPtr();
 
     for (uint i = 1; i < this->tensor_num; ++i) {
-        this->TensptrArr.ptr[i] = (uint8_t*)this->TensptrArr.ptr[i - 1] + this->_gap * this->_layout._single_element_size;
+        this->TensptrArr[i] = (uint8_t*)this->TensptrArr[i - 1] + this->_gap * this->_layout._single_element_size;
     }
 
     E->event_record(S);
@@ -138,32 +134,26 @@ void decx::_GPU_TensorArray::re_alloc_data_space()
     decx::cuda_stream* S = NULL;
     S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
     if (S == NULL) {
-        SetConsoleColor(4);
-        printf("Internal error.\n");
-        ResetConsoleColor;
+        DECX_LOG_ERR("Failed to get cuda stream from queue");
         return;
     }
     decx::cuda_event* E = NULL;
     E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
     if (E == NULL) {
-        SetConsoleColor(4);
-        printf("Internal error.\n");
-        ResetConsoleColor;
+        DECX_LOG_ERR("Failed to get cuda event from queue");
         return;
     }
 
-    if (decx::alloc::_device_realloc(&this->TensArr, this->total_bytes)) {
+    if (this->TensArr.Allocate(this->total_bytes, CUDA_DEVICE, de::GetLastError(), true, S)) {
         DECX_LOG_ERR("Fail to re-allocate memory for GPU_TensorArray on device\n");
-        exit(-1);
+        return;
     }
 
-    checkCudaErrors(cudaMemsetAsync(this->TensArr.ptr, 0, this->total_bytes, S->get_raw_stream_ref()));
+    this->TensptrArr.Allocate(this->tensor_num * sizeof(void*), PAGABLE);
 
-    this->TensptrArr.ptr = (void**)malloc(this->tensor_num * sizeof(void*));
-
-    this->TensptrArr.ptr[0] = this->TensArr.ptr;
+    this->TensptrArr[0] = this->TensArr.GetRawPtr();
     for (uint i = 1; i < this->tensor_num; ++i) {
-        this->TensptrArr.ptr[i] = (uint8_t*)this->TensptrArr.ptr[i - 1] + this->_gap * this->_layout._single_element_size;
+        this->TensptrArr[i] = (uint8_t*)this->TensptrArr[i - 1] + this->_gap * this->_layout._single_element_size;
     }
 
     E->event_record(S);
@@ -195,10 +185,10 @@ void decx::_GPU_TensorArray::re_construct(const de::_DATA_TYPES_FLAGS_ _type, co
 
         if (this->total_bytes > pre_size)
         {
-            free(this->TensptrArr.ptr);
+            this->TensptrArr.Free();
 
-            if (this->TensArr.ptr != NULL) {
-                decx::alloc::_device_dealloc(&this->TensArr);
+            if (this->TensArr.IsValid()) {
+                this->TensArr.Free();
 
                 this->alloc_data_space();
             }
@@ -207,9 +197,9 @@ void decx::_GPU_TensorArray::re_construct(const de::_DATA_TYPES_FLAGS_ _type, co
             }
         }
         else {
-            this->TensptrArr.ptr[0] = this->TensArr.ptr;
+            this->TensptrArr[0] = this->TensArr.GetRawPtr();
             for (uint i = 1; i < this->tensor_num; ++i) {
-                this->TensptrArr.ptr[i] = (void*)((uchar*)this->TensptrArr.ptr[i - 1] + this->_gap * this->_layout._single_element_size);
+                this->TensptrArr[i] = (void*)((uchar*)this->TensptrArr[i - 1] + this->_gap * this->_layout._single_element_size);
             }
         }
     }
@@ -224,7 +214,6 @@ decx::_GPU_TensorArray::_GPU_TensorArray()
 }
 
 
-
 decx::_GPU_TensorArray::_GPU_TensorArray(const de::_DATA_TYPES_FLAGS_ _type, const uint _width, const uint _height, const uint _depth, const uint _tensor_num)
 {
     this->_attribute_assign(_type, _width, _height, _depth, _tensor_num);
@@ -233,19 +222,19 @@ decx::_GPU_TensorArray::_GPU_TensorArray(const de::_DATA_TYPES_FLAGS_ _type, con
 }
 
 
-
-
 de::GPU_TensorArray& decx::_GPU_TensorArray::SoftCopy(const de::GPU_TensorArray& src)
 {
     const decx::_GPU_TensorArray& ref_src = dynamic_cast<const decx::_GPU_TensorArray&>(src);
 
     this->_attribute_assign(ref_src.type, ref_src._layout.width, ref_src._layout.height, ref_src._layout.depth, ref_src.tensor_num);
 
-    decx::alloc::_device_malloc_same_place(&this->TensArr);
+    this->TensArr.AllocateRef();
 
-    memset(this->TensArr.ptr, 0, this->total_bytes);
-
-    this->TensptrArr.ptr = (void**)realloc(this->TensptrArr.ptr, this->tensor_num * sizeof(void*));
+    this->TensptrArr.Reallocate(this->tensor_num * sizeof(void*), de::GetLastError());
+    this->TensptrArr[0] = this->TensArr.GetRawPtr();
+    for (uint i = 1; i < this->tensor_num; ++i) {
+        this->TensptrArr[i] = (uint8_t*)this->TensptrArr[i - 1] + this->_gap * this->_layout._single_element_size;
+    }
 
     return *this;
 }
@@ -264,7 +253,7 @@ de::DH decx::_GPU_TensorArray::Extract_SoftCopy(const uint32_t index, de::GPU_Te
     }
 
     _dst->_attribute_assign(this->Type(), this->Width(), this->Height(), this->Depth());
-    _dst->Tens.ptr = this->TensptrArr.ptr[index];
+    // _dst->Tens.ptr = this->TensptrArr.ptr[index];
 
     return handle;
 }
@@ -273,11 +262,9 @@ de::DH decx::_GPU_TensorArray::Extract_SoftCopy(const uint32_t index, de::GPU_Te
 
 void decx::_GPU_TensorArray::release()
 {
-    decx::alloc::_device_dealloc(&this->TensArr);
-
-    decx::alloc::_host_virtual_page_dealloc(&this->TensptrArr);
+    this->TensArr.Free();
+    this->TensptrArr.Free();
 }
-
 
 
 bool decx::_GPU_TensorArray::is_init() const
@@ -292,13 +279,11 @@ uint64_t decx::_GPU_TensorArray::get_total_bytes() const
 }
 
 
-
 _DECX_API_
 de::GPU_TensorArray& de::CreateGPUTensorArrayRef()
 {
     return *(new decx::_GPU_TensorArray());
 }
-
 
 
 _DECX_API_
@@ -308,13 +293,11 @@ de::GPU_TensorArray* de::CreateGPUTensorArrayPtr()
 }
 
 
-
 _DECX_API_
 de::GPU_TensorArray& de::CreateGPUTensorArrayRef(const de::_DATA_TYPES_FLAGS_ _type, const uint width, const uint height, const uint depth, const uint tensor_num)
 {
     return *(new decx::_GPU_TensorArray(_type, width, height, depth, tensor_num));
 }
-
 
 
 _DECX_API_
@@ -330,7 +313,7 @@ _DECX_API_ de::DH de::cuda::PinMemory(de::TensorArray& src)
     de::DH handle;
 
     decx::_TensorArray* _src = dynamic_cast<decx::_TensorArray*>(&src);
-    cudaError_t _err = cudaHostRegister(_src->TensArr.ptr, _src->get_total_bytes(), cudaHostRegisterPortable);
+    cudaError_t _err = cudaHostRegister(_src->TensArr.GetRawPtr(), _src->get_total_bytes(), cudaHostRegisterPortable);
     if (_err != cudaSuccess) {
         if (_err == cudaErrorHostMemoryAlreadyRegistered) {
             decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_HOST_MEM_REGISTERED, HOST_MEM_REGISTERED);
@@ -349,7 +332,7 @@ _DECX_API_ de::DH de::cuda::UnpinMemory(de::TensorArray& src)
     de::DH handle;
 
     decx::_TensorArray* _src = dynamic_cast<decx::_TensorArray*>(&src);
-    cudaError_t _err = cudaHostUnregister(_src->TensArr.ptr);
+    cudaError_t _err = cudaHostUnregister(_src->TensArr.GetRawPtr());
 
     if (_err != cudaSuccess) {
         if (_err == cudaErrorHostMemoryNotRegistered) {

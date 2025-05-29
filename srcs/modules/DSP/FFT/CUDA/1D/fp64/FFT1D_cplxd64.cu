@@ -54,20 +54,20 @@ void decx::dsp::fft::_cuda_FFT1D_planner<double>::Forward(decx::_Vector* src, de
         _formal_FFT2D_ptr->get_FFT_info(decx::dsp::fft::_FFT_AlongH),
         S);
 
-    decx::blas::transpose2D_b16_for_FFT(_double_buffer.get_leading_ptr<double2>(),
-                                     _double_buffer.get_lagging_ptr<double2>(),
+    decx::blas::transpose2D_b16_for_FFT(_double_buffer.GetLeadingBufPtr<double2>(),
+                                     _double_buffer.GetLaggingBufPtr<double2>(),
                                      make_uint2(this->get_larger_FFT_lengths(0), this->get_larger_FFT_lengths(1)),
                                      _formal_FFT2D_ptr->get_buffer_dims().x,
                                      _formal_FFT2D_ptr->get_buffer_dims().y, S);
 
-    _double_buffer.update_states();
+    _double_buffer.UpdateStatus();
 
     decx::dsp::fft::FFT1D_partition_cplxd_end_caller<_FFT1D_END_(de::CPd)>(&_double_buffer, NULL,
         _formal_FFT2D_ptr->get_FFT_info(decx::dsp::fft::_FFT_AlongW),
         S);
 
     checkCudaErrors(cudaMemcpyAsync(dst->Vec.ptr, 
-        _double_buffer.get_leading_ptr<void>(), 
+        _double_buffer.GetLeadingBufPtr<void>(), 
         src->Len() * sizeof(de::CPd),
         cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
 }
@@ -89,13 +89,13 @@ void decx::dsp::fft::_cuda_FFT1D_planner<double>::Forward(decx::_GPU_Vector* src
         _formal_FFT2D_ptr->get_FFT_info(decx::dsp::fft::_FFT_AlongH),
         S);
 
-    decx::blas::transpose2D_b16_for_FFT(_double_buffer.get_leading_ptr<double2>(),
-                                     _double_buffer.get_lagging_ptr<double2>(),
+    decx::blas::transpose2D_b16_for_FFT(_double_buffer.GetLeadingBufPtr<double2>(),
+                                     _double_buffer.GetLaggingBufPtr<double2>(),
                                      make_uint2(this->get_larger_FFT_lengths(0), this->get_larger_FFT_lengths(1)),
                                      _formal_FFT2D_ptr->get_buffer_dims().x,
                                      _formal_FFT2D_ptr->get_buffer_dims().y, S);
 
-    _double_buffer.update_states();
+    _double_buffer.UpdateStatus();
 
     decx::dsp::fft::FFT1D_partition_cplxd_end_caller<_FFT1D_END_(de::CPd)>(&_double_buffer, dst->Vec.ptr,
         _formal_FFT2D_ptr->get_FFT_info(decx::dsp::fft::_FFT_AlongW),
@@ -123,19 +123,19 @@ void decx::dsp::fft::_cuda_FFT1D_planner<double>::Inverse(decx::_Vector* src, de
         _formal_FFT2D_ptr->get_FFT_info(decx::dsp::fft::_FFT_AlongH),
         S, this->get_signal_length());
 
-    decx::blas::transpose2D_b16_for_FFT(_double_buffer.get_leading_ptr<double2>(),
-                                     _double_buffer.get_lagging_ptr<double2>(),
+    decx::blas::transpose2D_b16_for_FFT(_double_buffer.GetLeadingBufPtr<double2>(),
+                                     _double_buffer.GetLaggingBufPtr<double2>(),
                                      make_uint2(this->get_larger_FFT_lengths(0), this->get_larger_FFT_lengths(1)),
                                      _formal_FFT2D_ptr->get_buffer_dims().x,
                                      _formal_FFT2D_ptr->get_buffer_dims().y, S);
 
-    _double_buffer.update_states();
+    _double_buffer.UpdateStatus();
 
     decx::dsp::fft::FFT1D_partition_cplxd_end_caller<_IFFT1D_END_(_type_out)>(&_double_buffer, NULL,
         _formal_FFT2D_ptr->get_FFT_info(decx::dsp::fft::_FFT_AlongW),
         S);
 
-    checkCudaErrors(cudaMemcpyAsync(dst->Vec.ptr, _double_buffer.get_leading_ptr<void>(), src->Len() * sizeof(_type_out),
+    checkCudaErrors(cudaMemcpyAsync(dst->Vec.ptr, _double_buffer.GetLeadingBufPtr<void>(), src->Len() * sizeof(_type_out),
         cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
 }
 
@@ -155,13 +155,13 @@ void decx::dsp::fft::_cuda_FFT1D_planner<double>::Inverse(decx::_GPU_Vector* src
         _formal_FFT2D_ptr->get_FFT_info(decx::dsp::fft::_FFT_AlongH),
         S, this->get_signal_length());
 
-    decx::blas::transpose2D_b16_for_FFT(_double_buffer.get_leading_ptr<double2>(),
-                                     _double_buffer.get_lagging_ptr<double2>(),
+    decx::blas::transpose2D_b16_for_FFT(_double_buffer.GetLeadingBufPtr<double2>(),
+                                     _double_buffer.GetLaggingBufPtr<double2>(),
                                      make_uint2(this->get_larger_FFT_lengths(0), this->get_larger_FFT_lengths(1)),
                                      _formal_FFT2D_ptr->get_buffer_dims().x,
                                      _formal_FFT2D_ptr->get_buffer_dims().y, S);
 
-    _double_buffer.update_states();
+    _double_buffer.UpdateStatus();
 
     decx::dsp::fft::FFT1D_partition_cplxd_end_caller<_IFFT1D_END_(_type_out)>(&_double_buffer, dst->Vec.ptr,
         _formal_FFT2D_ptr->get_FFT_info(decx::dsp::fft::_FFT_AlongW),

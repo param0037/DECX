@@ -32,8 +32,9 @@
 #define _DYNAMIC_ARRAY_H_
 
 
-#include "../basic.h"
-#include "../../modules/core/allocators.h"
+#include <basic.h>
+#include <decx_alloc_interface.h>
+#include <PtrInfo.h>
 
 
 #define Array_Initial_Length 64
@@ -175,18 +176,18 @@ decx::utils::Dynamic_Array<_Ty>::Dynamic_Array()
 {
     this->_void_space_from_start = 0;
 
-    if (decx::alloc::_host_virtual_page_malloc(&this->_data, Array_Initial_Length * sizeof(_Ty))) {
+    if (this->_data.Allocate(Array_Initial_Length * sizeof(_Ty), PAGABLE)) {
         return;
     }
-    if (decx::alloc::_host_virtual_page_malloc(&this->_buffer, Array_Initial_Length * sizeof(_Ty))) {
+    if (this->_buffer.Allocate(Array_Initial_Length * sizeof(_Ty), PAGABLE)) {
         return;
     }
 
     this->_memory_capacity = Array_Initial_Length;
     this->_current_length = 0;
 
-    this->_begin_ptr = this->_data.ptr;
-    this->_end_ptr = this->_data.ptr;
+    this->_begin_ptr = this->_data.GetRawPtr();
+    this->_end_ptr = this->_data.GetRawPtr();
 }
 
 
@@ -221,8 +222,8 @@ void decx::utils::Dynamic_Array<_Ty>::del(const uint64_t index)
             this->pop_back();
         }
         else {
-            memcpy(this->_buffer.ptr, this->_begin_ptr + index + 1, (this->_current_length - index - 1) * sizeof(_Ty));
-            memcpy(this->_begin_ptr + index, this->_buffer.ptr, (this->_current_length - index - 1) * sizeof(_Ty));
+            memcpy(this->_buffer.GetRawPtr(), this->_begin_ptr + index + 1, (this->_current_length - index - 1) * sizeof(_Ty));
+            memcpy(this->_begin_ptr + index, this->_buffer.GetRawPtr(), (this->_current_length - index - 1) * sizeof(_Ty));
             --this->_current_length;
         }
     }
@@ -245,20 +246,20 @@ template<typename _Ty>
 void decx::utils::Dynamic_Array<_Ty>::move_ahead()
 {
     if (this->_current_length != 0) {
-        _Ty* _dst = this->_data.ptr;
+        _Ty* _dst = this->_data.GetRawPtr();
         _Ty* _src = this->_begin_ptr;
 
-        memcpy(this->_buffer.ptr, this->_begin_ptr, this->_current_length * sizeof(_Ty));
-        memcpy(this->_data.ptr, this->_buffer.ptr, this->_current_length * sizeof(_Ty));
+        memcpy(this->_buffer.GetRawPtr(), this->_begin_ptr, this->_current_length * sizeof(_Ty));
+        memcpy(this->_data.GetRawPtr(), this->_buffer.GetRawPtr(), this->_current_length * sizeof(_Ty));
 
         this->_void_space_from_start = 0;
-        this->_begin_ptr = this->_data.ptr;
+        this->_begin_ptr = this->_data.GetRawPtr();
         this->_end_ptr = this->_begin_ptr + this->_current_length + 1;
     }
     else {
         this->_void_space_from_start = 0;
-        this->_begin_ptr = this->_data.ptr;
-        this->_end_ptr = this->_data.ptr;
+        this->_begin_ptr = this->_data.GetRawPtr();
+        this->_end_ptr = this->_data.GetRawPtr();
     }
 }
 
@@ -267,18 +268,18 @@ template<typename _Ty>
 void decx::utils::Dynamic_Array<_Ty>::memory_expansion()
 {
     this->_memory_capacity += Array_Expansion_Length;
-    if (decx::alloc::_host_virtual_page_realloc(&this->_buffer, this->_memory_capacity * sizeof(_Ty))) {
+    if (this->_buffer.Reallocate(this->_memory_capacity * sizeof(_Ty))) {
         return;
     }
 
-    memcpy(this->_buffer.ptr, this->_begin_ptr, this->_current_length * sizeof(_Ty));
+    memcpy(this->_buffer.GetRawPtr(), this->_begin_ptr, this->_current_length * sizeof(_Ty));
 
-    if (decx::alloc::_host_virtual_page_realloc(&this->_data, this->_memory_capacity * sizeof(_Ty))) {
+    if (this->_data.Reallocate(this->_memory_capacity * sizeof(_Ty))) {
         return;
     }
 
-    memcpy(this->_data.ptr, this->_buffer.ptr, this->_current_length * sizeof(_Ty));
-    this->_begin_ptr = this->_data.ptr;
+    memcpy(this->_data.GetRawPtr(), this->_buffer.GetRawPtr(), this->_current_length * sizeof(_Ty));
+    this->_begin_ptr = this->_data.GetRawPtr();
     this->_end_ptr = this->_begin_ptr + this->_current_length;
     this->_void_space_from_start = 0;
 }
@@ -347,8 +348,8 @@ template<typename _Ty>
 void decx::utils::Dynamic_Array<_Ty>::clear()
 {
     this->_current_length = 0;
-    this->_begin_ptr = this->_data.ptr;
-    this->_end_ptr = this->_data.ptr;
+    this->_begin_ptr = this->_data.GetRawPtr();
+    this->_end_ptr = this->_data.GetRawPtr();
     this->_void_space_from_start = 0;
 }
 
@@ -356,8 +357,8 @@ void decx::utils::Dynamic_Array<_Ty>::clear()
 template<typename _Ty>
 decx::utils::Dynamic_Array<_Ty>::~Dynamic_Array()
 {
-    decx::alloc::_host_virtual_page_dealloc(&this->_data);
-    decx::alloc::_host_virtual_page_dealloc(&this->_buffer);
+    this->_data.Free();
+    this->_buffer.Free();
 }
 
 

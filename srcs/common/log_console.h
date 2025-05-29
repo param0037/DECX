@@ -34,6 +34,7 @@
 #include <decx_utils_macros.h>
 
 #define _CONSOLE_LOG_MSG_BUFFER_SIZE_ 256
+#define _CONSOLE_LOG_MSG_MAX_LENGTH_ 128
 #define _DECX_CONSOLE_LOG_ENABLE_ACCURATE_TIME_ 0
 
 typedef enum{
@@ -50,15 +51,26 @@ extern "C"{
     void _DECX_API_ DECX_Log_Console_Exec(const DecxInternalLogLevel color, 
                                           const char* __restrict module_tag,
                                           const char* __restrict func_name, 
-                                          const char *__restrict __fmt, ...);
+                                          const char *__restrict __fmt);
 #ifdef __cplusplus
 }
 #endif
 
+#define DECX_LOG(LVL_TAG, MDL_TAG, FUNC, ...)                       \
+{                                                                   \
+    char msg[_CONSOLE_LOG_MSG_MAX_LENGTH_];                         \
+    snprintf(msg, _CONSOLE_LOG_MSG_MAX_LENGTH_, __VA_ARGS__);       \
+    DECX_Log_Console_Exec(LVL_TAG, MDL_TAG, FUNC, msg);             \
+}
+
+// #ifndef MODULE_TAG
+// #define MODULE_TAG "DecxInternal"
+// #endif
+
 // MODULE_TAG should be defined first
-#define DECX_LOG_ERR(...)       DECX_Log_Console_Exec(LOG_ERROR, MODULE_TAG, __FUNCTION__, __VA_ARGS__)
-#define DECX_LOG_WARN(...)      DECX_Log_Console_Exec(LOG_WARNING, MODULE_TAG, __FUNCTION__, __VA_ARGS__)
-#define DECX_LOG_NOTICE(...)    DECX_Log_Console_Exec(LOG_NOTICE, MODULE_TAG, __FUNCTION__, __VA_ARGS__)
-#define DECX_LOG_INFO(...)      DECX_Log_Console_Exec(LOG_INFO, MODULE_TAG, __FUNCTION__, __VA_ARGS__)
+#define DECX_LOG_ERR(...)       DECX_LOG(LOG_ERROR,   MODULE_TAG, __FUNCTION__, __VA_ARGS__)
+#define DECX_LOG_WARN(...)      DECX_LOG(LOG_WARNING, MODULE_TAG, __FUNCTION__, __VA_ARGS__)
+#define DECX_LOG_NOTICE(...)    DECX_LOG(LOG_NOTICE,  MODULE_TAG, __FUNCTION__, __VA_ARGS__)
+#define DECX_LOG_INFO(...)      DECX_LOG(LOG_INFO,    MODULE_TAG, __FUNCTION__, __VA_ARGS__)
 
 #endif

@@ -48,7 +48,7 @@ namespace de
     class _DECX_API_ Matrix
     {
     protected:
-        _SHADOW_ATTRIBUTE_(void*) _exp_data_ptr;
+        void* _exp_data_ptr;
         _SHADOW_ATTRIBUTE_(de::MatrixLayout) _exp_matrix_dscr;
 
     public:
@@ -64,7 +64,7 @@ namespace de
         template <typename _ptr_type>
         _ptr_type* ptr(const int row, const int col) 
         {
-            return ((_ptr_type*)*this->_exp_data_ptr) + this->_exp_matrix_dscr->pitch * row + col;
+            return ((_ptr_type*)this->_exp_data_ptr) + this->_exp_matrix_dscr->pitch * row + col;
         }
 
 

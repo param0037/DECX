@@ -175,22 +175,22 @@ static void decx::bp::_extend1D_constant(decx::_Vector* src, decx::_Vector* dst,
     switch (src->_single_element_size)
     {
     case sizeof(double) :
-        decx::bp::_extend_constant_b64_1D((double*)src->Vec.ptr, (double*)dst->Vec.ptr, *((double*)val),
+        decx::bp::_extend_constant_b64_1D(src->Vec.GetRawPtr<double>(), dst->Vec.GetRawPtr<double>(), *((double*)val),
             left, right, src->_length, src->length, handle);
         break;
 
     case sizeof(float):
-        decx::bp::_extend_constant_b32_1D((float*)src->Vec.ptr, (float*)dst->Vec.ptr, *((float*)val),
+        decx::bp::_extend_constant_b32_1D(src->Vec.GetRawPtr<float>(), dst->Vec.GetRawPtr<float>(), *((float*)val),
             left, right, src->_length, src->length, handle);
         break;
 
     case sizeof(uint8_t):
-        decx::bp::_extend_constant_b8_1D((uint8_t*)src->Vec.ptr, (uint8_t*)dst->Vec.ptr, *((uint8_t*)val),
+        decx::bp::_extend_constant_b8_1D(src->Vec.GetRawPtr<uint8_t>(), dst->Vec.GetRawPtr<uint8_t>(), *((uint8_t*)val),
             left, right, src->_length, src->length, handle);
         break;
 
     case sizeof(uint16_t) :
-        decx::bp::_extend_constant_b16_1D((uint16_t*)src->Vec.ptr, (uint16_t*)dst->Vec.ptr, *((uint16_t*)val),
+        decx::bp::_extend_constant_b16_1D(src->Vec.GetRawPtr<uint16_t>(), dst->Vec.GetRawPtr<uint16_t>(), *((uint16_t*)val),
             left, right, src->_length, src->length, handle);
         break;
     default:
@@ -207,22 +207,22 @@ static void decx::bp::_extend2D_constant(decx::_Matrix* src, decx::_Matrix* dst,
     switch (src->get_layout()._single_element_size)
     {
     case sizeof(double) :
-        decx::bp::_extend_constant_b64_2D((double*)src->Mat.ptr, (double*)dst->Mat.ptr, *((double*)val), _ext_param, src->Pitch(), dst->Pitch(),
+        decx::bp::_extend_constant_b64_2D(src->Mat.GetRawPtr<double>(), dst->Mat.GetRawPtr<double>(), *((double*)val), _ext_param, src->Pitch(), dst->Pitch(),
             src->Width(), src->Height(), handle);
         break;
 
         case sizeof(float) :
-        decx::bp::_extend_constant_b32_2D((float*)src->Mat.ptr, (float*)dst->Mat.ptr, *((float*)val), _ext_param, src->Pitch(), dst->Pitch(),
+        decx::bp::_extend_constant_b32_2D(src->Mat.GetRawPtr<float>(), dst->Mat.GetRawPtr<float>(), *((float*)val), _ext_param, src->Pitch(), dst->Pitch(),
             src->Width(), src->Height(), handle);
         break;
 
     case sizeof(uint8_t) :
-        decx::bp::_extend_constant_b8_2D((uint8_t*)src->Mat.ptr, (uint8_t*)dst->Mat.ptr, *((uint8_t*)val), _ext_param, src->Pitch(), dst->Pitch(),
+        decx::bp::_extend_constant_b8_2D(src->Mat.GetRawPtr<uint8_t>(), dst->Mat.GetRawPtr<uint8_t>(), *((uint8_t*)val), _ext_param, src->Pitch(), dst->Pitch(),
             src->Width(), src->Height(), handle);
         break;
 
     case sizeof(uint16_t) :
-        decx::bp::_extend_constant_b16_2D((uint16_t*)src->Mat.ptr, (uint16_t*)dst->Mat.ptr, *((uint16_t*)val), _ext_param, src->Pitch(), dst->Pitch(),
+        decx::bp::_extend_constant_b16_2D(src->Mat.GetRawPtr<uint16_t>(), dst->Mat.GetRawPtr<uint16_t>(), *((uint16_t*)val), _ext_param, src->Pitch(), dst->Pitch(),
             src->Width(), src->Height(), handle);
         break;
     default:

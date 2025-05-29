@@ -161,20 +161,20 @@ template uint2 decx::dsp::fft::_cuda_FFT2D_planner<double>::get_buffer_dims() co
 
 
 template <typename _data_type>
-void decx::dsp::fft::_cuda_FFT2D_planner<_data_type>::release_buffers(decx::dsp::fft::_cuda_FFT2D_planner<_data_type>* _fake_this)
+void decx::dsp::fft::_cuda_FFT2D_planner<_data_type>::ReleaseBuffers(decx::dsp::fft::_cuda_FFT2D_planner<_data_type>* _fake_this)
 {
     decx::alloc::_device_dealloc(&_fake_this->_tmp1);
     decx::alloc::_device_dealloc(&_fake_this->_tmp2);
 }
 
-template void decx::dsp::fft::_cuda_FFT2D_planner<float>::release_buffers(decx::dsp::fft::_cuda_FFT2D_planner<float>*);
-template void decx::dsp::fft::_cuda_FFT2D_planner<double>::release_buffers(decx::dsp::fft::_cuda_FFT2D_planner<double>*);
+template void decx::dsp::fft::_cuda_FFT2D_planner<float>::ReleaseBuffers(decx::dsp::fft::_cuda_FFT2D_planner<float>*);
+template void decx::dsp::fft::_cuda_FFT2D_planner<double>::ReleaseBuffers(decx::dsp::fft::_cuda_FFT2D_planner<double>*);
 
 
 template <typename _data_type>
 decx::dsp::fft::_cuda_FFT2D_planner<_data_type>::~_cuda_FFT2D_planner()
 {
-    decx::dsp::fft::_cuda_FFT2D_planner<_data_type>::release_buffers(this);
+    decx::dsp::fft::_cuda_FFT2D_planner<_data_type>::ReleaseBuffers(this);
 }
 
 template decx::dsp::fft::_cuda_FFT2D_planner<float>::~_cuda_FFT2D_planner();

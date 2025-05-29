@@ -143,7 +143,7 @@ public:
     void Inverse(decx::_GPU_Matrix* src, decx::_GPU_Matrix* dst, decx::cuda_stream* S) const;
 
 
-    static void release_buffers(decx::dsp::fft::_cuda_FFT2D_planner<_data_type>* _fake_this);
+    static void ReleaseBuffers(decx::dsp::fft::_cuda_FFT2D_planner<_data_type>* _fake_this);
 
 
     ~_cuda_FFT2D_planner();

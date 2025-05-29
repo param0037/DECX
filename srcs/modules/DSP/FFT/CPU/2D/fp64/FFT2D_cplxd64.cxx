@@ -64,7 +64,7 @@ void decx::dsp::fft::cpu_FFT2D_planner<double>::Forward(decx::_Matrix* src,
                                                decx::utils::align<uint32_t>(src->Height(), 2),   t1D, false);
     // Transpose
     this->_transpose_config_2nd.transpose_16b_caller((de::CPd*)this->get_tmp1_ptr(), 
-                                                     (de::CPd*)dst->Mat.ptr,
+                                                     dst->Mat.GetRawPtr<de::CPd>(),
                                                      decx::utils::align<uint32_t>(src->Height(), 2), 
                                                      dst->Pitch(), 
                                                      t1D);
@@ -84,7 +84,7 @@ void decx::dsp::fft::cpu_FFT2D_planner<double>::Inverse(decx::_Matrix* src,
 {
     // The alignment is always 2 in case where _op_data_type = de::CPd
     // Horizontal FFT
-    decx::dsp::fft::_IFFT2D_H_entire_rows_cplxd<de::CPd>((de::CPd*)src->Mat.ptr,                
+    decx::dsp::fft::_IFFT2D_H_entire_rows_cplxd<de::CPd>(src->Mat.GetRawPtr<de::CPd>(),                
                                                         (de::CPd*)this->get_tmp1_ptr(), 
                                                         this,                                            
                                                         src->Pitch(), 
@@ -112,7 +112,7 @@ void decx::dsp::fft::cpu_FFT2D_planner<double>::Inverse(decx::_Matrix* src,
     if constexpr (std::is_same_v<_type_out, de::CPd>){
         this->_transpose_config_2nd.
             transpose_16b_caller((de::CPd*)this->get_tmp1_ptr(), 
-                                (de::CPd*)dst->Mat.ptr,
+                                dst->Mat.GetRawPtr<de::CPd>(),
                                 decx::utils::align<uint32_t>(src->Height(), 2), 
                                 dst->Pitch(),
                                 t1D);
@@ -128,7 +128,7 @@ void decx::dsp::fft::cpu_FFT2D_planner<double>::Inverse(decx::_Matrix* src,
     else {
         this->_transpose_config_2nd.
             transpose_8b_caller((double*)this->get_tmp1_ptr(), 
-                                (double*)dst->Mat.ptr,
+                                dst->Mat.GetRawPtr<double>(),
                                 decx::utils::align<uint32_t>(src->Height(), _STG_alignment), 
                                 dst->Pitch(),
                                 t1D);

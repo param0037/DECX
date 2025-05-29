@@ -29,9 +29,10 @@
 */
 
 
-#include "../../../common/Classes/MatrixArray.h"
+#include <Classes/MatrixArray.h>
+#define MODULE_TAG "MatrixArray"
+#include <log_console.h>
 
-#define MODULE_TAG "core::class"
 
 void decx::_MatrixArray::alloc_data_space()
 {
@@ -40,8 +41,8 @@ void decx::_MatrixArray::alloc_data_space()
         this->MatptrArr.emplace_back();
 
         const uint64_t alloc_bytes = (uint64_t)p_layout->height * (uint64_t)p_layout->pitch;
-        if (decx::alloc::_host_virtual_page_malloc<void>(this->MatptrArr[i], alloc_bytes)) {
-            DECX_LOG_ERR("Fail to allocate memory for MatrixArray on host\n");
+        if (this->MatptrArr[i]->Allocate(alloc_bytes, PAGABLE)) {
+            DECX_LOG_ERR("Fail to allocate memory for MatrixArray on host");
             return;
         }
     }
@@ -57,8 +58,8 @@ void decx::_MatrixArray::re_alloc_data_space()
         this->MatptrArr.emplace_back();
 
         const uint64_t alloc_bytes = (uint64_t)p_layout->height * (uint64_t)p_layout->pitch;
-        if (decx::alloc::_host_virtual_page_malloc<void>(this->MatptrArr[i], alloc_bytes)) {
-            DECX_LOG_ERR("Fail to allocate memory for MatrixArray on host\n");
+        if (this->MatptrArr[i]->Reallocate(alloc_bytes)) {
+            DECX_LOG_ERR("Fail to allocate memory for MatrixArray on host");
             return;
         }
     }
@@ -155,7 +156,7 @@ de::MatrixArray* de::CreateMatrixArrayPtr(const de::_DATA_TYPES_FLAGS_ _type, ui
 void decx::_MatrixArray::release()
 {
     for (int32_t i = 0; i < this->_matrix_number; ++i) {
-        decx::alloc::_host_virtual_page_dealloc(this->MatptrArr[i]);
+        this->MatptrArr[i]->Free();
     }
     
     this->_layouts.~Dynamic_Array();
@@ -183,7 +184,7 @@ de::MatrixArray& decx::_MatrixArray::SoftCopy(de::MatrixArray& src)
     this->_layouts = ref_src._layouts;
 
     for (int32_t i = 0; i < _matrix_number; ++i){
-        decx::alloc::_host_virtual_page_malloc_same_place(this->MatptrArr[i]);
+        this->MatptrArr[i]->AllocateRef();
     }
 
     return *this;

@@ -240,7 +240,7 @@ template const decx::dsp::fft::FKT1D* decx::dsp::fft::cpu_FFT2D_planner<double>:
 
 
 template <typename _data_type>
-void decx::dsp::fft::cpu_FFT2D_planner<_data_type>::release_buffers(decx::dsp::fft::cpu_FFT2D_planner<_data_type>* _fake_this)
+void decx::dsp::fft::cpu_FFT2D_planner<_data_type>::ReleaseBuffers(decx::dsp::fft::cpu_FFT2D_planner<_data_type>* _fake_this)
 {
     decx::alloc::_host_virtual_page_dealloc(&_fake_this->_tmp1);
     decx::alloc::_host_virtual_page_dealloc(&_fake_this->_tmp2);
@@ -250,14 +250,14 @@ void decx::dsp::fft::cpu_FFT2D_planner<_data_type>::release_buffers(decx::dsp::f
     }
 }
 
-template void decx::dsp::fft::cpu_FFT2D_planner<float>::release_buffers(decx::dsp::fft::cpu_FFT2D_planner<float>*);
-template void decx::dsp::fft::cpu_FFT2D_planner<double>::release_buffers(decx::dsp::fft::cpu_FFT2D_planner<double>*);
+template void decx::dsp::fft::cpu_FFT2D_planner<float>::ReleaseBuffers(decx::dsp::fft::cpu_FFT2D_planner<float>*);
+template void decx::dsp::fft::cpu_FFT2D_planner<double>::ReleaseBuffers(decx::dsp::fft::cpu_FFT2D_planner<double>*);
 
 
 template <typename _data_type>
 decx::dsp::fft::cpu_FFT2D_planner<_data_type>::~cpu_FFT2D_planner()
 {
-    decx::dsp::fft::cpu_FFT2D_planner<_data_type>::release_buffers(this);
+    decx::dsp::fft::cpu_FFT2D_planner<_data_type>::ReleaseBuffers(this);
 }
 
 template decx::dsp::fft::cpu_FFT2D_planner<float>::~cpu_FFT2D_planner(); 

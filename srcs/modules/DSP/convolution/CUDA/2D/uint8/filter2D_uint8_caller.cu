@@ -228,7 +228,7 @@ decx::dsp::cuda_Filter2D_planner<uint8_t>::run(decx::_GPU_Matrix* src, decx::_GP
     {
         decx::dsp::_cu_F2_U8_Kcaller _kernel_ptr = decx::dsp::_cu_F2_U8_Kcallers[0][(this->_kernel_layout->width - 2) / 8];
 
-        _kernel_ptr(this, (double*)src->Mat.ptr, kernel->Mat.ptr, dst->Mat.ptr,
+        _kernel_ptr(this, src->Mat.GetRawPtr<double>(), kernel->Mat.ptr, dst->Mat.ptr,
             dst->get_layout().pitch, S);
     }
 }

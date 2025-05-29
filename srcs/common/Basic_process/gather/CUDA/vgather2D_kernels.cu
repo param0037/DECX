@@ -36,22 +36,22 @@
 namespace decx
 {
 namespace GPUK{
-    __global__ void _UNIQUE_KERNEL_NAME_(cu_vgather2D_fp32)(cudaTextureObject_t tex, const float2* map, float4* dst,
+    __global__ void CKC(cu_vgather2D_fp32)(cudaTextureObject_t tex, const float2* map, float4* dst,
         const uint2 src_dims_v1, const uint2 proc_dims, const uint32_t pitchmap_v1, const uint32_t pitchdst_v);
 
 
-    __global__ void _UNIQUE_KERNEL_NAME_(cu_vgather2D_uint8)(cudaTextureObject_t tex, const float2* map, uchar4* dst,
+    __global__ void CKC(cu_vgather2D_uint8)(cudaTextureObject_t tex, const float2* map, uchar4* dst,
         const uint2 src_dims_v1, const uint2 proc_dims, const uint32_t pitchmap_v1, const uint32_t pitchdst_v);
 
 
-    __global__ void _UNIQUE_KERNEL_NAME_(cu_vgather2D_uchar4)(cudaTextureObject_t tex, const float2* map, float4* dst,
+    __global__ void CKC(cu_vgather2D_uchar4)(cudaTextureObject_t tex, const float2* map, float4* dst,
         const uint2 src_dims_v1, const uint2 proc_dims, const uint32_t pitchmap_v1, const uint32_t pitchdst_v);
 }
 }
 
 
 __global__ void decx::GPUK::
-_UNIQUE_KERNEL_NAME_(cu_vgather2D_fp32)(cudaTextureObject_t   tex, 
+CKC(cu_vgather2D_fp32)(cudaTextureObject_t   tex, 
                   const float2*         map, 
                   float4*               dst,
                   const uint2           src_dims_v1, 
@@ -130,7 +130,7 @@ _UNIQUE_KERNEL_NAME_(cu_vgather2D_fp32)(cudaTextureObject_t   tex,
 
 
 __global__ void decx::GPUK::
-_UNIQUE_KERNEL_NAME_(cu_vgather2D_uint8)(cudaTextureObject_t   tex, 
+CKC(cu_vgather2D_uint8)(cudaTextureObject_t   tex, 
                   const float2*         map, 
                   uchar4*               dst,
                   const uint2           src_dims_v1, 
@@ -215,7 +215,7 @@ _UNIQUE_KERNEL_NAME_(cu_vgather2D_uint8)(cudaTextureObject_t   tex,
 
 
 __global__ void decx::GPUK::
-_UNIQUE_KERNEL_NAME_(cu_vgather2D_uchar4)(cudaTextureObject_t   tex, 
+CKC(cu_vgather2D_uchar4)(cudaTextureObject_t   tex, 
                   const float2*         map, 
                   float4*               dst,
                   const uint2           src_dims_v1, 
@@ -320,7 +320,7 @@ void decx::GPUK::vgather2D_fp32(cudaTextureObject_t tex,        const float2* ma
                                 const uint32_t pitchdst_v,      dim3 block,
                                 dim3 grid,                      decx::cuda_stream* S)
 {
-    decx::GPUK::_UNIQUE_KERNEL_NAME_(cu_vgather2D_fp32)<<<grid, block, 0, S->get_raw_stream_ref()>>>(
+    decx::GPUK::CKC(cu_vgather2D_fp32)<<<grid, block, 0, S->get_raw_stream_ref()>>>(
         tex, map, (float4*)dst, src_dims_v1, proc_dims, pitchmap_v1, pitchdst_v);
 }
 
@@ -330,7 +330,7 @@ void decx::GPUK::vgather2D_uint8(cudaTextureObject_t tex,        const float2* m
                                  const uint32_t pitchdst_v,      dim3 block,
                                  dim3 grid,                      decx::cuda_stream* S)
 {
-    decx::GPUK::_UNIQUE_KERNEL_NAME_(cu_vgather2D_uint8)<<<grid, block, 0, S->get_raw_stream_ref()>>>(
+    decx::GPUK::CKC(cu_vgather2D_uint8)<<<grid, block, 0, S->get_raw_stream_ref()>>>(
         tex, map, (uchar4*)dst, src_dims_v1, proc_dims, pitchmap_v1, pitchdst_v);
 }
 
@@ -341,6 +341,6 @@ void decx::GPUK::vgather2D_uchar4(cudaTextureObject_t tex,        const float2* 
                                  const uint32_t pitchdst_v,      dim3 block,
                                  dim3 grid,                      decx::cuda_stream* S)
 {
-    decx::GPUK::_UNIQUE_KERNEL_NAME_(cu_vgather2D_uchar4)<<<grid, block, 0, S->get_raw_stream_ref()>>>(
+    decx::GPUK::CKC(cu_vgather2D_uchar4)<<<grid, block, 0, S->get_raw_stream_ref()>>>(
         tex, map, (float4*)dst, src_dims_v1, proc_dims, pitchmap_v1, pitchdst_v);
 }

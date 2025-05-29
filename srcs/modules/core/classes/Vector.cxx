@@ -29,8 +29,9 @@
 */
 
 
-#include "../../../common/Classes/Vector.h"
-
+#include <Classes/Vector.h>
+#define MODULE_TAG "Vector"
+#include <log_console.h>
 
 
 void decx::_Vector::_attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, size_t len)
@@ -65,22 +66,17 @@ void decx::_Vector::_attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, size_t
 
 void decx::_Vector::alloc_data_space()
 {
-    if (decx::alloc::_host_virtual_page_malloc<void>(&this->Vec, this->total_bytes)) {
-        SetConsoleColor(4);
-        printf("Vector malloc failed! Please check if there is enough space in your device.");
-        ResetConsoleColor;
+    if (this->Vec.Allocate(this->total_bytes, PAGABLE)) {
+        DECX_LOG_ERR("Vector malloc failed! Please check if there is enough space in your device");
         return;
     }
 }
 
 
-
 void decx::_Vector::re_alloc_data_space(const uint32_t _pre_store_type)
 {
-    if (decx::alloc::_host_virtual_page_realloc(&this->Vec, this->total_bytes)) {
-        SetConsoleColor(4);
-        printf("Vector malloc failed! Please check if there is enough space in your device.");
-        ResetConsoleColor;
+    if (this->Vec.Reallocate(this->total_bytes)) {
+        DECX_LOG_ERR("Vector malloc failed! Please check if there is enough space in your device");
         return;
     }
 }
@@ -106,8 +102,9 @@ void decx::_Vector::re_construct(const de::_DATA_TYPES_FLAGS_ _type, size_t leng
 
         if (this->total_bytes > pre_size) {
             // deallocate according to the current memory pool first
-            decx::alloc::_host_virtual_page_dealloc(&this->Vec);
+            this->Vec.Free();
             this->alloc_data_space();
+            this->_exp_data_ptr = this->Vec.GetRawPtr();
         }
     }
 }
@@ -115,18 +112,17 @@ void decx::_Vector::re_construct(const de::_DATA_TYPES_FLAGS_ _type, size_t leng
 
 decx::_Vector::_Vector()
 {
-    this->_exp_data_ptr = &this->Vec.ptr;
     this->_attribute_assign(de::_DATA_TYPES_FLAGS_::_VOID_, 0);
     this->_init = false;
+    this->_exp_data_ptr = this->Vec.GetRawPtr();
 }
 
 
 decx::_Vector::_Vector(const de::_DATA_TYPES_FLAGS_ _type, size_t length)
 {
-    this->_exp_data_ptr = &this->Vec.ptr;
     this->_attribute_assign(_type, length);
-
     this->alloc_data_space();
+    this->_exp_data_ptr = this->Vec.GetRawPtr();
 }
 
 
@@ -135,66 +131,6 @@ size_t decx::_Vector::Len() const
 {
     return this->length;
 }
-
-//
-//float* decx::_Vector::ptr_fp32(size_t index)
-//{
-//    float* _ptr = reinterpret_cast<float*>(this->Vec.ptr);
-//    return _ptr + index;
-//}
-//
-//int* decx::_Vector::ptr_int32(size_t index)
-//{
-//    int* _ptr = reinterpret_cast<int*>(this->Vec.ptr);
-//    return _ptr + index;
-//}
-//
-//
-//uint64_t* decx::_Vector::ptr_uint64(size_t index)
-//{
-//    uint64_t* _ptr = reinterpret_cast<uint64_t*>(this->Vec.ptr);
-//    return _ptr + index;
-//}
-//
-//
-//double* decx::_Vector::ptr_fp64(size_t index)
-//{
-//    double* _ptr = reinterpret_cast<double*>(this->Vec.ptr);
-//    return _ptr + index;
-//}
-//
-//de::Half* decx::_Vector::ptr_fp16(size_t index)
-//{
-//    de::Half* _ptr = reinterpret_cast<de::Half*>(this->Vec.ptr);
-//    return _ptr + index;
-//}
-//
-//de::CPf* decx::_Vector::ptr_cpl32(size_t index)
-//{
-//    de::CPf* _ptr = reinterpret_cast<de::CPf*>(this->Vec.ptr);
-//    return _ptr + index;
-//}
-//
-//
-//de::CPd* decx::_Vector::ptr_cpl64(size_t index)
-//{
-//    de::CPd* _ptr = reinterpret_cast<de::CPd*>(this->Vec.ptr);
-//    return _ptr + index;
-//}
-//
-//
-//uint8_t* decx::_Vector::ptr_uint8(size_t index)
-//{
-//    uint8_t* _ptr = reinterpret_cast<uint8_t*>(this->Vec.ptr);
-//    return _ptr + index;
-//}
-//
-//
-//de::Vector4f* decx::_Vector::ptr_vec4f(size_t index)
-//{
-//    de::Vector4f* _ptr = reinterpret_cast<de::Vector4f*>(this->Vec.ptr);
-//    return _ptr + index;
-//}
 
 
 #if _CPP_EXPORT_ENABLED_
@@ -225,9 +161,9 @@ de::Vector* de::CreateVectorPtr(const de::_DATA_TYPES_FLAGS_ _type, size_t len)
 
 void decx::_Vector::release()
 {
-    decx::alloc::_host_virtual_page_dealloc(&this->Vec);
+    this->Vec.Free();
+    this->_exp_data_ptr = nullptr;
 }
-
 
 
 de::Vector& decx::_Vector::SoftCopy(de::Vector& src)
@@ -236,7 +172,8 @@ de::Vector& decx::_Vector::SoftCopy(de::Vector& src)
 
     this->_attribute_assign(ref_src.type, ref_src.length);
 
-    decx::alloc::_host_virtual_page_malloc_same_place(&this->Vec);
+    this->Vec.AllocateRef();
+    this->_exp_data_ptr = this->Vec.GetRawPtr();
 
     return *this;
 }

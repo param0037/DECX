@@ -37,14 +37,14 @@ namespace blas{
     namespace GPUK 
     {
         // [32, 32]
-        __global__ void _UNIQUE_KERNEL_NAME_(cu_transpose2D_b4_dense)(const float* __restrict src, float* __restrict dst,
+        __global__ void CKC(cu_transpose2D_b4_dense)(const float* __restrict src, float* __restrict dst,
             const uint32_t pitchsrc_v2, const uint32_t pitchdst_v2, const uint2 proc_dim_dst);
     }
 }
 }
 
 __global__ void  decx::blas::GPUK::
-_UNIQUE_KERNEL_NAME_(cu_transpose2D_b4_dense)(const float* __restrict src, 
+CKC(cu_transpose2D_b4_dense)(const float* __restrict src, 
                                       float* __restrict dst,
                                       const uint32_t pitchsrc_v1, 
                                       const uint32_t pitchdst_v1, 
@@ -102,6 +102,6 @@ decx::blas::transpose2D_b4_dense(const float* src,
     dim3 transp_grid_0(decx::utils::ceil<uint>(proc_dims_dst.y, 32),
         decx::utils::ceil<uint>(proc_dims_dst.x, 32));
 
-    decx::blas::GPUK::_UNIQUE_KERNEL_NAME_(cu_transpose2D_b4_dense) << <transp_grid_0, transp_thread_0, 0, S->get_raw_stream_ref() >> > (
+    decx::blas::GPUK::CKC(cu_transpose2D_b4_dense) << <transp_grid_0, transp_thread_0, 0, S->get_raw_stream_ref() >> > (
         src, dst, pitchsrc, pitchdst, proc_dims_dst);
 }

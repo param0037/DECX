@@ -61,7 +61,7 @@ void decx::dsp::fft::cpu_FFT2D_planner<float>::Forward(decx::_Matrix* src,
                                                decx::utils::align<uint32_t>(src->Height(), 4),   t1D, false);
     // Transpose
     this->_transpose_config_2nd.transpose_8b_caller((double*)this->get_tmp1_ptr(),
-        (double*)dst->Mat.ptr,
+        dst->Mat.GetRawPtr<double>(),
         decx::utils::align<uint32_t>(src->Height(), 4),
         dst->Pitch(),
         t1D);
@@ -109,7 +109,7 @@ void decx::dsp::fft::cpu_FFT2D_planner<float>::Inverse(decx::_Matrix* src,
     if constexpr (std::is_same_v<_type_out, de::CPf>){
         this->_transpose_config_2nd.
             transpose_8b_caller((double*)this->get_tmp1_ptr(), 
-                                (double*)dst->Mat.ptr,
+                                dst->Mat.GetRawPtr<double>(),
                                 decx::utils::ceil<uint32_t>(src->Height(), 4) * 4, 
                                 dst->Pitch(),
                                 t1D);
@@ -125,7 +125,7 @@ void decx::dsp::fft::cpu_FFT2D_planner<float>::Inverse(decx::_Matrix* src,
     else {
         this->_transpose_config_2nd.
             transpose_4b_caller((float*)this->get_tmp1_ptr(), 
-                                (float*)dst->Mat.ptr,
+                                dst->Mat.GetRawPtr<float>(),
                                 decx::utils::align<uint32_t>(src->Height(), _STG_alignment), 
                                 dst->Pitch(),
                                 t1D);

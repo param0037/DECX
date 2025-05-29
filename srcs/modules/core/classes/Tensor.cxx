@@ -29,7 +29,8 @@
 */
 
 
-#include "../../../common/Classes/Tensor.h"
+#include <Classes/Tensor.h>
+#include <log_console.h>
 
 #define MODULE_TAG "core::class"
 
@@ -74,7 +75,7 @@ void decx::_tensor_layout::_attribute_assign(const de::_DATA_TYPES_FLAGS_ _type,
 decx::_Tensor::_Tensor()
 {
     this->_attribute_assign(de::_DATA_TYPES_FLAGS_::_VOID_, 0, 0, 0);
-    this->_exp_data_ptr = &this->Tens.ptr;
+    this->_exp_data_ptr = this->Tens.GetRawPtr();
     this->_exp_tensor_dscr = &this->_layout;
 
     this->_init = false;
@@ -99,21 +100,17 @@ void decx::_Tensor::_attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, const 
 
 void decx::_Tensor::alloc_data_space()
 {
-    if (decx::alloc::_host_virtual_page_malloc<void>(&this->Tens, this->total_bytes)) {
+    if (this->Tens.Allocate(this->total_bytes, PAGABLE)) {
         DECX_LOG_ERR("Tensor malloc failed! Please check if there is enough space in your RAM.");
-        exit(-1);
     }
-
-    memset(this->Tens.ptr, 0, this->total_bytes);
 }
 
 
 
 void decx::_Tensor::re_alloc_data_space()
 {
-    decx::alloc::_host_virtual_page_realloc<void>(&this->Tens, this->total_bytes);
-
-    memset(this->Tens.ptr, 0, this->total_bytes);
+    this->Tens.Reallocate(this->total_bytes);
+    this->_exp_data_ptr = nullptr;
 }
 
 
@@ -121,7 +118,6 @@ void decx::_Tensor::re_alloc_data_space()
 void decx::_Tensor::construct(const de::_DATA_TYPES_FLAGS_ _type, const uint32_t _width, const uint32_t _height, const uint32_t _depth)
 {
     this->_attribute_assign(_type, _width, _height, _depth);
-
     this->alloc_data_space();
 }
 
@@ -138,32 +134,27 @@ void decx::_Tensor::re_construct(const de::_DATA_TYPES_FLAGS_ _type, const uint3
 
         if (this->total_bytes > pre_size) {
             // deallocate according to the current memory pool first
-            decx::alloc::_host_virtual_page_dealloc(&this->Tens);
+            this->Tens.Free();
             this->alloc_data_space();
+            this->_exp_data_ptr = this->Tens.GetRawPtr();
         }
     }
 }
 
 
-
 decx::_Tensor::_Tensor(const de::_DATA_TYPES_FLAGS_ _type, const uint32_t _width, const uint32_t _height, const uint32_t _depth)
 {
-    this->_exp_data_ptr = &this->Tens.ptr;
     this->_exp_tensor_dscr = &this->_layout;
-
     this->_attribute_assign(_type, _width, _height, _depth);
-
     this->alloc_data_space();
+    this->_exp_data_ptr = this->Tens.GetRawPtr();
 }
-
-
 
 
 void decx::_Tensor::release()
 {
-    decx::alloc::_host_virtual_page_dealloc(&this->Tens);
+    this->Tens.Free();
 }
-
 
 
 de::_DATA_TYPES_FLAGS_ decx::_Tensor::Type() const
@@ -237,12 +228,12 @@ de::Tensor& decx::_Tensor::SoftCopy(de::Tensor& src)
 {
     decx::_Tensor& ref_src = dynamic_cast<decx::_Tensor&>(src);
 
-    this->Tens.block = ref_src.Tens.block;
-
     this->_attribute_assign(ref_src.Type(), ref_src._layout.width, ref_src._layout.height, ref_src._layout.depth);
 
-    decx::alloc::_host_virtual_page_malloc_same_place(&this->Tens);
-
+    this->Tens = ref_src.Tens;
+    this->Tens.AllocateRef();
+    this->_exp_data_ptr = this->Tens.GetRawPtr();
+    
     return *this;
 }
 

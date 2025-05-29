@@ -126,7 +126,7 @@ namespace de
         Matrix
     {
     protected:
-        _SHADOW_ATTRIBUTE_(void*) _exp_data_ptr;
+        void* _exp_data_ptr;
         _SHADOW_ATTRIBUTE_(decx::_matrix_layout) _matrix_dscr;
 
     public:

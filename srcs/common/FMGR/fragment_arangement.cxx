@@ -149,7 +149,6 @@ bool decx::utils::frag_manager_gen_Nx(decx::utils::frag_manager* src, const uint
 }
 
 
-
 // something wrong, for some inputs it fails to give the right results
 void decx::utils::thread2D_arrangement_advisor(uint2*              thr_arrange, 
                                                const uint32_t      total_thr_num, 

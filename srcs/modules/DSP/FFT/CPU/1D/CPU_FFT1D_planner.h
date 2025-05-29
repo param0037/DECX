@@ -185,7 +185,7 @@ public:
     void* get_tmp2_ptr() const;
 
 
-    static void release_buffers(decx::dsp::fft::cpu_FFT1D_planner<_data_type>* _fake_this);
+    static void ReleaseBuffers(decx::dsp::fft::cpu_FFT1D_planner<_data_type>* _fake_this);
 
 
     ~cpu_FFT1D_planner();

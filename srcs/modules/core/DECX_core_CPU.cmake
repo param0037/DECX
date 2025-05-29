@@ -36,9 +36,9 @@ file(GLOB_RECURSE THREAD_POOL "${DECX_WORLD_ABS_DIR}/srcs/modules/core/thread_ma
 file(GLOB_RECURSE GEN "${DECX_WORLD_ABS_DIR}/srcs/modules/core/generator/*.cxx")
 
 
-add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/modules/core/allocators/CPU" "${DECX_SUBBUILD_BIN_DIR}/allocators_host")
 add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/common/Element_wise" "${DECX_SUBBUILD_BIN_DIR}/EW_CPU")
 add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/common/FMGR" "${DECX_SUBBUILD_BIN_DIR}/FMGR_CPU")
+add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/modules/core/memory_management/CPU" "${DECX_SUBBUILD_BIN_DIR}/modules/core/mem_pool_host")
 
 
 message("Now building for ${_DECX_HOST_ARCH_}")
@@ -54,8 +54,8 @@ add_library(${PROJECT_NAME} SHARED
     ${CORE} ${CLASSES} ${RESMGR} ${THREAD_POOL} ${CONFIGS} ${GEN})
 
 
-target_link_libraries(DECX_core_CPU PRIVATE allocators_host
-                                    PRIVATE EW_CPU
+target_link_libraries(DECX_core_CPU PRIVATE EW_CPU
+                                    PRIVATE mem_pool_host
                                     PRIVATE FMGR_CPU)
 
 

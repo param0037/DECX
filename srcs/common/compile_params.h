@@ -87,13 +87,13 @@
 #ifdef _MSC_VER
 #define __STDCALL__ __stdcall
 #define __VECTORCALL__ __vectorcall
-#define __COMM_FUNC__
+// #define 
 #endif
 
 #if defined(__GNUC__) || defined(__clang__)
 #define __STDCALL__
 #define __VECTORCALL__
-#define __COMM_FUNC__ __attribute__((visibility("hidden")))
+// #define  __attribute__((visibility("hidden")))
 #endif
 
 
@@ -108,6 +108,10 @@
  */
 #define _REGISTER_COMM_KERNEL_WITH_LIB_(x1, x2) __CONCAT_IMPL(x1, x2)
 #define _UNIQUE_KERNEL_NAME_(kernel) _REGISTER_COMM_KERNEL_WITH_LIB_(kernel, _MODULE_NAME_)
+
+#ifdef _UNIQUE_KERNEL_NAME_
+#define CKC(kernel_name) _UNIQUE_KERNEL_NAME_(kernel_name)
+#endif
 
 #if defined(__linux__) || defined(__GNUC__)
 #define Linux

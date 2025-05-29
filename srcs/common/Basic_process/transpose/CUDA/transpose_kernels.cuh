@@ -45,32 +45,32 @@ namespace decx
 {
 namespace blas
 {
-    __COMM_FUNC__ void transpose2D_b8(const double2* src, double2* dst, const uint2 proc_dims_dst,
+     void transpose2D_b8(const double2* src, double2* dst, const uint2 proc_dims_dst,
         const uint32_t pitchsrc, const uint32_t pitchdst, decx::cuda_stream* S);
 
-    __COMM_FUNC__ void transpose2D_b16(const double2* src, double2* dst, const uint2 proc_dims_dst,
+     void transpose2D_b16(const double2* src, double2* dst, const uint2 proc_dims_dst,
         const uint32_t pitchsrc, const uint32_t pitchdst, decx::cuda_stream* S);
 
 
 #ifdef _DECX_DSP_CUDA_
-    __COMM_FUNC__ void transpose2D_b8_for_FFT(const double2* src, double2* dst, const uint2 proc_dims_dst,
+     void transpose2D_b8_for_FFT(const double2* src, double2* dst, const uint2 proc_dims_dst,
         const uint32_t pitchsrc, const uint32_t pitchdst, decx::cuda_stream* S);
 
 
-    __COMM_FUNC__ void transpose2D_b16_for_FFT(const double2* src, double2* dst, const uint2 proc_dims_dst,
+     void transpose2D_b16_for_FFT(const double2* src, double2* dst, const uint2 proc_dims_dst,
         const uint32_t pitchsrc, const uint32_t pitchdst, decx::cuda_stream* S);
 #endif
 
 
-    __COMM_FUNC__ void transpose2D_b4(const float2* src, float2* dst, const uint2 proc_dims_dst,
+     void transpose2D_b4(const float2* src, float2* dst, const uint2 proc_dims_dst,
         const uint32_t pitchsrc, const uint32_t pitchdst, decx::cuda_stream* S);
 
 
-    __COMM_FUNC__ void transpose2D_b2(const float4* src, float4* dst, const uint2 proc_dims_dst,
+     void transpose2D_b2(const float4* src, float4* dst, const uint2 proc_dims_dst,
         const uint32_t pitchsrc, const uint32_t pitchdst, decx::cuda_stream* S);
 
 
-    __COMM_FUNC__ void transpose2D_b1(const uint32_t* src, uint32_t* dst, const uint2 proc_dims_dst,
+     void transpose2D_b1(const uint32_t* src, uint32_t* dst, const uint2 proc_dims_dst,
         const uint32_t pitchsrc, const uint32_t pitchdst, decx::cuda_stream* S);
 }
 }

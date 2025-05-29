@@ -151,7 +151,7 @@ static void GetSysTimeMsRough(char* time_msg, const unsigned int msg_max_length)
 void DECX_Log_Console_Exec(const DecxInternalLogLevel log_level, 
                            const char *__restrict module_tag,
                            const char *__restrict func_name, 
-                           const char *__restrict __fmt, ...)
+                           const char *__restrict msg)
 {
     char time_info[32];
 #if _DECX_CONSOLE_LOG_ENABLE_ACCURATE_TIME_
@@ -161,11 +161,6 @@ void DECX_Log_Console_Exec(const DecxInternalLogLevel log_level,
 #endif
 
     DecxSetConsoleTextColor(log_level);
-    
-    char msg[_CONSOLE_LOG_MSG_BUFFER_SIZE_];
-    va_list args;
-    va_start(args, __fmt);
-    snprintf(msg, _CONSOLE_LOG_MSG_BUFFER_SIZE_, __fmt, args);
 
     switch (log_level)
     {
@@ -189,6 +184,5 @@ void DECX_Log_Console_Exec(const DecxInternalLogLevel log_level,
         break;
     }
 
-    va_end(args);
     ResetConsoleColor;
 }

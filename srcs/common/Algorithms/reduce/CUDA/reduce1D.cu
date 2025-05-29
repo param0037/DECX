@@ -62,7 +62,7 @@ bool decx::reduce::reduce2D_flatten_postproc_configs_gen(decx::reduce::cuda_redu
 
     _configs_ptr->generate_configs(flatten_len, S);
 
-    decx::reduce::RWPK_2D& rwpk_flatten = _configs_ptr->get_rwpk_flatten();
+    decx::reduce::RWPK_2D& rwpk_flatten = _configs_ptr->GetRWPKFlatten();
 
     rwpk_flatten._block_dims = dim3(_REDUCE2D_BLOCK_DIM_X_, _REDUCE2D_BLOCK_DIM_Y_);
     rwpk_flatten._grid_dims = _flatten_K_grid;
@@ -115,11 +115,12 @@ void decx::reduce::cuda_reduce1D_configs<_type_in>::_calc_kernel_param_packs()
 
     read_ptr = this->_proc_src;
     if (_src_from_device) {
-        write_ptr = this->_d_tmp1.ptr;
+        write_ptr = (void*)this->_d_tmp1;
+        this->_pp_buffers.ResetBuf1AsLeading();
     }
     else {
-        write_ptr = this->_d_tmp2.ptr;
-        this->inverse_mutex_MIF_states();
+        write_ptr = (void*)this->_d_tmp2;
+        this->_pp_buffers.ResetBuf2AsLeading();
     }
     
     this->_rwpks.emplace_back(read_ptr,         write_ptr, 
@@ -134,14 +135,14 @@ void decx::reduce::cuda_reduce1D_configs<_type_in>::_calc_kernel_param_packs()
 
         while (true)
         {
-            read_ptr = this->get_leading_MIF().mem;
-            write_ptr = this->get_lagging_MIF().mem;
+            read_ptr = this->_pp_buffers.template GetLaggingBufPtr<void>();
+            write_ptr = this->_pp_buffers.template GetLaggingBufPtr<void>();
 
             this->_rwpks.emplace_back(read_ptr,         write_ptr, 
                                       grid_len,         _REDUCE1D_BLOCK_DIM_,
                                       proc_len_v,       proc_len_v1);
 
-            this->inverse_mutex_MIF_states();
+            this->_pp_buffers.UpdateStatus();
 
             if (grid_len == 1) {
                 break;
@@ -191,22 +192,16 @@ void decx::reduce::cuda_reduce1D_configs<_type_in>::generate_configs(const uint6
         _first_grid_len = decx::utils::ceil<uint64_t>(_aligned_proc_len / _CU_REDUCE1D_MEM_ALIGN_8B_, _REDUCE1D_BLOCK_DIM_);
     }
 
-    if (decx::alloc::_device_malloc(&this->_d_tmp1, _aligned_proc_len * sizeof(_type_in), true, S)) {
-        DECX_LOG_ERR(DEV_ALLOC_FAIL);
-        return;
-    }
+    int32_t rval = 0;
+    rval |= this->_d_tmp1.Allocate(_aligned_proc_len * sizeof(_type_in), CUDA_DEVICE, de::GetLastError(), true, S);
 
-    if (decx::alloc::_device_malloc(&this->_d_tmp2, _first_grid_len * sizeof(_type_in), true, S)) {
-        DECX_LOG_ERR(DEV_ALLOC_FAIL);
-        return;
-    }
+    rval |= this->_d_tmp2.Allocate(_first_grid_len * sizeof(_type_in), CUDA_DEVICE, de::GetLastError(), true, S);
 
-    this->_MIF_tmp1 = decx::alloc::MIF<void>(this->_d_tmp1.ptr, true);
-    this->_MIF_tmp2 = decx::alloc::MIF<void>(this->_d_tmp2.ptr, false);
+    this->_pp_buffers = decx::utils::double_buffer_manager((void*)this->_d_tmp1, (void*)this->_d_tmp2);
 
-    this->_proc_src = this->_d_tmp1.ptr;
+    this->_proc_src = (void*)this->_d_tmp1;
     this->_calc_kernel_param_packs<false>();
-    this->_proc_dst = this->get_leading_MIF().mem;
+    this->_proc_dst = this->_pp_buffers.template GetLeadingBufPtr<void>();
 }
 
 template void decx::reduce::cuda_reduce1D_configs<float>::generate_configs(const uint64_t, decx::cuda_stream*);
@@ -240,24 +235,17 @@ void decx::reduce::cuda_reduce1D_configs<_type_in>::generate_configs(decx::PtrIn
         _first_grid_len = decx::utils::ceil<uint64_t>(_aligned_proc_len / _CU_REDUCE1D_MEM_ALIGN_8B_, _REDUCE1D_BLOCK_DIM_);
     }
 
-    this->_proc_src = dev_src.ptr;
+    this->_proc_src = (void*)dev_src;
 
-    if (decx::alloc::_device_malloc(&this->_d_tmp1, _first_grid_len * sizeof(_type_in), true, S)) {
-        DECX_LOG_ERR(DEV_ALLOC_FAIL);
-        return;
-    }
+    int32_t rval = 0;
+    rval |= this->_d_tmp1.Allocate(_first_grid_len * sizeof(_type_in), CUDA_DEVICE, de::GetLastError(), true, S);
+    rval |= this->_d_tmp2.Allocate(_first_grid_len * sizeof(_type_in), CUDA_DEVICE, de::GetLastError(), true, S);
 
-    if (decx::alloc::_device_malloc(&this->_d_tmp2, _first_grid_len * sizeof(_type_in), true, S)) {
-        DECX_LOG_ERR(DEV_ALLOC_FAIL);
-        return;
-    }
-
-    this->_MIF_tmp1 = decx::alloc::MIF<void>(this->_d_tmp1.ptr, true);
-    this->_MIF_tmp2 = decx::alloc::MIF<void>(this->_d_tmp2.ptr, false);
+    this->_pp_buffers = decx::utils::double_buffer_manager((void*)this->_d_tmp1, (void*)this->_d_tmp2);
 
     this->_calc_kernel_param_packs<true>();
 
-    this->_proc_dst = this->get_leading_MIF().mem;
+    this->_proc_dst = this->_pp_buffers.template GetLeadingBufPtr<void>();
 }
 
 template void decx::reduce::cuda_reduce1D_configs<float>::generate_configs(decx::PtrInfo<void>, const uint64_t, decx::cuda_stream*);
@@ -268,205 +256,163 @@ template void decx::reduce::cuda_reduce1D_configs<int32_t>::generate_configs(dec
 
 
 template <typename _type_in>
-uint64_t decx::reduce::cuda_reduce1D_configs<_type_in>::get_actual_len() const
+uint64_t decx::reduce::cuda_reduce1D_configs<_type_in>::GetActualLength() const
 {
     return this->_actual_len;
 }
 
 
-
 template <typename _type_in>
-_type_in decx::reduce::cuda_reduce1D_configs<_type_in>::get_fill_val() const
+_type_in decx::reduce::cuda_reduce1D_configs<_type_in>::GetPaddingValue() const
 {
     return this->_fill_val;
 }
 
-template float decx::reduce::cuda_reduce1D_configs<float>::get_fill_val() const;
-template int32_t decx::reduce::cuda_reduce1D_configs<int32_t>::get_fill_val() const;
-template de::Half decx::reduce::cuda_reduce1D_configs<de::Half>::get_fill_val() const;
-template uint8_t decx::reduce::cuda_reduce1D_configs<uint8_t>::get_fill_val() const;
-template double decx::reduce::cuda_reduce1D_configs<double>::get_fill_val() const;
+template float decx::reduce::cuda_reduce1D_configs<float>::GetPaddingValue() const;
+template int32_t decx::reduce::cuda_reduce1D_configs<int32_t>::GetPaddingValue() const;
+template de::Half decx::reduce::cuda_reduce1D_configs<de::Half>::GetPaddingValue() const;
+template uint8_t decx::reduce::cuda_reduce1D_configs<uint8_t>::GetPaddingValue() const;
+template double decx::reduce::cuda_reduce1D_configs<double>::GetPaddingValue() const;
 
 
 template <typename _type_in>
-void decx::reduce::cuda_reduce1D_configs<_type_in>::inverse_mutex_MIF_states()
-{
-    this->_MIF_tmp1.leading = !this->_MIF_tmp1.leading;
-    this->_MIF_tmp2.leading = !this->_MIF_tmp2.leading;
-}
-
-
-template <typename _type_in>
-void decx::reduce::cuda_reduce1D_configs<_type_in>::set_fill_val(const _type_in _val)
+void decx::reduce::cuda_reduce1D_configs<_type_in>::SetPaddingValue(const _type_in _val)
 {
     this->_fill_val = _val;
 }
 
-template void decx::reduce::cuda_reduce1D_configs<float>::set_fill_val(const float _val);
-template void decx::reduce::cuda_reduce1D_configs<uint8_t>::set_fill_val(const uint8_t _val);
-template void decx::reduce::cuda_reduce1D_configs<de::Half>::set_fill_val(const de::Half _val);
-template void decx::reduce::cuda_reduce1D_configs<double>::set_fill_val(const double _val);
-template void decx::reduce::cuda_reduce1D_configs<int32_t>::set_fill_val(const int32_t _val);
+template void decx::reduce::cuda_reduce1D_configs<float>::SetPaddingValue(const float _val);
+template void decx::reduce::cuda_reduce1D_configs<uint8_t>::SetPaddingValue(const uint8_t _val);
+template void decx::reduce::cuda_reduce1D_configs<de::Half>::SetPaddingValue(const de::Half _val);
+template void decx::reduce::cuda_reduce1D_configs<double>::SetPaddingValue(const double _val);
+template void decx::reduce::cuda_reduce1D_configs<int32_t>::SetPaddingValue(const int32_t _val);
 
-
-
-template uint64_t decx::reduce::cuda_reduce1D_configs<float>::get_actual_len() const;
-template uint64_t decx::reduce::cuda_reduce1D_configs<de::Half>::get_actual_len() const;
-template uint64_t decx::reduce::cuda_reduce1D_configs<uint8_t>::get_actual_len() const;
-template uint64_t decx::reduce::cuda_reduce1D_configs<double>::get_actual_len() const;
-template uint64_t decx::reduce::cuda_reduce1D_configs<int32_t>::get_actual_len() const;
-
-
-template void decx::reduce::cuda_reduce1D_configs<float>::inverse_mutex_MIF_states();
-template void decx::reduce::cuda_reduce1D_configs<de::Half>::inverse_mutex_MIF_states();
-template void decx::reduce::cuda_reduce1D_configs<uint8_t>::inverse_mutex_MIF_states();
-template void decx::reduce::cuda_reduce1D_configs<double>::inverse_mutex_MIF_states();
-template void decx::reduce::cuda_reduce1D_configs<int32_t>::inverse_mutex_MIF_states();
+template uint64_t decx::reduce::cuda_reduce1D_configs<float>::GetActualLength() const;
+template uint64_t decx::reduce::cuda_reduce1D_configs<de::Half>::GetActualLength() const;
+template uint64_t decx::reduce::cuda_reduce1D_configs<uint8_t>::GetActualLength() const;
+template uint64_t decx::reduce::cuda_reduce1D_configs<double>::GetActualLength() const;
+template uint64_t decx::reduce::cuda_reduce1D_configs<int32_t>::GetActualLength() const;
 
 
 template <typename _type_in>
-decx::alloc::MIF<void> decx::reduce::cuda_reduce1D_configs<_type_in>::get_leading_MIF() const
+void* decx::reduce::cuda_reduce1D_configs<_type_in>::GetLeadingBuf()
 {
-    if (this->_MIF_tmp1.leading) {
-        return this->_MIF_tmp1;
-    }
-    else if (this->_MIF_tmp2.leading) {
-        return this->_MIF_tmp2;
-    }
-    else {
-        return decx::alloc::MIF<void>(NULL);
-    }
+    return this->_pp_buffers.template GetLeadingBufPtr<void>();
 }
 
 
 template <typename _type_in>
-decx::alloc::MIF<void> decx::reduce::cuda_reduce1D_configs<_type_in>::get_lagging_MIF() const
+void* decx::reduce::cuda_reduce1D_configs<_type_in>::GetLaggingBuf()
 {
-    if (this->_MIF_tmp1.leading) {
-        return this->_MIF_tmp2;
-    }
-    else if (this->_MIF_tmp2.leading) {
-        return this->_MIF_tmp1;
-    }
-    else {
-        return decx::alloc::MIF<void>(NULL);
-    }
+    return this->_pp_buffers.template GetLaggingBufPtr<void>();
 }
 
-template decx::alloc::MIF<void> decx::reduce::cuda_reduce1D_configs<float>::get_leading_MIF() const;
-template decx::alloc::MIF<void> decx::reduce::cuda_reduce1D_configs<uint8_t>::get_leading_MIF() const;
-template decx::alloc::MIF<void> decx::reduce::cuda_reduce1D_configs<de::Half>::get_leading_MIF() const;
-template decx::alloc::MIF<void> decx::reduce::cuda_reduce1D_configs<double>::get_leading_MIF() const;
-template decx::alloc::MIF<void> decx::reduce::cuda_reduce1D_configs<int32_t>::get_leading_MIF() const;
+template void* decx::reduce::cuda_reduce1D_configs<float>::GetLeadingBuf();
+template void* decx::reduce::cuda_reduce1D_configs<uint8_t>::GetLeadingBuf();
+template void* decx::reduce::cuda_reduce1D_configs<de::Half>::GetLeadingBuf();
+template void* decx::reduce::cuda_reduce1D_configs<double>::GetLeadingBuf();
+template void* decx::reduce::cuda_reduce1D_configs<int32_t>::GetLeadingBuf();
 
-template decx::alloc::MIF<void> decx::reduce::cuda_reduce1D_configs<float>::get_lagging_MIF() const;
-template decx::alloc::MIF<void> decx::reduce::cuda_reduce1D_configs<uint8_t>::get_lagging_MIF() const;
-template decx::alloc::MIF<void> decx::reduce::cuda_reduce1D_configs<de::Half>::get_lagging_MIF() const;
-template decx::alloc::MIF<void> decx::reduce::cuda_reduce1D_configs<double>::get_lagging_MIF() const;
-template decx::alloc::MIF<void> decx::reduce::cuda_reduce1D_configs<int32_t>::get_lagging_MIF() const;
-
+template void* decx::reduce::cuda_reduce1D_configs<float>::GetLaggingBuf();
+template void* decx::reduce::cuda_reduce1D_configs<uint8_t>::GetLaggingBuf();
+template void* decx::reduce::cuda_reduce1D_configs<de::Half>::GetLaggingBuf();
+template void* decx::reduce::cuda_reduce1D_configs<double>::GetLaggingBuf();
+template void* decx::reduce::cuda_reduce1D_configs<int32_t>::GetLaggingBuf();
 
 
 template <typename _type_in>
-void* decx::reduce::cuda_reduce1D_configs<_type_in>::get_src()
+void* decx::reduce::cuda_reduce1D_configs<_type_in>::GetInputAddr()
 {
     return this->_proc_src;
 }
 
-template void* decx::reduce::cuda_reduce1D_configs<float>::get_src();
-template void* decx::reduce::cuda_reduce1D_configs<de::Half>::get_src();
-template void* decx::reduce::cuda_reduce1D_configs<uint8_t>::get_src();
-template void* decx::reduce::cuda_reduce1D_configs<double>::get_src();
-template void* decx::reduce::cuda_reduce1D_configs<int32_t>::get_src();
+template void* decx::reduce::cuda_reduce1D_configs<float>::GetInputAddr();
+template void* decx::reduce::cuda_reduce1D_configs<de::Half>::GetInputAddr();
+template void* decx::reduce::cuda_reduce1D_configs<uint8_t>::GetInputAddr();
+template void* decx::reduce::cuda_reduce1D_configs<double>::GetInputAddr();
+template void* decx::reduce::cuda_reduce1D_configs<int32_t>::GetInputAddr();
 
 
 template <typename _type_in>
-const void* decx::reduce::cuda_reduce1D_configs<_type_in>::get_dst()
+const void* decx::reduce::cuda_reduce1D_configs<_type_in>::GetOutputAddr()
 {
     return this->_proc_dst;
 }
 
-template const void* decx::reduce::cuda_reduce1D_configs<float>::get_dst();
-template const void* decx::reduce::cuda_reduce1D_configs<de::Half>::get_dst();
-template const void* decx::reduce::cuda_reduce1D_configs<uint8_t>::get_dst();
-template const void* decx::reduce::cuda_reduce1D_configs<double>::get_dst();
-template const void* decx::reduce::cuda_reduce1D_configs<int32_t>::get_dst();
+template const void* decx::reduce::cuda_reduce1D_configs<float>::GetOutputAddr();
+template const void* decx::reduce::cuda_reduce1D_configs<de::Half>::GetOutputAddr();
+template const void* decx::reduce::cuda_reduce1D_configs<uint8_t>::GetOutputAddr();
+template const void* decx::reduce::cuda_reduce1D_configs<double>::GetOutputAddr();
+template const void* decx::reduce::cuda_reduce1D_configs<int32_t>::GetOutputAddr();
 
 
 
 template <typename _type_in>
-std::vector<decx::reduce::RWPK_1D<_type_in>>& decx::reduce::cuda_reduce1D_configs<_type_in>::get_rwpk()
+std::vector<decx::reduce::RWPK_1D<_type_in>>& decx::reduce::cuda_reduce1D_configs<_type_in>::GetRWPK()
 {
     return this->_rwpks;
 }
 
-template std::vector<decx::reduce::RWPK_1D<float>>& decx::reduce::cuda_reduce1D_configs<float>::get_rwpk();
-template std::vector<decx::reduce::RWPK_1D<de::Half>>& decx::reduce::cuda_reduce1D_configs<de::Half>::get_rwpk();
-template std::vector<decx::reduce::RWPK_1D<uint8_t>>& decx::reduce::cuda_reduce1D_configs<uint8_t>::get_rwpk();
-template std::vector<decx::reduce::RWPK_1D<double>>& decx::reduce::cuda_reduce1D_configs<double>::get_rwpk();
-template std::vector<decx::reduce::RWPK_1D<int32_t>>& decx::reduce::cuda_reduce1D_configs<int32_t>::get_rwpk();
-
+template std::vector<decx::reduce::RWPK_1D<float>>& decx::reduce::cuda_reduce1D_configs<float>::GetRWPK();
+template std::vector<decx::reduce::RWPK_1D<de::Half>>& decx::reduce::cuda_reduce1D_configs<de::Half>::GetRWPK();
+template std::vector<decx::reduce::RWPK_1D<uint8_t>>& decx::reduce::cuda_reduce1D_configs<uint8_t>::GetRWPK();
+template std::vector<decx::reduce::RWPK_1D<double>>& decx::reduce::cuda_reduce1D_configs<double>::GetRWPK();
+template std::vector<decx::reduce::RWPK_1D<int32_t>>& decx::reduce::cuda_reduce1D_configs<int32_t>::GetRWPK();
 
 
 template <typename _type_in>
-decx::reduce::RWPK_2D& decx::reduce::cuda_reduce1D_configs<_type_in>::get_rwpk_flatten()
+decx::reduce::RWPK_2D& decx::reduce::cuda_reduce1D_configs<_type_in>::GetRWPKFlatten()
 {
     return this->_rwpk_flatten;
 }
 
-template decx::reduce::RWPK_2D& decx::reduce::cuda_reduce1D_configs<float>::get_rwpk_flatten();
-template decx::reduce::RWPK_2D& decx::reduce::cuda_reduce1D_configs<de::Half>::get_rwpk_flatten();
-template decx::reduce::RWPK_2D& decx::reduce::cuda_reduce1D_configs<uint8_t>::get_rwpk_flatten();
-template decx::reduce::RWPK_2D& decx::reduce::cuda_reduce1D_configs<double>::get_rwpk_flatten();
-template decx::reduce::RWPK_2D& decx::reduce::cuda_reduce1D_configs<int32_t>::get_rwpk_flatten();
-
-
+template decx::reduce::RWPK_2D& decx::reduce::cuda_reduce1D_configs<float>::GetRWPKFlatten();
+template decx::reduce::RWPK_2D& decx::reduce::cuda_reduce1D_configs<de::Half>::GetRWPKFlatten();
+template decx::reduce::RWPK_2D& decx::reduce::cuda_reduce1D_configs<uint8_t>::GetRWPKFlatten();
+template decx::reduce::RWPK_2D& decx::reduce::cuda_reduce1D_configs<double>::GetRWPKFlatten();
+template decx::reduce::RWPK_2D& decx::reduce::cuda_reduce1D_configs<int32_t>::GetRWPKFlatten();
 
 
 template <typename _type_in>
-void decx::reduce::cuda_reduce1D_configs<_type_in>::release_buffer()
+void decx::reduce::cuda_reduce1D_configs<_type_in>::ReleaseBuffer()
 {
-    decx::alloc::_device_dealloc(&this->_d_tmp1);
-    decx::alloc::_device_dealloc(&this->_d_tmp2);
+    this->_d_tmp1.Free();
+    this->_d_tmp2.Free();
 }
 
-template void decx::reduce::cuda_reduce1D_configs<float>::release_buffer();
-template void decx::reduce::cuda_reduce1D_configs<de::Half>::release_buffer();
-template void decx::reduce::cuda_reduce1D_configs<uint8_t>::release_buffer();
-template void decx::reduce::cuda_reduce1D_configs<double>::release_buffer();
-template void decx::reduce::cuda_reduce1D_configs<int32_t>::release_buffer();
-
+template void decx::reduce::cuda_reduce1D_configs<float>::ReleaseBuffer();
+template void decx::reduce::cuda_reduce1D_configs<de::Half>::ReleaseBuffer();
+template void decx::reduce::cuda_reduce1D_configs<uint8_t>::ReleaseBuffer();
+template void decx::reduce::cuda_reduce1D_configs<double>::ReleaseBuffer();
+template void decx::reduce::cuda_reduce1D_configs<int32_t>::ReleaseBuffer();
 
 
 template <typename _type_in>
-void decx::reduce::cuda_reduce1D_configs<_type_in>::set_fp16_accuracy(const uint32_t _accu_lv)
+void decx::reduce::cuda_reduce1D_configs<_type_in>::SetFp16Accuracy(const uint32_t _accu_lv)
 {
     this->_remain_load_byte = (_accu_lv != decx::Fp16_Accuracy_Levels::Fp16_Accurate_L1);
 }
 
-template void decx::reduce::cuda_reduce1D_configs<de::Half>::set_fp16_accuracy(const uint32_t _accu_lv);
-
+template void decx::reduce::cuda_reduce1D_configs<de::Half>::SetFp16Accuracy(const uint32_t _accu_lv);
 
 
 template <typename _type_in>
-void decx::reduce::cuda_reduce1D_configs<_type_in>::set_cmp_or_not(const bool _is_cmp)
+void decx::reduce::cuda_reduce1D_configs<_type_in>::CMP(const bool _is_cmp)
 {
     this->_remain_load_byte = _is_cmp;
 }
 
-template void decx::reduce::cuda_reduce1D_configs<float>::set_cmp_or_not(const bool _is_cmp);
-template void decx::reduce::cuda_reduce1D_configs<de::Half>::set_cmp_or_not(const bool _is_cmp);
-template void decx::reduce::cuda_reduce1D_configs<uint8_t>::set_cmp_or_not(const bool _is_cmp);
-template void decx::reduce::cuda_reduce1D_configs<double>::set_cmp_or_not(const bool _is_cmp);
-template void decx::reduce::cuda_reduce1D_configs<int32_t>::set_cmp_or_not(const bool _is_cmp);
-
-
+template void decx::reduce::cuda_reduce1D_configs<float>::CMP(const bool _is_cmp);
+template void decx::reduce::cuda_reduce1D_configs<de::Half>::CMP(const bool _is_cmp);
+template void decx::reduce::cuda_reduce1D_configs<uint8_t>::CMP(const bool _is_cmp);
+template void decx::reduce::cuda_reduce1D_configs<double>::CMP(const bool _is_cmp);
+template void decx::reduce::cuda_reduce1D_configs<int32_t>::CMP(const bool _is_cmp);
 
 
 template <typename _type_in>
 decx::reduce::cuda_reduce1D_configs<_type_in>::~cuda_reduce1D_configs()
 {
-    this->release_buffer();
+    this->ReleaseBuffer();
 }
 
 template decx::reduce::cuda_reduce1D_configs<float>::~cuda_reduce1D_configs();

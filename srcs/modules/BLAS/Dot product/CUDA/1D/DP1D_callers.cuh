@@ -106,9 +106,9 @@ static void decx::blas::vector_dot_fp32(decx::_Vector* A, decx::_Vector* B, de::
 
     decx::blas::cuda_DP1D_configs<float> _configs(A->Len(), S);
 
-    checkCudaErrors(cudaMemcpyAsync(_configs._dev_A.ptr, A->Vec.ptr, A->Len() * sizeof(float), cudaMemcpyHostToDevice,
+    checkCudaErrors(cudaMemcpyAsync((void*)_configs._dev_A, (void*)A->Vec, A->Len() * sizeof(float), cudaMemcpyHostToDevice,
         S->get_raw_stream_ref()));
-    checkCudaErrors(cudaMemcpyAsync(_configs._dev_B.ptr, B->Vec.ptr, B->Len() * sizeof(float), cudaMemcpyHostToDevice,
+    checkCudaErrors(cudaMemcpyAsync((void*)_configs._dev_B, (void*)B->Vec, B->Len() * sizeof(float), cudaMemcpyHostToDevice,
         S->get_raw_stream_ref()));
 
     const void* res_ptr = decx::blas::cuda_DP1D_fp32_caller_Async(&_configs, S);
@@ -177,9 +177,9 @@ static void decx::blas::vector_dot_fp16(decx::_Vector* A, decx::_Vector* B, de::
 
     decx::blas::cuda_DP1D_configs<de::Half> _configs(A->Len(), S, _fp16_accu);
 
-    checkCudaErrors(cudaMemcpyAsync(_configs._dev_A.ptr, A->Vec.ptr, A->Len() * sizeof(de::Half), cudaMemcpyHostToDevice,
+    checkCudaErrors(cudaMemcpyAsync((void*)_configs._dev_A, (void*)A->Vec, A->Len() * sizeof(de::Half), cudaMemcpyHostToDevice,
         S->get_raw_stream_ref()));
-    checkCudaErrors(cudaMemcpyAsync(_configs._dev_B.ptr, B->Vec.ptr, B->Len() * sizeof(de::Half), cudaMemcpyHostToDevice,
+    checkCudaErrors(cudaMemcpyAsync((void*)_configs._dev_B, (void*)B->Vec, B->Len() * sizeof(de::Half), cudaMemcpyHostToDevice,
         S->get_raw_stream_ref()));
 
     const void* res_ptr = decx::blas::cuda_DP1D_fp16_caller_Async(&_configs, S, _fp16_accu);
@@ -256,9 +256,9 @@ static void decx::blas::vector_dot_fp64(decx::_Vector* A, decx::_Vector* B, de::
 
     decx::blas::cuda_DP1D_configs<double> _configs(A->Len(), S);
 
-    checkCudaErrors(cudaMemcpyAsync(_configs._dev_A.ptr, A->Vec.ptr, A->Len() * sizeof(double), cudaMemcpyHostToDevice,
+    checkCudaErrors(cudaMemcpyAsync((void*)_configs._dev_A, (void*)A->Vec, A->Len() * sizeof(double), cudaMemcpyHostToDevice,
         S->get_raw_stream_ref()));
-    checkCudaErrors(cudaMemcpyAsync(_configs._dev_B.ptr, B->Vec.ptr, B->Len() * sizeof(double), cudaMemcpyHostToDevice,
+    checkCudaErrors(cudaMemcpyAsync((void*)_configs._dev_B, (void*)B->Vec, B->Len() * sizeof(double), cudaMemcpyHostToDevice,
         S->get_raw_stream_ref()));
 
     const void* res_ptr = decx::blas::cuda_DP1D_fp64_caller_Async(&_configs, S);
@@ -327,9 +327,9 @@ static void decx::blas::vector_dot_cplxf(decx::_Vector* A, decx::_Vector* B, de:
 
     decx::blas::cuda_DP1D_configs<double> _configs(A->Len(), S);
 
-    checkCudaErrors(cudaMemcpyAsync(_configs._dev_A.ptr, A->Vec.ptr, A->Len() * sizeof(de::CPf), cudaMemcpyHostToDevice,
+    checkCudaErrors(cudaMemcpyAsync((void*)_configs._dev_A, (void*)A->Vec, A->Len() * sizeof(de::CPf), cudaMemcpyHostToDevice,
         S->get_raw_stream_ref()));
-    checkCudaErrors(cudaMemcpyAsync(_configs._dev_B.ptr, B->Vec.ptr, B->Len() * sizeof(de::CPf), cudaMemcpyHostToDevice,
+    checkCudaErrors(cudaMemcpyAsync((void*)_configs._dev_B, (void*)B->Vec, B->Len() * sizeof(de::CPf), cudaMemcpyHostToDevice,
         S->get_raw_stream_ref()));
 
     const void* res_ptr = decx::blas::cuda_DP1D_cplxf_caller_Async(&_configs, S);

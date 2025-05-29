@@ -201,7 +201,7 @@ void decx::blas::_cpu_transpose_config::transpose_4b_caller(const float* src, fl
         {
             t1D->_async_thread[i * this->_thread_dist2D.x + j] = decx::cpu::register_task_default(
                 decx::blas::CPUK::transpose_4b_kernel, src_loc, dst_loc,
-                &this->_blocking_configs.ptr[this->_thread_dist2D.x * i + j], pitchsrc_v1, pitchdst_v1);
+                &this->_blocking_configs[this->_thread_dist2D.x * i + j], pitchsrc_v1, pitchdst_v1);
 
             src_loc += this->_fmgr_W.frag_len;
             dst_loc += this->_fmgr_W.frag_len * pitchdst_v1;

@@ -80,10 +80,10 @@ static void decx::reduce::matrix_reduce2D_1way_sum_fp32(decx::_Matrix* src, decx
     decx::reduce::cuda_reduce2D_1way_configs<float> _configs;
     _configs.generate_configs<_is_reduce_h>(make_uint2(src->Width(), src->Height()), S);
     
-    decx::Ptr2D_Info<void> _dt1 = _configs.get_src();
+    decx::Ptr2D_Info<void> _dt1 = _configs.GetInputAddr();
     
-    checkCudaErrors(cudaMemcpy2DAsync(_dt1._ptr.ptr,                    _dt1._dims.x * sizeof(float),
-                                      src->Mat.ptr,                     src->Pitch() * sizeof(float),
+    checkCudaErrors(cudaMemcpy2DAsync((void*)_dt1,                      _dt1.GetDims().x * sizeof(float),
+                                      (void*)src->Mat,                  src->Pitch() * sizeof(float),
                                       src->Width() * sizeof(float),     src->Height(),               
                                       cudaMemcpyHostToDevice,           S->get_raw_stream_ref()));
 
@@ -94,7 +94,7 @@ static void decx::reduce::matrix_reduce2D_1way_sum_fp32(decx::_Matrix* src, decx
         decx::reduce::reduce_sum2D_v_fp32_Async(&_configs, S);
     }
 
-    checkCudaErrors(cudaMemcpyAsync(dst->Vec.ptr, _configs.get_dst(), dst->Len() * sizeof(float), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
+    checkCudaErrors(cudaMemcpyAsync((void*)dst->Vec, _configs.GetOutputAddr(), dst->Len() * sizeof(float), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
 
     E->event_record(S);
     E->synchronize();
@@ -117,7 +117,7 @@ static void decx::reduce::dev_matrix_reduce2D_1way_sum_fp32(decx::_GPU_Matrix* s
     }
 
     decx::reduce::cuda_reduce2D_1way_configs<float> _configs;
-    _configs.generate_configs<_is_reduce_h>(src->Mat, dst->Vec.ptr, src->Pitch(), make_uint2(src->Width(), src->Height()), S);
+    _configs.generate_configs<_is_reduce_h>(src->Mat, (void*)dst->Vec, src->Pitch(), make_uint2(src->Width(), src->Height()), S);
     
     if (_is_reduce_h) {
         decx::reduce::reduce_sum2D_h_fp32_Async(&_configs, S);
@@ -148,10 +148,10 @@ static void decx::reduce::matrix_reduce2D_1way_sum_fp64(decx::_Matrix* src, decx
     decx::reduce::cuda_reduce2D_1way_configs<double> _configs;
     _configs.generate_configs<_is_reduce_h>(make_uint2(src->Width(), src->Height()), S);
 
-    decx::Ptr2D_Info<void> _dt1 = _configs.get_src();
+    decx::Ptr2D_Info<void> _dt1 = _configs.GetInputAddr();
 
-    checkCudaErrors(cudaMemcpy2DAsync(_dt1._ptr.ptr,                    _dt1._dims.x * sizeof(double),
-                                      src->Mat.ptr,                     src->Pitch() * sizeof(double),
+    checkCudaErrors(cudaMemcpy2DAsync((void*)_dt1,                      _dt1.GetDims().x * sizeof(double),
+                                      (void*)src->Mat,                  src->Pitch() * sizeof(double),
                                       src->Width() * sizeof(double),    src->Height(),
                                       cudaMemcpyHostToDevice,           S->get_raw_stream_ref()));
 
@@ -162,7 +162,7 @@ static void decx::reduce::matrix_reduce2D_1way_sum_fp64(decx::_Matrix* src, decx
         decx::reduce::reduce_sum2D_v_fp64_Async(&_configs, S);
     }
 
-    checkCudaErrors(cudaMemcpyAsync(dst->Vec.ptr, _configs.get_dst(), dst->Len() * sizeof(double), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
+    checkCudaErrors(cudaMemcpyAsync((void*)dst->Vec, _configs.GetOutputAddr(), dst->Len() * sizeof(double), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
 
     E->event_record(S);
     E->synchronize();
@@ -185,7 +185,7 @@ static void decx::reduce::dev_matrix_reduce2D_1way_sum_fp64(decx::_GPU_Matrix* s
     }
 
     decx::reduce::cuda_reduce2D_1way_configs<double> _configs;
-    _configs.generate_configs<_is_reduce_h>(src->Mat, dst->Vec.ptr, src->Pitch(), make_uint2(src->Width(), src->Height()), S);
+    _configs.generate_configs<_is_reduce_h>(src->Mat, (void*)dst->Vec, src->Pitch(), make_uint2(src->Width(), src->Height()), S);
     
     if (_is_reduce_h) {
         decx::reduce::reduce_sum2D_h_fp64_Async(&_configs, S);
@@ -215,14 +215,14 @@ static void decx::reduce::matrix_reduce2D_1way_sum_fp16(decx::_Matrix* src, decx
     }
     
     decx::reduce::cuda_reduce2D_1way_configs<de::Half> _configs;
-    _configs.set_fp16_accuracy(_fp16_accu);
+    _configs.SetFp16Accuracy(_fp16_accu);
     
     _configs.generate_configs<_is_reduce_h>(make_uint2(src->Width(), src->Height()), S);
     
-    decx::Ptr2D_Info<void> _dt1 = _configs.get_src();
+    decx::Ptr2D_Info<void> _dt1 = _configs.GetInputAddr();
     
-    checkCudaErrors(cudaMemcpy2DAsync(_dt1._ptr.ptr,                    _dt1._dims.x * sizeof(de::Half),
-                                      src->Mat.ptr,                     src->Pitch() * sizeof(de::Half),
+    checkCudaErrors(cudaMemcpy2DAsync((void*)_dt1,                      _dt1.GetDims().x * sizeof(de::Half),
+                                      (void*)src->Mat,                  src->Pitch() * sizeof(de::Half),
                                       src->Width() * sizeof(de::Half),  src->Height(),               
                                       cudaMemcpyHostToDevice,           S->get_raw_stream_ref()));
 
@@ -234,7 +234,7 @@ static void decx::reduce::matrix_reduce2D_1way_sum_fp16(decx::_Matrix* src, decx
     }
 
     const uint8_t _cpy_element_size = (_fp16_accu == decx::Fp16_Accuracy_Levels::Fp16_Accurate_L1) ? sizeof(float) : sizeof(de::Half);
-    checkCudaErrors(cudaMemcpyAsync(dst->Vec.ptr, _configs.get_dst(), dst->Len() * _cpy_element_size, cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
+    checkCudaErrors(cudaMemcpyAsync((void*)dst->Vec, _configs.GetOutputAddr(), dst->Len() * _cpy_element_size, cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
 
     E->event_record(S);
     E->synchronize();
@@ -260,10 +260,10 @@ static void decx::reduce::matrix_reduce2D_1way_sum_u8_i32(decx::_Matrix* src, de
     decx::reduce::cuda_reduce2D_1way_configs<uint8_t> _configs;
     _configs.generate_configs<_is_reduce_h>(make_uint2(src->Width(), src->Height()), S);
 
-    decx::Ptr2D_Info<void> _dt1 = _configs.get_src();
+    decx::Ptr2D_Info<void> _dt1 = _configs.GetInputAddr();
 
-    checkCudaErrors(cudaMemcpy2DAsync(_dt1._ptr.ptr,                        _dt1._dims.x * sizeof(uint8_t),
-                                      src->Mat.ptr,                         src->Pitch() * sizeof(uint8_t),
+    checkCudaErrors(cudaMemcpy2DAsync((void*)_dt1,                          _dt1.GetDims().x * sizeof(uint8_t),
+                                      (void*)src->Mat,                      src->Pitch() * sizeof(uint8_t),
                                       src->Width() * sizeof(uint8_t),       src->Height(),
                                       cudaMemcpyHostToDevice,               S->get_raw_stream_ref()));
 
@@ -274,7 +274,7 @@ static void decx::reduce::matrix_reduce2D_1way_sum_u8_i32(decx::_Matrix* src, de
         decx::reduce::reduce_sum2D_v_u8_i32_Async(&_configs, S);
     }
 
-    checkCudaErrors(cudaMemcpyAsync(dst->Vec.ptr, _configs.get_dst(), dst->Len() * sizeof(int32_t), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
+    checkCudaErrors(cudaMemcpyAsync((void*)dst->Vec, _configs.GetOutputAddr(), dst->Len() * sizeof(int32_t), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
 
     E->event_record(S);
     E->synchronize();
@@ -297,7 +297,7 @@ static void decx::reduce::dev_matrix_reduce2D_1way_sum_u8_i32(decx::_GPU_Matrix*
     }
 
     decx::reduce::cuda_reduce2D_1way_configs<uint8_t> _configs;
-    _configs.generate_configs<_is_reduce_h>(src->Mat, dst->Vec.ptr, src->Pitch(), make_uint2(src->Width(), src->Height()), S);
+    _configs.generate_configs<_is_reduce_h>(src->Mat, (void*)dst->Vec, src->Pitch(), make_uint2(src->Width(), src->Height()), S);
 
     if (_is_reduce_h) {
         decx::reduce::reduce_sum2D_h_u8_i32_Async(&_configs, S);
@@ -327,8 +327,8 @@ static void decx::reduce::dev_matrix_reduce2D_1way_sum_fp16(decx::_GPU_Matrix* s
     }
     
     decx::reduce::cuda_reduce2D_1way_configs<de::Half> _configs;
-    _configs.set_fp16_accuracy(_fp16_accu);
-    _configs.generate_configs<_is_reduce_h>(src->Mat, dst->Vec.ptr, src->Pitch(), make_uint2(src->Width(), src->Height()), S);
+    _configs.SetFp16Accuracy(_fp16_accu);
+    _configs.generate_configs<_is_reduce_h>(src->Mat, (void*)dst->Vec, src->Pitch(), make_uint2(src->Width(), src->Height()), S);
     
     if (_is_reduce_h) {
         decx::reduce::reduce_sum2D_h_fp16_Async(&_configs, S, _fp16_accu);
@@ -361,13 +361,11 @@ static void decx::reduce::matrix_reduce2D_full_sum_fp32(decx::_Matrix* src, de::
 
     decx::PtrInfo<void> _d_src;
     const uint2 alloc_dims = make_uint2(decx::utils::ceil<uint32_t>(src->Width(), 4) * 4, src->Height());
-    if (decx::alloc::_device_malloc(&_d_src, alloc_dims.x * alloc_dims.y * sizeof(float), true, S)) {
-        Print_Error_Message(4, DEV_ALLOC_FAIL);
-        return;
-    }
+    _d_src.Allocate(alloc_dims.x * alloc_dims.y * sizeof(float), CUDA_DEVICE, de::GetLastError(), true, S);
+
     // Transfer data from host to deivce
-    checkCudaErrors(cudaMemcpy2DAsync(_d_src.ptr, alloc_dims.x * sizeof(float),
-        src->Mat.ptr, src->Pitch() * sizeof(float),
+    checkCudaErrors(cudaMemcpy2DAsync((void*)_d_src, alloc_dims.x * sizeof(float),
+        (void*)src->Mat, src->Pitch() * sizeof(float),
         src->Width() * sizeof(float), src->Height(),
         cudaMemcpyHostToDevice, S->get_raw_stream_ref()));
 
@@ -379,7 +377,7 @@ static void decx::reduce::matrix_reduce2D_full_sum_fp32(decx::_Matrix* src, de::
     const bool _more_than_flatten = decx::reduce::reduce2D_flatten_postproc_configs_gen<float>(&_kp_configs, alloc_dims.x, proc_dims_v1, S);
     // Call the kernels
     // Obtain the pointer where the final value is stored
-    const void* _dst_ptr = decx::reduce::reduce_sum2D_full_fp32_Async(&_kp_configs, _d_src.ptr, proc_dims_v1, S, _more_than_flatten);
+    const void* _dst_ptr = decx::reduce::reduce_sum2D_full_fp32_Async(&_kp_configs, (void*)_d_src, proc_dims_v1, S, _more_than_flatten);
 
     checkCudaErrors(cudaMemcpyAsync(res->get_data_ptr<void>(), _dst_ptr, 1 * sizeof(float), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
     res->set_type_flag(de::_DATA_TYPES_FLAGS_::_FP32_);
@@ -388,7 +386,7 @@ static void decx::reduce::matrix_reduce2D_full_sum_fp32(decx::_Matrix* src, de::
     E->synchronize();
 
     // Release the buffers so that the configs can be safely destructed
-    _kp_configs.release_buffer();
+    _kp_configs.ReleaseBuffer();
 }
 
 
@@ -410,13 +408,11 @@ static void decx::reduce::matrix_reduce2D_full_sum_fp16(decx::_Matrix* src, de::
 
     decx::PtrInfo<void> _d_src;
     const uint2 alloc_dims = make_uint2(decx::utils::ceil<uint32_t>(src->Width(), 8) * 8, src->Height());
-    if (decx::alloc::_device_malloc(&_d_src, alloc_dims.x * alloc_dims.y * sizeof(de::Half), true, S)) {
-        Print_Error_Message(4, DEV_ALLOC_FAIL);
-        return;
-    }
+    _d_src.Allocate(alloc_dims.x * alloc_dims.y * sizeof(de::Half), CUDA_DEVICE, de::GetLastError(), true, S);
+
     // Transfer data from host to deivce
-    checkCudaErrors(cudaMemcpy2DAsync(_d_src.ptr,                       alloc_dims.x * sizeof(de::Half),
-                                      src->Mat.ptr,                     src->Pitch() * sizeof(de::Half),
+    checkCudaErrors(cudaMemcpy2DAsync((void*)_d_src,                    alloc_dims.x * sizeof(de::Half),
+                                      (void*)src->Mat,                  src->Pitch() * sizeof(de::Half),
                                       src->Width() * sizeof(de::Half),  src->Height(),
                                       cudaMemcpyHostToDevice,           S->get_raw_stream_ref()));
 
@@ -431,18 +427,18 @@ static void decx::reduce::matrix_reduce2D_full_sum_fp16(decx::_Matrix* src, de::
         const bool _more_than_flatten = decx::reduce::reduce2D_flatten_postproc_configs_gen<de::Half, float>(&_kp_configs, alloc_dims.x, proc_dims_v1, S);
         // Call the kernels
         // Obtain the pointer where the final value is stored
-        _dst_ptr = decx::reduce::reduce_sum2D_full_fp16_fp32_Async(&_kp_configs, _d_src.ptr, proc_dims_v1, S, _more_than_flatten);
+        _dst_ptr = decx::reduce::reduce_sum2D_full_fp16_fp32_Async(&_kp_configs, (void*)_d_src, proc_dims_v1, S, _more_than_flatten);
 
         checkCudaErrors(cudaMemcpyAsync(res->get_data_ptr<void>(), _dst_ptr, 1 * sizeof(float), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
         res->set_type_flag(de::_DATA_TYPES_FLAGS_::_FP32_);
     }
     else {
         decx::reduce::cuda_reduce1D_configs<de::Half> _kp_configs;
-        _kp_configs.set_fp16_accuracy(_fp16_accu);
+        _kp_configs.SetFp16Accuracy(_fp16_accu);
 
         const bool _more_than_flatten = decx::reduce::reduce2D_flatten_postproc_configs_gen<de::Half, de::Half>(&_kp_configs, alloc_dims.x, proc_dims_v1, S);
 
-        _dst_ptr = decx::reduce::reduce_sum2D_full_fp16_Async(&_kp_configs, _d_src.ptr, proc_dims_v1, S, _more_than_flatten, _fp16_accu);
+        _dst_ptr = decx::reduce::reduce_sum2D_full_fp16_Async(&_kp_configs, (void*)_d_src, proc_dims_v1, S, _more_than_flatten, _fp16_accu);
 
         checkCudaErrors(cudaMemcpyAsync(res->get_data_ptr<void>(), _dst_ptr, 1 * sizeof(de::Half), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
         res->set_type_flag(de::_DATA_TYPES_FLAGS_::_FP16_);
@@ -471,13 +467,11 @@ static void decx::reduce::matrix_reduce2D_full_sum_u8_i32(decx::_Matrix* src, de
 
     decx::PtrInfo<void> _d_src;
     const uint2 alloc_dims = make_uint2(decx::utils::ceil<uint32_t>(src->Width(), 16) * 16, src->Height());
-    if (decx::alloc::_device_malloc(&_d_src, alloc_dims.x * alloc_dims.y * sizeof(uint8_t), true, S)) {
-        Print_Error_Message(4, DEV_ALLOC_FAIL);
-        return;
-    }
+    _d_src.Allocate(alloc_dims.x * alloc_dims.y * sizeof(uint8_t), CUDA_DEVICE, de::GetLastError(), true, S);
+
     // Transfer data from host to deivce
-    checkCudaErrors(cudaMemcpy2DAsync(_d_src.ptr, alloc_dims.x * sizeof(uint8_t),
-        src->Mat.ptr, src->Pitch() * sizeof(uint8_t),
+    checkCudaErrors(cudaMemcpy2DAsync((void*)_d_src, alloc_dims.x * sizeof(uint8_t),
+        (void*)src->Mat, src->Pitch() * sizeof(uint8_t),
         src->Width() * sizeof(uint8_t), src->Height(),
         cudaMemcpyHostToDevice, S->get_raw_stream_ref()));
 
@@ -489,7 +483,7 @@ static void decx::reduce::matrix_reduce2D_full_sum_u8_i32(decx::_Matrix* src, de
     const bool _more_than_flatten = decx::reduce::reduce2D_flatten_postproc_configs_gen<uint8_t, int32_t>(&_kp_configs, alloc_dims.x, proc_dims_v1, S);
     // Call the kernels
     // Obtain the pointer where the final value is stored
-    const void* _dst_ptr = decx::reduce::reduce_sum2D_full_u8_i32_Async(&_kp_configs, _d_src.ptr, proc_dims_v1, S, _more_than_flatten);
+    const void* _dst_ptr = decx::reduce::reduce_sum2D_full_u8_i32_Async(&_kp_configs, (void*)_d_src, proc_dims_v1, S, _more_than_flatten);
 
     checkCudaErrors(cudaMemcpyAsync(res->get_data_ptr<void>(), _dst_ptr, 1 * sizeof(int32_t), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
     res->set_type_flag(de::_DATA_TYPES_FLAGS_::_INT32_);
@@ -498,7 +492,7 @@ static void decx::reduce::matrix_reduce2D_full_sum_u8_i32(decx::_Matrix* src, de
     E->synchronize();
 
     // Release the buffers so that the configs can be safely destructed
-    _kp_configs.release_buffer();
+    _kp_configs.ReleaseBuffer();
 }
 
 
@@ -526,7 +520,7 @@ static void decx::reduce::dev_matrix_reduce2D_full_sum_fp32(decx::_GPU_Matrix* s
     const bool _more_than_flatten = decx::reduce::reduce2D_flatten_postproc_configs_gen<float, float>(&_kp_configs, src->Pitch(), proc_dims_v1, S);
     // Call the kernels
     // Obtain the pointer where the final value is stored
-    const void* _dst_ptr = decx::reduce::reduce_sum2D_full_fp32_Async(&_kp_configs, src->Mat.ptr, proc_dims_v1, S, _more_than_flatten);
+    const void* _dst_ptr = decx::reduce::reduce_sum2D_full_fp32_Async(&_kp_configs, (void*)src->Mat, proc_dims_v1, S, _more_than_flatten);
 
     checkCudaErrors(cudaMemcpyAsync(res->get_data_ptr<void>(), _dst_ptr, 1 * sizeof(float), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
     res->set_type_flag(de::_DATA_TYPES_FLAGS_::_FP32_);
@@ -535,7 +529,7 @@ static void decx::reduce::dev_matrix_reduce2D_full_sum_fp32(decx::_GPU_Matrix* s
     E->synchronize();
 
     // Release the buffers so that the configs can be safely destructed
-    _kp_configs.release_buffer();
+    _kp_configs.ReleaseBuffer();
 }
 
 
@@ -557,13 +551,11 @@ static void decx::reduce::matrix_reduce2D_full_sum_fp64(decx::_Matrix* src, de::
 
     decx::PtrInfo<void> _d_src;
     const uint2 alloc_dims = make_uint2(decx::utils::ceil<uint32_t>(src->Width(), 2) * 2, src->Height());
-    if (decx::alloc::_device_malloc(&_d_src, alloc_dims.x * alloc_dims.y * sizeof(double), true, S)) {
-        Print_Error_Message(4, DEV_ALLOC_FAIL);
-        return;
-    }
+    _d_src.Allocate(alloc_dims.x * alloc_dims.y * sizeof(double), CUDA_DEVICE, de::GetLastError(), true, S);
+
     // Transfer data from host to deivce
-    checkCudaErrors(cudaMemcpy2DAsync(_d_src.ptr, alloc_dims.x * sizeof(double),
-        src->Mat.ptr, src->Pitch() * sizeof(double),
+    checkCudaErrors(cudaMemcpy2DAsync((void*)_d_src, alloc_dims.x * sizeof(double),
+        (void*)src->Mat, src->Pitch() * sizeof(double),
         src->Width() * sizeof(double), src->Height(),
         cudaMemcpyHostToDevice, S->get_raw_stream_ref()));
 
@@ -575,7 +567,7 @@ static void decx::reduce::matrix_reduce2D_full_sum_fp64(decx::_Matrix* src, de::
     const bool _more_than_flatten = decx::reduce::reduce2D_flatten_postproc_configs_gen<double, double>(&_kp_configs, alloc_dims.x, proc_dims_v1, S);
     // Call the kernels
     // Obtain the pointer where the final value is stored
-    const void* _dst_ptr = decx::reduce::reduce_sum2D_full_fp64_Async(&_kp_configs, _d_src.ptr, proc_dims_v1, S, _more_than_flatten);
+    const void* _dst_ptr = decx::reduce::reduce_sum2D_full_fp64_Async(&_kp_configs, (void*)_d_src, proc_dims_v1, S, _more_than_flatten);
 
     checkCudaErrors(cudaMemcpyAsync(res->get_data_ptr<void>(), _dst_ptr, 1 * sizeof(double), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
     res->set_type_flag(de::_DATA_TYPES_FLAGS_::_FP64_);
@@ -584,7 +576,7 @@ static void decx::reduce::matrix_reduce2D_full_sum_fp64(decx::_Matrix* src, de::
     E->synchronize();
 
     // Release the buffers so that the configs can be safely destructed
-    _kp_configs.release_buffer();
+    _kp_configs.ReleaseBuffer();
 }
 
 
@@ -613,20 +605,20 @@ static void decx::reduce::dev_matrix_reduce2D_full_sum_fp16(decx::_GPU_Matrix* s
         const bool _more_than_flatten = decx::reduce::reduce2D_flatten_postproc_configs_gen<de::Half, float>(&_kp_configs, src->Pitch(), proc_dims_v1, S);
         // Call the kernels
         // Obtain the pointer where the final value is stored
-        const void* _dst_ptr = decx::reduce::reduce_sum2D_full_fp16_fp32_Async(&_kp_configs, src->Mat.ptr, proc_dims_v1, S, _more_than_flatten);
+        const void* _dst_ptr = decx::reduce::reduce_sum2D_full_fp16_fp32_Async(&_kp_configs, (void*)src->Mat, proc_dims_v1, S, _more_than_flatten);
 
         checkCudaErrors(cudaMemcpyAsync(res->get_data_ptr<void>(), _dst_ptr, 1 * sizeof(float), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
         res->set_type_flag(de::_DATA_TYPES_FLAGS_::_FP32_);
     }
     else {
         decx::reduce::cuda_reduce1D_configs<de::Half> _kp_configs;
-        _kp_configs.set_fp16_accuracy(_fp16_accu);
+        _kp_configs.SetFp16Accuracy(_fp16_accu);
         // Generate the configs for postprocessing of 1D reduction
         // Obtain whether only one flatten kernel is OK
         const bool _more_than_flatten = decx::reduce::reduce2D_flatten_postproc_configs_gen<de::Half, de::Half>(&_kp_configs, src->Pitch(), proc_dims_v1, S);
         // Call the kernels
         // Obtain the pointer where the final value is stored
-        const void* _dst_ptr = decx::reduce::reduce_sum2D_full_fp16_Async(&_kp_configs, src->Mat.ptr, proc_dims_v1, S, _more_than_flatten, _fp16_accu);
+        const void* _dst_ptr = decx::reduce::reduce_sum2D_full_fp16_Async(&_kp_configs, (void*)src->Mat, proc_dims_v1, S, _more_than_flatten, _fp16_accu);
 
         checkCudaErrors(cudaMemcpyAsync(res->get_data_ptr<void>(), _dst_ptr, 1 * sizeof(de::Half), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
         res->set_type_flag(de::_DATA_TYPES_FLAGS_::_FP16_);
@@ -655,13 +647,11 @@ static void decx::reduce::matrix_reduce2D_full_sum_i32(decx::_Matrix* src, de::N
 
     decx::PtrInfo<void> _d_src;
     const uint2 alloc_dims = make_uint2(decx::utils::ceil<uint32_t>(src->Width(), 4) * 4, src->Height());
-    if (decx::alloc::_device_malloc(&_d_src, alloc_dims.x * alloc_dims.y * sizeof(int32_t), true, S)) {
-        Print_Error_Message(4, DEV_ALLOC_FAIL);
-        return;
-    }
+    _d_src.Allocate(alloc_dims.x * alloc_dims.y * sizeof(int32_t), CUDA_DEVICE, de::GetLastError(), true, S);
+
     // Transfer data from host to deivce
-    checkCudaErrors(cudaMemcpy2DAsync(_d_src.ptr, alloc_dims.x * sizeof(int32_t),
-        src->Mat.ptr, src->Pitch() * sizeof(int32_t),
+    checkCudaErrors(cudaMemcpy2DAsync((void*)_d_src, alloc_dims.x * sizeof(int32_t),
+        (void*)src->Mat, src->Pitch() * sizeof(int32_t),
         src->Width() * sizeof(int32_t), src->Height(),
         cudaMemcpyHostToDevice, S->get_raw_stream_ref()));
 
@@ -673,7 +663,7 @@ static void decx::reduce::matrix_reduce2D_full_sum_i32(decx::_Matrix* src, de::N
     const bool _more_than_flatten = decx::reduce::reduce2D_flatten_postproc_configs_gen<int32_t, int32_t>(&_kp_configs, alloc_dims.x, proc_dims_v1, S);
     // Call the kernels
     // Obtain the pointer where the final value is stored
-    const void* _dst_ptr = decx::reduce::reduce_sum2D_full_i32_Async(&_kp_configs, _d_src.ptr, proc_dims_v1, S, _more_than_flatten);
+    const void* _dst_ptr = decx::reduce::reduce_sum2D_full_i32_Async(&_kp_configs, (void*)_d_src, proc_dims_v1, S, _more_than_flatten);
 
     checkCudaErrors(cudaMemcpyAsync(res->get_data_ptr<void>(), _dst_ptr, 1 * sizeof(int32_t), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
     res->set_type_flag(de::_DATA_TYPES_FLAGS_::_INT32_);
@@ -682,7 +672,7 @@ static void decx::reduce::matrix_reduce2D_full_sum_i32(decx::_Matrix* src, de::N
     E->synchronize();
 
     // Release the buffers so that the configs can be safely destructed
-    _kp_configs.release_buffer();
+    _kp_configs.ReleaseBuffer();
 }
 
 
@@ -710,7 +700,7 @@ static void decx::reduce::dev_matrix_reduce2D_full_sum_u8_i32(decx::_GPU_Matrix*
     const bool _more_than_flatten = decx::reduce::reduce2D_flatten_postproc_configs_gen<uint8_t, int32_t>(&_kp_configs, src->Pitch(), proc_dims_v1, S);
     // Call the kernels
     // Obtain the pointer where the final value is stored
-    const void* _dst_ptr = decx::reduce::reduce_sum2D_full_u8_i32_Async(&_kp_configs, src->Mat.ptr, proc_dims_v1, S, _more_than_flatten);
+    const void* _dst_ptr = decx::reduce::reduce_sum2D_full_u8_i32_Async(&_kp_configs, (void*)src->Mat, proc_dims_v1, S, _more_than_flatten);
 
     checkCudaErrors(cudaMemcpyAsync(res->get_data_ptr<void>(), _dst_ptr, 1 * sizeof(int32_t), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
     res->set_type_flag(de::_DATA_TYPES_FLAGS_::_INT32_);
@@ -719,7 +709,7 @@ static void decx::reduce::dev_matrix_reduce2D_full_sum_u8_i32(decx::_GPU_Matrix*
     E->synchronize();
 
     // Release the buffers so that the configs can be safely destructed
-    _kp_configs.release_buffer();
+    _kp_configs.ReleaseBuffer();
 }
 
 
@@ -747,7 +737,7 @@ static void decx::reduce::dev_matrix_reduce2D_full_sum_fp64(decx::_GPU_Matrix* s
     const bool _more_than_flatten = decx::reduce::reduce2D_flatten_postproc_configs_gen<double, double>(&_kp_configs, src->Pitch(), proc_dims_v1, S);
     // Call the kernels
     // Obtain the pointer where the final value is stored
-    const void* _dst_ptr = decx::reduce::reduce_sum2D_full_fp64_Async(&_kp_configs, src->Mat.ptr, proc_dims_v1, S, _more_than_flatten);
+    const void* _dst_ptr = decx::reduce::reduce_sum2D_full_fp64_Async(&_kp_configs, (void*)src->Mat, proc_dims_v1, S, _more_than_flatten);
 
     checkCudaErrors(cudaMemcpyAsync(res->get_data_ptr<void>(), _dst_ptr, 1 * sizeof(double), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
     res->set_type_flag(de::_DATA_TYPES_FLAGS_::_FP64_);
@@ -756,7 +746,7 @@ static void decx::reduce::dev_matrix_reduce2D_full_sum_fp64(decx::_GPU_Matrix* s
     E->synchronize();
 
     // Release the buffers so that the configs can be safely destructed
-    _kp_configs.release_buffer();
+    _kp_configs.ReleaseBuffer();
 }
 
 
@@ -782,7 +772,7 @@ static void decx::reduce::dev_matrix_reduce2D_full_sum_i32(decx::_GPU_Matrix* sr
     const bool _more_than_flatten = decx::reduce::reduce2D_flatten_postproc_configs_gen<int32_t, int32_t>(&_kp_configs, src->Pitch(), proc_dims_v1, S);
     // Call the kernels
     // Obtain the pointer where the final value is stored
-    const void* _dst_ptr = decx::reduce::reduce_sum2D_full_i32_Async(&_kp_configs, src->Mat.ptr, proc_dims_v1, S, _more_than_flatten);
+    const void* _dst_ptr = decx::reduce::reduce_sum2D_full_i32_Async(&_kp_configs, (void*)src->Mat, proc_dims_v1, S, _more_than_flatten);
 
     checkCudaErrors(cudaMemcpyAsync(res->get_data_ptr<void>(), _dst_ptr, 1 * sizeof(int32_t), cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
     res->set_type_flag(de::_DATA_TYPES_FLAGS_::_INT32_);
@@ -791,7 +781,7 @@ static void decx::reduce::dev_matrix_reduce2D_full_sum_i32(decx::_GPU_Matrix* sr
     E->synchronize();
 
     // Release the buffers so that the configs can be safely destructed
-    _kp_configs.release_buffer();
+    _kp_configs.ReleaseBuffer();
 }
 
 

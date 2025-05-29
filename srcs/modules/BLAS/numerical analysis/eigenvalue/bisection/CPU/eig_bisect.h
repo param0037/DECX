@@ -89,8 +89,8 @@ public:
     void plan(const decx::_Matrix* mat, decx::utils::_thread_arrange_1D* t1D, de::DH* handle);
 
 
-    _data_type* get_diag() const {return this->_diag.ptr;}
-    _data_type* get_off_diag() const {return this->_off_diag.ptr;}
+    _data_type* get_diag() {return this->_diag.template GetRawPtr<_data_type>();}
+    _data_type* get_off_diag() {return this->_off_diag.template GetRawPtr<_data_type>();}
 
     _data_type get_Gerschgorin_L() const { return this->_Gerschgorin_L;}
     _data_type get_Gerschgorin_U() const { return this->_Gerschgorin_U;}

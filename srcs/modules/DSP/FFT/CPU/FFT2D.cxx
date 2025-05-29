@@ -65,7 +65,7 @@ static void decx::dsp::fft::FFT2D_caller_cplxf(decx::_Matrix* src, decx::_Matrix
     
     if (decx::dsp::fft::cpu_FFT2D_cplxf32_planner._res_ptr == NULL) {
         decx::dsp::fft::cpu_FFT2D_cplxf32_planner.RegisterResource(new decx::dsp::fft::cpu_FFT2D_planner<float>,
-            5, &decx::dsp::fft::cpu_FFT2D_planner<float>::release_buffers);
+            5, &decx::dsp::fft::cpu_FFT2D_planner<float>::ReleaseBuffers);
     }
     
     decx::dsp::fft::cpu_FFT2D_cplxf32_planner.lock();
@@ -92,7 +92,7 @@ static void decx::dsp::fft::FFT2D_caller_cplxd(decx::_Matrix* src, decx::_Matrix
 
     if (decx::dsp::fft::g_cpu_FFT2D_cplxd64_planner._res_ptr == NULL) {
         decx::dsp::fft::g_cpu_FFT2D_cplxd64_planner.RegisterResource(new decx::dsp::fft::cpu_FFT2D_planner<double>,
-            5, &decx::dsp::fft::cpu_FFT2D_planner<double>::release_buffers);
+            5, &decx::dsp::fft::cpu_FFT2D_planner<double>::ReleaseBuffers);
     }
 
     decx::dsp::fft::g_cpu_FFT2D_cplxd64_planner.lock();
@@ -118,7 +118,7 @@ static void decx::dsp::fft::IFFT2D_caller_cplxf(decx::_Matrix* src, decx::_Matri
     
     if (decx::dsp::fft::cpu_IFFT2D_cplxf32_planner._res_ptr == NULL) {
         decx::dsp::fft::cpu_IFFT2D_cplxf32_planner.RegisterResource(new decx::dsp::fft::cpu_FFT2D_planner<float>,
-            5, &decx::dsp::fft::cpu_FFT2D_planner<float>::release_buffers);
+            5, &decx::dsp::fft::cpu_FFT2D_planner<float>::ReleaseBuffers);
     }
 
     decx::dsp::fft::cpu_IFFT2D_cplxf32_planner.lock();
@@ -145,7 +145,7 @@ static void decx::dsp::fft::IFFT2D_caller_cplxd(decx::_Matrix* src, decx::_Matri
     
     if (decx::dsp::fft::g_cpu_IFFT2D_cplxd64_planner._res_ptr == NULL) {
         decx::dsp::fft::g_cpu_IFFT2D_cplxd64_planner.RegisterResource(new decx::dsp::fft::cpu_FFT2D_planner<double>,
-            5, &decx::dsp::fft::cpu_FFT2D_planner<double>::release_buffers);
+            5, &decx::dsp::fft::cpu_FFT2D_planner<double>::ReleaseBuffers);
     }
 
     decx::dsp::fft::g_cpu_IFFT2D_cplxd64_planner.lock();

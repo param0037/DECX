@@ -225,6 +225,26 @@ namespace simd
 }
 
 
+namespace decx
+{
+namespace utils{
+namespace simd{
+    static uint32_t _get_cpu_simd_align_bytes()
+    {
+        uint32_t align_byte = 32;
+#if defined(__x86_64__) || defined(__i386__)
+        align_byte = 32;
+#endif
+#if defined(__aarch64__) || defined(__arm__)
+        align_byte = 16;
+#endif
+        return align_byte;
+    }
+}
+}
+}
+
+
 #ifdef _DECX_CPU_PARTS_
 #if defined(__x86_64__) || defined(__i386__)
 static float decx::utils::simd::_mm128_h_sum(__m128 v) {
@@ -310,7 +330,8 @@ static float decx::utils::simd::_mm256_h_sum(__m256 x) {
     sumQuad = _mm_add_ps(sumQuad, hiQuad);
     loQuad = _mm_movehl_ps(hiQuad, sumQuad);
     sumQuad = _mm_add_ss(sumQuad, loQuad);
-    return _mm_extract_ps(sumQuad, 0);
+    int res_i = _mm_extract_ps(sumQuad, 0);
+    return *((float*)&res_i);
 }
 
 

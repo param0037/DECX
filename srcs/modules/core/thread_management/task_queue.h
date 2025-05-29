@@ -79,7 +79,7 @@ public:
 namespace decx 
 {
     template <class FuncType, class ...Args>
-    static std::future<void> emplace_back(decx::ThreadTaskQueue* _tq, FuncType&& f, Args&& ...args) {
+    static std::future<void> InsertTaskBack(decx::ThreadTaskQueue* _tq, FuncType&& f, Args&& ...args) {
         _tq->_task_queue.emplace_back(std::bind(std::forward<FuncType>(f), std::forward<Args>(args)...));
 
         return _tq->_task_queue.back()->get_future();

@@ -28,9 +28,10 @@
 * DEALINGS IN THE SOFTWARE.
 */
 
-#include "../../../common/Classes/TensorArray.h"
+#include <Classes/TensorArray.h>
+#define MODULE_TAG "TensorArray"
+#include <log_console.h>
 
-#define MODULE_TAG "core::class"
 
 void decx::_TensorArray::_attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, const uint _width, const uint _height, const uint _depth, const uint _tensor_num)
 {
@@ -76,20 +77,17 @@ uint decx::_TensorArray::TensorNum() const
 
 void decx::_TensorArray::alloc_data_space()
 {
-    if (decx::alloc::_host_virtual_page_malloc<void>(&this->TensArr, this->total_bytes)) {
-        DECX_LOG_ERR("Fail to allocate memory for TensorArray on host\n");
-        exit(-1);
+    if (this->TensArr.Allocate(this->total_bytes, PAGABLE)){
+        DECX_LOG_ERR("Fail to allocate memory for TensorArray on host");
     }
 
-    memset(this->TensArr.ptr, 0, this->total_bytes);
-
-    if (decx::alloc::_host_virtual_page_malloc<void*>(&this->TensptrArr, this->tensor_num * sizeof(void*))) {
-        DECX_LOG_ERR("Fail to allocate memory for TensorArray on host\n");
+    if (this->TensArr.Allocate(this->tensor_num * sizeof(void*), PAGABLE)){
         return;
     }
-    this->TensptrArr.ptr[0] = this->TensArr.ptr;
+
+    this->TensptrArr[0] = this->TensArr.GetRawPtr();
     for (uint i = 1; i < this->tensor_num; ++i) {
-        this->TensptrArr.ptr[i] = (void*)((uchar*)this->TensptrArr.ptr[i - 1] + this->_gap * this->_layout._single_element_size);
+        this->TensptrArr[i] = (uint8_t*)this->TensptrArr[i - 1] + this->_gap * this->_layout._single_element_size;
     }
 }
 
@@ -97,20 +95,18 @@ void decx::_TensorArray::alloc_data_space()
 
 void decx::_TensorArray::re_alloc_data_space()
 {
-    if (decx::alloc::_host_virtual_page_realloc<void>(&this->TensArr, this->total_bytes)) {
-        DECX_LOG_ERR("Fail to allocate memory for TensorArray on host\n");
-        exit(-1);
+    if (this->TensArr.Reallocate(this->total_bytes)) {
+        DECX_LOG_ERR("Fail to allocate memory for TensorArray on host");
     }
 
-    memset(this->TensArr.ptr, 0, this->total_bytes);
-
-    if (decx::alloc::_host_virtual_page_realloc<void*>(&this->TensptrArr, this->tensor_num * sizeof(void*))) {
+    if (this->TensptrArr.Reallocate(this->tensor_num * sizeof(void*))) {
         DECX_LOG_ERR("Fail to allocate memory for TensorArray on host\n");
         return;
     }
-    this->TensptrArr.ptr[0] = this->TensArr.ptr;
+    
+    this->TensptrArr[0] = this->TensArr.GetRawPtr();
     for (uint i = 1; i < this->tensor_num; ++i) {
-        this->TensptrArr.ptr[i] = (void*)((uchar*)this->TensptrArr.ptr[i - 1] + this->_gap * this->_layout._single_element_size);
+        this->TensptrArr[i] = (uint8_t*)this->TensptrArr[i - 1] + this->_gap * this->_layout._single_element_size;
     }
 }
 
@@ -137,16 +133,15 @@ void decx::_TensorArray::re_construct(const de::_DATA_TYPES_FLAGS_ _type, const 
 
         if (this->total_bytes > pre_size) 
         {
-            decx::alloc::_host_virtual_page_dealloc(&this->TensptrArr);
-
-            decx::alloc::_host_virtual_page_dealloc(&this->TensArr);
+            this->TensptrArr.Free();
+            this->TensArr.Free();
 
             this->alloc_data_space();
         }
         else {
-            this->TensptrArr.ptr[0] = this->TensArr.ptr;
+            this->TensptrArr[0] = this->TensArr.GetRawPtr();
             for (uint i = 1; i < this->tensor_num; ++i) {
-                this->TensptrArr.ptr[i] = (void*)((uchar*)this->TensptrArr.ptr[i - 1] + this->_gap * this->_layout._single_element_size);
+                this->TensptrArr[i] = (void*)((uchar*)this->TensptrArr[i - 1] + this->_gap * this->_layout._single_element_size);
             }
         }
     }
@@ -156,18 +151,16 @@ void decx::_TensorArray::re_construct(const de::_DATA_TYPES_FLAGS_ _type, const 
 
 decx::_TensorArray::_TensorArray()
 {
-    this->_exp_data_ptr = &this->TensptrArr.ptr;
+    this->_exp_data_ptr = this->TensptrArr.GetRawPtr();
     this->_exp_tensor_dscr = &this->_layout;
 
     this->_attribute_assign(de::_DATA_TYPES_FLAGS_::_VOID_, 0, 0, 0, 0);
 }
 
 
-
-
 decx::_TensorArray::_TensorArray(const de::_DATA_TYPES_FLAGS_ _type, const uint _width, const uint _height, const uint _depth, const uint _tensor_num)
 {
-    this->_exp_data_ptr = &this->TensptrArr.ptr;
+    this->_exp_data_ptr = this->TensptrArr.GetRawPtr();
     this->_exp_tensor_dscr = &this->_layout;
     
     this->_attribute_assign(_type, _width, _height, _depth, _tensor_num);
@@ -203,58 +196,13 @@ de::TensorArray* de::CreateTensorArrayPtr(const de::_DATA_TYPES_FLAGS_ _type, co
 #endif
 
 
-//
-//float* decx::_TensorArray::ptr_fp32(const int x, const int y, const int z, const int tensor_id)
-//{
-//    float* _ptr = reinterpret_cast<float*>(this->TensptrArr.ptr[tensor_id]);
-//    return (_ptr +
-//        ((size_t)x * this->_layout.dp_x_wp + (size_t)y * (size_t)this->_layout.dpitch + (size_t)z));
-//}
-//
-//
-//int* decx::_TensorArray::ptr_int32(const int x, const int y, const int z, const int tensor_id)
-//{
-//    int* _ptr = reinterpret_cast<int*>(this->TensptrArr.ptr[tensor_id]);
-//    return (_ptr +
-//        ((size_t)x * this->_layout.dp_x_wp + (size_t)y * (size_t)this->_layout.dpitch + (size_t)z));
-//}
-//
-//
-//
-//de::Half* decx::_TensorArray::ptr_fp16(const int x, const int y, const int z, const int tensor_id)
-//{
-//    de::Half* _ptr = reinterpret_cast<de::Half*>(this->TensptrArr.ptr[tensor_id]);
-//    return (_ptr +
-//        ((size_t)x * this->_layout.dp_x_wp + (size_t)y * (size_t)this->_layout.dpitch + (size_t)z));
-//}
-//
-//
-//
-//double* decx::_TensorArray::ptr_fp64(const int x, const int y, const int z, const int tensor_id)
-//{
-//    double* _ptr = reinterpret_cast<double*>(this->TensptrArr.ptr[tensor_id]);
-//    return (_ptr +
-//        ((size_t)x * this->_layout.dp_x_wp + (size_t)y * (size_t)this->_layout.dpitch + (size_t)z));
-//}
-//
-//
-//
-//uint8_t* decx::_TensorArray::ptr_uint8(const int x, const int y, const int z, const int tensor_id)
-//{
-//    uint8_t* _ptr = reinterpret_cast<uint8_t*>(this->TensptrArr.ptr[tensor_id]);
-//    return (_ptr +
-//        ((size_t)x * this->_layout.dp_x_wp + (size_t)y * (size_t)this->_layout.dpitch + (size_t)z));
-//}
-
-
-
 de::TensorArray& decx::_TensorArray::SoftCopy(de::TensorArray& src)
 {
     decx::_TensorArray& ref_src = dynamic_cast<decx::_TensorArray&>(src);
 
     this->_attribute_assign(ref_src.type, ref_src._layout.width, ref_src._layout.height, ref_src._layout.depth, ref_src.tensor_num);
 
-    decx::alloc::_host_virtual_page_malloc_same_place(&this->TensArr);
+    this->TensArr.AllocateRef();
 
     return *this;
 }
@@ -285,7 +233,7 @@ de::DH decx::_TensorArray::Extract_SoftCopy(const uint32_t index, de::Tensor& ds
     }
 
     _dst->_attribute_assign(this->type, this->Width(), this->Height(), this->Depth());
-    _dst->Tens.ptr = this->TensptrArr.ptr[index];
+    // _dst->Tens.ptr = this->TensptrArr.ptr[index];
 
     return handle;
 }
@@ -293,9 +241,8 @@ de::DH decx::_TensorArray::Extract_SoftCopy(const uint32_t index, de::Tensor& ds
 
 void decx::_TensorArray::release()
 {
-    decx::alloc::_host_virtual_page_dealloc(&this->TensArr);
-
-    decx::alloc::_host_virtual_page_dealloc(&this->TensptrArr);
+    this->TensArr.Free();
+    this->TensptrArr.Free();
 }
 
 

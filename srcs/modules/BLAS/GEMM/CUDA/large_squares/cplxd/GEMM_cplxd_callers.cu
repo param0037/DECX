@@ -39,7 +39,7 @@ decx::ResourceHandle decx::blas::g_cu_GEMM_cplxd_planner;
 template<> void decx::blas::cuda_GEMM_LS_planner<de::CPd>::
 run(decx::_GPU_Matrix* A, decx::_GPU_Matrix* B, decx::_GPU_Matrix* dst, decx::cuda_stream* S)
 {
-    decx::blas::GEMM_cplxd_16_32_64(A->Mat.ptr, B->Mat.ptr, dst->Mat.ptr, 
+    decx::blas::GEMM_cplxd_16_32_64((void*)A->Mat, (void*)B->Mat, (void*)dst->Mat, 
         make_uint2(B->Width(), A->Height()), A->Width(), A->Pitch(), B->Pitch(), dst->Pitch(), S,
         NULL, {1.0, 0}, {1.0, 0});
 }
@@ -49,7 +49,7 @@ template<> void decx::blas::cuda_GEMM_LS_planner<de::CPd>::
 run(decx::_GPU_Matrix* A, decx::_GPU_Matrix* B, decx::_GPU_Matrix* C, decx::_GPU_Matrix* dst, 
         const de::CPd alpha, const de::CPd beta, decx::cuda_stream* S)
 {
-    decx::blas::GEMM_cplxd_16_32_64(A->Mat.ptr, B->Mat.ptr, dst->Mat.ptr, 
+    decx::blas::GEMM_cplxd_16_32_64((void*)A->Mat, (void*)B->Mat, (void*)dst->Mat, 
         make_uint2(B->Width(), A->Height()), A->Width(), A->Pitch(), B->Pitch(), dst->Pitch(), S,
         C, alpha, beta);
 }

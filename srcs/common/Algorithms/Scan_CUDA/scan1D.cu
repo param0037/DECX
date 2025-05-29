@@ -120,27 +120,27 @@ int decx::scan::cuda_scan1D_config::get_scan_mode() const
     return this->_scan_mode;
 }
 
-void* decx::scan::cuda_scan1D_config::get_raw_dev_ptr_src() const {
-    return this->_dev_src.ptr;
+void* decx::scan::cuda_scan1D_config::GetSrcPtr() const {
+    return (void*)this->_dev_src;
 }
 
-void* decx::scan::cuda_scan1D_config::get_raw_dev_ptr_dst() const {
-    return this->_dev_dst.ptr;
+void* decx::scan::cuda_scan1D_config::GetDstPtr() const {
+    return (void*)this->_dev_dst;
 }
 
-void* decx::scan::cuda_scan1D_config::get_raw_dev_ptr_status() const {
-    return this->_dev_status.ptr;
+void* decx::scan::cuda_scan1D_config::GetStatusPtr() const {
+    return (void*)this->_dev_status;
 }
 
 
-void* decx::scan::cuda_scan1D_config::get_raw_dev_ptr_tmp() const {
-    return this->_dev_tmp.ptr;
+void* decx::scan::cuda_scan1D_config::GetTmpPtr() const {
+    return (void*)this->_dev_tmp;
 }
 
 
 
 template <typename _src_type>
-void decx::scan::cuda_scan1D_config::release_buffer(const bool _have_dev_classes)
+void decx::scan::cuda_scan1D_config::ReleaseBuffer(const bool _have_dev_classes)
 {
     if (_have_dev_classes) {
         decx::alloc::_device_dealloc(&this->_dev_src);
@@ -151,9 +151,9 @@ void decx::scan::cuda_scan1D_config::release_buffer(const bool _have_dev_classes
     }
 }
 
-template void decx::scan::cuda_scan1D_config::release_buffer<float>(const bool _have_dev_classes);
-template void decx::scan::cuda_scan1D_config::release_buffer<de::Half>(const bool _have_dev_classes);
-template void decx::scan::cuda_scan1D_config::release_buffer<uint8_t>(const bool _have_dev_classes);
+template void decx::scan::cuda_scan1D_config::ReleaseBuffer<float>(const bool _have_dev_classes);
+template void decx::scan::cuda_scan1D_config::ReleaseBuffer<de::Half>(const bool _have_dev_classes);
+template void decx::scan::cuda_scan1D_config::ReleaseBuffer<uint8_t>(const bool _have_dev_classes);
 
 
 void decx::scan::cuda_scan1D_fp32_caller_Async(const decx::scan::cuda_scan1D_config* _config, decx::cuda_stream* S)
@@ -164,27 +164,27 @@ void decx::scan::cuda_scan1D_fp32_caller_Async(const decx::scan::cuda_scan1D_con
     {
     case decx::scan::SCAN_MODE::SCAN_MODE_EXCLUSIVE:
         decx::scan::GPUK::cu_block_exclusive_scan_fp32_1D << <_config->get_block_num(), _WARP_SCAN_BLOCK_SIZE_,
-            0, S->get_raw_stream_ref() >> > ((float4*)_config->get_raw_dev_ptr_src(),
-                (float4*)_config->get_raw_dev_ptr_status(),
-                (float4*)_config->get_raw_dev_ptr_dst(),
+            0, S->get_raw_stream_ref() >> > ((float4*)_config->GetSrcPtr(),
+                (float4*)_config->GetStatusPtr(),
+                (float4*)_config->GetDstPtr(),
                 length_v4);
 
         decx::scan::GPUK::cu_scan_DLB_fp32_1D<true> << <_config->get_block_num(), _WARP_SCAN_BLOCK_SIZE_,
-            0, S->get_raw_stream_ref() >> > ((float4*)_config->get_raw_dev_ptr_status(),
-                (float4*)_config->get_raw_dev_ptr_dst(),
+            0, S->get_raw_stream_ref() >> > ((float4*)_config->GetStatusPtr(),
+                (float4*)_config->GetDstPtr(),
                 length_v4);
         break;
 
     case decx::scan::SCAN_MODE::SCAN_MODE_INCLUSIVE:
         decx::scan::GPUK::cu_block_inclusive_scan_fp32_1D << <_config->get_block_num(), _WARP_SCAN_BLOCK_SIZE_,
-            0, S->get_raw_stream_ref() >> > ((float4*)_config->get_raw_dev_ptr_src(),
-                (float4*)_config->get_raw_dev_ptr_status(),
-                (float4*)_config->get_raw_dev_ptr_dst(),
+            0, S->get_raw_stream_ref() >> > ((float4*)_config->GetSrcPtr(),
+                (float4*)_config->GetStatusPtr(),
+                (float4*)_config->GetDstPtr(),
                 length_v4);
 
         decx::scan::GPUK::cu_scan_DLB_fp32_1D<false> << <_config->get_block_num(), _WARP_SCAN_BLOCK_SIZE_,
-            0, S->get_raw_stream_ref() >> > ((float4*)_config->get_raw_dev_ptr_status(),
-                (float4*)_config->get_raw_dev_ptr_dst(),
+            0, S->get_raw_stream_ref() >> > ((float4*)_config->GetStatusPtr(),
+                (float4*)_config->GetDstPtr(),
                 length_v4);
         break;
     default:
@@ -201,29 +201,29 @@ void decx::scan::cuda_scan1D_u8_i32_caller_Async(const decx::scan::cuda_scan1D_c
     {
     case decx::scan::SCAN_MODE::SCAN_MODE_EXCLUSIVE:
         decx::scan::GPUK::cu_block_exclusive_scan_u8_fp16_1D << <_config->get_block_num(), _WARP_SCAN_BLOCK_SIZE_,
-            0, S->get_raw_stream_ref() >> > ((float2*)_config->get_raw_dev_ptr_src(),
-                                             (float4*)_config->get_raw_dev_ptr_status(),
-                                             (int4*)_config->get_raw_dev_ptr_tmp(),
+            0, S->get_raw_stream_ref() >> > ((float2*)_config->GetSrcPtr(),
+                                             (float4*)_config->GetStatusPtr(),
+                                             (int4*)_config->GetTmpPtr(),
                                              length_v8);
 
         decx::scan::GPUK::cu_block_DLB_u16_i32_1D_v8<true> << <_config->get_block_num(), _WARP_SCAN_BLOCK_SIZE_,
-            0, S->get_raw_stream_ref() >> > ((float4*)_config->get_raw_dev_ptr_tmp(),
-                                             (float4*)_config->get_raw_dev_ptr_status(),
-                                             (int4*)_config->get_raw_dev_ptr_dst(),
+            0, S->get_raw_stream_ref() >> > ((float4*)_config->GetTmpPtr(),
+                                             (float4*)_config->GetStatusPtr(),
+                                             (int4*)_config->GetDstPtr(),
                                              _config->get_proc_length() / 8);
         break;
 
     case decx::scan::SCAN_MODE::SCAN_MODE_INCLUSIVE:
         decx::scan::GPUK::cu_block_inclusive_scan_u8_u16_1D << <_config->get_block_num(), _WARP_SCAN_BLOCK_SIZE_,
-            0, S->get_raw_stream_ref() >> > ((float2*)_config->get_raw_dev_ptr_src(),
-                                             (float4*)_config->get_raw_dev_ptr_status(),
-                                             (int4*)_config->get_raw_dev_ptr_tmp(),
+            0, S->get_raw_stream_ref() >> > ((float2*)_config->GetSrcPtr(),
+                                             (float4*)_config->GetStatusPtr(),
+                                             (int4*)_config->GetTmpPtr(),
                                              length_v8);
 
         decx::scan::GPUK::cu_block_DLB_u16_i32_1D_v8<false> << <_config->get_block_num(), _WARP_SCAN_BLOCK_SIZE_,
-            0, S->get_raw_stream_ref() >> > ((float4*)_config->get_raw_dev_ptr_tmp(),
-                                             (float4*)_config->get_raw_dev_ptr_status(),
-                                             (int4*)_config->get_raw_dev_ptr_dst(),
+            0, S->get_raw_stream_ref() >> > ((float4*)_config->GetTmpPtr(),
+                                             (float4*)_config->GetStatusPtr(),
+                                             (int4*)_config->GetDstPtr(),
                                              _config->get_proc_length() / 8);
         break;
     default:
@@ -241,27 +241,27 @@ void decx::scan::cuda_scan1D_fp16_caller_Async(const decx::scan::cuda_scan1D_con
     {
     case decx::scan::SCAN_MODE::SCAN_MODE_EXCLUSIVE:
         decx::scan::GPUK::cu_block_exclusive_scan_fp16_1D << <_config->get_block_num(), _WARP_SCAN_BLOCK_SIZE_,
-            0, S->get_raw_stream_ref() >> > ((float4*)_config->get_raw_dev_ptr_src(),
-                (float4*)_config->get_raw_dev_ptr_status(),
-                (float4*)_config->get_raw_dev_ptr_dst(),
+            0, S->get_raw_stream_ref() >> > ((float4*)_config->GetSrcPtr(),
+                (float4*)_config->GetStatusPtr(),
+                (float4*)_config->GetDstPtr(),
                 length_v8);
 
         decx::scan::GPUK::cu_scan_DLB_fp32_1D_v8<true> << <_config->get_block_num(), _WARP_SCAN_BLOCK_SIZE_,
-            0, S->get_raw_stream_ref() >> > ((float4*)_config->get_raw_dev_ptr_status(),
-                (float4*)_config->get_raw_dev_ptr_dst(),
+            0, S->get_raw_stream_ref() >> > ((float4*)_config->GetStatusPtr(),
+                (float4*)_config->GetDstPtr(),
                 length_v8);
         break;
 
     case decx::scan::SCAN_MODE::SCAN_MODE_INCLUSIVE:
         decx::scan::GPUK::cu_block_inclusive_scan_fp16_1D << <_config->get_block_num(), _WARP_SCAN_BLOCK_SIZE_,
-            0, S->get_raw_stream_ref() >> > ((float4*)_config->get_raw_dev_ptr_src(),
-                (float4*)_config->get_raw_dev_ptr_status(),
-                (float4*)_config->get_raw_dev_ptr_dst(),
+            0, S->get_raw_stream_ref() >> > ((float4*)_config->GetSrcPtr(),
+                (float4*)_config->GetStatusPtr(),
+                (float4*)_config->GetDstPtr(),
                 length_v8);
 
         decx::scan::GPUK::cu_scan_DLB_fp32_1D_v8<false> << <_config->get_block_num(), _WARP_SCAN_BLOCK_SIZE_,
-            0, S->get_raw_stream_ref() >> > ((float4*)_config->get_raw_dev_ptr_status(),
-                (float4*)_config->get_raw_dev_ptr_dst(),
+            0, S->get_raw_stream_ref() >> > ((float4*)_config->GetStatusPtr(),
+                (float4*)_config->GetDstPtr(),
                 length_v8);
         break;
     default:

@@ -62,23 +62,23 @@ run(decx::_GPU_Matrix* A, decx::_GPU_Matrix* B, decx::_GPU_Matrix* dst, decx::cu
     auto* _kernel_ptr = (decx::blas::GPUK::_cu_GEMM_kernel_ptr<de::Half>*)_k_prop_ptr->_kernel_ptr;
     
     if (_k_prop_ptr->_transpose_A){
-        decx::blas::transpose2D_b2((float4*)A->Mat.ptr, 
-                                   (float4*)this->_AT._ptr.ptr, 
+        decx::blas::transpose2D_b2((float4*)A->Mat, 
+                                   (float4*)this->_AT, 
                                    make_uint2(this->_A_layout.height, this->_A_layout.width), 
                                    this->_A_layout.pitch, 
-                                   this->_AT._dims.x, 
+                                   this->_AT.GetDims().x, 
                                    S);
 
-        (*_kernel_ptr)(this->_AT._ptr.ptr,  B->Mat.ptr, 
-                      dst->Mat.ptr,         make_uint2(dst->Width(), dst->Height()), 
-                      A->Width(),           this->_AT._dims.x, 
+        (*_kernel_ptr)((void*)(this->_AT),     (void*)B->Mat, 
+                      (void*)dst->Mat,         make_uint2(dst->Width(), dst->Height()), 
+                      A->Width(),           this->_AT.GetDims().x, 
                       B->Pitch(),           dst->Pitch(), 
                       S,                    NULL, 
                       de::Float2Half(1),    de::Float2Half(1));
     }
     else{
-        (*_kernel_ptr)(A->Mat.ptr,          B->Mat.ptr, 
-                       dst->Mat.ptr,        make_uint2(dst->Width(), dst->Height()), 
+        (*_kernel_ptr)((void*)A->Mat,          (void*)B->Mat, 
+                       (void*)dst->Mat,        make_uint2(dst->Width(), dst->Height()), 
                        A->Width(),          A->Pitch(), 
                        B->Pitch(),          dst->Pitch(), 
                        S,                   NULL, 
@@ -99,26 +99,26 @@ decx::blas::cuda_GEMM_LS_planner<de::Half>::run(decx::_GPU_Matrix* A,     decx::
     auto* _kernel_ptr = (decx::blas::GPUK::_cu_GEMM_kernel_ptr<de::Half>*)_k_prop_ptr->_kernel_ptr;
 
     if (_k_prop_ptr->_transpose_A){
-        decx::blas::transpose2D_b2((float4*)A->Mat.ptr, 
-                                   (float4*)this->_AT._ptr.ptr, 
+        decx::blas::transpose2D_b2((float4*)A->Mat, 
+                                   (float4*)this->_AT, 
                                    make_uint2(this->_A_layout.height, this->_A_layout.width), 
                                    this->_A_layout.pitch, 
-                                   this->_AT._dims.x, 
+                                   this->_AT.GetDims().x, 
                                    S);
 
-        (*_kernel_ptr)(this->_AT._ptr.ptr,  B->Mat.ptr, 
-                      dst->Mat.ptr,         make_uint2(dst->Width(), dst->Height()), 
-                      A->Width(),           this->_AT._dims.x, 
+        (*_kernel_ptr)((void*)this->_AT,    (void*)B->Mat, 
+                      (void*)dst->Mat,      make_uint2(dst->Width(), dst->Height()), 
+                      A->Width(),           this->_AT.GetDims().x, 
                       B->Pitch(),           dst->Pitch(), 
-                      S,                    C->Mat.ptr, 
+                      S,                    (void*)C->Mat, 
                       alpha,                beta);
     }
     else{
-        (*_kernel_ptr)(A->Mat.ptr,     B->Mat.ptr, 
-                       dst->Mat.ptr,   make_uint2(dst->Width(), dst->Height()), 
+        (*_kernel_ptr)((void*)A->Mat,     (void*)B->Mat, 
+                       (void*)dst->Mat,   make_uint2(dst->Width(), dst->Height()), 
                        A->Width(),     A->Pitch(), 
                        B->Pitch(),     dst->Pitch(), 
-                       S,              C->Mat.ptr, 
+                       S,              (void*)C->Mat, 
                        alpha,          beta);
     }
 }

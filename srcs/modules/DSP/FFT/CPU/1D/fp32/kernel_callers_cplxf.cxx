@@ -160,26 +160,26 @@ decx::dsp::fft::CPUK::_FFT1D_smaller_1st_cplxf32(const _type_in* __restrict					
 															_tiles->get_tile2<de::CPf>(),
 															_FFT_info->get_kernel_info_ptr(0));
 		}
-		_double_buffer.reset_buffer2_leading();
+		_double_buffer.ResetBuf2AsLeading();
 
 		for (uint32_t i = 1; i < _FFT_info->get_kernel_call_num(); ++i) {
-			decx::dsp::fft::CPUK::_FFT1D_caller_cplxf32_mid_C2C(_double_buffer.get_leading_ptr<de::CPf>(), 
-																_double_buffer.get_lagging_ptr<de::CPf>(),
+			decx::dsp::fft::CPUK::_FFT1D_caller_cplxf32_mid_C2C(_double_buffer.GetLeadingBufPtr<de::CPf>(), 
+																_double_buffer.GetLaggingBufPtr<de::CPf>(),
 																_FFT_info->get_W_table<de::CPf>(), 
 																_FFT_info->get_kernel_info_ptr(i));
 
-			_double_buffer.update_states();
+			_double_buffer.UpdateStatus();
 		}
 
 		if (_Twd_info != NULL) 
 		{
-			decx::dsp::fft::CPUK::_FFT1D_Twd_smaller_kernels_v4_1st(_double_buffer.get_leading_ptr<de::CPf>(),
-																	_double_buffer.get_lagging_ptr<de::CPf>(),
+			decx::dsp::fft::CPUK::_FFT1D_Twd_smaller_kernels_v4_1st(_double_buffer.GetLeadingBufPtr<de::CPf>(),
+																	_double_buffer.GetLaggingBufPtr<de::CPf>(),
 																	_FFT_info->get_signal_len(),
 																	_call_time_base,
 																	_Twd_info);
 
-			_double_buffer.update_states();
+			_double_buffer.UpdateStatus();
 		}
 
 		if (_call_times < FFT_call_times_v4 - 1 || _L_v4 == 0) {
@@ -245,37 +245,37 @@ decx::dsp::fft::CPUK::_FFT1D_smaller_mid_cplxf32_C2C(const de::CPf* __restrict		
 																(de::CPf*)_tmp2_ptr, 
 																_FFT_info->get_kernel_info_ptr(0));
 
-			_double_buffer.reset_buffer2_leading();
+			_double_buffer.ResetBuf2AsLeading();
 
 			for (uint32_t i = 1; i < _FFT_info->get_kernel_call_num(); ++i) {
-				decx::dsp::fft::CPUK::_FFT1D_caller_cplxf32_mid_C2C(_double_buffer.get_leading_ptr<de::CPf>(), 
-																	_double_buffer.get_lagging_ptr<de::CPf>(), 
+				decx::dsp::fft::CPUK::_FFT1D_caller_cplxf32_mid_C2C(_double_buffer.GetLeadingBufPtr<de::CPf>(), 
+																	_double_buffer.GetLaggingBufPtr<de::CPf>(), 
 																	_FFT_info->get_W_table<de::CPf>(), 
 																	_FFT_info->get_kernel_info_ptr(i));
 
-				_double_buffer.update_states();
+				_double_buffer.UpdateStatus();
 			}
 
 			if (_Twd_info != NULL) {
-				decx::dsp::fft::CPUK::_FFT1D_Twd_smaller_kernels_v4_mid(_double_buffer.get_leading_ptr<de::CPf>(),
-																		_double_buffer.get_lagging_ptr<de::CPf>(),
+				decx::dsp::fft::CPUK::_FFT1D_Twd_smaller_kernels_v4_mid(_double_buffer.GetLeadingBufPtr<de::CPf>(),
+																		_double_buffer.GetLaggingBufPtr<de::CPf>(),
 																		_FFT_info->get_signal_len(),
 																		_call_times_in_warp,
 																		_global_kernel_info->_warp_proc_len * _warp_id + FFT_call_time_start_v1,
 																		_global_kernel_info->_store_pitch,
 																		_Twd_info);
 
-				_double_buffer.update_states();
+				_double_buffer.UpdateStatus();
 			}
 			
 			if constexpr (std::is_same_v<_type_out, de::CPf>){
-				decx::dsp::fft::CPUK::_store_fragment_to_DRAM_cplxf<_conj>(_double_buffer.get_leading_ptr<de::CPf>(), _dst_start_ptr, 
+				decx::dsp::fft::CPUK::_store_fragment_to_DRAM_cplxf<_conj>(_double_buffer.GetLeadingBufPtr<de::CPf>(), _dst_start_ptr, 
 																		   _call_times_in_warp,						 FFT_call_times_v4, 
 																		   _L_v4,									 _global_kernel_info, 
 																		   _FFT_info->get_signal_len());
 			}
 			else {
-				decx::dsp::fft::CPUK::_store_fragment_to_DRAM_cplxf_fp32(_double_buffer.get_leading_ptr<de::CPf>(), _dst_start_ptr, 
+				decx::dsp::fft::CPUK::_store_fragment_to_DRAM_cplxf_fp32(_double_buffer.GetLeadingBufPtr<de::CPf>(), _dst_start_ptr, 
 																	   _call_times_in_warp,						 FFT_call_times_v4, 
 																	   _L_v4,									 _global_kernel_info, 
 																	   _FFT_info->get_signal_len());

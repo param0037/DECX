@@ -35,7 +35,7 @@
 
 void decx::reduce::cuda_reduce1D_sum_fp32_caller_Async(decx::reduce::cuda_reduce1D_configs<float>* _kp_configs, decx::cuda_stream* S)
 {
-    std::vector<decx::reduce::RWPK_1D<float>>& _rwpk_arr = _kp_configs->get_rwpk();
+    std::vector<decx::reduce::RWPK_1D<float>>& _rwpk_arr = _kp_configs->GetRWPK();
     decx::reduce::RWPK_1D<float> _rwpk;
 
     for (int i = 0; i < _rwpk_arr.size(); ++i) {
@@ -51,7 +51,7 @@ void decx::reduce::cuda_reduce1D_sum_fp32_caller_Async(decx::reduce::cuda_reduce
 
 void decx::reduce::cuda_reduce1D_sum_fp64_caller_Async(decx::reduce::cuda_reduce1D_configs<double>* _kp_configs, decx::cuda_stream* S)
 {
-    std::vector<decx::reduce::RWPK_1D<double>>& _rwpk_arr = _kp_configs->get_rwpk();
+    std::vector<decx::reduce::RWPK_1D<double>>& _rwpk_arr = _kp_configs->GetRWPK();
     decx::reduce::RWPK_1D<double> _rwpk;
 
     for (int i = 0; i < _rwpk_arr.size(); ++i) {
@@ -67,7 +67,7 @@ void decx::reduce::cuda_reduce1D_sum_fp64_caller_Async(decx::reduce::cuda_reduce
 
 void decx::reduce::cuda_reduce1D_sum_i32_caller_Async(decx::reduce::cuda_reduce1D_configs<int32_t>* _kp_configs, decx::cuda_stream* S)
 {
-    std::vector<decx::reduce::RWPK_1D<int32_t>>& _rwpk_arr = _kp_configs->get_rwpk();
+    std::vector<decx::reduce::RWPK_1D<int32_t>>& _rwpk_arr = _kp_configs->GetRWPK();
     decx::reduce::RWPK_1D<int32_t> _rwpk;
 
     for (int i = 0; i < _rwpk_arr.size(); ++i) {
@@ -84,7 +84,7 @@ void decx::reduce::cuda_reduce1D_sum_i32_caller_Async(decx::reduce::cuda_reduce1
 
 void decx::reduce::cuda_reduce1D_sum_u8_i32_caller_Async(decx::reduce::cuda_reduce1D_configs<uint8_t>* _kp_configs, decx::cuda_stream* S)
 {
-    std::vector<decx::reduce::RWPK_1D<uint8_t>>& _rwpk_arr = _kp_configs->get_rwpk();
+    std::vector<decx::reduce::RWPK_1D<uint8_t>>& _rwpk_arr = _kp_configs->GetRWPK();
     decx::reduce::RWPK_1D<uint8_t> _rwpk;
 
     _rwpk = _rwpk_arr[0];
@@ -104,7 +104,7 @@ void decx::reduce::cuda_reduce1D_sum_u8_i32_caller_Async(decx::reduce::cuda_redu
 void decx::reduce::cuda_reduce1D_sum_fp16_caller_Async(decx::reduce::cuda_reduce1D_configs<de::Half>* _kp_configs, decx::cuda_stream* S,
     const uint32_t _fp16_accu)
 {
-    std::vector<decx::reduce::RWPK_1D<de::Half>>& _rwpk_arr = _kp_configs->get_rwpk();
+    std::vector<decx::reduce::RWPK_1D<de::Half>>& _rwpk_arr = _kp_configs->GetRWPK();
     decx::reduce::RWPK_1D<de::Half> _rwpk;
 
     if (_fp16_accu == decx::Fp16_Accuracy_Levels::Fp16_Accurate_L1) {
@@ -143,7 +143,7 @@ void decx::reduce::cuda_reduce1D_sum_fp16_caller_Async(decx::reduce::cuda_reduce
 
 void decx::reduce::reduce_sum2D_h_fp32_Async(decx::reduce::cuda_reduce2D_1way_configs<float>* _configs, decx::cuda_stream* S)
 {
-    const std::vector<decx::reduce::RWPK_2D>& _rwpks = _configs->get_rwpks();
+    const std::vector<decx::reduce::RWPK_2D>& _rwpks = _configs->GetRWPKs();
     decx::reduce::RWPK_2D _rwpk;
 
     for (int i = 0; i < _rwpks.size(); ++i) {
@@ -162,7 +162,7 @@ void decx::reduce::reduce_sum2D_h_fp32_Async(decx::reduce::cuda_reduce2D_1way_co
 
 void decx::reduce::reduce_sum2D_h_fp64_Async(decx::reduce::cuda_reduce2D_1way_configs<double>* _configs, decx::cuda_stream* S)
 {
-    const std::vector<decx::reduce::RWPK_2D>& _rwpks = _configs->get_rwpks();
+    const std::vector<decx::reduce::RWPK_2D>& _rwpks = _configs->GetRWPKs();
     decx::reduce::RWPK_2D _rwpk;
 
     for (int i = 0; i < _rwpks.size(); ++i) {
@@ -180,7 +180,7 @@ void decx::reduce::reduce_sum2D_h_fp64_Async(decx::reduce::cuda_reduce2D_1way_co
 void decx::reduce::reduce_sum2D_h_fp16_Async(decx::reduce::cuda_reduce2D_1way_configs<de::Half>* _configs, decx::cuda_stream* S,
     const uint32_t _fp16_accu)
 {
-    const std::vector<decx::reduce::RWPK_2D>& _rwpks = _configs->get_rwpks();
+    const std::vector<decx::reduce::RWPK_2D>& _rwpks = _configs->GetRWPKs();
     decx::reduce::RWPK_2D _rwpk;
 
     const bool _changed_lane = (_fp16_accu == decx::Fp16_Accuracy_Levels::Fp16_Accurate_L1);
@@ -226,7 +226,7 @@ void decx::reduce::reduce_sum2D_h_fp16_Async(decx::reduce::cuda_reduce2D_1way_co
 void decx::reduce::reduce_sum2D_h_u8_i32_Async(decx::reduce::cuda_reduce2D_1way_configs<uint8_t>* _configs, decx::cuda_stream* S)
 {
     using namespace std;
-    const std::vector<decx::reduce::RWPK_2D>& _rwpks = _configs->get_rwpks();
+    const std::vector<decx::reduce::RWPK_2D>& _rwpks = _configs->GetRWPKs();
     decx::reduce::RWPK_2D _rwpk;
 
     _rwpk = _rwpks[0];
@@ -247,7 +247,7 @@ void decx::reduce::reduce_sum2D_h_u8_i32_Async(decx::reduce::cuda_reduce2D_1way_
 
 void decx::reduce::reduce_sum2D_v_fp32_Async(decx::reduce::cuda_reduce2D_1way_configs<float>* _configs, decx::cuda_stream* S)
 {
-    const std::vector<decx::reduce::RWPK_2D>& _rwpks = _configs->get_rwpks();
+    const std::vector<decx::reduce::RWPK_2D>& _rwpks = _configs->GetRWPKs();
     decx::reduce::RWPK_2D _rwpk;
 
     for (int i = 0; i < _rwpks.size(); ++i) 
@@ -264,7 +264,7 @@ void decx::reduce::reduce_sum2D_v_fp32_Async(decx::reduce::cuda_reduce2D_1way_co
 
 void decx::reduce::reduce_sum2D_v_fp64_Async(decx::reduce::cuda_reduce2D_1way_configs<double>* _configs, decx::cuda_stream* S)
 {
-    const std::vector<decx::reduce::RWPK_2D>& _rwpks = _configs->get_rwpks();
+    const std::vector<decx::reduce::RWPK_2D>& _rwpks = _configs->GetRWPKs();
     decx::reduce::RWPK_2D _rwpk;
 
     for (int i = 0; i < _rwpks.size(); ++i)
@@ -282,7 +282,7 @@ void decx::reduce::reduce_sum2D_v_fp64_Async(decx::reduce::cuda_reduce2D_1way_co
 void decx::reduce::reduce_sum2D_v_fp16_Async(decx::reduce::cuda_reduce2D_1way_configs<de::Half>* _configs, decx::cuda_stream* S,
     const uint32_t _fp16_accu)
 {
-    const std::vector<decx::reduce::RWPK_2D>& _rwpks = _configs->get_rwpks();
+    const std::vector<decx::reduce::RWPK_2D>& _rwpks = _configs->GetRWPKs();
     decx::reduce::RWPK_2D _rwpk;
 
     const bool _load_lane_changed = _fp16_accu == decx::Fp16_Accuracy_Levels::Fp16_Accurate_L1;
@@ -327,7 +327,7 @@ void decx::reduce::reduce_sum2D_v_fp16_Async(decx::reduce::cuda_reduce2D_1way_co
 
 void decx::reduce::reduce_sum2D_v_u8_i32_Async(decx::reduce::cuda_reduce2D_1way_configs<uint8_t>* _configs, decx::cuda_stream* S)
 {
-    const std::vector<decx::reduce::RWPK_2D>& _rwpks = _configs->get_rwpks();
+    const std::vector<decx::reduce::RWPK_2D>& _rwpks = _configs->GetRWPKs();
     decx::reduce::RWPK_2D _rwpk;
 
     _rwpk = _rwpks[0];
@@ -352,18 +352,18 @@ const void* decx::reduce::reduce_sum2D_full_fp32_Async(decx::reduce::cuda_reduce
                                                 decx::cuda_stream*                                   S,
                                                 const bool                                           _more_than_flatten)
 {
-    decx::reduce::RWPK_2D rwpk_flatten = _kp_configs->get_rwpk_flatten();
+    decx::reduce::RWPK_2D rwpk_flatten = _kp_configs->GetRWPKFlatten();
     
     decx::reduce::GPUK::cu_warp_reduce_sum2D_flatten_fp32 << <rwpk_flatten._grid_dims, rwpk_flatten._block_dims,
-        0, S->get_raw_stream_ref() >> > ((float4*)src_ptr, (float*)_kp_configs->get_src(), rwpk_flatten._calc_pitch_src, rwpk_flatten._calc_proc_dims);
+        0, S->get_raw_stream_ref() >> > ((float4*)src_ptr, (float*)_kp_configs->GetInputAddr(), rwpk_flatten._calc_pitch_src, rwpk_flatten._calc_proc_dims);
 
     if (_more_than_flatten) {
         decx::reduce::cuda_reduce1D_sum_fp32_caller_Async(_kp_configs, S);
 
-        return _kp_configs->get_dst();
+        return _kp_configs->GetOutputAddr();
     }
     else {
-        return _kp_configs->get_src();
+        return _kp_configs->GetInputAddr();
     }
 }
 
@@ -376,18 +376,18 @@ const void* decx::reduce::reduce_sum2D_full_i32_Async(decx::reduce::cuda_reduce1
                                                 decx::cuda_stream*                          S,
                                                 const bool                                  _more_than_flatten)
 {
-    decx::reduce::RWPK_2D rwpk_flatten = _kp_configs->get_rwpk_flatten();
+    decx::reduce::RWPK_2D rwpk_flatten = _kp_configs->GetRWPKFlatten();
     
     decx::reduce::GPUK::cu_warp_reduce_sum2D_flatten_i32 << <rwpk_flatten._grid_dims, rwpk_flatten._block_dims,
-        0, S->get_raw_stream_ref() >> > ((int4*)src_ptr, (int32_t*)_kp_configs->get_src(), rwpk_flatten._calc_pitch_src, rwpk_flatten._calc_proc_dims);
+        0, S->get_raw_stream_ref() >> > ((int4*)src_ptr, (int32_t*)_kp_configs->GetInputAddr(), rwpk_flatten._calc_pitch_src, rwpk_flatten._calc_proc_dims);
 
     if (_more_than_flatten) {
         decx::reduce::cuda_reduce1D_sum_i32_caller_Async(_kp_configs, S);
 
-        return _kp_configs->get_dst();
+        return _kp_configs->GetOutputAddr();
     }
     else {
-        return _kp_configs->get_src();
+        return _kp_configs->GetInputAddr();
     }
 }
 
@@ -398,18 +398,18 @@ const void* decx::reduce::reduce_sum2D_full_fp64_Async(decx::reduce::cuda_reduce
                                                        decx::cuda_stream*                          S,
                                                        const bool                                  _more_than_flatten)
 {
-    decx::reduce::RWPK_2D rwpk_flatten = _kp_configs->get_rwpk_flatten();
+    decx::reduce::RWPK_2D rwpk_flatten = _kp_configs->GetRWPKFlatten();
     
     decx::reduce::GPUK::cu_warp_reduce_sum2D_flatten_fp64 << <rwpk_flatten._grid_dims, rwpk_flatten._block_dims,
-        0, S->get_raw_stream_ref() >> > ((double2*)src_ptr, (double*)_kp_configs->get_src(), rwpk_flatten._calc_pitch_src, rwpk_flatten._calc_proc_dims);
+        0, S->get_raw_stream_ref() >> > ((double2*)src_ptr, (double*)_kp_configs->GetInputAddr(), rwpk_flatten._calc_pitch_src, rwpk_flatten._calc_proc_dims);
 
     if (_more_than_flatten) {
         decx::reduce::cuda_reduce1D_sum_fp64_caller_Async(_kp_configs, S);
 
-        return _kp_configs->get_dst();
+        return _kp_configs->GetOutputAddr();
     }
     else {
-        return _kp_configs->get_src();
+        return _kp_configs->GetInputAddr();
     }
 }
 
@@ -421,18 +421,18 @@ const void* decx::reduce::reduce_sum2D_full_fp16_fp32_Async(decx::reduce::cuda_r
                                                             decx::cuda_stream*                          S,
                                                             const bool                                  _more_than_flatten)
 {
-    decx::reduce::RWPK_2D rwpk_flatten = _kp_configs->get_rwpk_flatten();
+    decx::reduce::RWPK_2D rwpk_flatten = _kp_configs->GetRWPKFlatten();
     
     decx::reduce::GPUK::cu_warp_reduce_sum2D_flatten_fp16_L1 << <rwpk_flatten._grid_dims, rwpk_flatten._block_dims,
-        0, S->get_raw_stream_ref() >> > ((float4*)src_ptr, (float*)_kp_configs->get_src(), rwpk_flatten._calc_pitch_src, rwpk_flatten._calc_proc_dims);
+        0, S->get_raw_stream_ref() >> > ((float4*)src_ptr, (float*)_kp_configs->GetInputAddr(), rwpk_flatten._calc_pitch_src, rwpk_flatten._calc_proc_dims);
     
     if (_more_than_flatten) {
         decx::reduce::cuda_reduce1D_sum_fp32_caller_Async(_kp_configs, S);
 
-        return _kp_configs->get_dst();
+        return _kp_configs->GetOutputAddr();
     }
     else {
-        return _kp_configs->get_src();
+        return _kp_configs->GetInputAddr();
     }
 }
 
@@ -446,18 +446,18 @@ const void* decx::reduce::reduce_sum2D_full_fp16_Async(decx::reduce::cuda_reduce
                                                        const bool                                       _more_than_flatten,
                                                        const uint32_t                                   _fp16_accu)
 {
-    decx::reduce::RWPK_2D rwpk_flatten = _kp_configs->get_rwpk_flatten();
+    decx::reduce::RWPK_2D rwpk_flatten = _kp_configs->GetRWPKFlatten();
     
     switch (_fp16_accu)
     {
     case decx::Fp16_Accuracy_Levels::Fp16_Accurate_L2:
         decx::reduce::GPUK::cu_warp_reduce_sum2D_flatten_fp16_L2 << <rwpk_flatten._grid_dims, rwpk_flatten._block_dims,
-            0, S->get_raw_stream_ref() >> > ((float4*)src_ptr, (__half*)_kp_configs->get_src(), rwpk_flatten._calc_pitch_src, rwpk_flatten._calc_proc_dims);
+            0, S->get_raw_stream_ref() >> > ((float4*)src_ptr, (__half*)_kp_configs->GetInputAddr(), rwpk_flatten._calc_pitch_src, rwpk_flatten._calc_proc_dims);
         break;
 
     case decx::Fp16_Accuracy_Levels::Fp16_Accurate_L3:
         decx::reduce::GPUK::cu_warp_reduce_sum2D_flatten_fp16_L3 << <rwpk_flatten._grid_dims, rwpk_flatten._block_dims,
-            0, S->get_raw_stream_ref() >> > ((float4*)src_ptr, (__half*)_kp_configs->get_src(), rwpk_flatten._calc_pitch_src, rwpk_flatten._calc_proc_dims);
+            0, S->get_raw_stream_ref() >> > ((float4*)src_ptr, (__half*)_kp_configs->GetInputAddr(), rwpk_flatten._calc_pitch_src, rwpk_flatten._calc_proc_dims);
         break;
     default:
         break;
@@ -466,10 +466,10 @@ const void* decx::reduce::reduce_sum2D_full_fp16_Async(decx::reduce::cuda_reduce
     if (_more_than_flatten) {
         decx::reduce::cuda_reduce1D_sum_fp16_caller_Async(_kp_configs, S, _fp16_accu);
 
-        return _kp_configs->get_dst();
+        return _kp_configs->GetOutputAddr();
     }
     else {
-        return _kp_configs->get_src();
+        return _kp_configs->GetInputAddr();
     }
 }
 
@@ -481,17 +481,17 @@ const void* decx::reduce::reduce_sum2D_full_u8_i32_Async(decx::reduce::cuda_redu
                                                          decx::cuda_stream*                             S,
                                                          const bool                                     _more_than_flatten)
 {
-    decx::reduce::RWPK_2D rwpk_flatten = _kp_configs->get_rwpk_flatten();
+    decx::reduce::RWPK_2D rwpk_flatten = _kp_configs->GetRWPKFlatten();
     
     decx::reduce::GPUK::cu_warp_reduce_sum2D_flatten_u8_i32 << <rwpk_flatten._grid_dims, rwpk_flatten._block_dims,
-        0, S->get_raw_stream_ref() >> > ((int4*)src_ptr, (int32_t*)_kp_configs->get_src(), rwpk_flatten._calc_pitch_src, rwpk_flatten._calc_proc_dims);
+        0, S->get_raw_stream_ref() >> > ((int4*)src_ptr, (int32_t*)_kp_configs->GetInputAddr(), rwpk_flatten._calc_pitch_src, rwpk_flatten._calc_proc_dims);
 
     if (_more_than_flatten) {
         decx::reduce::cuda_reduce1D_sum_i32_caller_Async(_kp_configs, S);
 
-        return _kp_configs->get_dst();
+        return _kp_configs->GetOutputAddr();
     }
     else {
-        return _kp_configs->get_src();
+        return _kp_configs->GetInputAddr();
     }
 }

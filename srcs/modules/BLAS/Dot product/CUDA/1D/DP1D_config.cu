@@ -52,6 +52,8 @@ template <typename _type_in>
 decx::blas::cuda_DP1D_configs<_type_in>::cuda_DP1D_configs(const uint64_t _proc_len, decx::cuda_stream* S,
     const uint32_t _fp16_accu)
 {
+    int32_t rval = 0;
+
     this->_from_dev = false;
 
     this->_proc_len_v1 = _proc_len;
@@ -71,13 +73,8 @@ decx::blas::cuda_DP1D_configs<_type_in>::cuda_DP1D_configs(const uint64_t _proc_
     }
 
     const uint64_t _proc_len_v = decx::utils::ceil<uint64_t>(_proc_len, _proc_align);
-
-    if (decx::alloc::_device_malloc(&this->_dev_A, _proc_len_v * _proc_align * sizeof(_type_in), true, S) ||
-        decx::alloc::_device_malloc(&this->_dev_B, _proc_len_v * _proc_align * sizeof(_type_in), true, S)) {
-
-        DECX_LOG_ERR(DEV_ALLOC_FAIL);
-        return;
-    }
+    rval |= this->_dev_A.Allocate(_proc_len_v * _proc_align * sizeof(_type_in), CUDA_DEVICE, de::GetLastError(), true, S);
+    rval |= this->_dev_B.Allocate(_proc_len_v * _proc_align * sizeof(_type_in), CUDA_DEVICE, de::GetLastError(), true, S);
 
     const uint64_t grid_len_k1 = decx::utils::ceil<uint64_t>(_proc_len_v, _REDUCE1D_BLOCK_DIM_);
     this->_grid_len_k1 = grid_len_k1;
@@ -99,10 +96,7 @@ decx::blas::cuda_DP1D_configs<_type_in>::cuda_DP1D_configs(const uint64_t _proc_
         this->_post_proc_needed = true;
     }
     else {
-        if (decx::alloc::_device_malloc(&this->_dev_dst, 1 * ele_size_dst)) {
-            DECX_LOG_ERR(DEV_ALLOC_FAIL);
-            return;
-        }
+        rval |= this->_dev_dst.Allocate(1 * ele_size_dst, CUDA_DEVICE, de::GetLastError());
         this->_post_proc_needed = false;
     }
 }
@@ -208,10 +202,7 @@ decx::blas::cuda_DP1D_configs<_type_in>::cuda_DP1D_configs(decx::PtrInfo<void> d
         this->_post_proc_needed = true;
     }
     else {
-        if (decx::alloc::_device_malloc(&this->_dev_dst, 1 * ele_size_dst)) {
-            DECX_LOG_ERR(DEV_ALLOC_FAIL);
-            return;
-        }
+        this->_dev_dst.Allocate(1 * ele_size_dst, CUDA_DEVICE, de::GetLastError(), true, S);
         this->_post_proc_needed = false;
     }
 }
@@ -230,11 +221,11 @@ template <typename _type_in>
 void decx::blas::cuda_DP1D_configs<_type_in>::relase_buffer()
 {
     if (this->_from_dev) {
-        decx::alloc::_device_dealloc(&this->_dev_A);
-        decx::alloc::_device_dealloc(&this->_dev_B);
+        this->_dev_A.Free();
+        this->_dev_B.Free();
     }
     if (!this->_post_proc_needed) {
-        decx::alloc::_device_dealloc(&this->_dev_dst);
+        this->_dev_dst.Free();
     }
 }
 

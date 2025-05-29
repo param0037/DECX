@@ -41,18 +41,11 @@ endif()
 
 include("${DECX_WORLD_ABS_DIR}/srcs/common/Algorithms/reduce/CPU/reduce_cpu.cmake")
 
-# Combine these kernel objects to GEMM_xxx_cpu.lib later
-add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/modules/BLAS/GEMM/CPU/fp32" "${DECX_SUBBUILD_BIN_DIR}/gemm_fp32_cpu")
-add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/modules/BLAS/GEMM/CPU/fp64" "${DECX_SUBBUILD_BIN_DIR}/gemm_64b_cpu")
-if(${_DECX_HOST_ARCH_} STREQUAL "x64")
-    add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/modules/BLAS/GEMM/CPU/cplxd" "${DECX_SUBBUILD_BIN_DIR}/gemm_cplxd_cpu")
-    
-endif()
-
 # Common srcs
 add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/common/Basic_process/transpose" "${DECX_SUBBUILD_BIN_DIR}/TRP_CPU")
 add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/common/Element_wise" "${DECX_SUBBUILD_BIN_DIR}/EW_CPU")
 add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/common/FMGR" "${DECX_SUBBUILD_BIN_DIR}/FMGR_CPU")
+add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/common/BLAS/GEMM/CPU" "${DECX_SUBBUILD_BIN_DIR}/common/BLAS/CPU/")
 
 # include common sources
 include("${DECX_WORLD_ABS_DIR}/srcs/common/Basic_process/extension/extension_com.cmake")
@@ -62,15 +55,16 @@ include("${DECX_WORLD_ABS_DIR}/srcs/common/Basic_process/extension/extension_com
 if(${_DECX_HOST_ARCH_} STREQUAL "x64")
 include("${DECX_WORLD_ABS_DIR}/srcs/common/Basic_process/type_cast/typecast_com.cmake")
 
+find_package(OpenMP REQUIRED)
 
 add_library(DECX_BLAS_CPU SHARED ${GEMM}                    ${BP} ${EW}
                                  ${EXT_CPU_COM_SRCS} 
                                  ${INTRIN_X86_64}
                                  ${TYPECAST_CPU_COM_SRCS} ${EIG} ${REDUCE_CPU_SRCS})
 
-target_link_libraries(DECX_BLAS_CPU PRIVATE gemm_fp32_cpu
-                                    PRIVATE gemm_64b_cpu
-                                    PRIVATE gemm_cplxd_cpu
+# target_link_libraries(DECX_BLAS_CPU PRIVATE OpenMP::OpenMP_CXX)
+
+target_link_libraries(DECX_BLAS_CPU PRIVATE GEMM_CPU
                                     PRIVATE TRP_CPU
                                     PRIVATE EW_CPU
                                     PRIVATE FMGR_CPU)
