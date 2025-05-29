@@ -77,23 +77,14 @@ decx::dsp::cpu_Filter2D_planner<_data_type>::plan(const uint32_t concurrency,
     decx::utils::frag_manager_gen_Nx(&this->_thread_blocking_conf._fmgrH, this->_conv_dims_v1.y, this->_thread_dist.y, _CONV2_BLOCK_H_);
     decx::utils::frag_manager_gen_Nx(&this->_thread_blocking_conf._fmgrW, conv_dim_W_v, this->_thread_dist.x, _CONV2_BLOCK_W_);
 
-    if (decx::alloc::_host_virtual_page_malloc(&this->_blocking_confs, this->_concurrency * sizeof(decx::utils::_blocking2D_fmgrs))){
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION,
-            ALLOC_FAIL);
-        return;
-    }
+    int32_t rval = 0;
+    rval |= this->_blocking_confs.Allocate(this->_concurrency * sizeof(decx::utils::_blocking2D_fmgrs), PAGABLE, handle);
 
     if (this->_padding_method != de::extend_label::_EXTEND_NONE_) 
     {
         const uint32_t conv_W = this->_layout_src.width + this->_layout_kernel.width - 1;
-        this->_ext_src._dims = make_uint2(decx::utils::align<uint32_t>(conv_W, _alignment), 
-                                          this->_layout_src.height);
-
-        if (decx::alloc::_host_virtual_page_malloc(&this->_ext_src._ptr, this->_ext_src._dims.x * this->_ext_src._dims.y * sizeof(_data_type))) {
-            decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION,
-                ALLOC_FAIL);
-            return;
-        }
+        this->_ext_src.SetDims(decx::utils::align<uint32_t>(conv_W, _alignment), this->_layout_src.height);
+        rval |= this->_ext_src.Allocate(PAGABLE, sizeof(_data_type), handle);
     }
 
     for (uint32_t i = 0; i < this->_thread_dist.y; ++i)
@@ -103,12 +94,12 @@ decx::dsp::cpu_Filter2D_planner<_data_type>::plan(const uint32_t concurrency,
                                      this->_thread_blocking_conf._fmgrH.last_frag_len);
 
         for (uint32_t j = 0; j < _thread_dist.x - 1; ++j){
-            auto* thread_block = &this->_blocking_confs.ptr[i * _thread_dist.x + j];
+            auto* thread_block = &this->_blocking_confs[i * _thread_dist.x + j];
             decx::utils::frag_manager_gen_from_fragLen(&thread_block->_fmgrH, thread_proc_dim_v.y, _CONV2_BLOCK_H_);
             decx::utils::frag_manager_gen_from_fragLen(&thread_block->_fmgrW, thread_proc_dim_v.x, _CONV2_BLOCK_W_);
         }
         thread_proc_dim_v.x = _thread_blocking_conf._fmgrW.last_frag_len;
-        auto* thread_block = &this->_blocking_confs.ptr[(i + 1) * _thread_dist.x - 1];
+        auto* thread_block = &this->_blocking_confs[(i + 1) * _thread_dist.x - 1];
 
         decx::utils::frag_manager_gen_from_fragLen(&thread_block->_fmgrH, thread_proc_dim_v.y, _CONV2_BLOCK_H_);
         decx::utils::frag_manager_gen_from_fragLen(&thread_block->_fmgrW, thread_proc_dim_v.x, _CONV2_BLOCK_W_);
@@ -164,7 +155,7 @@ template bool decx::dsp::cpu_Filter2D_planner<double>::changed(const uint32_t, d
 template <typename _data_type>
 void decx::dsp::cpu_Filter2D_planner<_data_type>::release(decx::dsp::cpu_Filter2D_planner<_data_type>* _fake_this)
 {
-    decx::alloc::_host_virtual_page_dealloc(&_fake_this->_blocking_confs);
+    _fake_this->_blocking_confs.Free();
 }
 
 template void decx::dsp::cpu_Filter2D_planner<float>::release(decx::dsp::cpu_Filter2D_planner<float>*);

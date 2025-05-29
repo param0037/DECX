@@ -251,7 +251,7 @@ template<typename... Args>
 void decx::utils::Fixed_Length_Array<_Ty>::emplace_back(Args&&... args)
 {
     if (!this->check_vaild_space_req()) {
-        DECX_LOG_ERR("Buffer already full, with allocated length=%d current length=%d", this->_memory_capacity, this->_current_length);
+        DECX_LOG_ERR("Buffer already full, with allocated length=%ld current length=%ld", this->_memory_capacity, this->_current_length);
         exit(-1);
     }
     if (this->_current_length == 0) {

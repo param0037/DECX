@@ -42,7 +42,7 @@ void _CRSR_ decx::dsp::fft::cpu_FFT3D_planner<double>::Forward(decx::_Tensor* sr
     decx::utils::_thread_arrange_1D t1D(decx::cpu::_get_permitted_concurrency());
 
     // FFT along depth
-    decx::dsp::fft::_FFT3D_H_entire_rows_cplxd<_type_in, false>((const _type_in*)src->Tens.ptr,
+    decx::dsp::fft::_FFT3D_H_entire_rows_cplxd<_type_in, false>((const _type_in*)src->Tens,
         (de::CPd*)this->get_tmp1_ptr(),
         this, &t1D,
         decx::dsp::fft::FFT_directions::_FFT_AlongD);
@@ -81,7 +81,7 @@ void _CRSR_ decx::dsp::fft::cpu_FFT3D_planner<double>::Forward(decx::_Tensor* sr
     
     this->_transp_config_back.
         transpose_16b_caller((de::CPd*)this->get_tmp2_ptr(),      // 2
-                            (de::CPd*)dst->Tens.ptr, 
+                            (de::CPd*)dst->Tens, 
                             this->_FFT_H._pitchdst, 
                             dst->get_layout().dp_x_wp, &t1D);
 
@@ -100,7 +100,7 @@ void _CRSR_ decx::dsp::fft::cpu_FFT3D_planner<double>::Inverse(decx::_Tensor* sr
     decx::utils::_thread_arrange_1D t1D(decx::cpu::_get_permitted_concurrency());
 
     // FFT along depth
-    decx::dsp::fft::_IFFT3D_H_entire_rows_cplxd<de::CPd>((const de::CPd*)src->Tens.ptr,
+    decx::dsp::fft::_IFFT3D_H_entire_rows_cplxd<de::CPd>((const de::CPd*)src->Tens,
         (de::CPd*)this->get_tmp1_ptr(),
         this, &t1D,
         decx::dsp::fft::FFT_directions::_FFT_AlongD);
@@ -141,21 +141,21 @@ void _CRSR_ decx::dsp::fft::cpu_FFT3D_planner<double>::Inverse(decx::_Tensor* sr
     if constexpr (std::is_same_v<_type_out, double>) {
         this->_transp_config_back.
             transpose_8b_caller((double*)this->get_tmp2_ptr(),
-                                (double*)dst->Tens.ptr, 
+                                (double*)dst->Tens, 
                                 this->_FFT_H._pitchdst, 
                                 dst->get_layout().dp_x_wp, &t1D);
     }
     else if constexpr (std::is_same_v<_type_out, uint8_t>) {
         this->_transp_config_back.
             transpose_1b_caller((uint64_t*)this->get_tmp2_ptr(),
-                                (uint64_t*)dst->Tens.ptr, 
+                                (uint64_t*)dst->Tens, 
                                 this->_FFT_H._pitchdst / 8, 
                                 dst->get_layout().dp_x_wp / 8, &t1D);
     }
     else {
         this->_transp_config_back.
             transpose_16b_caller((de::CPd*)this->get_tmp2_ptr(),
-                                (de::CPd*)dst->Tens.ptr, 
+                                (de::CPd*)dst->Tens, 
                                 this->_FFT_H._pitchdst, 
                                 dst->get_layout().dp_x_wp, &t1D);
     }

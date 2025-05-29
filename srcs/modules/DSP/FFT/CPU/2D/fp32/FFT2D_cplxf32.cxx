@@ -42,7 +42,7 @@ void decx::dsp::fft::cpu_FFT2D_planner<float>::Forward(decx::_Matrix* src,
 {
     // The alignment is always 4 in case where _op_data_type = de::CPf
     // Horizontal FFT
-    decx::dsp::fft::_FFT2D_H_entire_rows_cplxf<_type_in, false>((_type_in*)src->Mat.ptr,                             
+    decx::dsp::fft::_FFT2D_H_entire_rows_cplxf<_type_in, false>((_type_in*)src->Mat,                             
                                                                 (de::CPf*)this->get_tmp1_ptr(), 
                                                                 this,                                            
                                                                 src->Pitch(), 
@@ -81,7 +81,7 @@ void decx::dsp::fft::cpu_FFT2D_planner<float>::Inverse(decx::_Matrix* src,
 {
     // The alignment is always 4 in case where _op_data_type = de::CPf
     // Horizontal FFT
-    decx::dsp::fft::_IFFT2D_H_entire_rows_cplxf<de::CPf>((de::CPf*)src->Mat.ptr,                
+    decx::dsp::fft::_IFFT2D_H_entire_rows_cplxf<de::CPf>((de::CPf*)src->Mat,                
                                                         (de::CPf*)this->get_tmp1_ptr(), 
                                                         this,                                            
                                                         src->Pitch(), 
@@ -117,7 +117,7 @@ void decx::dsp::fft::cpu_FFT2D_planner<float>::Inverse(decx::_Matrix* src,
     else if constexpr (std::is_same_v<_type_out, uint8_t>) {
         this->_transpose_config_2nd.
             transpose_1b_caller((uint64_t*)this->get_tmp1_ptr(), 
-                                (uint64_t*)dst->Mat.ptr,
+                                (uint64_t*)dst->Mat,
                                 decx::utils::align<uint32_t>(src->Height(), _STG_alignment) / 8, 
                                 dst->Pitch() / 8,
                                 t1D);

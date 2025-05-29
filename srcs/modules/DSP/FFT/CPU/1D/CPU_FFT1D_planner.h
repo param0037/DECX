@@ -33,13 +33,14 @@
 #define _CPU_FFT1D_PLANNER_H_
 
 
-#include "../../../../../common/basic.h"
+#include <basic.h>
 #include "../FFT_common/CPU_FFT_tiles.h"
 #include "../FFT_common/W_table.h"
-#include "../../../../../common/Array/Fixed_Length_Array.h"
+#include <Array/Fixed_Length_Array.h>
 #include "../FFT_common/CPU_FFT_defs.h"
-#include "../../../../../common/Classes/Vector.h"
-#include "../../../../core/resources_manager/decx_resource.h"
+#include <Classes/Vector.h>
+#include <resources_manager/decx_resource.h>
+#include <double_buffer.h>
 
 
 namespace decx
@@ -121,7 +122,7 @@ private:
     uint64_t _signal_length;
 
     decx::PtrInfo<void> _tmp1, _tmp2;
-    decx::alloc::MIF<void> _MIF1, _MIF2;
+    decx::utils::double_buffer_manager _pp_buffer;
 
     bool _without_larger_DFT;
 

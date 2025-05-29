@@ -41,11 +41,7 @@ void decx::dsp::fft::_FFT1D_kernel_tile::allocate_tile(const uint32_t tile_frag_
 
     this->_total_size = this->_tile_len * 2 * (sizeof(_data_type) * 2);
 
-    if (decx::alloc::_host_virtual_page_malloc(&this->_tmp_ptr, this->_total_size)) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION,
-            ALLOC_FAIL);
-        return;
-    }
+    this->_tmp_ptr.Allocate(this->_total_size, PAGABLE, handle);
 }
 
 template void decx::dsp::fft::_FFT1D_kernel_tile::allocate_tile<float>(const uint32_t, de::DH*);
@@ -54,13 +50,13 @@ template void decx::dsp::fft::_FFT1D_kernel_tile::allocate_tile<double>(const ui
 
 void decx::dsp::fft::_FFT1D_kernel_tile::release()
 {
-    decx::alloc::_host_virtual_page_dealloc(&this->_tmp_ptr);
+    this->_tmp_ptr.Free();
 }
 
 
 void decx::dsp::fft::_FFT1D_kernel_tile::flush() const
 {
-    memset(this->_tmp_ptr.ptr, 0, this->_total_size);
+    memset((void*)this->_tmp_ptr, 0, this->_total_size);
 }
 
 

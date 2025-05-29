@@ -46,15 +46,15 @@ void decx::dsp::fft::cpu_FFT1D_planner<float>::Forward(decx::_Vector* src, decx:
                                    this->get_smaller_FFT_info_ptr(1)->get_signal_len());
     
     if (this->get_kernel_call_num() > 1) {
-        decx::dsp::fft::_FFT1D_cplxf32_1st<false, _type_in>((const _type_in*)src->Vec.ptr, 
-                                                     (de::CPf*)_double_buffer._MIF1.mem, 
+        decx::dsp::fft::_FFT1D_cplxf32_1st<false, _type_in>((const _type_in*)src->Vec, 
+                                                     _double_buffer.get_buffer1<de::CPf>(), 
                                                      this, t1D, &_FIMT1D);
 
         _double_buffer.ResetBuf1AsLeading();
     }
     else {
-        decx::dsp::fft::_FFT1D_cplxf32_1st<false, _type_in>((const _type_in*)src->Vec.ptr, 
-                                                     (de::CPf*)dst->Vec.ptr, 
+        decx::dsp::fft::_FFT1D_cplxf32_1st<false, _type_in>((const _type_in*)src->Vec, 
+                                                     (de::CPf*)dst->Vec, 
                                                      this, t1D, NULL);
     }
 
@@ -70,7 +70,7 @@ void decx::dsp::fft::cpu_FFT1D_planner<float>::Forward(decx::_Vector* src, decx:
         }
         else {
             decx::dsp::fft::_FFT1D_cplxf32_mid<de::CPf, true>(_double_buffer.GetLeadingBufPtr<const de::CPf>(), 
-                                                         (de::CPf*)dst->Vec.ptr, 
+                                                         (de::CPf*)dst->Vec, 
                                                          this, t1D, 
                                                          i, NULL);
         }
@@ -96,15 +96,15 @@ void decx::dsp::fft::cpu_FFT1D_planner<float>::Inverse(decx::_Vector* src, decx:
                                    this->get_smaller_FFT_info_ptr(1)->get_signal_len());
     
     if (this->get_kernel_call_num() > 1) {
-        decx::dsp::fft::_FFT1D_cplxf32_1st<true, de::CPf>((const de::CPf*)src->Vec.ptr,
-                                                   (de::CPf*)_double_buffer._MIF1.mem, 
+        decx::dsp::fft::_FFT1D_cplxf32_1st<true, de::CPf>((const de::CPf*)src->Vec,
+                                                   _double_buffer.get_buffer1<de::CPf>(), 
                                                    this, t1D, &_FIMT1D);
 
         _double_buffer.ResetBuf1AsLeading();
     }
     else {
-        decx::dsp::fft::_FFT1D_cplxf32_1st<true, de::CPf>((const de::CPf*)src->Vec.ptr, 
-                                                   (de::CPf*)dst->Vec.ptr, 
+        decx::dsp::fft::_FFT1D_cplxf32_1st<true, de::CPf>((const de::CPf*)src->Vec, 
+                                                   (de::CPf*)dst->Vec, 
                                                    this, t1D, NULL);
     }
 
@@ -120,7 +120,7 @@ void decx::dsp::fft::cpu_FFT1D_planner<float>::Inverse(decx::_Vector* src, decx:
         }
         else {
             decx::dsp::fft::_FFT1D_cplxf32_mid<_type_out, false>(_double_buffer.GetLeadingBufPtr<const de::CPf>(),
-                                                         (_type_out*)dst->Vec.ptr,
+                                                         (_type_out*)dst->Vec,
                                                          this, t1D, 
                                                          i, NULL);
         }

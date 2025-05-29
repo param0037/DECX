@@ -204,8 +204,8 @@ de::dsp::cpu::LowPass1D_Ideal(de::Vector& src, de::Vector& dst, const size_t cut
         decx::utils::frag_manager f_mgr;
         decx::utils::frag_manager_gen(&f_mgr, proc_len, t1D.total_thread);
 
-        const double* _loc_src = reinterpret_cast<const double*>(_src->Vec.ptr);
-        double* _loc_dst = reinterpret_cast<double*>(_dst->Vec.ptr);
+        const double* _loc_src = (const double*)_src->Vec;
+        double* _loc_dst = (double*)_dst->Vec;
         size_t _global_ptr_offset = 0;
 
         for (int i = 0; i < t1D.total_thread - 1; ++i) {
@@ -227,7 +227,7 @@ de::dsp::cpu::LowPass1D_Ideal(de::Vector& src, de::Vector& dst, const size_t cut
         t1D.__sync_all_threads();
     }
     else {
-        decx::dsp::CPUK::ideal_LP1D_cpl32_ST((const double*)_src->Vec.ptr, (double*)_dst->Vec.ptr, cutoff_frequency,
+        decx::dsp::CPUK::ideal_LP1D_cpl32_ST((const double*)_src->Vec, (double*)_dst->Vec, cutoff_frequency,
             proc_len, _src->length, 0);
     }
     
@@ -262,8 +262,8 @@ de::dsp::cpu::LowPass2D_Ideal(de::Matrix& src, de::Matrix& dst, const de::Point2
     const uint2 real_bound = make_uint2(_src->Width(), _src->Height());
 
     if (_src->Height() > decx::cpu::_get_permitted_concurrency()) {
-        const double* _loc_src = reinterpret_cast<const double*>(_src->Mat.ptr);
-        double* _loc_dst = reinterpret_cast<double*>(_dst->Mat.ptr);
+        const double* _loc_src = (const double*)_src->Mat;
+        double* _loc_dst = (double*)_dst->Mat;
 
         for (int i = 0; i < t1D.total_thread - 1; ++i) {
             t1D._async_thread[i] = decx::cpu::register_task_default( decx::dsp::CPUK::ideal_LP2D_cpl32_ST,
@@ -288,8 +288,8 @@ de::dsp::cpu::LowPass2D_Ideal(de::Matrix& src, de::Matrix& dst, const de::Point2
     }
     else {
         _proc_dims.y = _src->Height();
-        decx::dsp::CPUK::ideal_LP2D_cpl32_ST(reinterpret_cast<const double*>(_src->Mat.ptr), 
-            reinterpret_cast<double*>(_dst->Mat.ptr), _proc_dims, real_bound,
+        decx::dsp::CPUK::ideal_LP2D_cpl32_ST((const double*)_src->Mat, 
+            (double*)_dst->Mat, _proc_dims, real_bound,
             make_uint2(cutoff_frequency.x, cutoff_frequency.y), pitch, make_uint2(0, 0));
     }
     decx::err::Success(&handle);
@@ -322,8 +322,8 @@ de::dsp::cpu::ButterWorth_LP2D(de::Matrix& src, de::Matrix& dst, const float cut
     const uint2 real_bound = make_uint2(_src->Width(), _src->Height());
 
     if (_src->Height() > decx::cpu::_get_permitted_concurrency()) {
-        const double* _loc_src = reinterpret_cast<const double*>(_src->Mat.ptr);
-        double* _loc_dst = reinterpret_cast<double*>(_dst->Mat.ptr);
+        const double* _loc_src = (const double*)_src->Mat;
+        double* _loc_dst = (double*)_dst->Mat;
 
         for (int i = 0; i < t1D.total_thread - 1; ++i) {
             t1D._async_thread[i] = decx::cpu::register_task_default( decx::dsp::CPUK::ButterWorth_Window2D_cpl32,
@@ -342,8 +342,8 @@ de::dsp::cpu::ButterWorth_LP2D(de::Matrix& src, de::Matrix& dst, const float cut
     }
     else {
         _proc_dims.y = _src->Height();
-        decx::dsp::CPUK::ButterWorth_Window2D_cpl32(reinterpret_cast<const double*>(_src->Mat.ptr),
-            reinterpret_cast<double*>(_dst->Mat.ptr), order, cutoff_freq, _proc_dims, real_bound,
+        decx::dsp::CPUK::ButterWorth_Window2D_cpl32((const double*)_src->Mat,
+            (double*)_dst->Mat, order, cutoff_freq, _proc_dims, real_bound,
             0, pitch);
     }
     decx::err::Success(&handle);

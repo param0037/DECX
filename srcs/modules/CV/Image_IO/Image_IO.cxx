@@ -35,7 +35,7 @@
 
 void decx::vis::Blt_Matrix2SDL_UC4(decx::_Matrix* src, SDL_Surface* dst)
 {
-    dst->pixels = src->Mat.ptr;
+    dst->pixels = (void*)src->Mat;
     dst->pitch = src->Pitch() * sizeof(uchar4);
     dst->h = src->Height();
     dst->w = src->Width();
@@ -44,7 +44,7 @@ void decx::vis::Blt_Matrix2SDL_UC4(decx::_Matrix* src, SDL_Surface* dst)
 
 void decx::vis::Blt_Matrix2SDL_UC1(decx::_Matrix* src, SDL_Surface* dst)
 {
-    dst->pixels = src->Mat.ptr;
+    dst->pixels = (void*)src->Mat;
     dst->pitch = src->Pitch() * sizeof(uint8_t);
     dst->h = src->Height();
     dst->w = src->Width();
@@ -55,7 +55,7 @@ void decx::vis::Blt_Matrix2SDL_UC1(decx::_Matrix* src, SDL_Surface* dst)
 void decx::vis::Blt_SDL2Matrix_UC4(SDL_Surface* src, decx::_Matrix* dst)
 {
     int* src_data_ptr = (int*)src->pixels;
-    int* dst_data_ptr = (int*)dst->Mat.ptr;
+    int* dst_data_ptr = (int*)dst->Mat;
 
     uint64_t dex_src = 0, dex_dst = 0;
 
@@ -76,7 +76,7 @@ void decx::vis::Blt_SDL2Matrix_UC4(SDL_Surface* src, decx::_Matrix* dst)
 void decx::vis::Blt_SDL2Matrix_UC3(SDL_Surface* src, decx::_Matrix* dst)
 {
     uchar* src_data_ptr = (uchar*)src->pixels;
-    int* dst_data_ptr = (int*)dst->Mat.ptr;
+    int* dst_data_ptr = (int*)dst->Mat;
     
     uint64_t dex_src = 0, dex_dst = 0;
     uchar _in_buffer;

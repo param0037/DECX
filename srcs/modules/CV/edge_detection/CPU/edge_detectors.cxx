@@ -36,11 +36,11 @@
 _DECX_API_ de::DH
 de::vis::cpu::Find_Edge(de::Matrix& src, de::Matrix& dst, const float _L_threshold, const float _H_threshold, const int method)
 {
-    de::DH handle;
+    de::DH* handle = de::GetLastError();
     if (!decx::cpu::_is_CPU_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CPU_not_init,
+        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_CPU_not_init,
             CPU_NOT_INIT);
-        return handle;
+        return *handle;
     }
 
     decx::_Matrix* _src = dynamic_cast<decx::_Matrix*>(&src);
@@ -51,18 +51,11 @@ de::vis::cpu::Find_Edge(de::Matrix& src, de::Matrix& dst, const float _L_thresho
     const uint2 _proc_dims = Dmap_dims;
 
     decx::PtrInfo<float> gradient_info_map, dir_info_map;
-    if (decx::alloc::_host_virtual_page_malloc(&gradient_info_map, Gmap_dims.x * Gmap_dims.y * sizeof(float), true)) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION,
-            ALLOC_FAIL);
-        return handle;
-    }
-    if (decx::alloc::_host_virtual_page_malloc(&dir_info_map, Dmap_dims.x * Dmap_dims.y * sizeof(float), true)) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION,
-            ALLOC_FAIL);
-        return handle;
-    }
+    int32_t rval = 0;
+    rval |= gradient_info_map.Allocate(Gmap_dims.x * Gmap_dims.y * sizeof(float), PAGABLE, handle);
+    rval |= dir_info_map.Allocate(Dmap_dims.x * Dmap_dims.y * sizeof(float), PAGABLE, handle);
 
-    uint8_t* start_ptr = decx::utils::ptr_shift_xy<uint8_t, uint8_t>((uint8_t*)_dst->Mat.ptr, 1, 1, _dst->Pitch());
+    uint8_t* start_ptr = decx::utils::ptr_shift_xy<uint8_t, uint8_t>((uint8_t*)_dst->Mat, 1, 1, _dst->Pitch());
 
     decx::PtrInfo<float> cache;
 
@@ -90,9 +83,9 @@ de::vis::cpu::Find_Edge(de::Matrix& src, de::Matrix& dst, const float _L_thresho
         const size_t frag_G = (size_t)f_mgr.frag_len * (size_t)Gmap_dims.x;
         const size_t frag_D = (size_t)f_mgr.frag_len * (size_t)Dmap_dims.x;
 
-        const uint8_t* loc_src = (uint8_t*)_src->Mat.ptr;
-        float* loc_G = gradient_info_map.ptr;
-        float* loc_D = dir_info_map.ptr;
+        const uint8_t* loc_src = (uint8_t*)_src->Mat;
+        float* loc_G = (float*)gradient_info_map;
+        float* loc_D = (float*)dir_info_map;
 
         for (int i = 0; i < t1D.total_thread - 1; ++i) {
             t1D._async_thread[i] = decx::cpu::register_task_default(_op_ptr,
@@ -111,20 +104,16 @@ de::vis::cpu::Find_Edge(de::Matrix& src, de::Matrix& dst, const float _L_thresho
         t1D.__sync_all_threads();
 
         // post-processing
-        loc_src = (uint8_t*)_src->Mat.ptr;
-        loc_G = gradient_info_map.ptr;
-        loc_D = dir_info_map.ptr;
+        loc_src = (uint8_t*)_src->Mat;
+        loc_G = (float*)gradient_info_map;
+        loc_D = (float*)dir_info_map;
         uint8_t* loc_dst = (uint8_t*)start_ptr;
 
-        if (decx::alloc::_host_virtual_page_malloc(&cache, t1D.total_thread * 48 * sizeof(float), true)) {
-            decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION,
-                ALLOC_FAIL);
-            return handle;
-        }
+        rval |= cache.Allocate(t1D.total_thread * 48 * sizeof(float), PAGABLE, handle);
 
         for (int i = 0; i < t1D.total_thread - 1; ++i) {
             t1D._async_thread[i] = decx::cpu::register_task_default(decx::vis::CPUK::_Edge_Detector_Post_processing,
-                loc_G, loc_D, cache.ptr + i * 48, (uint64_t*)loc_dst, Gmap_dims.x, Dmap_dims.x,
+                loc_G, loc_D, cache + i * 48, (uint64_t*)loc_dst, Gmap_dims.x, Dmap_dims.x,
                 _dst->Pitch() / 8, make_uint2(Dmap_dims.x / 8, f_mgr.frag_len), make_float2(powf(_L_threshold, 2), powf(_H_threshold, 2)));
 
             loc_dst += frag_dst;
@@ -133,40 +122,39 @@ de::vis::cpu::Find_Edge(de::Matrix& src, de::Matrix& dst, const float _L_thresho
         }
 
         t1D._async_thread[t1D.total_thread - 1] = decx::cpu::register_task_default(decx::vis::CPUK::_Edge_Detector_Post_processing,
-            loc_G, loc_D, cache.ptr + (t1D.total_thread - 1) * 48, (uint64_t*)loc_dst, Gmap_dims.x, Dmap_dims.x,
+            loc_G, loc_D, cache + (t1D.total_thread - 1) * 48, (uint64_t*)loc_dst, Gmap_dims.x, Dmap_dims.x,
             _dst->Pitch() / 8, make_uint2(Dmap_dims.x / 8, _L), make_float2(powf(_L_threshold, 2), powf(_H_threshold, 2)));
 
         t1D.__sync_all_threads();
     }
     else {
-        if (decx::alloc::_host_virtual_page_malloc(&cache, 48 * sizeof(float), true)) {
-            decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION,
-                ALLOC_FAIL);
-            return handle;
+        rval |= cache.Allocate(48 * sizeof(float), PAGABLE, handle);
+        if (rval != 0){
+            return *handle;
         }
         switch (method)
         {
         case de::vis::DE_SOBEL:
-            decx::vis::CPUK::Sobel_XY_uint8((uint8_t*)_src->Mat.ptr, gradient_info_map.ptr, dir_info_map.ptr, Gmap_dims.x, Dmap_dims.x,
+            decx::vis::CPUK::Sobel_XY_uint8((uint8_t*)_src->Mat, (float*)gradient_info_map, (float*)dir_info_map, Gmap_dims.x, Dmap_dims.x,
                 _src->Pitch(), make_uint2(_proc_dims.x / 8, _proc_dims.y));
             break;
 
         case de::vis::DE_SCHARR:
-            decx::vis::CPUK::Scharr_XY_uint8((uint8_t*)_src->Mat.ptr, gradient_info_map.ptr, dir_info_map.ptr, Gmap_dims.x, Dmap_dims.x,
+            decx::vis::CPUK::Scharr_XY_uint8((uint8_t*)_src->Mat, (float*)gradient_info_map, (float*)dir_info_map, Gmap_dims.x, Dmap_dims.x,
                 _src->Pitch(), make_uint2(_proc_dims.x / 8, _proc_dims.y));
             break;
         default:
             break;
         }
         
-        decx::vis::CPUK::_Edge_Detector_Post_processing(gradient_info_map.ptr, dir_info_map.ptr, cache.ptr, (uint64_t*)start_ptr, Gmap_dims.x, Dmap_dims.x,
+        decx::vis::CPUK::_Edge_Detector_Post_processing((const float*)gradient_info_map, (const float*)dir_info_map, (float*)cache, (uint64_t*)start_ptr, Gmap_dims.x, Dmap_dims.x,
             _dst->Pitch() / 8, make_uint2(Dmap_dims.x / 8, Dmap_dims.y), make_float2(powf(_L_threshold, 2), powf(_H_threshold, 2)));
     }
 
-    decx::alloc::_host_virtual_page_dealloc(&gradient_info_map);
-    decx::alloc::_host_virtual_page_dealloc(&dir_info_map);
-    decx::alloc::_host_virtual_page_dealloc(&cache);
+    gradient_info_map.Free();
+    dir_info_map.Free();
+    cache.Free();
 
-    decx::err::Success(&handle);
-    return handle;
+    decx::err::Success(handle);
+    return *handle;
 }

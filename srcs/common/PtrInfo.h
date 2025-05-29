@@ -60,7 +60,7 @@ public:
     PtrInfo() {
         this->block = NULL;
         this->ptr = NULL;
-        this->_mem_type = DecxMemoryType_e::PAGABLE;
+        this->_mem_type = DecxMemoryType_e::MEMTYPE_DEFAULT;
     }
 
     template <typename _Type_dst>
@@ -147,7 +147,7 @@ public:
         return rval;
     }
 
-
+    
     #ifdef _DECX_CUDA_PARTS_
     int32_t Reallocate(const uint64_t size, de::DH* handle = nullptr, const bool zero_initialize = true, decx::cuda_stream* S = nullptr, const bool lazy_alloc = false)
 #else
@@ -155,7 +155,7 @@ public:
 #endif
     {
         int32_t rval = 0;
-
+        
         switch (this->_mem_type)
         {
         case DecxMemoryType_e::PAGABLE:
@@ -194,6 +194,9 @@ public:
 
     int32_t Free()
     {
+        if (this->IsValid() == 0){
+            return 0;
+        }
         switch (this->_mem_type)
         {
         case PAGABLE:
@@ -241,6 +244,10 @@ public:
 
     int32_t AllocateRef()
     {
+        if (this->IsValid() == 0){
+            return 0;
+        }
+
         switch (this->_mem_type)
         {
         case PAGABLE:

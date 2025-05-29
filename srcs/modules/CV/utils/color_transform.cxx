@@ -34,8 +34,8 @@
 
 #define _IMG_CHANNEL_OP_UC42UC_CALL_(op)            \
     decx::vis::_channel_ops_UC42UC_caller(op,       \
-    reinterpret_cast<const float*>(_src->Mat.ptr),  \
-    reinterpret_cast<float*>(_dst->Mat.ptr),        \
+    (const float*)_src->Mat,                        \
+    (float*)_dst->Mat,                              \
     make_int2(_src->Width(), _src->Height()),       \
     _src->Pitch(),                                  \
     _dst->Pitch());                                 \
@@ -43,8 +43,8 @@
 
 #define _IMG_CHANNEL_OP_UC42UC4_CALL_(op)           \
     decx::vis::_channel_ops_UC42UC4_caller(op,      \
-    reinterpret_cast<const float*>(_src->Mat.ptr),  \
-    reinterpret_cast<float*>(_dst->Mat.ptr),        \
+    (const float*)_src->Mat,                        \
+    (float*)_dst->Mat,                              \
     make_int2(_src->Width(), _src->Height()),       \
     _src->Pitch(),                                  \
     _dst->Pitch());                                 \
