@@ -99,7 +99,7 @@ _cu_Filter2D_BC_u8_x_caller(const decx::dsp::cuda_Filter2D_planner<uint8_t>* _fa
             src,
             (float*)kernel,
             (float4*)dst,
-            _fake_this->_ext_src._dims.x / 8,
+            _fake_this->_ext_src.GetDims().x / 8,
             pitchdst_v1 / 8,
             make_uint3(_fake_this->_kernel_layout->width, 
                        _fake_this->_kernel_layout->height, 
@@ -113,7 +113,7 @@ _cu_Filter2D_BC_u8_x_caller(const decx::dsp::cuda_Filter2D_planner<uint8_t>* _fa
             src,
             (float*)kernel,
             (double*)dst,
-            _fake_this->_ext_src._dims.x / 8,
+            _fake_this->_ext_src.GetDims().x / 8,
             pitchdst_v1 / 8,
             make_uint3(_fake_this->_kernel_layout->width, 
                        _fake_this->_kernel_layout->height, 
@@ -210,9 +210,9 @@ decx::dsp::cuda_Filter2D_planner<uint8_t>::run(decx::_GPU_Matrix* src, decx::_GP
 {
     if (this->_conv_border_method != de::extend_label::_EXTEND_NONE_) 
     {
-        checkCudaErrors(cudaMemcpy2DAsync((uint8_t*)this->_ext_src._ptr.ptr + (this->_kernel_layout->width >> 1),
-            _ext_src._dims.x * sizeof(uint8_t),
-            src->Mat.ptr,
+        checkCudaErrors(cudaMemcpy2DAsync((uint8_t*)this->_ext_src + (this->_kernel_layout->width >> 1),
+            _ext_src.GetDims().x * sizeof(uint8_t),
+            (const void*)src->Mat,
             this->_src_layout->pitch * sizeof(uint8_t),
             this->_src_layout->width * sizeof(uint8_t),
             this->_src_layout->height,
@@ -221,14 +221,14 @@ decx::dsp::cuda_Filter2D_planner<uint8_t>::run(decx::_GPU_Matrix* src, decx::_GP
 
         decx::dsp::_cu_F2_U8_Kcaller _kernel_ptr = decx::dsp::_cu_F2_U8_Kcallers[1][(this->_kernel_layout->width - 2) / 8];
 
-        _kernel_ptr(this, (double*)_ext_src._ptr.ptr, kernel->Mat.ptr, dst->Mat.ptr,
+        _kernel_ptr(this, (double*)_ext_src, (void*)kernel->Mat, (void*)dst->Mat,
             dst->get_layout().pitch, S);
     }
     else
     {
         decx::dsp::_cu_F2_U8_Kcaller _kernel_ptr = decx::dsp::_cu_F2_U8_Kcallers[0][(this->_kernel_layout->width - 2) / 8];
 
-        _kernel_ptr(this, src->Mat.GetRawPtr<double>(), kernel->Mat.ptr, dst->Mat.ptr,
+        _kernel_ptr(this, (double*)src->Mat, (void*)kernel->Mat, (void*)dst->Mat,
             dst->get_layout().pitch, S);
     }
 }

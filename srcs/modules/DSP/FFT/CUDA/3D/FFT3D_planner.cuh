@@ -122,13 +122,13 @@ private:
 
     template <typename _ptr_type>
     _ptr_type* get_tmp1_ptr() const {
-        return static_cast<_ptr_type*>(this->_tmp1.ptr);
+        return (_ptr_type*)this->_tmp1;
     }
 
 
     template <typename _ptr_type>
     _ptr_type* get_tmp2_ptr() const {
-        return static_cast<_ptr_type*>(this->_tmp2.ptr);
+        return (_ptr_type*)this->_tmp2;
     }
 
 public:

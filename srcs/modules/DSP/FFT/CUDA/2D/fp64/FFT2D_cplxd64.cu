@@ -42,7 +42,7 @@ void decx::dsp::fft::_cuda_FFT2D_planner<double>::Forward(decx::_GPU_Matrix* src
 {
     decx::utils::double_buffer_manager double_buffer(this->get_tmp1_ptr<void>(), this->get_tmp2_ptr<void>());
 
-    decx::dsp::fft::FFT2D_cplxd_1st_1way_caller<_type_in, false>(src->Mat.ptr, &double_buffer,
+    decx::dsp::fft::FFT2D_cplxd_1st_1way_caller<_type_in, false>((const void*)src->Mat, &double_buffer,
         this->get_FFT_info(decx::dsp::fft::_FFT_AlongH),
         S);
 
@@ -59,7 +59,7 @@ void decx::dsp::fft::_cuda_FFT2D_planner<double>::Forward(decx::_GPU_Matrix* src
         S);
 
     decx::blas::transpose2D_b16(double_buffer.GetLeadingBufPtr<double2>(),
-        (double2*)dst->Mat.ptr,
+        (double2*)dst->Mat,
         make_uint2(dst->Width(), dst->Height()),
         this->get_buffer_dims().y,
         dst->Pitch(), S);
@@ -77,7 +77,7 @@ void decx::dsp::fft::_cuda_FFT2D_planner<double>::Inverse(decx::_GPU_Matrix* src
 {
     decx::utils::double_buffer_manager double_buffer(this->get_tmp1_ptr<void>(), this->get_tmp2_ptr<void>());
 
-    decx::dsp::fft::FFT2D_cplxd_1st_1way_caller<de::CPd, true>(src->Mat.ptr, &double_buffer,
+    decx::dsp::fft::FFT2D_cplxd_1st_1way_caller<de::CPd, true>((const void*)src->Mat, &double_buffer,
         this->get_FFT_info(decx::dsp::fft::_FFT_AlongH),
         S);
 
@@ -93,21 +93,21 @@ void decx::dsp::fft::_cuda_FFT2D_planner<double>::Inverse(decx::_GPU_Matrix* src
         S);
     if (std::is_same<_type_out, de::CPd>::value) {
         decx::blas::transpose2D_b16(double_buffer.GetLeadingBufPtr<double2>(), 
-                                 (double2*)dst->Mat.ptr,
+                                 (double2*)dst->Mat,
                                  make_uint2(dst->Width(), dst->Height()),
                                  this->get_buffer_dims().y, 
                                  dst->Pitch(), S);
     }
     else if (std::is_same<_type_out, uint8_t>::value) {
         decx::blas::transpose2D_b1(double_buffer.GetLeadingBufPtr<uint32_t>(), 
-                                 (uint32_t*)dst->Mat.ptr,
+                                 (uint32_t*)dst->Mat,
                                  make_uint2(dst->Width(), dst->Height()),
                                  this->get_buffer_dims().y * 16,  // Times 8 cuz 8 uchars in one de::CPd
                                  dst->Pitch(), S);
     }
     else if (std::is_same<_type_out, double>::value) {
         decx::blas::transpose2D_b8(double_buffer.GetLeadingBufPtr<double2>(), 
-                                 (double2*)dst->Mat.ptr,
+                                 (double2*)dst->Mat,
                                  make_uint2(dst->Width(), dst->Height()),
                                  this->get_buffer_dims().y * 2,  // Times 2 cuz 2 doubles in one de::CPd
                                  dst->Pitch(), S);

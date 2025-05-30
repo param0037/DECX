@@ -66,13 +66,9 @@ decx::dsp::cuda_Filter2D_planner<_data_type>::plan(const decx::_matrix_layout* s
     else {
         this->_dst_dims = make_uint2(this->_src_layout->width, this->_src_layout->height);
 
-        this->_ext_src._dims = make_uint2(decx::utils::align<uint32_t>(this->_dst_dims.x + this->_kernel_layout->width - 1, 128 / sizeof(_data_type)), 
-            this->_dst_dims.y);
-        if (decx::alloc::_device_malloc(&this->_ext_src._ptr, this->_ext_src._dims.x * this->_ext_src._dims.y * sizeof(_data_type), true, S)) {
-            decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_CUDA_ALLOCATION,
-                DEV_ALLOC_FAIL);
-            return;
-        }
+        this->_ext_src.SetDims(decx::utils::align<uint32_t>(this->_dst_dims.x + this->_kernel_layout->width - 1, 128 / sizeof(_data_type)), 
+                                                            this->_dst_dims.y);
+        this->_ext_src.Allocate(CUDA_DEVICE, sizeof(_data_type), handle, true, S);
     }
 
     this->_block = dim3(_CU_FILTER2D_FP32_BLOCK_X_, _CU_FILTER2D_FP32_BLOCK_Y_);
@@ -154,7 +150,7 @@ template <typename _data_type>
 void decx::dsp::cuda_Filter2D_planner<_data_type>::release(decx::dsp::cuda_Filter2D_planner<_data_type>* _fake_this)
 {
     if (_fake_this->_conv_border_method != de::extend_label::_EXTEND_NONE_) {
-        decx::alloc::_device_dealloc(&_fake_this->_ext_src._ptr);
+        _fake_this->_ext_src.Free();
     }
 }
 

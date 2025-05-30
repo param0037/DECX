@@ -60,9 +60,10 @@ void decx::dsp::fft::_cuda_FFT2D_planner<_type_in>::plan(const uint2 signal_dims
         decx::utils::align<uint32_t>(signal_dims.y, _alignment));
 
     // Allocate buffers in device
-    if (decx::alloc::_device_malloc(&this->_tmp1, this->_buffer_dims.x * this->_buffer_dims.y * sizeof(_type_in) * 2) ||
-        decx::alloc::_device_malloc(&this->_tmp2, this->_buffer_dims.x * this->_buffer_dims.y * sizeof(_type_in) * 2)) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_CUDA_ALLOCATION, DEV_ALLOC_FAIL);
+    int32_t rval = 0;
+    rval |= this->_tmp1.Allocate(this->_buffer_dims.x * this->_buffer_dims.y * sizeof(_type_in) * 2, CUDA_DEVICE, handle, true);
+    rval |= this->_tmp2.Allocate(this->_buffer_dims.x * this->_buffer_dims.y * sizeof(_type_in) * 2, CUDA_DEVICE, handle, true);
+    if (rval != 0){
         return;
     }
 
@@ -163,8 +164,8 @@ template uint2 decx::dsp::fft::_cuda_FFT2D_planner<double>::get_buffer_dims() co
 template <typename _data_type>
 void decx::dsp::fft::_cuda_FFT2D_planner<_data_type>::ReleaseBuffers(decx::dsp::fft::_cuda_FFT2D_planner<_data_type>* _fake_this)
 {
-    decx::alloc::_device_dealloc(&_fake_this->_tmp1);
-    decx::alloc::_device_dealloc(&_fake_this->_tmp2);
+    _fake_this->_tmp1.Free();
+    _fake_this->_tmp2.Free();
 }
 
 template void decx::dsp::fft::_cuda_FFT2D_planner<float>::ReleaseBuffers(decx::dsp::fft::_cuda_FFT2D_planner<float>*);

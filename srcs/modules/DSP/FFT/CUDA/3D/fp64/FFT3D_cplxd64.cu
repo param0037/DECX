@@ -45,7 +45,7 @@ void decx::dsp::fft::_cuda_FFT3D_planner<double>::Forward(decx::_GPU_Tensor* src
     double_buffer.ResetBuf1AsLeading();
 
     // Along H
-    decx::dsp::fft::FFT2D_cplxd_1st_1way_caller<_type_in, false>(src->Tens.ptr, &double_buffer, 
+    decx::dsp::fft::FFT2D_cplxd_1st_1way_caller<_type_in, false>((void*)src->Tens, &double_buffer, 
         this->get_FFT_info(decx::dsp::fft::_FFT_AlongH), S);
 
     // Along W
@@ -76,7 +76,7 @@ void decx::dsp::fft::_cuda_FFT3D_planner<double>::Forward(decx::_GPU_Tensor* src
     decx::dsp::fft::FFT2D_C2C_cplxd_1way_caller<_FFT2D_END_(de::CPd)>(&double_buffer, _along_D, S);
 
     decx::blas::transpose2D_b16(double_buffer.GetLeadingBufPtr<double2>(), 
-                             (double2*)dst->Tens.ptr,
+                             (double2*)dst->Tens,
                              make_uint2(dst->Depth(), _along_D->_pitchtmp),
                              _along_D->_pitchdst, 
                              dst->get_layout().dpitch, S);
@@ -95,7 +95,7 @@ void decx::dsp::fft::_cuda_FFT3D_planner<double>::Inverse(decx::_GPU_Tensor* src
     double_buffer.ResetBuf1AsLeading();
 
     // Along H
-    decx::dsp::fft::FFT2D_cplxd_1st_1way_caller<de::CPd, true>(src->Tens.ptr, &double_buffer, 
+    decx::dsp::fft::FFT2D_cplxd_1st_1way_caller<de::CPd, true>((void*)src->Tens, &double_buffer, 
         this->get_FFT_info(decx::dsp::fft::_FFT_AlongH), S);
 
     // Along W
@@ -126,21 +126,21 @@ void decx::dsp::fft::_cuda_FFT3D_planner<double>::Inverse(decx::_GPU_Tensor* src
 
     if (std::is_same<_type_out, de::CPd>::value){
         decx::blas::transpose2D_b16(double_buffer.GetLeadingBufPtr<double2>(), 
-                                 (double2*)dst->Tens.ptr,
+                                 (double2*)dst->Tens,
                                  make_uint2(dst->Depth(), _along_D->_pitchtmp),
                                  _along_D->_pitchdst, 
                                  dst->get_layout().dpitch, S);
     }
     else if (std::is_same<_type_out, uint8_t>::value) {
         decx::blas::transpose2D_b1(double_buffer.GetLeadingBufPtr<uint32_t>(), 
-                                 (uint32_t*)dst->Tens.ptr,
+                                 (uint32_t*)dst->Tens,
                                  make_uint2(dst->Depth(), _along_D->_pitchtmp),
                                  _along_D->_pitchdst * 8, 
                                  dst->get_layout().dpitch, S);
     }
     else if (std::is_same<_type_out, double>::value){
         decx::blas::transpose2D_b8(double_buffer.GetLeadingBufPtr<double2>(), 
-                                 (double2*)dst->Tens.ptr,
+                                 (double2*)dst->Tens,
                                  make_uint2(dst->Depth(), _along_D->_pitchtmp),
                                  _along_D->_pitchdst * 2, 
                                  dst->get_layout().dpitch, S);

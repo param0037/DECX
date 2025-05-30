@@ -139,8 +139,8 @@ template uint32_t decx::dsp::fft::_cuda_FFT1D_planner<double>::get_larger_FFT_le
 template <typename _data_type>
 void decx::dsp::fft::_cuda_FFT1D_planner<_data_type>::release(decx::dsp::fft::_cuda_FFT1D_planner<_data_type>* _fake_this)
 {
-    decx::alloc::_device_dealloc(&_fake_this->_tmp1);
-    decx::alloc::_device_dealloc(&_fake_this->_tmp2);
+    _fake_this->_tmp1.Free();
+    _fake_this->_tmp2.Free();
 }
 
 template void decx::dsp::fft::_cuda_FFT1D_planner<float>::release(decx::dsp::fft::_cuda_FFT1D_planner<float>*);

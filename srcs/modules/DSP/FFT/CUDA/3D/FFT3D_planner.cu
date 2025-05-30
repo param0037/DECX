@@ -79,11 +79,9 @@ void decx::dsp::fft::_cuda_FFT3D_planner<_data_type>::plan(const decx::_tensor_l
                     this->_FFT_D._pitchtmp * this->_FFT_D.get_signal_len());
 
     const uint64_t alloc_size = max(max(_alloc_sizes.x, _alloc_sizes.y), _alloc_sizes.z);
-    if (decx::alloc::_device_malloc(&this->_tmp1, alloc_size * sizeof(_data_type) * 2, true, S) ||
-        decx::alloc::_device_malloc(&this->_tmp2, alloc_size * sizeof(_data_type) * 2, true, S)) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION, ALLOC_FAIL);
-        return;
-    }
+    int32_t rval = 0;
+    rval |= this->_tmp1.Allocate(alloc_size * sizeof(_data_type) * 2, CUDA_DEVICE, handle, true, S);
+    rval |= this->_tmp2.Allocate(alloc_size * sizeof(_data_type) * 2, CUDA_DEVICE, handle, true, S);
 }
 
 template _CRSR_ void decx::dsp::fft::_cuda_FFT3D_planner<float>::plan(const decx::_tensor_layout*,
@@ -152,8 +150,8 @@ template bool decx::dsp::fft::_cuda_FFT3D_planner<double>::changed(const decx::_
 template <typename _data_type>
 void decx::dsp::fft::_cuda_FFT3D_planner<_data_type>::release(decx::dsp::fft::_cuda_FFT3D_planner<_data_type>* _fake_this)
 {
-    decx::alloc::_device_dealloc(&_fake_this->_tmp1);
-    decx::alloc::_device_dealloc(&_fake_this->_tmp2);
+    _fake_this->_tmp1.Free();
+    _fake_this->_tmp2.Free();
 }
 
 template void decx::dsp::fft::_cuda_FFT3D_planner<float>::release(decx::dsp::fft::_cuda_FFT3D_planner<float>*);

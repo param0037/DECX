@@ -46,8 +46,8 @@ _cu_Filter2D_fp32_caller(const decx::dsp::cuda_Filter2D_planner<float>* _fake_th
 {
     if (_fake_this->_conv_border_method != de::extend_label::_EXTEND_NONE_) 
     {
-        checkCudaErrors(cudaMemcpy2DAsync((float*)_fake_this->_ext_src._ptr.ptr + (_fake_this->_kernel_layout->width >> 1),
-            _fake_this->_ext_src._dims.x * sizeof(float),
+        checkCudaErrors(cudaMemcpy2DAsync((float*)_fake_this->_ext_src + (_fake_this->_kernel_layout->width >> 1),
+            _fake_this->_ext_src.GetDims().x * sizeof(float),
             src,
             _fake_this->_src_layout->pitch * sizeof(float),
             _fake_this->_src_layout->width * sizeof(float),
@@ -57,10 +57,10 @@ _cu_Filter2D_fp32_caller(const decx::dsp::cuda_Filter2D_planner<float>* _fake_th
         
         decx::dsp::GPUK::cu_filter2D_BC_fp32<_ext_w> << <_fake_this->_grid, _fake_this->_block, 
                                                     0, S->get_raw_stream_ref() >> > (
-            (float4*)_fake_this->_ext_src._ptr.ptr,
+            (float4*)_fake_this->_ext_src,
             (float*)kernel,
             (float4*)dst,
-            _fake_this->_ext_src._dims.x / 4,
+            _fake_this->_ext_src.GetDims().x / 4,
             pitchdst_v1 / 4,
             make_uint3(_fake_this->_kernel_layout->width, 
                        _fake_this->_kernel_layout->height, 
@@ -133,5 +133,5 @@ decx::dsp::cuda_Filter2D_planner<float>::run(decx::_GPU_Matrix* src, decx::_GPU_
 {
     _cu_F2_FP32_Kcaller _kernel_ptr = decx::dsp::_cu_F2_FP32_Kcallers[(this->_kernel_layout->width - 2) / 4];
 
-    _kernel_ptr(this, (float4*)src->Mat.ptr, (float*)kernel->Mat.ptr, (float4*)dst->Mat.ptr, dst->get_layout().pitch, S);
+    _kernel_ptr(this, (float4*)src->Mat, (float*)kernel->Mat, (float4*)dst->Mat, dst->get_layout().pitch, S);
 }
