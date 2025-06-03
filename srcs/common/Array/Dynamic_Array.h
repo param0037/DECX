@@ -92,10 +92,13 @@ public:
      * @return _Ty* pointer of the epscified element. If there is no element in the array
      * the return value will be unexpected
      */
-    _Ty* operator[](const uint64_t _index);
+    _Ty& operator[](const uint64_t _index);
 
 
-    const _Ty* operator[](const uint64_t _index) const;
+    const _Ty& operator[](const uint64_t _index) const;
+
+
+    _Ty* operator+(const uint64_t _index);
 
 
     /**
@@ -122,6 +125,9 @@ public:
      * @return void, return none
      */
     void del(const uint64_t index);
+
+
+    void Init();
 
 
     decx::utils::Dynamic_Array<_Ty>& operator=(const decx::utils::Dynamic_Array<_Ty>* _src);
@@ -174,12 +180,34 @@ template <typename _Ty>
 decx::utils::Dynamic_Array<_Ty>::Dynamic_Array()
 {
     this->_void_space_from_start = 0;
-
     if (this->_data.Allocate(Array_Initial_Length * sizeof(_Ty), PAGABLE)) {
         return;
     }
     if (this->_buffer.Allocate(Array_Initial_Length * sizeof(_Ty), PAGABLE)) {
         return;
+    }
+
+    this->_memory_capacity = Array_Initial_Length;
+    this->_current_length = 0;
+
+    this->_begin_ptr = this->_data.GetRawPtr();
+    this->_end_ptr = this->_data.GetRawPtr();
+}
+
+
+template <typename _Ty>
+void decx::utils::Dynamic_Array<_Ty>::Init()
+{
+    this->_void_space_from_start = 0;
+    if (this->_data.IsValid() == 0){
+        if (this->_data.Allocate(Array_Initial_Length * sizeof(_Ty), PAGABLE)) {
+            return;
+        }
+    }
+    if (this->_buffer.IsValid() == 0) {
+        if (this->_buffer.Allocate(Array_Initial_Length * sizeof(_Ty), PAGABLE)) {
+            return;
+        }
     }
 
     this->_memory_capacity = Array_Initial_Length;
@@ -198,15 +226,15 @@ bool decx::utils::Dynamic_Array<_Ty>::check_vaild_space_req()
 
 
 template <typename _Ty>
-_Ty* decx::utils::Dynamic_Array<_Ty>::operator[](const size_t _index)
+_Ty& decx::utils::Dynamic_Array<_Ty>::operator[](const size_t _index)
 {
-    return this->_begin_ptr + _index;
+    return *(this->_begin_ptr + _index);
 }
 
 template <typename _Ty>
-const _Ty* decx::utils::Dynamic_Array<_Ty>::operator[](const size_t _index) const
+const _Ty& decx::utils::Dynamic_Array<_Ty>::operator[](const size_t _index) const
 {
-    return this->_begin_ptr + _index;
+    return *(this->_begin_ptr + _index);
 }
 
 
@@ -238,6 +266,12 @@ template <typename _Ty>
 uint64_t decx::utils::Dynamic_Array<_Ty>::size() const
 {
     return this->_current_length;
+}
+
+template <typename _Ty>
+_Ty* decx::utils::Dynamic_Array<_Ty>::operator+(const uint64_t _index)
+{
+    return this->_begin_ptr + _index;
 }
 
 

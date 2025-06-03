@@ -57,7 +57,7 @@ void decx::ResMgr::_mgr_task()
         this->_shortest_wait_period = 0x7fffffffffffffff;
         for (uint32_t i = 0; i < this->_res_arr.size(); ++i) 
         {
-            decx::Resource* res_ptr = this->_res_arr[i];
+            decx::Resource* res_ptr = this->_res_arr + i;
             
             if (res_ptr->exceeded_lifespan(_current)) {
                 this->_mtx.lock();
@@ -95,7 +95,7 @@ uint64_t decx::ResMgr::checkin(void** exposed_ptr, const time_t lifespan,
 void decx::ResMgr::lock_resource(const uint64_t res_id)
 {
     this->_mtx.lock();
-    this->_res_arr[res_id]->lock();
+    this->_res_arr[res_id].lock();
     this->_mtx.unlock();
 }
 
@@ -103,7 +103,7 @@ void decx::ResMgr::lock_resource(const uint64_t res_id)
 void decx::ResMgr::unlock_resource(const uint64_t res_id)
 {
     this->_mtx.lock();
-    this->_res_arr[res_id]->unlock();
+    this->_res_arr[res_id].unlock();
     this->_mtx.unlock();
 }
 
