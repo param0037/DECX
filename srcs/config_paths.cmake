@@ -43,6 +43,7 @@ cmake_host_system_information(RESULT HOST_OS_NAME QUERY OS_NAME)
 message(STATUS "=========================== Building on host, OS name = ${HOST_OS_NAME} ===========================")
 
 include_directories("${DECX_WORLD_ABS_DIR}/srcs/common")
+include_directories("${DECX_WORLD_ABS_DIR}/srcs/modules/core")
 
 # Set library output path
 set(LIBRARY_OUTPUT_PATH ${DECX_WORLD_ABS_DIR}/build/bin/${_DECX_HOST_ARCH_})
