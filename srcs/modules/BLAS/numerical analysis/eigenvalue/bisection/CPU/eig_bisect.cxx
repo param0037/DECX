@@ -128,7 +128,7 @@ void decx::blas::cpu_eig_bisection<_data_type>::calc_Gerschgorin_bound(decx::uti
         decx::TArg_var<const float*>([this, p_dist](const int32_t i){return this->_off_diag + i * p_dist->get_frag_len();}),
         decx::TArg_var<float*>      ([u_ptr](const int32_t i)->float*{return u_ptr + i;}),
         decx::TArg_var<float*>      ([l_ptr](const int32_t i)->float*{return l_ptr + i;}),
-        decx::TArg_var<uint32_t>    ([p_dist](const int32_t i){return p_dist->get_frag_len_by_id(i);}));
+        decx::TArg_var<uint32_t>    ([p_dist](const int32_t i){return p_dist->GetFragLenById(i);}));
     
     this->_Gerschgorin_L = l_ptr[0];
     this->_Gerschgorin_U = u_ptr[0];

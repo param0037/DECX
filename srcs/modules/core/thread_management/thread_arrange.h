@@ -46,6 +46,8 @@ namespace utils
         uint total_thread;
         std::future<void>* _async_thread;
 
+        _thread_arrange_1D() {}
+
         _thread_arrange_1D(const uint _total_thread, std::future<void>* __async_thread)
         {
             this->total_thread = _total_thread;
@@ -87,6 +89,7 @@ namespace utils
         uint thread_h, thread_w;
         std::future<void>* _async_thread;
 
+        _thread_arrange_2D() {}
 
         _thread_arrange_2D() {
             this->total_thread = 0;

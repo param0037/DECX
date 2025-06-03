@@ -67,12 +67,12 @@ public:
 
 
     uint64_t get_proc_len_by_id(const int32_t thread_id) const{
-        return this->_fmgr.get_frag_len_by_id(thread_id);
+        return this->_fmgr.GetFragLenById(thread_id);
     }
 
 
     uint64_t get_proc_len_v_by_id(const int32_t thread_id) const{
-        return decx::utils::ceil<uint64_t>(this->_fmgr.get_frag_len_by_id(thread_id), this->_alignment);
+        return decx::utils::ceil<uint64_t>(this->_fmgr.GetFragLenById(thread_id), this->_alignment);
     }
 
 
@@ -127,15 +127,15 @@ public:
 
     uint2 get_proc_dims_by_id(const int32_t i, const int32_t j) const
     {
-        return make_uint2(this->_fmgr_WH[0].get_frag_len_by_id(j),
-                          this->_fmgr_WH[1].get_frag_len_by_id(i));
+        return make_uint2(this->_fmgr_WH[0].GetFragLenById(j),
+                          this->_fmgr_WH[1].GetFragLenById(i));
     }
 
 
     uint2 get_proc_dims_v_by_id(const int32_t i, const int32_t j) const
     {
-        return make_uint2(decx::utils::ceil<uint32_t>(this->_fmgr_WH[0].get_frag_len_by_id(j), this->_alignment),
-                          this->_fmgr_WH[1].get_frag_len_by_id(i));
+        return make_uint2(decx::utils::ceil<uint32_t>(this->_fmgr_WH[0].GetFragLenById(j), this->_alignment),
+                          this->_fmgr_WH[1].GetFragLenById(i));
     }
 
 

@@ -78,7 +78,7 @@ void decx::blas::cpu_eig_bisect_count_interval<float>::count_intervals(uint32_t*
         decx::TArg_var<const float*>  ([&](const int32_t i){return this->_p_midps + i * frag_len;}),
         decx::TArg_var<float*>        ([&](const int32_t i){return this->_mid_arr_buf.GetRawPtr() + i * frag_len * 2;}),
         decx::TArg_still<uint32_t>    (this->_N),
-        decx::TArg_var<uint32_t>      ([&](const int32_t i){return this->get_fmgr()->get_frag_len_by_id(i);}),
+        decx::TArg_var<uint32_t>      ([&](const int32_t i){return this->get_fmgr()->GetFragLenById(i);}),
         decx::TArg_var<uint32_t*>      ([&](const int32_t i){return this->_count_buffer.GetRawPtr() + i;})
     );
 

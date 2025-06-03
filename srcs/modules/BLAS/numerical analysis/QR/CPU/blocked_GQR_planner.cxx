@@ -183,7 +183,7 @@ void decx::blas::Blocked_GQR_planner<_data_type>::Process_HouseHolder()
                 decx::TArg_var<const _data_type*>([&](const int32_t i){return pV + i * fmgr->get_frag_len() * panel_pitch;}),
                 decx::TArg_var<_data_type*>      ([&](const int32_t i){return pPanel + i * fmgr->get_frag_len() * panel_pitch;}),
                 decx::TArg_still<int32_t>(col_id),
-                decx::TArg_var<uint2>([&](const int32_t i){return make_uint2(fmgr->get_frag_len_by_id(i), _block_dims.y - col_id);})
+                decx::TArg_var<uint2>([&](const int32_t i){return make_uint2(fmgr->GetFragLenById(i), _block_dims.y - col_id);})
             );
 
             // // Update rest of the panel
