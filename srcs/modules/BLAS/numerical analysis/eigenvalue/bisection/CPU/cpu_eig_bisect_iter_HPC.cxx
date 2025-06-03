@@ -68,7 +68,7 @@ template void decx::blas::cpu_eig_bisect_count_interval<float>::set_count_num(co
 template <>
 void decx::blas::cpu_eig_bisect_count_interval<float>::count_intervals(uint32_t* p_num, decx::utils::ThreadArrange1D* t1D)
 {
-    const uint32_t frag_len = this->_fmgr.get_frag_len();
+    const uint32_t frag_len = this->_fmgr.GetFragLen();
 
     this->caller(update_intrv,
         t1D,

@@ -62,9 +62,9 @@ mat_arithmetic_caller_VVO(const decx::_Matrix*  A,
         _planner.caller(
             (arithmetic_kernels_1D_VVO<float, float, float>*)_kernel_ptr,
             &t1D,
-            decx::TArg_var<const float*>([&](const int32_t i){return (const float*)A->Mat + i * _planner.get_fmgr()->get_frag_len();}),
-            decx::TArg_var<const float*>([&](const int32_t i){return (const float*)B->Mat + i * _planner.get_fmgr()->get_frag_len();}),
-            decx::TArg_var<float*>([&](const int32_t i){return (float*)dst->Mat + i * _planner.get_fmgr()->get_frag_len();}),
+            decx::TArg_var<const float*>([&](const int32_t i){return (const float*)A->Mat + i * _planner.get_fmgr()->GetFragLen();}),
+            decx::TArg_var<const float*>([&](const int32_t i){return (const float*)B->Mat + i * _planner.get_fmgr()->GetFragLen();}),
+            decx::TArg_var<float*>([&](const int32_t i){return (float*)dst->Mat + i * _planner.get_fmgr()->GetFragLen();}),
             decx::TArg_var<uint64_t>([&](const int32_t i){
                 return decx::utils::ceil<uint64_t>(_planner.get_fmgr()->GetFragLenById(i), _planner.get_alignment());})
         );
@@ -79,9 +79,9 @@ mat_arithmetic_caller_VVO(const decx::_Matrix*  A,
         _planner.caller(
             (arithmetic_kernels_1D_VVO<double, double, double>*)_kernel_ptr,
             &t1D,
-            decx::TArg_var<const double*>([&](const int32_t i){return (const double*)A->Mat + i * _planner.get_fmgr()->get_frag_len();}),
-            decx::TArg_var<const double*>([&](const int32_t i){return (const double*)B->Mat + i * _planner.get_fmgr()->get_frag_len();}),
-            decx::TArg_var<double*>([&](const int32_t i){return dst->Mat.GetRawPtr<double>() + i * _planner.get_fmgr()->get_frag_len();}),
+            decx::TArg_var<const double*>([&](const int32_t i){return (const double*)A->Mat + i * _planner.get_fmgr()->GetFragLen();}),
+            decx::TArg_var<const double*>([&](const int32_t i){return (const double*)B->Mat + i * _planner.get_fmgr()->GetFragLen();}),
+            decx::TArg_var<double*>([&](const int32_t i){return dst->Mat.GetRawPtr<double>() + i * _planner.get_fmgr()->GetFragLen();}),
             decx::TArg_var<uint64_t>([&](const int32_t i){
                 return decx::utils::ceil<uint64_t>(_planner.get_fmgr()->GetFragLenById(i), _planner.get_alignment());})
         );
@@ -123,8 +123,8 @@ mat_arithmetic_caller_VO(const decx::_Matrix*  src,
         _planner.caller(
             (arithmetic_kernels_1D_VO<float, float>*)_kernel_ptr,
             &t1D,
-            decx::TArg_var<const float*>([&](const int32_t i){return (const float*)src->Mat + i * _planner.get_fmgr()->get_frag_len();}),
-            decx::TArg_var<float*>([&](const int32_t i){return (float*)dst->Mat + i * _planner.get_fmgr()->get_frag_len();}),
+            decx::TArg_var<const float*>([&](const int32_t i){return (const float*)src->Mat + i * _planner.get_fmgr()->GetFragLen();}),
+            decx::TArg_var<float*>([&](const int32_t i){return (float*)dst->Mat + i * _planner.get_fmgr()->GetFragLen();}),
             decx::TArg_var<uint64_t>([&](const int32_t i){
                 return decx::utils::ceil<uint64_t>(_planner.get_fmgr()->GetFragLenById(i), _planner.get_alignment());})
         );
@@ -138,8 +138,8 @@ mat_arithmetic_caller_VO(const decx::_Matrix*  src,
         _planner.caller(
             (arithmetic_kernels_1D_VO<double, double>*)_kernel_ptr,
             &t1D,
-            decx::TArg_var<const double*>([&](const int32_t i){return (const double*)src->Mat + i * _planner.get_fmgr()->get_frag_len();}),
-            decx::TArg_var<double*>([&](const int32_t i){return (double*)dst->Mat + i * _planner.get_fmgr()->get_frag_len();}),
+            decx::TArg_var<const double*>([&](const int32_t i){return (const double*)src->Mat + i * _planner.get_fmgr()->GetFragLen();}),
+            decx::TArg_var<double*>([&](const int32_t i){return (double*)dst->Mat + i * _planner.get_fmgr()->GetFragLen();}),
             decx::TArg_var<uint64_t>([&](const int32_t i){
                 return decx::utils::ceil<uint64_t>(_planner.get_fmgr()->GetFragLenById(i), _planner.get_alignment());})
         );
@@ -178,9 +178,9 @@ vec_arithmetic_caller_VVO(const decx::_Vector*  A,
         _planner.caller(
             (arithmetic_kernels_1D_VVO<float, float, float>*)_kernel_ptr,
             &t1D,
-            decx::TArg_var<const float*>([&](const int32_t i){return A->Vec.GetRawPtrConst<float>() + i * _planner.get_fmgr()->get_frag_len();}),
-            decx::TArg_var<const float*>([&](const int32_t i){return B->Vec.GetRawPtrConst<float>() + i * _planner.get_fmgr()->get_frag_len();}),
-            decx::TArg_var<float*>([&](const int32_t i){return dst->Vec.GetRawPtr<float>() + i * _planner.get_fmgr()->get_frag_len();}),
+            decx::TArg_var<const float*>([&](const int32_t i){return A->Vec.GetRawPtrConst<float>() + i * _planner.get_fmgr()->GetFragLen();}),
+            decx::TArg_var<const float*>([&](const int32_t i){return B->Vec.GetRawPtrConst<float>() + i * _planner.get_fmgr()->GetFragLen();}),
+            decx::TArg_var<float*>([&](const int32_t i){return dst->Vec.GetRawPtr<float>() + i * _planner.get_fmgr()->GetFragLen();}),
             decx::TArg_var<uint64_t>([&](const int32_t i){
                 return decx::utils::ceil<uint64_t>(_planner.get_fmgr()->GetFragLenById(i), _planner.get_alignment());})
         );
@@ -195,9 +195,9 @@ vec_arithmetic_caller_VVO(const decx::_Vector*  A,
         _planner.caller(
             (arithmetic_kernels_1D_VVO<double, double, double>*)_kernel_ptr,
             &t1D,
-            decx::TArg_var<const double*>([&](const int32_t i){return A->Vec.GetRawPtrConst<double>() + i * _planner.get_fmgr()->get_frag_len();}),
-            decx::TArg_var<const double*>([&](const int32_t i){return B->Vec.GetRawPtrConst<double>() + i * _planner.get_fmgr()->get_frag_len();}),
-            decx::TArg_var<double*>([&](const int32_t i){return dst->Vec.GetRawPtr<double>() + i * _planner.get_fmgr()->get_frag_len();}),
+            decx::TArg_var<const double*>([&](const int32_t i){return A->Vec.GetRawPtrConst<double>() + i * _planner.get_fmgr()->GetFragLen();}),
+            decx::TArg_var<const double*>([&](const int32_t i){return B->Vec.GetRawPtrConst<double>() + i * _planner.get_fmgr()->GetFragLen();}),
+            decx::TArg_var<double*>([&](const int32_t i){return dst->Vec.GetRawPtr<double>() + i * _planner.get_fmgr()->GetFragLen();}),
             decx::TArg_var<uint64_t>([&](const int32_t i){
                 return decx::utils::ceil<uint64_t>(_planner.get_fmgr()->GetFragLenById(i), _planner.get_alignment());})
         );
@@ -236,8 +236,8 @@ vec_arithmetic_caller_VO(const decx::_Vector*  src,
         _planner.caller(
             (arithmetic_kernels_1D_VO<float, float>*)_kernel_ptr,
             &t1D,
-            decx::TArg_var<const float*>([&](const int32_t i){return (const float*)src->Vec + i * _planner.get_fmgr()->get_frag_len();}),
-            decx::TArg_var<float*>([&](const int32_t i){return (float*)dst->Vec + i * _planner.get_fmgr()->get_frag_len();}),
+            decx::TArg_var<const float*>([&](const int32_t i){return (const float*)src->Vec + i * _planner.get_fmgr()->GetFragLen();}),
+            decx::TArg_var<float*>([&](const int32_t i){return (float*)dst->Vec + i * _planner.get_fmgr()->GetFragLen();}),
             decx::TArg_var<uint64_t>([&](const int32_t i){
                 return decx::utils::ceil<uint64_t>(_planner.get_fmgr()->GetFragLenById(i), _planner.get_alignment());})
         );
@@ -252,8 +252,8 @@ vec_arithmetic_caller_VO(const decx::_Vector*  src,
         _planner.caller(
             (arithmetic_kernels_1D_VO<double, double>*)_kernel_ptr,
             &t1D,
-            decx::TArg_var<const double*>([&](const int32_t i){return (const double*)src->Vec + i * _planner.get_fmgr()->get_frag_len();}),
-            decx::TArg_var<double*>([&](const int32_t i){return (double*)dst->Vec + i * _planner.get_fmgr()->get_frag_len();}),
+            decx::TArg_var<const double*>([&](const int32_t i){return (const double*)src->Vec + i * _planner.get_fmgr()->GetFragLen();}),
+            decx::TArg_var<double*>([&](const int32_t i){return (double*)dst->Vec + i * _planner.get_fmgr()->GetFragLen();}),
             decx::TArg_var<uint64_t>([&](const int32_t i){
                 return decx::utils::ceil<uint64_t>(_planner.get_fmgr()->GetFragLenById(i), _planner.get_alignment());})
         );

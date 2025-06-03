@@ -124,8 +124,8 @@ void decx::blas::cpu_eig_bisection<_data_type>::calc_Gerschgorin_bound(decx::uti
 
     this->_Gersch_bound_founder.caller(decx::blas::CPUK::Gerschgorin_bound_fp32,
         t1D,
-        decx::TArg_var<const float*>([this, p_dist](const int32_t i){return this->_diag + i * p_dist->get_frag_len();}),
-        decx::TArg_var<const float*>([this, p_dist](const int32_t i){return this->_off_diag + i * p_dist->get_frag_len();}),
+        decx::TArg_var<const float*>([this, p_dist](const int32_t i){return this->_diag + i * p_dist->GetFragLen();}),
+        decx::TArg_var<const float*>([this, p_dist](const int32_t i){return this->_off_diag + i * p_dist->GetFragLen();}),
         decx::TArg_var<float*>      ([u_ptr](const int32_t i)->float*{return u_ptr + i;}),
         decx::TArg_var<float*>      ([l_ptr](const int32_t i)->float*{return l_ptr + i;}),
         decx::TArg_var<uint32_t>    ([p_dist](const int32_t i){return p_dist->GetFragLenById(i);}));

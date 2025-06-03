@@ -217,7 +217,7 @@ public:
 
 
 // #define VarArgGen1D(__EW, __VAL, __GAP, __TVAL) \
-//     decx::TArg_var<__TVAL>([&](const int32_t i){return (__TVAL)__VAL + i * (__EW).get_fmgr()->get_frag_len() * (__GAP);})
+//     decx::TArg_var<__TVAL>([&](const int32_t i){return (__TVAL)__VAL + i * (__EW).get_fmgr()->GetFragLen() * (__GAP);})
 
 
 

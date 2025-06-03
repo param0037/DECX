@@ -181,8 +181,8 @@ static void decx::type_cast::typecast1D_general_caller(
 
     _planner->caller(_kernel_ptr,
         t1D,
-        decx::TArg_var<const _type_in*>(_TARG_PTR_INC_(src, _planner->get_fmgr()->get_frag_len())),
-        decx::TArg_var<_type_out*>(_TARG_PTR_INC_(dst, _planner->get_fmgr()->get_frag_len())),
+        decx::TArg_var<const _type_in*>(_TARG_PTR_INC_(src, _planner->get_fmgr()->GetFragLen())),
+        decx::TArg_var<_type_out*>(_TARG_PTR_INC_(dst, _planner->get_fmgr()->GetFragLen())),
         decx::TArg_var<uint64_t>([&](const int32_t i){return _planner->get_proc_len_v_by_id(i);})
     );
 }

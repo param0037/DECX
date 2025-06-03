@@ -180,8 +180,8 @@ void decx::blas::Blocked_GQR_planner<_data_type>::Process_HouseHolder()
             decx::cpu_ElementWise1D_planner::
             sCaller(decx::blas::Blocked_GQR_planner<_data_type>::ApplyRefactors, fmgr, &t1D, 
                 decx::TArg_still<decx::blas::Blocked_GQR_planner<_data_type>*>(this),
-                decx::TArg_var<const _data_type*>([&](const int32_t i){return pV + i * fmgr->get_frag_len() * panel_pitch;}),
-                decx::TArg_var<_data_type*>      ([&](const int32_t i){return pPanel + i * fmgr->get_frag_len() * panel_pitch;}),
+                decx::TArg_var<const _data_type*>([&](const int32_t i){return pV + i * fmgr->GetFragLen() * panel_pitch;}),
+                decx::TArg_var<_data_type*>      ([&](const int32_t i){return pPanel + i * fmgr->GetFragLen() * panel_pitch;}),
                 decx::TArg_still<int32_t>(col_id),
                 decx::TArg_var<uint2>([&](const int32_t i){return make_uint2(fmgr->GetFragLenById(i), _block_dims.y - col_id);})
             );
