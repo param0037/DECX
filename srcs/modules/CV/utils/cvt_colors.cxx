@@ -441,7 +441,7 @@ void decx::vis::_channel_ops_UC42UC_caller(decx::vis::channel_ops_kernel kernel,
                                             const float* src, float* dst, const int2 dims, 
                                             const uint32_t pitchsrc, const uint32_t pitchdst)
 {
-    decx::utils::_thread_arrange_1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::ThreadArrange1D t1D(decx::cpu::_get_permitted_concurrency());
     decx::utils::frag_manager f_mgr;
     decx::utils::frag_manager_gen(&f_mgr, dims.y, t1D.total_thread);
 
@@ -473,7 +473,7 @@ void decx::vis::_channel_ops_UC42UC4_caller(decx::vis::channel_ops_kernel kernel
                                             const float* src, float* dst, const int2 dims, 
                                             const uint32_t pitchsrc, const uint32_t pitchdst)
 {
-    decx::utils::_thread_arrange_1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::ThreadArrange1D t1D(decx::cpu::_get_permitted_concurrency());
     decx::utils::frag_manager f_mgr;
     decx::utils::frag_manager_gen(&f_mgr, dims.y, t1D.total_thread);
 

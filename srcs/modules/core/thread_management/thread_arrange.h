@@ -40,33 +40,33 @@ namespace decx
 {
 namespace utils
 {
-    class _thread_arrange_1D;
+    class ThreadArrange1D;
 
-    class _thread_arrange_2D;
+    class ThreadArrange2D;
 
 
-    typedef _thread_arrange_1D _thr_1D;
-    typedef _thread_arrange_2D _thr_2D;
+    typedef ThreadArrange1D Thr1D;
+    typedef ThreadArrange2D Thr2D;
 }
 }
 
-class decx::utils::_thread_arrange_1D
+class decx::utils::ThreadArrange1D
 {
 public:
     uint32_t total_thread;
     std::future<void>* _async_thread;
 
-    _thread_arrange_1D() {
+    ThreadArrange1D() {
         this->total_thread = 0;
     }
 
-    _thread_arrange_1D(const uint _total_thread, std::future<void>* __async_thread)
+    ThreadArrange1D(const uint _total_thread, std::future<void>* __async_thread)
     {
         this->total_thread = _total_thread;
         this->_async_thread = __async_thread;
     }
 
-    _thread_arrange_1D(const uint _total_thread)
+    ThreadArrange1D(const uint _total_thread)
     {
         this->total_thread = _total_thread;
         this->_async_thread = new std::future<void>[this->total_thread];
@@ -89,20 +89,20 @@ public:
         }
     }
 
-    ~_thread_arrange_1D() {
+    ~ThreadArrange1D() {
         delete[] this->_async_thread;
     }
 };
 
 
-class decx::utils::_thread_arrange_2D
+class decx::utils::ThreadArrange2D
 {
 public:
     uint total_thread;
     uint thread_h, thread_w;
     std::future<void>* _async_thread;
 
-    _thread_arrange_2D() {
+    ThreadArrange2D() {
         this->total_thread = 0;
         this->thread_h = 0;
         this->thread_w = 0;
@@ -110,7 +110,7 @@ public:
     }
 
 
-    _thread_arrange_2D(const uint32_t _thread_h, const uint32_t _thread_w, std::future<void>* __async_thread)
+    ThreadArrange2D(const uint32_t _thread_h, const uint32_t _thread_w, std::future<void>* __async_thread)
     {
         this->thread_h = _thread_h;
         this->thread_w = _thread_w;
@@ -118,7 +118,7 @@ public:
         this->total_thread = _thread_h * _thread_w;
     }
 
-    _thread_arrange_2D(const uint32_t _thread_h, const uint32_t _thread_w)
+    ThreadArrange2D(const uint32_t _thread_h, const uint32_t _thread_w)
     {
         this->thread_h = _thread_h;
         this->thread_w = _thread_w;
@@ -157,7 +157,7 @@ public:
     }
 
 
-    decx::utils::_thread_arrange_2D& operator=(const decx::utils::_thread_arrange_2D& src)
+    decx::utils::ThreadArrange2D& operator=(const decx::utils::ThreadArrange2D& src)
     {
         this->thread_h = src.thread_h;
         this->thread_w = src.thread_w;
@@ -168,7 +168,7 @@ public:
     }
 
 
-    ~_thread_arrange_2D() {
+    ~ThreadArrange2D() {
         if (this->_async_thread != NULL) {
             delete[] this->_async_thread;
         }

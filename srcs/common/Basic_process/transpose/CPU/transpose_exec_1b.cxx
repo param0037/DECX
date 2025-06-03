@@ -211,7 +211,7 @@ transpose_1b_caller(const uint64_t* src,
                     uint64_t* dst, 
                     const uint32_t pitchsrc_v8, 
                     const uint32_t pitchdst_v8, 
-                    decx::utils::_thread_arrange_1D* t1D) const
+                    decx::utils::ThreadArrange1D* t1D) const
 {
     const uint64_t* src_loc = src;
     uint64_t* dst_loc = dst;

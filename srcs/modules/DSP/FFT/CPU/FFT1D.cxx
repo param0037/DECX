@@ -60,7 +60,7 @@ namespace dsp {
 template <typename _type_in>
 void decx::dsp::fft::FFT1D_caller(decx::_Vector* src, decx::_Vector* dst, de::DH* handle)
 {
-    decx::utils::_thr_1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::Thr1D t1D(decx::cpu::_get_permitted_concurrency());
 
     if (decx::dsp::fft::g_cpu_FFT1D_cplxf32_planner._res_ptr == NULL) {
         decx::dsp::fft::g_cpu_FFT1D_cplxf32_planner.RegisterResource(new decx::dsp::fft::cpu_FFT1D_planner<float>,
@@ -86,7 +86,7 @@ void decx::dsp::fft::FFT1D_caller(decx::_Vector* src, decx::_Vector* dst, de::DH
 template <typename _type_in>
 void decx::dsp::fft::FFT1D_caller_cplxd(decx::_Vector* src, decx::_Vector* dst, de::DH* handle)
 {
-    decx::utils::_thr_1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::Thr1D t1D(decx::cpu::_get_permitted_concurrency());
     
     if (decx::dsp::fft::g_cpu_FFT1D_cplxd64_planner._res_ptr == NULL) {
         decx::dsp::fft::g_cpu_FFT1D_cplxd64_planner.RegisterResource(new decx::dsp::fft::cpu_FFT1D_planner<double>,
@@ -112,7 +112,7 @@ void decx::dsp::fft::FFT1D_caller_cplxd(decx::_Vector* src, decx::_Vector* dst, 
 template <typename _type_out>
 void decx::dsp::fft::IFFT1D_caller(decx::_Vector* src, decx::_Vector* dst, de::DH* handle)
 {
-    decx::utils::_thr_1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::Thr1D t1D(decx::cpu::_get_permitted_concurrency());
 
     if (decx::dsp::fft::g_cpu_IFFT1D_cplxf32_planner._res_ptr == NULL) {
         decx::dsp::fft::g_cpu_IFFT1D_cplxf32_planner.RegisterResource(new decx::dsp::fft::cpu_FFT1D_planner<float>,
@@ -138,7 +138,7 @@ void decx::dsp::fft::IFFT1D_caller(decx::_Vector* src, decx::_Vector* dst, de::D
 template <typename _type_out>
 void decx::dsp::fft::IFFT1D_caller_cplxd(decx::_Vector* src, decx::_Vector* dst, de::DH* handle)
 {
-    decx::utils::_thr_1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::Thr1D t1D(decx::cpu::_get_permitted_concurrency());
 
     if (decx::dsp::fft::g_cpu_IFFT1D_cplxd64_planner._res_ptr == NULL) {
         decx::dsp::fft::g_cpu_IFFT1D_cplxd64_planner.RegisterResource(new decx::dsp::fft::cpu_FFT1D_planner<double>,

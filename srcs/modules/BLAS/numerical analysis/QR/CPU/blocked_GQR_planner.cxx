@@ -163,7 +163,7 @@ void decx::blas::Blocked_GQR_planner<_data_type>::Process_HouseHolder()
     _data_type* p_V_tile = this->_V_tile.template GetRawPtr<_data_type>();
     const uint32_t panel_pitch = this->_src_tile.GetDims().x;
 
-    decx::utils::_thr_1D t1D(16);
+    decx::utils::Thr1D t1D(16);
 
     for (int col_id = 0; col_id < this->_block_dims.x; ++col_id) {
         // Calculate householder reflector
@@ -204,7 +204,7 @@ void decx::blas::Blocked_GQR_planner<_data_type>::LoadSrcTile(
         const _data_type* src,
         const uint32_t block_id, 
         const uint32_t pitchsrc_v1,
-        decx::utils::_thr_1D* t1D)
+        decx::utils::Thr1D* t1D)
 {
     this->_tp_ldg_config.transpose_4b_caller(src + block_id * pitchsrc_v1 + block_id * this->_block_dims.x, 
         this->_src_tile.template GetRawPtr<_data_type>(), 
@@ -213,4 +213,4 @@ void decx::blas::Blocked_GQR_planner<_data_type>::LoadSrcTile(
         t1D);
 }
 
-template void decx::blas::Blocked_GQR_planner<float>::LoadSrcTile(const float* src, const uint32_t block_id, const uint32_t pitchsrc_v1, decx::utils::_thr_1D* t1D);
+template void decx::blas::Blocked_GQR_planner<float>::LoadSrcTile(const float* src, const uint32_t block_id, const uint32_t pitchsrc_v1, decx::utils::Thr1D* t1D);

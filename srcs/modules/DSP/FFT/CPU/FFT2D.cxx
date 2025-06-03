@@ -61,7 +61,7 @@ namespace dsp {
 template <typename _type_in>
 static void decx::dsp::fft::FFT2D_caller_cplxf(decx::_Matrix* src, decx::_Matrix* dst, de::DH* handle)
 {
-    decx::utils::_thread_arrange_1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::ThreadArrange1D t1D(decx::cpu::_get_permitted_concurrency());
     
     if (decx::dsp::fft::cpu_FFT2D_cplxf32_planner._res_ptr == NULL) {
         decx::dsp::fft::cpu_FFT2D_cplxf32_planner.RegisterResource(new decx::dsp::fft::cpu_FFT2D_planner<float>,
@@ -88,7 +88,7 @@ static void decx::dsp::fft::FFT2D_caller_cplxf(decx::_Matrix* src, decx::_Matrix
 template <typename _type_in>
 static void decx::dsp::fft::FFT2D_caller_cplxd(decx::_Matrix* src, decx::_Matrix* dst, de::DH* handle)
 {
-    decx::utils::_thread_arrange_1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::ThreadArrange1D t1D(decx::cpu::_get_permitted_concurrency());
 
     if (decx::dsp::fft::g_cpu_FFT2D_cplxd64_planner._res_ptr == NULL) {
         decx::dsp::fft::g_cpu_FFT2D_cplxd64_planner.RegisterResource(new decx::dsp::fft::cpu_FFT2D_planner<double>,
@@ -114,7 +114,7 @@ static void decx::dsp::fft::FFT2D_caller_cplxd(decx::_Matrix* src, decx::_Matrix
 template <typename _type_out>
 static void decx::dsp::fft::IFFT2D_caller_cplxf(decx::_Matrix* src, decx::_Matrix* dst, de::DH* handle)
 {
-    decx::utils::_thread_arrange_1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::ThreadArrange1D t1D(decx::cpu::_get_permitted_concurrency());
     
     if (decx::dsp::fft::cpu_IFFT2D_cplxf32_planner._res_ptr == NULL) {
         decx::dsp::fft::cpu_IFFT2D_cplxf32_planner.RegisterResource(new decx::dsp::fft::cpu_FFT2D_planner<float>,
@@ -141,7 +141,7 @@ static void decx::dsp::fft::IFFT2D_caller_cplxf(decx::_Matrix* src, decx::_Matri
 template <typename _type_out>
 static void decx::dsp::fft::IFFT2D_caller_cplxd(decx::_Matrix* src, decx::_Matrix* dst, de::DH* handle)
 {
-    decx::utils::_thread_arrange_1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::ThreadArrange1D t1D(decx::cpu::_get_permitted_concurrency());
     
     if (decx::dsp::fft::g_cpu_IFFT2D_cplxd64_planner._res_ptr == NULL) {
         decx::dsp::fft::g_cpu_IFFT2D_cplxd64_planner.RegisterResource(new decx::dsp::fft::cpu_FFT2D_planner<double>,

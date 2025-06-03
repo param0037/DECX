@@ -74,7 +74,7 @@ de::vis::cpu::Find_Edge(de::Matrix& src, de::Matrix& dst, const float _L_thresho
             break;
         }
 
-        decx::utils::_thread_arrange_1D t1D(decx::cpu::_get_permitted_concurrency());
+        decx::utils::ThreadArrange1D t1D(decx::cpu::_get_permitted_concurrency());
         decx::utils::frag_manager f_mgr;
         decx::utils::frag_manager_gen(&f_mgr, _proc_dims.y, t1D.total_thread);
 

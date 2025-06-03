@@ -42,7 +42,7 @@ void decx::dsp::cpu_Filter2D_planner<float>::
 filter2D_NB_fp32(decx::_Matrix* src, 
                  decx::_Matrix* kernel, 
                  decx::_Matrix* dst,
-                 decx::utils::_thr_2D* t2D)
+                 decx::utils::Thr2D* t2D)
 {
     const float* src_loc = NULL;
     float* dst_loc = NULL;
@@ -76,7 +76,7 @@ template <> void
 decx::dsp::cpu_Filter2D_planner<float>::filter2D_B_fp32(decx::_Matrix* src, 
                                                         decx::_Matrix* kernel, 
                                                         decx::_Matrix* dst,
-                                                        decx::utils::_thr_2D* t2D)
+                                                        decx::utils::Thr2D* t2D)
 {
     decx::dsp::CPUK::conv2_B_kernel_fp32* _kernel_ptr = NULL;
 
@@ -131,7 +131,7 @@ decx::dsp::cpu_Filter2D_planner<float>::filter2D_B_fp32(decx::_Matrix* src,
 template <> template <>
 void decx::dsp::cpu_Filter2D_planner<float>::
 run<false>(decx::_Matrix* src, decx::_Matrix* kernel, decx::_Matrix* dst, 
-    decx::utils::_thr_2D* t2D)
+    decx::utils::Thr2D* t2D)
 {
     if (this->_padding_method == de::extend_label::_EXTEND_NONE_) {
         this->filter2D_NB_fp32(src, kernel, dst, t2D);

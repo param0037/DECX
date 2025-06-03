@@ -38,7 +38,7 @@ template <>
 template <typename _type_in>
 void decx::dsp::fft::cpu_FFT2D_planner<float>::Forward(decx::_Matrix* src, 
                                                        decx::_Matrix* dst,
-                                                       decx::utils::_thread_arrange_1D* t1D) const
+                                                       decx::utils::ThreadArrange1D* t1D) const
 {
     // The alignment is always 4 in case where _op_data_type = de::CPf
     // Horizontal FFT
@@ -67,9 +67,9 @@ void decx::dsp::fft::cpu_FFT2D_planner<float>::Forward(decx::_Matrix* src,
         t1D);
 }
 
-template void decx::dsp::fft::cpu_FFT2D_planner<float>::Forward<float>(decx::_Matrix*, decx::_Matrix*, decx::utils::_thread_arrange_1D*) const;
-template void decx::dsp::fft::cpu_FFT2D_planner<float>::Forward<de::CPf>(decx::_Matrix*, decx::_Matrix*, decx::utils::_thread_arrange_1D*) const;
-template void decx::dsp::fft::cpu_FFT2D_planner<float>::Forward<uint8_t>(decx::_Matrix*, decx::_Matrix*, decx::utils::_thread_arrange_1D*) const;
+template void decx::dsp::fft::cpu_FFT2D_planner<float>::Forward<float>(decx::_Matrix*, decx::_Matrix*, decx::utils::ThreadArrange1D*) const;
+template void decx::dsp::fft::cpu_FFT2D_planner<float>::Forward<de::CPf>(decx::_Matrix*, decx::_Matrix*, decx::utils::ThreadArrange1D*) const;
+template void decx::dsp::fft::cpu_FFT2D_planner<float>::Forward<uint8_t>(decx::_Matrix*, decx::_Matrix*, decx::utils::ThreadArrange1D*) const;
 
 
 
@@ -77,7 +77,7 @@ template <>
 template <typename _type_out>
 void decx::dsp::fft::cpu_FFT2D_planner<float>::Inverse(decx::_Matrix* src, 
                                                        decx::_Matrix* dst,
-                                                       decx::utils::_thread_arrange_1D* t1D) const
+                                                       decx::utils::ThreadArrange1D* t1D) const
 {
     // The alignment is always 4 in case where _op_data_type = de::CPf
     // Horizontal FFT
@@ -132,9 +132,9 @@ void decx::dsp::fft::cpu_FFT2D_planner<float>::Inverse(decx::_Matrix* src,
     }
 }
 
-template void decx::dsp::fft::cpu_FFT2D_planner<float>::Inverse<float>(decx::_Matrix*, decx::_Matrix*, decx::utils::_thread_arrange_1D*) const;
-template void decx::dsp::fft::cpu_FFT2D_planner<float>::Inverse<de::CPf>(decx::_Matrix*, decx::_Matrix*, decx::utils::_thread_arrange_1D*) const;
-template void decx::dsp::fft::cpu_FFT2D_planner<float>::Inverse<uint8_t>(decx::_Matrix*, decx::_Matrix*, decx::utils::_thread_arrange_1D*) const;
+template void decx::dsp::fft::cpu_FFT2D_planner<float>::Inverse<float>(decx::_Matrix*, decx::_Matrix*, decx::utils::ThreadArrange1D*) const;
+template void decx::dsp::fft::cpu_FFT2D_planner<float>::Inverse<de::CPf>(decx::_Matrix*, decx::_Matrix*, decx::utils::ThreadArrange1D*) const;
+template void decx::dsp::fft::cpu_FFT2D_planner<float>::Inverse<uint8_t>(decx::_Matrix*, decx::_Matrix*, decx::utils::ThreadArrange1D*) const;
 
 
 decx::ResourceHandle decx::dsp::fft::cpu_FFT2D_cplxf32_planner;

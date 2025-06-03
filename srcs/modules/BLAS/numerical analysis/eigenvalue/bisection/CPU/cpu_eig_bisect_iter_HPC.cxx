@@ -66,7 +66,7 @@ template void decx::blas::cpu_eig_bisect_count_interval<float>::set_count_num(co
 
 
 template <>
-void decx::blas::cpu_eig_bisect_count_interval<float>::count_intervals(uint32_t* p_num, decx::utils::_thread_arrange_1D* t1D)
+void decx::blas::cpu_eig_bisect_count_interval<float>::count_intervals(uint32_t* p_num, decx::utils::ThreadArrange1D* t1D)
 {
     const uint32_t frag_len = this->_fmgr.get_frag_len();
 
@@ -202,7 +202,7 @@ template void decx::blas::cpu_eig_bisect_iter_HPC<float>::init(const float*, con
 template <>
 void decx::blas::cpu_eig_bisect_iter_HPC<float>::iter(const float* p_diag, const float* p_off_diag, const uint32_t N)
 {
-    decx::utils::_thr_1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::Thr1D t1D(decx::cpu::_get_permitted_concurrency());
 
     auto* p_1st_interval = this->_interval_stack.GetRawPtr();
     

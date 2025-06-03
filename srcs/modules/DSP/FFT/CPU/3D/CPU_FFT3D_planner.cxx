@@ -75,7 +75,7 @@ template void decx::dsp::fft::cpu_FFT3D_planner<double>::plan_transpose_configs<
 
 template <typename _data_type>
 template <typename _type_out>
-_CRSR_ void decx::dsp::fft::cpu_FFT3D_planner<_data_type>::plan(decx::utils::_thread_arrange_1D* t1D, 
+_CRSR_ void decx::dsp::fft::cpu_FFT3D_planner<_data_type>::plan(decx::utils::ThreadArrange1D* t1D, 
                                                               const decx::_tensor_layout* src_layout, 
                                                               const decx::_tensor_layout* dst_layout, 
                                                               de::DH* handle)
@@ -143,23 +143,23 @@ _CRSR_ void decx::dsp::fft::cpu_FFT3D_planner<_data_type>::plan(decx::utils::_th
     this->template plan_transpose_configs<_type_out>(handle);
 }
 
-template void decx::dsp::fft::cpu_FFT3D_planner<float>::plan<de::CPf>(decx::utils::_thread_arrange_1D*,
+template void decx::dsp::fft::cpu_FFT3D_planner<float>::plan<de::CPf>(decx::utils::ThreadArrange1D*,
     const decx::_tensor_layout*, const decx::_tensor_layout*, de::DH*);
 
-template void decx::dsp::fft::cpu_FFT3D_planner<float>::plan<float>(decx::utils::_thread_arrange_1D*,
+template void decx::dsp::fft::cpu_FFT3D_planner<float>::plan<float>(decx::utils::ThreadArrange1D*,
     const decx::_tensor_layout*, const decx::_tensor_layout*, de::DH*);
 
-template void decx::dsp::fft::cpu_FFT3D_planner<float>::plan<uint8_t>(decx::utils::_thread_arrange_1D*,
+template void decx::dsp::fft::cpu_FFT3D_planner<float>::plan<uint8_t>(decx::utils::ThreadArrange1D*,
     const decx::_tensor_layout*, const decx::_tensor_layout*, de::DH*);
 
 
-template void decx::dsp::fft::cpu_FFT3D_planner<double>::plan<de::CPd>(decx::utils::_thread_arrange_1D*,
+template void decx::dsp::fft::cpu_FFT3D_planner<double>::plan<de::CPd>(decx::utils::ThreadArrange1D*,
     const decx::_tensor_layout*, const decx::_tensor_layout*, de::DH*);
 
-template void decx::dsp::fft::cpu_FFT3D_planner<double>::plan<double>(decx::utils::_thread_arrange_1D*,
+template void decx::dsp::fft::cpu_FFT3D_planner<double>::plan<double>(decx::utils::ThreadArrange1D*,
     const decx::_tensor_layout*, const decx::_tensor_layout*, de::DH*);
 
-template void decx::dsp::fft::cpu_FFT3D_planner<double>::plan<uint8_t>(decx::utils::_thread_arrange_1D*,
+template void decx::dsp::fft::cpu_FFT3D_planner<double>::plan<uint8_t>(decx::utils::ThreadArrange1D*,
     const decx::_tensor_layout*, const decx::_tensor_layout*, de::DH*);
 
 

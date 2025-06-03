@@ -129,7 +129,7 @@ void decx::bp::_extend_reflect_b32_2D(const float* src, float* dst, const uint4 
     decx::PtrInfo<float> buffer;
     buffer.Allocate(_conc * _buffer_frag_len * sizeof(float), PAGABLE, handle);
 
-    decx::utils::_thr_1D t1D(_conc);
+    decx::utils::Thr1D t1D(_conc);
     decx::utils::frag_manager fmgr_H;
     decx::utils::frag_manager_gen(&fmgr_H, Hsrc, t1D.total_thread);
 
@@ -179,7 +179,7 @@ _extend_reflect_b64_2D(const double* src,           double* dst, const uint4 _ex
     decx::PtrInfo<double> buffer;
     buffer.Allocate(_buffer_frag_len * _conc * sizeof(double), PAGABLE, handle);
 
-    decx::utils::_thr_1D t1D(_conc);
+    decx::utils::Thr1D t1D(_conc);
     decx::utils::frag_manager fmgr_H;
     decx::utils::frag_manager_gen(&fmgr_H, Hsrc, t1D.total_thread);
 
@@ -222,7 +222,7 @@ void decx::bp::_extend_reflect_b8_2D(const uint8_t* src,    uint8_t* dst,
     decx::PtrInfo<uint8_t> buffer;
     buffer.Allocate(_conc * _buffer_frag_len * sizeof(uint8_t), PAGABLE, handle);
 
-    decx::utils::_thr_1D t1D(_conc);
+    decx::utils::Thr1D t1D(_conc);
     decx::utils::frag_manager fmgr_H;
     decx::utils::frag_manager_gen(&fmgr_H, Hsrc, t1D.total_thread);
 
@@ -265,7 +265,7 @@ void decx::bp::_extend_reflect_b16_2D(const uint16_t* src,      uint16_t* dst,
     decx::PtrInfo<uint16_t> buffer;
     buffer.Allocate(_conc * _buffer_frag_len * sizeof(uint16_t), PAGABLE, handle);
 
-    decx::utils::_thr_1D t1D(_conc);
+    decx::utils::Thr1D t1D(_conc);
     decx::utils::frag_manager fmgr_H;
     decx::utils::frag_manager_gen(&fmgr_H, Hsrc, t1D.total_thread);
 

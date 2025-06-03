@@ -46,7 +46,7 @@ _DECX_API_ void de::blas::cpu::GQRF(de::Matrix& src, de::Matrix& Q, de::Matrix& 
 
     decx::blas::Blocked_GQR_planner<float> _planner;
 
-    decx::utils::_thr_1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::Thr1D t1D(decx::cpu::_get_permitted_concurrency());
 
     const uint32_t block_dim = 512;
 

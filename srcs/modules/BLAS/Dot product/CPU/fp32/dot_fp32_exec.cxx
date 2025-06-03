@@ -53,7 +53,7 @@ void decx::dot::_dot_fp32_1D_caller(const float* A, const float* B, const size_t
     const uint conc_thr = decx::cpu::_get_permitted_concurrency();
     decx::utils::frag_manager fr_mgr;
     decx::utils::frag_manager_gen(&fr_mgr, len / 8, conc_thr);
-    decx::utils::_thread_arrange_1D t1D(conc_thr);
+    decx::utils::ThreadArrange1D t1D(conc_thr);
 
     float* res_arr = new float[conc_thr];
 

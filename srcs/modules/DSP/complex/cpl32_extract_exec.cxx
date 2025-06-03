@@ -110,7 +110,7 @@ void decx::dsp::_cpl32_extract_caller(const de::CPf* src, float* dst, const uint
         decx::utils::frag_manager f_mgr;
         decx::utils::frag_manager_gen(&f_mgr, _proc_dims.y, conc_thr);
 
-        decx::utils::_thread_arrange_1D t1D(conc_thr);
+        decx::utils::ThreadArrange1D t1D(conc_thr);
 
         const double* loc_src = (double*)src;
         float* loc_dst = dst;

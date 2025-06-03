@@ -130,7 +130,7 @@ decx::type_cast::CPUK::_v256_cvtpd_ps2D(const double* __restrict        src,
 // {
 //     const size_t proc_num_vec4 = proc_num / 4;
 
-//     decx::utils::_thread_arrange_1D t1D(decx::cpu::_get_permitted_concurrency());
+//     decx::utils::ThreadArrange1D t1D(decx::cpu::_get_permitted_concurrency());
     
 //     const bool _is_MT = (proc_num_vec4 > (1024 * (size_t)t1D.total_thread));
 
@@ -166,7 +166,7 @@ decx::type_cast::CPUK::_v256_cvtpd_ps2D(const double* __restrict        src,
 // {
 //     const size_t proc_num_vec4 = proc_num / 4;
 
-//     decx::utils::_thread_arrange_1D t1D(decx::cpu::_get_permitted_concurrency());
+//     decx::utils::ThreadArrange1D t1D(decx::cpu::_get_permitted_concurrency());
     
 //     const bool _is_MT = (proc_num_vec4 > (1024 * (size_t)t1D.total_thread));
 
@@ -201,7 +201,7 @@ decx::type_cast::CPUK::_v256_cvtpd_ps2D(const double* __restrict        src,
 
 // void decx::type_cast::_cvtfp32_fp64_caller2D(const float* src, double* dst, const ulong2 proc_dims, const uint Wsrc, const uint Wdst)
 // {
-//     decx::utils::_thread_arrange_1D t1D(decx::cpu::_get_permitted_concurrency());
+//     decx::utils::ThreadArrange1D t1D(decx::cpu::_get_permitted_concurrency());
 
 //     const bool _is_MT = (proc_dims.y > (1024 * (size_t)t1D.total_thread));
 
@@ -238,7 +238,7 @@ decx::type_cast::CPUK::_v256_cvtpd_ps2D(const double* __restrict        src,
 
 // void decx::type_cast::_cvtfp64_fp32_caller2D(const double* src, float* dst, const ulong2 proc_dims, const uint Wsrc, const uint Wdst)
 // {
-//     decx::utils::_thread_arrange_1D t1D(decx::cpu::_get_permitted_concurrency());
+//     decx::utils::ThreadArrange1D t1D(decx::cpu::_get_permitted_concurrency());
 
 //     const bool _is_MT = (proc_dims.y > (1024 * (size_t)t1D.total_thread));
 

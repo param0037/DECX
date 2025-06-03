@@ -80,13 +80,13 @@ public:
     void Init(const uint32_t conc, const decx::_matrix_layout* layout, const _data_type max_err, de::DH* handle);
 
 
-    void extract_diagonal(const _data_type* src, decx::utils::_thread_arrange_1D* t1D);
+    void extract_diagonal(const _data_type* src, decx::utils::ThreadArrange1D* t1D);
 
 
-    void calc_Gerschgorin_bound(decx::utils::_thread_arrange_1D* t1D);
+    void calc_Gerschgorin_bound(decx::utils::ThreadArrange1D* t1D);
 
 
-    void plan(const decx::_Matrix* mat, decx::utils::_thread_arrange_1D* t1D, de::DH* handle);
+    void plan(const decx::_Matrix* mat, decx::utils::ThreadArrange1D* t1D, de::DH* handle);
 
 
     _data_type* get_diag() {return this->_diag.template GetRawPtr<_data_type>();}

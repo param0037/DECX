@@ -216,7 +216,7 @@ template <typename _type_in, bool _conj>
 void decx::dsp::fft::_FFT3D_H_entire_rows_cplxf(const _type_in* __restrict src_head_ptr, 
                                                  de::CPf* __restrict dst_head_ptr, 
                                                  const decx::dsp::fft::cpu_FFT3D_planner<float>* planner,
-                                                 decx::utils::_thread_arrange_1D* t1D, 
+                                                 decx::utils::ThreadArrange1D* t1D, 
                                                  decx::dsp::fft::FFT_directions _proc_dir)
 {
     const decx::dsp::fft::cpu_FFT3D_subproc<float>* FFT_info = planner->get_subproc(_proc_dir);
@@ -241,24 +241,24 @@ void decx::dsp::fft::_FFT3D_H_entire_rows_cplxf(const _type_in* __restrict src_h
 }
 
 template void decx::dsp::fft::_FFT3D_H_entire_rows_cplxf<float, true>(const float* __restrict, de::CPf* __restrict, const decx::dsp::fft::cpu_FFT3D_planner<float>*,
-    decx::utils::_thread_arrange_1D* t1D, decx::dsp::fft::FFT_directions);
+    decx::utils::ThreadArrange1D* t1D, decx::dsp::fft::FFT_directions);
 
 template void decx::dsp::fft::_FFT3D_H_entire_rows_cplxf<float, false>(const float* __restrict, de::CPf* __restrict, const decx::dsp::fft::cpu_FFT3D_planner<float>*,
-    decx::utils::_thread_arrange_1D* t1D, decx::dsp::fft::FFT_directions);
+    decx::utils::ThreadArrange1D* t1D, decx::dsp::fft::FFT_directions);
 
 
 template void decx::dsp::fft::_FFT3D_H_entire_rows_cplxf<uint8_t, true>(const uint8_t* __restrict, de::CPf* __restrict, const decx::dsp::fft::cpu_FFT3D_planner<float>*,
-    decx::utils::_thread_arrange_1D* t1D, decx::dsp::fft::FFT_directions);
+    decx::utils::ThreadArrange1D* t1D, decx::dsp::fft::FFT_directions);
 
 template void decx::dsp::fft::_FFT3D_H_entire_rows_cplxf<uint8_t, false>(const uint8_t* __restrict, de::CPf* __restrict, const decx::dsp::fft::cpu_FFT3D_planner<float>*,
-    decx::utils::_thread_arrange_1D* t1D, decx::dsp::fft::FFT_directions);
+    decx::utils::ThreadArrange1D* t1D, decx::dsp::fft::FFT_directions);
 
 
 template void decx::dsp::fft::_FFT3D_H_entire_rows_cplxf<de::CPf, true>(const de::CPf* __restrict, de::CPf* __restrict, const decx::dsp::fft::cpu_FFT3D_planner<float>*,
-    decx::utils::_thread_arrange_1D* t1D, decx::dsp::fft::FFT_directions);
+    decx::utils::ThreadArrange1D* t1D, decx::dsp::fft::FFT_directions);
 
 template void decx::dsp::fft::_FFT3D_H_entire_rows_cplxf<de::CPf, false>(const de::CPf* __restrict, de::CPf* __restrict, const decx::dsp::fft::cpu_FFT3D_planner<float>*,
-    decx::utils::_thread_arrange_1D* t1D, decx::dsp::fft::FFT_directions);
+    decx::utils::ThreadArrange1D* t1D, decx::dsp::fft::FFT_directions);
 
 
 
@@ -266,7 +266,7 @@ template <typename _type_out>
 void decx::dsp::fft::_IFFT3D_H_entire_rows_cplxf(const de::CPf* __restrict src_head_ptr, 
                                                  _type_out* __restrict dst_head_ptr, 
                                                  const decx::dsp::fft::cpu_FFT3D_planner<float>* planner,
-                                                 decx::utils::_thread_arrange_1D* t1D, 
+                                                 decx::utils::ThreadArrange1D* t1D, 
                                                  decx::dsp::fft::FFT_directions _proc_dir)
 {
     const decx::dsp::fft::cpu_FFT3D_subproc<float>* FFT_info = planner->get_subproc(_proc_dir);
@@ -292,10 +292,10 @@ void decx::dsp::fft::_IFFT3D_H_entire_rows_cplxf(const de::CPf* __restrict src_h
 
 
 template void decx::dsp::fft::_IFFT3D_H_entire_rows_cplxf<de::CPf>(const de::CPf* __restrict, de::CPf* __restrict, const decx::dsp::fft::cpu_FFT3D_planner<float>*,
-    decx::utils::_thread_arrange_1D* t1D, decx::dsp::fft::FFT_directions);
+    decx::utils::ThreadArrange1D* t1D, decx::dsp::fft::FFT_directions);
 
 template void decx::dsp::fft::_IFFT3D_H_entire_rows_cplxf<float>(const de::CPf* __restrict, float* __restrict, const decx::dsp::fft::cpu_FFT3D_planner<float>*,
-    decx::utils::_thread_arrange_1D* t1D, decx::dsp::fft::FFT_directions);
+    decx::utils::ThreadArrange1D* t1D, decx::dsp::fft::FFT_directions);
 
 template void decx::dsp::fft::_IFFT3D_H_entire_rows_cplxf<uint8_t>(const de::CPf* __restrict, uint8_t* __restrict, const decx::dsp::fft::cpu_FFT3D_planner<float>*,
-    decx::utils::_thread_arrange_1D* t1D, decx::dsp::fft::FFT_directions);
+    decx::utils::ThreadArrange1D* t1D, decx::dsp::fft::FFT_directions);

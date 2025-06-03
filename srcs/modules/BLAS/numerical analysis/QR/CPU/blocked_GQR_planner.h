@@ -112,7 +112,7 @@ public:
 
 
     void LoadSrcTile(const _data_type* src, uint32_t block_id, const uint32_t pitchsrc_v1,
-        decx::utils::_thr_1D* t1D);
+        decx::utils::Thr1D* t1D);
 
 
     void Process_HouseHolder();

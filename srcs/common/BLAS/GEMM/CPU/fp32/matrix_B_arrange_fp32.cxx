@@ -222,7 +222,7 @@ void decx::blas::matrix_B_arrange_fp32(const float*                     src,
                                        const uint32_t                   pitchsrc_v1,
                                        const uint32_t                   Llen, 
                                        const decx::utils::frag_manager* _fmgr_WH,   // Aligned to 8 on width
-                                       decx::utils::_thr_2D*            t2D)
+                                       decx::utils::Thr2D*            t2D)
 {
 #if defined(__x86_64__) || defined(__i386__)
     constexpr uint32_t _alignment = 8;

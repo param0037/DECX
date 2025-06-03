@@ -37,7 +37,7 @@
 
 template <>
 template <typename _type_in>
-void decx::dsp::fft::cpu_FFT1D_planner<double>::Forward(decx::_Vector* src, decx::_Vector* dst, decx::utils::_thread_arrange_1D* t1D) const
+void decx::dsp::fft::cpu_FFT1D_planner<double>::Forward(decx::_Vector* src, decx::_Vector* dst, decx::utils::ThreadArrange1D* t1D) const
 {
     decx::utils::double_buffer_manager _double_buffer(this->get_tmp1_ptr(), 
                                                       this->get_tmp2_ptr());
@@ -80,15 +80,15 @@ void decx::dsp::fft::cpu_FFT1D_planner<double>::Forward(decx::_Vector* src, decx
     }
 }
 
-template void decx::dsp::fft::cpu_FFT1D_planner<double>::Forward<double>(decx::_Vector*, decx::_Vector*, decx::utils::_thread_arrange_1D*) const;
-template void decx::dsp::fft::cpu_FFT1D_planner<double>::Forward<de::CPd>(decx::_Vector*, decx::_Vector*, decx::utils::_thread_arrange_1D*) const;
+template void decx::dsp::fft::cpu_FFT1D_planner<double>::Forward<double>(decx::_Vector*, decx::_Vector*, decx::utils::ThreadArrange1D*) const;
+template void decx::dsp::fft::cpu_FFT1D_planner<double>::Forward<de::CPd>(decx::_Vector*, decx::_Vector*, decx::utils::ThreadArrange1D*) const;
 
 
 
 
 template <>
 template <typename _type_out>
-void decx::dsp::fft::cpu_FFT1D_planner<double>::Inverse(decx::_Vector* src, decx::_Vector* dst, decx::utils::_thread_arrange_1D* t1D) const
+void decx::dsp::fft::cpu_FFT1D_planner<double>::Inverse(decx::_Vector* src, decx::_Vector* dst, decx::utils::ThreadArrange1D* t1D) const
 {
     decx::utils::double_buffer_manager _double_buffer(this->get_tmp1_ptr(), 
                                                       this->get_tmp2_ptr());
@@ -131,8 +131,8 @@ void decx::dsp::fft::cpu_FFT1D_planner<double>::Inverse(decx::_Vector* src, decx
     }
 }
 
-template void decx::dsp::fft::cpu_FFT1D_planner<double>::Inverse<double>(decx::_Vector*, decx::_Vector*, decx::utils::_thread_arrange_1D*) const;
-template void decx::dsp::fft::cpu_FFT1D_planner<double>::Inverse<de::CPd>(decx::_Vector*, decx::_Vector*, decx::utils::_thread_arrange_1D*) const;
+template void decx::dsp::fft::cpu_FFT1D_planner<double>::Inverse<double>(decx::_Vector*, decx::_Vector*, decx::utils::ThreadArrange1D*) const;
+template void decx::dsp::fft::cpu_FFT1D_planner<double>::Inverse<de::CPd>(decx::_Vector*, decx::_Vector*, decx::utils::ThreadArrange1D*) const;
 
 
 decx::ResourceHandle decx::dsp::fft::g_cpu_FFT1D_cplxd64_planner;

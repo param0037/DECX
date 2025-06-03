@@ -121,7 +121,7 @@ static void decx::_cpy2D_anybit_caller(_T_ele* src, _T_ele* dst, const uint32_t 
     decx::utils::frag_manager f_mgr;
     decx::utils::frag_manager_gen(&f_mgr, cpy_area.y, conc_thr);
 
-    decx::utils::_thread_arrange_1D t1D(conc_thr);
+    decx::utils::ThreadArrange1D t1D(conc_thr);
     
     _T_ele* tmp_src = src, * tmp_dst = dst;
     for (int i = 0; i < conc_thr - 1; ++i) {

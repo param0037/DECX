@@ -118,7 +118,7 @@ static void decx::bp::_summing_fp32_1D_caller(const float* src, const size_t len
     decx::utils::frag_manager fr_mgr;
     decx::utils::frag_manager_gen(&fr_mgr, len / 8, conc_thr);
 
-    decx::utils::_thread_arrange_1D t1D(conc_thr);
+    decx::utils::ThreadArrange1D t1D(conc_thr);
     float* res_arr = new float[conc_thr];
     
     const float* tmp_src = src;
@@ -154,7 +154,7 @@ static void decx::bp::_summing_fp64_1D_caller(const double* src, const size_t le
     decx::utils::frag_manager_gen(&fr_mgr, len / 4, conc_thr);
 
     double* res_arr = new double[conc_thr];
-    decx::utils::_thread_arrange_1D t1D(conc_thr);
+    decx::utils::ThreadArrange1D t1D(conc_thr);
 
     const double* tmp_src = src;
     if (fr_mgr.frag_left_over != 0) {

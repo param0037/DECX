@@ -144,7 +144,7 @@ template void decx::dsp::fft::Rotational_Factors_Table<double>::_alloc_table(con
 
 
 template <>
-void decx::dsp::fft::Rotational_Factors_Table<float>::_generate_table(decx::utils::_thr_1D* t1D)
+void decx::dsp::fft::Rotational_Factors_Table<float>::_generate_table(decx::utils::Thr1D* t1D)
 {
     decx::utils::frag_manager _f_mgr_WT;
     decx::utils::frag_manager_gen(&_f_mgr_WT, this->_alloc_len / 4, t1D->total_thread);
@@ -174,7 +174,7 @@ void decx::dsp::fft::Rotational_Factors_Table<float>::_generate_table(decx::util
 
 
 template <>
-void decx::dsp::fft::Rotational_Factors_Table<double>::_generate_table(decx::utils::_thr_1D* t1D)
+void decx::dsp::fft::Rotational_Factors_Table<double>::_generate_table(decx::utils::Thr1D* t1D)
 {
     decx::utils::frag_manager _f_mgr_WT;
     decx::utils::frag_manager_gen(&_f_mgr_WT, this->_alloc_len / 2, t1D->total_thread);

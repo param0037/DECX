@@ -143,25 +143,25 @@ namespace dsp {
     namespace fft {
         template <bool _IFFT, typename _type_in>
         void _FFT1D_cplxf32_1st(const _type_in* __restrict src, de::CPf* __restrict dst,
-            const decx::dsp::fft::cpu_FFT1D_planner<float>* _FFT_frame, decx::utils::_thr_1D* t1D, 
+            const decx::dsp::fft::cpu_FFT1D_planner<float>* _FFT_frame, decx::utils::Thr1D* t1D, 
             const decx::dsp::fft::FIMT1D* _Twd_info);
 
 
         template <bool _IFFT, typename _type_in>
         void _FFT1D_cplxd64_1st(const _type_in* __restrict src, de::CPd* __restrict dst,
-            const decx::dsp::fft::cpu_FFT1D_planner<double>* _FFT_frame, decx::utils::_thr_1D* t1D,
+            const decx::dsp::fft::cpu_FFT1D_planner<double>* _FFT_frame, decx::utils::Thr1D* t1D,
             const decx::dsp::fft::FIMT1D* _Twd_info);
 
 
         template <typename _type_out, bool _conj>
         void _FFT1D_cplxf32_mid(const de::CPf* __restrict src, _type_out* __restrict dst,
-            const decx::dsp::fft::cpu_FFT1D_planner<float>* _FFT_frame, decx::utils::_thr_1D* t1D, const uint32_t _call_order,
+            const decx::dsp::fft::cpu_FFT1D_planner<float>* _FFT_frame, decx::utils::Thr1D* t1D, const uint32_t _call_order,
             const decx::dsp::fft::FIMT1D* _Twd_info);
 
 
         template <typename _type_out, bool _conj>
         void _FFT1D_cplxd64_mid(const de::CPd* __restrict src, _type_out* __restrict dst,
-            const decx::dsp::fft::cpu_FFT1D_planner<double>* _FFT_frame, decx::utils::_thr_1D* t1D, const uint32_t _call_order,
+            const decx::dsp::fft::cpu_FFT1D_planner<double>* _FFT_frame, decx::utils::Thr1D* t1D, const uint32_t _call_order,
             const decx::dsp::fft::FIMT1D* _Twd_info);
     }
 }

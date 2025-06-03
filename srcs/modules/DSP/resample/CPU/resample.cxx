@@ -56,7 +56,7 @@ resample_caller(const decx::_Matrix* src, const decx::_Matrix* map, decx::_Matri
         g_VGT2D_hdlr.RegisterResource(new decx::cpu_VGT2D_planner, 5, decx::cpu_VGT2D_planner::release);
     }
 
-    decx::utils::_thr_1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::Thr1D t1D(decx::cpu::_get_permitted_concurrency());
 
     auto* VGT = g_VGT2D_hdlr.get_resource_raw_ptr<decx::cpu_VGT2D_planner>();
 

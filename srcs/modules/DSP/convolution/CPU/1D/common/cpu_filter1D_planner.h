@@ -69,13 +69,13 @@
 //     uint32_t _concurrency;
 //     uint2 _thread_dist;
 
-//     void filter2D_NB_fp32(decx::_Matrix* src, decx::_Matrix* kernel, decx::_Matrix* dst, decx::utils::_thr_2D* t2D);
-//     void filter2D_B_fp32(decx::_Matrix* src, decx::_Matrix* kernel, decx::_Matrix* dst, decx::utils::_thr_2D* t2D);
+//     void filter2D_NB_fp32(decx::_Matrix* src, decx::_Matrix* kernel, decx::_Matrix* dst, decx::utils::Thr2D* t2D);
+//     void filter2D_B_fp32(decx::_Matrix* src, decx::_Matrix* kernel, decx::_Matrix* dst, decx::utils::Thr2D* t2D);
 
 //     template <bool _cplxf>
-//     void filter2D_NB_64b(decx::_Matrix* src, decx::_Matrix* kernel, decx::_Matrix* dst, decx::utils::_thr_2D* t2D);
+//     void filter2D_NB_64b(decx::_Matrix* src, decx::_Matrix* kernel, decx::_Matrix* dst, decx::utils::Thr2D* t2D);
 //     template <bool _cplxf>
-//     void filter2D_B_64b(decx::_Matrix* src, decx::_Matrix* kernel, decx::_Matrix* dst, decx::utils::_thr_2D* t2D);
+//     void filter2D_B_64b(decx::_Matrix* src, decx::_Matrix* kernel, decx::_Matrix* dst, decx::utils::Thr2D* t2D);
 
 // public:
 //     cpu_Filter2D_planner() {}
@@ -94,7 +94,7 @@
 
     
 //     template <bool _cplxf>
-//     void run(decx::_Matrix* src, decx::_Matrix* kenrel, decx::_Matrix* dst, decx::utils::_thr_2D* t2D);
+//     void run(decx::_Matrix* src, decx::_Matrix* kenrel, decx::_Matrix* dst, decx::utils::Thr2D* t2D);
 
     
 //     uint2 get_thread_dist() const;

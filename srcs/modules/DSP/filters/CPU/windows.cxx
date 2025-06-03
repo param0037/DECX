@@ -352,7 +352,7 @@ de::dsp::cpu::Gaussian_Window1D(de::Vector& src, de::Vector& dst, const float u,
 
     const size_t proc_len = _src->_length / 4;
     if (proc_len > decx::cpu::_get_permitted_concurrency()) {
-        decx::utils::_thread_arrange_1D t1D(decx::cpu::_get_permitted_concurrency());
+        decx::utils::ThreadArrange1D t1D(decx::cpu::_get_permitted_concurrency());
         decx::utils::frag_manager f_mgr;
         decx::utils::frag_manager_gen(&f_mgr, proc_len, t1D.total_thread);
 
@@ -405,7 +405,7 @@ de::dsp::cpu::Triangular_Window1D(de::Vector& src, de::Vector& dst, const long l
 
     const size_t proc_len = _src->_length / 4;
     if (proc_len > decx::cpu::_get_permitted_concurrency()) {
-        decx::utils::_thread_arrange_1D t1D(decx::cpu::_get_permitted_concurrency());
+        decx::utils::ThreadArrange1D t1D(decx::cpu::_get_permitted_concurrency());
         decx::utils::frag_manager f_mgr;
         decx::utils::frag_manager_gen(&f_mgr, proc_len, t1D.total_thread);
 
@@ -456,7 +456,7 @@ de::dsp::cpu::Gaussian_Window2D(de::Matrix& src, de::Matrix& dst, const de::Poin
     decx::_Matrix* _dst = dynamic_cast<decx::_Matrix*>(&dst);
 
     const uint pitch = _src->Pitch() / 4;
-    decx::utils::_thread_arrange_1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::ThreadArrange1D t1D(decx::cpu::_get_permitted_concurrency());
     decx::utils::frag_manager f_mgr;
     decx::utils::frag_manager_gen(&f_mgr, _src->Height(), t1D.total_thread);
 
@@ -548,7 +548,7 @@ de::dsp::cpu::Cone_Window2D(de::Matrix& src, de::Matrix& dst, const de::Point2D 
     decx::_Matrix* _dst = dynamic_cast<decx::_Matrix*>(&dst);
 
     const uint pitch = _src->Pitch() / 4;
-    decx::utils::_thread_arrange_1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::ThreadArrange1D t1D(decx::cpu::_get_permitted_concurrency());
     decx::utils::frag_manager f_mgr;
     decx::utils::frag_manager_gen(&f_mgr, _src->Height(), t1D.total_thread);
 

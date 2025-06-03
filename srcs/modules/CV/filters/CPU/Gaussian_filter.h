@@ -75,7 +75,7 @@ static void decx::vis::_gaussian_uint8_NB(decx::_Matrix* src, decx::vis::gaussia
     }
 
     const uint conc_thr = (uint)decx::cpu::_get_permitted_concurrency();
-    decx::utils::_thr_1D t1D(conc_thr);
+    decx::utils::Thr1D t1D(conc_thr);
 
     const uint _loop = (kernel_H->_ker_length - 1) / 16;
     ushort reg_WL = (ushort)(kernel_H->_ker_length - _loop * 16);
@@ -131,7 +131,7 @@ static void decx::vis::_gaussian_uint8_BC_zero(decx::_Matrix* src, decx::vis::ga
                                         make_uint2(src->Width(), src->Height()));
 
     const uint conc_thr = (uint)decx::cpu::_get_permitted_concurrency();
-    decx::utils::_thr_1D t1D(conc_thr);
+    decx::utils::Thr1D t1D(conc_thr);
 
     const uint _loop = (kernel_H->_ker_length - 1) / 16;
     ushort reg_WL = (ushort)(kernel_H->_ker_length - _loop * 16);
@@ -186,7 +186,7 @@ static void decx::vis::_gaussian_uint8_BC_reflect(decx::_Matrix* src, decx::vis:
         src->Pitch(), tmp_src_dims.x, src->Width(), src->Height(), handle);
 
     const uint conc_thr = (uint)decx::cpu::_get_permitted_concurrency();
-    decx::utils::_thr_1D t1D(conc_thr);
+    decx::utils::Thr1D t1D(conc_thr);
 
     const uint _loop = (kernel_H->_ker_length - 1) / 16;
     ushort reg_WL = (ushort)(kernel_H->_ker_length - _loop * 16);
@@ -294,7 +294,7 @@ static void decx::vis::_gaussian_uchar4_NB(decx::_Matrix* src, decx::vis::gaussi
     }
 
     const uint conc_thr = (uint)decx::cpu::_get_permitted_concurrency();
-    decx::utils::_thr_1D t1D(conc_thr);
+    decx::utils::Thr1D t1D(conc_thr);
 
     const uint _loop = (kernel_H->_ker_length - 1) / 4;
     ushort reg_WL = (ushort)(kernel_H->_ker_length - _loop * 4);
@@ -350,7 +350,7 @@ static void decx::vis::_gaussian_uchar4_BC_zero(decx::_Matrix* src, decx::vis::g
                                       make_uint2(src->Width(), src->Height()));
 
     const uint conc_thr = (uint)decx::cpu::_get_permitted_concurrency();
-    decx::utils::_thr_1D t1D(conc_thr);
+    decx::utils::Thr1D t1D(conc_thr);
 
     const uint _loop = (kernel_H->_ker_length - 1) / 4;
     ushort reg_WL = (ushort)(kernel_H->_ker_length - _loop * 4);
@@ -406,7 +406,7 @@ static void decx::vis::_gaussian_uchar4_BC_reflect(decx::_Matrix* src, decx::vis
         src->Pitch(), tmp_src_dims.x, src->Width(), src->Height(), handle);
 
     const uint conc_thr = (uint)decx::cpu::_get_permitted_concurrency();
-    decx::utils::_thr_1D t1D(conc_thr);
+    decx::utils::Thr1D t1D(conc_thr);
 
     const uint _loop = (kernel_H->_ker_length - 1) / 4;
     ushort reg_WL = (ushort)(kernel_H->_ker_length - _loop * 4);

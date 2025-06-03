@@ -80,7 +80,7 @@ template void decx::blas::cpu_eig_bisection<float>::Init(const uint32_t, const d
 
 
 template <typename _data_type>
-void decx::blas::cpu_eig_bisection<_data_type>::extract_diagonal(const _data_type* src, decx::utils::_thread_arrange_1D* t1D)
+void decx::blas::cpu_eig_bisection<_data_type>::extract_diagonal(const _data_type* src, decx::utils::ThreadArrange1D* t1D)
 {
     using diag_extractor = void(const _data_type*, _data_type*, _data_type*, const uint32_t, const uint32_t);
 
@@ -109,11 +109,11 @@ void decx::blas::cpu_eig_bisection<_data_type>::extract_diagonal(const _data_typ
     t1D->__sync_all_threads(make_uint2(0, frag_num));
 }
 
-template void decx::blas::cpu_eig_bisection<float>::extract_diagonal(const float*, decx::utils::_thread_arrange_1D*);
+template void decx::blas::cpu_eig_bisection<float>::extract_diagonal(const float*, decx::utils::ThreadArrange1D*);
 
 
 template <typename _data_type>
-void decx::blas::cpu_eig_bisection<_data_type>::calc_Gerschgorin_bound(decx::utils::_thread_arrange_1D* t1D)
+void decx::blas::cpu_eig_bisection<_data_type>::calc_Gerschgorin_bound(decx::utils::ThreadArrange1D* t1D)
 {
     const decx::utils::frag_manager* p_dist = this->_Gersch_bound_founder.get_distribution();
     const uint32_t& frag_num = p_dist->frag_num;
@@ -140,11 +140,11 @@ void decx::blas::cpu_eig_bisection<_data_type>::calc_Gerschgorin_bound(decx::uti
     }
 }
 
-template void decx::blas::cpu_eig_bisection<float>::calc_Gerschgorin_bound(decx::utils::_thread_arrange_1D*);
+template void decx::blas::cpu_eig_bisection<float>::calc_Gerschgorin_bound(decx::utils::ThreadArrange1D*);
 
 
 template <typename _data_type>
-void decx::blas::cpu_eig_bisection<_data_type>::plan(const decx::_Matrix* mat, decx::utils::_thread_arrange_1D* t1D,
+void decx::blas::cpu_eig_bisection<_data_type>::plan(const decx::_Matrix* mat, decx::utils::ThreadArrange1D* t1D,
     de::DH* handle)
 {
     // Extract diagonal and off-diagonal elements
@@ -161,7 +161,7 @@ void decx::blas::cpu_eig_bisection<_data_type>::plan(const decx::_Matrix* mat, d
     Check_Runtime_Error(handle);
 }
 
-template void decx::blas::cpu_eig_bisection<float>::plan(const decx::_Matrix*, decx::utils::_thread_arrange_1D*, de::DH*);
+template void decx::blas::cpu_eig_bisection<float>::plan(const decx::_Matrix*, decx::utils::ThreadArrange1D*, de::DH*);
 
 
 template <>

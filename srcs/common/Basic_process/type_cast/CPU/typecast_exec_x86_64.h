@@ -159,13 +159,13 @@ namespace type_cast{
     template <typename _type_in, typename _type_out>
     static void typecast1D_general_caller(decx::type_cast::CPUK::_cvt_kernel1D<_type_in, _type_out> *_kernel_ptr, 
         decx::cpu_ElementWise1D_planner* _planner, const _type_in* src, _type_out* dst, const uint64_t proc_len,
-        decx::utils::_thr_1D* t1D);
+        decx::utils::Thr1D* t1D);
 
 
     template <typename _type_in, typename _type_out>
     static void typecast2D_general_caller(decx::type_cast::CPUK::_cvt_kernel2D<_type_in, _type_out> *_kernel_ptr, 
         decx::cpu_ElementWise2D_planner* _planner, const _type_in* src, _type_out* dst, const uint2 proc_dims,
-        const uint32_t Wsrc, const uint32_t Wdst, decx::utils::_thr_1D* t1D);
+        const uint32_t Wsrc, const uint32_t Wdst, decx::utils::Thr1D* t1D);
 }
 }
 
@@ -175,7 +175,7 @@ static void decx::type_cast::typecast1D_general_caller(
     decx::type_cast::CPUK::_cvt_kernel1D<_type_in, _type_out>* _kernel_ptr, 
     decx::cpu_ElementWise1D_planner* _planner,  
     const _type_in* src,            _type_out* dst,                             
-    const uint64_t proc_len,        decx::utils::_thr_1D* t1D)
+    const uint64_t proc_len,        decx::utils::Thr1D* t1D)
 {
     _planner->plan(decx::cpu::_get_permitted_concurrency(), proc_len, sizeof(_type_in), sizeof(_type_out));
 
@@ -194,7 +194,7 @@ static void decx::type_cast::typecast2D_general_caller(
     decx::cpu_ElementWise2D_planner*                            _planner, 
     const _type_in* src,                                        _type_out* dst,
     const uint2 proc_dims,                                      const uint32_t Wsrc, 
-    const uint32_t Wdst,                                        decx::utils::_thr_1D* t1D)
+    const uint32_t Wdst,                                        decx::utils::Thr1D* t1D)
 {
     _planner->plan(decx::cpu::_get_permitted_concurrency(), proc_dims, sizeof(_type_in), sizeof(_type_out));
 

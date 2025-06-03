@@ -129,7 +129,7 @@ public:
 
 
     _CRSR_ template <typename _type_out>
-    void plan(decx::utils::_thread_arrange_1D* t1D, 
+    void plan(decx::utils::ThreadArrange1D* t1D, 
         const decx::_tensor_layout* src_layout, const decx::_tensor_layout* dst_layout, de::DH* handle);
 
 

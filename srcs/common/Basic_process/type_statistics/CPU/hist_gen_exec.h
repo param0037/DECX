@@ -72,7 +72,7 @@ namespace decx
 //{
 //    decx::utils::frag_manager f_mgr;
 //    decx::utils::frag_manager_gen(&f_mgr, proc_dims.y, decx::cpu::_get_permitted_concurrency());
-//    decx::utils::_thread_arrange_1D t1D(decx::cpu::_get_permitted_concurrency());
+//    decx::utils::ThreadArrange1D t1D(decx::cpu::_get_permitted_concurrency());
 //
 //    const uint8_t _leagal_space_v4 = (proc_dims.x % 4) ? (uint8_t)(proc_dims.x - (proc_dims.x / 4) * 4) : 4;
 //    
@@ -145,7 +145,7 @@ static void decx::bp::_histgen2D_u8_u64_caller(const uint8_t* src, uint64_t* his
 {
     decx::utils::frag_manager f_mgr;
     decx::utils::frag_manager_gen(&f_mgr, proc_dims.y, decx::cpu::_get_permitted_concurrency());
-    decx::utils::_thread_arrange_1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::ThreadArrange1D t1D(decx::cpu::_get_permitted_concurrency());
 
     const uint8_t _leagal_space_v4 = (proc_dims.x % 4) ? (uint8_t)(proc_dims.x % 4) : 4;
     

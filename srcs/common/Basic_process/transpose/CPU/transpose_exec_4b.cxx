@@ -187,7 +187,7 @@ transpose_4b_kernel(const float* __restrict                 src,
 
 
 void decx::blas::_cpu_transpose_config::transpose_4b_caller(const float* src, float* dst, 
-    const uint32_t pitchsrc_v1, const uint32_t pitchdst_v1, decx::utils::_thread_arrange_1D* t1D) const
+    const uint32_t pitchsrc_v1, const uint32_t pitchdst_v1, decx::utils::ThreadArrange1D* t1D) const
 {
     const float* src_loc = src;
     float* dst_loc = dst;

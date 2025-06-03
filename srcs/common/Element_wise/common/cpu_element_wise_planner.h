@@ -83,7 +83,7 @@ public:
 
 
     template <typename FuncType, typename... Args> inline void 
-    caller(FuncType&& f, decx::utils::_thr_1D* t1D, Args&&... args)
+    caller(FuncType&& f, decx::utils::Thr1D* t1D, Args&&... args)
     {
         for (int32_t i = 0; i < this->_fmgr.get_frag_num(); ++i){
             t1D->_async_thread[i] = decx::cpu::register_task_by_id(f, i, args.value(i)...);
@@ -93,7 +93,7 @@ public:
 
 
     template <typename FuncType, typename... Args> static void 
-    sCaller(FuncType&& f, const decx::utils::frag_manager* fmgr, decx::utils::_thr_1D* t1D, Args&&... args)
+    sCaller(FuncType&& f, const decx::utils::frag_manager* fmgr, decx::utils::Thr1D* t1D, Args&&... args)
     {
         for (int32_t i = 0; i < fmgr->get_frag_num(); ++i){
             t1D->_async_thread[i] = decx::cpu::register_task_by_id(f, i, args.value(i)...);
@@ -140,7 +140,7 @@ public:
 
 
     template <typename FuncType, typename ...Args>
-    inline void caller(FuncType&& f, decx::utils::_thr_1D* t1D, Args&& ...args)
+    inline void caller(FuncType&& f, decx::utils::Thr1D* t1D, Args&& ...args)
     {
         uint32_t _thr_cnt = 0;
 
@@ -156,7 +156,7 @@ public:
 
     template <typename FuncType, typename _type_in, typename _type_out, class ...Args>
     inline void caller_unary(FuncType&& f, const _type_in* src, _type_out* dst, const uint32_t Wsrc, const uint32_t Wdst, 
-        decx::utils::_thr_1D* t1D, Args&& ...additional)
+        decx::utils::Thr1D* t1D, Args&& ...additional)
     {
         const _type_in* loc_src = src;
         _type_out* loc_dst = dst;
@@ -186,7 +186,7 @@ public:
 
     template <typename FuncType, typename _type_in, typename _type_out, class ...Args>
     inline void caller_binary(FuncType&& f, const _type_in* src1, const _type_in* src2, _type_out* dst, const uint32_t Wsrc, const uint32_t Wdst, 
-        decx::utils::_thr_1D* t1D, Args&& ...additional)
+        decx::utils::Thr1D* t1D, Args&& ...additional)
     {
         uint64_t dex_src = 0, dex_dst = 0;
         uint32_t _thr_cnt = 0;

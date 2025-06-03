@@ -61,7 +61,7 @@ void decx::vis::VEVID_u8_caller(const double* src,
                                 const float _phase_gain,
                                 const float _original_gain)
 {
-    decx::utils::_thread_arrange_1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::ThreadArrange1D t1D(decx::cpu::_get_permitted_concurrency());
     decx::utils::frag_manager f_mgr;
     decx::utils::frag_manager_gen(&f_mgr, proc_H, t1D.total_thread);
 

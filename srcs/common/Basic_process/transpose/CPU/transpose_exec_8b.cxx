@@ -226,7 +226,7 @@ transpose_8b_caller(const double* src,
                     double* dst, 
                     const uint32_t pitchsrc_v1, 
                     const uint32_t pitchdst_v1, 
-                    decx::utils::_thread_arrange_1D* t1D) const
+                    decx::utils::ThreadArrange1D* t1D) const
 {
     const double* src_loc = src;
     double* dst_loc = dst;
@@ -256,7 +256,7 @@ void decx::blas::_cpu_transpose_config::
 transpose_8b_MC_caller(const double* src,           double* dst,
                        const uint32_t pitchsrc_v1,  const uint32_t pitchdst_v1, 
                        const uint32_t ch_num,       const uint64_t gch_src_v1, 
-                       const uint64_t gch_dst_v1,   decx::utils::_thread_arrange_1D* t1D) const
+                       const uint64_t gch_dst_v1,   decx::utils::ThreadArrange1D* t1D) const
 {
     const double* src_loc = src;
     double* dst_loc = dst;
@@ -285,7 +285,7 @@ transpose_8b_MC_caller(const double* src,           double* dst,
 void decx::blas::_cpu_transpose_MC_config::
 transpose_8b_caller(const double* src,              double* dst, 
                     const uint32_t pitchsrc_v1,     const uint32_t pitchdst_v1, 
-                    decx::utils::_thread_arrange_1D* t1D) const
+                    decx::utils::ThreadArrange1D* t1D) const
 {
     if (this->_divide_ch) 
     {

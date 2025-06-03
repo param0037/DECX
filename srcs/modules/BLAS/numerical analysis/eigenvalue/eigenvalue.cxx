@@ -51,7 +51,7 @@ _DECX_API_ void de::blas::cpu::Eigenvalue(de::InputMatrix src, float** a, float*
     const uint32_t conc = decx::cpu::_get_permitted_concurrency();
     planner.Init(conc, &_src->get_layout(), 0.001, de::GetLastError());
 
-    decx::utils::_thread_arrange_1D t1D(conc);
+    decx::utils::ThreadArrange1D t1D(conc);
 
     // planner.extract_diagonal((float*)_src->Mat.ptr, &t1D);
 

@@ -81,7 +81,7 @@ template <typename _data_type> _CRSR_
 template <typename _type_out>
 void decx::dsp::fft::cpu_FFT2D_planner<_data_type>::plan(const decx::_matrix_layout* src_layout, 
                                                        const decx::_matrix_layout* dst_layout,
-                                                       decx::utils::_thread_arrange_1D* t1D, 
+                                                       decx::utils::ThreadArrange1D* t1D, 
                                                        de::DH* handle)
 {
     this->_signal_dims.x = src_layout->width;
@@ -139,22 +139,22 @@ void decx::dsp::fft::cpu_FFT2D_planner<_data_type>::plan(const decx::_matrix_lay
 }
 
 template void decx::dsp::fft::cpu_FFT2D_planner<float>::plan<de::CPf>(const decx::_matrix_layout*,
-    const decx::_matrix_layout*, decx::utils::_thread_arrange_1D*, de::DH*);
+    const decx::_matrix_layout*, decx::utils::ThreadArrange1D*, de::DH*);
 
 template void decx::dsp::fft::cpu_FFT2D_planner<float>::plan<float>(const decx::_matrix_layout*,
-    const decx::_matrix_layout*, decx::utils::_thread_arrange_1D*, de::DH*);
+    const decx::_matrix_layout*, decx::utils::ThreadArrange1D*, de::DH*);
 
 template void decx::dsp::fft::cpu_FFT2D_planner<float>::plan<uint8_t>(const decx::_matrix_layout*,
-    const decx::_matrix_layout*, decx::utils::_thread_arrange_1D*, de::DH*);
+    const decx::_matrix_layout*, decx::utils::ThreadArrange1D*, de::DH*);
 
 template void decx::dsp::fft::cpu_FFT2D_planner<double>::plan<de::CPd>(const decx::_matrix_layout*,
-    const decx::_matrix_layout*, decx::utils::_thread_arrange_1D*, de::DH*);
+    const decx::_matrix_layout*, decx::utils::ThreadArrange1D*, de::DH*);
 
 template void decx::dsp::fft::cpu_FFT2D_planner<double>::plan<double>(const decx::_matrix_layout*,
-    const decx::_matrix_layout*, decx::utils::_thread_arrange_1D*, de::DH*);
+    const decx::_matrix_layout*, decx::utils::ThreadArrange1D*, de::DH*);
 
 template void decx::dsp::fft::cpu_FFT2D_planner<double>::plan<uint8_t>(const decx::_matrix_layout*,
-    const decx::_matrix_layout*, decx::utils::_thread_arrange_1D*, de::DH*);
+    const decx::_matrix_layout*, decx::utils::ThreadArrange1D*, de::DH*);
 
 
 template <typename _data_type>

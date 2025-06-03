@@ -280,7 +280,7 @@ void decx::bp::_maximum_1D_caller(T_kernel _cmp_kernel, const T_data* src, const
     decx::utils::frag_manager fr_mgr;
     decx::utils::frag_manager_gen(&fr_mgr, decx::utils::ceil<uint64_t>(len, _align), conc_thr);
 
-    decx::utils::_thread_arrange_1D t1D(conc_thr);
+    decx::utils::ThreadArrange1D t1D(conc_thr);
     T_data* res_arr = new T_data[conc_thr];
     const uint8_t _occupied_length = (len % _align);
 
@@ -315,7 +315,7 @@ void decx::bp::_minimum_1D_caller(T_kernel _cmp_kernel, const T_data* src, const
     decx::utils::frag_manager fr_mgr;
     decx::utils::frag_manager_gen(&fr_mgr, decx::utils::ceil<uint64_t>(len, _align), conc_thr);
 
-    decx::utils::_thread_arrange_1D t1D(conc_thr);
+    decx::utils::ThreadArrange1D t1D(conc_thr);
     T_data* res_arr = new T_data[conc_thr];
     const uint8_t _occupied_length = (len % _align);
 
@@ -349,7 +349,7 @@ static void decx::bp::_min_max_1D_caller(T_kernel _cmp_kernel, const T_data* src
     decx::utils::frag_manager fr_mgr;
     decx::utils::frag_manager_gen(&fr_mgr, decx::utils::ceil<uint64_t>(len, _align), conc_thr);
 
-    decx::utils::_thread_arrange_1D t1D(conc_thr);
+    decx::utils::ThreadArrange1D t1D(conc_thr);
     decx::PtrInfo<T_data> vec_min, vec_max;
     int32_t rval = 0;
     rval |= vec_min.Allocate(conc_thr * sizeof(T_data), PAGABLE, de::GetLastError());
@@ -395,7 +395,7 @@ void decx::bp::_maximum_2D_caller(T_kernel          _cmp_kernel,
     decx::utils::frag_manager_gen(&fr_mgr, proc_dims.y, conc_thr);
     const uint8_t _occupied_length = (proc_dims.x % _align);
 
-    decx::utils::_thread_arrange_1D t1D(conc_thr);
+    decx::utils::ThreadArrange1D t1D(conc_thr);
     T_data* res_arr = new T_data[conc_thr];
 
     const T_data* tmp_src = src;
@@ -432,7 +432,7 @@ void decx::bp::_minimum_2D_caller(T_kernel _cmp_kernel, const T_data* src, const
     decx::utils::frag_manager_gen(&fr_mgr, proc_dims.y, conc_thr);
     const uint8_t _occupied_length = (proc_dims.x % _align);
 
-    decx::utils::_thread_arrange_1D t1D(conc_thr);
+    decx::utils::ThreadArrange1D t1D(conc_thr);
     T_data* res_arr = new T_data[conc_thr];
 
     const T_data* tmp_src = src;
@@ -469,7 +469,7 @@ void decx::bp::_min_max_2D_caller(T_kernel _cmp_kernel, const T_data* src, const
     decx::utils::frag_manager_gen(&fr_mgr, proc_dims.y, conc_thr);
     const uint8_t _occupied_length = (proc_dims.x % _align);
 
-    decx::utils::_thread_arrange_1D t1D(conc_thr);
+    decx::utils::ThreadArrange1D t1D(conc_thr);
     decx::PtrInfo<T_data> vec_min, vec_max;
     int32_t rval = 0;
     rval |= vec_min.Allocate(conc_thr * sizeof(T_data), PAGABLE, de::GetLastError());

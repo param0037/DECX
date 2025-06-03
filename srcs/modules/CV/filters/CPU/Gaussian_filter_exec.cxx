@@ -320,7 +320,7 @@ decx::vis::CPUK::_gaussian_H_uchar4_fp32_ST(const float* src, const float* kerne
 
 void decx::vis::_gaussian_H_uint8_caller(const double* src, 
     const float* kernel, float* dst, const uint2 proc_dim, const uint32_t Wker,
-    const uint Wsrc, const uint Wdst, const ushort reg_WL, decx::utils::_thr_1D* t1D,
+    const uint Wsrc, const uint Wdst, const ushort reg_WL, decx::utils::Thr1D* t1D,
     const uint _loop)
 {
     const double* tmp_src_ptr = src;
@@ -353,7 +353,7 @@ void decx::vis::_gaussian_H_uint8_caller(const double* src,
 
 void decx::vis::_gaussian_H_uchar4_caller(const float* src, 
     const float* kernel, float* dst, const uint2 proc_dim, const uint32_t Wker,
-    const uint Wsrc, const uint Wdst, const ushort reg_WL, decx::utils::_thr_1D* t1D,
+    const uint Wsrc, const uint Wdst, const ushort reg_WL, decx::utils::Thr1D* t1D,
     const uint _loop)
 {
     const float* tmp_src_ptr = src;
@@ -384,7 +384,7 @@ void decx::vis::_gaussian_H_uchar4_caller(const float* src,
 
 
 void decx::vis::_gaussian_V_uint8_caller(const float* src, const float* kernel, double* dst, const uint2 proc_dim, const uint32_t Hker,
-    const uint Wsrc, const uint Wdst, decx::utils::_thr_1D* t1D)
+    const uint Wsrc, const uint Wdst, decx::utils::Thr1D* t1D)
 {
     const float* tmp_src_ptr = src;
     double* tmp_dst_ptr = dst;

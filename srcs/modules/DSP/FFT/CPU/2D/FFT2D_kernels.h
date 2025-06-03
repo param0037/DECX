@@ -68,22 +68,22 @@ namespace fft {
 
         template <typename _type_in, bool _conj>
         void _FFT2D_H_entire_rows_cplxf(const _type_in* __restrict src, de::CPf* __restrict dst, const decx::dsp::fft::cpu_FFT2D_planner<float>* planner,
-            const uint32_t pitch_src, const uint32_t pitch_dst, decx::utils::_thread_arrange_1D* t1D, bool _is_FFTH);
+            const uint32_t pitch_src, const uint32_t pitch_dst, decx::utils::ThreadArrange1D* t1D, bool _is_FFTH);
 
 
         template <typename _type_in, bool _conj>
         void _FFT2D_H_entire_rows_cplxd(const _type_in* __restrict src, de::CPd* __restrict dst, const decx::dsp::fft::cpu_FFT2D_planner<double>* planner,
-            const uint32_t pitch_src, const uint32_t pitch_dst, decx::utils::_thread_arrange_1D* t1D, bool _is_FFTH);
+            const uint32_t pitch_src, const uint32_t pitch_dst, decx::utils::ThreadArrange1D* t1D, bool _is_FFTH);
 
 
         template <typename _type_out>
         void _IFFT2D_H_entire_rows_cplxf(const de::CPf* __restrict src, _type_out* __restrict dst, const decx::dsp::fft::cpu_FFT2D_planner<float>* planner,
-            const uint32_t pitch_src, const uint32_t pitch_dst, decx::utils::_thread_arrange_1D* t1D, bool _is_FFTH);
+            const uint32_t pitch_src, const uint32_t pitch_dst, decx::utils::ThreadArrange1D* t1D, bool _is_FFTH);
 
 
         template <typename _type_out>
         void _IFFT2D_H_entire_rows_cplxd(const de::CPd* __restrict src, _type_out* __restrict dst, const decx::dsp::fft::cpu_FFT2D_planner<double>* planner,
-            const uint32_t pitch_src, const uint32_t pitch_dst, decx::utils::_thread_arrange_1D* t1D, bool _is_FFTH);
+            const uint32_t pitch_src, const uint32_t pitch_dst, decx::utils::ThreadArrange1D* t1D, bool _is_FFTH);
     }
 }
 }

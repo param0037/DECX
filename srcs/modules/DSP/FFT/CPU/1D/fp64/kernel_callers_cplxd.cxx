@@ -319,7 +319,7 @@ template <bool _IFFT, typename _type_in>
 void decx::dsp::fft::_FFT1D_cplxd64_1st(const _type_in* __restrict						src, 
 										de::CPd* __restrict								dst,
 										const decx::dsp::fft::cpu_FFT1D_planner<double>* _FFT_frame, 
-										decx::utils::_thr_1D*							t1D,
+										decx::utils::Thr1D*							t1D,
 										const decx::dsp::fft::FIMT1D*					_Twd_info)
 {
 	const _type_in* _src_ptr = src;
@@ -351,16 +351,16 @@ void decx::dsp::fft::_FFT1D_cplxd64_1st(const _type_in* __restrict						src,
 }
 
 template void decx::dsp::fft::_FFT1D_cplxd64_1st<true, double>(const double* __restrict, de::CPd* __restrict,
-	const decx::dsp::fft::cpu_FFT1D_planner<double>*, decx::utils::_thr_1D*, const decx::dsp::fft::FIMT1D*);
+	const decx::dsp::fft::cpu_FFT1D_planner<double>*, decx::utils::Thr1D*, const decx::dsp::fft::FIMT1D*);
 
 template void decx::dsp::fft::_FFT1D_cplxd64_1st<true, de::CPd>(const de::CPd* __restrict, de::CPd* __restrict,
-	const decx::dsp::fft::cpu_FFT1D_planner<double>*, decx::utils::_thr_1D*, const decx::dsp::fft::FIMT1D*);
+	const decx::dsp::fft::cpu_FFT1D_planner<double>*, decx::utils::Thr1D*, const decx::dsp::fft::FIMT1D*);
 
 template void decx::dsp::fft::_FFT1D_cplxd64_1st<false, double>(const double* __restrict, de::CPd* __restrict,
-	const decx::dsp::fft::cpu_FFT1D_planner<double>*, decx::utils::_thr_1D*, const decx::dsp::fft::FIMT1D*);
+	const decx::dsp::fft::cpu_FFT1D_planner<double>*, decx::utils::Thr1D*, const decx::dsp::fft::FIMT1D*);
 
 template void decx::dsp::fft::_FFT1D_cplxd64_1st<false, de::CPd>(const de::CPd* __restrict, de::CPd* __restrict,
-	const decx::dsp::fft::cpu_FFT1D_planner<double>*, decx::utils::_thr_1D*, const decx::dsp::fft::FIMT1D*);
+	const decx::dsp::fft::cpu_FFT1D_planner<double>*, decx::utils::Thr1D*, const decx::dsp::fft::FIMT1D*);
 
 
 
@@ -368,7 +368,7 @@ template <typename _type_out, bool _conj>
 void decx::dsp::fft::_FFT1D_cplxd64_mid(const de::CPd* __restrict							src, 
 										_type_out* __restrict								dst,
 										const decx::dsp::fft::cpu_FFT1D_planner<double>*	_FFT_frame, 
-										decx::utils::_thr_1D*								t1D, 
+										decx::utils::Thr1D*								t1D, 
 										const uint32_t										_call_order,
 										const decx::dsp::fft::FIMT1D*						_Twd_info)
 {
@@ -403,13 +403,13 @@ void decx::dsp::fft::_FFT1D_cplxd64_mid(const de::CPd* __restrict							src,
 
 
 template void decx::dsp::fft::_FFT1D_cplxd64_mid<de::CPd, true>(const de::CPd* __restrict, de::CPd* __restrict,
-	const decx::dsp::fft::cpu_FFT1D_planner<double>*, decx::utils::_thr_1D*, const uint32_t, const decx::dsp::fft::FIMT1D*);
+	const decx::dsp::fft::cpu_FFT1D_planner<double>*, decx::utils::Thr1D*, const uint32_t, const decx::dsp::fft::FIMT1D*);
 
 template void decx::dsp::fft::_FFT1D_cplxd64_mid<de::CPd, false>(const de::CPd* __restrict, de::CPd* __restrict,
-	const decx::dsp::fft::cpu_FFT1D_planner<double>*, decx::utils::_thr_1D*, const uint32_t, const decx::dsp::fft::FIMT1D*);
+	const decx::dsp::fft::cpu_FFT1D_planner<double>*, decx::utils::Thr1D*, const uint32_t, const decx::dsp::fft::FIMT1D*);
 
 template void decx::dsp::fft::_FFT1D_cplxd64_mid<double, true>(const de::CPd* __restrict, double* __restrict,
-	const decx::dsp::fft::cpu_FFT1D_planner<double>*, decx::utils::_thr_1D*, const uint32_t, const decx::dsp::fft::FIMT1D*);
+	const decx::dsp::fft::cpu_FFT1D_planner<double>*, decx::utils::Thr1D*, const uint32_t, const decx::dsp::fft::FIMT1D*);
 
 template void decx::dsp::fft::_FFT1D_cplxd64_mid<double, false>(const de::CPd* __restrict, double* __restrict,
-	const decx::dsp::fft::cpu_FFT1D_planner<double>*, decx::utils::_thr_1D*, const uint32_t, const decx::dsp::fft::FIMT1D*);
+	const decx::dsp::fft::cpu_FFT1D_planner<double>*, decx::utils::Thr1D*, const uint32_t, const decx::dsp::fft::FIMT1D*);

@@ -69,7 +69,7 @@ void decx::dsp::filter2D_fp32(decx::_Matrix* src, decx::_Matrix* kernel, decx::_
         _planner->plan(_conc, &src->get_layout(), &kernel->get_layout(), &dst->get_layout(), de::GetLastError(), padding);
     }
     const uint2 thread_dist = _planner->get_thread_dist();
-    decx::utils::_thr_2D t2D(thread_dist.y, thread_dist.x);
+    decx::utils::Thr2D t2D(thread_dist.y, thread_dist.x);
     _planner->run<false>(src, kernel, dst, &t2D);
 
     decx::dsp::g_cpu_filter2D_fp32.unlock();
@@ -99,7 +99,7 @@ void decx::dsp::filter2D_64b(decx::_Matrix* src, decx::_Matrix* kernel, decx::_M
         _planner->plan(_conc, &src->get_layout(), &kernel->get_layout(), &dst->get_layout(), de::GetLastError(), padding);
     }
     const uint2 thread_dist = _planner->get_thread_dist();
-    decx::utils::_thr_2D t2D(thread_dist.y, thread_dist.x);
+    decx::utils::Thr2D t2D(thread_dist.y, thread_dist.x);
     _planner->run<_cplxf>(src, kernel, dst, &t2D);
 
     decx::dsp::g_cpu_filter2D_64b.unlock();

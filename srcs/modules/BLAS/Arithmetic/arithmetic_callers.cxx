@@ -43,7 +43,7 @@ mat_arithmetic_caller_VVO(const decx::_Matrix*  A,
     using namespace decx::CPUK;
 
     decx::cpu_ElementWise1D_planner _planner;
-    decx::utils::_thr_1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::Thr1D t1D(decx::cpu::_get_permitted_concurrency());
 
     const int32_t _kernel_dex = decx::blas::_find_arith_kernel_id<0>(arith_flag);
 
@@ -105,7 +105,7 @@ mat_arithmetic_caller_VO(const decx::_Matrix*  src,
     using namespace decx::CPUK;
 
     decx::cpu_ElementWise1D_planner _planner;
-    decx::utils::_thr_1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::Thr1D t1D(decx::cpu::_get_permitted_concurrency());
 
     const int32_t _kernel_dex = decx::blas::_find_arith_kernel_id<0>(arith_flag);
 
@@ -163,7 +163,7 @@ vec_arithmetic_caller_VVO(const decx::_Vector*  A,
     using namespace decx::CPUK;
 
     decx::cpu_ElementWise1D_planner _planner;
-    decx::utils::_thr_1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::Thr1D t1D(decx::cpu::_get_permitted_concurrency());
     
     const int32_t _kernel_dex = decx::blas::_find_arith_kernel_id<0>(arith_flag);
     void* _kernel_ptr = NULL;
@@ -221,7 +221,7 @@ vec_arithmetic_caller_VO(const decx::_Vector*  src,
     using namespace decx::CPUK;
 
     decx::cpu_ElementWise1D_planner _planner;
-    decx::utils::_thr_1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::Thr1D t1D(decx::cpu::_get_permitted_concurrency());
 
     const int32_t _kernel_dex = decx::blas::_find_arith_kernel_id<0>(arith_flag);
     void* _kernel_ptr = NULL;

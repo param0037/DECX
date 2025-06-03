@@ -89,7 +89,7 @@ plan(const uint32_t concurrency,    const uint2 dst_dims_v1,
 template <typename _type_in, typename _type_out> void 
 decx::cpu_VGT2D_planner::run(const _type_in* src,          const float2* map, 
                              _type_out* dst,                const uint32_t pitchmap_v1,    
-                             const uint32_t pitchdst_v1,    decx::utils::_thr_1D* t1D)
+                             const uint32_t pitchdst_v1,    decx::utils::Thr1D* t1D)
 {
     uint64_t dex_map = 0, dex_dst = 0;
     uint32_t _thr_cnt = 0;
@@ -122,10 +122,10 @@ decx::cpu_VGT2D_planner::run(const _type_in* src,          const float2* map,
 }
 
 template void decx::cpu_VGT2D_planner::run<float>(const float*, const float2*, float*, const uint32_t,    
-    const uint32_t, decx::utils::_thr_1D*);
+    const uint32_t, decx::utils::Thr1D*);
 
 template void decx::cpu_VGT2D_planner::run<uint8_t>(const uint8_t*, const float2*, uint8_t*, const uint32_t,    
-    const uint32_t, decx::utils::_thr_1D*);
+    const uint32_t, decx::utils::Thr1D*);
 
 
 void decx::cpu_VGT2D_planner::release(decx::cpu_VGT2D_planner* fake_this)

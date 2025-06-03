@@ -261,7 +261,7 @@ decx::type_cast::_cvtf32_ui8_selector2D(const int32_t flag)
 //         decx::type_cast::CPUK::_v256_cvtui8_f32_2D(src, dst, make_uint2(proc_dims.x, proc_dims.y), Wsrc, Wdst);
 //     }
 //     else {
-//         decx::utils::_thread_arrange_1D t1D(decx::cpu::_get_permitted_concurrency());
+//         decx::utils::ThreadArrange1D t1D(decx::cpu::_get_permitted_concurrency());
 //         decx::utils::frag_manager f_mgr;
 //         decx::utils::frag_manager_gen(&f_mgr, proc_dims.y, t1D.total_thread);
 
@@ -320,7 +320,7 @@ decx::type_cast::_cvtf32_ui8_selector2D(const int32_t flag)
 //         (*exec_kernrel_ptr)(src, dst, make_uint2(proc_dims.x, proc_dims.y), Wsrc, Wdst);
 //     }
 //     else {
-//         decx::utils::_thread_arrange_1D t1D(decx::cpu::_get_permitted_concurrency());
+//         decx::utils::ThreadArrange1D t1D(decx::cpu::_get_permitted_concurrency());
 //         decx::utils::frag_manager f_mgr;
 //         decx::utils::frag_manager_gen(&f_mgr, proc_dims.y, t1D.total_thread);
 

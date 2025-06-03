@@ -130,7 +130,7 @@ template void decx::dsp::fft::cpu_FFT1D_planner<double>::_apart_for_smaller_FFTs
 
 
 template <typename _data_type>
-void decx::dsp::fft::cpu_FFT1D_planner<_data_type>::plan(const uint64_t signal_len, decx::utils::_thr_1D* t1D, de::DH* handle)
+void decx::dsp::fft::cpu_FFT1D_planner<_data_type>::plan(const uint64_t signal_len, decx::utils::Thr1D* t1D, de::DH* handle)
 {
     constexpr uint32_t alignment = _CPU_FFT_PROC_ALIGN_(_data_type);
     constexpr uint32_t threshold_fragment = sizeof(_data_type) == 8 ? _MAX_TILING_CPU_FFT_FP64_ : _MAX_TILING_CPU_FFT_FP32_;
@@ -183,8 +183,8 @@ void decx::dsp::fft::cpu_FFT1D_planner<_data_type>::plan(const uint64_t signal_l
     this->_allocate_spaces(handle);
 }
 
-template void decx::dsp::fft::cpu_FFT1D_planner<float>::plan(const uint64_t, decx::utils::_thr_1D*, de::DH*);
-template void decx::dsp::fft::cpu_FFT1D_planner<double>::plan(const uint64_t, decx::utils::_thr_1D*, de::DH*);
+template void decx::dsp::fft::cpu_FFT1D_planner<float>::plan(const uint64_t, decx::utils::Thr1D*, de::DH*);
+template void decx::dsp::fft::cpu_FFT1D_planner<double>::plan(const uint64_t, decx::utils::Thr1D*, de::DH*);
 
 
 template <typename _data_type>
@@ -340,7 +340,7 @@ template void decx::dsp::fft::cpu_FFT1D_smaller<double>::set_length(const uint32
 
 
 template <typename _data_type>
-void decx::dsp::fft::cpu_FFT1D_smaller<_data_type>::plan(decx::utils::_thr_1D* t1D)
+void decx::dsp::fft::cpu_FFT1D_smaller<_data_type>::plan(decx::utils::Thr1D* t1D)
 {
     decx::dsp::fft::_radix_apart<false>(this->_signal_length, &this->_radixes);
     
@@ -356,8 +356,8 @@ void decx::dsp::fft::cpu_FFT1D_smaller<_data_type>::plan(decx::utils::_thr_1D* t
     this->_W_table._generate_table(t1D);
 }
 
-template void decx::dsp::fft::cpu_FFT1D_smaller<float>::plan(decx::utils::_thr_1D* t1D);
-template void decx::dsp::fft::cpu_FFT1D_smaller<double>::plan(decx::utils::_thr_1D* t1D);
+template void decx::dsp::fft::cpu_FFT1D_smaller<float>::plan(decx::utils::Thr1D* t1D);
+template void decx::dsp::fft::cpu_FFT1D_smaller<double>::plan(decx::utils::Thr1D* t1D);
 
 
 template <typename _data_type>

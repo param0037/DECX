@@ -63,7 +63,7 @@ decx::type_cast::CPUK::_v256_cvti32_ps(const int32_t* __restrict src, float* __r
 // {
 //     const size_t proc_num_vec4 = proc_num / 8;
 
-//     decx::utils::_thread_arrange_1D t1D(decx::cpu::_get_permitted_concurrency());
+//     decx::utils::ThreadArrange1D t1D(decx::cpu::_get_permitted_concurrency());
     
 //     const bool _is_MT = (proc_num_vec4 > (1024 * (size_t)t1D.total_thread));
 
@@ -98,7 +98,7 @@ decx::type_cast::CPUK::_v256_cvti32_ps(const int32_t* __restrict src, float* __r
 // {
 //     const size_t proc_num_vec4 = proc_num / 8;
 
-//     decx::utils::_thread_arrange_1D t1D(decx::cpu::_get_permitted_concurrency());
+//     decx::utils::ThreadArrange1D t1D(decx::cpu::_get_permitted_concurrency());
     
 //     const bool _is_MT = (proc_num_vec4 > (1024 * (size_t)t1D.total_thread));
 

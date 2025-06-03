@@ -37,7 +37,7 @@
 void 
 decx::dsp::complex_rotate_fp32_caller(const double* src, const float angle, double* dst, const size_t _proc_len)
 {
-    decx::utils::_thread_arrange_1D t1D((uint)decx::cpu::_get_permitted_concurrency());
+    decx::utils::ThreadArrange1D t1D((uint)decx::cpu::_get_permitted_concurrency());
 
     decx::utils::frag_manager f_mgr;
     decx::utils::frag_manager_gen(&f_mgr, _proc_len, t1D.total_thread);

@@ -559,7 +559,7 @@ void decx::vis::_bilateral_uint8_caller(const double*               src,
                                         const uint32_t                  Wsrc,
                                         const uint32_t                  Wdst,
                                         const ushort                reg_WL,
-                                        decx::utils::_thr_1D*       t1D,
+                                        decx::utils::Thr1D*       t1D,
                                         decx::utils::frag_manager*  f_mgr,
                                         const uint32_t                  _loop)
 {
@@ -597,7 +597,7 @@ void decx::vis::_bilateral_uchar4_caller(const float*               src,
                                         const uint32_t                  Wsrc,
                                         const uint32_t                  Wdst,
                                         const ushort                reg_WL,
-                                        decx::utils::_thr_1D*       t1D,
+                                        decx::utils::Thr1D*       t1D,
                                         decx::utils::frag_manager*  f_mgr,
                                         const uint32_t                  _loop)
 {

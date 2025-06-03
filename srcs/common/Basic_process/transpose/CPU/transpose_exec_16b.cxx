@@ -236,7 +236,7 @@ transpose_16b_caller(const de::CPd* src,
                      de::CPd* dst,
                      const uint32_t pitchsrc_v1, 
                      const uint32_t pitchdst_v1, 
-                     decx::utils::_thread_arrange_1D* t1D) const
+                     decx::utils::ThreadArrange1D* t1D) const
 {
     const de::CPd* src_loc = src;
     de::CPd* dst_loc = dst;
@@ -268,7 +268,7 @@ transpose_16b_MC_caller(const de::CPd* src,
                      const uint32_t ch_num, 
                      const uint64_t gch_src_v1, 
                      const uint64_t gch_dst_v1,
-                     decx::utils::_thread_arrange_1D* t1D) const
+                     decx::utils::ThreadArrange1D* t1D) const
 {
     const de::CPd* src_loc = src;
     de::CPd* dst_loc = dst;
@@ -297,7 +297,7 @@ transpose_16b_MC_caller(const de::CPd* src,
 void decx::blas::_cpu_transpose_MC_config::
 transpose_16b_caller(const de::CPd* src,              de::CPd* dst, 
                     const uint32_t pitchsrc_v1,     const uint32_t pitchdst_v1, 
-                    decx::utils::_thread_arrange_1D* t1D) const
+                    decx::utils::ThreadArrange1D* t1D) const
 {
     if (this->_divide_ch) 
     {

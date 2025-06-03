@@ -179,7 +179,7 @@ _v256_cvti32_ui8_truncate_clamp_zero1D(const int32_t* __restrict      src,
 //                                            float*               dst, 
 //                                            const size_t         proc_len)
 // {
-//     decx::utils::_thread_arrange_1D t1D(decx::cpu::_get_permitted_concurrency());
+//     decx::utils::ThreadArrange1D t1D(decx::cpu::_get_permitted_concurrency());
 
 //     bool _is_MT = proc_len > 1024 * t1D.total_thread;
 
@@ -479,7 +479,7 @@ decx::type_cast::_cvti32_ui8_selector2D(const int32_t flag)
 //                                            const uint           Wsrc, 
 //                                            const uint           Wdst)
 // {
-//     decx::utils::_thread_arrange_1D t1D(decx::cpu::_get_permitted_concurrency());
+//     decx::utils::ThreadArrange1D t1D(decx::cpu::_get_permitted_concurrency());
 //     decx::utils::frag_manager f_mgr;
 //     decx::utils::frag_manager_gen(&f_mgr, proc_dims.y, t1D.total_thread);
 
@@ -516,7 +516,7 @@ decx::type_cast::_cvti32_ui8_selector2D(const int32_t flag)
 //                                            de::DH*              handle)
 // {
 //     using namespace decx::type_cast;
-//     decx::utils::_thread_arrange_1D t1D(decx::cpu::_get_permitted_concurrency());
+//     decx::utils::ThreadArrange1D t1D(decx::cpu::_get_permitted_concurrency());
 //     decx::utils::frag_manager f_mgr;
 //     decx::utils::frag_manager_gen(&f_mgr, proc_dims.y, t1D.total_thread);
 

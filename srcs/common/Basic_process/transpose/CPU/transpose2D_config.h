@@ -87,29 +87,29 @@ public:
 
 
     void transpose_4b_caller(const float* src, float* dst, const uint32_t pitchsrc_v1,
-        const uint32_t pitchdst_v1, decx::utils::_thread_arrange_1D* t1D) const;
+        const uint32_t pitchdst_v1, decx::utils::ThreadArrange1D* t1D) const;
 
 
     void transpose_1b_caller(const uint64_t* src, uint64_t* dst, const uint32_t pitchsrc_v8,
-        const uint32_t pitchdst_v8, decx::utils::_thread_arrange_1D* t1D) const;
+        const uint32_t pitchdst_v8, decx::utils::ThreadArrange1D* t1D) const;
 
 
     void transpose_8b_caller(const double* src, double* dst, const uint32_t pitchsrc_v1,
-        const uint32_t pitchdst_v1, decx::utils::_thread_arrange_1D* t1D) const;
+        const uint32_t pitchdst_v1, decx::utils::ThreadArrange1D* t1D) const;
 
 
     void transpose_8b_MC_caller(const double* src, double* dst, const uint32_t pitchsrc_v1,
         const uint32_t pitchdst_v1, const uint32_t ch_num, const uint64_t gch_src_v1, const uint64_t gch_dst_v1,
-        decx::utils::_thread_arrange_1D* t1D) const;
+        decx::utils::ThreadArrange1D* t1D) const;
 
 
     void transpose_16b_caller(const de::CPd* src, de::CPd* dst, const uint32_t pitchsrc_v1,
-        const uint32_t pitchdst_v1, decx::utils::_thread_arrange_1D* t1D) const;
+        const uint32_t pitchdst_v1, decx::utils::ThreadArrange1D* t1D) const;
 
 
     void transpose_16b_MC_caller(const de::CPd* src, de::CPd* dst, const uint32_t pitchsrc_v1,
         const uint32_t pitchdst_v1, const uint32_t ch_num, const uint64_t gch_src_v1, const uint64_t gch_dst_v1,
-        decx::utils::_thread_arrange_1D* t1D) const;
+        decx::utils::ThreadArrange1D* t1D) const;
 
 
     bool changed(const uint8_t element_byte, const uint32_t concurrency, const uint2 src_dims_v1) const;
@@ -147,11 +147,11 @@ public:
 
 
     void transpose_8b_caller(const double* src, double* dst, const uint32_t pitchsrc_v1,
-        const uint32_t pitchdst_v1, decx::utils::_thread_arrange_1D* t1D) const;
+        const uint32_t pitchdst_v1, decx::utils::ThreadArrange1D* t1D) const;
 
 
     void transpose_16b_caller(const de::CPd* src, de::CPd* dst, const uint32_t pitchsrc_v1,
-        const uint32_t pitchdst_v1, decx::utils::_thread_arrange_1D* t1D) const;
+        const uint32_t pitchdst_v1, decx::utils::ThreadArrange1D* t1D) const;
 };
 
 

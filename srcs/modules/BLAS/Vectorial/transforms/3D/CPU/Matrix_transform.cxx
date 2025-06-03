@@ -143,7 +143,7 @@ de::tf::cpu::Vec_transform(de::Vector& src, de::Vector& dst, de::Matrix& transfo
             kernel = decx::tf::CPUK::_vec3_mul_mat4x3_fp32_1D;
         }
 
-        decx::utils::_thread_arrange_1D t1D(decx::cpu::_get_permitted_concurrency());
+        decx::utils::ThreadArrange1D t1D(decx::cpu::_get_permitted_concurrency());
         decx::utils::frag_manager f_mgr;
         decx::utils::frag_manager_gen(&f_mgr, _proc_len, t1D.total_thread);
 

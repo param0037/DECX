@@ -42,7 +42,7 @@ void decx::dsp::cpu_Filter2D_planner<double>::
 filter2D_NB_64b(decx::_Matrix* src, 
                  decx::_Matrix* kernel, 
                  decx::_Matrix* dst,
-                 decx::utils::_thr_2D* t2D)
+                 decx::utils::Thr2D* t2D)
 {
     decx::dsp::CPUK::conv2_NB_kernel_64b* kernel_ptr = NULL;
     if
@@ -87,7 +87,7 @@ template <> template <bool _cplxf> void
 decx::dsp::cpu_Filter2D_planner<double>::filter2D_B_64b(decx::_Matrix* src, 
                                                         decx::_Matrix* kernel, 
                                                         decx::_Matrix* dst,
-                                                        decx::utils::_thr_2D* t2D)
+                                                        decx::utils::Thr2D* t2D)
 {
     decx::dsp::CPUK::conv2_B_kernel_64b* _kernel_ptr = NULL;
 
@@ -161,7 +161,7 @@ template <> template <bool _cplxf> void
 decx::dsp::cpu_Filter2D_planner<double>::run(decx::_Matrix* src, 
                                              decx::_Matrix* kernel, 
                                              decx::_Matrix* dst, 
-                                             decx::utils::_thr_2D* t2D)
+                                             decx::utils::Thr2D* t2D)
 {
     if (this->_padding_method == de::extend_label::_EXTEND_NONE_) {
         this->filter2D_NB_64b<_cplxf>(src, kernel, dst, t2D);
@@ -172,7 +172,7 @@ decx::dsp::cpu_Filter2D_planner<double>::run(decx::_Matrix* src,
 }
 
 template void decx::dsp::cpu_Filter2D_planner<double>::run<true>(decx::_Matrix*,
-    decx::_Matrix*, decx::_Matrix*, decx::utils::_thr_2D*);
+    decx::_Matrix*, decx::_Matrix*, decx::utils::Thr2D*);
 
 template void decx::dsp::cpu_Filter2D_planner<double>::run<false>(decx::_Matrix*,
-    decx::_Matrix*, decx::_Matrix*, decx::utils::_thr_2D*);
+    decx::_Matrix*, decx::_Matrix*, decx::utils::Thr2D*);
