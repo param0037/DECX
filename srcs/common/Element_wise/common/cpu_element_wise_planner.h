@@ -86,7 +86,7 @@ public:
     caller(FuncType&& f, decx::utils::Thr1D* t1D, Args&&... args)
     {
         for (int32_t i = 0; i < this->_fmgr.get_frag_num(); ++i){
-            t1D->_async_thread[i] = decx::cpu::register_task_by_id(f, i, args.value(i)...);
+            t1D->_async_thread[i] = decx::cpu::RegisterTaskByID(f, i, args.value(i)...);
         }
         t1D->__sync_all_threads(make_uint2(0, this->_fmgr.frag_num));
     }
@@ -96,7 +96,7 @@ public:
     sCaller(FuncType&& f, const decx::utils::frag_manager* fmgr, decx::utils::Thr1D* t1D, Args&&... args)
     {
         for (int32_t i = 0; i < fmgr->get_frag_num(); ++i){
-            t1D->_async_thread[i] = decx::cpu::register_task_by_id(f, i, args.value(i)...);
+            t1D->_async_thread[i] = decx::cpu::RegisterTaskByID(f, i, args.value(i)...);
         }
         t1D->__sync_all_threads(make_uint2(0, fmgr->frag_num));
     }
