@@ -46,7 +46,7 @@ bool WINAPI DllMain(HMODULE hModule,
 		* Note : The memory pool should be initialized first, since the dynamic_array in
 		* threadpool is based on the host memory pool.
 		*/
-		decx::thread_pool = new decx::ThreadPool(std::thread::hardware_concurrency(), true);
+		decx::thread_pool = new decx::ThreadPool(decx::cpu::_get_permitted_concurrency(), true);
 		decx::_res_mgr = new decx::ResMgr;
 		break;
 	case DLL_PROCESS_DETACH:
