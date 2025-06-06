@@ -136,7 +136,7 @@ decx::dsp::fft::_FFT2D_H_entire_rows_cplxd(const _type_in* __restrict           
     de::CPd* _dst_loc_ptr = dst;
 
     for (uint32_t i = 0; i < f_mgr->frag_num - 1; ++i) {
-        t1D->_async_thread[i] = decx::cpu::register_task_default(decx::dsp::fft::CPUK::_FFT2D_smaller_2rows_cplxd<_type_in, _conj>,
+        t1D->_async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(decx::dsp::fft::CPUK::_FFT2D_smaller_2rows_cplxd<_type_in, _conj>,
             _src_loc_ptr,               _dst_loc_ptr, 
             planner->get_tile_ptr(i),
             pitch_src,                  pitch_dst, 
@@ -146,7 +146,7 @@ decx::dsp::fft::_FFT2D_H_entire_rows_cplxd(const _type_in* __restrict           
         _dst_loc_ptr += f_mgr->frag_len * pitch_dst;
     }
 
-    t1D->_async_thread[f_mgr->frag_num - 1] = decx::cpu::register_task_default(decx::dsp::fft::CPUK::_FFT2D_smaller_2rows_cplxd<_type_in, _conj>,
+    t1D->_async_thread[f_mgr->frag_num - 1] = decx::cpu::RegisterTaskLoadBalanced(decx::dsp::fft::CPUK::_FFT2D_smaller_2rows_cplxd<_type_in, _conj>,
             _src_loc_ptr,               _dst_loc_ptr, 
             planner->get_tile_ptr(f_mgr->frag_num - 1),
             pitch_src,                  pitch_dst, 
@@ -265,7 +265,7 @@ decx::dsp::fft::_IFFT2D_H_entire_rows_cplxd(const de::CPd* __restrict           
     _type_out* _dst_loc_ptr = dst;
 
     for (uint32_t i = 0; i < f_mgr->frag_num - 1; ++i) {
-        t1D->_async_thread[i] = decx::cpu::register_task_default(decx::dsp::fft::CPUK::_IFFT2D_smaller_2rows_cplxd<_type_out>,
+        t1D->_async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(decx::dsp::fft::CPUK::_IFFT2D_smaller_2rows_cplxd<_type_out>,
             _src_loc_ptr,               _dst_loc_ptr, 
             planner->get_tile_ptr(i),
             pitch_src,                  pitch_dst, 
@@ -275,7 +275,7 @@ decx::dsp::fft::_IFFT2D_H_entire_rows_cplxd(const de::CPd* __restrict           
         _dst_loc_ptr += f_mgr->frag_len * pitch_dst;
     }
     const uint32_t _L = f_mgr->is_left ? f_mgr->frag_left_over : f_mgr->frag_len;
-    t1D->_async_thread[f_mgr->frag_num - 1] = decx::cpu::register_task_default(decx::dsp::fft::CPUK::_IFFT2D_smaller_2rows_cplxd<_type_out>,
+    t1D->_async_thread[f_mgr->frag_num - 1] = decx::cpu::RegisterTaskLoadBalanced(decx::dsp::fft::CPUK::_IFFT2D_smaller_2rows_cplxd<_type_out>,
             _src_loc_ptr,               _dst_loc_ptr, 
             planner->get_tile_ptr(f_mgr->frag_num - 1),
             pitch_src,                  pitch_dst, 

@@ -150,14 +150,14 @@ de::tf::cpu::Vec_transform(de::Vector& src, de::Vector& dst, de::Matrix& transfo
         const float* _loc_src_ptr = (float*)_src->Vec.ptr;
         float* _loc_dst_ptr = (float*)_dst->Vec.ptr;
         for (int i = 0; i < t1D.total_thread - 1; ++i) {
-            t1D._async_thread[i] = decx::cpu::register_task_default(kernel, _loc_src_ptr, _loc_dst_ptr,
+            t1D._async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(kernel, _loc_src_ptr, _loc_dst_ptr,
                 _tf_mat4_by_4, f_mgr.frag_len);
 
             _loc_src_ptr += f_mgr.frag_len * 4;
             _loc_dst_ptr += f_mgr.frag_len * 4;
         }
         size_t _L = f_mgr.is_left ? f_mgr.frag_left_over : f_mgr.frag_len;
-        t1D._async_thread[t1D.total_thread - 1] = decx::cpu::register_task_default(kernel, _loc_src_ptr, _loc_dst_ptr,
+        t1D._async_thread[t1D.total_thread - 1] = decx::cpu::RegisterTaskLoadBalanced(kernel, _loc_src_ptr, _loc_dst_ptr,
             _tf_mat4_by_4, _L);
     }
     else {

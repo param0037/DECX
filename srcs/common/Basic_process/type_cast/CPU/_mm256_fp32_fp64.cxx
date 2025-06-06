@@ -142,13 +142,13 @@ decx::type_cast::CPUK::_v256_cvtpd_ps2D(const double* __restrict        src,
 //         double* loc_dst = reinterpret_cast<double*>(dst);
 
 //         for (int i = 0; i < t1D.total_thread - 1; ++i) {
-//             t1D._async_thread[i] = decx::cpu::register_task_default( decx::type_cast::CPUK::_v256_cvtps_pd1D,
+//             t1D._async_thread[i] = decx::cpu::RegisterTaskLoadBalanced( decx::type_cast::CPUK::_v256_cvtps_pd1D,
 //                 loc_src, loc_dst, f_mgr.frag_len);
 //             loc_src += ((size_t)f_mgr.frag_len << 2);
 //             loc_dst += ((size_t)f_mgr.frag_len << 2);
 //         }
 //         const uint _L = f_mgr.is_left ? f_mgr.frag_left_over : f_mgr.frag_len;
-//         t1D._async_thread[t1D.total_thread - 1] = decx::cpu::register_task_default(
+//         t1D._async_thread[t1D.total_thread - 1] = decx::cpu::RegisterTaskLoadBalanced(
 //             decx::type_cast::CPUK::_v256_cvtps_pd1D, loc_src, loc_dst, _L);
 
 //         t1D.__sync_all_threads();
@@ -178,13 +178,13 @@ decx::type_cast::CPUK::_v256_cvtpd_ps2D(const double* __restrict        src,
 //         float* loc_dst = reinterpret_cast<float*>(dst);
 
 //         for (int i = 0; i < t1D.total_thread - 1; ++i) {
-//             t1D._async_thread[i] = decx::cpu::register_task_default( decx::type_cast::CPUK::_v256_cvtpd_ps1D,
+//             t1D._async_thread[i] = decx::cpu::RegisterTaskLoadBalanced( decx::type_cast::CPUK::_v256_cvtpd_ps1D,
 //                 loc_src, loc_dst, f_mgr.frag_len);
 //             loc_src += ((size_t)f_mgr.frag_len << 2);
 //             loc_dst += ((size_t)f_mgr.frag_len << 2);
 //         }
 //         const uint _L = f_mgr.is_left ? f_mgr.frag_left_over : f_mgr.frag_len;
-//         t1D._async_thread[t1D.total_thread - 1] = decx::cpu::register_task_default(
+//         t1D._async_thread[t1D.total_thread - 1] = decx::cpu::RegisterTaskLoadBalanced(
 //             decx::type_cast::CPUK::_v256_cvtpd_ps1D, loc_src, loc_dst, _L);
 
 //         t1D.__sync_all_threads();
@@ -216,13 +216,13 @@ decx::type_cast::CPUK::_v256_cvtpd_ps2D(const double* __restrict        src,
 //             frag_dst = Wdst * f_mgr.frag_len;
 
 //         for (int i = 0; i < t1D.total_thread - 1; ++i) {
-//             t1D._async_thread[i] = decx::cpu::register_task_default( decx::type_cast::CPUK::_v256_cvtps_pd2D,
+//             t1D._async_thread[i] = decx::cpu::RegisterTaskLoadBalanced( decx::type_cast::CPUK::_v256_cvtps_pd2D,
 //                 loc_src, loc_dst, make_uint2(proc_dims.x, f_mgr.frag_len), Wsrc, Wdst);
 //             loc_src += frag_src;
 //             loc_dst += frag_dst;
 //         }
 //         const uint _L = f_mgr.is_left ? f_mgr.frag_left_over : f_mgr.frag_len;
-//         t1D._async_thread[t1D.total_thread - 1] = decx::cpu::register_task_default(
+//         t1D._async_thread[t1D.total_thread - 1] = decx::cpu::RegisterTaskLoadBalanced(
 //             decx::type_cast::CPUK::_v256_cvtps_pd2D, loc_src, loc_dst, make_uint2(proc_dims.x, _L), Wsrc, Wdst);
 
 //         t1D.__sync_all_threads();
@@ -253,13 +253,13 @@ decx::type_cast::CPUK::_v256_cvtpd_ps2D(const double* __restrict        src,
 //             frag_dst = Wdst * f_mgr.frag_len;
 
 //         for (int i = 0; i < t1D.total_thread - 1; ++i) {
-//             t1D._async_thread[i] = decx::cpu::register_task_default( decx::type_cast::CPUK::_v256_cvtpd_ps2D,
+//             t1D._async_thread[i] = decx::cpu::RegisterTaskLoadBalanced( decx::type_cast::CPUK::_v256_cvtpd_ps2D,
 //                 loc_src, loc_dst, make_uint2(proc_dims.x, f_mgr.frag_len), Wsrc, Wdst);
 //             loc_src += frag_src;
 //             loc_dst += frag_dst;
 //         }
 //         const uint _L = f_mgr.is_left ? f_mgr.frag_left_over : f_mgr.frag_len;
-//         t1D._async_thread[t1D.total_thread - 1] = decx::cpu::register_task_default(
+//         t1D._async_thread[t1D.total_thread - 1] = decx::cpu::RegisterTaskLoadBalanced(
 //             decx::type_cast::CPUK::_v256_cvtpd_ps2D, loc_src, loc_dst, make_uint2(proc_dims.x, _L), Wsrc, Wdst);
 
 //         t1D.__sync_all_threads();

@@ -140,7 +140,7 @@ void decx::bp::_extend_reflect_b32_2D(const float* src, float* dst, const uint4 
         const uint2 proc_dims = make_uint2(Wsrc / _alignment, i == t1D.total_thread - 1 ?
                                                      fmgr_H.last_frag_len :
                                                      fmgr_H.frag_len);
-        t1D._async_thread[i] = decx::cpu::register_task_default(decx::bp::CPUK::_extend_H_reflect2D_b32,
+        t1D._async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(decx::bp::CPUK::_extend_H_reflect2D_b32,
             loc_src, buffer.GetRawPtr() + i * _buffer_frag_len, loc_dst, &b_rfct, Wsrc, Wdst, _actual_Wsrc, proc_dims);
 
         loc_src += fmgr_H.frag_len * Wsrc;
@@ -190,7 +190,7 @@ _extend_reflect_b64_2D(const double* src,           double* dst, const uint4 _ex
         const uint2 proc_dims = make_uint2(Wsrc / _alignment, i == t1D.total_thread - 1 ?
                                                      fmgr_H.last_frag_len :
                                                      fmgr_H.frag_len);
-        t1D._async_thread[i] = decx::cpu::register_task_default(decx::bp::CPUK::_extend_H_reflect2D_b64,
+        t1D._async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(decx::bp::CPUK::_extend_H_reflect2D_b64,
             loc_src, buffer.GetRawPtr() + i * _buffer_frag_len, loc_dst, &b_rfct, Wsrc, Wdst, _actual_Wsrc, proc_dims);
 
         loc_src += fmgr_H.frag_len * Wsrc;
@@ -233,7 +233,7 @@ void decx::bp::_extend_reflect_b8_2D(const uint8_t* src,    uint8_t* dst,
         const uint2 proc_dims = make_uint2(Wsrc / 16, i == t1D.total_thread - 1 ?
                                                      fmgr_H.last_frag_len :
                                                      fmgr_H.frag_len);
-        t1D._async_thread[i] = decx::cpu::register_task_default(decx::bp::CPUK::_extend_H_reflect2D_b8,
+        t1D._async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(decx::bp::CPUK::_extend_H_reflect2D_b8,
             loc_src, buffer.GetRawPtr() + i * _buffer_frag_len, loc_dst, &b_rfct, Wsrc, Wdst, _actual_Wsrc, proc_dims);
 
         loc_src += fmgr_H.frag_len * Wsrc;
@@ -276,7 +276,7 @@ void decx::bp::_extend_reflect_b16_2D(const uint16_t* src,      uint16_t* dst,
         const uint2 proc_dims = make_uint2(Wsrc / 8, i == t1D.total_thread - 1 ?
                                                      fmgr_H.last_frag_len :
                                                      fmgr_H.frag_len);
-        t1D._async_thread[i] = decx::cpu::register_task_default(decx::bp::CPUK::_extend_H_reflect2D_b16,
+        t1D._async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(decx::bp::CPUK::_extend_H_reflect2D_b16,
             loc_src, buffer.GetRawPtr() + i * _buffer_frag_len, loc_dst, &b_rfct, Wsrc, Wdst, _actual_Wsrc, proc_dims);
 
         loc_src += fmgr_H.frag_len * Wsrc;

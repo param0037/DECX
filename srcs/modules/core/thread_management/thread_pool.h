@@ -121,7 +121,7 @@ namespace decx {
 namespace cpu 
 {
     template <class FuncType, class ...Args>
-    static std::future<void> register_task_default(FuncType&& f, Args&& ...args)
+    static std::future<void> RegisterTaskLoadBalanced(FuncType&& f, Args&& ...args)
     {
         uint64_t id = decx::cpu::GetOptimalThreadID_Ranged(
             make_uint2(0, decx::utils::clamp_max<uint64_t>(decx::cpu::_get_permitted_concurrency(), decx::cpu::GetCurrentThreadNum())));

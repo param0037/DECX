@@ -272,14 +272,14 @@ decx::type_cast::_cvtf32_ui8_selector2D(const int32_t flag)
 //             frag_dst = Wdst * f_mgr.frag_len;
 
 //         for (int i = 0; i < t1D.total_thread - 1; ++i) {
-//             t1D._async_thread[i] = decx::cpu::register_task_default( decx::type_cast::CPUK::_v256_cvtui8_f32_2D,
+//             t1D._async_thread[i] = decx::cpu::RegisterTaskLoadBalanced( decx::type_cast::CPUK::_v256_cvtui8_f32_2D,
 //                 loc_src, loc_dst, make_uint2(proc_dims.x, f_mgr.frag_len), Wsrc, Wdst);
 
 //             loc_src += frag_src;
 //             loc_dst += frag_dst;
 //         }
 //         const uint _L = f_mgr.is_left ? f_mgr.frag_left_over : f_mgr.frag_len;
-//         t1D._async_thread[t1D.total_thread - 1] = decx::cpu::register_task_default( decx::type_cast::CPUK::_v256_cvtui8_f32_2D,
+//         t1D._async_thread[t1D.total_thread - 1] = decx::cpu::RegisterTaskLoadBalanced( decx::type_cast::CPUK::_v256_cvtui8_f32_2D,
 //             loc_src, loc_dst, make_uint2(proc_dims.x, _L), Wsrc, Wdst);
 
 //         t1D.__sync_all_threads();
@@ -332,14 +332,14 @@ decx::type_cast::_cvtf32_ui8_selector2D(const int32_t flag)
 
 
 //         for (int i = 0; i < t1D.total_thread - 1; ++i) {
-//             t1D._async_thread[i] = decx::cpu::register_task_default( exec_kernrel_ptr,
+//             t1D._async_thread[i] = decx::cpu::RegisterTaskLoadBalanced( exec_kernrel_ptr,
 //                 loc_src, loc_dst, make_uint2(proc_dims.x, f_mgr.frag_len), Wsrc, Wdst);
 
 //             loc_src += frag_src;
 //             loc_dst += frag_dst;
 //         }
 //         const uint _L = f_mgr.is_left ? f_mgr.frag_left_over : f_mgr.frag_len;
-//         t1D._async_thread[t1D.total_thread - 1] = decx::cpu::register_task_default( exec_kernrel_ptr,
+//         t1D._async_thread[t1D.total_thread - 1] = decx::cpu::RegisterTaskLoadBalanced( exec_kernrel_ptr,
 //             loc_src, loc_dst, make_uint2(proc_dims.x, _L), Wsrc, Wdst);
 
 //         t1D.__sync_all_threads();

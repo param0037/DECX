@@ -116,7 +116,7 @@ int32_t decx::utils::ConcurrentSplit::Process()
             break;
 
         case StreamThreadDispatchMethod_e::Dispatch_LoadBalanced:
-            info._future = decx::cpu::register_task_default(BranchFunctionByID, this, i);
+            info._future = decx::cpu::RegisterTaskLoadBalanced(BranchFunctionByID, this, i);
             break;
 
         case StreamThreadDispatchMethod_e::Dispatch_ByID:

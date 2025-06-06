@@ -569,7 +569,7 @@ void decx::vis::_bilateral_uint8_caller(const double*               src,
     uint64_t frag_dst = (uint64_t)f_mgr->frag_len * (uint64_t)Wdst * 2;
 
     for (int i = 0; i < t1D->total_thread - 1; ++i) {
-        t1D->_async_thread[i] = decx::cpu::register_task_default(decx::vis::_bilateral_uint8_ST,
+        t1D->_async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(decx::vis::_bilateral_uint8_ST,
             tmp_src_ptr, _exp_chart_dist, _exp_chart_diff, tmp_dst_ptr,
             make_uint2(proc_dim.x, f_mgr->frag_len), neighbor_dims, Wsrc, Wdst, reg_WL, _loop);
 
@@ -577,7 +577,7 @@ void decx::vis::_bilateral_uint8_caller(const double*               src,
         tmp_dst_ptr += frag_dst;
     }
     const uint32_t _L = f_mgr->is_left ? f_mgr->frag_left_over : f_mgr->frag_len;
-    t1D->_async_thread[t1D->total_thread - 1] = decx::cpu::register_task_default(decx::vis::_bilateral_uint8_ST,
+    t1D->_async_thread[t1D->total_thread - 1] = decx::cpu::RegisterTaskLoadBalanced(decx::vis::_bilateral_uint8_ST,
         tmp_src_ptr, _exp_chart_dist, _exp_chart_diff, tmp_dst_ptr,
         make_uint2(proc_dim.x, _L), neighbor_dims, Wsrc, Wdst, reg_WL, _loop);
 
@@ -607,7 +607,7 @@ void decx::vis::_bilateral_uchar4_caller(const float*               src,
     uint64_t frag_dst = (uint64_t)f_mgr->frag_len * (uint64_t)Wdst;
 
     for (int i = 0; i < t1D->total_thread - 1; ++i) {
-        t1D->_async_thread[i] = decx::cpu::register_task_default(decx::vis::_bilateral_uchar4_ST,
+        t1D->_async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(decx::vis::_bilateral_uchar4_ST,
             tmp_src_ptr, _exp_chart_dist, _exp_chart_diff, tmp_dst_ptr,
             make_uint2(proc_dim.x, f_mgr->frag_len), neighbor_dims, Wsrc, Wdst, reg_WL, _loop);
 
@@ -615,7 +615,7 @@ void decx::vis::_bilateral_uchar4_caller(const float*               src,
         tmp_dst_ptr += frag_dst;
     }
     const uint32_t _L = f_mgr->is_left ? f_mgr->frag_left_over : f_mgr->frag_len;
-    t1D->_async_thread[t1D->total_thread - 1] = decx::cpu::register_task_default(decx::vis::_bilateral_uchar4_ST,
+    t1D->_async_thread[t1D->total_thread - 1] = decx::cpu::RegisterTaskLoadBalanced(decx::vis::_bilateral_uchar4_ST,
         tmp_src_ptr, _exp_chart_dist, _exp_chart_diff, tmp_dst_ptr,
         make_uint2(proc_dim.x, _L), neighbor_dims, Wsrc, Wdst, reg_WL, _loop);
 

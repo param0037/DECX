@@ -125,14 +125,14 @@ static void decx::_cpy2D_anybit_caller(_T_ele* src, _T_ele* dst, const uint32_t 
     
     _T_ele* tmp_src = src, * tmp_dst = dst;
     for (int i = 0; i < conc_thr - 1; ++i) {
-        t1D._async_thread[i] = decx::cpu::register_task_default(decx::_cpy2D_plane<_T_ele>,
+        t1D._async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(decx::_cpy2D_plane<_T_ele>,
             tmp_src, tmp_dst, Wsrc, Wdst, make_uint2(cpy_area.x, f_mgr.frag_len));
 
         tmp_src += (uint64_t)Wsrc * (uint64_t)f_mgr.frag_len;
         tmp_dst += (uint64_t)Wdst * (uint64_t)f_mgr.frag_len;
     }
     const uint32_t _L = f_mgr.is_left ? f_mgr.frag_left_over : f_mgr.frag_len;
-    t1D._async_thread[conc_thr - 1] = decx::cpu::register_task_default(decx::_cpy2D_plane<_T_ele>,
+    t1D._async_thread[conc_thr - 1] = decx::cpu::RegisterTaskLoadBalanced(decx::_cpy2D_plane<_T_ele>,
         tmp_src, tmp_dst, Wsrc, Wdst, make_uint2(cpy_area.x, _L));
 
     for (int i = 0; i < conc_thr; ++i) {

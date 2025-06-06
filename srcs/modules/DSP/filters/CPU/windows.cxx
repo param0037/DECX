@@ -361,7 +361,7 @@ de::dsp::cpu::Gaussian_Window1D(de::Vector& src, de::Vector& dst, const float u,
         size_t _global_ptr_offset = 0;
 
         for (int i = 0; i < t1D.total_thread - 1; ++i) {
-            t1D._async_thread[i] = decx::cpu::register_task_default(
+            t1D._async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(
                 decx::dsp::CPUK::Gaussian_Window1D_cpl32,
                 _loc_src, _loc_dst, u, sigma,
                 f_mgr.frag_num, _src->length, _global_ptr_offset);
@@ -371,7 +371,7 @@ de::dsp::cpu::Gaussian_Window1D(de::Vector& src, de::Vector& dst, const float u,
             _loc_dst += _global_ptr_offset;
         }
         const size_t _L = f_mgr.is_left ? f_mgr.frag_left_over : f_mgr.frag_len;
-        t1D._async_thread[t1D.total_thread - 1] = decx::cpu::register_task_default(
+        t1D._async_thread[t1D.total_thread - 1] = decx::cpu::RegisterTaskLoadBalanced(
             decx::dsp::CPUK::Gaussian_Window1D_cpl32,
             _loc_src, _loc_dst, u, sigma,
             _L, _src->length, _global_ptr_offset);
@@ -414,7 +414,7 @@ de::dsp::cpu::Triangular_Window1D(de::Vector& src, de::Vector& dst, const long l
         size_t _global_ptr_offset = 0;
 
         for (int i = 0; i < t1D.total_thread - 1; ++i) {
-            t1D._async_thread[i] = decx::cpu::register_task_default(
+            t1D._async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(
                 decx::dsp::CPUK::Triangular_Window1D_cpl32,
                 _loc_src, _loc_dst, center, radius,
                 f_mgr.frag_num, _src->length, _global_ptr_offset);
@@ -424,7 +424,7 @@ de::dsp::cpu::Triangular_Window1D(de::Vector& src, de::Vector& dst, const long l
             _loc_dst += _global_ptr_offset;
         }
         const size_t _L = f_mgr.is_left ? f_mgr.frag_left_over : f_mgr.frag_len;
-        t1D._async_thread[t1D.total_thread - 1] = decx::cpu::register_task_default(
+        t1D._async_thread[t1D.total_thread - 1] = decx::cpu::RegisterTaskLoadBalanced(
             decx::dsp::CPUK::Triangular_Window1D_cpl32,
             _loc_src, _loc_dst, center, radius,
             _L, _src->length, _global_ptr_offset);
@@ -480,14 +480,14 @@ de::dsp::cpu::Gaussian_Window2D(de::Matrix& src, de::Matrix& dst, const de::Poin
 
         for (int i = 0; i < t1D.total_thread - 1; ++i) {
             if (_corrolated) {
-                t1D._async_thread[i] = decx::cpu::register_task_default( decx::dsp::CPUK::Gaussian_Window2D_cpl32,
+                t1D._async_thread[i] = decx::cpu::RegisterTaskLoadBalanced( decx::dsp::CPUK::Gaussian_Window2D_cpl32,
                     _loc_src, _loc_dst,
                     make_float2(u.x, u.y), make_float2(sigma.x, sigma.y), p,
                     _proc_dims, real_bound,
                     f_mgr.frag_len * i, pitch);
             }
             else {
-                t1D._async_thread[i] = decx::cpu::register_task_default( decx::dsp::CPUK::Gaussian_Window2D_cpl32_no_corrolation,
+                t1D._async_thread[i] = decx::cpu::RegisterTaskLoadBalanced( decx::dsp::CPUK::Gaussian_Window2D_cpl32_no_corrolation,
                     _loc_src, _loc_dst,
                     make_float2(u.x, u.y), make_float2(sigma.x, sigma.y),
                     _proc_dims, real_bound,
@@ -499,14 +499,14 @@ de::dsp::cpu::Gaussian_Window2D(de::Matrix& src, de::Matrix& dst, const de::Poin
         }
         _proc_dims.y = f_mgr.is_left ? f_mgr.frag_left_over : f_mgr.frag_len;
         if (_corrolated) {
-            t1D._async_thread[t1D.total_thread - 1] = decx::cpu::register_task_default( decx::dsp::CPUK::Gaussian_Window2D_cpl32,
+            t1D._async_thread[t1D.total_thread - 1] = decx::cpu::RegisterTaskLoadBalanced( decx::dsp::CPUK::Gaussian_Window2D_cpl32,
                 _loc_src, _loc_dst,
                 make_float2(u.x, u.y), make_float2(sigma.x, sigma.y), p,
                 _proc_dims, real_bound,
                 f_mgr.frag_len * (t1D.total_thread - 1), pitch);
         }
         else {
-            t1D._async_thread[t1D.total_thread - 1] = decx::cpu::register_task_default( decx::dsp::CPUK::Gaussian_Window2D_cpl32_no_corrolation,
+            t1D._async_thread[t1D.total_thread - 1] = decx::cpu::RegisterTaskLoadBalanced( decx::dsp::CPUK::Gaussian_Window2D_cpl32_no_corrolation,
                 _loc_src, _loc_dst,
                 make_float2(u.x, u.y), make_float2(sigma.x, sigma.y),
                 _proc_dims, real_bound,
@@ -562,7 +562,7 @@ de::dsp::cpu::Cone_Window2D(de::Matrix& src, de::Matrix& dst, const de::Point2D 
         double* _loc_dst = (double*)_dst->Mat;
 
         for (int i = 0; i < t1D.total_thread - 1; ++i) {
-            t1D._async_thread[i] = decx::cpu::register_task_default( decx::dsp::CPUK::Cone_Window2D_cpl32,
+            t1D._async_thread[i] = decx::cpu::RegisterTaskLoadBalanced( decx::dsp::CPUK::Cone_Window2D_cpl32,
                 _loc_src, _loc_dst, make_uint2(origin.x, origin.y), radius,
                 _proc_dims, real_bound,
                 f_mgr.frag_len * i, pitch);
@@ -571,7 +571,7 @@ de::dsp::cpu::Cone_Window2D(de::Matrix& src, de::Matrix& dst, const de::Point2D 
             _loc_dst += frag_size;
         }
         _proc_dims.y = f_mgr.is_left ? f_mgr.frag_left_over : f_mgr.frag_len;
-        t1D._async_thread[t1D.total_thread - 1] = decx::cpu::register_task_default( decx::dsp::CPUK::Cone_Window2D_cpl32,
+        t1D._async_thread[t1D.total_thread - 1] = decx::cpu::RegisterTaskLoadBalanced( decx::dsp::CPUK::Cone_Window2D_cpl32,
             _loc_src, _loc_dst, make_uint2(origin.x, origin.y), radius,
             _proc_dims, real_bound,
             f_mgr.frag_len * (t1D.total_thread - 1), pitch);

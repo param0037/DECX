@@ -84,7 +84,7 @@ void decx::blas::GEMM_fp32_caller(const float*                      A,
         {
             const auto* conf_ptr = &_thread_configs[t2D->thread_w * i + j];
 
-            t2D->_async_thread[t2D->thread_w * i + j] = decx::cpu::register_task_default(
+            t2D->_async_thread[t2D->thread_w * i + j] = decx::cpu::RegisterTaskLoadBalanced(
                 decx::blas::CPUK::GEMM_fp32_kernel<_ABC>, A_loc, B_loc, dst_loc, conf_ptr,
                 layout_A->pitch, conf_ptr->_fmgr_L.total, layout_dst->pitch, C_loc);
 
@@ -95,7 +95,7 @@ void decx::blas::GEMM_fp32_caller(const float*                      A,
 
         const auto* conf_ptr = &_thread_configs[t2D->thread_w * (i + 1) - 1];
 
-        t2D->_async_thread[t2D->thread_w * (i+1) - 1] = decx::cpu::register_task_default(
+        t2D->_async_thread[t2D->thread_w * (i+1) - 1] = decx::cpu::RegisterTaskLoadBalanced(
             decx::blas::CPUK::GEMM_fp32_kernel<_ABC>, A_loc, B_loc, dst_loc, conf_ptr,
             layout_A->pitch, conf_ptr->_fmgr_L.total, layout_dst->pitch, C_loc);
 

@@ -194,7 +194,7 @@ void decx::blas::matrix_B_arrange_cplxd(const de::CPd*                      src,
         loc_dst = dst + i * _fmgr_WH[1].frag_len * 4;
         for (uint32_t j = 0; j < t2D->thread_w - 1; ++j) 
         {
-            t2D->_async_thread[i * t2D->thread_w + j] = decx::cpu::register_task_default(
+            t2D->_async_thread[i * t2D->thread_w + j] = decx::cpu::RegisterTaskLoadBalanced(
                 decx::blas::CPUK::_matrix_B_arrange_cplxd_exec<2, 16>,
                 loc_src, loc_dst, proc_dims, pitchsrc_v1, Llen);
             loc_src += _fmgr_WH[0].frag_len * 2;
@@ -203,7 +203,7 @@ void decx::blas::matrix_B_arrange_cplxd(const de::CPd*                      src,
         const uint32_t _LW = _fmgr_WH[0].is_left ? _fmgr_WH[0].frag_left_over : _fmgr_WH[0].frag_len;
 
         proc_dims.x = _LW;
-        t2D->_async_thread[(i+1)*t2D->thread_w - 1] = decx::cpu::register_task_default(
+        t2D->_async_thread[(i+1)*t2D->thread_w - 1] = decx::cpu::RegisterTaskLoadBalanced(
             decx::blas::CPUK::_matrix_B_arrange_cplxd_exec<2, 16>,
             loc_src, loc_dst, proc_dims, pitchsrc_v1, Llen);
     }

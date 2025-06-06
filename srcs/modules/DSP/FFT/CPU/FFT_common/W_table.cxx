@@ -152,7 +152,7 @@ void decx::dsp::fft::Rotational_Factors_Table<float>::_generate_table(decx::util
     double* _loc_ptr_WT = (double*)this->_W_table;
     
     for (int i = 0; i < _f_mgr_WT.frag_num - 1; ++i) {
-        t1D->_async_thread[i] = decx::cpu::register_task_default(decx::dsp::fft::CPUK::_W_table_gen_cplxf, 
+        t1D->_async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(decx::dsp::fft::CPUK::_W_table_gen_cplxf, 
                                                                  _loc_ptr_WT,
                                                                  _f_mgr_WT.frag_len, 
                                                                  this->_actual_len, 
@@ -163,7 +163,7 @@ void decx::dsp::fft::Rotational_Factors_Table<float>::_generate_table(decx::util
     const uint32_t _L_WT = _f_mgr_WT.is_left ? _f_mgr_WT.frag_left_over : _f_mgr_WT.frag_len;
 
     t1D->_async_thread[_f_mgr_WT.frag_num - 1] = 
-        decx::cpu::register_task_default(decx::dsp::fft::CPUK::_W_table_gen_cplxf, 
+        decx::cpu::RegisterTaskLoadBalanced(decx::dsp::fft::CPUK::_W_table_gen_cplxf, 
                                          _loc_ptr_WT,
                                          _L_WT, 
                                          this->_actual_len, 
@@ -182,7 +182,7 @@ void decx::dsp::fft::Rotational_Factors_Table<double>::_generate_table(decx::uti
     de::CPd* _loc_ptr_WT = (de::CPd*)this->_W_table;
 
     for (int i = 0; i < _f_mgr_WT.frag_num - 1; ++i) {
-        t1D->_async_thread[i] = decx::cpu::register_task_default(decx::dsp::fft::CPUK::_W_table_gen_cplxd, 
+        t1D->_async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(decx::dsp::fft::CPUK::_W_table_gen_cplxd, 
                                                                  _loc_ptr_WT,
                                                                  _f_mgr_WT.frag_len, 
                                                                  this->_actual_len, 
@@ -193,7 +193,7 @@ void decx::dsp::fft::Rotational_Factors_Table<double>::_generate_table(decx::uti
     const uint32_t _L_WT = _f_mgr_WT.is_left ? _f_mgr_WT.frag_left_over : _f_mgr_WT.frag_len;
 
     t1D->_async_thread[_f_mgr_WT.frag_num - 1] = 
-        decx::cpu::register_task_default(decx::dsp::fft::CPUK::_W_table_gen_cplxd, 
+        decx::cpu::RegisterTaskLoadBalanced(decx::dsp::fft::CPUK::_W_table_gen_cplxd, 
                                          _loc_ptr_WT,
                                          _L_WT, 
                                          this->_actual_len, 

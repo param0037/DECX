@@ -72,7 +72,7 @@ public:
                     make_uint2(j < this->_thread_dist.x - 1 ? this->_fmgr_WH[0].frag_len : this->_fmgr_WH[0].last_frag_len,
                             i < this->_thread_dist.y - 1 ? this->_fmgr_WH[1].frag_len : this->_fmgr_WH[1].last_frag_len);
 
-                t1D->_async_thread[_thr_cnt] = decx::cpu::register_task_default(f, loc_ptr, proc_dims, pitch_v1, additional...);
+                t1D->_async_thread[_thr_cnt] = decx::cpu::RegisterTaskLoadBalanced(f, loc_ptr, proc_dims, pitch_v1, additional...);
                 
                 loc_ptr += this->_fmgr_WH[0].frag_len;
                 ++_thr_cnt;

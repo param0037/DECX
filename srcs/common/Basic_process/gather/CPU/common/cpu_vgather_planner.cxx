@@ -110,7 +110,7 @@ decx::cpu_VGT2D_planner::run(const _type_in* src,          const float2* map,
                 make_uint2(j < this->_thread_dist.x - 1 ? this->_fmgr_WH[0].frag_len : this->_fmgr_WH[0].last_frag_len,
                         i < this->_thread_dist.y - 1 ? this->_fmgr_WH[1].frag_len : this->_fmgr_WH[1].last_frag_len);
 
-            t1D->_async_thread[_thr_cnt] = decx::cpu::register_task_default(exec_ptr, src, map + dex_map, dst + dex_dst, 
+            t1D->_async_thread[_thr_cnt] = decx::cpu::RegisterTaskLoadBalanced(exec_ptr, src, map + dex_map, dst + dex_dst, 
                 proc_dims_v, this->_pitchsrc_v1, pitchmap_v1, pitchdst_v1, (uint8_t*)this->_addr_mgrs + _thr_cnt * addr_mgr_size);
             
             dex_map += this->_fmgr_WH[0].frag_len * this->_alignment;

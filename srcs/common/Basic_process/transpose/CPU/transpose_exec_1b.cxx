@@ -223,7 +223,7 @@ transpose_1b_caller(const uint64_t* src,
 
         for (uint32_t j = 0; j < this->_thread_dist2D.x; ++j)
         {
-            t1D->_async_thread[i * this->_thread_dist2D.x + j] = decx::cpu::register_task_default(
+            t1D->_async_thread[i * this->_thread_dist2D.x + j] = decx::cpu::RegisterTaskLoadBalanced(
                 decx::blas::CPUK::transpose_1b_kernel, src_loc, dst_loc,
                 &this->_blocking_configs[this->_thread_dist2D.x * i + j], pitchsrc_v8, pitchdst_v8);
 

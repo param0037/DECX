@@ -61,18 +61,18 @@ void decx::dot::_dot_fp32_1D_caller(const float* A, const float* B, const size_t
     if (fr_mgr.frag_left_over != 0) {
         const size_t proc_len = fr_mgr.frag_len * 8;
         for (int i = 0; i < conc_thr - 1; ++i) {
-            t1D._async_thread[i] = decx::cpu::register_task_default(
+            t1D._async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(
                 decx::dot::CPUK::_dot_vec8_fp32, tmp_A_ptr, tmp_B_ptr, proc_len / 8, res_arr + i);
             tmp_A_ptr += proc_len;
             tmp_B_ptr += proc_len;
         }
-        t1D._async_thread[conc_thr - 1] = decx::cpu::register_task_default(
+        t1D._async_thread[conc_thr - 1] = decx::cpu::RegisterTaskLoadBalanced(
             decx::dot::CPUK::_dot_vec8_fp32, tmp_A_ptr, tmp_B_ptr, fr_mgr.frag_left_over, res_arr + conc_thr - 1);
     }
     else {
         const size_t proc_len = fr_mgr.frag_len * 8;
         for (int i = 0; i < conc_thr; ++i) {
-            t1D._async_thread[i] = decx::cpu::register_task_default(
+            t1D._async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(
                 decx::dot::CPUK::_dot_vec8_fp32, tmp_A_ptr, tmp_B_ptr, proc_len / 8, res_arr + i);
             tmp_A_ptr += proc_len;
             tmp_B_ptr += proc_len;

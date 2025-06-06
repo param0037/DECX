@@ -146,7 +146,7 @@ public:
 
         for (int32_t i = 0; i < this->_thread_dist.y; ++i){
             for (int32_t j = 0; j < this->_thread_dist.x; ++j){
-                t1D->_async_thread[_thr_cnt] = decx::cpu::register_task_default(f, args.value(i, j)...);
+                t1D->_async_thread[_thr_cnt] = decx::cpu::RegisterTaskLoadBalanced(f, args.value(i, j)...);
                 ++_thr_cnt;
             }
         }
@@ -173,7 +173,7 @@ public:
 
                 uint2 proc_dims = this->get_proc_dims_v_by_id(i, j);
 
-                t1D->_async_thread[_thr_cnt] = decx::cpu::register_task_default(f, loc_src, loc_dst, proc_dims, Wsrc, Wdst, additional...);
+                t1D->_async_thread[_thr_cnt] = decx::cpu::RegisterTaskLoadBalanced(f, loc_src, loc_dst, proc_dims, Wsrc, Wdst, additional...);
                 
                 loc_src += this->_fmgr_WH[0].frag_len;
                 loc_dst += this->_fmgr_WH[0].frag_len;
@@ -201,7 +201,7 @@ public:
                     make_uint2(j < this->_thread_dist.x - 1 ? this->_fmgr_WH[0].frag_len : this->_fmgr_WH[0].last_frag_len,
                             i < this->_thread_dist.y - 1 ? this->_fmgr_WH[1].frag_len : this->_fmgr_WH[1].last_frag_len);
 
-                t1D->_async_thread[_thr_cnt] = decx::cpu::register_task_default(f, src1 + dex_src, src2 + dex_src, dst + dex_dst, proc_dims, 
+                t1D->_async_thread[_thr_cnt] = decx::cpu::RegisterTaskLoadBalanced(f, src1 + dex_src, src2 + dex_src, dst + dex_dst, proc_dims, 
                                     Wsrc, Wdst, additional...);
                 
                 dex_src += this->_fmgr_WH[0].frag_len;

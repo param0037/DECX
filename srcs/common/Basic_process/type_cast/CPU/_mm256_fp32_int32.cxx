@@ -75,12 +75,12 @@ decx::type_cast::CPUK::_v256_cvti32_ps(const int32_t* __restrict src, float* __r
 //         float* loc_dst = reinterpret_cast<float*>(dst);
 
 //         for (int i = 0; i < t1D.total_thread - 1; ++i) {
-//             t1D._async_thread[i] = decx::cpu::register_task_default( decx::type_cast::CPUK::_v256_cvtps_i32,
+//             t1D._async_thread[i] = decx::cpu::RegisterTaskLoadBalanced( decx::type_cast::CPUK::_v256_cvtps_i32,
 //                 loc_src, loc_dst, f_mgr.frag_len);
 //             loc_src += ((size_t)f_mgr.frag_len << 3);
 //             loc_dst += ((size_t)f_mgr.frag_len << 3);
 //         }
-//         t1D._async_thread[t1D.total_thread - 1] = decx::cpu::register_task_default(
+//         t1D._async_thread[t1D.total_thread - 1] = decx::cpu::RegisterTaskLoadBalanced(
 //             decx::type_cast::CPUK::_v256_cvtps_i32, loc_src, loc_dst, f_mgr.frag_len);
 
 //         t1D.__sync_all_threads();
@@ -110,12 +110,12 @@ decx::type_cast::CPUK::_v256_cvti32_ps(const int32_t* __restrict src, float* __r
 //         float* loc_dst = reinterpret_cast<float*>(dst);
 
 //         for (int i = 0; i < t1D.total_thread - 1; ++i) {
-//             t1D._async_thread[i] = decx::cpu::register_task_default( decx::type_cast::CPUK::_v256_cvti32_ps,
+//             t1D._async_thread[i] = decx::cpu::RegisterTaskLoadBalanced( decx::type_cast::CPUK::_v256_cvti32_ps,
 //                 loc_src, loc_dst, f_mgr.frag_len);
 //             loc_src += ((size_t)f_mgr.frag_len << 3);
 //             loc_dst += ((size_t)f_mgr.frag_len << 3);
 //         }
-//         t1D._async_thread[t1D.total_thread - 1] = decx::cpu::register_task_default(
+//         t1D._async_thread[t1D.total_thread - 1] = decx::cpu::RegisterTaskLoadBalanced(
 //             decx::type_cast::CPUK::_v256_cvti32_ps, loc_src, loc_dst, f_mgr.frag_len);
 
 //         t1D.__sync_all_threads();

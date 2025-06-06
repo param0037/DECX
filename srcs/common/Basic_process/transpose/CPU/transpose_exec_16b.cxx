@@ -248,7 +248,7 @@ transpose_16b_caller(const de::CPd* src,
 
         for (uint32_t j = 0; j < this->_thread_dist2D.x; ++j)
         {
-            t1D->_async_thread[i * this->_thread_dist2D.x + j] = decx::cpu::register_task_default(
+            t1D->_async_thread[i * this->_thread_dist2D.x + j] = decx::cpu::RegisterTaskLoadBalanced(
                 decx::blas::CPUK::transpose_16b_kernel, src_loc, dst_loc,
                 &this->_blocking_configs[this->_thread_dist2D.x * i + j], pitchsrc_v1, pitchdst_v1);
             
@@ -280,7 +280,7 @@ transpose_16b_MC_caller(const de::CPd* src,
 
         for (uint32_t j = 0; j < this->_thread_dist2D.x; ++j)
         {
-            t1D->_async_thread[i * this->_thread_dist2D.x + j] = decx::cpu::register_task_default(
+            t1D->_async_thread[i * this->_thread_dist2D.x + j] = decx::cpu::RegisterTaskLoadBalanced(
                 decx::blas::CPUK::transpose_16b_kernel_MC, src_loc, dst_loc,
                 &this->_blocking_configs[this->_thread_dist2D.x * i + j], 
                 pitchsrc_v1, pitchdst_v1, ch_num, gch_src_v1, gch_dst_v1);
@@ -307,7 +307,7 @@ transpose_16b_caller(const de::CPd* src,              de::CPd* dst,
         de::CPd* dst_loc = dst;
         for (uint32_t i = 0; i < _conc - 1; ++i) 
         {
-            t1D->_async_thread[i] = decx::cpu::register_task_default(
+            t1D->_async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(
                 decx::blas::CPUK::transpose_16b_kernel_MC, src_loc, dst_loc,
                 &this->_blocking_conf, pitchsrc_v1, pitchdst_v1, 
                 this->_fmgr_ch.frag_len, this->_ch_gap_src, this->_ch_gap_dst);
@@ -315,7 +315,7 @@ transpose_16b_caller(const de::CPd* src,              de::CPd* dst,
             src_loc += this->_fmgr_ch.frag_len * this->_ch_gap_src;
             dst_loc += this->_fmgr_ch.frag_len * this->_ch_gap_dst;
         }
-        t1D->_async_thread[_conc - 1] = decx::cpu::register_task_default(
+        t1D->_async_thread[_conc - 1] = decx::cpu::RegisterTaskLoadBalanced(
             decx::blas::CPUK::transpose_16b_kernel_MC, src_loc, dst_loc,
             &this->_blocking_conf, pitchsrc_v1, pitchdst_v1,
             this->_fmgr_ch.last_frag_len, this->_ch_gap_src, this->_ch_gap_dst);

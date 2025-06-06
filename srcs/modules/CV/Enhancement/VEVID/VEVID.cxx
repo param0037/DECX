@@ -68,14 +68,14 @@ void decx::vis::VEVID_u8_caller(const double* src,
     const double* _loc_src = src;
     float* _loc_dst = dst;
     for (uint32_t i = 0; i < t1D.total_thread - 1; ++i) {
-        t1D._async_thread[i] = decx::cpu::register_task_default(decx::vis::CPUK::_VEVID_u8_kernel,
+        t1D._async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(decx::vis::CPUK::_VEVID_u8_kernel,
             _loc_src, _loc_dst, pitchsrc_v8, pitchdst_v1, f_mgr.frag_len, _phase_gain, _original_gain);
 
         _loc_src += pitchsrc_v8 * f_mgr.frag_len;
         _loc_dst += pitchdst_v1 * f_mgr.frag_len;
     }
     const uint32_t _L = f_mgr.is_left ? f_mgr.frag_left_over : f_mgr.frag_len;
-    t1D._async_thread[t1D.total_thread - 1] = decx::cpu::register_task_default(decx::vis::CPUK::_VEVID_u8_kernel,
+    t1D._async_thread[t1D.total_thread - 1] = decx::cpu::RegisterTaskLoadBalanced(decx::vis::CPUK::_VEVID_u8_kernel,
         _loc_src, _loc_dst, pitchsrc_v8, pitchdst_v1, _L, _phase_gain, _original_gain);
 
     t1D.__sync_all_threads();

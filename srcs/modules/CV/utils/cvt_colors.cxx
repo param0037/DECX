@@ -453,7 +453,7 @@ void decx::vis::_channel_ops_UC42UC_caller(decx::vis::channel_ops_kernel kernel,
              offset_dst = 0;
 
     for (int i = 0; i < t1D.total_thread - 1; ++i) {
-        t1D._async_thread[i] = decx::cpu::register_task_default(kernel, src + offset_src, dst + offset_dst, sub_dims,
+        t1D._async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(kernel, src + offset_src, dst + offset_dst, sub_dims,
             pitchsrc, pitchdst);
         offset_src += fragment_src;
         offset_dst += fragment_dst;
@@ -461,7 +461,7 @@ void decx::vis::_channel_ops_UC42UC_caller(decx::vis::channel_ops_kernel kernel,
 
     sub_dims.y = f_mgr.is_left ? f_mgr.frag_left_over : f_mgr.frag_len;
     t1D._async_thread[decx::cpu::_get_permitted_concurrency() - 1] =
-        decx::cpu::register_task_default(kernel, src + offset_src, dst + offset_dst, sub_dims,
+        decx::cpu::RegisterTaskLoadBalanced(kernel, src + offset_src, dst + offset_dst, sub_dims,
             pitchsrc, pitchdst);
 
     t1D.__sync_all_threads();
@@ -485,7 +485,7 @@ void decx::vis::_channel_ops_UC42UC4_caller(decx::vis::channel_ops_kernel kernel
              offset_dst = 0;
 
     for (int i = 0; i < t1D.total_thread - 1; ++i) {
-        t1D._async_thread[i] = decx::cpu::register_task_default(kernel, src + offset_src, dst + offset_dst, sub_dims,
+        t1D._async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(kernel, src + offset_src, dst + offset_dst, sub_dims,
             pitchsrc, pitchdst);
         offset_src += fragment_src;
         offset_dst += fragment_dst;
@@ -493,7 +493,7 @@ void decx::vis::_channel_ops_UC42UC4_caller(decx::vis::channel_ops_kernel kernel
 
     sub_dims.y = f_mgr.is_left ? f_mgr.frag_left_over : f_mgr.frag_len;
     t1D._async_thread[decx::cpu::_get_permitted_concurrency() - 1] =
-        decx::cpu::register_task_default(kernel, src + offset_src, dst + offset_dst, sub_dims,
+        decx::cpu::RegisterTaskLoadBalanced(kernel, src + offset_src, dst + offset_dst, sub_dims,
             pitchsrc, pitchdst);
 
     t1D.__sync_all_threads();

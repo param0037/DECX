@@ -56,7 +56,7 @@ filter2D_NB_fp32(decx::_Matrix* src,
         {
             const auto* thread_block = &this->_blocking_confs[i * t2D->thread_w + j];
             t2D->_async_thread[i * t2D->thread_w + j] =
-                decx::cpu::register_task_default(decx::dsp::CPUK::conv2_fp32_kernel,
+                decx::cpu::RegisterTaskLoadBalanced(decx::dsp::CPUK::conv2_fp32_kernel,
                     src_loc, (float*)kernel->Mat,
                     dst_loc, make_uint2(kernel->Width(), kernel->Height()),
                     thread_block, src->Pitch(),
@@ -110,7 +110,7 @@ decx::dsp::cpu_Filter2D_planner<float>::filter2D_B_fp32(decx::_Matrix* src,
         {
             const auto* thread_block = &this->_blocking_confs[i * t2D->thread_w + j];
             t2D->_async_thread[i * t2D->thread_w + j] =
-                decx::cpu::register_task_default(_kernel_ptr,
+                decx::cpu::RegisterTaskLoadBalanced(_kernel_ptr,
                     src_loc,            (float*)kernel->Mat,
                     dst_loc,            make_uint2(kernel->Width(), kernel->Height()),
                     thread_block,       this->_ext_src.GetDims().x,

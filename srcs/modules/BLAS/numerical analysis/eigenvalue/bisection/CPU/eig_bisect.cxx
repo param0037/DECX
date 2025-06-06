@@ -99,7 +99,7 @@ void decx::blas::cpu_eig_bisection<_data_type>::extract_diagonal(const _data_typ
 
         const uint32_t proc_len = this->_diag_extractor.get_proc_len_by_id(i);
         
-        t1D->_async_thread[i] = decx::cpu::register_task_default(f, loc_ptr, p_diag, p_off_diag, proc_len, this->_layout.pitch);
+        t1D->_async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(f, loc_ptr, p_diag, p_off_diag, proc_len, this->_layout.pitch);
 
         loc_ptr += (this->_layout.pitch + 1) * frag_len;
         p_diag += frag_len;

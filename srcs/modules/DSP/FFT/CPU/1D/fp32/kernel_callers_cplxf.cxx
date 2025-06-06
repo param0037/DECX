@@ -320,7 +320,7 @@ void decx::dsp::fft::_FFT1D_cplxf32_1st(const _type_in* __restrict						src,
 	const decx::utils::frag_manager* _f_mgr = _inner_FFT_info->get_thread_patching();
 
 	for (uint32_t i = 0; i < t1D->total_thread - 1; ++i) {
-		t1D->_async_thread[i] = decx::cpu::register_task_default(decx::dsp::fft::CPUK::_FFT1D_smaller_1st_cplxf32<_IFFT, _type_in>,
+		t1D->_async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(decx::dsp::fft::CPUK::_FFT1D_smaller_1st_cplxf32<_IFFT, _type_in>,
 			_src_ptr,											_dst_ptr,
 			_FFT_frame->get_tile_ptr(i),
 			_FFT_frame->get_signal_len(),						_inner_FFT_info,
@@ -331,7 +331,7 @@ void decx::dsp::fft::_FFT1D_cplxf32_1st(const _type_in* __restrict						src,
 		_dst_ptr += _f_mgr->frag_len * _inner_FFT_info->get_signal_len();
 	}
 	uint32_t _L_FFT_smaller_num = _f_mgr->is_left ? _f_mgr->frag_left_over : _f_mgr->frag_len;
-	t1D->_async_thread[t1D->total_thread - 1] = decx::cpu::register_task_default(decx::dsp::fft::CPUK::_FFT1D_smaller_1st_cplxf32<_IFFT, _type_in>,
+	t1D->_async_thread[t1D->total_thread - 1] = decx::cpu::RegisterTaskLoadBalanced(decx::dsp::fft::CPUK::_FFT1D_smaller_1st_cplxf32<_IFFT, _type_in>,
 		_src_ptr,																_dst_ptr,
 		_FFT_frame->get_tile_ptr(t1D->total_thread - 1),
 		_FFT_frame->get_signal_len(),											_inner_FFT_info,
@@ -371,7 +371,7 @@ void decx::dsp::fft::_FFT1D_cplxf32_mid(const de::CPf* __restrict							src,
 	const decx::utils::frag_manager* _f_mgr = _inner_FFT_info->get_thread_patching();
 	
 	for (uint32_t i = 0; i < t1D->total_thread - 1; ++i) {
-		t1D->_async_thread[i] = decx::cpu::register_task_default(decx::dsp::fft::CPUK::_FFT1D_smaller_mid_cplxf32_C2C<_type_out, _conj>,
+		t1D->_async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(decx::dsp::fft::CPUK::_FFT1D_smaller_mid_cplxf32_C2C<_type_out, _conj>,
 			_src_ptr,											_dst_ptr,
 			_FFT_frame->get_tile_ptr(i)->get_tile1<void>(),		_FFT_frame->get_tile_ptr(i)->get_tile2<void>(),
 			_outer_kernel_info,									_inner_FFT_info,
@@ -382,7 +382,7 @@ void decx::dsp::fft::_FFT1D_cplxf32_mid(const de::CPf* __restrict							src,
 		_dst_ptr += _f_mgr->frag_len;
 	}
 	const uint32_t _L_FFT_smaller_num = _f_mgr->is_left ? _f_mgr->frag_left_over : _f_mgr->frag_len;
-	t1D->_async_thread[t1D->total_thread - 1] = decx::cpu::register_task_default(decx::dsp::fft::CPUK::_FFT1D_smaller_mid_cplxf32_C2C<_type_out, _conj>,
+	t1D->_async_thread[t1D->total_thread - 1] = decx::cpu::RegisterTaskLoadBalanced(decx::dsp::fft::CPUK::_FFT1D_smaller_mid_cplxf32_C2C<_type_out, _conj>,
 		_src_ptr,																_dst_ptr,
 		_FFT_frame->get_tile_ptr(t1D->total_thread - 1)->get_tile1<void>(),		_FFT_frame->get_tile_ptr(t1D->total_thread - 1)->get_tile2<void>(),
 		_outer_kernel_info,														_inner_FFT_info,

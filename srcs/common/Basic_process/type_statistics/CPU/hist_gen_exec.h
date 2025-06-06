@@ -103,7 +103,7 @@ namespace decx
 //        uint64_t* loc_hist = _hist_for_threads.ptr;
 //
 //        for (int thread_id = 0; thread_id < t1D.total_thread - 1; ++thread_id) {
-//            t1D._async_thread[thread_id] = decx::cpu::register_task_default(decx::bp::CPUK::_histgen2D_u8,
+//            t1D._async_thread[thread_id] = decx::cpu::RegisterTaskLoadBalanced(decx::bp::CPUK::_histgen2D_u8,
 //                loc_src, loc_hist,
 //                make_uint2(proc_dims.x, f_mgr.frag_len), Wsrc,
 //                _mask);
@@ -112,7 +112,7 @@ namespace decx
 //            loc_hist += 256 * 4;
 //        }
 //        const uint32_t _L = f_mgr.is_left ? f_mgr.frag_left_over : f_mgr.frag_len;
-//        t1D._async_thread[t1D.total_thread - 1] = decx::cpu::register_task_default(decx::bp::CPUK::_histgen2D_u8,
+//        t1D._async_thread[t1D.total_thread - 1] = decx::cpu::RegisterTaskLoadBalanced(decx::bp::CPUK::_histgen2D_u8,
 //            loc_src, loc_hist,
 //            make_uint2(proc_dims.x, _L), Wsrc,
 //            _mask);
@@ -158,7 +158,7 @@ static void decx::bp::_histgen2D_u8_u64_caller(const uint8_t* src, uint64_t* his
     uint64_t* loc_hist = _hist_for_threads.ptr;
 
     for (int thread_id = 0; thread_id < t1D.total_thread - 1; ++thread_id) {
-        t1D._async_thread[thread_id] = decx::cpu::register_task_default(decx::bp::CPUK::_histgen2D_u8_u64,
+        t1D._async_thread[thread_id] = decx::cpu::RegisterTaskLoadBalanced(decx::bp::CPUK::_histgen2D_u8_u64,
             loc_src, loc_hist,
             make_uint2(proc_dims.x, f_mgr.frag_len), Wsrc,
             _leagal_space_v4);
@@ -167,7 +167,7 @@ static void decx::bp::_histgen2D_u8_u64_caller(const uint8_t* src, uint64_t* his
         loc_hist += 256;
     }
     const uint32_t _L = f_mgr.is_left ? f_mgr.frag_left_over : f_mgr.frag_len;
-    t1D._async_thread[t1D.total_thread - 1] = decx::cpu::register_task_default(decx::bp::CPUK::_histgen2D_u8_u64,
+    t1D._async_thread[t1D.total_thread - 1] = decx::cpu::RegisterTaskLoadBalanced(decx::bp::CPUK::_histgen2D_u8_u64,
         loc_src, loc_hist,
         make_uint2(proc_dims.x, _L), Wsrc,
         _leagal_space_v4);
