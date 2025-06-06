@@ -1,7 +1,7 @@
 #include "pipeline.h"
 #include "nodes/task_node.h"
 #include <basic.h>
-
+#include <thread_management/thread_pool.h>
 
 #define MODULE_TAG "Pipeline"
 
@@ -61,6 +61,12 @@ int32_t predicator_func1(const void* in, int32_t* p_slot_idx)
 }
 
 
+void test_thread_func()
+{
+    DECX_LOG_INFO("test_thread_funcis called");
+}
+
+
 _DECX_API_ void pipeline_ut()
 {
     decx::utils::Pipeline pipeline;
@@ -82,6 +88,9 @@ _DECX_API_ void pipeline_ut()
     predicator1->SetPredicatedData(&node_param, sizeof(node_proc_params_t));
     predicator1->PredicatorRegister(predicator_func1);
 
+    decx::utils::ConcurrentSplit* conc_split = new decx::utils::ConcurrentSplit("conc_split");
+    decx::utils::Synchronize* sync = new decx::utils::Synchronize("sync");
+
     decx::utils::TaskNode* node_branch1 = new decx::utils::TaskNode("node_branch_1");
     node_branch1->NodeTaskRegister(node_func_branch1);
     // node1->SetInputData(&node_param, sizeof(node_proc_params_t), true, de::GetLastError());
@@ -90,9 +99,18 @@ _DECX_API_ void pipeline_ut()
     node_branch2->NodeTaskRegister(node_func_branch2);
     // node2->SetInputData(&node_param, sizeof(node_proc_params_t), true, de::GetLastError());
 
-    pipeline.Link({node1, node2, predicator1});
-    pipeline.AddBranch(predicator1, {node_branch1});
-    pipeline.AddBranch(predicator1, {node_branch2});
+    // pipeline.LinkNodes({node1, node2, predicator1});
+    // pipeline.LinkBranch(predicator1, {node_branch1});
+    // pipeline.LinkBranch(predicator1, {node_branch2});
+
+    pipeline.LinkNodes({node1, node2, conc_split});
+    pipeline.LinkStream(conc_split, {node_branch1}, sync);
+    pipeline.LinkStream(conc_split, {node_branch2}, sync);
+
+    // std::future<void> fut = decx::cpu::RegisterTaskAppened(test_thread_func);
+    // std::future<void> fut_copy;
+    // memcpy(&fut_copy, &fut, sizeof(std::future<void>));
+    // fut_copy.get();
 
     pipeline.Run();
 }

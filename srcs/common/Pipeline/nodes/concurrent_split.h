@@ -28,64 +28,63 @@
 * DEALINGS IN THE SOFTWARE.
 */
 
+#ifndef _CONCURRENT_SPLIT_H_
+#define _CONCURRENT_SPLIT_H_
+
 #include "node_base.h"
-#include <string.h>
+#include <thread_management/thread_pool.h>
 
-#define MODULE_TAG "Pipeline"
-
-decx::utils::NodeBase::NodeBase()
+namespace decx
 {
-    memset(this->_name, 0, NODE_NAME_MAX_LENGTH);
-    this->_prev = nullptr;
-    this->_next = nullptr;
+namespace utils
+{
+    class ConcurrentSplit;
+    class Synchronize;
 
-    this->_node_type = NodeTypes_e::NodeType_Base;
+    enum class StreamThreadDispatchMethod_e
+    {
+        Dispatch_NewSlot = 0,
+        Dispatch_LoadBalanced = 1,
+        Dispatch_ByID = 2,
+    };
+
+    struct StreamHeaderInfo_t
+    {
+        decx::utils::NodeBase*       _p_stream_head;
+        int32_t                      _thread_id;
+        decx::utils::Synchronize*    _p_sync;
+        std::future<void>            _future;
+        StreamThreadDispatchMethod_e _dispatch_method;
+    };
+}
 }
 
+#define MAX_CONCURRENT_BRANCHS_NUM 64
 
-decx::utils::NodeBase::NodeBase(const char* node_name)
+class decx::utils::ConcurrentSplit : public decx::utils::NodeBase
 {
-    this->_prev = nullptr;
-    this->_next = nullptr;
-    memset(this->_name, 0, NODE_NAME_MAX_LENGTH);
-    strcpy(this->_name, node_name);
-    this->_node_type = NodeTypes_e::NodeType_Base;
-}
+private:
+    decx::utils::StreamHeaderInfo_t _header_info_arr[MAX_CONCURRENT_BRANCHS_NUM];
+    uint32_t _branch_num;
+
+    static _THREAD_FUNCTION_ void BranchFunctionByID(decx::utils::ConcurrentSplit* _fake_this, const uint32_t branch_id);
+
+public:
+    ConcurrentSplit();
 
 
-int32_t decx::utils::NodeBase::Process()
-{
-    return 0;
-}
+    ConcurrentSplit(const char* node_name);
 
 
-decx::utils::NodeBase::~NodeBase()
-{
-    return;
-}
+    decx::utils::StreamHeaderInfo_t* GetStreamInfoByID(const uint32_t id);
+    decx::utils::StreamHeaderInfo_t* GetStreamInfoByStreamHeader(const decx::utils::NodeBase* p_stream_header);
 
 
-int32_t decx::utils::NodeBase::SetUpStreamNode(decx::utils::NodeBase* p_prev)
-{
-    this->_prev = p_prev;
-    return 0;
-}
+    int32_t RegisterBranchHead(decx::utils::NodeBase* p_conc_split, const StreamThreadDispatchMethod_e method = StreamThreadDispatchMethod_e::Dispatch_NewSlot,
+        const int32_t slot_id = 0);
 
 
-const char* decx::utils::NodeBase::GetNodeName() const
-{
-    return this->_name;
-}
+    virtual int32_t Process() override;
+};
 
-
-decx::utils::NodeTypes_e decx::utils::NodeBase::GetNodeType() const
-{
-    return this->_node_type;
-}
-
-
-int32_t decx::utils::NodeBase::SetDownStreamNode(decx::utils::NodeBase* p_next)
-{
-    this->_next = p_next;
-    return 0;
-}
+#endif

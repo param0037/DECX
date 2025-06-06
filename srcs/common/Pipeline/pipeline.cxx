@@ -38,7 +38,7 @@ decx::utils::Pipeline::Pipeline()
 }
 
 
-int32_t decx::utils::Pipeline::Link(std::initializer_list<decx::utils::NodeBase*> nodes)
+int32_t decx::utils::Pipeline::LinkNodes(std::initializer_list<decx::utils::NodeBase*> nodes)
 {
     int32_t idx = 0;
     int32_t rval = 0;
@@ -90,7 +90,7 @@ int32_t decx::utils::Pipeline::Run()
 }
 
 
-int32_t decx::utils::Pipeline::AddBranch(decx::utils::BranchSplit* branch_split, std::initializer_list<decx::utils::NodeBase*> branch)
+int32_t decx::utils::Pipeline::LinkBranch(decx::utils::BranchSplit* branch_split, std::initializer_list<decx::utils::NodeBase*> branch)
 {
     if (branch_split == nullptr){
         DECX_LOG_ERR("Failed to add branch, since the branch header is NULL");
@@ -107,10 +107,6 @@ int32_t decx::utils::Pipeline::AddBranch(decx::utils::BranchSplit* branch_split,
     rval |= (*_branch_starter)->SetUpStreamNode(branch_split);
 
     rval |= branch_split->RegisterBranchHead(*_branch_starter);
-
-    // if (this->NodeFinder(branch_split, nullptr) == 0){
-    //     this->_node_ptr_arr.emplace_back(branch_split);
-    // }
 
     int32_t idx = 0;
     for (auto* p_branch_node = branch.begin(); p_branch_node != branch.end(); ++p_branch_node)
@@ -129,5 +125,49 @@ int32_t decx::utils::Pipeline::AddBranch(decx::utils::BranchSplit* branch_split,
         // Emplace back the node pointer
         this->_node_ptr_arr.emplace_back(*p_branch_node);
     }
+    return rval;
+}
+
+
+int32_t 
+decx::utils::Pipeline::LinkStream(decx::utils::ConcurrentSplit* conc_split, 
+                                  std::initializer_list<decx::utils::NodeBase*> stream_nodes, 
+                                  decx::utils::Synchronize* backend_sync)
+{
+    if (conc_split == nullptr || backend_sync == nullptr){
+        DECX_LOG_ERR("Failed to add branch, neither conc_split nor sync can be NULL");
+        return -1;
+    }
+    if (stream_nodes.size() == 0){
+        return 0;
+    }
+    int32_t rval = 0;
+
+    auto* p_stream_head = *(stream_nodes.begin());
+    rval |= conc_split->RegisterBranchHead(p_stream_head);
+    rval |= conc_split->SetDownStreamNode(backend_sync);
+
+    int32_t idx = 0;
+    auto* p_branch_node = stream_nodes.begin();
+    for (; p_branch_node != stream_nodes.end(); ++p_branch_node)
+    {
+        decx::utils::NodeBase* p_next_node = nullptr;
+        if (idx < stream_nodes.size() - 1){
+            p_next_node = *(p_branch_node + 1);
+        }
+        decx::utils::NodeBase* p_prev_node = nullptr;
+        if (idx > 0){
+            p_prev_node = *(p_branch_node - 1);
+        }
+        if (idx == stream_nodes.size() - 1){
+            rval |= (*p_branch_node)->SetDownStreamNode(backend_sync);
+        }
+        rval |= (*p_branch_node)->SetUpStreamNode(p_prev_node);
+        rval |= (*p_branch_node)->SetDownStreamNode(p_next_node);
+        // Emplace back the node pointer
+        this->_node_ptr_arr.emplace_back(*p_branch_node);
+    }
+    rval |= backend_sync->RegisterOneStream(conc_split, p_stream_head);
+
     return rval;
 }

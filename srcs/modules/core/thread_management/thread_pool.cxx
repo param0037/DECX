@@ -133,7 +133,6 @@ decx::ThreadPool::ThreadPool(const int thread_num, const bool start_at_begin)
     this->_all_shutdown = true;
     this->_max_thr_num = MAX_THREAD_NUM;
     this->current_thread_num = thread_num;
-    DECX_LOG_NOTICE("%d threads initialized", this->current_thread_num);
 
     this->_hardware_concurrent = std::thread::hardware_concurrency();
 

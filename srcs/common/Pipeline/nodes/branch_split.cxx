@@ -57,16 +57,28 @@ int32_t decx::utils::BranchSplit::AllocateNodeBufData(de::DH* handle)
 }
 
 
+decx::utils::NodeBase* decx::utils::NodeBase::GetNextNodeBasePtr()
+{
+    return this->_next;
+}
+
+
+decx::utils::NodeBase* decx::utils::NodeBase::GetPrevNodeBasePtr()
+{
+    return this->_prev;
+}
+
+
 int32_t decx::utils::BranchSplit::SetPredicatedData(void* p_data, const uint64_t size, const bool use_buitin_buffer, de::DH* handle)
 {
     if (use_buitin_buffer) {
         this->AllocateNodeBufData(handle);
         if (p_data == nullptr){
-            DECX_LOG_ERR("Failed to set predicated data since its pointer is NULL");
+            DECX_LOG_ERR("%s: failed to set predicated data since its pointer is NULL", this->_name);
             return -1;
         }
         if (size > PREDICATED_DATA_MAX_LENGTH){
-            DECX_LOG_ERR("Failed to set predicated data since it is oversized");
+            DECX_LOG_ERR("%s: failed to set predicated data since it is oversized", this->_name);
             return -1;
         }
         this->_data_in = (void*)this->_node_data_buf;

@@ -86,10 +86,20 @@ public:
     NodeBase(const char* node_name);
 
 
+    NodeTypes_e GetNodeType() const;
+
+
+    const char* GetNodeName() const;
+
+
     int32_t SetUpStreamNode(decx::utils::NodeBase* p_prev);
 
     
     int32_t SetDownStreamNode(decx::utils::NodeBase* p_next);
+
+
+    decx::utils::NodeBase* GetNextNodeBasePtr();
+    decx::utils::NodeBase* GetPrevNodeBasePtr();
 
 
     virtual int32_t Process();

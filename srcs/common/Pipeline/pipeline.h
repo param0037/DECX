@@ -34,6 +34,8 @@
 #include <basic.h>
 #include "nodes/node_base.h"
 #include "nodes/branch_split.h"
+#include "nodes/concurrent_split.h"
+#include "nodes/synchronize.h"
 #include <Array/Dynamic_Array.h>
 #include <thread_management/thread_arrange.h>
 
@@ -60,10 +62,14 @@ public:
     Pipeline();
 
 
-    int32_t Link(std::initializer_list<decx::utils::NodeBase*> node_ptrs);
+    int32_t LinkNodes(std::initializer_list<decx::utils::NodeBase*> node_ptrs);
 
 
-    int32_t AddBranch(decx::utils::BranchSplit* branch_split, std::initializer_list<decx::utils::NodeBase*> branch);
+    int32_t LinkBranch(decx::utils::BranchSplit* branch_split, std::initializer_list<decx::utils::NodeBase*> branch);
+
+
+    int32_t LinkStream(decx::utils::ConcurrentSplit* conc_split, std::initializer_list<decx::utils::NodeBase*> stream_nodes, 
+        decx::utils::Synchronize* backend_sync);
 
 
     int32_t Run();

@@ -28,64 +28,37 @@
 * DEALINGS IN THE SOFTWARE.
 */
 
+#ifndef _SYNCHRONIZE_H_
+#define _SYNCHRONIZE_H_
+
 #include "node_base.h"
-#include <string.h>
+#include "concurrent_split.h"
 
-#define MODULE_TAG "Pipeline"
-
-decx::utils::NodeBase::NodeBase()
+namespace decx
 {
-    memset(this->_name, 0, NODE_NAME_MAX_LENGTH);
-    this->_prev = nullptr;
-    this->_next = nullptr;
-
-    this->_node_type = NodeTypes_e::NodeType_Base;
+namespace utils
+{
+    class Synchronize;
+}
 }
 
-
-decx::utils::NodeBase::NodeBase(const char* node_name)
+class decx::utils::Synchronize : public decx::utils::NodeBase
 {
-    this->_prev = nullptr;
-    this->_next = nullptr;
-    memset(this->_name, 0, NODE_NAME_MAX_LENGTH);
-    strcpy(this->_name, node_name);
-    this->_node_type = NodeTypes_e::NodeType_Base;
-}
+private:
+    std::future<void>* _p_sync_streams[MAX_CONCURRENT_BRANCHS_NUM];
+    uint32_t _sync_streams_num;
+
+public:
+    Synchronize();
 
 
-int32_t decx::utils::NodeBase::Process()
-{
-    return 0;
-}
+    Synchronize(const char* node_name);
 
 
-decx::utils::NodeBase::~NodeBase()
-{
-    return;
-}
+    int32_t RegisterOneStream(decx::utils::ConcurrentSplit* p_conc_split, decx::utils::NodeBase* p_stream_head);
 
 
-int32_t decx::utils::NodeBase::SetUpStreamNode(decx::utils::NodeBase* p_prev)
-{
-    this->_prev = p_prev;
-    return 0;
-}
+    virtual int32_t Process() override;
+};
 
-
-const char* decx::utils::NodeBase::GetNodeName() const
-{
-    return this->_name;
-}
-
-
-decx::utils::NodeTypes_e decx::utils::NodeBase::GetNodeType() const
-{
-    return this->_node_type;
-}
-
-
-int32_t decx::utils::NodeBase::SetDownStreamNode(decx::utils::NodeBase* p_next)
-{
-    this->_next = p_next;
-    return 0;
-}
+#endif
