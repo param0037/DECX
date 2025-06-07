@@ -45,6 +45,12 @@ int32_t node_func_branch2(const void* in, void* swap, void* out)
     return 0;
 }
 
+int32_t node_func3(const void* in, void* swap, void* out)
+{
+    DECX_LOG_NOTICE("Hello from node 3");
+    return 0;
+}
+
 
 int32_t predicator_func1(const void* in, int32_t* p_slot_idx)
 {
@@ -90,22 +96,24 @@ _DECX_API_ void pipeline_ut()
 
     decx::utils::ConcurrentSplit* conc_split = new decx::utils::ConcurrentSplit("conc_split");
     decx::utils::Synchronize* sync = new decx::utils::Synchronize("sync");
+    decx::utils::Synchronize* sync1 = new decx::utils::Synchronize("sync1");
 
     decx::utils::TaskNode* node_branch1 = new decx::utils::TaskNode("node_branch_1");
     node_branch1->NodeTaskRegister(node_func_branch1);
-    // node1->SetInputData(&node_param, sizeof(node_proc_params_t), true, de::GetLastError());
 
     decx::utils::TaskNode* node_branch2 = new decx::utils::TaskNode("node_branch_2");
     node_branch2->NodeTaskRegister(node_func_branch2);
-    // node2->SetInputData(&node_param, sizeof(node_proc_params_t), true, de::GetLastError());
+
+    decx::utils::TaskNode* node3 = new decx::utils::TaskNode("node3");
+    node3->NodeTaskRegister(node_func3);
 
     // pipeline.LinkNodes({node1, node2, predicator1});
     // pipeline.LinkBranch(predicator1, {node_branch1});
     // pipeline.LinkBranch(predicator1, {node_branch2});
 
-    pipeline.LinkNodes({node1, node2, conc_split});
+    pipeline.LinkNodes({node1, node2, conc_split, sync, node3, sync1});
     pipeline.LinkStream(conc_split, {node_branch1}, sync);
-    pipeline.LinkStream(conc_split, {node_branch2}, sync);
+    pipeline.LinkStream(conc_split, {node_branch2}, sync1);
 
     // std::future<void> fut = decx::cpu::RegisterTaskAppened(test_thread_func);
     // std::future<void> fut_copy;

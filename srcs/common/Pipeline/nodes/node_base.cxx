@@ -30,8 +30,8 @@
 
 #include "node_base.h"
 #include <string.h>
-
 #define MODULE_TAG "Pipeline"
+
 
 decx::utils::NodeBase::NodeBase()
 {

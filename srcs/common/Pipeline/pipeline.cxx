@@ -145,7 +145,6 @@ decx::utils::Pipeline::LinkStream(decx::utils::ConcurrentSplit* conc_split,
 
     auto* p_stream_head = *(stream_nodes.begin());
     rval |= conc_split->RegisterBranchHead(p_stream_head);
-    rval |= conc_split->SetDownStreamNode(backend_sync);
 
     int32_t idx = 0;
     auto* p_branch_node = stream_nodes.begin();

@@ -50,7 +50,7 @@ decx::utils::ConcurrentSplit::ConcurrentSplit(const char* node_name) : decx::uti
 
 int32_t decx::utils::ConcurrentSplit::
 RegisterBranchHead(decx::utils::NodeBase* p_branch_head,
-                   const StreamThreadDispatchMethod_e method,
+                   const decx::cpu::ThreadDispatchMethod_e method,
                    const int32_t slot_id)
 {
     if (p_branch_head == nullptr){
@@ -94,7 +94,7 @@ decx::utils::ConcurrentSplit::BranchFunctionByID(decx::utils::ConcurrentSplit* _
 {
     auto* p_branch_head = _fake_this->_header_info_arr[branch_id]._p_stream_head;
     decx::utils::NodeBase* p_branch_node = p_branch_head;
-    while (p_branch_node->GetNodeType() != NodeTypes_e::NodeType_Synchronize)
+    while (1)
     {
         p_branch_node->Process();
         p_branch_node = p_branch_node->GetNextNodeBasePtr();
@@ -111,15 +111,15 @@ int32_t decx::utils::ConcurrentSplit::Process()
         auto& info = this->_header_info_arr[i];
         switch (this->_header_info_arr[i]._dispatch_method)
         {
-        case StreamThreadDispatchMethod_e::Dispatch_NewSlot:
+        case decx::cpu::ThreadDispatchMethod_e::Dispatch_NewSlot:
             info._future = decx::cpu::RegisterTaskAppened(BranchFunctionByID, this, i);
             break;
 
-        case StreamThreadDispatchMethod_e::Dispatch_LoadBalanced:
+        case decx::cpu::ThreadDispatchMethod_e::Dispatch_LoadBalanced:
             info._future = decx::cpu::RegisterTaskLoadBalanced(BranchFunctionByID, this, i);
             break;
 
-        case StreamThreadDispatchMethod_e::Dispatch_ByID:
+        case decx::cpu::ThreadDispatchMethod_e::Dispatch_ByID:
             info._future = decx::cpu::RegisterTaskByID(BranchFunctionByID, info._thread_id, this, i);
             break;
         

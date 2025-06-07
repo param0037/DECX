@@ -41,20 +41,13 @@ namespace utils
     class ConcurrentSplit;
     class Synchronize;
 
-    enum class StreamThreadDispatchMethod_e
-    {
-        Dispatch_NewSlot = 0,
-        Dispatch_LoadBalanced = 1,
-        Dispatch_ByID = 2,
-    };
-
     struct StreamHeaderInfo_t
     {
         decx::utils::NodeBase*       _p_stream_head;
         int32_t                      _thread_id;
         decx::utils::Synchronize*    _p_sync;
         std::future<void>            _future;
-        StreamThreadDispatchMethod_e _dispatch_method;
+        decx::cpu::ThreadDispatchMethod_e _dispatch_method;
     };
 }
 }
@@ -80,7 +73,7 @@ public:
     decx::utils::StreamHeaderInfo_t* GetStreamInfoByStreamHeader(const decx::utils::NodeBase* p_stream_header);
 
 
-    int32_t RegisterBranchHead(decx::utils::NodeBase* p_conc_split, const StreamThreadDispatchMethod_e method = StreamThreadDispatchMethod_e::Dispatch_NewSlot,
+    int32_t RegisterBranchHead(decx::utils::NodeBase* p_conc_split, const decx::cpu::ThreadDispatchMethod_e method = decx::cpu::ThreadDispatchMethod_e::Dispatch_NewSlot,
         const int32_t slot_id = 0);
 
 

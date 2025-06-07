@@ -73,6 +73,10 @@ int32_t decx::utils::TaskNode::Process()
         return -1;
     }
     auto* p_task_func = (NodeTaskFunc_t*)this->_task_func;
+    if (nullptr == p_task_func){
+        DECX_LOG_ERR("%s, failed to run node task, since the function pointer is NULL");
+        return -1;
+    }
     return (*p_task_func)((const void*)this->_data_in, (void*)this->_data_exchanged, (void*)this->_data_out);
 }
 
