@@ -31,19 +31,25 @@
 #ifndef _CPU_ELEMENT_WISE_PLANNER_H_
 #define _CPU_ELEMENT_WISE_PLANNER_H_
 
-#include "../../basic.h"
-#include "../../FMGR/fragment_arrangment.h"
-#include "../../../modules/core/configs/config.h"
-#include "../../../modules/core/thread_management/thread_arrange.h"
-#include "../../../modules/core/thread_management/thread_pool.h"
+#include <basic.h>
+#include <FMGR/fragment_arrangment.h>
+#include <configs/config.h>
+#include <thread_management/thread_arrange.h>
+#include <thread_management/thread_pool.h>
 #include "element_wise_base.h"
 #include <thread_argument.h>
 
+
 namespace decx
 {
-    class  cpu_ElementWise1D_planner;
-    class  cpu_ElementWise2D_planner;
+    class cpu_ElementWise1D_planner;
+    class cpu_ElementWise2D_planner;
 }
+
+
+#define SLOT_ID_UNUSED decx::TArg_var<int32_t>([&](const int32_t i){return 0;})
+#define SLOT_ID_MONOTONIC(offset) decx::TArg_var<int32_t>([&](const int32_t i){return i + (offset);})
+#define SLOT_ID_CUSTOM(func) decx::TArg_var<int32_t>((func))
 
 
 class decx::cpu_ElementWise1D_planner : public decx::element_wise_base_1D
@@ -92,11 +98,16 @@ public:
     }
 
 
-    template <typename FuncType, typename... Args> static void 
-    sCaller(FuncType&& f, const decx::utils::frag_manager* fmgr, decx::utils::Thr1D* t1D, Args&&... args)
+    template <typename FuncType, typename LambdaFunc_T, typename... Args> static void 
+    sCaller(FuncType&&                                      f, 
+            const decx::utils::frag_manager*                fmgr, 
+            decx::utils::Thr1D*                             t1D, 
+            const decx::cpu::ThreadDispatchMethod_e         method, 
+            decx::ThreadArg_var<int32_t, LambdaFunc_T>&&    slot_id, 
+            Args&&                                          ...args)
     {
         for (int32_t i = 0; i < fmgr->get_frag_num(); ++i){
-            t1D->_async_thread[i] = decx::cpu::RegisterTaskByID(f, i, args.value(i)...);
+            t1D->_async_thread[i] = decx::cpu::RegisterTask(f, method, slot_id.value(i), args.value(i)...);
         }
         t1D->__sync_all_threads(make_uint2(0, fmgr->frag_num));
     }
@@ -213,13 +224,6 @@ public:
     }
 
 };
-
-
-
-// #define VarArgGen1D(__EW, __VAL, __GAP, __TVAL) \
-//     decx::TArg_var<__TVAL>([&](const int32_t i){return (__TVAL)__VAL + i * (__EW).get_fmgr()->GetFragLen() * (__GAP);})
-
-
 
 
 #endif

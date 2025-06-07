@@ -37,8 +37,6 @@
 #include "task_queue.h"
 #include "../configs/config.h"
 
-#define MAX_THREAD_NUM 1024
-
 #ifdef _MSC_VER
 #define _THREAD_FUNCTION_  // represents a function that only runs on threads
 #define _THREAD_CALL_      // represents a function that is only called by a thread function
@@ -93,7 +91,7 @@ public:
 
     ~ThreadPool();
 };
-#endif
+#endif      // ifdef _DECX_CORE_CPU_
 
 
 namespace decx
@@ -120,6 +118,19 @@ namespace decx
 namespace decx {
 namespace cpu 
 {
+    enum class ThreadDispatchMethod_e
+    {
+        // Always create a new thread in the threadpool for the task unconditionally.
+        Dispatch_NewSlot = 0,
+
+        // Find the task queue that holds the least tasks and push the task to it, load balanced.
+        Dispatch_LoadBalanced = 1,
+
+        // Push the task to the task queue by indicated slot ID.
+        Dispatch_ByID = 2,
+    };
+
+
     template <class FuncType, class ...Args>
     static std::future<void> RegisterTaskLoadBalanced(FuncType&& f, Args&& ...args)
     {
@@ -154,6 +165,24 @@ namespace cpu
     {
         uint64_t tid = decx::cpu::AppendThread();
         return decx::cpu::RegisterTaskByID(f, tid, args...);
+    }
+
+
+    template <class FuncType, class ...Args>
+    static std::future<void> RegisterTask(FuncType&& f, const decx::cpu::ThreadDispatchMethod_e method, const uint32_t id, Args&& ...args)
+    {
+        switch (method)
+        {
+        case decx::cpu::ThreadDispatchMethod_e::Dispatch_NewSlot:
+            return RegisterTaskAppened(f, args...);
+
+        case decx::cpu::ThreadDispatchMethod_e::Dispatch_ByID:
+            return RegisterTaskByID(f, id, args...);
+        
+        case decx::cpu::ThreadDispatchMethod_e::Dispatch_LoadBalanced:
+        default:
+            return RegisterTaskLoadBalanced(f, args...);
+        }
     }
 }
 }
