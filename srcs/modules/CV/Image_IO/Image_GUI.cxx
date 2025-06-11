@@ -41,6 +41,7 @@ decx::vis::ImgShow_workplace::ImgShow_workplace()
     this->renderer = NULL;
     this->texture = NULL;
     this->silence = true;
+    this->_data_source = Surface_DataSource_e::DataSource_ImgFile;
 
     this->texture_dimensions.x = 0;
     this->texture_dimensions.y = 0;
@@ -62,6 +63,7 @@ int decx::vis::ImgShow_workplace::Create_from_file_path(const char* img_path, co
     this->texture_dimensions.y = 0;
     this->texture_dimensions.w = this->image->w;
     this->texture_dimensions.h = this->image->h;
+    this->_data_source = Surface_DataSource_e::DataSource_ImgFile;
 
     this->display_window = SDL_CreateWindow(window_name, 10, 10,
         this->image->w,
@@ -92,6 +94,7 @@ void decx::vis::ImgShow_workplace::Create_from_surface(SDL_Surface* surface, con
     this->texture_dimensions.y = 0;
     this->texture_dimensions.w = this->image->w;
     this->texture_dimensions.h = this->image->h;
+    this->_data_source = Surface_DataSource_e::DataSource_DecxMatrix;
 
     this->display_window = SDL_CreateWindow(window_name, 10, 10,
         this->image->w,
@@ -201,8 +204,10 @@ void de::vis::wait_untill_quit()
             SDL_DestroyRenderer(decx::vis::displayed_img_array[i].renderer);
         }
 #endif
-        if (decx::vis::displayed_img_array[i].image != NULL){
-            SDL_FreeSurface(decx::vis::displayed_img_array[i].image);
+        if (decx::vis::displayed_img_array[i]._data_source == decx::vis::Surface_DataSource_e::DataSource_ImgFile){
+            if (decx::vis::displayed_img_array[i].image != NULL){
+                SDL_FreeSurface(decx::vis::displayed_img_array[i].image);
+            }
         }
     }
 }

@@ -40,9 +40,16 @@
 
 namespace decx
 {
-    namespace vis {
-        class ImgShow_workplace;
-    }
+namespace vis {
+    class ImgShow_workplace;
+
+
+    enum class Surface_DataSource_e
+    {
+        DataSource_ImgFile = 0,
+        DataSource_DecxMatrix = 1,
+    };
+}
 }
 
 
@@ -59,6 +66,8 @@ public:
     SDL_Window* display_window;
     SDL_Renderer* renderer;
     SDL_Texture* texture;
+
+    Surface_DataSource_e _data_source;
 
     ImgShow_workplace();
 
