@@ -46,6 +46,7 @@ add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/common/Basic_process/transpose" "${
 add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/common/Element_wise" "${DECX_SUBBUILD_BIN_DIR}/EW_CPU")
 add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/common/FMGR" "${DECX_SUBBUILD_BIN_DIR}/FMGR_CPU")
 add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/common/BLAS/GEMM/CPU" "${DECX_SUBBUILD_BIN_DIR}/common/BLAS/CPU/")
+add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/common/Pipeline" "${DECX_SUBBUILD_BIN_DIR}/common/Pipeline/")
 
 # include common sources
 include("${DECX_WORLD_ABS_DIR}/srcs/common/Basic_process/extension/extension_com.cmake")
@@ -67,7 +68,8 @@ add_library(DECX_BLAS_CPU SHARED ${GEMM}                    ${BP} ${EW}
 target_link_libraries(DECX_BLAS_CPU PRIVATE GEMM_CPU
                                     PRIVATE TRP_CPU
                                     PRIVATE EW_CPU
-                                    PRIVATE FMGR_CPU)
+                                    PRIVATE FMGR_CPU
+                                    PRIVATE PIPELINE)
 else()
 add_library(DECX_BLAS_CPU SHARED ${GEMM}                ${BP} 
                                  ${EXT_CPU_COM_SRCS}    ${FMGR_CPU_COM_SRCS})

@@ -53,8 +53,12 @@ int32_t decx::utils::Pipeline::LinkNodes(std::initializer_list<decx::utils::Node
         if (idx > 0){
             p_prev_node = *(p_node - 1);
         }
-        rval |= (*p_node)->SetUpStreamNode(p_prev_node);
-        rval |= (*p_node)->SetDownStreamNode(p_next_node);
+        if ((*p_node)->GetDownStreamNode() == nullptr || p_next_node != nullptr){
+            rval |= (*p_node)->SetDownStreamNode(p_next_node);
+        }
+        if ((*p_node)->GetUpStreamNode() == nullptr || p_prev_node != nullptr){
+            rval |= (*p_node)->SetUpStreamNode(p_prev_node);
+        }
         ++idx;
     }
     return rval;
@@ -83,47 +87,9 @@ int32_t decx::utils::Pipeline::Run()
     decx::utils::NodeBase* p_node = this->_node_ptr_arr[0];
     while (p_node != nullptr)
     {
+        // DECX_LOG_NOTICE("%s is called", p_node->GetNodeName());
         rval |= p_node->Process();
         p_node = p_node->_next;
-    }
-    return rval;
-}
-
-
-int32_t decx::utils::Pipeline::LinkBranch(decx::utils::BranchSplit* branch_split, std::initializer_list<decx::utils::NodeBase*> branch)
-{
-    if (branch_split == nullptr){
-        DECX_LOG_ERR("Failed to add branch, since the branch header is NULL");
-        return -1;
-    }
-    if (branch.size() == 0){
-        return 0;
-    }
-
-    int32_t rval = 0;
-    auto* _branch_starter = branch.begin();
-    rval |= branch_split->SetUpStreamNode(nullptr);
-    rval |= branch_split->SetDownStreamNode(*_branch_starter);
-    rval |= (*_branch_starter)->SetUpStreamNode(branch_split);
-
-    rval |= branch_split->RegisterBranchHead(*_branch_starter);
-
-    int32_t idx = 0;
-    for (auto* p_branch_node = branch.begin(); p_branch_node != branch.end(); ++p_branch_node)
-    {
-        decx::utils::NodeBase* p_next_node = nullptr;
-        if (idx < branch.size() - 1){
-            p_next_node = *(p_branch_node + 1);
-        }
-        decx::utils::NodeBase* p_prev_node = nullptr;
-        if (idx > 0){
-            p_prev_node = *(p_branch_node - 1);
-        }
-
-        (*p_branch_node)->SetUpStreamNode(p_prev_node);
-        (*p_branch_node)->SetDownStreamNode(p_next_node);
-        // Emplace back the node pointer
-        this->_node_ptr_arr.emplace_back(*p_branch_node);
     }
     return rval;
 }
@@ -132,7 +98,9 @@ int32_t decx::utils::Pipeline::LinkBranch(decx::utils::BranchSplit* branch_split
 int32_t 
 decx::utils::Pipeline::LinkStream(decx::utils::ConcurrentSplit* conc_split, 
                                   std::initializer_list<decx::utils::NodeBase*> stream_nodes, 
-                                  decx::utils::Synchronize* backend_sync)
+                                  decx::utils::Synchronize* backend_sync,
+                                  const decx::cpu::ThreadDispatchMethod_e method,
+                                  const int32_t slot_id)
 {
     if (conc_split == nullptr || backend_sync == nullptr){
         DECX_LOG_ERR("Failed to add branch, neither conc_split nor sync can be NULL");
@@ -144,7 +112,7 @@ decx::utils::Pipeline::LinkStream(decx::utils::ConcurrentSplit* conc_split,
     int32_t rval = 0;
 
     auto* p_stream_head = *(stream_nodes.begin());
-    rval |= conc_split->RegisterBranchHead(p_stream_head);
+    rval |= conc_split->RegisterBranchHead(p_stream_head, method, slot_id);
 
     int32_t idx = 0;
     auto* p_branch_node = stream_nodes.begin();
@@ -158,11 +126,11 @@ decx::utils::Pipeline::LinkStream(decx::utils::ConcurrentSplit* conc_split,
         if (idx > 0){
             p_prev_node = *(p_branch_node - 1);
         }
-        if (idx == stream_nodes.size() - 1){
-            rval |= (*p_branch_node)->SetDownStreamNode(backend_sync);
-        }
         rval |= (*p_branch_node)->SetUpStreamNode(p_prev_node);
         rval |= (*p_branch_node)->SetDownStreamNode(p_next_node);
+        if (idx == stream_nodes.size() - 1){
+            rval |= (*p_branch_node)->SetDownStreamNode(nullptr);
+        }
         // Emplace back the node pointer
         this->_node_ptr_arr.emplace_back(*p_branch_node);
     }

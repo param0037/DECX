@@ -35,16 +35,18 @@
 decx::utils::TaskNode::TaskNode() : decx::utils::NodeBase()
 {
     this->_node_type = NodeTypes_e::NodeType_Task;
-    this->_data_in = nullptr;
-    this->_data_out = nullptr;
+    memset(&_data_in, 0, sizeof(TaskNode_Stack_t<void*, NODE_DATA_BUFFER_SIZE>));
+    memset(&_data_exchanged, 0, sizeof(TaskNode_Stack_t<void*, NODE_DATA_BUFFER_SIZE>));
+    memset(&_data_out, 0, sizeof(TaskNode_Stack_t<void*, NODE_DATA_BUFFER_SIZE>));
 }
 
 
 decx::utils::TaskNode::TaskNode(const char* node_name) : decx::utils::NodeBase(node_name)
 {
     this->_node_type = NodeTypes_e::NodeType_Task;
-    this->_data_in = nullptr;
-    this->_data_out = nullptr;
+    memset(&_data_in, 0, sizeof(TaskNode_Stack_t<void*, NODE_DATA_BUFFER_SIZE>));
+    memset(&_data_exchanged, 0, sizeof(TaskNode_Stack_t<void*, NODE_DATA_BUFFER_SIZE>));
+    memset(&_data_out, 0, sizeof(TaskNode_Stack_t<void*, NODE_DATA_BUFFER_SIZE>));
 }
 
 
@@ -58,10 +60,25 @@ int32_t decx::utils::TaskNode::NodeTaskRegister(decx::utils::NodeTaskFunc_t* nod
 }
 
 
-int32_t decx::utils::TaskNode::AllocateNodeBufData(de::DH* handle)
+int32_t decx::utils::TaskNode::AllocateNodeBufData(de::DH* handle, TaskNode_WorkingData_Type_e type)
 {
-    if (this->_node_data_buf.IsValid() == 0)
-        return this->_node_data_buf.Allocate(NODE_DATA_BUFFER_SIZE * 3, PAGABLE, handle);
+    switch (type)
+    {
+    case TaskNode_WorkingData_Type_e::TaskNode_Data_ReadOnly:
+    if (this->_data_in._aux_buffer.IsValid() == 0)
+        return this->_data_in._aux_buffer.Allocate(NODE_DATA_BUFFER_SIZE, PAGABLE, handle);
+
+    case TaskNode_WorkingData_Type_e::TaskNode_Data_Swap:
+    if (this->_data_exchanged._aux_buffer.IsValid() == 0)
+        return this->_data_exchanged._aux_buffer.Allocate(NODE_DATA_BUFFER_SIZE, PAGABLE, handle);
+    
+    case TaskNode_WorkingData_Type_e::TaskNode_Data_Write:
+    if (this->_data_out._aux_buffer.IsValid() == 0)
+        return this->_data_out._aux_buffer.Allocate(NODE_DATA_BUFFER_SIZE, PAGABLE, handle);
+
+    default:
+        break;
+    }
 
     return 0;
 }
@@ -77,7 +94,8 @@ int32_t decx::utils::TaskNode::Process()
         DECX_LOG_ERR("%s, failed to run node task, since the function pointer is NULL");
         return -1;
     }
-    return (*p_task_func)((const void*)this->_data_in, (void*)this->_data_exchanged, (void*)this->_data_out);
+    return (*p_task_func)((const void**)this->_data_in._checkpoints, (void**)this->_data_exchanged._checkpoints, 
+        (void**)this->_data_out._checkpoints);
 }
 
 
@@ -88,7 +106,7 @@ int32_t decx::utils::TaskNode::SetData(TaskNode_WorkingData_Type_e  type,
                                        de::DH*                      handle)
 {
     if (use_builtin_buf) {
-        this->AllocateNodeBufData(handle);
+        this->AllocateNodeBufData(handle, type);
         if (p_data == nullptr){
             DECX_LOG_ERR("Failed to set input data since the pointer is NULL");
             return -1;
@@ -97,43 +115,47 @@ int32_t decx::utils::TaskNode::SetData(TaskNode_WorkingData_Type_e  type,
             DECX_LOG_ERR("Failed to set input data since it is oversized");
             return -1;
         }
-        this->_data_in = (void*)this->_node_data_buf;
-        memcpy((void*)this->_node_data_buf, p_data, size);
-    }
-    else{
-        this->_data_in = p_data;
     }
 
     switch (type)
     {
     case TaskNode_WorkingData_Type_e::TaskNode_Data_ReadOnly:
-        if (use_builtin_buf){
-            this->_data_in = (void*)this->_node_data_buf;
-            memcpy((void*)this->_node_data_buf, p_data, size);
+        if (use_builtin_buf) {
+            uint8_t* p_checkpoint = (uint8_t*)this->_data_exchanged._aux_buffer + this->_data_exchanged._stack_aux_buffer_head;
+            this->_data_in._checkpoints[this->_data_in._current_checkpoint_num] = p_checkpoint;
+            memcpy(p_checkpoint, p_data, size);
+            this->_data_in._stack_aux_buffer_head += size;
         }
         else{
-            this->_data_in = p_data;
+            this->_data_in._checkpoints[this->_data_in._current_checkpoint_num] = const_cast<void*>(p_data);
         }
+        this->_data_in._current_checkpoint_num++;
         break;
 
     case TaskNode_WorkingData_Type_e::TaskNode_Data_Swap:
-        if (use_builtin_buf){
-            this->_data_exchanged = (uint8_t*)this->_node_data_buf + NODE_DATA_BUFFER_SIZE;
-            memcpy((uint8_t*)this->_node_data_buf + NODE_DATA_BUFFER_SIZE, p_data, size);
+        if (use_builtin_buf) {
+            uint8_t* p_checkpoint = (uint8_t*)this->_data_exchanged._aux_buffer + this->_data_exchanged._stack_aux_buffer_head;
+            this->_data_exchanged._checkpoints[this->_data_exchanged._current_checkpoint_num] = p_checkpoint;
+            memcpy(p_checkpoint, p_data, size);
+            this->_data_exchanged._stack_aux_buffer_head += size;
         }
         else{
-            this->_data_exchanged = const_cast<void*>(p_data);
+            this->_data_exchanged._checkpoints[this->_data_exchanged._current_checkpoint_num] = const_cast<void*>(p_data);
         }
+        this->_data_exchanged._current_checkpoint_num++;
         break;
     
     case TaskNode_WorkingData_Type_e::TaskNode_Data_Write:
-        if (use_builtin_buf){
-            this->_data_out = (uint8_t*)this->_node_data_buf + NODE_DATA_BUFFER_SIZE * 2;
-            memcpy((uint8_t*)this->_node_data_buf + NODE_DATA_BUFFER_SIZE * 2, p_data, size);
+        if (use_builtin_buf) {
+            uint8_t* p_checkpoint = (uint8_t*)this->_data_exchanged._aux_buffer + this->_data_exchanged._stack_aux_buffer_head;
+            this->_data_out._checkpoints[this->_data_out._current_checkpoint_num] = p_checkpoint;
+            memcpy(p_checkpoint, p_data, size);
+            this->_data_out._stack_aux_buffer_head += size;
         }
         else{
-            this->_data_out = const_cast<void*>(p_data);
+            this->_data_out._checkpoints[this->_data_out._current_checkpoint_num] = const_cast<void*>(p_data);
         }
+        this->_data_out._current_checkpoint_num++;
         break;
 
     default:
@@ -143,20 +165,15 @@ int32_t decx::utils::TaskNode::SetData(TaskNode_WorkingData_Type_e  type,
 }
 
 
-int32_t decx::utils::TaskNode::AssignOutBufPtr(void* p_out_buf)
-{
-    if (p_out_buf == nullptr){
-        DECX_LOG_ERR("Failed to assign output buffer since the pointer is NULL");
-        return -1;
-    }
-    this->_data_out = (uint8_t*)p_out_buf;
-    return 0;
-}
-
-
 decx::utils::TaskNode::~TaskNode()
 {
-    if (this->_node_data_buf.IsValid()){
-        this->_node_data_buf.Free();
+    if (this->_data_in._aux_buffer.IsValid()){
+        this->_data_in._aux_buffer.Free();
+    }
+    if (this->_data_exchanged._aux_buffer.IsValid()){
+        this->_data_exchanged._aux_buffer.Free();
+    }
+    if (this->_data_out._aux_buffer.IsValid()){
+        this->_data_out._aux_buffer.Free();
     }
 }

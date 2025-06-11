@@ -45,7 +45,7 @@ namespace utils
     class NodeBase;
 
 
-    typedef int32_t NodeTaskFunc_t(const void*, void*, void*);
+    typedef int32_t NodeTaskFunc_t(const void**, void**, void**);
     typedef int32_t PredicatorFunc_t(const void*, int32_t*);
 
 
@@ -93,13 +93,11 @@ public:
 
 
     int32_t SetUpStreamNode(decx::utils::NodeBase* p_prev);
-
-    
     int32_t SetDownStreamNode(decx::utils::NodeBase* p_next);
 
 
-    decx::utils::NodeBase* GetNextNodeBasePtr();
-    decx::utils::NodeBase* GetPrevNodeBasePtr();
+    decx::utils::NodeBase* GetDownStreamNode();
+    decx::utils::NodeBase* GetUpStreamNode();
 
 
     virtual int32_t Process();

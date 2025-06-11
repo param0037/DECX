@@ -56,19 +56,6 @@ int32_t decx::utils::BranchSplit::AllocateNodeBufData(de::DH* handle)
     return 0;
 }
 
-
-decx::utils::NodeBase* decx::utils::NodeBase::GetNextNodeBasePtr()
-{
-    return this->_next;
-}
-
-
-decx::utils::NodeBase* decx::utils::NodeBase::GetPrevNodeBasePtr()
-{
-    return this->_prev;
-}
-
-
 int32_t decx::utils::BranchSplit::SetPredicatedData(void* p_data, const uint64_t size, const bool use_buitin_buffer, de::DH* handle)
 {
     if (use_buitin_buffer) {
@@ -94,6 +81,7 @@ int32_t decx::utils::BranchSplit::SetPredicatedData(void* p_data, const uint64_t
 int32_t decx::utils::BranchSplit::Process()
 {
     if (this->_task_func == nullptr){
+        DECX_LOG_ERR("%s failed to run a null predicator");
         return -1;
     }
     auto* p_task_func = (PredicatorFunc_t*)this->_task_func;
@@ -110,10 +98,6 @@ int32_t decx::utils::BranchSplit::Process()
 
 int32_t decx::utils::BranchSplit::RegisterBranchHead(decx::utils::NodeBase* p_branch_head)
 {
-    if (p_branch_head == nullptr){
-        DECX_LOG_ERR("Failed to register branch header, since its pointer is NULL");
-        return -1;
-    }
     if (this->_branch_num > MAX_BRANCH_NUM - 1){
         DECX_LOG_ERR("Failed to register branch header, since quantity limit is already exceeded");
         return -1;

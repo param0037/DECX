@@ -46,7 +46,18 @@ namespace utils
     {
         TaskNode_Data_ReadOnly = 0,
         TaskNode_Data_Swap = 1,
-        TaskNode_Data_Write = 2
+        TaskNode_Data_Write = 2,
+        TaskNode_Data_TypesNum
+    };
+
+
+    template <typename _data_type, uint32_t MaxCPNum>
+    struct TaskNode_Stack_t
+    {
+        decx::PtrInfo<_data_type> _aux_buffer;
+        _data_type* _checkpoints[MaxCPNum];
+        uint32_t _stack_aux_buffer_head;
+        uint32_t _current_checkpoint_num;
     };
 }
 }
@@ -55,11 +66,9 @@ namespace utils
 class decx::utils::TaskNode : public decx::utils::NodeBase
 {
 private:
-    decx::PtrInfo<void> _node_data_buf;
-
-    const void* _data_in;
-    void* _data_exchanged;
-    void* _data_out;
+    TaskNode_Stack_t<void, NODE_DATA_BUFFER_SIZE> _data_in;
+    TaskNode_Stack_t<void, NODE_DATA_BUFFER_SIZE> _data_exchanged;
+    TaskNode_Stack_t<void, NODE_DATA_BUFFER_SIZE> _data_out;
 
 public:
     TaskNode();
@@ -67,14 +76,11 @@ public:
 
     TaskNode(const char* node_name);
 
-
-    int32_t AssignOutBufPtr(void* p_out_buf);
-
-
+    
     int32_t NodeTaskRegister(NodeTaskFunc_t* node_func);
 
 
-    int32_t AllocateNodeBufData(de::DH* handle);
+    int32_t AllocateNodeBufData(de::DH* handle, TaskNode_WorkingData_Type_e type);
 
 
     int32_t SetData(TaskNode_WorkingData_Type_e type, const void* p_data, const uint64_t size, 

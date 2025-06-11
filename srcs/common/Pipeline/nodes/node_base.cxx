@@ -72,20 +72,32 @@ int32_t decx::utils::NodeBase::SetUpStreamNode(decx::utils::NodeBase* p_prev)
 }
 
 
+int32_t decx::utils::NodeBase::SetDownStreamNode(decx::utils::NodeBase* p_next)
+{
+    this->_next = p_next;
+    return 0;
+}
+
+
 const char* decx::utils::NodeBase::GetNodeName() const
 {
     return this->_name;
 }
 
 
-decx::utils::NodeTypes_e decx::utils::NodeBase::GetNodeType() const
+decx::utils::NodeBase* decx::utils::NodeBase::GetDownStreamNode()
 {
-    return this->_node_type;
+    return this->_next;
 }
 
 
-int32_t decx::utils::NodeBase::SetDownStreamNode(decx::utils::NodeBase* p_next)
+decx::utils::NodeBase* decx::utils::NodeBase::GetUpStreamNode()
 {
-    this->_next = p_next;
-    return 0;
+    return this->_prev;
+}
+
+
+decx::utils::NodeTypes_e decx::utils::NodeBase::GetNodeType() const
+{
+    return this->_node_type;
 }

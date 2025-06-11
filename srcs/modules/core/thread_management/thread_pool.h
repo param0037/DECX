@@ -50,6 +50,9 @@
 
 
 #ifdef _DECX_CORE_CPU_
+
+#define MAX_THREAD_NUM 1024
+
 class decx::ThreadPool
 {
 public:

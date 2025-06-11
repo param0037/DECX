@@ -34,12 +34,8 @@
 
 #if defined(_DECX_CPU_PARTS_)
 
-#include "../../../common/basic.h"
-#include "../../../common/Array/Dynamic_Array.h"
-
-
-#define MAX_THREAD_NUM 16
-
+#include <basic.h>
+#include <Array/Dynamic_Array.h>
 
 
 namespace decx

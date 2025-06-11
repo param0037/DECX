@@ -97,7 +97,7 @@ decx::utils::ConcurrentSplit::BranchFunctionByID(decx::utils::ConcurrentSplit* _
     while (1)
     {
         p_branch_node->Process();
-        p_branch_node = p_branch_node->GetNextNodeBasePtr();
+        p_branch_node = p_branch_node->GetDownStreamNode();
         if (p_branch_node == nullptr)
             break;
     }

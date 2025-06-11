@@ -62,22 +62,14 @@ public:
     Pipeline();
 
     /**
-     * @brief Link nodes to pipeline main branch, launched by main thread of pipeline.alignas
+     * @brief Link nodes to create a pipeline branch, launched by main thread of pipeline.alignas
      * @param node_ptrs List of the nodes (they can also be branch split or concurrent split, etc as well).
      * @return 0 for no error; Non-zero for error occuring.
      */
     int32_t LinkNodes(std::initializer_list<decx::utils::NodeBase*> node_ptrs);
 
     /**
-     * @brief Link a branch for pipeline, this branch is also executed by the main thread, acting as conditional jump instructions.
-     * @param branch_split Pointer of branch split node, indicating where this branch is attached to.
-     * @param branch A list of branch nodes (they can also be branch split or concurrent split, etc as well).
-     * @return 0 for no error; Non-zero for error occuring.
-     */
-    int32_t LinkBranch(decx::utils::BranchSplit* branch_split, std::initializer_list<decx::utils::NodeBase*> branch);
-
-    /**
-     * @brief Link a concurrent stream to pipeline
+     * @brief Link a concurrent stream to pipeline. Next node of the last node must be nullptr, as the end of the stream labeled.
      * @param conc_split Pointer of concurrent split node, indicating where the stream is launched. If this node is linked by
      *     Pipeline::LinkNodes(), pipeline main thread will launch this stream.
      * @param stream_nodes A list of stream task nodes (they can also be branch split or concurrent split, etc as well).
@@ -86,7 +78,8 @@ public:
      * @return 0 for no error; Non-zero for error occuring.
      */
     int32_t LinkStream(decx::utils::ConcurrentSplit* conc_split, std::initializer_list<decx::utils::NodeBase*> stream_nodes, 
-        decx::utils::Synchronize* backend_sync);
+        decx::utils::Synchronize* backend_sync, const decx::cpu::ThreadDispatchMethod_e method = decx::cpu::ThreadDispatchMethod_e::Dispatch_NewSlot,
+        const int32_t slot_id = 0);
 
 
     int32_t Run();
