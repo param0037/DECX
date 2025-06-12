@@ -88,7 +88,7 @@ cu_GEMM_cplxf_kernel_16_64_64(const double* __restrict A,   const double* __rest
     const uint32_t loc_tid_Ay = loc_tid_1d / _loc_LDG_Ax;
     const uint32_t tid_Ay = loc_tid_Ay * _LDG_HA_step + blockIdx.y * 64;
 
-    const uint32_t W_v2 = decx::utils::fast_uint_ceil2<uint32_t>(proc_dims_v1.x);
+    const uint32_t W_v2 = decx::utils::ifdiv2_ceil<uint32_t>(proc_dims_v1.x);
 
     __shared__ double _frag_A[64][16 + 1];
     __shared__ double2 _frag_B[16][64 / 2];
@@ -160,7 +160,7 @@ cu_GEMM_cplxf_kernel_16_64_64(const double* __restrict A,   const double* __rest
     // Store the results to dst.
     const uint64_t dex_dst = tidx * 2 + tidy * pitchdst_v1 * 8;
 
-    if (tidx < decx::utils::fast_uint_ceil2<uint32_t>(proc_dims_v1.x))
+    if (tidx < decx::utils::ifdiv2_ceil<uint32_t>(proc_dims_v1.x))
     {
 #pragma unroll
         for (uint32_t k = 0; k < 8; ++k) {
@@ -194,7 +194,7 @@ cu_GEMM_cplxf_F_kernel_16_64_64(const double* __restrict A,     const double* __
     const uint32_t loc_tid_Ay = loc_tid_1d / _loc_LDG_Ax;
     const uint32_t tid_Ay = loc_tid_Ay * _LDG_HA_step + blockIdx.y * 64;
 
-    const uint32_t W_v2 = decx::utils::fast_uint_ceil2<uint32_t>(proc_dims_v1.x);
+    const uint32_t W_v2 = decx::utils::ifdiv2_ceil<uint32_t>(proc_dims_v1.x);
 
     __shared__ double _frag_A[64][16 + 1];
     __shared__ double2 _frag_B[16][64 / 2];
@@ -266,7 +266,7 @@ cu_GEMM_cplxf_F_kernel_16_64_64(const double* __restrict A,     const double* __
     // Store the results to dst.
     const uint64_t dex_dst = tidx * 2 + tidy * pitchdst_v1 * 8;
 
-    if (tidx < decx::utils::fast_uint_ceil2<uint32_t>(proc_dims_v1.x))
+    if (tidx < decx::utils::ifdiv2_ceil<uint32_t>(proc_dims_v1.x))
     {
 #pragma unroll
         for (uint32_t k = 0; k < 8; ++k) 

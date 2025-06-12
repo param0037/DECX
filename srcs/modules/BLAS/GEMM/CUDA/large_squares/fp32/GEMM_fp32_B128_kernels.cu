@@ -55,7 +55,7 @@ cu_GEMM_fp32_kernel_32_128_128(const float* __restrict A,   const float* __restr
     const uint32_t tid_Ay = loc_tid_Ay * 4 + blockIdx.y * 128;
 
     const uint32_t W_v4 = decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.x, 4);
-    const uint32_t L_v2 = decx::utils::fast_uint_ceil2<uint32_t>(_L_v1);
+    const uint32_t L_v2 = decx::utils::ifdiv2_ceil<uint32_t>(_L_v1);
 
     __shared__ float4 _frag_A[32][128 / 4 + 1];
     __shared__ float4 _frag_B[32][128 / 4];
@@ -178,7 +178,7 @@ cu_GEMM_fp32_F_kernel_32_128_128(const float* __restrict A,       const float* _
     const uint32_t tid_Ay = loc_tid_Ay * 4 + blockIdx.y * 128;
 
     const uint32_t W_v4 = decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.x, 4);
-    const uint32_t L_v2 = decx::utils::fast_uint_ceil2<uint32_t>(_L_v1);
+    const uint32_t L_v2 = decx::utils::ifdiv2_ceil<uint32_t>(_L_v1);
 
     __shared__ float4 _frag_A[32][128 / 4 + 1];
     __shared__ float4 _frag_B[32][128 / 4];
@@ -316,7 +316,7 @@ cu_GEMM_fp32_kernel_16_128_128(const float* __restrict A,   const float* __restr
     const uint32_t tid_Ay = loc_tid_Ay * _LDG_HA_step + blockIdx.y * 128;
 
     const uint32_t W_v4 = decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.x, 4);
-    const uint32_t L_v2 = decx::utils::fast_uint_ceil2<uint32_t>(_L_v1);
+    const uint32_t L_v2 = decx::utils::ifdiv2_ceil<uint32_t>(_L_v1);
 
     __shared__ float4 _frag_A[16][128 / 4 + 1];
     __shared__ float4 _frag_B[16][128 / 4];
@@ -426,7 +426,7 @@ cu_GEMM_fp32_F_kernel_16_128_128(const float* __restrict A,   const float* __res
     const uint32_t tid_Ay = loc_tid_Ay * _LDG_HA_step + blockIdx.y * 128;
 
     const uint32_t W_v4 = decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.x, 4);
-    const uint32_t L_v2 = decx::utils::fast_uint_ceil2<uint32_t>(_L_v1);
+    const uint32_t L_v2 = decx::utils::ifdiv2_ceil<uint32_t>(_L_v1);
 
     __shared__ float4 _frag_A[16][128 / 4 + 1];
     __shared__ float4 _frag_B[16][128 / 4];

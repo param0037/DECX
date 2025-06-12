@@ -42,116 +42,168 @@
 
 namespace decx
 {
-    namespace utils
-    {
-        /*
-        * @brief : The '_abd' suffix means that the return value WILL NOT
-        * plus one when the input value reaches the critical points (e.g.
-        * 2, 4, 8, 16, 32...)
-        */
-        static int _GetHighest_abd(uint64_t __x) noexcept;
+namespace utils
+{
+    /*
+    * @brief : The '_abd' suffix means that the return value WILL NOT
+    * plus one when the input value reaches the critical points (e.g.
+    * 2, 4, 8, 16, 32...)
+    */
+    static int _GetHighest_abd(uint64_t __x) noexcept;
 
-        /*
-        * @brief : The '_abd' suffix means that the return value WILL
-        * plus one when the input value reaches the critical points (e.g.
-        * 2, 4, 8, 16, 32...)
-        */
-        static int _GetHighest(uint64_t __x) noexcept;
-
-
-        /*
-        * @return return __x < _boundary ? _boundary : __x;
-        */
-        template <typename _Ty>
-        constexpr static _Ty clamp_min(_Ty __x, _Ty _bpunary) noexcept;
-        
-
-        /*
-        * @return return __x > _boundary ? _boundary : __x;
-        */
-        template <typename _Ty>
-        constexpr static _Ty clamp_max(_Ty __x, _Ty _bpunary) noexcept;
+    /*
+    * @brief : The '_abd' suffix means that the return value WILL
+    * plus one when the input value reaches the critical points (e.g.
+    * 2, 4, 8, 16, 32...)
+    */
+    static int _GetHighest(uint64_t __x) noexcept;
 
 
-        /*
-        * @return return (__deno % __numer) != 0 ? __deno / __numer + 1 : __deno / __numer;
-        */
-        template <typename _Ty>
+/*
+* @return return __x < _boundary ? _boundary : __x;
+*/
+template <typename _Ty>
+constexpr static _Ty clamp_min(_Ty __x, _Ty _boundary) noexcept{
+    return __x < _boundary ? _boundary : __x;
+}
+
+/*
+* @return return __x > _boundary ? _boundary : __x;
+*/
+template <typename _Ty>
+constexpr static _Ty clamp_max(_Ty __x, _Ty _boundary) noexcept {
+    return __x > _boundary ? _boundary : __x;
+}
+
+
+/*
+* @return return (__deno % __numer) != 0 ? __deno / __numer + 1 : __deno / __numer;
+*/
+template <typename _Ty>
 #ifdef _DECX_CUDA_PARTS_
 __host__ __device__
 #endif
-        constexpr
-        inline static _Ty idiv_ceil(_Ty __deno, _Ty __numer) noexcept;
+constexpr inline static 
+typename std::enable_if<std::is_same<_Ty, int32_t>::value  ||
+                        std::is_same<_Ty, uint32_t>::value || 
+                        std::is_same<_Ty, int64_t>::value  ||
+                        std::is_same<_Ty, uint64_t>::value ||
+                        std::is_same<_Ty, int8_t>::value   ||
+                        std::is_same<_Ty, uint8_t>::value, _Ty>::type
+idiv_ceil(_Ty __deno, _Ty __numer) noexcept
+{
+    return (__deno / __numer) + (_Ty)((bool)(__deno % __numer));
+}
+
 
 
 template <typename _Ty>
 #ifdef _DECX_CUDA_PARTS_
 __host__ __device__
 #endif
-        /**
-        * @brief Only valid for positive int32_t, uint32_t, positive int64_t, and uint64_t;
-        */
-        constexpr
-        inline static _Ty fast_uint_ceil2(_Ty __src) noexcept;
-
-
-        template <typename _Ty>
-#ifdef _DECX_CUDA_PARTS_
-        __host__ __device__
-#endif
-        constexpr inline static _Ty align(_Ty __x, const uint32_t _alignment);
-        
-
-
-        constexpr inline static int Iabs(int n) noexcept {
-            return (n ^ (n >> 31)) - (n >> 31);
-        }
-
-        
-        /**
-         * NOrmally, src_len should not larger than dst_len
-        */
-        template <uint64_t dst_len>
-        static void decx_strcpy(char (&dst)[dst_len], const char* src);
-
-        /*
-        * @param _initial_ptr : The pointer where start to offset
-        * @param __x : Offset along height
-        * @param __y : Offset along width
-        * @param _pitch : The width of the virtal square
-        */
-        template <typename _In_Type, typename _Out_Type>
-        static _Out_Type* ptr_shift_xy(_In_Type* _initial_ptr, const uint64_t __x, const uint64_t __y, const uint64_t _pitch);
-
-        /*
-        * @param _initial_ptr : The pointer where start to offset
-        * @param offset_xy : ~.x : Offset along height; ~.y : Offset along width
-        * @param _pitch : The width of the virtal square
-        */
-        template <typename _In_Type, typename _Out_Type>
-        static _Out_Type* ptr_shift_xy(_In_Type* _initial_ptr, const uint2 offset_xy, const uint64_t _pitch);
-
-
-        /*
-        * @param _initial_ptr : The pointer where start to offset
-        * @param __x : Offset along height
-        * @param __y : Offset along width
-        * @param _pitch : The width of the virtal square
-        */
-        template <typename _Ty>
-        static void ptr_shift_xy_inplace(_Ty** _initial_ptr, const uint __x, const uint __y, const uint64_t _pitch);
-
-        /*
-        * @param _initial_ptr : The pointer where start to offset
-        * @param offset_xy : ~.x : Offset along height; ~.y : Offset along width
-        * @param _pitch : The width of the virtal square
-        */
-        template <typename _Ty>
-        static void ptr_shift_xy_inplace(_Ty** _initial_ptr, const uint2 offset_xy, const uint64_t _pitch);
-    }
+constexpr inline static 
+typename std::enable_if<std::is_same<_Ty, int32_t>::value  ||
+                        std::is_same<_Ty, uint32_t>::value || 
+                        std::is_same<_Ty, int64_t>::value  ||
+                        std::is_same<_Ty, uint64_t>::value ||
+                        std::is_same<_Ty, int8_t>::value   ||
+                        std::is_same<_Ty, uint8_t>::value, _Ty>::type
+idiv_floor(_Ty __deno, _Ty __numer) noexcept
+{
+    return (__deno / __numer) * __numer;
 }
 
 
+template <typename _Ty>
+#ifdef _DECX_CUDA_PARTS_
+__host__ __device__
+#endif
+constexpr inline static 
+typename std::enable_if<std::is_same<_Ty, int32_t>::value  ||
+                        std::is_same<_Ty, uint32_t>::value || 
+                        std::is_same<_Ty, int64_t>::value  ||
+                        std::is_same<_Ty, uint64_t>::value ||
+                        std::is_same<_Ty, int8_t>::value   ||
+                        std::is_same<_Ty, uint8_t>::value, _Ty>::type
+ifdiv2_ceil(_Ty __src) noexcept
+{
+    return ((__src >> 1) + (__src & 1));
+}
+
+
+template <typename _Ty>
+#ifdef _DECX_CUDA_PARTS_
+__host__ __device__
+#endif
+constexpr static inline 
+typename std::enable_if<std::is_same<_Ty, int32_t>::value  ||
+                        std::is_same<_Ty, uint32_t>::value || 
+                        std::is_same<_Ty, int64_t>::value  ||
+                        std::is_same<_Ty, uint64_t>::value ||
+                        std::is_same<_Ty, int8_t>::value   ||
+                        std::is_same<_Ty, uint8_t>::value, _Ty>::type
+align(_Ty __x, const uint32_t _alignment)
+{
+    return decx::utils::idiv_ceil<_Ty>(__x, _alignment) * _alignment;
+}
+    
+
+constexpr inline static int32_t Iabs(int32_t n) noexcept 
+{
+    return (n ^ (n >> 31)) - (n >> 31);
+}
+
+    
+/**
+ * NOrmally, src_len should not larger than dst_len
+*/
+template <uint64_t dst_len>
+static void decx_strcpy(char (&dst)[dst_len], const char* src)
+{
+#ifdef _MSC_VER
+    strcpy_s<dst_len>(dst, src);
+#endif
+#ifdef __GNUC__
+    strcpy(dst, src);
+#endif
+}
+
+    /*
+    * @param _initial_ptr : The pointer where start to offset
+    * @param __x : Offset along height
+    * @param __y : Offset along width
+    * @param _pitch : The width of the virtal square
+    */
+    template <typename _In_Type, typename _Out_Type>
+    static _Out_Type* ptr_shift_xy(_In_Type* _initial_ptr, const uint64_t __x, const uint64_t __y, const uint64_t _pitch);
+
+    /*
+    * @param _initial_ptr : The pointer where start to offset
+    * @param offset_xy : ~.x : Offset along height; ~.y : Offset along width
+    * @param _pitch : The width of the virtal square
+    */
+    template <typename _In_Type, typename _Out_Type>
+    static _Out_Type* ptr_shift_xy(_In_Type* _initial_ptr, const uint2 offset_xy, const uint64_t _pitch);
+
+
+    /*
+    * @param _initial_ptr : The pointer where start to offset
+    * @param __x : Offset along height
+    * @param __y : Offset along width
+    * @param _pitch : The width of the virtal square
+    */
+    template <typename _Ty>
+    static void ptr_shift_xy_inplace(_Ty** _initial_ptr, const uint __x, const uint __y, const uint64_t _pitch);
+
+    /*
+    * @param _initial_ptr : The pointer where start to offset
+    * @param offset_xy : ~.x : Offset along height; ~.y : Offset along width
+    * @param _pitch : The width of the virtal square
+    */
+    template <typename _Ty>
+    static void ptr_shift_xy_inplace(_Ty** _initial_ptr, const uint2 offset_xy, const uint64_t _pitch);
+}
+}
 
 
 static int decx::utils::_GetHighest_abd(uint64_t __x) noexcept
@@ -163,56 +215,6 @@ static int decx::utils::_GetHighest_abd(uint64_t __x) noexcept
         __x >>= 1;
     }
     return res;
-}
-
-
-/*
-* @return return __x < _boundary ? _boundary : __x;
-*/
-template <typename _Ty>
-constexpr static _Ty decx::utils::clamp_min(_Ty __x, _Ty _boundary) noexcept{
-    return __x < _boundary ? _boundary : __x;
-}
-
-/*
-* @return return __x > _boundary ? _boundary : __x;
-*/
-template <typename _Ty>
-constexpr static _Ty decx::utils::clamp_max(_Ty __x, _Ty _boundary) noexcept {
-    return __x > _boundary ? _boundary : __x;
-}
-
-
-template <typename _Ty>
-#ifdef _DECX_CUDA_PARTS_
-__host__ __device__
-#endif
-constexpr
-inline static _Ty decx::utils::idiv_ceil(_Ty __deno, _Ty __numer) noexcept
-{
-    return (__deno / __numer) + (_Ty)((bool)(__deno % __numer));
-}
-
-
-template <typename _Ty>
-#ifdef _DECX_CUDA_PARTS_
-__host__ __device__
-#endif
-constexpr
-inline static _Ty decx::utils::fast_uint_ceil2(_Ty __src) noexcept
-{
-    return ((__src >> 1) + (__src & 1));
-}
-
-
-template <typename _Ty>
-#ifdef _DECX_CUDA_PARTS_
-__host__ __device__
-#endif
-constexpr static inline _Ty
-decx::utils::align(_Ty __x, const uint32_t _alignment)
-{
-    return decx::utils::idiv_ceil<_Ty>(__x, _alignment) * _alignment;
 }
 
 
@@ -238,21 +240,6 @@ static int decx::utils::_GetHighest(uint64_t __x) noexcept
     return res;
 }
 
-
-
-
-template <uint64_t dst_len>
-static void decx::utils::decx_strcpy(char (&dst)[dst_len], const char* src)
-{
-#ifdef _MSC_VER
-    strcpy_s<dst_len>(dst, src);
-#endif
-
-#ifdef __GNUC__
-    strcpy(dst, src);
-    //memcpy(dst, src, dst_len * sizeof(char));
-#endif
-}
 
 
 template <typename _In_Type, typename _Out_Type> static FORCEINLINE
