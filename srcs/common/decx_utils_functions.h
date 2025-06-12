@@ -44,26 +44,60 @@ namespace decx
 {
 namespace utils
 {
-    /*
-    * @brief : The '_abd' suffix means that the return value WILL NOT
-    * plus one when the input value reaches the critical points (e.g.
-    * 2, 4, 8, 16, 32...)
-    */
-    static int _GetHighest_abd(uint64_t __x) noexcept;
+/**
+* @brief The '_conservative' suffix means that the return value WILL NOT
+* plus one when the input value reaches the critical points (e.g.
+* 2, 4, 8, 16, 32...)
+*/
+template <typename _Ty>
+inline static int32_t
+i_getLSB_idx_conservative(
+    typename std::enable_if<std::is_same<_Ty, int32_t>::value  ||
+                            std::is_same<_Ty, uint32_t>::value || 
+                            std::is_same<_Ty, int64_t>::value  ||
+                            std::is_same<_Ty, uint64_t>::value ||
+                            std::is_same<_Ty, int8_t>::value   ||
+                            std::is_same<_Ty, uint8_t>::value, _Ty>::type __x) noexcept
+{
+    --__x;
+    int res = 0;
+    while (__x) {
+        ++res;
+        __x >>= 1;
+    }
+    return res;
+}
 
-    /*
-    * @brief : The '_abd' suffix means that the return value WILL
-    * plus one when the input value reaches the critical points (e.g.
-    * 2, 4, 8, 16, 32...)
-    */
-    static int _GetHighest(uint64_t __x) noexcept;
+/**
+* @brief : No '_conservative' suffix means that the return value WILL
+* plus one when the input value reaches the critical points (e.g.
+* 2, 4, 8, 16, 32...)
+*/
+template <typename _Ty>
+inline static int32_t
+i_getLSB_idx(
+    typename std::enable_if<std::is_same<_Ty, int32_t>::value  ||
+                            std::is_same<_Ty, uint32_t>::value || 
+                            std::is_same<_Ty, int64_t>::value  ||
+                            std::is_same<_Ty, uint64_t>::value ||
+                            std::is_same<_Ty, int8_t>::value   ||
+                            std::is_same<_Ty, uint8_t>::value, _Ty>::type __x) noexcept
+{
+    int res = 0;
+    while (__x) {
+        ++res;
+        __x >>= 1;
+    }
+    return res;
+}
 
 
 /*
 * @return return __x < _boundary ? _boundary : __x;
 */
 template <typename _Ty>
-constexpr static _Ty clamp_min(_Ty __x, _Ty _boundary) noexcept{
+constexpr static _Ty clamp_min(_Ty __x, _Ty _boundary) noexcept
+{
     return __x < _boundary ? _boundary : __x;
 }
 
@@ -71,7 +105,8 @@ constexpr static _Ty clamp_min(_Ty __x, _Ty _boundary) noexcept{
 * @return return __x > _boundary ? _boundary : __x;
 */
 template <typename _Ty>
-constexpr static _Ty clamp_max(_Ty __x, _Ty _boundary) noexcept {
+constexpr static _Ty clamp_max(_Ty __x, _Ty _boundary) noexcept 
+{
     return __x > _boundary ? _boundary : __x;
 }
 
@@ -142,15 +177,27 @@ typename std::enable_if<std::is_same<_Ty, int32_t>::value  ||
                         std::is_same<_Ty, uint64_t>::value ||
                         std::is_same<_Ty, int8_t>::value   ||
                         std::is_same<_Ty, uint8_t>::value, _Ty>::type
-align(_Ty __x, const uint32_t _alignment)
+align(_Ty __x, const uint32_t _alignment) noexcept
 {
     return decx::utils::idiv_ceil<_Ty>(__x, _alignment) * _alignment;
 }
     
 
-constexpr inline static int32_t Iabs(int32_t n) noexcept 
+template <typename _Ty>
+#ifdef _DECX_CUDA_PARTS_
+__host__ __device__
+#endif
+constexpr static inline 
+typename std::enable_if<std::is_same<_Ty, int32_t>::value  ||
+                        std::is_same<_Ty, uint32_t>::value || 
+                        std::is_same<_Ty, int64_t>::value  ||
+                        std::is_same<_Ty, uint64_t>::value ||
+                        std::is_same<_Ty, int8_t>::value   ||
+                        std::is_same<_Ty, uint8_t>::value, _Ty>::type
+iabs(_Ty n) noexcept 
 {
-    return (n ^ (n >> 31)) - (n >> 31);
+    constexpr int32_t max_bit_idx = sizeof(_Ty) * 8 - 1;
+    return (n ^ (n >> max_bit_idx)) - (n >> max_bit_idx);
 }
 
     
@@ -168,111 +215,58 @@ static void decx_strcpy(char (&dst)[dst_len], const char* src)
 #endif
 }
 
-    /*
-    * @param _initial_ptr : The pointer where start to offset
-    * @param __x : Offset along height
-    * @param __y : Offset along width
-    * @param _pitch : The width of the virtal square
-    */
-    template <typename _In_Type, typename _Out_Type>
-    static _Out_Type* ptr_shift_xy(_In_Type* _initial_ptr, const uint64_t __x, const uint64_t __y, const uint64_t _pitch);
 
-    /*
-    * @param _initial_ptr : The pointer where start to offset
-    * @param offset_xy : ~.x : Offset along height; ~.y : Offset along width
-    * @param _pitch : The width of the virtal square
-    */
-    template <typename _In_Type, typename _Out_Type>
-    static _Out_Type* ptr_shift_xy(_In_Type* _initial_ptr, const uint2 offset_xy, const uint64_t _pitch);
-
-
-    /*
-    * @param _initial_ptr : The pointer where start to offset
-    * @param __x : Offset along height
-    * @param __y : Offset along width
-    * @param _pitch : The width of the virtal square
-    */
-    template <typename _Ty>
-    static void ptr_shift_xy_inplace(_Ty** _initial_ptr, const uint __x, const uint __y, const uint64_t _pitch);
-
-    /*
-    * @param _initial_ptr : The pointer where start to offset
-    * @param offset_xy : ~.x : Offset along height; ~.y : Offset along width
-    * @param _pitch : The width of the virtal square
-    */
-    template <typename _Ty>
-    static void ptr_shift_xy_inplace(_Ty** _initial_ptr, const uint2 offset_xy, const uint64_t _pitch);
-}
-}
-
-
-static int decx::utils::_GetHighest_abd(uint64_t __x) noexcept
-{
-    --__x;
-    int res = 0;
-    while (__x) {
-        ++res;
-        __x >>= 1;
-    }
-    return res;
-}
-
-
-static int _GetHighest(uint64_t __x) noexcept
-{
-    int res = 0;
-    while (__x) {
-        ++res;
-        __x >>= 1;
-    }
-    return res;
-}
-
-
-
-static int decx::utils::_GetHighest(uint64_t __x) noexcept
-{
-    int res = 0;
-    while (__x) {
-        ++res;
-        __x >>= 1;
-    }
-    return res;
-}
-
-
-
+/*
+* @param _initial_ptr : The pointer where start to offset
+* @param __x : Offset along height
+* @param __y : Offset along width
+* @param _pitch : The width of the virtal square
+*/
 template <typename _In_Type, typename _Out_Type> static FORCEINLINE
-_Out_Type* decx::utils::ptr_shift_xy(_In_Type* _initial_ptr, const uint64_t __y, const uint64_t __x, const uint64_t _pitch)
+_Out_Type* ptr_shift_xy(_In_Type* _initial_ptr, const uint64_t __y, const uint64_t __x, const uint64_t _pitch)
 {
     return reinterpret_cast<_Out_Type*>(_initial_ptr) + (uint64_t)__y * _pitch + (uint64_t)__x;
 }
 
 
-
+/*
+* @param _initial_ptr : The pointer where start to offset
+* @param offset_xy : ~.x : Offset along height; ~.y : Offset along width
+* @param _pitch : The width of the virtal square
+*/
 template <typename _In_Type, typename _Out_Type> static FORCEINLINE
-_Out_Type* decx::utils::ptr_shift_xy(_In_Type* _initial_ptr, const uint2 offset_xy, const uint64_t _pitch)
+_Out_Type* ptr_shift_xy(_In_Type* _initial_ptr, const uint2 offset_xy, const uint64_t _pitch)
 {
     return reinterpret_cast<_Out_Type*>(_initial_ptr) + (uint64_t)offset_xy.x * _pitch + (uint64_t)offset_xy.y;
 }
 
 
-
+/*
+* @param _initial_ptr : The pointer where start to offset
+* @param __x : Offset along height
+* @param __y : Offset along width
+* @param _pitch : The width of the virtal square
+*/
 template <typename _Ty> static FORCEINLINE
-void decx::utils::ptr_shift_xy_inplace(_Ty** _initial_ptr, const uint __x, const uint __y, const uint64_t _pitch)
+void ptr_shift_xy_inplace(_Ty** _initial_ptr, const uint __x, const uint __y, const uint64_t _pitch)
 {
     *_initial_ptr += (uint64_t)__x * _pitch + (uint64_t)__y;
 }
 
 
-
+/*
+* @param _initial_ptr : The pointer where start to offset
+* @param offset_xy : ~.x : Offset along height; ~.y : Offset along width
+* @param _pitch : The width of the virtal square
+*/
 template <typename _Ty> static FORCEINLINE
-void decx::utils::ptr_shift_xy_inplace(_Ty** _initial_ptr, const uint2 offset_xy, const uint64_t _pitch)
+void ptr_shift_xy_inplace(_Ty** _initial_ptr, const uint2 offset_xy, const uint64_t _pitch)
 {
     *_initial_ptr += (uint64_t)offset_xy.x * _pitch + (uint64_t)offset_xy.y;
 }
 
-
+}
+}
 
 
 #define DECX_PTR_SHF_XY decx::utils::ptr_shift_xy
@@ -282,4 +276,4 @@ void decx::utils::ptr_shift_xy_inplace(_Ty** _initial_ptr, const uint2 offset_xy
     (_src_ptr) + (_offset_y) * (_pitch) + (_offset_x)
 
 
-#endif
+#endif      // ifndef _DECX_UTILS_FUNCTIONS_H_
