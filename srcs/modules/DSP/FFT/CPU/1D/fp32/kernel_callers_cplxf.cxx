@@ -138,7 +138,7 @@ decx::dsp::fft::CPUK::_FFT1D_smaller_1st_cplxf32(const _type_in* __restrict					
 	const uint64_t _load_pitch = _signal_length / _FFT_info->get_signal_len();
 
 	uint32_t _call_time_base = FFT_call_time_start;
-	const uint32_t FFT_call_times_v4 = decx::utils::ceil<uint32_t>(FFT_call_times, 4);
+	const uint32_t FFT_call_times_v4 = decx::utils::idiv_ceil<uint32_t>(FFT_call_times, 4);
 	const uint8_t _L_v4 = FFT_call_times % 4;
 
 	decx::utils::frag_manager _store_linearly_config;
@@ -228,7 +228,7 @@ decx::dsp::fft::CPUK::_FFT1D_smaller_mid_cplxf32_C2C(const de::CPf* __restrict		
 	decx::utils::double_buffer_manager _double_buffer(_tmp1_ptr, _tmp2_ptr);
 	const uint64_t _load_pitch = _global_kernel_info->_signal_len / _FFT_info->get_signal_len();
 
-	const uint32_t FFT_call_times_v4 = decx::utils::ceil<uint32_t>(_FFT_times_v4, 4);
+	const uint32_t FFT_call_times_v4 = decx::utils::idiv_ceil<uint32_t>(_FFT_times_v4, 4);
 	const uint8_t _L_v4 = _FFT_times_v4 % 4;
 
 	const de::CPf* _src_start_ptr = src;

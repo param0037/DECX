@@ -445,7 +445,7 @@ void decx::vis::_channel_ops_UC42UC_caller(decx::vis::channel_ops_kernel kernel,
     decx::utils::frag_manager f_mgr;
     decx::utils::frag_manager_gen(&f_mgr, dims.y, t1D.total_thread);
 
-    int2 sub_dims = make_int2(decx::utils::ceil<uint32_t>(dims.x, 4), f_mgr.frag_len);
+    int2 sub_dims = make_int2(decx::utils::idiv_ceil<uint32_t>(dims.x, 4), f_mgr.frag_len);
 
     uint64_t fragment_src = pitchsrc * (uint64_t)sub_dims.y, 
              fragment_dst = (pitchdst / 4) * (uint64_t)sub_dims.y,
@@ -477,7 +477,7 @@ void decx::vis::_channel_ops_UC42UC4_caller(decx::vis::channel_ops_kernel kernel
     decx::utils::frag_manager f_mgr;
     decx::utils::frag_manager_gen(&f_mgr, dims.y, t1D.total_thread);
 
-    int2 sub_dims = make_int2(decx::utils::ceil<uint32_t>(dims.x, 8), f_mgr.frag_len);
+    int2 sub_dims = make_int2(decx::utils::idiv_ceil<uint32_t>(dims.x, 8), f_mgr.frag_len);
 
     uint64_t fragment_src = pitchsrc * (uint64_t)sub_dims.y, 
              fragment_dst = pitchdst * (uint64_t)sub_dims.y,

@@ -225,7 +225,7 @@ decx::dsp::fft::CPUK::_IFFT2D_smaller_2rows_cplxd(const de::CPd* __restrict     
         else if constexpr (std::is_same_v<_type_out, uint8_t>) {
             decx::dsp::fft::CPUK::
                 store_entire_row_transpose_cplxd_u8(&_double_buffer,  (int16_t*)_dst_loc_ptr, 
-                                                    _tiles,           decx::utils::ceil<uint32_t>(_FFT_info->get_signal_len(), 2), 
+                                                    _tiles,           decx::utils::idiv_ceil<uint32_t>(_FFT_info->get_signal_len(), 2), 
                                                     _pitch_dst,       i == (_f_mgr_H.frag_num - 1) ? _L : 2);
         }
         else {

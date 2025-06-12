@@ -137,7 +137,7 @@ _matrix_B_arrange_cplxd_exec(const de::CPd* __restrict  src,            // point
     const uint32_t ptime_w = proc_dims_v2.x / block_W_v2;
     const uint32_t _LW = proc_dims_v2.x % block_W_v2;
 
-    const uint32_t ptime_h = decx::utils::ceil<uint32_t>(proc_dims_v2.y, block_H);
+    const uint32_t ptime_h = decx::utils::idiv_ceil<uint32_t>(proc_dims_v2.y, block_H);
     const uint32_t _LH = proc_dims_v2.y % block_H;
 
     for (uint32_t i = 0; i < ptime_h; ++i) 

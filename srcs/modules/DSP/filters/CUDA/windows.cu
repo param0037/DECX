@@ -297,7 +297,7 @@ de::dsp::cuda::Gaussian_Window1D(de::GPU_Vector& src, de::GPU_Vector& dst, const
     }
 
     const size_t _proc_len_v2 = _src->_length / 2;
-    decx::dsp::GPUK::cu_Gaussian_Window1D_cpl32 << <decx::utils::ceil<size_t>(_proc_len_v2, decx::cuda::_get_cuda_prop().maxThreadsPerBlock),
+    decx::dsp::GPUK::cu_Gaussian_Window1D_cpl32 << <decx::utils::idiv_ceil<size_t>(_proc_len_v2, decx::cuda::_get_cuda_prop().maxThreadsPerBlock),
         decx::cuda::_get_cuda_prop().maxThreadsPerBlock, 0, S->get_raw_stream_ref() >> > (
             (float4*)_src->Vec.ptr, (float4*)_dst->Vec.ptr, u, sigma, _proc_len_v2, _src->length);
 
@@ -334,7 +334,7 @@ de::dsp::cuda::Triangular_Window1D(de::GPU_Vector& src, de::GPU_Vector& dst, con
     }
 
     const size_t _proc_len_v2 = _src->_length / 2;
-    decx::dsp::GPUK::cu_Triangluar_Window1D_cpl32 << <decx::utils::ceil<size_t>(_proc_len_v2, decx::cuda::_get_cuda_prop().maxThreadsPerBlock),
+    decx::dsp::GPUK::cu_Triangluar_Window1D_cpl32 << <decx::utils::idiv_ceil<size_t>(_proc_len_v2, decx::cuda::_get_cuda_prop().maxThreadsPerBlock),
         decx::cuda::_get_cuda_prop().maxThreadsPerBlock, 0, S->get_raw_stream_ref() >> > (
             (float4*)_src->Vec.ptr, (float4*)_dst->Vec.ptr, origin, radius, _proc_len_v2, _src->length);
 
@@ -370,8 +370,8 @@ de::dsp::cuda::Cone_Window2D(de::GPU_Matrix& src, de::GPU_Matrix& dst, const de:
         return handle;
     }
 
-    const dim3 grid(decx::utils::ceil<uint>(_src->Height(), 16),
-        decx::utils::ceil<uint>(_src->Pitch() / 2, 16));
+    const dim3 grid(decx::utils::idiv_ceil<uint>(_src->Height(), 16),
+        decx::utils::idiv_ceil<uint>(_src->Pitch() / 2, 16));
     const dim3 gpu_thread(16, 16);
     decx::dsp::GPUK::cu_Cone_Window2D_cpl32 << <grid, gpu_thread, 0, S->get_raw_stream_ref() >> > (
         (float4*)_src->Mat.ptr,
@@ -414,8 +414,8 @@ de::dsp::cuda::Gaussian_Window2D(
         return handle;
     }
 
-    const dim3 grid(decx::utils::ceil<uint>(_src->Height(), 16),
-        decx::utils::ceil<uint>(_src->Pitch() / 2, 16));
+    const dim3 grid(decx::utils::idiv_ceil<uint>(_src->Height(), 16),
+        decx::utils::idiv_ceil<uint>(_src->Pitch() / 2, 16));
     const dim3 gpu_thread(16, 16);
     if (p == 0) {
         decx::dsp::GPUK::cu_Gaussian_Window2D_cpl32_no_correlation << <grid, gpu_thread, 0, S->get_raw_stream_ref() >> > (

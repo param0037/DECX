@@ -46,8 +46,8 @@ const void* decx::blas::cuda_DP2D_1way_fp32_caller_Async(decx::blas::cuda_DP2D_c
                 (float4*)_configs->_dev_A,
                 (float4*)_configs->_dev_B,
                 (float*)res_ptr,
-                decx::utils::ceil<uint32_t>(_configs->get_actual_proc_dims().x, 4),
-                decx::utils::ceil<uint32_t>(_configs->get_1st_kernel_config().x, 4) * 4,
+                decx::utils::idiv_ceil<uint32_t>(_configs->get_actual_proc_dims().x, 4),
+                decx::utils::idiv_ceil<uint32_t>(_configs->get_1st_kernel_config().x, 4) * 4,
                 _configs->get_actual_proc_dims());
     }
     else {
@@ -56,8 +56,8 @@ const void* decx::blas::cuda_DP2D_1way_fp32_caller_Async(decx::blas::cuda_DP2D_c
                 (float4*)_configs->_dev_A,
                 (float4*)_configs->_dev_B,
                 (float4*)res_ptr,
-                decx::utils::ceil<uint32_t>(_configs->get_actual_proc_dims().x, 4),
-                decx::utils::ceil<uint32_t>(_configs->get_actual_proc_dims().x, 4),
+                decx::utils::idiv_ceil<uint32_t>(_configs->get_actual_proc_dims().x, 4),
+                decx::utils::idiv_ceil<uint32_t>(_configs->get_actual_proc_dims().x, 4),
                 _configs->get_actual_proc_dims());
     }
 
@@ -84,16 +84,16 @@ template const void* decx::blas::cuda_DP2D_1way_fp32_caller_Async<false>(decx::b
 
 #define _DOT2D_1WAY_H_FP16_PARAM(_dst_type)                                                                 \
     (float4*)_configs->_dev_A, (float4*)_configs->_dev_B, (_dst_type*)res_ptr,                              \
-    decx::utils::ceil<uint32_t>(_configs->get_actual_proc_dims().x, 8),                                     \
-    decx::utils::ceil<uint32_t>(_configs->get_1st_kernel_config().x, (sizeof(float4) / sizeof(_dst_type)))  \
+    decx::utils::idiv_ceil<uint32_t>(_configs->get_actual_proc_dims().x, 8),                                     \
+    decx::utils::idiv_ceil<uint32_t>(_configs->get_1st_kernel_config().x, (sizeof(float4) / sizeof(_dst_type)))  \
     * (sizeof(float4) / sizeof(_dst_type)),                                                                 \
     _configs->get_actual_proc_dims()                                                                        \
 
 
 #define _DOT2D_1WAY_V_FP16_PARAM(_dst_type)                                                                 \
     (float4*)_configs->_dev_A, (float4*)_configs->_dev_B, (float4*)res_ptr,                                 \
-    decx::utils::ceil<uint32_t>(_configs->get_actual_proc_dims().x, 8),                                     \
-    decx::utils::ceil<uint32_t>(_configs->get_actual_proc_dims().x, (sizeof(float4) / sizeof(_dst_type))),  \
+    decx::utils::idiv_ceil<uint32_t>(_configs->get_actual_proc_dims().x, 8),                                     \
+    decx::utils::idiv_ceil<uint32_t>(_configs->get_actual_proc_dims().x, (sizeof(float4) / sizeof(_dst_type))),  \
     _configs->get_actual_proc_dims()                                                                        \
     
 

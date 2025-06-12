@@ -94,7 +94,7 @@ cu_GEMM_cplxd_kernel_16_32_64(const double2* __restrict A,   const double2* __re
         _accu[k]._vf = decx::utils::vec4_set1_fp32(0);
     }
 
-    for (uint32_t i = 0; i < decx::utils::ceil<uint32_t>(_L_v1, 16); ++i)
+    for (uint32_t i = 0; i < decx::utils::idiv_ceil<uint32_t>(_L_v1, 16); ++i)
     {
         // Load from A
         if (_Lloc_A < _L_v1){
@@ -197,7 +197,7 @@ cu_GEMM_cplxd_F_kernel_16_32_64(const double2* __restrict A,    const double2* _
         _accu[k]._vf = decx::utils::vec4_set1_fp32(0);
     }
 
-    for (uint32_t i = 0; i < decx::utils::ceil<uint32_t>(_L_v1, 16); ++i)
+    for (uint32_t i = 0; i < decx::utils::idiv_ceil<uint32_t>(_L_v1, 16); ++i)
     {
         // Load from A
         if (_Lloc_A < _L_v1){

@@ -37,16 +37,16 @@ plan(const uint64_t total, const uint8_t type_in_size, const uint8_t type_out_si
     this->_type_in_size = type_in_size;
     this->_type_out_size = type_out_size;
 
-    this->plan_alignment();
+    this->plan_alignment(16);
 
     this->_total = total;
 
-    this->_total_v = decx::utils::ceil<uint64_t>(this->_total, this->_alignment);
+    this->_total_v = decx::utils::idiv_ceil<uint64_t>(this->_total, this->_alignment);
 
     this->_block = _EW_CUDA_BLOCK_SIZE_ == 0 ? decx::cuda::_get_cuda_prop().maxThreadsPerBlock :
         _EW_CUDA_BLOCK_SIZE_;
     
-    this->_grid = decx::utils::ceil<uint64_t>(this->_total_v, this->_block);
+    this->_grid = decx::utils::idiv_ceil<uint64_t>(this->_total_v, this->_block);
 }
 
 
@@ -71,7 +71,7 @@ plan(const uint2 proc_dims, const uint8_t type_in_size, const uint8_t type_out_s
         this->_type_in_size = type_in_size;
         this->_type_out_size = type_out_size;
 
-        this->plan_alignment();
+        this->plan_alignment(16);
 
         if (decx::cuda::_get_cuda_prop().maxThreadsPerBlock < 1024){
             this->_block = dim3(32, 8);
@@ -81,9 +81,9 @@ plan(const uint2 proc_dims, const uint8_t type_in_size, const uint8_t type_out_s
         }
 
         this->_proc_dims = proc_dims;
-        this->_proc_w_v = decx::utils::ceil<uint32_t>(this->_proc_dims.x, this->_alignment);
+        this->_proc_w_v = decx::utils::idiv_ceil<uint32_t>(this->_proc_dims.x, this->_alignment);
 
-        this->_grid = dim3(decx::utils::ceil<uint32_t>(this->_proc_w_v, this->_block.x),
-                        decx::utils::ceil<uint32_t>(this->_proc_dims.y, this->_block.y));
+        this->_grid = dim3(decx::utils::idiv_ceil<uint32_t>(this->_proc_w_v, this->_block.x),
+                        decx::utils::idiv_ceil<uint32_t>(this->_proc_dims.y, this->_block.y));
     }
 }

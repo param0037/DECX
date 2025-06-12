@@ -59,7 +59,7 @@ decx::GPUK::cu_vec_m_mat_fp32(const float* __restrict       vec_src,
     * process goes all the way down vertically. The process stops at exactly
     * where the matrix ends.
     */
-    if (tidx < decx::utils::ceil<uint32_t>(proc_dims_v1.x, 4) && tidy < proc_dims_v1.y) {
+    if (tidx < decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.x, 4) && tidy < proc_dims_v1.y) {
         _recv._vf = mat_src[LDG_dex];
         _vec_val = vec_src[tidy];
     }
@@ -94,7 +94,7 @@ decx::GPUK::cu_vec_m_mat_fp32(const float* __restrict       vec_src,
 
     _recv._vf = _workspace[threadIdx.y][threadIdx.x];
 
-    if (tidx < decx::utils::ceil<uint32_t>(proc_dims_v1.x, 4) && threadIdx.y == 0) {
+    if (tidx < decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.x, 4) && threadIdx.y == 0) {
         dst[STG_dex] = _recv._vf;
     }
 }
@@ -115,7 +115,7 @@ decx::GPUK::cu_mat_m_vec_fp32(const float4* __restrict      mat_src,
     uint64_t LDG_dex = Wsrc_v4 * tidy + tidx;
     uint64_t STG_dex = Wdst_v1 * tidy + blockIdx.x;
 
-    uint32_t proc_W_v4 = decx::utils::ceil<uint32_t>(proc_dims.x, 4);
+    uint32_t proc_W_v4 = decx::utils::idiv_ceil<uint32_t>(proc_dims.x, 4);
 
     decx::utils::_cuda_vec128 _recv, _vec_vals;
     _recv._vf = decx::utils::vec4_set1_fp32(0);

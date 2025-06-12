@@ -55,8 +55,8 @@ bool decx::reduce::reduce2D_flatten_postproc_configs_gen(decx::reduce::cuda_redu
         _proc_align = _CU_REDUCE1D_MEM_ALIGN_8B_;
     }
 
-    const dim3 _flatten_K_grid = dim3(decx::utils::ceil<uint32_t>(proc_dims_v1.x, _REDUCE2D_BLOCK_DIM_X_ * _proc_align),
-                                      decx::utils::ceil<uint32_t>(proc_dims_v1.y, _REDUCE2D_BLOCK_DIM_Y_));
+    const dim3 _flatten_K_grid = dim3(decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.x, _REDUCE2D_BLOCK_DIM_X_ * _proc_align),
+                                      decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.y, _REDUCE2D_BLOCK_DIM_Y_));
 
     uint64_t flatten_len = _flatten_K_grid.x * _flatten_K_grid.y;
 
@@ -107,8 +107,8 @@ void decx::reduce::cuda_reduce1D_configs<_type_in>::_calc_kernel_param_packs()
     _proc_align = this->_remain_load_byte ? _proc_align_tr : _proc_align;
 
     uint64_t proc_len_v1 = this->_actual_len;
-    uint64_t proc_len_v = decx::utils::ceil<uint32_t>(this->_actual_len, _proc_align_tr);
-    uint64_t grid_len = decx::utils::ceil<uint64_t>(proc_len_v, _REDUCE1D_BLOCK_DIM_);
+    uint64_t proc_len_v = decx::utils::idiv_ceil<uint32_t>(this->_actual_len, _proc_align_tr);
+    uint64_t grid_len = decx::utils::idiv_ceil<uint64_t>(proc_len_v, _REDUCE1D_BLOCK_DIM_);
 
     const void* read_ptr = NULL;
     void* write_ptr = NULL;
@@ -130,8 +130,8 @@ void decx::reduce::cuda_reduce1D_configs<_type_in>::_calc_kernel_param_packs()
     if (grid_len > 1)
     {
         proc_len_v1 = grid_len;
-        proc_len_v = decx::utils::ceil<uint64_t>(proc_len_v1, _proc_align);
-        grid_len = decx::utils::ceil<uint64_t>(proc_len_v, _REDUCE1D_BLOCK_DIM_);
+        proc_len_v = decx::utils::idiv_ceil<uint64_t>(proc_len_v1, _proc_align);
+        grid_len = decx::utils::idiv_ceil<uint64_t>(proc_len_v, _REDUCE1D_BLOCK_DIM_);
 
         while (true)
         {
@@ -149,8 +149,8 @@ void decx::reduce::cuda_reduce1D_configs<_type_in>::_calc_kernel_param_packs()
             }
 
             proc_len_v1 = grid_len;
-            proc_len_v = decx::utils::ceil<uint64_t>(proc_len_v1, _proc_align);
-            grid_len = decx::utils::ceil<uint64_t>(proc_len_v, _REDUCE1D_BLOCK_DIM_);
+            proc_len_v = decx::utils::idiv_ceil<uint64_t>(proc_len_v1, _proc_align);
+            grid_len = decx::utils::idiv_ceil<uint64_t>(proc_len_v, _REDUCE1D_BLOCK_DIM_);
         }
     }
 }
@@ -176,20 +176,20 @@ void decx::reduce::cuda_reduce1D_configs<_type_in>::generate_configs(const uint6
     uint64_t _first_grid_len = 0, _aligned_proc_len = 0;
 
     if (sizeof(_type_in) == 4) {
-        _aligned_proc_len = decx::utils::ceil<uint64_t>(proc_len_v1, _CU_REDUCE1D_MEM_ALIGN_4B_) * _CU_REDUCE1D_MEM_ALIGN_4B_;
-        _first_grid_len = decx::utils::ceil<uint64_t>(_aligned_proc_len / _CU_REDUCE1D_MEM_ALIGN_4B_, _REDUCE1D_BLOCK_DIM_);
+        _aligned_proc_len = decx::utils::idiv_ceil<uint64_t>(proc_len_v1, _CU_REDUCE1D_MEM_ALIGN_4B_) * _CU_REDUCE1D_MEM_ALIGN_4B_;
+        _first_grid_len = decx::utils::idiv_ceil<uint64_t>(_aligned_proc_len / _CU_REDUCE1D_MEM_ALIGN_4B_, _REDUCE1D_BLOCK_DIM_);
     }
     else if (sizeof(_type_in) == 1) {
-        _aligned_proc_len = decx::utils::ceil<uint64_t>(proc_len_v1, _CU_REDUCE1D_MEM_ALIGN_1B_) * _CU_REDUCE1D_MEM_ALIGN_1B_;
-        _first_grid_len = decx::utils::ceil<uint64_t>(_aligned_proc_len / _CU_REDUCE1D_MEM_ALIGN_1B_, _REDUCE1D_BLOCK_DIM_);
+        _aligned_proc_len = decx::utils::idiv_ceil<uint64_t>(proc_len_v1, _CU_REDUCE1D_MEM_ALIGN_1B_) * _CU_REDUCE1D_MEM_ALIGN_1B_;
+        _first_grid_len = decx::utils::idiv_ceil<uint64_t>(_aligned_proc_len / _CU_REDUCE1D_MEM_ALIGN_1B_, _REDUCE1D_BLOCK_DIM_);
     }
     else if (sizeof(_type_in) == 2) {
-        _aligned_proc_len = decx::utils::ceil<uint64_t>(proc_len_v1, _CU_REDUCE1D_MEM_ALIGN_2B_) * _CU_REDUCE1D_MEM_ALIGN_2B_;
-        _first_grid_len = decx::utils::ceil<uint64_t>(_aligned_proc_len / _CU_REDUCE1D_MEM_ALIGN_2B_, _REDUCE1D_BLOCK_DIM_);
+        _aligned_proc_len = decx::utils::idiv_ceil<uint64_t>(proc_len_v1, _CU_REDUCE1D_MEM_ALIGN_2B_) * _CU_REDUCE1D_MEM_ALIGN_2B_;
+        _first_grid_len = decx::utils::idiv_ceil<uint64_t>(_aligned_proc_len / _CU_REDUCE1D_MEM_ALIGN_2B_, _REDUCE1D_BLOCK_DIM_);
     }
     else if (sizeof(_type_in) == 8) {
-        _aligned_proc_len = decx::utils::ceil<uint64_t>(proc_len_v1, _CU_REDUCE1D_MEM_ALIGN_8B_) * _CU_REDUCE1D_MEM_ALIGN_8B_;
-        _first_grid_len = decx::utils::ceil<uint64_t>(_aligned_proc_len / _CU_REDUCE1D_MEM_ALIGN_8B_, _REDUCE1D_BLOCK_DIM_);
+        _aligned_proc_len = decx::utils::idiv_ceil<uint64_t>(proc_len_v1, _CU_REDUCE1D_MEM_ALIGN_8B_) * _CU_REDUCE1D_MEM_ALIGN_8B_;
+        _first_grid_len = decx::utils::idiv_ceil<uint64_t>(_aligned_proc_len / _CU_REDUCE1D_MEM_ALIGN_8B_, _REDUCE1D_BLOCK_DIM_);
     }
 
     int32_t rval = 0;
@@ -219,20 +219,20 @@ void decx::reduce::cuda_reduce1D_configs<_type_in>::generate_configs(decx::PtrIn
     uint64_t _first_grid_len = 0, _aligned_proc_len = 0;
 
     if (sizeof(_type_in) == 4) {
-        _aligned_proc_len = decx::utils::ceil<uint64_t>(proc_len_v1, _CU_REDUCE1D_MEM_ALIGN_4B_) * _CU_REDUCE1D_MEM_ALIGN_4B_;
-        _first_grid_len = decx::utils::ceil<uint64_t>(_aligned_proc_len / _CU_REDUCE1D_MEM_ALIGN_4B_, _REDUCE1D_BLOCK_DIM_);
+        _aligned_proc_len = decx::utils::idiv_ceil<uint64_t>(proc_len_v1, _CU_REDUCE1D_MEM_ALIGN_4B_) * _CU_REDUCE1D_MEM_ALIGN_4B_;
+        _first_grid_len = decx::utils::idiv_ceil<uint64_t>(_aligned_proc_len / _CU_REDUCE1D_MEM_ALIGN_4B_, _REDUCE1D_BLOCK_DIM_);
     }
     else if (sizeof(_type_in) == 1) {
-        _aligned_proc_len = decx::utils::ceil<uint64_t>(proc_len_v1, _CU_REDUCE1D_MEM_ALIGN_1B_) * _CU_REDUCE1D_MEM_ALIGN_1B_;
-        _first_grid_len = decx::utils::ceil<uint64_t>(_aligned_proc_len / _CU_REDUCE1D_MEM_ALIGN_1B_, _REDUCE1D_BLOCK_DIM_);
+        _aligned_proc_len = decx::utils::idiv_ceil<uint64_t>(proc_len_v1, _CU_REDUCE1D_MEM_ALIGN_1B_) * _CU_REDUCE1D_MEM_ALIGN_1B_;
+        _first_grid_len = decx::utils::idiv_ceil<uint64_t>(_aligned_proc_len / _CU_REDUCE1D_MEM_ALIGN_1B_, _REDUCE1D_BLOCK_DIM_);
     }
     else if (sizeof(_type_in) == 2) {
-        _aligned_proc_len = decx::utils::ceil<uint64_t>(proc_len_v1, _CU_REDUCE1D_MEM_ALIGN_2B_) * _CU_REDUCE1D_MEM_ALIGN_2B_;
-        _first_grid_len = decx::utils::ceil<uint64_t>(_aligned_proc_len / _CU_REDUCE1D_MEM_ALIGN_2B_, _REDUCE1D_BLOCK_DIM_);
+        _aligned_proc_len = decx::utils::idiv_ceil<uint64_t>(proc_len_v1, _CU_REDUCE1D_MEM_ALIGN_2B_) * _CU_REDUCE1D_MEM_ALIGN_2B_;
+        _first_grid_len = decx::utils::idiv_ceil<uint64_t>(_aligned_proc_len / _CU_REDUCE1D_MEM_ALIGN_2B_, _REDUCE1D_BLOCK_DIM_);
     }
     else if (sizeof(_type_in) == 8) {
-        _aligned_proc_len = decx::utils::ceil<uint64_t>(proc_len_v1, _CU_REDUCE1D_MEM_ALIGN_8B_) * _CU_REDUCE1D_MEM_ALIGN_8B_;
-        _first_grid_len = decx::utils::ceil<uint64_t>(_aligned_proc_len / _CU_REDUCE1D_MEM_ALIGN_8B_, _REDUCE1D_BLOCK_DIM_);
+        _aligned_proc_len = decx::utils::idiv_ceil<uint64_t>(proc_len_v1, _CU_REDUCE1D_MEM_ALIGN_8B_) * _CU_REDUCE1D_MEM_ALIGN_8B_;
+        _first_grid_len = decx::utils::idiv_ceil<uint64_t>(_aligned_proc_len / _CU_REDUCE1D_MEM_ALIGN_8B_, _REDUCE1D_BLOCK_DIM_);
     }
 
     this->_proc_src = (void*)dev_src;

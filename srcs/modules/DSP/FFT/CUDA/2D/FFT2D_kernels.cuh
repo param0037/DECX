@@ -249,8 +249,8 @@ decx::dsp::fft::FFT2D_1st_R2C_caller_cplxf(const float2* __restrict src,
                                            const uint32_t _pitchdst_v2,
                                            decx::cuda_stream* S)
 {
-    dim3 _grid(decx::utils::ceil<uint32_t>(min(_pitchsrc_v2, _pitchdst_v2), _FFT2D_BLOCK_X_),
-               decx::utils::ceil<uint32_t>(_signal_len / _radix, _FFT2D_BLOCK_Y_));
+    dim3 _grid(decx::utils::idiv_ceil<uint32_t>(min(_pitchsrc_v2, _pitchdst_v2), _FFT2D_BLOCK_X_),
+               decx::utils::idiv_ceil<uint32_t>(_signal_len / _radix, _FFT2D_BLOCK_Y_));
     dim3 _block(_FFT2D_BLOCK_X_, _FFT2D_BLOCK_Y_);
 
     switch (_radix)
@@ -290,8 +290,8 @@ decx::dsp::fft::FFT2D_1st_R2C_caller_uc8_cplxf(const ushort* __restrict src,
                                            const uint32_t _pitchdst_v2,
                                            decx::cuda_stream* S)
 {
-    dim3 _grid(decx::utils::ceil<uint32_t>(min(_pitchsrc_v2, _pitchdst_v2), _FFT2D_BLOCK_X_),
-               decx::utils::ceil<uint32_t>(_signal_len / _radix, _FFT2D_BLOCK_Y_));
+    dim3 _grid(decx::utils::idiv_ceil<uint32_t>(min(_pitchsrc_v2, _pitchdst_v2), _FFT2D_BLOCK_X_),
+               decx::utils::idiv_ceil<uint32_t>(_signal_len / _radix, _FFT2D_BLOCK_Y_));
     dim3 _block(_FFT2D_BLOCK_X_, _FFT2D_BLOCK_Y_);
 
     switch (_radix)
@@ -332,8 +332,8 @@ FFT2D_1st_R2C_caller_uc8_cplxd(const uint8_t* __restrict src,
                                const uint32_t _pitchdst_v1,
                                decx::cuda_stream* S)
 {
-    dim3 _grid(decx::utils::ceil<uint32_t>(min(_pitchsrc_v1, _pitchdst_v1), _FFT2D_BLOCK_X_),
-               decx::utils::ceil<uint32_t>(_signal_len / _radix, _FFT2D_BLOCK_Y_));
+    dim3 _grid(decx::utils::idiv_ceil<uint32_t>(min(_pitchsrc_v1, _pitchdst_v1), _FFT2D_BLOCK_X_),
+               decx::utils::idiv_ceil<uint32_t>(_signal_len / _radix, _FFT2D_BLOCK_Y_));
     dim3 _block(_FFT2D_BLOCK_X_, _FFT2D_BLOCK_Y_);
 
     switch (_radix)
@@ -373,8 +373,8 @@ decx::dsp::fft::FFT2D_1st_C2C_caller_cplxf(const float4* __restrict src,
                                            decx::cuda_stream* S,
                                            const uint64_t _div_len)
 {
-    dim3 _grid(decx::utils::ceil<uint32_t>(min(_pitchsrc_v2, _pitchdst_v2), _FFT2D_BLOCK_X_),
-               decx::utils::ceil<uint32_t>(_signal_len / _radix, _FFT2D_BLOCK_Y_));
+    dim3 _grid(decx::utils::idiv_ceil<uint32_t>(min(_pitchsrc_v2, _pitchdst_v2), _FFT2D_BLOCK_X_),
+               decx::utils::idiv_ceil<uint32_t>(_signal_len / _radix, _FFT2D_BLOCK_Y_));
     dim3 _block(_FFT2D_BLOCK_X_, _FFT2D_BLOCK_Y_);
 
     switch (_radix)
@@ -413,8 +413,8 @@ decx::dsp::fft::FFT2D_C2C_caller_cplxf(const float4* __restrict src,
                                        const uint32_t _pitchdst_v2,
                                        decx::cuda_stream* S)
 {
-    dim3 _grid(decx::utils::ceil<uint32_t>(min(_pitchsrc_v2, _pitchdst_v2), _FFT2D_BLOCK_X_),
-               decx::utils::ceil<uint32_t>(_kernel_info->_signal_len / _radix, _FFT2D_BLOCK_Y_));
+    dim3 _grid(decx::utils::idiv_ceil<uint32_t>(min(_pitchsrc_v2, _pitchdst_v2), _FFT2D_BLOCK_X_),
+               decx::utils::idiv_ceil<uint32_t>(_kernel_info->_signal_len / _radix, _FFT2D_BLOCK_Y_));
     dim3 _block(_FFT2D_BLOCK_X_, _FFT2D_BLOCK_Y_);
 
     switch (_radix)
@@ -453,8 +453,8 @@ decx::dsp::fft::IFFT2D_C2R_caller_cplxf_u8(const float4* __restrict src,
                                        const uint32_t _pitchdst_v2,
                                        decx::cuda_stream* S)
 {
-    dim3 _grid(decx::utils::ceil<uint32_t>(min(_pitchsrc_v2, _pitchdst_v2), _FFT2D_BLOCK_X_),
-               decx::utils::ceil<uint32_t>(_kernel_info->_signal_len / _radix, _FFT2D_BLOCK_Y_));
+    dim3 _grid(decx::utils::idiv_ceil<uint32_t>(min(_pitchsrc_v2, _pitchdst_v2), _FFT2D_BLOCK_X_),
+               decx::utils::idiv_ceil<uint32_t>(_kernel_info->_signal_len / _radix, _FFT2D_BLOCK_Y_));
     dim3 _block(_FFT2D_BLOCK_X_, _FFT2D_BLOCK_Y_);
 
     switch (_radix)
@@ -494,8 +494,8 @@ decx::dsp::fft::IFFT2D_C2R_caller_cplxd_u8(const double2* __restrict src,
                                        const uint32_t _pitchdst_v1,
                                        decx::cuda_stream* S)
 {
-    dim3 _grid(decx::utils::ceil<uint32_t>(min(_pitchsrc_v1, _pitchdst_v1), _FFT2D_BLOCK_X_),
-               decx::utils::ceil<uint32_t>(_kernel_info->_signal_len / _radix, _FFT2D_BLOCK_Y_));
+    dim3 _grid(decx::utils::idiv_ceil<uint32_t>(min(_pitchsrc_v1, _pitchdst_v1), _FFT2D_BLOCK_X_),
+               decx::utils::idiv_ceil<uint32_t>(_kernel_info->_signal_len / _radix, _FFT2D_BLOCK_Y_));
     dim3 _block(_FFT2D_BLOCK_X_, _FFT2D_BLOCK_Y_);
 
     switch (_radix)
@@ -535,8 +535,8 @@ decx::dsp::fft::IFFT2D_C2R_caller_cplxf_fp32(const float4* __restrict src,
                                        const uint32_t _pitchdst_v2,
                                        decx::cuda_stream* S)
 {
-    dim3 _grid(decx::utils::ceil<uint32_t>(min(_pitchsrc_v2, _pitchdst_v2), _FFT2D_BLOCK_X_),
-               decx::utils::ceil<uint32_t>(_kernel_info->_signal_len / _radix, _FFT2D_BLOCK_Y_));
+    dim3 _grid(decx::utils::idiv_ceil<uint32_t>(min(_pitchsrc_v2, _pitchdst_v2), _FFT2D_BLOCK_X_),
+               decx::utils::idiv_ceil<uint32_t>(_kernel_info->_signal_len / _radix, _FFT2D_BLOCK_Y_));
     dim3 _block(_FFT2D_BLOCK_X_, _FFT2D_BLOCK_Y_);
 
     switch (_radix)

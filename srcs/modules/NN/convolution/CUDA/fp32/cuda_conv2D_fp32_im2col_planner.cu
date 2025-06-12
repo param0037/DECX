@@ -139,56 +139,56 @@ void decx::nn::cuda_conv2D_fp32_im2col_planner::_kernel_launch_config(const uint
         constexpr uint32_t STG_block_dimy = _IM2COL_GET_STG_BLOCKDIM_Y_(_IM2COL_D4N_FP32_BLOCK_Y_);
 
         _ptr->_block_i2c = dim3(_IM2COL_D4N_FP32_BLOCK_X_, _IM2COL_D4N_FP32_BLOCK_Y_);
-        _ptr->_grid_i2c = dim3(decx::utils::ceil<uint32_t>(this->_dst_dims.y, STG_block_dimx),
-                               decx::utils::ceil<uint32_t>(_ptr->_proc_H, STG_block_dimy),
+        _ptr->_grid_i2c = dim3(decx::utils::idiv_ceil<uint32_t>(this->_dst_dims.y, STG_block_dimx),
+                               decx::utils::idiv_ceil<uint32_t>(_ptr->_proc_H, STG_block_dimy),
                                this->_kernel_manager._kernel_layout->height);
 
         _ptr->_block_gemm = dim3(_IM2COL_GEMM_FP32_BLOCK_X_, _IM2COL_GEMM_FP32_BLOCK_Y_);
-        _ptr->_grid_gemm = dim3(decx::utils::ceil<uint32_t>(this->_dst_dims.y, STG_block_dimx),
-                                decx::utils::ceil<uint32_t>(_ptr->_proc_H, _IM2COL_GEMM_FP32_BLOCK_Y_),
-                                decx::utils::ceil<uint32_t>(this->_kernel_manager._kernel_tensor_num, 4));
+        _ptr->_grid_gemm = dim3(decx::utils::idiv_ceil<uint32_t>(this->_dst_dims.y, STG_block_dimx),
+                                decx::utils::idiv_ceil<uint32_t>(_ptr->_proc_H, _IM2COL_GEMM_FP32_BLOCK_Y_),
+                                decx::utils::idiv_ceil<uint32_t>(this->_kernel_manager._kernel_tensor_num, 4));
     }
     else if (this->_src_layout->dpitch == 8) {
         constexpr uint32_t STG_block_dimx = _IM2COL_GET_STG_BLOCKDIM_X_(_IM2COL_D4N_FP32_BLOCK_X_, 8);
         constexpr uint32_t STG_block_dimy = _IM2COL_GET_STG_BLOCKDIM_Y_(_IM2COL_D4N_FP32_BLOCK_Y_);
 
         _ptr->_block_i2c = dim3(_IM2COL_D4N_FP32_BLOCK_X_, _IM2COL_D4N_FP32_BLOCK_Y_);
-        _ptr->_grid_i2c = dim3(decx::utils::ceil<uint32_t>(this->_dst_dims.y, STG_block_dimx),
-            decx::utils::ceil<uint32_t>(_ptr->_proc_H, STG_block_dimy),
+        _ptr->_grid_i2c = dim3(decx::utils::idiv_ceil<uint32_t>(this->_dst_dims.y, STG_block_dimx),
+            decx::utils::idiv_ceil<uint32_t>(_ptr->_proc_H, STG_block_dimy),
             this->_kernel_manager._kernel_layout->height);
 
         _ptr->_block_gemm = dim3(_IM2COL_GEMM_FP32_BLOCK_X_, _IM2COL_GEMM_FP32_BLOCK_Y_);
-        _ptr->_grid_gemm = dim3(decx::utils::ceil<uint32_t>(this->_dst_dims.y, STG_block_dimx),
-            decx::utils::ceil<uint32_t>(_ptr->_proc_H, _IM2COL_GEMM_FP32_BLOCK_Y_),
-            decx::utils::ceil<uint32_t>(this->_kernel_manager._kernel_tensor_num, 4));
+        _ptr->_grid_gemm = dim3(decx::utils::idiv_ceil<uint32_t>(this->_dst_dims.y, STG_block_dimx),
+            decx::utils::idiv_ceil<uint32_t>(_ptr->_proc_H, _IM2COL_GEMM_FP32_BLOCK_Y_),
+            decx::utils::idiv_ceil<uint32_t>(this->_kernel_manager._kernel_tensor_num, 4));
     }
     else if (this->_src_layout->dpitch == 12) {
         constexpr uint32_t STG_block_dimx = _IM2COL_GET_STG_BLOCKDIM_X_(_IM2COL_D12_FP32_BLOCK_X_, 12);
         constexpr uint32_t STG_block_dimy = _IM2COL_GET_STG_BLOCKDIM_Y_(_IM2COL_D12_FP32_BLOCK_Y_);
 
         _ptr->_block_i2c = dim3(_IM2COL_D12_FP32_BLOCK_X_, _IM2COL_D12_FP32_BLOCK_Y_);
-        _ptr->_grid_i2c = dim3(decx::utils::ceil<uint32_t>(this->_dst_dims.y, STG_block_dimx),
-            decx::utils::ceil<uint32_t>(_ptr->_proc_H, STG_block_dimy),
+        _ptr->_grid_i2c = dim3(decx::utils::idiv_ceil<uint32_t>(this->_dst_dims.y, STG_block_dimx),
+            decx::utils::idiv_ceil<uint32_t>(_ptr->_proc_H, STG_block_dimy),
             this->_kernel_manager._kernel_layout->height);
 
         _ptr->_block_gemm = dim3(_IM2COL_GEMM_FP32_BLOCK_X_, _IM2COL_GEMM_FP32_BLOCK_Y_);
-        _ptr->_grid_gemm = dim3(decx::utils::ceil<uint32_t>(this->_dst_dims.y, STG_block_dimx),
-            decx::utils::ceil<uint32_t>(_ptr->_proc_H, _IM2COL_GEMM_FP32_BLOCK_Y_),
-            decx::utils::ceil<uint32_t>(this->_kernel_manager._kernel_tensor_num, 4));
+        _ptr->_grid_gemm = dim3(decx::utils::idiv_ceil<uint32_t>(this->_dst_dims.y, STG_block_dimx),
+            decx::utils::idiv_ceil<uint32_t>(_ptr->_proc_H, _IM2COL_GEMM_FP32_BLOCK_Y_),
+            decx::utils::idiv_ceil<uint32_t>(this->_kernel_manager._kernel_tensor_num, 4));
     }
     else {
         constexpr uint32_t STG_block_dimx = _IM2COL_GET_STG_BLOCKDIM_X_(_IM2COL_D4N_FP32_BLOCK_X_, 16);
         constexpr uint32_t STG_block_dimy = _IM2COL_GET_STG_BLOCKDIM_Y_(_IM2COL_D4N_FP32_BLOCK_Y_);
 
         _ptr->_block_i2c = dim3(_IM2COL_D4N_FP32_BLOCK_X_, _IM2COL_D4N_FP32_BLOCK_Y_);
-        _ptr->_grid_i2c = dim3(decx::utils::ceil<uint32_t>(this->_dst_dims.y, STG_block_dimx),
-            decx::utils::ceil<uint32_t>(_ptr->_proc_H, STG_block_dimy),
+        _ptr->_grid_i2c = dim3(decx::utils::idiv_ceil<uint32_t>(this->_dst_dims.y, STG_block_dimx),
+            decx::utils::idiv_ceil<uint32_t>(_ptr->_proc_H, STG_block_dimy),
             this->_kernel_manager._kernel_layout->height);
 
         _ptr->_block_gemm = dim3(_IM2COL_GEMM_FP32_BLOCK_X_, _IM2COL_GEMM_FP32_BLOCK_Y_);
-        _ptr->_grid_gemm = dim3(decx::utils::ceil<uint32_t>(this->_dst_dims.y, STG_block_dimx),
-            decx::utils::ceil<uint32_t>(_ptr->_proc_H, _IM2COL_GEMM_FP32_BLOCK_Y_),
-            decx::utils::ceil<uint32_t>(this->_kernel_manager._kernel_tensor_num, 4));
+        _ptr->_grid_gemm = dim3(decx::utils::idiv_ceil<uint32_t>(this->_dst_dims.y, STG_block_dimx),
+            decx::utils::idiv_ceil<uint32_t>(_ptr->_proc_H, _IM2COL_GEMM_FP32_BLOCK_Y_),
+            decx::utils::idiv_ceil<uint32_t>(this->_kernel_manager._kernel_tensor_num, 4));
     }
 }
 

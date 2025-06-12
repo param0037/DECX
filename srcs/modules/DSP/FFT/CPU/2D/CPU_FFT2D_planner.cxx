@@ -96,8 +96,8 @@ void decx::dsp::fft::cpu_FFT2D_planner<_data_type>::plan(const decx::_matrix_lay
     constexpr uint8_t _alignment = std::is_same_v<_data_type, float> ? 4 : 2;
 
     // Get the smallest allocation size (the minimum size that is able to cover all the alignments)
-    const uint2 _aligned_dims = make_uint2(decx::utils::ceil<uint32_t>(this->_signal_dims.x, _alignment) * _alignment,
-        decx::utils::ceil<uint32_t>(this->_signal_dims.y, _alignment) * _alignment);
+    const uint2 _aligned_dims = make_uint2(decx::utils::idiv_ceil<uint32_t>(this->_signal_dims.x, _alignment) * _alignment,
+        decx::utils::idiv_ceil<uint32_t>(this->_signal_dims.y, _alignment) * _alignment);
 
     const uint64_t _alloc_size = max(_aligned_dims.x * this->_signal_dims.y, this->_signal_dims.x * _aligned_dims.y)
         * sizeof(_data_type) * 2;
@@ -117,11 +117,11 @@ void decx::dsp::fft::cpu_FFT2D_planner<_data_type>::plan(const decx::_matrix_lay
     this->_FFT_V.plan(t1D);
     const uint32_t _concurrency = decx::cpu::_get_permitted_concurrency();
     // Thread distribution on FFT_H
-    const uint32_t _conc_FFT_1D_H = min(decx::utils::ceil<uint32_t>(this->_signal_dims.y, _alignment), this->_concurrency);
+    const uint32_t _conc_FFT_1D_H = min(decx::utils::idiv_ceil<uint32_t>(this->_signal_dims.y, _alignment), this->_concurrency);
     decx::utils::frag_manager_gen_Nx(&this->_thread_dist_FFTH, this->_signal_dims.y, _conc_FFT_1D_H, _alignment);
 
     // Thread distribution in FFT_W
-    const uint32_t _conc_FFT_1D_V = min(decx::utils::ceil<uint32_t>(this->_signal_dims.x, _alignment), this->_concurrency);
+    const uint32_t _conc_FFT_1D_V = min(decx::utils::idiv_ceil<uint32_t>(this->_signal_dims.x, _alignment), this->_concurrency);
     decx::utils::frag_manager_gen_Nx(&this->_thread_dist_FFTV, this->_signal_dims.x, _conc_FFT_1D_V, _alignment);
 
     const uint32_t _alloc_tiles_num = max(_conc_FFT_1D_H, _conc_FFT_1D_V);

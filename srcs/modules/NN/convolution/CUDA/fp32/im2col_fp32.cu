@@ -61,7 +61,7 @@ decx::nn::GPUK::cu_im2col_DP4_NB_fp32(const float4* __restrict  src,
     
     __shared__ float _shmem[_IM2COL_D4N_FP32_BLOCK_Y_ * 4][_IM2COL_D4N_FP32_BLOCK_X_ + 4];
 
-    for (uint32_t i = 0; i < decx::utils::ceil<uint32_t>(kernel_dims.y, gridDim.z); ++i) 
+    for (uint32_t i = 0; i < decx::utils::idiv_ceil<uint32_t>(kernel_dims.y, gridDim.z); ++i) 
     {
         dex_src = dex_plane_src_x * strides.x + (blockIdx.z + dex_plane_src_y * strides.y + i) * wpitch_src_v1;
         for (uint32_t j = 0; j < kernel_dims.x; ++j) 
@@ -125,7 +125,7 @@ decx::nn::GPUK::cu_im2col_DP4_BC_fp32(const float4* __restrict  src,
     
     __shared__ float _shmem[_IM2COL_D4N_FP32_BLOCK_Y_ * 4][_IM2COL_D4N_FP32_BLOCK_X_ + 4];
 
-    for (uint32_t i = 0; i < decx::utils::ceil<uint32_t>(kernel_dims.y, gridDim.z); ++i) 
+    for (uint32_t i = 0; i < decx::utils::idiv_ceil<uint32_t>(kernel_dims.y, gridDim.z); ++i) 
     {
         const uint32_t _global_coor_y = blockIdx.z + dex_plane_src_y * strides.y + i;
         
@@ -206,7 +206,7 @@ decx::nn::GPUK::cu_im2col_DP8_NB_fp32(const float4* __restrict  src,
     
     __shared__ float _shmem[_IM2COL_D4N_FP32_BLOCK_Y_ * 4][_IM2COL_D4N_FP32_BLOCK_X_ + 2];
 
-    for (uint32_t i = 0; i < decx::utils::ceil<uint32_t>(kernel_dims.y, gridDim.z); ++i) 
+    for (uint32_t i = 0; i < decx::utils::idiv_ceil<uint32_t>(kernel_dims.y, gridDim.z); ++i) 
     {
         dex_src = _logical_ldgl.x + (dex_plane_src_x * strides.x + (blockIdx.z + dex_plane_src_y * strides.y + i) * wpitch_src_v1) * 2;
         for (uint32_t j = 0; j < kernel_dims.x; ++j) 
@@ -279,7 +279,7 @@ decx::nn::GPUK::cu_im2col_DP8_BC_fp32(const float4* __restrict  src,
     
     __shared__ float _shmem[_IM2COL_D4N_FP32_BLOCK_Y_ * 4][_IM2COL_D4N_FP32_BLOCK_X_ + 2];
 
-    for (uint32_t i = 0; i < decx::utils::ceil<uint32_t>(kernel_dims.y, gridDim.z); ++i) 
+    for (uint32_t i = 0; i < decx::utils::idiv_ceil<uint32_t>(kernel_dims.y, gridDim.z); ++i) 
     {
         const uint32_t _global_coor_y = blockIdx.z + dex_plane_src_y * strides.y + i;
         
@@ -366,7 +366,7 @@ decx::nn::GPUK::cu_im2col_DP12_NB_fp32(const float4* __restrict  src,
     
     __shared__ float _shmem[_IM2COL_D12_FP32_BLOCK_Y_ * 4][_IM2COL_D12_FP32_BLOCK_X_ + 2];
 
-    for (uint32_t i = 0; i < decx::utils::ceil<uint32_t>(kernel_dims.y, gridDim.z); ++i) 
+    for (uint32_t i = 0; i < decx::utils::idiv_ceil<uint32_t>(kernel_dims.y, gridDim.z); ++i) 
     {
         dex_src = _logical_ldgl.x + (dex_plane_src_x * strides.x + (blockIdx.z + dex_plane_src_y * strides.y + i) * wpitch_src_v1) * 3;
         for (uint32_t j = 0; j < kernel_dims.x; ++j) 
@@ -440,7 +440,7 @@ decx::nn::GPUK::cu_im2col_DP12_BC_fp32(const float4* __restrict  src,
     
     __shared__ float _shmem[_IM2COL_D12_FP32_BLOCK_Y_ * 4][_IM2COL_D12_FP32_BLOCK_X_ + 2];
 
-    for (uint32_t i = 0; i < decx::utils::ceil<uint32_t>(kernel_dims.y, gridDim.z); ++i) 
+    for (uint32_t i = 0; i < decx::utils::idiv_ceil<uint32_t>(kernel_dims.y, gridDim.z); ++i) 
     {
         const uint32_t _global_coor_y = blockIdx.z + dex_plane_src_y * strides.y + i;
         
@@ -526,7 +526,7 @@ decx::nn::GPUK::cu_im2col_DP16_NB_fp32(const float4* __restrict  src,
     
     __shared__ float _shmem[_IM2COL_D4N_FP32_BLOCK_Y_ * 4][_IM2COL_D4N_FP32_BLOCK_X_ + 1];
 
-    for (uint32_t i = 0; i < decx::utils::ceil<uint32_t>(kernel_dims.y, gridDim.z); ++i) 
+    for (uint32_t i = 0; i < decx::utils::idiv_ceil<uint32_t>(kernel_dims.y, gridDim.z); ++i) 
     {
         dex_src = _logical_ldgl.x + (dex_plane_src_x * strides.x + (blockIdx.z + dex_plane_src_y * strides.y + i) * wpitch_src_v1) * 4;
         for (uint32_t j = 0; j < kernel_dims.x; ++j) 
@@ -602,7 +602,7 @@ decx::nn::GPUK::cu_im2col_DP16_BC_fp32(const float4* __restrict  src,
     
     __shared__ float _shmem[_IM2COL_D4N_FP32_BLOCK_Y_ * 4][_IM2COL_D4N_FP32_BLOCK_X_ + 1];
 
-    for (uint32_t i = 0; i < decx::utils::ceil<uint32_t>(kernel_dims.y, gridDim.z); ++i) 
+    for (uint32_t i = 0; i < decx::utils::idiv_ceil<uint32_t>(kernel_dims.y, gridDim.z); ++i) 
     {
         const uint32_t _global_coor_y = blockIdx.z + dex_plane_src_y * strides.y + i;
         

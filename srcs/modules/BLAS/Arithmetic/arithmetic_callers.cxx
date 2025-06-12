@@ -57,16 +57,18 @@ mat_arithmetic_caller_VVO(const decx::_Matrix*  A,
         // Obtain the kernel ptr according to flag
         _kernel_ptr = g_arithmetic_cpu_kernel_LUT[0][_kernel_dex];
         // Do the plan
-        _planner.plan(t1D.total_thread, proc_len_flatten_v1, sizeof(float), sizeof(float));
+        _planner.plan(32, t1D.total_thread, proc_len_flatten_v1, sizeof(float), sizeof(float));
         // Call the kernel
         _planner.caller(
             (arithmetic_kernels_1D_VVO<float, float, float>*)_kernel_ptr,
             &t1D,
+            decx::cpu::ThreadDispatchMethod_e::Dispatch_ByID,
+            EW_SLOT_ID_MONOTONIC(0),
             decx::TArg_var<const float*>([&](const int32_t i){return (const float*)A->Mat + i * _planner.get_fmgr()->GetFragLen();}),
             decx::TArg_var<const float*>([&](const int32_t i){return (const float*)B->Mat + i * _planner.get_fmgr()->GetFragLen();}),
             decx::TArg_var<float*>([&](const int32_t i){return (float*)dst->Mat + i * _planner.get_fmgr()->GetFragLen();}),
             decx::TArg_var<uint64_t>([&](const int32_t i){
-                return decx::utils::ceil<uint64_t>(_planner.get_fmgr()->GetFragLenById(i), _planner.get_alignment());})
+                return decx::utils::idiv_ceil<uint64_t>(_planner.get_fmgr()->GetFragLenById(i), _planner.get_alignment());})
         );
         
         break;
@@ -74,16 +76,18 @@ mat_arithmetic_caller_VVO(const decx::_Matrix*  A,
     case de::_DATA_TYPES_FLAGS_::_FP64_:
         _kernel_ptr = g_arithmetic_cpu_kernel_LUT[1][_kernel_dex];
 
-        _planner.plan(t1D.total_thread, proc_len_flatten_v1, sizeof(double), sizeof(double));
+        _planner.plan(32, t1D.total_thread, proc_len_flatten_v1, sizeof(double), sizeof(double));
 
         _planner.caller(
             (arithmetic_kernels_1D_VVO<double, double, double>*)_kernel_ptr,
             &t1D,
+            decx::cpu::ThreadDispatchMethod_e::Dispatch_ByID,
+            EW_SLOT_ID_MONOTONIC(0),
             decx::TArg_var<const double*>([&](const int32_t i){return (const double*)A->Mat + i * _planner.get_fmgr()->GetFragLen();}),
             decx::TArg_var<const double*>([&](const int32_t i){return (const double*)B->Mat + i * _planner.get_fmgr()->GetFragLen();}),
             decx::TArg_var<double*>([&](const int32_t i){return dst->Mat.GetRawPtr<double>() + i * _planner.get_fmgr()->GetFragLen();}),
             decx::TArg_var<uint64_t>([&](const int32_t i){
-                return decx::utils::ceil<uint64_t>(_planner.get_fmgr()->GetFragLenById(i), _planner.get_alignment());})
+                return decx::utils::idiv_ceil<uint64_t>(_planner.get_fmgr()->GetFragLenById(i), _planner.get_alignment());})
         );
 
         break;
@@ -118,30 +122,34 @@ mat_arithmetic_caller_VO(const decx::_Matrix*  src,
     case de::_DATA_TYPES_FLAGS_::_FP32_:
         _kernel_ptr = g_arithmetic_cpu_kernel_LUT[0][_kernel_dex];
 
-        _planner.plan(t1D.total_thread, proc_len_flatten_v1, sizeof(float), sizeof(float));
+        _planner.plan(32, t1D.total_thread, proc_len_flatten_v1, sizeof(float), sizeof(float));
 
         _planner.caller(
-            (arithmetic_kernels_1D_VO<float, float>*)_kernel_ptr,
+            (arithmetic_kernels_1D_VO<float, float>*)_kernel_ptr,   
             &t1D,
+            decx::cpu::ThreadDispatchMethod_e::Dispatch_ByID,
+            EW_SLOT_ID_MONOTONIC(0),
             decx::TArg_var<const float*>([&](const int32_t i){return (const float*)src->Mat + i * _planner.get_fmgr()->GetFragLen();}),
             decx::TArg_var<float*>([&](const int32_t i){return (float*)dst->Mat + i * _planner.get_fmgr()->GetFragLen();}),
             decx::TArg_var<uint64_t>([&](const int32_t i){
-                return decx::utils::ceil<uint64_t>(_planner.get_fmgr()->GetFragLenById(i), _planner.get_alignment());})
+                return decx::utils::idiv_ceil<uint64_t>(_planner.get_fmgr()->GetFragLenById(i), _planner.get_alignment());})
         );
         break;
     
     case de::_DATA_TYPES_FLAGS_::_FP64_:
         _kernel_ptr = g_arithmetic_cpu_kernel_LUT[1][_kernel_dex];
 
-        _planner.plan(t1D.total_thread, proc_len_flatten_v1, sizeof(double), sizeof(double));
+        _planner.plan(32, t1D.total_thread, proc_len_flatten_v1, sizeof(double), sizeof(double));
         
         _planner.caller(
             (arithmetic_kernels_1D_VO<double, double>*)_kernel_ptr,
             &t1D,
+            decx::cpu::ThreadDispatchMethod_e::Dispatch_ByID,
+            EW_SLOT_ID_MONOTONIC(0),
             decx::TArg_var<const double*>([&](const int32_t i){return (const double*)src->Mat + i * _planner.get_fmgr()->GetFragLen();}),
             decx::TArg_var<double*>([&](const int32_t i){return (double*)dst->Mat + i * _planner.get_fmgr()->GetFragLen();}),
             decx::TArg_var<uint64_t>([&](const int32_t i){
-                return decx::utils::ceil<uint64_t>(_planner.get_fmgr()->GetFragLenById(i), _planner.get_alignment());})
+                return decx::utils::idiv_ceil<uint64_t>(_planner.get_fmgr()->GetFragLenById(i), _planner.get_alignment());})
         );
         break;
 
@@ -173,16 +181,18 @@ vec_arithmetic_caller_VVO(const decx::_Vector*  A,
     case de::_DATA_TYPES_FLAGS_::_FP32_:
         _kernel_ptr = g_arithmetic_cpu_kernel_LUT[0][_kernel_dex];
 
-        _planner.plan(t1D.total_thread, A->Len(), sizeof(float), sizeof(float));
+        _planner.plan(32, t1D.total_thread, A->Len(), sizeof(float), sizeof(float));
 
         _planner.caller(
             (arithmetic_kernels_1D_VVO<float, float, float>*)_kernel_ptr,
             &t1D,
+            decx::cpu::ThreadDispatchMethod_e::Dispatch_ByID,
+            EW_SLOT_ID_MONOTONIC(0),
             decx::TArg_var<const float*>([&](const int32_t i){return A->Vec.GetRawPtrConst<float>() + i * _planner.get_fmgr()->GetFragLen();}),
             decx::TArg_var<const float*>([&](const int32_t i){return B->Vec.GetRawPtrConst<float>() + i * _planner.get_fmgr()->GetFragLen();}),
             decx::TArg_var<float*>([&](const int32_t i){return dst->Vec.GetRawPtr<float>() + i * _planner.get_fmgr()->GetFragLen();}),
             decx::TArg_var<uint64_t>([&](const int32_t i){
-                return decx::utils::ceil<uint64_t>(_planner.get_fmgr()->GetFragLenById(i), _planner.get_alignment());})
+                return decx::utils::idiv_ceil<uint64_t>(_planner.get_fmgr()->GetFragLenById(i), _planner.get_alignment());})
         );
 
         break;
@@ -190,16 +200,18 @@ vec_arithmetic_caller_VVO(const decx::_Vector*  A,
     case de::_DATA_TYPES_FLAGS_::_FP64_:
         _kernel_ptr = g_arithmetic_cpu_kernel_LUT[1][_kernel_dex];
 
-        _planner.plan(t1D.total_thread, A->Len(), sizeof(double), sizeof(double));
+        _planner.plan(32, t1D.total_thread, A->Len(), sizeof(double), sizeof(double));
 
         _planner.caller(
             (arithmetic_kernels_1D_VVO<double, double, double>*)_kernel_ptr,
             &t1D,
+            decx::cpu::ThreadDispatchMethod_e::Dispatch_ByID,
+            EW_SLOT_ID_MONOTONIC(0),
             decx::TArg_var<const double*>([&](const int32_t i){return A->Vec.GetRawPtrConst<double>() + i * _planner.get_fmgr()->GetFragLen();}),
             decx::TArg_var<const double*>([&](const int32_t i){return B->Vec.GetRawPtrConst<double>() + i * _planner.get_fmgr()->GetFragLen();}),
             decx::TArg_var<double*>([&](const int32_t i){return dst->Vec.GetRawPtr<double>() + i * _planner.get_fmgr()->GetFragLen();}),
             decx::TArg_var<uint64_t>([&](const int32_t i){
-                return decx::utils::ceil<uint64_t>(_planner.get_fmgr()->GetFragLenById(i), _planner.get_alignment());})
+                return decx::utils::idiv_ceil<uint64_t>(_planner.get_fmgr()->GetFragLenById(i), _planner.get_alignment());})
         );
 
         break;
@@ -231,15 +243,17 @@ vec_arithmetic_caller_VO(const decx::_Vector*  src,
     case de::_DATA_TYPES_FLAGS_::_FP32_:
         _kernel_ptr = g_arithmetic_cpu_kernel_LUT[0][_kernel_dex];
 
-        _planner.plan(t1D.total_thread, src->Len(), sizeof(float), sizeof(float));
+        _planner.plan(32, t1D.total_thread, src->Len(), sizeof(float), sizeof(float));
 
         _planner.caller(
-            (arithmetic_kernels_1D_VO<float, float>*)_kernel_ptr,
+            (arithmetic_kernels_1D_VO<float, float>*)_kernel_ptr,   
             &t1D,
+            decx::cpu::ThreadDispatchMethod_e::Dispatch_ByID,
+            EW_SLOT_ID_MONOTONIC(0),
             decx::TArg_var<const float*>([&](const int32_t i){return (const float*)src->Vec + i * _planner.get_fmgr()->GetFragLen();}),
             decx::TArg_var<float*>([&](const int32_t i){return (float*)dst->Vec + i * _planner.get_fmgr()->GetFragLen();}),
             decx::TArg_var<uint64_t>([&](const int32_t i){
-                return decx::utils::ceil<uint64_t>(_planner.get_fmgr()->GetFragLenById(i), _planner.get_alignment());})
+                return decx::utils::idiv_ceil<uint64_t>(_planner.get_fmgr()->GetFragLenById(i), _planner.get_alignment());})
         );
         
         break;
@@ -247,15 +261,17 @@ vec_arithmetic_caller_VO(const decx::_Vector*  src,
     case de::_DATA_TYPES_FLAGS_::_FP64_:
         _kernel_ptr = g_arithmetic_cpu_kernel_LUT[1][_kernel_dex];
 
-        _planner.plan(t1D.total_thread, src->Len(), sizeof(double), sizeof(double));
+        _planner.plan(32, t1D.total_thread, src->Len(), sizeof(double), sizeof(double));
 
         _planner.caller(
             (arithmetic_kernels_1D_VO<double, double>*)_kernel_ptr,
             &t1D,
+            decx::cpu::ThreadDispatchMethod_e::Dispatch_ByID,
+            EW_SLOT_ID_MONOTONIC(0),
             decx::TArg_var<const double*>([&](const int32_t i){return (const double*)src->Vec + i * _planner.get_fmgr()->GetFragLen();}),
             decx::TArg_var<double*>([&](const int32_t i){return (double*)dst->Vec + i * _planner.get_fmgr()->GetFragLen();}),
             decx::TArg_var<uint64_t>([&](const int32_t i){
-                return decx::utils::ceil<uint64_t>(_planner.get_fmgr()->GetFragLenById(i), _planner.get_alignment());})
+                return decx::utils::idiv_ceil<uint64_t>(_planner.get_fmgr()->GetFragLenById(i), _planner.get_alignment());})
         );
 
         break;

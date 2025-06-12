@@ -113,7 +113,7 @@ _CRSR_ void decx::dsp::fft::cpu_FFT3D_planner<_data_type>::plan(decx::utils::Thr
     uint32_t _FFTD_lane_num_effective, _conc_FFTD_num;
     // Thread distribution for FFT along depth dimension
     _FFTD_lane_num_effective = this->_signal_dims.y * this->_signal_dims.z;
-    _conc_FFTD_num = min(decx::utils::ceil<uint32_t>(_FFTD_lane_num_effective, _proc_alignment), this->_concurrency);
+    _conc_FFTD_num = min(decx::utils::idiv_ceil<uint32_t>(_FFTD_lane_num_effective, _proc_alignment), this->_concurrency);
     decx::utils::frag_manager_gen_Nx(&this->_FFT_D._f_mgr, _FFTD_lane_num_effective, _conc_FFTD_num, _proc_alignment);
     this->_FFT_D._FFT_zip_info_LDG.set_attributes(src_layout->wpitch, this->_signal_dims.y);
     this->_FFT_D._FFT_zip_info_STG.set_attributes(this->_signal_dims.y, this->_signal_dims.y);
@@ -122,7 +122,7 @@ _CRSR_ void decx::dsp::fft::cpu_FFT3D_planner<_data_type>::plan(decx::utils::Thr
 
     // Thread distribution for FFT along width dimension
     _FFTD_lane_num_effective = this->_signal_dims.x * this->_signal_dims.z;
-    _conc_FFTD_num = min(decx::utils::ceil<uint32_t>(_FFTD_lane_num_effective, _proc_alignment), this->_concurrency);
+    _conc_FFTD_num = min(decx::utils::idiv_ceil<uint32_t>(_FFTD_lane_num_effective, _proc_alignment), this->_concurrency);
     decx::utils::frag_manager_gen_Nx(&this->_FFT_W._f_mgr, _FFTD_lane_num_effective, _conc_FFTD_num, _proc_alignment);
     this->_FFT_W._FFT_zip_info_LDG.set_attributes(this->_signal_dims.x, this->_signal_dims.x);
     this->_FFT_W._FFT_zip_info_STG.set_attributes(this->_signal_dims.x, this->_signal_dims.x);
@@ -131,7 +131,7 @@ _CRSR_ void decx::dsp::fft::cpu_FFT3D_planner<_data_type>::plan(decx::utils::Thr
 
     // Thread distribution for FFT along height dimension
     _FFTD_lane_num_effective = this->_signal_dims.x * this->_signal_dims.y;
-    _conc_FFTD_num = min(decx::utils::ceil<uint32_t>(_FFTD_lane_num_effective, _proc_alignment), this->_concurrency);
+    _conc_FFTD_num = min(decx::utils::idiv_ceil<uint32_t>(_FFTD_lane_num_effective, _proc_alignment), this->_concurrency);
     decx::utils::frag_manager_gen_Nx(&this->_FFT_H._f_mgr, _FFTD_lane_num_effective, _conc_FFTD_num, _proc_alignment);
     this->_FFT_H._FFT_zip_info_LDG.set_attributes(this->_FFT_D._pitchdst, this->_signal_dims.x);
     this->_FFT_H._FFT_zip_info_STG.set_attributes(dst_layout->dpitch, this->_signal_dims.x, dst_layout->wpitch, this->_signal_dims.y);

@@ -110,7 +110,7 @@ transpose_block_4b(const float* __restrict   src,
 
     const uint32_t _Hv4 = proc_dims_v1.y / 4;
     const uint32_t _LH = proc_dims_v1.y % 4;
-    const uint32_t _Wv4 = decx::utils::ceil<uint32_t>(proc_dims_v1.x, 4);
+    const uint32_t _Wv4 = decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.x, 4);
     const uint32_t _LW = proc_dims_v1.x % 4;
 
     for (uint32_t i = 0; i < _Hv4; ++i) 

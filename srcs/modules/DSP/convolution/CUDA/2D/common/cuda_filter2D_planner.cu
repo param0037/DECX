@@ -73,8 +73,8 @@ decx::dsp::cuda_Filter2D_planner<_data_type>::plan(const decx::_matrix_layout* s
 
     this->_block = dim3(_CU_FILTER2D_FP32_BLOCK_X_, _CU_FILTER2D_FP32_BLOCK_Y_);
     constexpr uint8_t _proc_vec_len = sizeof(_data_type) < 4 ? (8 / sizeof(_data_type)) : (16 / sizeof(_data_type));
-    this->_grid = dim3(decx::utils::ceil<uint32_t>(this->_dst_dims.x, this->_block.x * _proc_vec_len),
-        decx::utils::ceil<uint32_t>(this->_dst_dims.y, this->_block.y));
+    this->_grid = dim3(decx::utils::idiv_ceil<uint32_t>(this->_dst_dims.x, this->_block.x * _proc_vec_len),
+        decx::utils::idiv_ceil<uint32_t>(this->_dst_dims.y, this->_block.y));
 }
 
 template void decx::dsp::cuda_Filter2D_planner<float>::plan(const decx::_matrix_layout*, const decx::_matrix_layout*,

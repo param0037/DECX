@@ -108,8 +108,8 @@
 //                          decx::cuda_stream* S)
 // {
 //     dim3 transp_thread_0(32, 8);
-//     dim3 transp_grid_0(decx::utils::ceil<uint>(proc_dims_dst.y, 64),
-//         decx::utils::ceil<uint>(proc_dims_dst.x, 64));
+//     dim3 transp_grid_0(decx::utils::idiv_ceil<uint>(proc_dims_dst.y, 64),
+//         decx::utils::idiv_ceil<uint>(proc_dims_dst.x, 64));
 //     printf("trabspose transp_grid_0.x : %d, transp_grid_0.y : %d\n", transp_grid_0.x, transp_grid_0.y);
 //     cu_tr_b8 << <transp_grid_0, transp_thread_0, 0, S->get_raw_stream_ref() >> > (
 //         src, dst, pitchsrc / 2, pitchdst / 2, proc_dims_dst);

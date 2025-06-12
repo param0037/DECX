@@ -186,7 +186,7 @@ _extend_constant_b8_2D(const uint8_t* src,          uint8_t* dst,
     uint8_t* loc_dst = decx::utils::ptr_shift_xy<uint8_t, uint8_t>(dst, _ext.z, 0, Wdst);
 
     for (uint32_t i = 0; i < t1D.total_thread; ++i) {
-        const uint2 proc_dims = make_uint2(decx::utils::ceil<uint32_t>(_actual_Wsrc, 16), 
+        const uint2 proc_dims = make_uint2(decx::utils::idiv_ceil<uint32_t>(_actual_Wsrc, 16), 
             i == t1D.total_thread - 1 ?
             fmgr_H.last_frag_len :
             fmgr_H.frag_len);
@@ -226,7 +226,7 @@ void decx::bp::_extend_constant_b16_2D(const uint16_t* src,         uint16_t* ds
     uint16_t* loc_dst = decx::utils::ptr_shift_xy<uint16_t, uint16_t>(dst, _ext.z, 0, Wdst);
 
     for (uint32_t i = 0; i < t1D.total_thread; ++i) {
-        const uint2 proc_dims = make_uint2(decx::utils::ceil<uint32_t>(_actual_Wsrc, 8),
+        const uint2 proc_dims = make_uint2(decx::utils::idiv_ceil<uint32_t>(_actual_Wsrc, 8),
             i == t1D.total_thread - 1 ?
             fmgr_H.last_frag_len :
             fmgr_H.frag_len);

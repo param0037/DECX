@@ -139,7 +139,7 @@ decx::dsp::fft::CPUK::_FFT1D_smaller_1st_cplxd64(const _type_in* __restrict					
 	const uint64_t _load_pitch = _signal_length / _FFT_info->get_signal_len();
 
 	uint32_t _call_time_base = FFT_call_time_start;
-	const uint32_t FFT_call_times_v2 = decx::utils::ceil<uint32_t>(FFT_call_times, 2);
+	const uint32_t FFT_call_times_v2 = decx::utils::idiv_ceil<uint32_t>(FFT_call_times, 2);
 	const uint8_t _L_v2 = FFT_call_times % 2;
 
 	decx::utils::frag_manager _store_linearly_config;
@@ -232,7 +232,7 @@ decx::dsp::fft::CPUK::_FFT1D_smaller_mid_cplxd64_C2C(const de::CPd* __restrict		
 	decx::utils::double_buffer_manager _double_buffer(_tmp1_ptr, _tmp2_ptr);
 	const uint64_t _load_pitch = _global_kernel_info->_signal_len / _FFT_info->get_signal_len();
 
-	const uint32_t FFT_call_times_v2 = decx::utils::ceil<uint32_t>(_FFT_times_v2, 2);
+	const uint32_t FFT_call_times_v2 = decx::utils::idiv_ceil<uint32_t>(_FFT_times_v2, 2);
 	const uint8_t _L_v2 = _FFT_times_v2 % 2;
 
 	const de::CPd* _src_start_ptr = src;

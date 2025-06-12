@@ -81,7 +81,7 @@ namespace decx
 __host__ __device__
 #endif
         constexpr
-        inline static _Ty ceil(_Ty __deno, _Ty __numer) noexcept;
+        inline static _Ty idiv_ceil(_Ty __deno, _Ty __numer) noexcept;
 
 
 template <typename _Ty>
@@ -188,7 +188,7 @@ template <typename _Ty>
 __host__ __device__
 #endif
 constexpr
-inline static _Ty decx::utils::ceil(_Ty __deno, _Ty __numer) noexcept
+inline static _Ty decx::utils::idiv_ceil(_Ty __deno, _Ty __numer) noexcept
 {
     return (__deno / __numer) + (_Ty)((bool)(__deno % __numer));
 }
@@ -212,7 +212,7 @@ __host__ __device__
 constexpr static inline _Ty
 decx::utils::align(_Ty __x, const uint32_t _alignment)
 {
-    return decx::utils::ceil<_Ty>(__x, _alignment) * _alignment;
+    return decx::utils::idiv_ceil<_Ty>(__x, _alignment) * _alignment;
 }
 
 

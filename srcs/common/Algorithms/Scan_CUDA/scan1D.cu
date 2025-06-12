@@ -39,9 +39,9 @@ void decx::scan::cuda_scan1D_config::generate_scan_config(const uint64_t _proc_l
 {
     this->_scan_mode = scan_mode;
 
-    this->_length = decx::utils::ceil<uint64_t>(_proc_length, _align) * _align;
+    this->_length = decx::utils::idiv_ceil<uint64_t>(_proc_length, _align) * _align;
 
-    this->_block_num = decx::utils::ceil<uint64_t>(this->_length / _align, _WARP_SCAN_BLOCK_SIZE_);
+    this->_block_num = decx::utils::idiv_ceil<uint64_t>(this->_length / _align, _WARP_SCAN_BLOCK_SIZE_);
 
     if (decx::alloc::_device_malloc(&this->_dev_dst, this->_length * sizeof(_type_out), true, S)) {
         DECX_LOG_ERR(DEV_ALLOC_FAIL);
@@ -80,9 +80,9 @@ void decx::scan::cuda_scan1D_config::generate_scan_config(decx::PtrInfo<void>   
 {
     this->_scan_mode = scan_mode;
 
-    this->_length = decx::utils::ceil<uint64_t>(_proc_length, _align) * _align;
+    this->_length = decx::utils::idiv_ceil<uint64_t>(_proc_length, _align) * _align;
 
-    this->_block_num = decx::utils::ceil<uint64_t>(this->_length / _align, _WARP_SCAN_BLOCK_SIZE_);
+    this->_block_num = decx::utils::idiv_ceil<uint64_t>(this->_length / _align, _WARP_SCAN_BLOCK_SIZE_);
 
     this->_dev_dst = dev_dst;
     this->_dev_src = dev_src;

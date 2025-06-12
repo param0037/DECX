@@ -225,7 +225,7 @@ decx::vis::_bilateral_uchar4_NB(decx::_Matrix* src, decx::_Matrix* dst, const ui
 static void decx::vis::_bilateral_uint8_BC(decx::_Matrix* src, decx::_Matrix* dst, const uint2 neighbor_dims, const float2 sigmas_raw, 
     de::DH* handle, const int border_type)
 {
-    uint2 tmp_src_dims = make_uint2(decx::utils::ceil<uint>(src->Width() + neighbor_dims.x - 1, 16) * 16,
+    uint2 tmp_src_dims = make_uint2(decx::utils::idiv_ceil<uint>(src->Width() + neighbor_dims.x - 1, 16) * 16,
         src->Height() + neighbor_dims.y - 1);
 
     decx::PtrInfo<uint8_t> tmp_src;
@@ -275,7 +275,7 @@ static void decx::vis::_bilateral_uint8_BC(decx::_Matrix* src, decx::_Matrix* ds
 static void decx::vis::_bilateral_uchar4_BC(decx::_Matrix* src, decx::_Matrix* dst, const uint2 neighbor_dims, const float2 sigmas_raw, 
     de::DH* handle, const int border_type)
 {
-    uint2 tmp_src_dims = make_uint2(decx::utils::ceil<uint>(src->Width() + neighbor_dims.x - 1, 8) * 8,
+    uint2 tmp_src_dims = make_uint2(decx::utils::idiv_ceil<uint>(src->Width() + neighbor_dims.x - 1, 8) * 8,
         src->Height() + neighbor_dims.y - 1);
 
     decx::PtrInfo<float> tmp_src;

@@ -112,7 +112,7 @@ transpose_block_8b(const double* __restrict   src,
 
     const uint32_t _Hv2 = proc_dims_v1.y / 2;
     const uint32_t _LH = proc_dims_v1.y & 1;
-    const uint32_t _Wv2 = decx::utils::ceil<uint32_t>(proc_dims_v1.x, 2);
+    const uint32_t _Wv2 = decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.x, 2);
     const uint32_t _LW = proc_dims_v1.x & 1;
 
     for (uint32_t i = 0; i < _Hv2; ++i) 

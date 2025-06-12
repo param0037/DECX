@@ -79,16 +79,16 @@ void decx::reduce::cuda_reduce2D_1way_configs<_type_in>::CalcDPH_KernelParams(co
     // reverse the buffer states
     this->_pp_buffer.UpdateStatus();
 
-    uint32_t grid_x = decx::utils::ceil<uint32_t>(decx::utils::ceil<uint32_t>(this->get_actual_proc_dims().x, _proc_align_tr), 
+    uint32_t grid_x = decx::utils::idiv_ceil<uint32_t>(decx::utils::idiv_ceil<uint32_t>(this->get_actual_proc_dims().x, _proc_align_tr), 
                                                   _REDUCE2D_BLOCK_DIM_X_);
 
-    const uint32_t grid_y = decx::utils::ceil<uint32_t>(this->get_actual_proc_dims().y, _REDUCE2D_BLOCK_DIM_Y_);
+    const uint32_t grid_y = decx::utils::idiv_ceil<uint32_t>(this->get_actual_proc_dims().y, _REDUCE2D_BLOCK_DIM_Y_);
 
     uint2 proc_dims_actual = this->get_actual_proc_dims();
     uint32_t Wdsrc_v_varient = _src_from_device ? this->_Wdsrc : this->get_dtmp1().GetDims().x;
     Wdsrc_v_varient /= _proc_align_tr;
 
-    uint32_t Wddst_v1_varient = decx::utils::ceil<uint32_t>(grid_x, _proc_align) * _proc_align;
+    uint32_t Wddst_v1_varient = decx::utils::idiv_ceil<uint32_t>(grid_x, _proc_align) * _proc_align;
     
     const void* _proc_src_ptr = NULL;
 
@@ -103,10 +103,10 @@ void decx::reduce::cuda_reduce2D_1way_configs<_type_in>::CalcDPH_KernelParams(co
         this->_rwpks.push_back(_rwpk);
 
         proc_dims_actual.x = grid_x;
-        Wdsrc_v_varient = decx::utils::ceil<uint32_t>(proc_dims_actual.x, _proc_align);
-        grid_x = decx::utils::ceil<uint32_t>(Wdsrc_v_varient, _REDUCE2D_BLOCK_DIM_X_);
+        Wdsrc_v_varient = decx::utils::idiv_ceil<uint32_t>(proc_dims_actual.x, _proc_align);
+        grid_x = decx::utils::idiv_ceil<uint32_t>(Wdsrc_v_varient, _REDUCE2D_BLOCK_DIM_X_);
         // Align the data to _proc_align for the loading pitch of the next kernel
-        Wddst_v1_varient = decx::utils::ceil<uint32_t>(grid_x, _proc_align) * _proc_align;
+        Wddst_v1_varient = decx::utils::idiv_ceil<uint32_t>(grid_x, _proc_align) * _proc_align;
 
         // If the grid_dims.x of the next kernel is 1, then exit the loop
         while (grid_x > 1)
@@ -119,9 +119,9 @@ void decx::reduce::cuda_reduce2D_1way_configs<_type_in>::CalcDPH_KernelParams(co
             this->_pp_buffer.UpdateStatus();
 
             proc_dims_actual.x = grid_x;
-            Wdsrc_v_varient = decx::utils::ceil<uint32_t>(proc_dims_actual.x, _proc_align);
-            grid_x = decx::utils::ceil<uint32_t>(Wdsrc_v_varient, _REDUCE2D_BLOCK_DIM_X_);
-            Wddst_v1_varient = decx::utils::ceil<uint32_t>(grid_x, _proc_align) * _proc_align;
+            Wdsrc_v_varient = decx::utils::idiv_ceil<uint32_t>(proc_dims_actual.x, _proc_align);
+            grid_x = decx::utils::idiv_ceil<uint32_t>(Wdsrc_v_varient, _REDUCE2D_BLOCK_DIM_X_);
+            Wddst_v1_varient = decx::utils::idiv_ceil<uint32_t>(grid_x, _proc_align) * _proc_align;
         }
 
         _proc_src_ptr = this->GetLeadingBufPtr();
@@ -183,22 +183,22 @@ void decx::reduce::cuda_reduce2D_1way_configs<_type_in>::CalcDPV_KernelParams(co
         _proc_align = sizeof(_type_in) <= 4 ? _CU_REDUCE2D_MEM_ALIGN_4B_ : _CU_REDUCE2D_MEM_ALIGN_8B_;
     }
 
-    uint32_t grid_y = decx::utils::ceil<uint32_t>(this->get_actual_proc_dims().y, _REDUCE2D_BLOCK_DIM_Y_);
+    uint32_t grid_y = decx::utils::idiv_ceil<uint32_t>(this->get_actual_proc_dims().y, _REDUCE2D_BLOCK_DIM_Y_);
 
     // The parameters for the firstly called kernel, especially for the different types (e.g. fp16 -> fp32, uint8 -> int32)
-    const uint32_t grid_x_tr = decx::utils::ceil<uint32_t>(this->get_actual_proc_dims().x, _REDUCE2D_BLOCK_DIM_X_ * _proc_align_tr);
+    const uint32_t grid_x_tr = decx::utils::idiv_ceil<uint32_t>(this->get_actual_proc_dims().x, _REDUCE2D_BLOCK_DIM_X_ * _proc_align_tr);
     
     const uint32_t Wsrc_v_tr = (_src_from_device ?
                                (this->_Wdsrc) :
                                (this->get_dtmp1().GetDims().x)) / _proc_align_tr;
     
-    const uint32_t Wdst_v_tr = decx::utils::ceil<uint32_t>(this->get_actual_proc_dims().x, _proc_align);
+    const uint32_t Wdst_v_tr = decx::utils::idiv_ceil<uint32_t>(this->get_actual_proc_dims().x, _proc_align);
 
     /**
     * The parameters for the remaining kernels. Since the datatype remains the same.
     * (_proc_align_tr / _proc_align) -> How many times are the two different alignments of datatypes
     */
-    const uint32_t grid_x_st = decx::utils::ceil<uint32_t>(this->get_actual_proc_dims().x, _REDUCE2D_BLOCK_DIM_X_ * _proc_align);
+    const uint32_t grid_x_st = decx::utils::idiv_ceil<uint32_t>(this->get_actual_proc_dims().x, _REDUCE2D_BLOCK_DIM_X_ * _proc_align);
     const uint32_t Wsrc_v_st = Wdst_v_tr;
     const uint32_t Wdst_v_st = Wsrc_v_st;
 
@@ -232,7 +232,7 @@ void decx::reduce::cuda_reduce2D_1way_configs<_type_in>::CalcDPV_KernelParams(co
         this->_pp_buffer.UpdateStatus();
         _proc_dims_v1.y = grid_y;
 
-        grid_y = decx::utils::ceil<uint32_t>(_proc_dims_v1.y, _REDUCE2D_BLOCK_DIM_Y_);
+        grid_y = decx::utils::idiv_ceil<uint32_t>(_proc_dims_v1.y, _REDUCE2D_BLOCK_DIM_Y_);
 
         ++_loop_times;
     }
@@ -275,15 +275,15 @@ void decx::reduce::cuda_reduce2D_1way_configs<_type_in>::generate_configs(const 
         _reduce_proc_align = _CU_REDUCE2D_MEM_ALIGN_1B_;
     }
 
-    const uint32_t _reduce_len_s1 = decx::utils::ceil<uint32_t>(proc_dims.x, _reduce_proc_align);
+    const uint32_t _reduce_len_s1 = decx::utils::idiv_ceil<uint32_t>(proc_dims.x, _reduce_proc_align);
     _alloc_dim_x = _reduce_len_s1 * _reduce_proc_align;
 
     if (_is_reduce_h) {
-        _grid_len_r1 = decx::utils::ceil<uint64_t>(_reduce_len_s1, _REDUCE2D_BLOCK_DIM_X_);
+        _grid_len_r1 = decx::utils::idiv_ceil<uint64_t>(_reduce_len_s1, _REDUCE2D_BLOCK_DIM_X_);
         this->_d_tmp2.SetDims(_grid_len_r1, proc_dims.y);
     }
     else {
-        _grid_len_r1 = decx::utils::ceil<uint32_t>(proc_dims.y, _REDUCE2D_BLOCK_DIM_Y_);
+        _grid_len_r1 = decx::utils::idiv_ceil<uint32_t>(proc_dims.y, _REDUCE2D_BLOCK_DIM_Y_);
         this->_d_tmp2.SetDims(_alloc_dim_x, _grid_len_r1);
     }
 
@@ -349,14 +349,14 @@ void decx::reduce::cuda_reduce2D_1way_configs<_type_in>::generate_configs(decx::
 
     this->_Wdsrc = Wdsrc;
 
-    _alloc_dim_x = decx::utils::ceil<uint32_t>(proc_dims.x, _proc_align) * _proc_align;
+    _alloc_dim_x = decx::utils::idiv_ceil<uint32_t>(proc_dims.x, _proc_align) * _proc_align;
 
     if (_is_reduce_h) {
-        _grid_len_r1 = decx::utils::ceil<uint64_t>(_alloc_dim_x / _proc_align, _REDUCE2D_BLOCK_DIM_X_);
+        _grid_len_r1 = decx::utils::idiv_ceil<uint64_t>(_alloc_dim_x / _proc_align, _REDUCE2D_BLOCK_DIM_X_);
         this->_d_tmp2.SetDims(_grid_len_r1, proc_dims.y);
     }
     else {
-        _grid_len_r1 = decx::utils::ceil<uint32_t>(proc_dims.y, _REDUCE2D_BLOCK_DIM_Y_);
+        _grid_len_r1 = decx::utils::idiv_ceil<uint32_t>(proc_dims.y, _REDUCE2D_BLOCK_DIM_Y_);
         this->_d_tmp2.SetDims(_alloc_dim_x, _grid_len_r1);
     }
 

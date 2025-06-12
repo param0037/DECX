@@ -164,7 +164,7 @@ void decx::dsp::fft::cpu_FFT1D_planner<_data_type>::plan(const uint64_t signal_l
         _store_pitch *= _current_radix;
     }
     uint32_t _fraction_num = min(this->_permitted_concurrency, 
-        decx::utils::ceil<uint32_t>(this->_signal_length / this->_smaller_FFTs[0].get_signal_len(), alignment));
+        decx::utils::idiv_ceil<uint32_t>(this->_signal_length / this->_smaller_FFTs[0].get_signal_len(), alignment));
         
     decx::utils::frag_manager_gen_Nx(this->_smaller_FFTs[0].get_thread_patching_modify(),
         this->_signal_length / this->_smaller_FFTs[0].get_signal_len(),
@@ -173,7 +173,7 @@ void decx::dsp::fft::cpu_FFT1D_planner<_data_type>::plan(const uint64_t signal_l
     for (uint32_t i = 1; i < this->_smaller_FFTs.effective_size(); ++i) 
     {
         _fraction_num = min(this->_permitted_concurrency, 
-            decx::utils::ceil<uint32_t>(this->_outer_kernel_info[i]._store_pitch, alignment));
+            decx::utils::idiv_ceil<uint32_t>(this->_outer_kernel_info[i]._store_pitch, alignment));
 
         decx::utils::frag_manager_gen_Nx(this->_smaller_FFTs[i].get_thread_patching_modify(),
             this->_outer_kernel_info[i]._store_pitch,

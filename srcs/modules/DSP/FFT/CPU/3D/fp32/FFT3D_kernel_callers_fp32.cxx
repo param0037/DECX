@@ -58,7 +58,7 @@ _FFT3D_smaller_4rows_cplxf(const _type_in* __restrict src_head_ptr, de::CPf* __r
         {
             // Load and transpose data from global memory
             decx::dsp::fft::CPUK::load_entire_row_transpose_fp32_zip(src_head_ptr,  &_double_buffer,
-                                                                     _tiles,        decx::utils::ceil<uint32_t>(_FFT_info->_FFT_info.get_signal_len(), 4),
+                                                                     _tiles,        decx::utils::idiv_ceil<uint32_t>(_FFT_info->_FFT_info.get_signal_len(), 4),
                                                                      _pitch_src,    &_FFT_info->_FFT_zip_info_LDG,
                                                                      start_dex_H, i == (_f_mgr_H.frag_num - 1) ? _f_mgr_H.last_frag_len : 4);
 
@@ -105,7 +105,7 @@ _FFT3D_smaller_4rows_cplxf(const _type_in* __restrict src_head_ptr, de::CPf* __r
 
         // Store back to global memory
         decx::dsp::fft::CPUK::store_entire_row_transpose_cplxf_zip<_conj>(&_double_buffer,      dst_head_ptr, 
-                                                                          _tiles,               decx::utils::ceil<uint32_t>(_FFT_info->_FFT_info.get_signal_len(), 4), 
+                                                                          _tiles,               decx::utils::idiv_ceil<uint32_t>(_FFT_info->_FFT_info.get_signal_len(), 4), 
                                                                           _pitch_dst,           &_FFT_info->_FFT_zip_info_STG, 
                                                                           start_dex_H,          i == (_f_mgr_H.frag_num - 1) ? _f_mgr_H.last_frag_len : 4);
 

@@ -48,7 +48,7 @@ static void decx::cpu_generate2D(decx::_Matrix* mat, const _data_type val)
 {
     decx::cpu_Generator2D planner;
     const uint32_t conc = decx::cpu::_get_permitted_concurrency();
-    planner.plan(conc, make_uint2(mat->Width(), mat->Height()), sizeof(_data_type), sizeof(_data_type));
+    planner.plan(32, conc, make_uint2(mat->Width(), mat->Height()), sizeof(_data_type), sizeof(_data_type));
     
     decx::utils::ThreadArrange1D t1D(conc);
     planner.fill_caller(decx::CPUK::fill2D_constant_fp32, (_data_type*)mat->Mat.GetRawPtr(), mat->Pitch(), &t1D, val);
@@ -64,7 +64,7 @@ static void decx::cpu_random2D(decx::_Matrix* mat, const double min, const doubl
     decx::cpu_Generator2D planner;
     const uint32_t conc = decx::cpu::_get_permitted_concurrency();
     const int32_t element_size = mat->get_layout()._single_element_size;
-    planner.plan(conc, make_uint2(mat->Width(), mat->Height()), element_size, element_size);
+    planner.plan(32, conc, make_uint2(mat->Width(), mat->Height()), element_size, element_size);
     
     decx::utils::ThreadArrange1D t1D(conc);
     switch (mat->Type())

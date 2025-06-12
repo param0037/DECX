@@ -172,7 +172,7 @@ decx::dsp::fft::CPUK::_IFFT2D_smaller_4rows_cplxf(const de::CPf* __restrict     
             decx::dsp::fft::CPUK::store_entire_row_transpose_cplxf_u8(&_double_buffer,          
                                                                       (int32_t*)_dst_loc_ptr, 
                                                                       _tiles, 
-                                                                      decx::utils::ceil<uint32_t>(_FFT_info->get_signal_len(), 4), 
+                                                                      decx::utils::idiv_ceil<uint32_t>(_FFT_info->get_signal_len(), 4), 
                                                                       _pitch_dst,
                                                                       i == (_f_mgr_H.frag_num - 1) ? _L : 4);
         }

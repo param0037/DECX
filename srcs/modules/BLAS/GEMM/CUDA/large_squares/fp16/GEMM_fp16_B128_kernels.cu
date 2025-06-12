@@ -98,8 +98,8 @@ cu_GEMM_fp16_kernel_32_128_128(const __half* __restrict A,   const __half* __res
     const uint32_t loc_tid_By = threadIdx.x / 32;
     const uint32_t tid_Bx = loc_tid_Bx + blockIdx.x * 16;
 
-    const uint32_t W_v4 = decx::utils::ceil<uint32_t>(proc_dims_v1.x, 4);
-    const uint32_t L_v4 = decx::utils::ceil<uint32_t>(_L_v1, 4);
+    const uint32_t W_v4 = decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.x, 4);
+    const uint32_t L_v4 = decx::utils::idiv_ceil<uint32_t>(_L_v1, 4);
     
     __shared__ float2 _frag_A[L][128 / 4 + 1];
     __shared__ float2 _frag_B[L][128 / 4];
@@ -120,7 +120,7 @@ cu_GEMM_fp16_kernel_32_128_128(const __half* __restrict A,   const __half* __res
         _accu[k]._vf = decx::utils::vec4_set1_fp32(0);
     }
 
-    for (uint32_t i = 0; i < decx::utils::ceil<uint32_t>(_L_v1, 32); ++i)
+    for (uint32_t i = 0; i < decx::utils::idiv_ceil<uint32_t>(_L_v1, 32); ++i)
     {
         // Load from A
         if (_Lloc_A < L_v4){
@@ -187,7 +187,7 @@ cu_GEMM_fp16_kernel_32_128_128(const __half* __restrict A,   const __half* __res
     // Store the results to dst.
     const uint64_t dex_dst = STG_tidx * 4 + STG_tidy * pitchdst_v1 * 16;
 
-    if (STG_tidx < decx::utils::ceil<uint32_t>(proc_dims_v1.x, 4)) {
+    if (STG_tidx < decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.x, 4)) {
 #pragma unroll
         for (uint32_t k = 0; k < 16; ++k) {
             if (STG_tidy * 16 + k < proc_dims_v1.y)  *((float4*)(dst + dex_dst + k * pitchdst_v1)) = _accu[k]._vf;
@@ -223,8 +223,8 @@ cu_GEMM_fp16_F_kernel_32_128_128(const __half* __restrict A,   const __half* __r
     const uint32_t loc_tid_By = threadIdx.x / 32;
     const uint32_t tid_Bx = loc_tid_Bx + blockIdx.x * 16;
 
-    const uint32_t W_v4 = decx::utils::ceil<uint32_t>(proc_dims_v1.x, 4);
-    const uint32_t L_v4 = decx::utils::ceil<uint32_t>(_L_v1, 4);
+    const uint32_t W_v4 = decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.x, 4);
+    const uint32_t L_v4 = decx::utils::idiv_ceil<uint32_t>(_L_v1, 4);
     
     __shared__ float2 _frag_A[L][128 / 4 + 1];
     __shared__ float2 _frag_B[L][128 / 4];
@@ -257,7 +257,7 @@ cu_GEMM_fp16_F_kernel_32_128_128(const __half* __restrict A,   const __half* __r
         _accu_fp16[k]._v_h2_2[1] = __hmul2(__half2half2(beta), _accu_fp16[k]._v_h2_2[1]);
     }
 
-    for (uint32_t i = 0; i < decx::utils::ceil<uint32_t>(_L_v1, 32); ++i)
+    for (uint32_t i = 0; i < decx::utils::idiv_ceil<uint32_t>(_L_v1, 32); ++i)
     {
         // Load from A
         if (_Lloc_A < L_v4){
@@ -336,7 +336,7 @@ cu_GEMM_fp16_F_kernel_32_128_128(const __half* __restrict A,   const __half* __r
     // Store the results to dst.
     const uint64_t dex_dst = STG_tidx * 4 + STG_tidy * pitchdst_v1 * 16;
 
-    if (STG_tidx < decx::utils::ceil<uint32_t>(proc_dims_v1.x, 4)) {
+    if (STG_tidx < decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.x, 4)) {
 #pragma unroll
         for (uint32_t k = 0; k < 16; ++k) {
             if (STG_tidy * 16 + k < proc_dims_v1.y) *((float4*)(dst + dex_dst + k * pitchdst_v1)) = _accu[k]._vf;
@@ -370,8 +370,8 @@ cu_GEMM_fp16_kernel_64_128_128(const __half* __restrict A,   const __half* __res
     const uint32_t loc_tid_By = threadIdx.x / 32;
     const uint32_t tid_Bx = loc_tid_Bx + blockIdx.x * 32;
 
-    const uint32_t W_v4 = decx::utils::ceil<uint32_t>(proc_dims_v1.x, 4);
-    const uint32_t L_v4 = decx::utils::ceil<uint32_t>(_L_v1, 4);
+    const uint32_t W_v4 = decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.x, 4);
+    const uint32_t L_v4 = decx::utils::idiv_ceil<uint32_t>(_L_v1, 4);
     
     __shared__ float4 _frag_A[L][128 / 8 + 1];
     __shared__ float2 _frag_B[L][128 / 4];
@@ -392,7 +392,7 @@ cu_GEMM_fp16_kernel_64_128_128(const __half* __restrict A,   const __half* __res
         _accu[k]._vf = decx::utils::vec4_set1_fp32(0);
     }
 
-    for (uint32_t i = 0; i < decx::utils::ceil<uint32_t>(_L_v1, 32); ++i)
+    for (uint32_t i = 0; i < decx::utils::idiv_ceil<uint32_t>(_L_v1, 32); ++i)
     {
         // Load from A
         if (_Lloc_A < L_v4){
@@ -463,7 +463,7 @@ cu_GEMM_fp16_kernel_64_128_128(const __half* __restrict A,   const __half* __res
     // Store the results to dst.
     const uint64_t dex_dst = STG_tidx * 4 + STG_tidy * pitchdst_v1 * 16;
 
-    if (STG_tidx < decx::utils::ceil<uint32_t>(proc_dims_v1.x, 4))
+    if (STG_tidx < decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.x, 4))
     {
 #pragma unroll
         for (uint32_t k = 0; k < 16; ++k) {
@@ -501,8 +501,8 @@ cu_GEMM_fp16_F_kernel_64_128_128(const __half* __restrict A,   const __half* __r
     const uint32_t loc_tid_By = threadIdx.x / 32;
     const uint32_t tid_Bx = loc_tid_Bx + blockIdx.x * 32;
 
-    const uint32_t W_v4 = decx::utils::ceil<uint32_t>(proc_dims_v1.x, 4);
-    const uint32_t L_v4 = decx::utils::ceil<uint32_t>(_L_v1, 4);
+    const uint32_t W_v4 = decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.x, 4);
+    const uint32_t L_v4 = decx::utils::idiv_ceil<uint32_t>(_L_v1, 4);
     
     __shared__ float4 _frag_A[L][128 / 8 + 1];
     __shared__ float2 _frag_B[L][128 / 4];
@@ -534,7 +534,7 @@ cu_GEMM_fp16_F_kernel_64_128_128(const __half* __restrict A,   const __half* __r
         _accu_fp16[k]._v_h2_2[1] = __hmul2(__half2half2(beta), _accu_fp16[k]._v_h2_2[1]);
     }
 
-    for (uint32_t i = 0; i < decx::utils::ceil<uint32_t>(_L_v1, 32); ++i)
+    for (uint32_t i = 0; i < decx::utils::idiv_ceil<uint32_t>(_L_v1, 32); ++i)
     {
         // Load from A
         if (_Lloc_A < L_v4){
@@ -613,7 +613,7 @@ cu_GEMM_fp16_F_kernel_64_128_128(const __half* __restrict A,   const __half* __r
     // Store the results to dst.
     const uint64_t dex_dst = STG_tidx * 4 + STG_tidy * pitchdst_v1 * 16;
 
-    if (STG_tidx < decx::utils::ceil<uint32_t>(proc_dims_v1.x, 4))
+    if (STG_tidx < decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.x, 4))
     {
 #pragma unroll
         for (uint32_t k = 0; k < 16; ++k) {
@@ -642,8 +642,8 @@ cu_GEMM_fp16_kernel_64_128_128_T(const __half* __restrict A,   const __half* __r
     const uint32_t tidy = threadIdx.y + blockIdx.y * blockDim.y;
     const uint32_t tidx_A = threadIdx.x + blockIdx.y * blockDim.x;
 
-    const uint32_t W_v4 = decx::utils::ceil<uint32_t>(proc_dims_v1.x, 4);
-    const uint32_t H_v4 = decx::utils::ceil<uint32_t>(proc_dims_v1.y, 4);
+    const uint32_t W_v4 = decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.x, 4);
+    const uint32_t H_v4 = decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.y, 4);
 
     __shared__ float2 _frag_A[L][128 / 4];
     __shared__ float2 _frag_B[L][128 / 4];
@@ -665,7 +665,7 @@ cu_GEMM_fp16_kernel_64_128_128_T(const __half* __restrict A,   const __half* __r
         _accu[k]._vf = decx::utils::vec4_set1_fp32(0);
     }
 
-    for (uint32_t i = 0; i < decx::utils::ceil<uint32_t>(_L_v1, L); ++i)
+    for (uint32_t i = 0; i < decx::utils::idiv_ceil<uint32_t>(_L_v1, L); ++i)
     {
         // Load from A
         if (tidx_A < H_v4){
@@ -724,7 +724,7 @@ cu_GEMM_fp16_kernel_64_128_128_T(const __half* __restrict A,   const __half* __r
     // Store the results to dst.
     const uint64_t dex_dst = tidx * 4 + tidy * pitchdst_v1 * 16;
 
-    if (tidx < decx::utils::ceil<uint32_t>(proc_dims_v1.x, 4))
+    if (tidx < decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.x, 4))
     {
 #pragma unroll
         for (uint32_t k = 0; k < 16; ++k) {
@@ -755,8 +755,8 @@ cu_GEMM_fp16_F_kernel_64_128_128_T(const __half* __restrict A,   const __half* _
     const uint32_t tidy = threadIdx.y + blockIdx.y * blockDim.y;
     const uint32_t tidx_A = threadIdx.x + blockIdx.y * blockDim.x;
 
-    const uint32_t W_v4 = decx::utils::ceil<uint32_t>(proc_dims_v1.x, 4);
-    const uint32_t H_v4 = decx::utils::ceil<uint32_t>(proc_dims_v1.y, 4);
+    const uint32_t W_v4 = decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.x, 4);
+    const uint32_t H_v4 = decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.y, 4);
 
     __shared__ float2 _frag_A[L][128 / 4];
     __shared__ float2 _frag_B[L][128 / 4];
@@ -780,7 +780,7 @@ cu_GEMM_fp16_F_kernel_64_128_128_T(const __half* __restrict A,   const __half* _
     for (uint32_t k = 0; k < 16; ++k){
         _accu[k]._vf = decx::utils::vec4_set1_fp32(0);
 
-        if (tidx < decx::utils::ceil<uint32_t>(proc_dims_v1.x, 4)) {
+        if (tidx < decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.x, 4)) {
             if (tidy * 16 + k < proc_dims_v1.y)  _accu_fp16[k]._vf2 = *((float2*)(C + dex_C + k * pitchB_v1));
         }
 
@@ -788,7 +788,7 @@ cu_GEMM_fp16_F_kernel_64_128_128_T(const __half* __restrict A,   const __half* _
         _accu_fp16[k]._v_h2_2[1] = __hmul2(__half2half2(beta), _accu_fp16[k]._v_h2_2[1]);
     }
 
-    for (uint32_t i = 0; i < decx::utils::ceil<uint32_t>(_L_v1, L); ++i)
+    for (uint32_t i = 0; i < decx::utils::idiv_ceil<uint32_t>(_L_v1, L); ++i)
     {
         // Load from A
         if (tidx_A < H_v4){
@@ -861,7 +861,7 @@ cu_GEMM_fp16_F_kernel_64_128_128_T(const __half* __restrict A,   const __half* _
     // Store the results to dst.
     const uint64_t dex_dst = tidx * 4 + tidy * pitchdst_v1 * 16;
 
-    if (tidx < decx::utils::ceil<uint32_t>(proc_dims_v1.x, 4))
+    if (tidx < decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.x, 4))
     {
 #pragma unroll
         for (uint32_t k = 0; k < 16; ++k) {

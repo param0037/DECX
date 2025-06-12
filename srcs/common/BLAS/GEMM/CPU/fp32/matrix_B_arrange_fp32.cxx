@@ -181,7 +181,7 @@ _matrix_B_arrange_fp32_exec(const float* __restrict src,            // pointer o
     const uint32_t ptime_w = proc_dims_v.x / block_W_v;
     const uint32_t _LW = proc_dims_v.x % block_W_v;
 
-    const uint32_t ptime_h = decx::utils::ceil<uint32_t>(proc_dims_v.y, block_H);
+    const uint32_t ptime_h = decx::utils::idiv_ceil<uint32_t>(proc_dims_v.y, block_H);
     const uint32_t _LH = proc_dims_v.y % block_H;
 
     for (uint32_t i = 0; i < ptime_h; ++i) 

@@ -46,8 +46,8 @@ de::vis::cpu::Find_Edge(de::Matrix& src, de::Matrix& dst, const float _L_thresho
     decx::_Matrix* _src = dynamic_cast<decx::_Matrix*>(&src);
     decx::_Matrix* _dst = dynamic_cast<decx::_Matrix*>(&dst);
     
-    const uint2 Dmap_dims = make_uint2(decx::utils::ceil<uint>(_src->Width() - 2, 8) * 8, _src->Height() - 2);
-    const uint2 Gmap_dims = make_uint2(decx::utils::ceil<uint>(Dmap_dims.x + 2, 8) * 8, _src->Height());
+    const uint2 Dmap_dims = make_uint2(decx::utils::idiv_ceil<uint>(_src->Width() - 2, 8) * 8, _src->Height() - 2);
+    const uint2 Gmap_dims = make_uint2(decx::utils::idiv_ceil<uint>(Dmap_dims.x + 2, 8) * 8, _src->Height());
     const uint2 _proc_dims = Dmap_dims;
 
     decx::PtrInfo<float> gradient_info_map, dir_info_map;

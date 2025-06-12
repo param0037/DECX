@@ -47,9 +47,9 @@ namespace decx
 }
 
 
-#define SLOT_ID_UNUSED decx::TArg_var<int32_t>([&](const int32_t i){return 0;})
-#define SLOT_ID_MONOTONIC(offset) decx::TArg_var<int32_t>([&](const int32_t i){return i + (offset);})
-#define SLOT_ID_CUSTOM(func) decx::TArg_var<int32_t>((func))
+#define EW_SLOT_ID_UNUSED            decx::TArg_var<int32_t>([&](const int32_t i){return 0;})
+#define EW_SLOT_ID_MONOTONIC(offset) decx::TArg_var<int32_t>([&](const int32_t i){return i + (offset);})
+#define EW_SLOT_ID_CUSTOM(func)      decx::TArg_var<int32_t>((func))
 
 
 class decx::cpu_ElementWise1D_planner : public decx::element_wise_base_1D
@@ -68,8 +68,8 @@ public:
     cpu_ElementWise1D_planner() {}
 
 
-    void plan(const uint32_t conc, const uint64_t total, const uint8_t _type_in_size, const uint8_t _type_out_size,
-        const uint64_t min_thread_proc = _EW_MIN_THREAD_PROC_DEFAULT_CPU_);
+    void plan(const uint32_t simd_align_byte, const uint32_t conc, const uint64_t total, const uint8_t _type_in_size, const uint8_t _type_out_size,
+        const uint64_t min_thread_proc = _EW_MIN_THREAD_PROC_DEFAULT_CPU_, const uint32_t extra_alignment = 1);
 
 
     uint64_t get_proc_len_by_id(const int32_t thread_id) const{
@@ -78,7 +78,7 @@ public:
 
 
     uint64_t get_proc_len_v_by_id(const int32_t thread_id) const{
-        return decx::utils::ceil<uint64_t>(this->_fmgr.GetFragLenById(thread_id), this->_alignment);
+        return decx::utils::idiv_ceil<uint64_t>(this->_fmgr.GetFragLenById(thread_id), this->_alignment);
     }
 
 
@@ -88,11 +88,15 @@ public:
     const uint8_t get_alignment() const {return this->_alignment;}
 
 
-    template <typename FuncType, typename... Args> inline void 
-    caller(FuncType&& f, decx::utils::Thr1D* t1D, Args&&... args)
+    template <typename FuncType, typename LambdaFunc_T, typename... Args> inline void 
+    caller(FuncType&& f, 
+           decx::utils::Thr1D* t1D, 
+           const decx::cpu::ThreadDispatchMethod_e         method, 
+           decx::ThreadArg_var<int32_t, LambdaFunc_T>&&    slot_id, 
+           Args&&... args)
     {
         for (int32_t i = 0; i < this->_fmgr.get_frag_num(); ++i){
-            t1D->_async_thread[i] = decx::cpu::RegisterTaskByID(f, i, args.value(i)...);
+            t1D->_async_thread[i] = decx::cpu::RegisterTask(f, method, slot_id.value(i), args.value(i)...);
         }
         t1D->__sync_all_threads(make_uint2(0, this->_fmgr.frag_num));
     }
@@ -130,8 +134,8 @@ public:
     cpu_ElementWise2D_planner() {}
 
 
-    void plan(const uint32_t conc, const uint2 proc_dims, const uint8_t _type_in_size, const uint8_t _type_out_size,
-        const uint64_t min_thread_proc = _EW_MIN_THREAD_PROC_DEFAULT_CPU_);
+    void plan(const uint32_t simd_align_byte, const uint32_t conc, const uint2 proc_dims, const uint8_t _type_in_size, const uint8_t _type_out_size,
+        const uint64_t min_thread_proc = _EW_MIN_THREAD_PROC_DEFAULT_CPU_, const uint2 extra_alignment = make_uint2(1, 1));
 
     uint2 _thread_dist;
 
@@ -145,19 +149,23 @@ public:
 
     uint2 get_proc_dims_v_by_id(const int32_t i, const int32_t j) const
     {
-        return make_uint2(decx::utils::ceil<uint32_t>(this->_fmgr_WH[0].GetFragLenById(j), this->_alignment),
+        return make_uint2(decx::utils::idiv_ceil<uint32_t>(this->_fmgr_WH[0].GetFragLenById(j), this->_alignment),
                           this->_fmgr_WH[1].GetFragLenById(i));
     }
 
 
-    template <typename FuncType, typename ...Args>
-    inline void caller(FuncType&& f, decx::utils::Thr1D* t1D, Args&& ...args)
+    template <typename FuncType, typename LambdaFunc_T, typename ...Args>
+    inline void caller(FuncType&& f, 
+                       decx::utils::Thr1D* t1D, 
+                       const decx::cpu::ThreadDispatchMethod_e method,
+                       decx::ThreadArg_var<int32_t, LambdaFunc_T>&& slot_id,
+                       Args&& ...args)
     {
         uint32_t _thr_cnt = 0;
 
         for (int32_t i = 0; i < this->_thread_dist.y; ++i){
             for (int32_t j = 0; j < this->_thread_dist.x; ++j){
-                t1D->_async_thread[_thr_cnt] = decx::cpu::RegisterTaskLoadBalanced(f, args.value(i, j)...);
+                t1D->_async_thread[_thr_cnt] = decx::cpu::RegisterTask(f, method, slot_id.value(i), args.value(i, j)...);
                 ++_thr_cnt;
             }
         }
@@ -177,13 +185,9 @@ public:
         for (int32_t i = 0; i < this->_thread_dist.y; ++i){
             loc_src = src + Wsrc * i * this->_fmgr_WH[1].frag_len;
             loc_dst = dst + Wdst * i * this->_fmgr_WH[1].frag_len;
-            for (int32_t j = 0; j < this->_thread_dist.x; ++j){
-                // uint2 proc_dims = 
-                //     make_uint2(j < this->_thread_dist.x - 1 ? this->_fmgr_WH[0].frag_len : this->_fmgr_WH[0].last_frag_len,
-                //             i < this->_thread_dist.y - 1 ? this->_fmgr_WH[1].frag_len : this->_fmgr_WH[1].last_frag_len);
-
+            for (int32_t j = 0; j < this->_thread_dist.x; ++j)
+            {
                 uint2 proc_dims = this->get_proc_dims_v_by_id(i, j);
-
                 t1D->_async_thread[_thr_cnt] = decx::cpu::RegisterTaskLoadBalanced(f, loc_src, loc_dst, proc_dims, Wsrc, Wdst, additional...);
                 
                 loc_src += this->_fmgr_WH[0].frag_len;

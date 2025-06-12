@@ -70,7 +70,7 @@ void decx::nn::GPUK::cu_im2col_GEMM_fp32(const float4* __restrict   im2col_buf,
 
         //uint32_t _physical_i = decx::nn::GPUK::_Lproc_params_i2c_fp32[0].get_phyaddr_L1(i);
         
-        if (tidx_dist < decx::utils::ceil<uint32_t>(conv2D_area.x, 4) && tidy_dist < conv2D_area.y)
+        if (tidx_dist < decx::utils::idiv_ceil<uint32_t>(conv2D_area.x, 4) && tidy_dist < conv2D_area.y)
         {
             _recv_i2c._vf = im2col_buf[_LDG_I2C_X + /*_physical_i*/i * _logical_pitch_i2c_v1 / 4];
 

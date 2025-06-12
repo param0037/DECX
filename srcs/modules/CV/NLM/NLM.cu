@@ -88,8 +88,8 @@ void decx::vis::NLM_RGB_r16(decx::_Matrix* src, decx::_Matrix* dst, uint search_
     const uint eq_ker_len = (search_window_radius * 2 + 1) * (search_window_radius * 2 + 1),
         eq_Wker = search_window_radius * 2 + 1;
 
-    const uint2 dst_buf_dim = make_uint2(decx::utils::ceil<uint>(dst->Width(), 64) * 64,
-        decx::utils::ceil<uint>(dst->Height(), 16) * 16);
+    const uint2 dst_buf_dim = make_uint2(decx::utils::idiv_ceil<uint>(dst->Width(), 64) * 64,
+        decx::utils::idiv_ceil<uint>(dst->Height(), 16) * 16);
 
     const uint2 _work_space_dim = make_uint2(dst_buf_dim.x + 32, dst_buf_dim.y + 32);
 
@@ -152,8 +152,8 @@ void decx::vis::NLM_RGB_r16_keep_alpha(decx::_Matrix* src, decx::_Matrix* dst, u
     const uint eq_ker_len = (search_window_radius * 2 + 1) * (search_window_radius * 2 + 1),
         eq_Wker = search_window_radius * 2 + 1;
 
-    const uint2 dst_buf_dim = make_uint2(decx::utils::ceil<uint>(dst->Width(), 64) * 64,
-        decx::utils::ceil<uint>(dst->Height(), 16) * 16);
+    const uint2 dst_buf_dim = make_uint2(decx::utils::idiv_ceil<uint>(dst->Width(), 64) * 64,
+        decx::utils::idiv_ceil<uint>(dst->Height(), 16) * 16);
 
     const uint2 _work_space_dim = make_uint2(dst_buf_dim.x + 32, dst_buf_dim.y + 32);
 
@@ -216,8 +216,8 @@ void decx::vis::NLM_RGB_r8(decx::_Matrix* src, decx::_Matrix* dst, uint search_w
     const uint eq_ker_len = (search_window_radius * 2 + 1) * (search_window_radius * 2 + 1),
         eq_Wker = search_window_radius * 2 + 1;
 
-    const uint2 dst_buf_dim = make_uint2(decx::utils::ceil<uint>(dst->Width(), 64) * 64,
-        decx::utils::ceil<uint>(dst->Height(), 16) * 16);
+    const uint2 dst_buf_dim = make_uint2(decx::utils::idiv_ceil<uint>(dst->Width(), 64) * 64,
+        decx::utils::idiv_ceil<uint>(dst->Height(), 16) * 16);
 
     const uint2 _work_space_dim = make_uint2(dst_buf_dim.x + 16, dst_buf_dim.y + 16);
 
@@ -281,8 +281,8 @@ void decx::vis::NLM_RGB_r8_keep_alpha(decx::_Matrix* src, decx::_Matrix* dst, ui
     const uint eq_ker_len = (search_window_radius * 2 + 1) * (search_window_radius * 2 + 1),
         eq_Wker = search_window_radius * 2 + 1;
 
-    const uint2 dst_buf_dim = make_uint2(decx::utils::ceil<uint>(dst->Width(), 64) * 64,
-        decx::utils::ceil<uint>(dst->Height(), 16) * 16);
+    const uint2 dst_buf_dim = make_uint2(decx::utils::idiv_ceil<uint>(dst->Width(), 64) * 64,
+        decx::utils::idiv_ceil<uint>(dst->Height(), 16) * 16);
 
     const uint2 _work_space_dim = make_uint2(dst_buf_dim.x + 16, dst_buf_dim.y + 16);
 
@@ -346,8 +346,8 @@ void decx::vis::NLM_gray_r16(decx::_Matrix* src, decx::_Matrix* dst, uint search
     const uint eq_ker_len = (search_window_radius * 2 + 1) * (search_window_radius * 2 + 1),
         eq_Wker = search_window_radius * 2 + 1;
 
-    const uint2 dst_buf_dim = make_uint2(decx::utils::ceil<uint>(dst->Width(), 256) * 256,
-        decx::utils::ceil<uint>(dst->Height(), 16) * 16);
+    const uint2 dst_buf_dim = make_uint2(decx::utils::idiv_ceil<uint>(dst->Width(), 256) * 256,
+        decx::utils::idiv_ceil<uint>(dst->Height(), 16) * 16);
 
     const uint2 _work_space_dim = make_uint2(dst_buf_dim.x + 32, dst_buf_dim.y + 32);
 
@@ -410,8 +410,8 @@ void decx::vis::NLM_gray_r8(decx::_Matrix* src, decx::_Matrix* dst, uint search_
     const uint eq_ker_len = (search_window_radius * 2 + 1) * (search_window_radius * 2 + 1),
         eq_Wker = search_window_radius * 2 + 1;
 
-    const uint2 dst_buf_dim = make_uint2(decx::utils::ceil<uint>(dst->Width(), 256) * 256,
-        decx::utils::ceil<uint>(dst->Height(), 16) * 16);
+    const uint2 dst_buf_dim = make_uint2(decx::utils::idiv_ceil<uint>(dst->Width(), 256) * 256,
+        decx::utils::idiv_ceil<uint>(dst->Height(), 16) * 16);
 
     const uint2 _work_space_dim = make_uint2(dst_buf_dim.x + 16, dst_buf_dim.y + 16);
 

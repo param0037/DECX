@@ -74,14 +74,14 @@ decx::dsp::GPUK::cu_filter2D_NB_fp64(const double2* __restrict  src,
 
     uint64_t dex_src = tidx + tidy * (uint64_t)pitchsrc_v2;
 
-    const uint2 _ldg_bound_v2 = make_uint2(decx::utils::ceil<uint32_t>(conv_area.x + kernel_dims.x - 1, 2),
+    const uint2 _ldg_bound_v2 = make_uint2(decx::utils::idiv_ceil<uint32_t>(conv_area.x + kernel_dims.x - 1, 2),
         conv_area.y + kernel_dims.y - 1);
 
     constexpr uint32_t _ext_w_v2 = _ext_w / 2;
     constexpr uint32_t _row_cover_x_v2 = _CU_FILTER2D_FP32_BLOCK_X_ * 2 / 2;
     __shared__ double2 _row[_CU_FILTER2D_FP32_BLOCK_Y_][_row_cover_x_v2 + _ext_w_v2 + 1];
 
-    const uint32_t _k_loop_w_v2 = decx::utils::ceil<uint32_t>(kernel_dims.x - 1, 2);
+    const uint32_t _k_loop_w_v2 = decx::utils::idiv_ceil<uint32_t>(kernel_dims.x - 1, 2);
     // const uint32_t _k_loop_w_L = (kernel_dims.x - 1) % 2 ? (kernel_dims.x - 1) % 2 : 2;
     decx::utils::_cuda_vec128 _recv[2];
     _recv[0]._vd = decx::utils::vec2_set1_fp64(0);
@@ -142,7 +142,7 @@ decx::dsp::GPUK::cu_filter2D_NB_fp64(const double2* __restrict  src,
     }
 
     uint64_t dex_dst = tidx + tidy * (uint64_t)pitchdst_v2;
-    if (tidx < decx::utils::ceil<uint32_t>(conv_area.x, 2) && tidy < conv_area.y) {
+    if (tidx < decx::utils::idiv_ceil<uint32_t>(conv_area.x, 2) && tidy < conv_area.y) {
         dst[dex_dst] = _accu._vd;
     }
 }
@@ -163,7 +163,7 @@ decx::dsp::GPUK::cu_filter2D_BC_fp64(const double2* __restrict  src,
     const uint32_t tidx = threadIdx.x + blockIdx.x * blockDim.x;
     const uint32_t tidy = threadIdx.y + blockIdx.y * blockDim.y;
 
-    const uint32_t _ldg_bound_x = decx::utils::ceil<uint32_t>(conv_area.x + kernel_dims.x - 1, 2);
+    const uint32_t _ldg_bound_x = decx::utils::idiv_ceil<uint32_t>(conv_area.x + kernel_dims.x - 1, 2);
     const uint32_t _KH_half = (kernel_dims.y >> 1);
     int64_t dex_src = tidx + tidy * (int64_t)pitchsrc_v2 - _KH_half * pitchsrc_v2;
 
@@ -171,7 +171,7 @@ decx::dsp::GPUK::cu_filter2D_BC_fp64(const double2* __restrict  src,
     constexpr uint32_t _row_cover_x_v2 = _CU_FILTER2D_FP32_BLOCK_X_ * 2 / 2;
     __shared__ double2 _row[_CU_FILTER2D_FP32_BLOCK_Y_][_row_cover_x_v2 + _ext_w_v2 + 1];
 
-    const uint32_t _k_loop_w_v2 = decx::utils::ceil<uint32_t>(kernel_dims.x - 1, 2);
+    const uint32_t _k_loop_w_v2 = decx::utils::idiv_ceil<uint32_t>(kernel_dims.x - 1, 2);
     // const uint32_t _k_loop_w_L = (kernel_dims.x - 1) % 2 ? (kernel_dims.x - 1) % 2 : 2;
     decx::utils::_cuda_vec128 _recv[2];
     _recv[0]._vd = decx::utils::vec2_set1_fp64(0);
@@ -235,7 +235,7 @@ decx::dsp::GPUK::cu_filter2D_BC_fp64(const double2* __restrict  src,
     }
 
     uint64_t dex_dst = tidx + tidy * (uint64_t)pitchdst_v2;
-    if (tidx < decx::utils::ceil<uint32_t>(conv_area.x, 2) && tidy < conv_area.y) {
+    if (tidx < decx::utils::idiv_ceil<uint32_t>(conv_area.x, 2) && tidy < conv_area.y) {
         dst[dex_dst] = _accu._vd;
     }
 }

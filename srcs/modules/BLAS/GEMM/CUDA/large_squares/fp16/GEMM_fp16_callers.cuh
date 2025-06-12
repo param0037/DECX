@@ -63,8 +63,8 @@ GEMM_fp16_64_128_128(const void* A,             const void* B,
                      const de::Half alpha,      const de::Half beta)
 {
     dim3 thread(256, 1);
-    dim3 grid(decx::utils::ceil<uint32_t>(proc_dims_v1.x, 128), 
-              decx::utils::ceil<uint32_t>(proc_dims_v1.y, 128));
+    dim3 grid(decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.x, 128), 
+              decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.y, 128));
 
     if (C == NULL){
         decx::blas::GPUK::cu_GEMM_fp16_kernel_64_128_128<<<grid, thread, 0, S->get_raw_stream_ref()>>>(
@@ -88,8 +88,8 @@ GEMM_fp16_32_128_128(const void* A,             const void* B,
                      const de::Half alpha,      const de::Half beta)
 {
     dim3 thread(256, 1);
-    dim3 grid(decx::utils::ceil<uint32_t>(proc_dims_v1.x, 128), 
-              decx::utils::ceil<uint32_t>(proc_dims_v1.y, 128));
+    dim3 grid(decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.x, 128), 
+              decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.y, 128));
 
     if (C == NULL){
         decx::blas::GPUK::cu_GEMM_fp16_kernel_32_128_128<<<grid, thread, 0, S->get_raw_stream_ref()>>>(
@@ -113,8 +113,8 @@ GEMM_fp16_64_128_128_T(const void* A,           const void* B,
                      const de::Half alpha,      const de::Half beta)
 {
     dim3 thread(32, 8);
-    dim3 grid(decx::utils::ceil<uint32_t>(proc_dims_v1.x, 128), 
-              decx::utils::ceil<uint32_t>(proc_dims_v1.y, 128));
+    dim3 grid(decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.x, 128), 
+              decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.y, 128));
 
     if (C == NULL){
         decx::blas::GPUK::cu_GEMM_fp16_kernel_64_128_128_T<<<grid, thread, 0, S->get_raw_stream_ref()>>>(

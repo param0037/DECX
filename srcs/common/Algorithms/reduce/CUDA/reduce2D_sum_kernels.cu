@@ -45,7 +45,7 @@ decx::reduce::GPUK::cu_warp_reduce_sum2D_h_fp32(const float4 * __restrict   src,
     uint64_t LDG_dex = Wsrc_v4 * tidy + tidx;
     uint64_t STG_dex = Wdst_v1 * tidy + blockIdx.x;
 
-    uint32_t proc_W_v4 = decx::utils::ceil<uint32_t>(proc_dims.x, 4);
+    uint32_t proc_W_v4 = decx::utils::idiv_ceil<uint32_t>(proc_dims.x, 4);
 
     decx::utils::_cuda_vec128 _recv;
     _recv._vf = decx::utils::vec4_set1_fp32(0);
@@ -84,7 +84,7 @@ decx::reduce::GPUK::cu_warp_reduce_sum2D_h_fp64(const double2 * __restrict   src
     uint64_t LDG_dex = Wsrc_v2 * tidy + tidx;
     uint64_t STG_dex = Wdst_v1 * tidy + blockIdx.x;
 
-    uint32_t proc_W_v2 = decx::utils::ceil<uint32_t>(proc_dims.x, 2);
+    uint32_t proc_W_v2 = decx::utils::idiv_ceil<uint32_t>(proc_dims.x, 2);
 
     decx::utils::_cuda_vec128 _recv;
     _recv._vf = decx::utils::vec4_set1_fp32(0);
@@ -126,7 +126,7 @@ decx::reduce::GPUK::cu_warp_reduce_sum2D_h_int32(const int4 * __restrict   src,
     uint64_t LDG_dex = Wsrc_v4 * tidy + tidx;
     uint64_t STG_dex = Wdst_v1 * tidy + blockIdx.x;
 
-    uint32_t proc_W_v4 = decx::utils::ceil<uint32_t>(proc_dims.x, 4);
+    uint32_t proc_W_v4 = decx::utils::idiv_ceil<uint32_t>(proc_dims.x, 4);
 
     decx::utils::_cuda_vec128 _recv;
     _recv._vi = decx::utils::vec4_set1_int32(0);
@@ -168,7 +168,7 @@ decx::reduce::GPUK::cu_warp_reduce_sum2D_h_fp16_L1(const float4 * __restrict   s
     uint64_t LDG_dex = Wsrc_v8 * tidy + tidx;
     uint64_t STG_dex = Wdst_v1 * tidy + blockIdx.x;
 
-    uint32_t proc_W_v8 = decx::utils::ceil<uint32_t>(proc_dims.x, 8);
+    uint32_t proc_W_v8 = decx::utils::idiv_ceil<uint32_t>(proc_dims.x, 8);
 
     decx::utils::_cuda_vec128 _recv;
     _recv._vf = decx::utils::vec4_set1_fp32(0);
@@ -210,7 +210,7 @@ decx::reduce::GPUK::cu_warp_reduce_sum2D_h_fp16_L2(const float4 * __restrict   s
     uint64_t LDG_dex = Wsrc_v8 * tidy + tidx;
     uint64_t STG_dex = Wdst_v1 * tidy + blockIdx.x;
 
-    uint32_t proc_W_v8 = decx::utils::ceil<uint32_t>(proc_dims.x, 8);
+    uint32_t proc_W_v8 = decx::utils::idiv_ceil<uint32_t>(proc_dims.x, 8);
 
     decx::utils::_cuda_vec128 _recv;
     _recv._vf = decx::utils::vec4_set1_fp32(0);
@@ -252,7 +252,7 @@ decx::reduce::GPUK::cu_warp_reduce_sum2D_h_fp16_L3(const float4 * __restrict   s
     uint64_t LDG_dex = Wsrc_v8 * tidy + tidx;
     uint64_t STG_dex = Wdst_v1 * tidy + blockIdx.x;
 
-    uint32_t proc_W_v8 = decx::utils::ceil<uint32_t>(proc_dims.x, 8);
+    uint32_t proc_W_v8 = decx::utils::idiv_ceil<uint32_t>(proc_dims.x, 8);
 
     decx::utils::_cuda_vec128 _recv;
     _recv._vf = decx::utils::vec4_set1_fp32(0);
@@ -295,7 +295,7 @@ decx::reduce::GPUK::cu_warp_reduce_sum2D_h_u8_i32(const int4 * __restrict     sr
     uint64_t LDG_dex = Wsrc_v16 * tidy + tidx;
     uint64_t STG_dex = Wdst_v1 * tidy + blockIdx.x;
 
-    uint32_t proc_W_v16 = decx::utils::ceil<uint32_t>(proc_dims.x, 16);
+    uint32_t proc_W_v16 = decx::utils::idiv_ceil<uint32_t>(proc_dims.x, 16);
 
     decx::utils::_cuda_vec128 _recv;
     _recv._vf = decx::utils::vec4_set1_fp32(0);
@@ -360,7 +360,7 @@ decx::reduce::GPUK::cu_warp_reduce_sum2D_v_fp32(const float4 * __restrict   src,
     * process goes all the way down vertically. The process stops at exactly 
     * where the matrix ends.
     */
-    if (tidx < decx::utils::ceil<uint32_t>(proc_dims_v1.x, 4) && tidy < proc_dims_v1.y) {
+    if (tidx < decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.x, 4) && tidy < proc_dims_v1.y) {
         _recv._vf = src[LDG_dex];
     }
 
@@ -389,7 +389,7 @@ decx::reduce::GPUK::cu_warp_reduce_sum2D_v_fp32(const float4 * __restrict   src,
     
     _recv._vf = _workspace[threadIdx.y][threadIdx.x];
 
-    if (tidx < decx::utils::ceil<uint32_t>(proc_dims_v1.x, 4) && threadIdx.y == 0) {
+    if (tidx < decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.x, 4) && threadIdx.y == 0) {
         dst[STG_dex] = _recv._vf;
     }
 }
@@ -422,7 +422,7 @@ decx::reduce::GPUK::cu_warp_reduce_sum2D_v_fp64(const double2 * __restrict   src
     * process goes all the way down vertically. The process stops at exactly 
     * where the matrix ends.
     */
-    if (tidx < decx::utils::ceil<uint32_t>(proc_dims_v1.x, 2) && tidy < proc_dims_v1.y) {
+    if (tidx < decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.x, 2) && tidy < proc_dims_v1.y) {
         _recv._vd = src[LDG_dex];
     }
 
@@ -449,7 +449,7 @@ decx::reduce::GPUK::cu_warp_reduce_sum2D_v_fp64(const double2 * __restrict   src
     
     _recv._vd = _workspace[threadIdx.y][threadIdx.x];
 
-    if (tidx < decx::utils::ceil<uint32_t>(proc_dims_v1.x, 2) && threadIdx.y == 0) {
+    if (tidx < decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.x, 2) && threadIdx.y == 0) {
         dst[STG_dex] = _recv._vd;
     }
 }
@@ -483,7 +483,7 @@ decx::reduce::GPUK::cu_warp_reduce_sum2D_v_int32(const int4 * __restrict   src,
     * process goes all the way down vertically. The process stops at exactly 
     * where the matrix ends.
     */
-    if (tidx < decx::utils::ceil<uint32_t>(proc_dims_v1.x, 4) && tidy < proc_dims_v1.y) {
+    if (tidx < decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.x, 4) && tidy < proc_dims_v1.y) {
         _recv._vi = src[LDG_dex];
     }
 
@@ -510,7 +510,7 @@ decx::reduce::GPUK::cu_warp_reduce_sum2D_v_int32(const int4 * __restrict   src,
     
     _recv._vi = _workspace[threadIdx.y][threadIdx.x];
 
-    if (tidx < decx::utils::ceil<uint32_t>(proc_dims_v1.x, 4) && threadIdx.y == 0) {
+    if (tidx < decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.x, 4) && threadIdx.y == 0) {
         dst[STG_dex] = _recv._vi;
     }
 }
@@ -544,7 +544,7 @@ decx::reduce::GPUK::cu_warp_reduce_sum2D_v_fp16_L1(const float4 * __restrict   s
     * process goes all the way down vertically. The process stops at exactly
     * where the matrix ends.
     */
-    if (tidx < decx::utils::ceil<uint32_t>(proc_dims_v1.x, 8) && tidy < proc_dims_v1.y) {
+    if (tidx < decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.x, 8) && tidy < proc_dims_v1.y) {
         _recv._vf = src[LDG_dex];
     }
 
@@ -580,7 +580,7 @@ decx::reduce::GPUK::cu_warp_reduce_sum2D_v_fp16_L1(const float4 * __restrict   s
 
     __syncthreads();
 
-    if (STG_dex_x < decx::utils::ceil<uint32_t>(proc_dims_v1.x, 4) && threadIdx.y < 2) {
+    if (STG_dex_x < decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.x, 4) && threadIdx.y < 2) {
         tmp1._vf = _workspace[threadIdx.y][threadIdx.x];
         dst[blockIdx.y * Wdst_v4 + STG_dex_x] = tmp1._vf;
     }
@@ -614,7 +614,7 @@ decx::reduce::GPUK::cu_warp_reduce_sum2D_v_fp16_L2(const float4 * __restrict   s
     * process goes all the way down vertically. The process stops at exactly
     * where the matrix ends.
     */
-    if (tidx < decx::utils::ceil<uint32_t>(proc_dims_v1.x, 8) && tidy < proc_dims_v1.y) {
+    if (tidx < decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.x, 8) && tidy < proc_dims_v1.y) {
         _recv._vf = src[LDG_dex];
     }
 
@@ -655,7 +655,7 @@ decx::reduce::GPUK::cu_warp_reduce_sum2D_v_fp16_L2(const float4 * __restrict   s
 
     tmp1._vf = _workspace[threadIdx.y][threadIdx.x];
 
-    if (tidx < decx::utils::ceil<uint32_t>(proc_dims_v1.x, 8) && threadIdx.y == 0) {
+    if (tidx < decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.x, 8) && threadIdx.y == 0) {
         dst[blockIdx.y * Wdst_v8 + tidx] = tmp1._vf;
     }
 #endif
@@ -689,7 +689,7 @@ decx::reduce::GPUK::cu_warp_reduce_sum2D_v_fp16_L3(const float4 * __restrict   s
     * process goes all the way down vertically. The process stops at exactly
     * where the matrix ends.
     */
-    if (tidx < decx::utils::ceil<uint32_t>(proc_dims_v1.x, 8) && tidy < proc_dims_v1.y) {
+    if (tidx < decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.x, 8) && tidy < proc_dims_v1.y) {
         _recv._vf = src[LDG_dex];
     }
 
@@ -716,7 +716,7 @@ decx::reduce::GPUK::cu_warp_reduce_sum2D_v_fp16_L3(const float4 * __restrict   s
 
     tmp1._vf = _workspace[threadIdx.y][threadIdx.x];
 
-    if (tidx < decx::utils::ceil<uint32_t>(proc_dims_v1.x, 8) && threadIdx.y == 0) {
+    if (tidx < decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.x, 8) && threadIdx.y == 0) {
         dst[blockIdx.y * Wdst_v8 + tidx] = tmp1._vf;
     }
 #endif
@@ -750,7 +750,7 @@ decx::reduce::GPUK::cu_warp_reduce_sum2D_v_u8_i32(const int4 * __restrict   src,
     * process goes all the way down vertically. The process stops at exactly 
     * where the matrix ends.
     */
-    if (tidx < decx::utils::ceil<uint32_t>(proc_dims_v1.x, 16) && tidy < proc_dims_v1.y) {
+    if (tidx < decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.x, 16) && tidy < proc_dims_v1.y) {
         _recv._vi = src[LDG_dex];
     }
 
@@ -796,7 +796,7 @@ decx::reduce::GPUK::cu_warp_reduce_sum2D_v_u8_i32(const int4 * __restrict   src,
 
     __syncthreads();
     
-    if (STG_dex_x < decx::utils::ceil<uint32_t>(proc_dims_v1.x, 4) && threadIdx.y < 4) {
+    if (STG_dex_x < decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.x, 4) && threadIdx.y < 4) {
         tmp1._vf = _workspace[threadIdx.y][threadIdx.x];
         dst[blockIdx.y * Wdst_v4 + STG_dex_x] = tmp1._vi;
     }

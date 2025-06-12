@@ -60,7 +60,7 @@ void decx::_matrix_layout::_attribute_assign(const de::_DATA_TYPES_FLAGS_ type, 
             break;
         }
     }
-    this->pitch = decx::utils::ceil<uint>(_width, _alignment) * _alignment;
+    this->pitch = decx::utils::idiv_ceil<uint>(_width, _alignment) * _alignment;
 }
 
 

@@ -177,10 +177,12 @@ static void decx::type_cast::typecast1D_general_caller(
     const _type_in* src,            _type_out* dst,                             
     const uint64_t proc_len,        decx::utils::Thr1D* t1D)
 {
-    _planner->plan(decx::cpu::_get_permitted_concurrency(), proc_len, sizeof(_type_in), sizeof(_type_out));
+    _planner->plan(32, decx::cpu::_get_permitted_concurrency(), proc_len, sizeof(_type_in), sizeof(_type_out));
 
     _planner->caller(_kernel_ptr,
         t1D,
+        decx::cpu::ThreadDispatchMethod_e::Dispatch_ByID,
+        EW_SLOT_ID_MONOTONIC(0),
         decx::TArg_var<const _type_in*>(_TARG_PTR_INC_(src, _planner->get_fmgr()->GetFragLen())),
         decx::TArg_var<_type_out*>(_TARG_PTR_INC_(dst, _planner->get_fmgr()->GetFragLen())),
         decx::TArg_var<uint64_t>([&](const int32_t i){return _planner->get_proc_len_v_by_id(i);})
@@ -196,10 +198,12 @@ static void decx::type_cast::typecast2D_general_caller(
     const uint2 proc_dims,                                      const uint32_t Wsrc, 
     const uint32_t Wdst,                                        decx::utils::Thr1D* t1D)
 {
-    _planner->plan(decx::cpu::_get_permitted_concurrency(), proc_dims, sizeof(_type_in), sizeof(_type_out));
+    _planner->plan(32, decx::cpu::_get_permitted_concurrency(), proc_dims, sizeof(_type_in), sizeof(_type_out));
 
     _planner->caller(_kernel_ptr,
         t1D,
+        decx::cpu::ThreadDispatchMethod_e::Dispatch_ByID,
+        EW_SLOT_ID_MONOTONIC(0),
         decx::TArg_var<const _type_in*>([&](const int32_t i, const int32_t j){
             const uint2 xy = _planner->get_proc_dims_by_id(0, 0);
             return DECX_PTR_SHF_XY_SAME_TYPE(src, i * xy.y, j * xy.x, Wsrc);}),

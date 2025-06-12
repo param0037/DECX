@@ -68,8 +68,8 @@ public:
     _CRSR_ void alloc_shared_mem(const uint64_t size, de::DH* handle);
 
 
-    void plan(const uint32_t conc, const uint64_t total, const uint8_t type_size_in, const uint8_t type_size_out,
-        const uint64_t min_thread_proc=_EW_MIN_THREAD_PROC_DEFAULT_CPU_);
+    void plan(const uint32_t simd_align_byte, const uint32_t conc, const uint64_t total, const uint8_t type_size_in, const uint8_t type_size_out,
+        const uint64_t min_thread_proc = _EW_MIN_THREAD_PROC_DEFAULT_CPU_);
 
 
     template <typename _ptr_type>

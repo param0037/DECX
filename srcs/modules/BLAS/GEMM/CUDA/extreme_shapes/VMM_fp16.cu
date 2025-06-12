@@ -47,7 +47,7 @@ decx::GPUK::cu_mat_m_vec_fp16_L1(const float4* __restrict    mat_src,
     uint64_t LDG_dex = Wsrc_v8 * tidy + tidx;
     uint64_t STG_dex = Wdst_v1 * tidy + blockIdx.x;
 
-    uint32_t proc_W_v8 = decx::utils::ceil<uint32_t>(proc_dims.x, 8);
+    uint32_t proc_W_v8 = decx::utils::idiv_ceil<uint32_t>(proc_dims.x, 8);
 
     decx::utils::_cuda_vec128 _recv, _vec_vals;
     _recv._vf = decx::utils::vec4_set1_fp32(0);
@@ -115,7 +115,7 @@ decx::GPUK::cu_vec_m_mat_fp16_L1(const __half* __restrict     vec_src,
     * process goes all the way down vertically. The process stops at exactly
     * where the matrix ends.
     */
-    if (tidx < decx::utils::ceil<uint32_t>(proc_dims_v1.x, 8) && tidy < proc_dims_v1.y) {
+    if (tidx < decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.x, 8) && tidy < proc_dims_v1.y) {
         _recv._vf = mat_src[LDG_dex];
         __half tmp = vec_src[tidy];
         if (threadIdx.x == 0) { _vec_vals[threadIdx.y] = tmp; }
@@ -157,7 +157,7 @@ decx::GPUK::cu_vec_m_mat_fp16_L1(const __half* __restrict     vec_src,
 
     __syncthreads();
 
-    if (STG_dex_x < decx::utils::ceil<uint32_t>(proc_dims_v1.x, 4) && threadIdx.y < 2) {
+    if (STG_dex_x < decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.x, 4) && threadIdx.y < 2) {
         tmp1._vf = _workspace[threadIdx.y][threadIdx.x];
         dst[blockIdx.y * Wdst_v4 + STG_dex_x] = tmp1._vf;
     }
@@ -181,7 +181,7 @@ decx::GPUK::cu_mat_m_vec_fp16_L2(const float4 * __restrict      mat_src,
     uint64_t LDG_dex = Wsrc_v8 * tidy + tidx;
     uint64_t STG_dex = Wdst_v1 * tidy + blockIdx.x;
 
-    uint32_t proc_W_v8 = decx::utils::ceil<uint32_t>(proc_dims.x, 8);
+    uint32_t proc_W_v8 = decx::utils::idiv_ceil<uint32_t>(proc_dims.x, 8);
 
     decx::utils::_cuda_vec128 _recv, _vec_vals;
     _recv._vf = decx::utils::vec4_set1_fp32(0);
@@ -248,7 +248,7 @@ decx::GPUK::cu_vec_m_mat_fp16_L2(const __half* __restrict       vec_src,
     * process goes all the way down vertically. The process stops at exactly
     * where the matrix ends.
     */
-    if (tidx < decx::utils::ceil<uint32_t>(proc_dims_v1.x, 8) && tidy < proc_dims_v1.y) {
+    if (tidx < decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.x, 8) && tidy < proc_dims_v1.y) {
         _recv._vf = mat_src[LDG_dex];
         __half tmp = vec_src[tidy];
         if (threadIdx.x == 0) { _vec_vals[threadIdx.y] = tmp; }
@@ -296,7 +296,7 @@ decx::GPUK::cu_vec_m_mat_fp16_L2(const __half* __restrict       vec_src,
 
     tmp1._vf = _workspace[threadIdx.y][threadIdx.x];
 
-    if (tidx < decx::utils::ceil<uint32_t>(proc_dims_v1.x, 8) && threadIdx.y == 0) {
+    if (tidx < decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.x, 8) && threadIdx.y == 0) {
         dst[blockIdx.y * Wdst_v8 + tidx] = tmp1._vf;
     }
 #endif
@@ -320,7 +320,7 @@ decx::GPUK::cu_mat_m_vec_fp16_L3(const float4* __restrict       mat_src,
     uint64_t LDG_dex = Wsrc_v8 * tidy + tidx;
     uint64_t STG_dex = Wdst_v1 * tidy + blockIdx.x;
 
-    uint32_t proc_W_v8 = decx::utils::ceil<uint32_t>(proc_dims.x, 8);
+    uint32_t proc_W_v8 = decx::utils::idiv_ceil<uint32_t>(proc_dims.x, 8);
 
     decx::utils::_cuda_vec128 _recv, _vec_vals;
     _recv._vf = decx::utils::vec4_set1_fp32(0);
@@ -385,7 +385,7 @@ decx::GPUK::cu_vec_m_mat_fp16_L3(const __half* __restrict       vec_src,
     * process goes all the way down vertically. The process stops at exactly
     * where the matrix ends.
     */
-    if (tidx < decx::utils::ceil<uint32_t>(proc_dims_v1.x, 8) && tidy < proc_dims_v1.y) {
+    if (tidx < decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.x, 8) && tidy < proc_dims_v1.y) {
         _recv._vf = mat_src[LDG_dex];
         __half tmp = vec_src[tidy];
         if (threadIdx.x == 0) { _vec_vals[threadIdx.y] = tmp; }
@@ -417,7 +417,7 @@ decx::GPUK::cu_vec_m_mat_fp16_L3(const __half* __restrict       vec_src,
 
     tmp1._vf = _workspace[threadIdx.y][threadIdx.x];
 
-    if (tidx < decx::utils::ceil<uint32_t>(proc_dims_v1.x, 8) && threadIdx.y == 0) {
+    if (tidx < decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.x, 8) && threadIdx.y == 0) {
         dst[blockIdx.y * Wdst_v8 + tidx] = tmp1._vf;
     }
 #endif
