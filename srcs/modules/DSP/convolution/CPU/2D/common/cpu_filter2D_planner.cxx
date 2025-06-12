@@ -83,7 +83,7 @@ decx::dsp::cpu_Filter2D_planner<_data_type>::plan(const uint32_t concurrency,
     if (this->_padding_method != de::extend_label::_EXTEND_NONE_) 
     {
         const uint32_t conv_W = this->_layout_src.width + this->_layout_kernel.width - 1;
-        this->_ext_src.SetDims(decx::utils::align<uint32_t>(conv_W, _alignment), this->_layout_src.height);
+        this->_ext_src.SetDims(decx::utils::ialign_up<uint32_t>(conv_W, _alignment), this->_layout_src.height);
         rval |= this->_ext_src.Allocate(PAGABLE, sizeof(_data_type), handle);
     }
 

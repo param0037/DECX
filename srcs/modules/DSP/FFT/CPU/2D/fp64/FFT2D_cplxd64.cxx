@@ -49,23 +49,23 @@ void decx::dsp::fft::cpu_FFT2D_planner<double>::Forward(decx::_Matrix* src,
                                                                 (de::CPd*)this->get_tmp1_ptr(), 
                                                                 this,                                            
                                                                 src->Pitch(), 
-                                                                decx::utils::align<uint32_t>(src->Width(), 2),   
+                                                                decx::utils::ialign_up<uint32_t>(src->Width(), 2),   
                                                                 t1D, true);
     // Transpose
     this->_transpose_config_1st.transpose_16b_caller((de::CPd*)this->get_tmp1_ptr(),
                                                      (de::CPd*)this->get_tmp2_ptr(),
-                                                     decx::utils::align<uint32_t>(src->Width(), 2),
-                                                     decx::utils::align<uint32_t>(src->Height(), 2),
+                                                     decx::utils::ialign_up<uint32_t>(src->Width(), 2),
+                                                     decx::utils::ialign_up<uint32_t>(src->Height(), 2),
                                                      t1D);
 
     // Horizontal FFT
     decx::dsp::fft::_FFT2D_H_entire_rows_cplxd<de::CPd, true>((de::CPd*)this->get_tmp2_ptr(),       (de::CPd*)this->get_tmp1_ptr(), 
-                                               this,                                                decx::utils::align<uint32_t>(src->Height(), 2),  
-                                               decx::utils::align<uint32_t>(src->Height(), 2),   t1D, false);
+                                               this,                                                decx::utils::ialign_up<uint32_t>(src->Height(), 2),  
+                                               decx::utils::ialign_up<uint32_t>(src->Height(), 2),   t1D, false);
     // Transpose
     this->_transpose_config_2nd.transpose_16b_caller((de::CPd*)this->get_tmp1_ptr(), 
                                                      dst->Mat.GetRawPtr<de::CPd>(),
-                                                     decx::utils::align<uint32_t>(src->Height(), 2), 
+                                                     decx::utils::ialign_up<uint32_t>(src->Height(), 2), 
                                                      dst->Pitch(), 
                                                      t1D);
 }
@@ -88,14 +88,14 @@ void decx::dsp::fft::cpu_FFT2D_planner<double>::Inverse(decx::_Matrix* src,
                                                         (de::CPd*)this->get_tmp1_ptr(), 
                                                         this,                                            
                                                         src->Pitch(), 
-                                                        decx::utils::align<uint32_t>(src->Width(), 2),    
+                                                        decx::utils::ialign_up<uint32_t>(src->Width(), 2),    
                                                         t1D, true);
                                                         
     // Transpose
     this->_transpose_config_1st.transpose_16b_caller((de::CPd*)this->get_tmp1_ptr(),
         (de::CPd*)this->get_tmp2_ptr(),
-        decx::utils::align<uint32_t>(src->Width(), 2),
-        decx::utils::align<uint32_t>(src->Height(), 2),
+        decx::utils::ialign_up<uint32_t>(src->Width(), 2),
+        decx::utils::ialign_up<uint32_t>(src->Height(), 2),
         t1D);
 
     // Horizontal FFT
@@ -104,8 +104,8 @@ void decx::dsp::fft::cpu_FFT2D_planner<double>::Inverse(decx::_Matrix* src,
     decx::dsp::fft::_IFFT2D_H_entire_rows_cplxd<_type_out>((de::CPd*)this->get_tmp2_ptr(),       
                                                            (_type_out*)this->get_tmp1_ptr(), 
                                                            this,                                    
-                                                           decx::utils::align<uint32_t>(src->Height(), 2),  
-                                                           decx::utils::align<uint32_t>(src->Height(), _STG_alignment),
+                                                           decx::utils::ialign_up<uint32_t>(src->Height(), 2),  
+                                                           decx::utils::ialign_up<uint32_t>(src->Height(), _STG_alignment),
                                                            t1D, false);
                                                            
     // Transpose
@@ -113,7 +113,7 @@ void decx::dsp::fft::cpu_FFT2D_planner<double>::Inverse(decx::_Matrix* src,
         this->_transpose_config_2nd.
             transpose_16b_caller((de::CPd*)this->get_tmp1_ptr(), 
                                 dst->Mat.GetRawPtr<de::CPd>(),
-                                decx::utils::align<uint32_t>(src->Height(), 2), 
+                                decx::utils::ialign_up<uint32_t>(src->Height(), 2), 
                                 dst->Pitch(),
                                 t1D);
     }
@@ -121,7 +121,7 @@ void decx::dsp::fft::cpu_FFT2D_planner<double>::Inverse(decx::_Matrix* src,
         this->_transpose_config_2nd.
             transpose_1b_caller((uint64_t*)this->get_tmp1_ptr(), 
                                 (uint64_t*)dst->Mat,
-                                decx::utils::align<uint32_t>(src->Height(), _STG_alignment) / 8, 
+                                decx::utils::ialign_up<uint32_t>(src->Height(), _STG_alignment) / 8, 
                                 dst->Pitch() / 8,
                                 t1D);
     }
@@ -129,7 +129,7 @@ void decx::dsp::fft::cpu_FFT2D_planner<double>::Inverse(decx::_Matrix* src,
         this->_transpose_config_2nd.
             transpose_8b_caller((double*)this->get_tmp1_ptr(), 
                                 dst->Mat.GetRawPtr<double>(),
-                                decx::utils::align<uint32_t>(src->Height(), _STG_alignment), 
+                                decx::utils::ialign_up<uint32_t>(src->Height(), _STG_alignment), 
                                 dst->Pitch(),
                                 t1D);
     }

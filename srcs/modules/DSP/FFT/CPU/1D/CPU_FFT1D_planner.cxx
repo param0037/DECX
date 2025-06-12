@@ -308,7 +308,7 @@ void decx::dsp::fft::cpu_FFT1D_planner<_data_type>::_allocate_spaces(de::DH* han
         Check_Runtime_Error(handle);
     }
 
-    const uint64_t _tmp_alloc_size = decx::utils::align<uint64_t>(this->_signal_length, alignment) * sizeof(_data_type) * 2;
+    const uint64_t _tmp_alloc_size = decx::utils::ialign_up<uint64_t>(this->_signal_length, alignment) * sizeof(_data_type) * 2;
     int32_t rval = 0;
     rval |= this->_tmp1.Allocate(_tmp_alloc_size, PAGABLE, handle);
     rval |= this->_tmp2.Allocate(_tmp_alloc_size, PAGABLE, handle);

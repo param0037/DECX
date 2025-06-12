@@ -141,11 +141,11 @@ void decx::blas::cuda_DP2D_configs<_type_in>::alloc_buffers(decx::cuda_stream* S
     if (!this->_post_proc_needed) {
         uint32_t _alloc_dst_size = 0;
         if (std::is_same<_type_in, de::Half>::value && _fp16_accu == decx::Fp16_Accuracy_Levels::Fp16_Accurate_L1) {
-            _alloc_dst_size = decx::utils::align<uint32_t>(
+            _alloc_dst_size = decx::utils::ialign_up<uint32_t>(
                 _is_reduce_h ? this->_proc_dims.y : this->_proc_dims.x, _CU_REDUCE1D_MEM_ALIGN_4B_) * sizeof(float);
         }
         else {
-            _alloc_dst_size = decx::utils::align<uint32_t>(
+            _alloc_dst_size = decx::utils::ialign_up<uint32_t>(
                 _is_reduce_h ? this->_proc_dims.y : this->_proc_dims.x, _CU_REDUCE1D_MEM_ALIGN_4B_) * sizeof(_type_in);
         }
         this->_dev_dst.Allocate(_alloc_dst_size, CUDA_DEVICE, de::GetLastError(), true, S);

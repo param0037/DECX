@@ -56,8 +56,8 @@ void decx::dsp::fft::_cuda_FFT2D_planner<_type_in>::plan(const uint2 signal_dims
     this->_signal_dims = signal_dims;
 
     constexpr uint8_t _alignment = 128 / sizeof(_type_in);
-    this->_buffer_dims = make_uint2(decx::utils::align<uint32_t>(signal_dims.x, _alignment),
-        decx::utils::align<uint32_t>(signal_dims.y, _alignment));
+    this->_buffer_dims = make_uint2(decx::utils::ialign_up<uint32_t>(signal_dims.x, _alignment),
+        decx::utils::ialign_up<uint32_t>(signal_dims.y, _alignment));
 
     // Allocate buffers in device
     int32_t rval = 0;

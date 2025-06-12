@@ -55,9 +55,9 @@ void decx::dsp::fft::_cuda_FFT3D_planner<_data_type>::plan(const decx::_tensor_l
     this->_FFT_H._pitchdst = this->_FFT_H._pitchtmp;
 
 #if _CUDA_FFT3D_restrict_coalesce_
-    this->_FFT_W._1way_FFT_conf._pitchsrc = decx::utils::align<uint32_t>(_src_layout->dpitch, 16);
-    this->_FFT_W._1way_FFT_conf._pitchdst = decx::utils::align<uint32_t>(_src_layout->dpitch, 16);
-    this->_FFT_W._1way_FFT_conf._pitchtmp = decx::utils::align<uint32_t>(_src_layout->dpitch, 16);
+    this->_FFT_W._1way_FFT_conf._pitchsrc = decx::utils::ialign_up<uint32_t>(_src_layout->dpitch, 16);
+    this->_FFT_W._1way_FFT_conf._pitchdst = decx::utils::ialign_up<uint32_t>(_src_layout->dpitch, 16);
+    this->_FFT_W._1way_FFT_conf._pitchtmp = decx::utils::ialign_up<uint32_t>(_src_layout->dpitch, 16);
 
     this->_sync_dpitchdst_needed = (this->_FFT_W._1way_FFT_conf._pitchdst != _src_layout->dpitch);
 #else

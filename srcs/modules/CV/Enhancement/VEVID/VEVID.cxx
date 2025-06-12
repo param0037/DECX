@@ -90,7 +90,7 @@ _DECX_API_ de::DH de::vis::cpu::VEVID_gray(de::Matrix& src, de::Matrix& dst, con
     decx::_Matrix* _src = dynamic_cast<decx::_Matrix*>(&src);
     decx::_Matrix* _dst = dynamic_cast<decx::_Matrix*>(&dst);
 
-    const uint2 _tmp_dims = make_uint2(decx::utils::align<uint32_t>(_src->Width(), 8), _src->Height());
+    const uint2 _tmp_dims = make_uint2(decx::utils::ialign_up<uint32_t>(_src->Width(), 8), _src->Height());
     decx::PtrInfo<float> _tmp;
     if (decx::alloc::_host_virtual_page_malloc(&_tmp, _tmp_dims.x * _tmp_dims.y * sizeof(float))) {
         decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION, ALLOC_FAIL);

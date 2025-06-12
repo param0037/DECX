@@ -127,7 +127,7 @@ void decx::dsp::fft::cpu_FFT2D_planner<_data_type>::plan(const decx::_matrix_lay
     const uint32_t _alloc_tiles_num = max(_conc_FFT_1D_H, _conc_FFT_1D_V);
     this->_tiles.define_capacity(_alloc_tiles_num);
     
-    const uint32_t _tile_frag_pitch = decx::utils::align<uint32_t>(max(this->_signal_dims.x, this->_signal_dims.y), _alignment);
+    const uint32_t _tile_frag_pitch = decx::utils::ialign_up<uint32_t>(max(this->_signal_dims.x, this->_signal_dims.y), _alignment);
 
     for (uint32_t i = 0; i < _alloc_tiles_num; ++i) {
         this->_tiles.emplace_back();

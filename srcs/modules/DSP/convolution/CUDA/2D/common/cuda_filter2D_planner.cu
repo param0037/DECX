@@ -66,7 +66,7 @@ decx::dsp::cuda_Filter2D_planner<_data_type>::plan(const decx::_matrix_layout* s
     else {
         this->_dst_dims = make_uint2(this->_src_layout->width, this->_src_layout->height);
 
-        this->_ext_src.SetDims(decx::utils::align<uint32_t>(this->_dst_dims.x + this->_kernel_layout->width - 1, 128 / sizeof(_data_type)), 
+        this->_ext_src.SetDims(decx::utils::ialign_up<uint32_t>(this->_dst_dims.x + this->_kernel_layout->width - 1, 128 / sizeof(_data_type)), 
                                                             this->_dst_dims.y);
         this->_ext_src.Allocate(CUDA_DEVICE, sizeof(_data_type), handle, true, S);
     }

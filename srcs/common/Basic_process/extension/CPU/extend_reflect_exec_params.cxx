@@ -91,9 +91,9 @@ e_rfct_exep_gen_b32(decx::bp::extend_reflect_exec_params* _src,
 #endif
     _src->_left = _left;
     _src->_right = _right;
-    _src->_actual_load_num_L = decx::utils::align<uint32_t>(_left + 1, _alignment);
+    _src->_actual_load_num_L = decx::utils::ialign_up<uint32_t>(_left + 1, _alignment);
     _src->_rightmost_0num_src = _Wsrc_v * _alignment - _actual_w_v1;
-    _src->_actual_load_num_R = decx::utils::align<uint32_t>(_right + _src->_rightmost_0num_src + 1, _alignment);
+    _src->_actual_load_num_R = decx::utils::ialign_up<uint32_t>(_right + _src->_rightmost_0num_src + 1, _alignment);
     uint32_t raw_L_v8_reflectL = _alignment - ((_left + 1) % _alignment);
     _src->_L_v8_reflectL = raw_L_v8_reflectL == _alignment ? 0 : raw_L_v8_reflectL;
     _src->_L_v8_L = _alignment - (_left % _alignment);
@@ -146,9 +146,9 @@ void decx::bp::e_rfct_exep_gen_b64(decx::bp::extend_reflect_exec_params* _src, c
 #endif
     _src->_left = _left;
     _src->_right = _right;
-    _src->_actual_load_num_L = decx::utils::align<uint32_t>(_left + 1, _alignment);
+    _src->_actual_load_num_L = decx::utils::ialign_up<uint32_t>(_left + 1, _alignment);
     _src->_rightmost_0num_src = _Wsrc_v * _alignment - _actual_w_v1;
-    _src->_actual_load_num_R = decx::utils::align<uint32_t>(_right + _src->_rightmost_0num_src + 1, _alignment);
+    _src->_actual_load_num_R = decx::utils::ialign_up<uint32_t>(_right + _src->_rightmost_0num_src + 1, _alignment);
     uint32_t raw_L_v8_reflectL = _alignment - ((_left + 1) % _alignment);
     _src->_L_v8_reflectL = raw_L_v8_reflectL == _alignment ? 0 : raw_L_v8_reflectL;
     _src->_L_v8_L = _alignment - (_left % _alignment);

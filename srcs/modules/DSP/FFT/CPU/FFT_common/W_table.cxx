@@ -101,7 +101,7 @@ void decx::dsp::fft::Rotational_Factors_Table<_data_type>::_alloc_table_from_scr
     constexpr uint32_t alignment = _CPU_FFT_PROC_ALIGN_(_data_type);
 
     this->_actual_len = _len;
-    this->_alloc_len = decx::utils::align<uint64_t>(_len, alignment);
+    this->_alloc_len = decx::utils::ialign_up<uint64_t>(_len, alignment);
     this->_W_table.Allocate(this->_alloc_len * sizeof(_data_type) * 2, PAGABLE, handle);
 }
 
@@ -113,7 +113,7 @@ template <typename _data_type>
 void decx::dsp::fft::Rotational_Factors_Table<_data_type>::_realloc_table(const uint64_t _new_len, de::DH* handle)
 {
     constexpr uint32_t alignment = _CPU_FFT_PROC_ALIGN_(_data_type);
-    const uint64_t new_alloc_len = decx::utils::align<uint64_t>(_new_len, alignment);
+    const uint64_t new_alloc_len = decx::utils::ialign_up<uint64_t>(_new_len, alignment);
     
     if (new_alloc_len > this->_alloc_len) {
         this->_W_table.Free();

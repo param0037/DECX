@@ -62,7 +62,7 @@ _attribute_assign(const de::_DATA_TYPES_FLAGS_ type, const uint32_t _width, cons
             break;
         }
     }
-    this->pitch = decx::utils::align<uint>(_width, _alignment);
+    this->pitch = decx::utils::ialign_up<uint>(_width, _alignment);
 }
 
 

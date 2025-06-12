@@ -177,7 +177,7 @@ typename std::enable_if<std::is_same<_Ty, int32_t>::value  ||
                         std::is_same<_Ty, uint64_t>::value ||
                         std::is_same<_Ty, int8_t>::value   ||
                         std::is_same<_Ty, uint8_t>::value, _Ty>::type
-align(_Ty __x, const uint32_t _alignment) noexcept
+ialign_up(_Ty __x, const uint32_t _alignment) noexcept
 {
     return decx::utils::idiv_ceil<_Ty>(__x, _alignment) * _alignment;
 }
