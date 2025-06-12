@@ -51,7 +51,7 @@ namespace utils
 */
 template <typename _Ty>
 inline static int32_t
-i_getLSB_idx_conservative(
+i_getMSB_idx_conservative(
     typename std::enable_if<std::is_same<_Ty, int32_t>::value  ||
                             std::is_same<_Ty, uint32_t>::value || 
                             std::is_same<_Ty, int64_t>::value  ||
@@ -145,7 +145,7 @@ typename std::enable_if<std::is_same<_Ty, int32_t>::value  ||
                         std::is_same<_Ty, uint8_t>::value, _Ty>::type
 idiv_floor(_Ty __deno, _Ty __numer) noexcept
 {
-    return (__deno / __numer) * __numer;
+    return (__deno / __numer);
 }
 
 
@@ -180,6 +180,23 @@ typename std::enable_if<std::is_same<_Ty, int32_t>::value  ||
 ialign_up(_Ty __x, const uint32_t _alignment) noexcept
 {
     return decx::utils::idiv_ceil<_Ty>(__x, _alignment) * _alignment;
+}
+
+
+template <typename _Ty>
+#ifdef _DECX_CUDA_PARTS_
+__host__ __device__
+#endif
+constexpr static inline 
+typename std::enable_if<std::is_same<_Ty, int32_t>::value  ||
+                        std::is_same<_Ty, uint32_t>::value || 
+                        std::is_same<_Ty, int64_t>::value  ||
+                        std::is_same<_Ty, uint64_t>::value ||
+                        std::is_same<_Ty, int8_t>::value   ||
+                        std::is_same<_Ty, uint8_t>::value, _Ty>::type
+ialign_down(_Ty __x, const uint32_t _alignment) noexcept
+{
+    return decx::utils::idiv_floor<_Ty>(__x, _alignment) * _alignment;
 }
     
 
