@@ -158,13 +158,20 @@ struct decx::utils::frag_manager
         return (frag_id < this->frag_num - 1) ? this->frag_len : this->last_frag_len;
     }
 
+    uint32_t GetLastFragLen() const {
+        return this->last_frag_len;
+    }
+
     uint32_t GetFragLen() const {
         return this->frag_len;
     }
 
-    uint32_t get_frag_num() const {
+    uint32_t GetFragNum() const {
         return this->frag_num;
     }
+
+
+    void DumpInfo() const;
 };
 
 

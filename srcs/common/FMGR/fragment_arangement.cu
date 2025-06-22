@@ -60,6 +60,7 @@ bool decx::utils::frag_manager_gen_from_fragLen(decx::utils::frag_manager* src, 
         if (_tot % _frag_len) {     // is left
             src->is_left = true;
             src->frag_num = _tot / _frag_len + 1;
+            src->last_frag_len = _tot - (src->frag_num - 1) * src->frag_len;
             return false;
         }
         else {
@@ -72,6 +73,7 @@ bool decx::utils::frag_manager_gen_from_fragLen(decx::utils::frag_manager* src, 
         src->frag_len = _tot;
         src->frag_num = 1;
         src->is_left = (bool)src->frag_left_over;
+        src->last_frag_len = src->frag_len;
         return false;
     }
 }

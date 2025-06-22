@@ -30,6 +30,20 @@
 
 
 #include "fragment_arrangment.h"
+#include <log_console.h>
+#define MODULE_TAG "FMGR"
+
+
+void decx::utils::frag_manager::DumpInfo() const
+{
+    DECX_LOG_NOTICE("frag_manager::DumpInfo()");
+    DECX_LOG_NOTICE("total : %llu", this->total);
+    DECX_LOG_NOTICE("frag_num : %u", this->frag_num);
+    DECX_LOG_NOTICE("frag_len : %u", this->frag_len);
+    // DECX_LOG_NOTICE("frag_left_over : %u", this->frag_left_over);
+    DECX_LOG_NOTICE("is_left : %u", this->is_left);
+    DECX_LOG_NOTICE("last_frag_len : %u", this->last_frag_len);
+}
 
 
 bool decx::utils::frag_manager_gen(decx::utils::frag_manager* src, const uint64_t _tot, const uint64_t _frag_num)
@@ -58,7 +72,7 @@ bool decx::utils::frag_manager_gen(decx::utils::frag_manager* src, const uint64_
         src->frag_num = _tot;
         src->frag_len = 1;
         src->frag_left_over = 0;
-        src->is_left = 0;
+        src->is_left = 1;
         src->last_frag_len = 1;
         return 0;
     }
@@ -67,24 +81,6 @@ bool decx::utils::frag_manager_gen(decx::utils::frag_manager* src, const uint64_
 
 bool decx::utils::frag_manager_gen_from_fragLen(decx::utils::frag_manager* src, const uint64_t _tot, const uint64_t _frag_len)
 {
-    // src->total = _tot;
-    // src->frag_len = _frag_len;
-    // bool res;
-    // if (_tot % _frag_len) {     // is left
-    //     src->is_left = true;
-    //     src->frag_num = _tot / _frag_len + 1;
-    //     src->frag_left_over = _tot % _frag_len;
-    //     res = false;
-    // }
-    // else {
-    //     src->is_left = false;
-    //     src->frag_num = _tot / _frag_len;
-    //     src->frag_left_over = _tot % _frag_len;
-    //     res = true;
-    // }
-    // src->last_frag_len = src->is_left ? src->frag_left_over : src->frag_len;
-    // return res;
-
     src->total = _tot;
 
     if (_tot > _frag_len)
