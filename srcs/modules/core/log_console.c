@@ -39,6 +39,7 @@
 #include <sys/time.h>
 #endif
 
+
 #ifdef Windows
 #define SetConsoleColor(_color_flag)    \
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), _color_flag)   \
@@ -165,19 +166,19 @@ void DECX_Log_Console_Exec(const DecxInternalLogLevel log_level,
     switch (log_level)
     {
     case LOG_INFO:
-        printf("[%s] <%s::%s> I: %s\n", time_info, module_tag, func_name, msg);
+        printf("DECX: [%s] <%s::%s> I: %s\n", time_info, module_tag, func_name, msg);
         break;
 
     case LOG_NOTICE:
-        printf("[%s] <%s::%s> N: %s\n", time_info, module_tag, func_name, msg);
+        printf("DECX: [%s] <%s::%s> N: %s\n", time_info, module_tag, func_name, msg);
         break;
 
     case LOG_WARNING:
-        printf("[%s] <%s::%s> W: %s\n", time_info, module_tag, func_name, msg);
+        printf("DECX: [%s] <%s::%s> W: %s\n", time_info, module_tag, func_name, msg);
         break;
 
     case LOG_ERROR:
-        printf("[%s] <%s::%s> E: %s\n", time_info, module_tag, func_name, msg);
+        printf("DECX: [%s] <%s::%s> E: %s\n", time_info, module_tag, func_name, msg);
         break;
     
     default:
