@@ -430,7 +430,7 @@ void decx::vis::_bilateral_uint8_ST(const double* __restrict     src,
     {
         const uint32_t _loopW = f_mgrW.is_left ? f_mgrW.frag_num - 1 : f_mgrW.frag_num;
 
-        for (int k = 0; k < _loopW; ++k) {
+        for (int k = 0; k < f_mgrW.GetFragNum(); ++k) {
             decx::vis::CPUK::_bilateral_rect_fixed_uint8_ST(
                 DECX_PTR_SHF_XY_SAME_TYPE(src, i * _BLOCKED_CONV2_UINT8_H_, k * 2 * _BLOCKED_CONV2_UINT8_W_, Wsrc * 2),
                 _exp_chart_dist, _exp_chart_diff,

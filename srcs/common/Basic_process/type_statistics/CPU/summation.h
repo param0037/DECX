@@ -123,15 +123,11 @@ static void decx::bp::_summing_fp32_1D_caller(const float* src, const size_t len
     
     const float* tmp_src = src;
     const uint64_t proc_len = fr_mgr.frag_len * 8;
-    for (int i = 0; i < conc_thr - 1; ++i) {
+    for (int i = 0; i < conc_thr; ++i) {
         t1D._async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(
-            decx::bp::CPUK::_summing_vec8_fp32, tmp_src, fr_mgr.frag_len, res_arr + i);
+            decx::bp::CPUK::_summing_vec8_fp32, tmp_src, fr_mgr.GetFragLenById(i), res_arr + i);
         tmp_src += proc_len;
     }
-    const uint32_t _L = fr_mgr.is_left ? fr_mgr.frag_left_over : fr_mgr.frag_len;
-    t1D._async_thread[conc_thr - 1] = decx::cpu::RegisterTaskLoadBalanced(
-        decx::bp::CPUK::_summing_vec8_fp32, tmp_src, _L, res_arr + conc_thr - 1);
-
     t1D.__sync_all_threads();
 
     float res = 0;
@@ -157,25 +153,12 @@ static void decx::bp::_summing_fp64_1D_caller(const double* src, const size_t le
     decx::utils::ThreadArrange1D t1D(conc_thr);
 
     const double* tmp_src = src;
-    if (fr_mgr.frag_left_over != 0) {
-        const size_t proc_len = fr_mgr.frag_len * 4;
-        for (int i = 0; i < conc_thr - 1; ++i) {
-            t1D._async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(
-                decx::bp::CPUK::_summing_vec4_fp64, tmp_src, proc_len / 4, res_arr + i);
-            tmp_src += proc_len;
-        }
-        t1D._async_thread[conc_thr - 1] = decx::cpu::RegisterTaskLoadBalanced(
-            decx::bp::CPUK::_summing_vec4_fp64, tmp_src, fr_mgr.frag_left_over, res_arr + conc_thr - 1);
+    const size_t proc_len = fr_mgr.frag_len * 4;
+    for (int i = 0; i < conc_thr; ++i) {
+        t1D._async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(
+            decx::bp::CPUK::_summing_vec4_fp64, tmp_src, fr_mgr.GetFragLenById(i), res_arr + i);
+        tmp_src += proc_len;
     }
-    else {
-        const size_t proc_len = fr_mgr.frag_len * 4;
-        for (int i = 0; i < conc_thr; ++i) {
-            t1D._async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(
-                decx::bp::CPUK::_summing_vec4_fp64, tmp_src, proc_len / 4, res_arr + i);
-            tmp_src += proc_len;
-        }
-    }
-
     t1D.__sync_all_threads();
 
     double res = 0;

@@ -130,7 +130,7 @@ de::tf::cpu::Vec_transform(de::Vector& src, de::Vector& dst, de::Matrix& transfo
 
         decx::_Mat4x4f _tf_mat4_by_4;
         for (int i = 0; i < 4; ++i) {
-            _tf_mat4_by_4._row[i] = _mm_load_ps((float*)_transform_matrix->Mat.ptr + i * _transform_matrix->Pitch());
+            _tf_mat4_by_4._row[i] = _mm_load_ps((float*)_transform_matrix->Mat + i * _transform_matrix->Pitch());
         }
 
         decx::mat::_mat4x4_transpose_fp32(&_tf_mat4_by_4);      // transpose the 4_by_4 matrix
@@ -147,18 +147,15 @@ de::tf::cpu::Vec_transform(de::Vector& src, de::Vector& dst, de::Matrix& transfo
         decx::utils::frag_manager f_mgr;
         decx::utils::frag_manager_gen(&f_mgr, _proc_len, t1D.total_thread);
 
-        const float* _loc_src_ptr = (float*)_src->Vec.ptr;
-        float* _loc_dst_ptr = (float*)_dst->Vec.ptr;
-        for (int i = 0; i < t1D.total_thread - 1; ++i) {
+        const float* _loc_src_ptr = (float*)_src->Vec;
+        float* _loc_dst_ptr = (float*)_dst->Vec;
+        for (int i = 0; i < t1D.total_thread; ++i) {
             t1D._async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(kernel, _loc_src_ptr, _loc_dst_ptr,
-                _tf_mat4_by_4, f_mgr.frag_len);
+                _tf_mat4_by_4, f_mgr.GetFragLenById(i));
 
-            _loc_src_ptr += f_mgr.frag_len * 4;
-            _loc_dst_ptr += f_mgr.frag_len * 4;
+            _loc_src_ptr += f_mgr.GetFragLen() * 4;
+            _loc_dst_ptr += f_mgr.GetFragLen() * 4;
         }
-        size_t _L = f_mgr.is_left ? f_mgr.frag_left_over : f_mgr.frag_len;
-        t1D._async_thread[t1D.total_thread - 1] = decx::cpu::RegisterTaskLoadBalanced(kernel, _loc_src_ptr, _loc_dst_ptr,
-            _tf_mat4_by_4, _L);
     }
     else {
         decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_TYPE_MOT_MATCH,
