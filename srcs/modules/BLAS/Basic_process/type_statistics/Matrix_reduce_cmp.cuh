@@ -305,7 +305,7 @@ static void decx::reduce::matrix_reduce2D_full_cmp_fp32(decx::_Matrix* src, de::
     }
 
     decx::PtrInfo<void> _d_src;
-    const uint2 alloc_dims = make_uint2(decx::utils::ceil<uint32_t>(src->Width(), 4) * 4, src->Height());
+    const uint2 alloc_dims = make_uint2(decx::utils::idiv_ceil<uint32_t>(src->Width(), 4) * 4, src->Height());
     _d_src.Allocate(alloc_dims.x * alloc_dims.y * sizeof(float), CUDA_DEVICE, de::GetLastError(), true, S);
 
     // Transfer data from host to deivce
@@ -360,7 +360,7 @@ static void decx::reduce::matrix_reduce2D_full_cmp_int32(decx::_Matrix* src, de:
     }
 
     decx::PtrInfo<void> _d_src;
-    const uint2 alloc_dims = make_uint2(decx::utils::ceil<uint32_t>(src->Width(), _CU_REDUCE1D_MEM_ALIGN_4B_) * _CU_REDUCE1D_MEM_ALIGN_4B_, 
+    const uint2 alloc_dims = make_uint2(decx::utils::idiv_ceil<uint32_t>(src->Width(), _CU_REDUCE1D_MEM_ALIGN_4B_) * _CU_REDUCE1D_MEM_ALIGN_4B_, 
                                         src->Height());
     _d_src.Allocate(alloc_dims.x * alloc_dims.y * sizeof(int32_t), CUDA_DEVICE, de::GetLastError(), true, S);
 
@@ -417,7 +417,7 @@ static void decx::reduce::matrix_reduce2D_full_cmp_fp16(decx::_Matrix* src, de::
     }
 
     decx::PtrInfo<void> _d_src;
-    const uint2 alloc_dims = make_uint2(decx::utils::ceil<uint32_t>(src->Width(), _CU_REDUCE1D_MEM_ALIGN_2B_) * _CU_REDUCE1D_MEM_ALIGN_2B_, 
+    const uint2 alloc_dims = make_uint2(decx::utils::idiv_ceil<uint32_t>(src->Width(), _CU_REDUCE1D_MEM_ALIGN_2B_) * _CU_REDUCE1D_MEM_ALIGN_2B_, 
                                         src->Height());
     _d_src.Allocate(alloc_dims.x * alloc_dims.y * sizeof(de::Half), CUDA_DEVICE, de::GetLastError(), true, S);
 
@@ -473,7 +473,7 @@ static void decx::reduce::matrix_reduce2D_full_cmp_u8(decx::_Matrix* src, de::Nu
     }
 
     decx::PtrInfo<void> _d_src;
-    const uint2 alloc_dims = make_uint2(decx::utils::ceil<uint32_t>(src->Width(), _CU_REDUCE1D_MEM_ALIGN_1B_) * _CU_REDUCE1D_MEM_ALIGN_1B_, 
+    const uint2 alloc_dims = make_uint2(decx::utils::idiv_ceil<uint32_t>(src->Width(), _CU_REDUCE1D_MEM_ALIGN_1B_) * _CU_REDUCE1D_MEM_ALIGN_1B_, 
                                         src->Height());
     _d_src.Allocate(alloc_dims.x * alloc_dims.y * sizeof(uint8_t), CUDA_DEVICE, de::GetLastError(), true, S);
 
@@ -529,7 +529,7 @@ static void decx::reduce::matrix_reduce2D_full_cmp_fp64(decx::_Matrix* src, de::
     }
 
     decx::PtrInfo<void> _d_src;
-    const uint2 alloc_dims = make_uint2(decx::utils::ceil<uint32_t>(src->Width(), 4) * 4, src->Height());
+    const uint2 alloc_dims = make_uint2(decx::utils::idiv_ceil<uint32_t>(src->Width(), 4) * 4, src->Height());
     _d_src.Allocate(alloc_dims.x * alloc_dims.y * sizeof(double), CUDA_DEVICE, de::GetLastError(), true, S);
 
     // Transfer data from host to deivce

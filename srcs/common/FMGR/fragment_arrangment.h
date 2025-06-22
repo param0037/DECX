@@ -154,17 +154,24 @@ struct decx::utils::frag_manager
     uint32_t last_frag_len;         // The length of the very last fragment
 
 
-    uint32_t get_frag_len_by_id(const uint32_t frag_id) const {
+    uint32_t GetFragLenById(const uint32_t frag_id) const {
         return (frag_id < this->frag_num - 1) ? this->frag_len : this->last_frag_len;
     }
 
-    uint32_t get_frag_len() const {
+    uint32_t GetLastFragLen() const {
+        return this->last_frag_len;
+    }
+
+    uint32_t GetFragLen() const {
         return this->frag_len;
     }
 
-    uint32_t get_frag_num() const {
+    uint32_t GetFragNum() const {
         return this->frag_num;
     }
+
+
+    void DumpInfo() const;
 };
 
 

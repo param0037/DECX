@@ -53,7 +53,7 @@ decx::MemPool_D* decx::MemPool_D::GetInstance()
 }
 
 
-bool decx::MemPool_D::search_for_idle(size_t req_size, int begin_dex, decx::MemBlock** _ptr)
+bool decx::MemPool_D::search_for_idle(uint64_t req_size, int begin_dex, decx::MemBlock** _ptr)
 {
     bool _found = false;
 
@@ -87,12 +87,12 @@ bool decx::MemPool_D::search_for_idle(size_t req_size, int begin_dex, decx::MemB
 }
 
 
-void decx::MemPool_D::allocate(size_t req_size, decx::MemBlock** _ptr)
+void decx::MemPool_D::allocate(uint64_t req_size, decx::MemBlock** _ptr)
 {
     this->_mtx.lock();
 
-    int begin_dex = decx::utils::_GetHighest_abd(
-        decx::utils::clamp_min<size_t>(req_size, Min_Alloc_Bytes)) - dex_to_pow_bias;
+    int begin_dex = decx::utils::i_getMSB_idx_conservative<uint64_t>(
+        decx::utils::clamp_min<uint64_t>(req_size, Min_Alloc_Bytes)) - dex_to_pow_bias;
     decx::MemBlock* _MBPtr = NULL;
 
     bool _found = this->search_for_idle(req_size, begin_dex, &_MBPtr);

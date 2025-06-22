@@ -30,7 +30,7 @@
 
 #include "../blocked_GQR_planner.h"
 #include <SIMD/intrinsics_ops.h>
-
+#define MODULE_TAG ""
 
 template <>
 void decx::blas::Blocked_GQR_planner<float>::Process_SingleCol_HH(
@@ -59,9 +59,6 @@ void decx::blas::Blocked_GQR_planner<float>::Process_SingleCol_HH(
     pow2_sum_post = decx::utils::simd::_mm256_h_sum(sum_v8);
 
     float x_norm2 = sqrtf(pow2_sum_post);
-    if (x_norm2 < 1e-3) {
-        return;
-    }
     if (proc_len_v1 == this->_block_dims.x && local_col_id == this->_block_dims.x - 1){
         return;
     }
@@ -84,6 +81,7 @@ void decx::blas::Blocked_GQR_planner<float>::Process_SingleCol_HH(
 }
 
 
+#define MODULE_TAG ""
 template <>
 void decx::blas::Blocked_GQR_planner<float>::
 ApplyRefactors(decx::blas::Blocked_GQR_planner<float>* fake_this,
@@ -92,11 +90,9 @@ ApplyRefactors(decx::blas::Blocked_GQR_planner<float>* fake_this,
                const uint32_t local_col_id,
                const uint2    submat_dims)
 {
-    const uint32_t alignment = fake_this->_align_bytes / sizeof(float);
-
     int32_t rval = 0;
-    const uint32_t L_front = local_col_id % alignment;
-    const uint32_t proc_len_v8 = CalcProcLenV(local_col_id, alignment, submat_dims.y);
+    const uint32_t L_front = local_col_id % 8;
+    const uint32_t proc_len_v8 = CalcProcLenV(local_col_id, 8, submat_dims.y);
     decx::utils::simd::xmm256_reg mask;
     rval |= fake_this->GetPostMask(L_front, (void*)(&mask));
 
@@ -105,10 +101,9 @@ ApplyRefactors(decx::blas::Blocked_GQR_planner<float>* fake_this,
         __m256 sum_v8 = _mm256_setzero_ps();
         float* next_panel_col = panel_next + fake_this->_src_tile.GetDims().x * i;
         for (int k = 0; k < proc_len_v8; ++k) {
-            __m256 vk_v8 = _mm256_load_ps(Vk + (k * alignment));
-            __m256 AR_v8 = _mm256_load_ps(next_panel_col + (k * alignment));
+            __m256 vk_v8 = _mm256_load_ps(Vk + (k * 8));
+            __m256 AR_v8 = _mm256_load_ps(next_panel_col + (k * 8));
             if (k == 0) {
-                vk_v8 = _mm256_and_ps(vk_v8, mask._vf);
                 AR_v8 = _mm256_and_ps(AR_v8, mask._vf);
             }
             sum_v8 = _mm256_fmadd_ps(vk_v8, AR_v8, sum_v8);
@@ -116,31 +111,30 @@ ApplyRefactors(decx::blas::Blocked_GQR_planner<float>* fake_this,
         float res = decx::utils::simd::_mm256_h_sum(sum_v8);
         res *= -2;
         for (int k = 0; k < proc_len_v8; ++k) {
-            __m256 vk_v8 = _mm256_load_ps(Vk + (k * alignment));
-            __m256 AR_v8 = _mm256_load_ps(next_panel_col + (k * alignment));
+            __m256 vk_v8 = _mm256_load_ps(Vk + (k * 8));
+            __m256 AR_v8 = _mm256_load_ps(next_panel_col + (k * 8));
             if (k == 0) {
-                vk_v8 = _mm256_and_ps(vk_v8, mask._vf);
                 AR_v8 = _mm256_and_ps(AR_v8, mask._vf);
             }
             AR_v8 = _mm256_fmadd_ps(_mm256_set1_ps(res), vk_v8, AR_v8);
-            _mm256_store_ps(next_panel_col + (k * alignment), AR_v8);
+            _mm256_store_ps(next_panel_col + (k * 8), AR_v8);
         }
     }
 }
 
 
-template <> void 
-decx::blas::Blocked_GQR_planner<float>::UpdateW(decx::blas::Blocked_GQR_planner<float>* fake_this,
-                                                const float* __restrict pV_now, 
-                                                const float* __restrict pV_last, 
-                                                float* __restrict pW,
-                                                const uint32_t local_col_id, 
-                                                const uint32_t proc_len_v1)
-{
-    const uint32_t alignment = fake_this->_align_bytes / sizeof(float);
+// template <> void 
+// decx::blas::Blocked_GQR_planner<float>::UpdateW(decx::blas::Blocked_GQR_planner<float>* fake_this,
+//                                                 const float* __restrict pV_now, 
+//                                                 const float* __restrict pV_last, 
+//                                                 float* __restrict pW,
+//                                                 const uint32_t local_col_id, 
+//                                                 const uint32_t proc_len_v1)
+// {
+//     const uint32_t alignment = fake_this->_align_bytes / sizeof(float);
 
-    const uint32_t proc_len_v8 = CalcProcLenV(local_col_id, alignment, proc_len_v1);
-    if (local_col_id == 0){
+//     const uint32_t proc_len_v8 = CalcProcLenV(local_col_id, alignment, proc_len_v1);
+//     if (local_col_id == 0){
         
-    }
-}
+//     }
+// }

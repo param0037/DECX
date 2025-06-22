@@ -87,7 +87,8 @@ decx::cuda_VGT2D_planner::cuda_VGT2D_planner()
 
 template <typename _type_in, typename _type_out>
 void decx::cuda_VGT2D_planner::plan(const de::Interpolate_Types type, 
-    const decx::_matrix_layout* src_layout, const decx::_matrix_layout* dst_layout)
+                                    const decx::_matrix_layout* src_layout, 
+                                    const decx::_matrix_layout* dst_layout)
 {
     decx::cuda_ElementWise2D_planner::plan(make_uint2(dst_layout->width, dst_layout->height), sizeof(_type_in), sizeof(_type_out));
 

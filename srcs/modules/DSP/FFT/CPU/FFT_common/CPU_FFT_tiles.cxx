@@ -36,7 +36,7 @@ template <typename _data_type>
 void decx::dsp::fft::_FFT1D_kernel_tile::allocate_tile(const uint32_t tile_frag_len, de::DH* handle)
 {
     constexpr uint32_t _alignment = 256 / (sizeof(_data_type) * 8 * 2);
-    this->_tile_row_pitch = decx::utils::align<uint32_t>(tile_frag_len, _alignment);
+    this->_tile_row_pitch = decx::utils::ialign_up<uint32_t>(tile_frag_len, _alignment);
     this->_tile_len = this->_tile_row_pitch * _alignment;        // vec(x)
 
     this->_total_size = this->_tile_len * 2 * (sizeof(_data_type) * 2);

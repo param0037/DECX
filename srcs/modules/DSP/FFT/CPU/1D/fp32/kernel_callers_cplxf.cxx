@@ -138,7 +138,7 @@ decx::dsp::fft::CPUK::_FFT1D_smaller_1st_cplxf32(const _type_in* __restrict					
 	const uint64_t _load_pitch = _signal_length / _FFT_info->get_signal_len();
 
 	uint32_t _call_time_base = FFT_call_time_start;
-	const uint32_t FFT_call_times_v4 = decx::utils::ceil<uint32_t>(FFT_call_times, 4);
+	const uint32_t FFT_call_times_v4 = decx::utils::idiv_ceil<uint32_t>(FFT_call_times, 4);
 	const uint8_t _L_v4 = FFT_call_times % 4;
 
 	decx::utils::frag_manager _store_linearly_config;
@@ -228,7 +228,7 @@ decx::dsp::fft::CPUK::_FFT1D_smaller_mid_cplxf32_C2C(const de::CPf* __restrict		
 	decx::utils::double_buffer_manager _double_buffer(_tmp1_ptr, _tmp2_ptr);
 	const uint64_t _load_pitch = _global_kernel_info->_signal_len / _FFT_info->get_signal_len();
 
-	const uint32_t FFT_call_times_v4 = decx::utils::ceil<uint32_t>(_FFT_times_v4, 4);
+	const uint32_t FFT_call_times_v4 = decx::utils::idiv_ceil<uint32_t>(_FFT_times_v4, 4);
 	const uint8_t _L_v4 = _FFT_times_v4 % 4;
 
 	const de::CPf* _src_start_ptr = src;
@@ -310,7 +310,7 @@ template <bool _IFFT, typename _type_in>
 void decx::dsp::fft::_FFT1D_cplxf32_1st(const _type_in* __restrict						src, 
 										de::CPf* __restrict								dst,
 										const decx::dsp::fft::cpu_FFT1D_planner<float>* _FFT_frame, 
-										decx::utils::_thr_1D*							t1D,
+										decx::utils::Thr1D*							t1D,
 										const decx::dsp::fft::FIMT1D*					_Twd_info)
 {
 	const _type_in* _src_ptr = src;
@@ -320,7 +320,7 @@ void decx::dsp::fft::_FFT1D_cplxf32_1st(const _type_in* __restrict						src,
 	const decx::utils::frag_manager* _f_mgr = _inner_FFT_info->get_thread_patching();
 
 	for (uint32_t i = 0; i < t1D->total_thread - 1; ++i) {
-		t1D->_async_thread[i] = decx::cpu::register_task_default(decx::dsp::fft::CPUK::_FFT1D_smaller_1st_cplxf32<_IFFT, _type_in>,
+		t1D->_async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(decx::dsp::fft::CPUK::_FFT1D_smaller_1st_cplxf32<_IFFT, _type_in>,
 			_src_ptr,											_dst_ptr,
 			_FFT_frame->get_tile_ptr(i),
 			_FFT_frame->get_signal_len(),						_inner_FFT_info,
@@ -331,7 +331,7 @@ void decx::dsp::fft::_FFT1D_cplxf32_1st(const _type_in* __restrict						src,
 		_dst_ptr += _f_mgr->frag_len * _inner_FFT_info->get_signal_len();
 	}
 	uint32_t _L_FFT_smaller_num = _f_mgr->is_left ? _f_mgr->frag_left_over : _f_mgr->frag_len;
-	t1D->_async_thread[t1D->total_thread - 1] = decx::cpu::register_task_default(decx::dsp::fft::CPUK::_FFT1D_smaller_1st_cplxf32<_IFFT, _type_in>,
+	t1D->_async_thread[t1D->total_thread - 1] = decx::cpu::RegisterTaskLoadBalanced(decx::dsp::fft::CPUK::_FFT1D_smaller_1st_cplxf32<_IFFT, _type_in>,
 		_src_ptr,																_dst_ptr,
 		_FFT_frame->get_tile_ptr(t1D->total_thread - 1),
 		_FFT_frame->get_signal_len(),											_inner_FFT_info,
@@ -342,16 +342,16 @@ void decx::dsp::fft::_FFT1D_cplxf32_1st(const _type_in* __restrict						src,
 }
 
 template void decx::dsp::fft::_FFT1D_cplxf32_1st<true, float>(const float* __restrict, de::CPf* __restrict,
-	const decx::dsp::fft::cpu_FFT1D_planner<float>*, decx::utils::_thr_1D*, const decx::dsp::fft::FIMT1D*);
+	const decx::dsp::fft::cpu_FFT1D_planner<float>*, decx::utils::Thr1D*, const decx::dsp::fft::FIMT1D*);
 
 template void decx::dsp::fft::_FFT1D_cplxf32_1st<true, de::CPf>(const de::CPf* __restrict, de::CPf* __restrict,
-	const decx::dsp::fft::cpu_FFT1D_planner<float>*, decx::utils::_thr_1D*, const decx::dsp::fft::FIMT1D*);
+	const decx::dsp::fft::cpu_FFT1D_planner<float>*, decx::utils::Thr1D*, const decx::dsp::fft::FIMT1D*);
 
 template void decx::dsp::fft::_FFT1D_cplxf32_1st<false, float>(const float* __restrict, de::CPf* __restrict,
-	const decx::dsp::fft::cpu_FFT1D_planner<float>*, decx::utils::_thr_1D*, const decx::dsp::fft::FIMT1D*);
+	const decx::dsp::fft::cpu_FFT1D_planner<float>*, decx::utils::Thr1D*, const decx::dsp::fft::FIMT1D*);
 
 template void decx::dsp::fft::_FFT1D_cplxf32_1st<false, de::CPf>(const de::CPf* __restrict, de::CPf* __restrict,
-	const decx::dsp::fft::cpu_FFT1D_planner<float>*, decx::utils::_thr_1D*, const decx::dsp::fft::FIMT1D*);
+	const decx::dsp::fft::cpu_FFT1D_planner<float>*, decx::utils::Thr1D*, const decx::dsp::fft::FIMT1D*);
 
 
 
@@ -359,7 +359,7 @@ template <typename _type_out, bool _conj>
 void decx::dsp::fft::_FFT1D_cplxf32_mid(const de::CPf* __restrict							src, 
 										_type_out* __restrict								dst,
 										const decx::dsp::fft::cpu_FFT1D_planner<float>*		_FFT_frame, 
-										decx::utils::_thr_1D*								t1D, 
+										decx::utils::Thr1D*								t1D, 
 										const uint32_t										_call_order,
 										const decx::dsp::fft::FIMT1D*						_Twd_info)
 {
@@ -371,7 +371,7 @@ void decx::dsp::fft::_FFT1D_cplxf32_mid(const de::CPf* __restrict							src,
 	const decx::utils::frag_manager* _f_mgr = _inner_FFT_info->get_thread_patching();
 	
 	for (uint32_t i = 0; i < t1D->total_thread - 1; ++i) {
-		t1D->_async_thread[i] = decx::cpu::register_task_default(decx::dsp::fft::CPUK::_FFT1D_smaller_mid_cplxf32_C2C<_type_out, _conj>,
+		t1D->_async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(decx::dsp::fft::CPUK::_FFT1D_smaller_mid_cplxf32_C2C<_type_out, _conj>,
 			_src_ptr,											_dst_ptr,
 			_FFT_frame->get_tile_ptr(i)->get_tile1<void>(),		_FFT_frame->get_tile_ptr(i)->get_tile2<void>(),
 			_outer_kernel_info,									_inner_FFT_info,
@@ -382,7 +382,7 @@ void decx::dsp::fft::_FFT1D_cplxf32_mid(const de::CPf* __restrict							src,
 		_dst_ptr += _f_mgr->frag_len;
 	}
 	const uint32_t _L_FFT_smaller_num = _f_mgr->is_left ? _f_mgr->frag_left_over : _f_mgr->frag_len;
-	t1D->_async_thread[t1D->total_thread - 1] = decx::cpu::register_task_default(decx::dsp::fft::CPUK::_FFT1D_smaller_mid_cplxf32_C2C<_type_out, _conj>,
+	t1D->_async_thread[t1D->total_thread - 1] = decx::cpu::RegisterTaskLoadBalanced(decx::dsp::fft::CPUK::_FFT1D_smaller_mid_cplxf32_C2C<_type_out, _conj>,
 		_src_ptr,																_dst_ptr,
 		_FFT_frame->get_tile_ptr(t1D->total_thread - 1)->get_tile1<void>(),		_FFT_frame->get_tile_ptr(t1D->total_thread - 1)->get_tile2<void>(),
 		_outer_kernel_info,														_inner_FFT_info,
@@ -394,13 +394,13 @@ void decx::dsp::fft::_FFT1D_cplxf32_mid(const de::CPf* __restrict							src,
 
 
 template void decx::dsp::fft::_FFT1D_cplxf32_mid<de::CPf, true>(const de::CPf* __restrict, de::CPf* __restrict,
-	const decx::dsp::fft::cpu_FFT1D_planner<float>*, decx::utils::_thr_1D*, const uint32_t, const decx::dsp::fft::FIMT1D*);
+	const decx::dsp::fft::cpu_FFT1D_planner<float>*, decx::utils::Thr1D*, const uint32_t, const decx::dsp::fft::FIMT1D*);
 
 template void decx::dsp::fft::_FFT1D_cplxf32_mid<de::CPf, false>(const de::CPf* __restrict, de::CPf* __restrict,
-	const decx::dsp::fft::cpu_FFT1D_planner<float>*, decx::utils::_thr_1D*, const uint32_t, const decx::dsp::fft::FIMT1D*);
+	const decx::dsp::fft::cpu_FFT1D_planner<float>*, decx::utils::Thr1D*, const uint32_t, const decx::dsp::fft::FIMT1D*);
 
 template void decx::dsp::fft::_FFT1D_cplxf32_mid<float, true>(const de::CPf* __restrict, float* __restrict,
-	const decx::dsp::fft::cpu_FFT1D_planner<float>*, decx::utils::_thr_1D*, const uint32_t, const decx::dsp::fft::FIMT1D*);
+	const decx::dsp::fft::cpu_FFT1D_planner<float>*, decx::utils::Thr1D*, const uint32_t, const decx::dsp::fft::FIMT1D*);
 
 template void decx::dsp::fft::_FFT1D_cplxf32_mid<float, false>(const de::CPf* __restrict, float* __restrict,
-	const decx::dsp::fft::cpu_FFT1D_planner<float>*, decx::utils::_thr_1D*, const uint32_t, const decx::dsp::fft::FIMT1D*);
+	const decx::dsp::fft::cpu_FFT1D_planner<float>*, decx::utils::Thr1D*, const uint32_t, const decx::dsp::fft::FIMT1D*);

@@ -33,136 +33,148 @@
 #define _THREAD_ARRANGE_H_
 
 
-#include "../../../common/basic.h"
+#include <basic.h>
 
-
+#ifdef __cplusplus
 namespace decx
 {
 namespace utils
 {
+    class ThreadArrange1D;
 
-    typedef struct _thread_arrange_1D
+    class ThreadArrange2D;
+
+
+    typedef ThreadArrange1D Thr1D;
+    typedef ThreadArrange2D Thr2D;
+}
+}
+
+class decx::utils::ThreadArrange1D
+{
+public:
+    uint32_t total_thread;
+    std::future<void>* _async_thread;
+
+    ThreadArrange1D() {
+        this->total_thread = 0;
+    }
+
+    ThreadArrange1D(const uint _total_thread, std::future<void>* __async_thread)
     {
-        uint total_thread;
-        std::future<void>* _async_thread;
+        this->total_thread = _total_thread;
+        this->_async_thread = __async_thread;
+    }
 
-        _thread_arrange_1D(const uint _total_thread, std::future<void>* __async_thread)
-        {
-            this->total_thread = _total_thread;
-            this->_async_thread = __async_thread;
-        }
-
-        _thread_arrange_1D(const uint _total_thread)
-        {
-            this->total_thread = _total_thread;
-            this->_async_thread = new std::future<void>[this->total_thread];
-        }
-
-        void __sync_all_threads() {
-            for (int i = 0; i < this->total_thread; ++i) {
-                this->_async_thread[i].get();
-            }
-        }
-
-
-        void __sync_all_threads(const uint2 _range) {
-            if (_range.y > this->total_thread) {
-                Print_Error_Message(4, "__sync_all_threads failure: memory out of bound");
-                return;
-            }
-            for (int i = _range.x; i < _range.y; ++i) {
-                this->_async_thread[i].get();
-            }
-        }
-
-        ~_thread_arrange_1D() {
-            delete[] this->_async_thread;
-        }
-    }_thr_1D;
-
-
-    typedef struct _thread_arrange_2D
+    ThreadArrange1D(const uint _total_thread)
     {
-        uint total_thread;
-        uint thread_h, thread_w;
-        std::future<void>* _async_thread;
+        this->total_thread = _total_thread;
+        this->_async_thread = new std::future<void>[this->total_thread];
+    }
 
-
-        _thread_arrange_2D() {
-            this->total_thread = 0;
-            this->thread_h = 0;
-            this->thread_w = 0;
-            this->_async_thread = NULL;
+    void __sync_all_threads() {
+        for (int i = 0; i < this->total_thread; ++i) {
+            this->_async_thread[i].get();
         }
+    }
 
 
-        _thread_arrange_2D(const uint32_t _thread_h, const uint32_t _thread_w, std::future<void>* __async_thread)
-        {
-            this->thread_h = _thread_h;
-            this->thread_w = _thread_w;
-            this->_async_thread = __async_thread;
-            this->total_thread = _thread_h * _thread_w;
+    void __sync_all_threads(const uint2 _range) {
+        if (_range.y > this->total_thread) {
+            Print_Error_Message(4, "__sync_all_threads failure: memory out of bound");
+            return;
         }
-
-        _thread_arrange_2D(const uint32_t _thread_h, const uint32_t _thread_w)
-        {
-            this->thread_h = _thread_h;
-            this->thread_w = _thread_w;
-            this->total_thread = _thread_h * _thread_w;
-            this->_async_thread = new std::future<void>[this->total_thread];
+        for (int i = _range.x; i < _range.y; ++i) {
+            this->_async_thread[i].get();
         }
+    }
 
-        void reshape(const uint32_t _thread_h, const uint32_t _thread_w)
-        {
-            this->thread_h = _thread_h;
-            this->thread_w = _thread_w;
-            this->total_thread = _thread_h * _thread_w;
-            if (_thread_h * _thread_w != this->total_thread) {
-                if (this->_async_thread != NULL) {
-                    delete[] this->_async_thread;
-                }
-                this->_async_thread = new std::future<void>[this->total_thread];
-            }
-        }
-
-        void __sync_all_threads() {
-            for (int i = 0; i < this->total_thread; ++i) {
-                this->_async_thread[i].get();
-            }
-        }
+    ~ThreadArrange1D() {
+        delete[] this->_async_thread;
+    }
+};
 
 
-        void __sync_all_threads(const uint2 _range) {
-            if (_range.y > this->total_thread) {
-                Print_Error_Message(4, "memory out of bound\n");
-                return;
-            }
-            for (int i = _range.x; i < _range.y; ++i) {
-                this->_async_thread[i].get();
-            }
-        }
+class decx::utils::ThreadArrange2D
+{
+public:
+    uint total_thread;
+    uint thread_h, thread_w;
+    std::future<void>* _async_thread;
+
+    ThreadArrange2D() {
+        this->total_thread = 0;
+        this->thread_h = 0;
+        this->thread_w = 0;
+        this->_async_thread = NULL;
+    }
 
 
-        decx::utils::_thread_arrange_2D& operator=(const decx::utils::_thread_arrange_2D& src)
-        {
-            this->thread_h = src.thread_h;
-            this->thread_w = src.thread_w;
-            this->total_thread = src.total_thread;
-            this->_async_thread = src._async_thread;
+    ThreadArrange2D(const uint32_t _thread_h, const uint32_t _thread_w, std::future<void>* __async_thread)
+    {
+        this->thread_h = _thread_h;
+        this->thread_w = _thread_w;
+        this->_async_thread = __async_thread;
+        this->total_thread = _thread_h * _thread_w;
+    }
 
-            return *this;
-        }
+    ThreadArrange2D(const uint32_t _thread_h, const uint32_t _thread_w)
+    {
+        this->thread_h = _thread_h;
+        this->thread_w = _thread_w;
+        this->total_thread = _thread_h * _thread_w;
+        this->_async_thread = new std::future<void>[this->total_thread];
+    }
 
-
-        ~_thread_arrange_2D() {
+    void reshape(const uint32_t _thread_h, const uint32_t _thread_w)
+    {
+        this->thread_h = _thread_h;
+        this->thread_w = _thread_w;
+        this->total_thread = _thread_h * _thread_w;
+        if (_thread_h * _thread_w != this->total_thread) {
             if (this->_async_thread != NULL) {
                 delete[] this->_async_thread;
             }
+            this->_async_thread = new std::future<void>[this->total_thread];
         }
-    }_thr_2D;
-}
-}
+    }
+
+    void __sync_all_threads() {
+        for (int i = 0; i < this->total_thread; ++i) {
+            this->_async_thread[i].get();
+        }
+    }
 
 
+    void __sync_all_threads(const uint2 _range) {
+        if (_range.y > this->total_thread) {
+            Print_Error_Message(4, "memory out of bound\n");
+            return;
+        }
+        for (int i = _range.x; i < _range.y; ++i) {
+            this->_async_thread[i].get();
+        }
+    }
+
+
+    decx::utils::ThreadArrange2D& operator=(const decx::utils::ThreadArrange2D& src)
+    {
+        this->thread_h = src.thread_h;
+        this->thread_w = src.thread_w;
+        this->total_thread = src.total_thread;
+        this->_async_thread = src._async_thread;
+
+        return *this;
+    }
+
+
+    ~ThreadArrange2D() {
+        if (this->_async_thread != NULL) {
+            delete[] this->_async_thread;
+        }
+    }
+};
+
+#endif
 
 #endif

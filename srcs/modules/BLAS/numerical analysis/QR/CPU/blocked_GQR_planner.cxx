@@ -30,6 +30,8 @@
 
 #include "blocked_GQR_planner.h"
 #include <Element_wise/common/cpu_element_wise_planner.h>
+#define MODULE_TAG "GQR_cpu"
+
 
 static decx::utils::simd::xmm256_reg post_mask256_gen_v8(const uint8_t L_front)
 {
@@ -52,7 +54,7 @@ void decx::blas::Blocked_GQR_planner<_data_type>::Config(const uint2 block_dims,
     const uint32_t alignment = this->_align_bytes / sizeof(_data_type);
 
     // Allocate src_tile
-    this->_src_tile.SetDims(decx::utils::align<uint32_t>(block_dims.y, alignment),
+    this->_src_tile.SetDims(decx::utils::ialign_up<uint32_t>(block_dims.y, alignment),
                             block_dims.x);
     this->_tile_size = (uint64_t)this->_src_tile.GetDims().x * (uint64_t)this->_src_tile.GetDims().y * sizeof(_data_type);
     rval |= this->_src_tile.Allocate(PAGABLE, sizeof(_data_type), handle);
@@ -79,11 +81,16 @@ void decx::blas::Blocked_GQR_planner<_data_type>::Config(const uint2 block_dims,
 
     rval |= this->_fmgrs_apply_HH.Allocate((this->_block_dims.x - 1) * sizeof(decx::utils::frag_manager), PAGABLE, handle);
     for (int32_t i = 0; i < block_dims.x - 1; ++i){
-        decx::utils::frag_manager_gen(this->_fmgrs_apply_HH + i, this->_block_dims.x - i - 1, 16);
+        decx::utils::frag_manager_gen(this->_fmgrs_apply_HH + i, this->_block_dims.x - i - 1, decx::cpu::_get_permitted_concurrency());
     }
 
-    this->_IWY.SetDims(decx::utils::align<uint32_t>(this->_block_dims.y, alignment), this->_block_dims.y);
+    this->_IWY.SetDims(decx::utils::ialign_up<uint32_t>(this->_block_dims.y, alignment), this->_block_dims.y);
     rval |= this->_IWY.Allocate(PAGABLE, sizeof(_data_type), handle);
+
+    decx::utils::frag_manager_gen(&this->_fmgr_updateW, this->_block_dims.y, decx::cpu::_get_permitted_concurrency());
+
+    rval |= this->Config_W_updator();
+    // return rval;
 }
 
 template void decx::blas::Blocked_GQR_planner<float>::Config(const uint2 block_dims, de::DH* handle);
@@ -115,7 +122,7 @@ static uint32_t calc_proc_len_v(const uint32_t    local_col_id,
     int32_t is_left = first_lane == 0 ? 0 : 1;
     int32_t post_length = proc_len_v1 - first_lane;
     post_length = post_length < 0 ? 0 : post_length;
-    return decx::utils::ceil<uint32_t>(post_length, alignment) + is_left;
+    return decx::utils::idiv_ceil<uint32_t>(post_length, alignment) + is_left;
 }
 
 template <typename _data_type> void
@@ -128,6 +135,7 @@ decx::blas::Blocked_GQR_planner<_data_type>::Release()
     this->_fmgrs_apply_HH.Free();
     this->_simd_post_masks.Free();
     decx::blas::_cpu_transpose_config::release(&this->_tp_ldg_config);
+    
 }
 
 template void decx::blas::Blocked_GQR_planner<float>::Release();
@@ -157,42 +165,56 @@ template int32_t decx::blas::Blocked_GQR_planner<float>::GetPostMask(const uint3
 
 
 template <typename _data_type>
+int32_t decx::blas::Blocked_GQR_planner<_data_type>::Config_W_updator()
+{
+    int32_t rval = 0;
+    const uint32_t alignment = this->_align_bytes / sizeof(_data_type); 
+    uint32_t plan_nodes_num = decx::utils::idiv_ceil<uint32_t>(this->_block_dims.y - 1, alignment);
+    uint32_t aligned_vec_len = decx::utils::ialign_up<uint32_t>(this->_block_dims.y, alignment);
+
+    this->_w_update_helpers.Allocate(plan_nodes_num * sizeof(decx::blas::cpu_MVM_planner<_data_type>), PAGABLE);
+    for (int32_t i = 0; i < plan_nodes_num; ++i){
+        rval |= this->_w_update_helpers[i].Config(make_uint2(aligned_vec_len - i * alignment, this->_block_dims.y));
+    }
+    return rval;
+}
+
+template int32_t decx::blas::Blocked_GQR_planner<float>::Config_W_updator();
+
+
+template <typename _data_type>
 void decx::blas::Blocked_GQR_planner<_data_type>::Process_HouseHolder()
 {
-    _data_type* p_src_tile = this->_src_tile.template GetRawPtr<_data_type>();
-    _data_type* p_V_tile = this->_V_tile.template GetRawPtr<_data_type>();
     const uint32_t panel_pitch = this->_src_tile.GetDims().x;
 
-    decx::utils::_thr_1D t1D(16);
+    decx::utils::Thr1D t1D(16);
 
-    for (int col_id = 0; col_id < this->_block_dims.x; ++col_id) {
+    for (int col_id = 0; col_id < this->_block_dims.x; ++col_id) 
+    {
         // Calculate householder reflector
-        this->Process_SingleCol_HH(p_src_tile + this->GetAlignedStartOffsetPanel(col_id, panel_pitch), 
-                                   p_V_tile + this->GetAlignedStartOffsetPanel(col_id, panel_pitch), 
+        this->Process_SingleCol_HH(this->GetAlignedBufAddr(BlockedGQR_BufType_e::BGQR_Buffer_src, col_id, col_id),
+                                   this->GetAlignedBufAddr(BlockedGQR_BufType_e::BGQR_Buffer_V, col_id, col_id),
                                    this->_block_dims.y - col_id, col_id);
 
         if (col_id < this->_block_dims.x - 1) {
             const decx::utils::frag_manager* fmgr = this->_fmgrs_apply_HH + col_id;
             
-            const _data_type* pV = p_V_tile + this->GetAlignedStartOffsetPanel(col_id, panel_pitch);
-            _data_type* pPanel = p_src_tile + this->GetAlignedStartOffsetPanel(col_id, panel_pitch);
-            
+            const _data_type* pV = this->GetAlignedBufAddr(BlockedGQR_BufType_e::BGQR_Buffer_V, col_id, col_id);
+            _data_type* pPanel = this->GetAlignedBufAddr(BlockedGQR_BufType_e::BGQR_Buffer_src, col_id, col_id + 1);
+
             decx::cpu_ElementWise1D_planner::
             sCaller(decx::blas::Blocked_GQR_planner<_data_type>::ApplyRefactors, fmgr, &t1D, 
+                decx::cpu::ThreadDispatchMethod_e::Dispatch_ByID,
+                EW_SLOT_ID_MONOTONIC(0),
                 decx::TArg_still<decx::blas::Blocked_GQR_planner<_data_type>*>(this),
-                decx::TArg_var<const _data_type*>([&](const int32_t i){return pV + i * fmgr->get_frag_len() * panel_pitch;}),
-                decx::TArg_var<_data_type*>      ([&](const int32_t i){return pPanel + i * fmgr->get_frag_len() * panel_pitch;}),
+                decx::TArg_still<const _data_type*>(pV),
+                decx::TArg_var<_data_type*>      ([&](const int32_t i){return pPanel + i * 1 * panel_pitch;}),
                 decx::TArg_still<int32_t>(col_id),
-                decx::TArg_var<uint2>([&](const int32_t i){return make_uint2(fmgr->get_frag_len_by_id(i), _block_dims.y - col_id);})
+                decx::TArg_var<uint2>([&](const int32_t i){return make_uint2(fmgr->GetFragLenById(i), this->_block_dims.y - col_id);})
             );
-
-            // // Update rest of the panel
-            // ApplyRefactors(this,
-            //     p_V_tile + panel_pitch * col_id + (col_id/8)*8, 
-            //                      p_src_tile + panel_pitch * (col_id+1) + (col_id/8)*8,
-            //                      col_id, 
-            //                      make_uint2(_block_dims.x - col_id - 1, _block_dims.y - col_id));
         }
+
+        this->UpdateW(this, col_id);
     }
 }
 
@@ -204,7 +226,7 @@ void decx::blas::Blocked_GQR_planner<_data_type>::LoadSrcTile(
         const _data_type* src,
         const uint32_t block_id, 
         const uint32_t pitchsrc_v1,
-        decx::utils::_thr_1D* t1D)
+        decx::utils::Thr1D* t1D)
 {
     this->_tp_ldg_config.transpose_4b_caller(src + block_id * pitchsrc_v1 + block_id * this->_block_dims.x, 
         this->_src_tile.template GetRawPtr<_data_type>(), 
@@ -213,4 +235,28 @@ void decx::blas::Blocked_GQR_planner<_data_type>::LoadSrcTile(
         t1D);
 }
 
-template void decx::blas::Blocked_GQR_planner<float>::LoadSrcTile(const float* src, const uint32_t block_id, const uint32_t pitchsrc_v1, decx::utils::_thr_1D* t1D);
+template void decx::blas::Blocked_GQR_planner<float>::LoadSrcTile(const float* src, const uint32_t block_id, const uint32_t pitchsrc_v1, decx::utils::Thr1D* t1D);
+
+
+template <typename _data_type>
+_data_type* decx::blas::Blocked_GQR_planner<_data_type>::GetAlignedBufAddr(
+    const decx::blas::Blocked_GQR_planner<_data_type>::BlockedGQR_BufType_e buf_type, const uint32_t col_id, const uint32_t row_id)
+{
+    const uint32_t alignment = this->_align_bytes / sizeof(_data_type);
+    switch (buf_type)
+    {
+    case BlockedGQR_BufType_e::BGQR_Buffer_src:
+        return this->_src_tile + decx::utils::ialign_down<uint32_t>(col_id, alignment) + row_id * this->_src_tile.GetDims().x;
+    case BlockedGQR_BufType_e::BGQR_Buffer_V:
+        return this->_V_tile + decx::utils::ialign_down<uint32_t>(col_id, alignment) + row_id * this->_V_tile.GetDims().x;
+    case BlockedGQR_BufType_e::BGQR_Buffer_W:
+        return this->_W_tile + decx::utils::ialign_down<uint32_t>(col_id, alignment) + row_id * this->_W_tile.GetDims().x;
+    case BlockedGQR_BufType_e::BGQR_Buffer_IWY:
+        return this->_IWY + decx::utils::ialign_down<uint32_t>(col_id, alignment) + row_id * this->_IWY.GetDims().x;
+    default:
+        DECX_LOG_ERR("Invalid buffer type");
+        return nullptr;
+    }
+}
+
+template float* decx::blas::Blocked_GQR_planner<float>::GetAlignedBufAddr(const decx::blas::Blocked_GQR_planner<float>::BlockedGQR_BufType_e, const uint32_t, const uint32_t);

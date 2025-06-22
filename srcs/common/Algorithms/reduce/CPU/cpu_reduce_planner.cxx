@@ -77,11 +77,11 @@ void decx::reduce::cpu_Reduce1D_Planner::mask_gen_128b(const uint32_t l)
 
 
 void decx::reduce::cpu_Reduce1D_Planner::
-plan(const uint32_t conc,           const uint64_t total, 
-     const uint8_t type_size_in,    const uint8_t type_size_out,
-     const uint64_t min_thread_proc)
+plan(const uint32_t simd_align_byte,        const uint32_t conc, 
+     const uint64_t total,                  const uint8_t type_size_in, 
+     const uint8_t type_size_out,           const uint64_t min_thread_proc)
 {
-    decx::cpu_ElementWise1D_planner::plan(conc, total, type_size_in, type_size_out, min_thread_proc);
+    decx::cpu_ElementWise1D_planner::plan(simd_align_byte, conc, total, type_size_in, type_size_out, min_thread_proc);
 
     const uint32_t _L = this->_total_v * this->_alignment - this->_total;
     

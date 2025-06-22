@@ -53,32 +53,18 @@ void decx::dot::_dot_fp32_1D_caller(const float* A, const float* B, const size_t
     const uint conc_thr = decx::cpu::_get_permitted_concurrency();
     decx::utils::frag_manager fr_mgr;
     decx::utils::frag_manager_gen(&fr_mgr, len / 8, conc_thr);
-    decx::utils::_thread_arrange_1D t1D(conc_thr);
+    decx::utils::ThreadArrange1D t1D(conc_thr);
 
     float* res_arr = new float[conc_thr];
 
     const float* tmp_A_ptr = A, * tmp_B_ptr = B;
-    if (fr_mgr.frag_left_over != 0) {
-        const size_t proc_len = fr_mgr.frag_len * 8;
-        for (int i = 0; i < conc_thr - 1; ++i) {
-            t1D._async_thread[i] = decx::cpu::register_task_default(
-                decx::dot::CPUK::_dot_vec8_fp32, tmp_A_ptr, tmp_B_ptr, proc_len / 8, res_arr + i);
-            tmp_A_ptr += proc_len;
-            tmp_B_ptr += proc_len;
-        }
-        t1D._async_thread[conc_thr - 1] = decx::cpu::register_task_default(
-            decx::dot::CPUK::_dot_vec8_fp32, tmp_A_ptr, tmp_B_ptr, fr_mgr.frag_left_over, res_arr + conc_thr - 1);
+    const size_t proc_len = fr_mgr.GetFragLen() * 8;
+    for (int i = 0; i < conc_thr; ++i) {
+        t1D._async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(
+            decx::dot::CPUK::_dot_vec8_fp32, tmp_A_ptr, tmp_B_ptr, fr_mgr.GetFragLenById(i) / 8, res_arr + i);
+        tmp_A_ptr += proc_len;
+        tmp_B_ptr += proc_len;
     }
-    else {
-        const size_t proc_len = fr_mgr.frag_len * 8;
-        for (int i = 0; i < conc_thr; ++i) {
-            t1D._async_thread[i] = decx::cpu::register_task_default(
-                decx::dot::CPUK::_dot_vec8_fp32, tmp_A_ptr, tmp_B_ptr, proc_len / 8, res_arr + i);
-            tmp_A_ptr += proc_len;
-            tmp_B_ptr += proc_len;
-        }
-    }
-
     t1D.__sync_all_threads();
 
     float res = 0;

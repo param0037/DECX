@@ -54,13 +54,13 @@ namespace decx
         */
         static void _bilateral_uint8_organiser(const double* src, double* dst, const float2 sigmas,
             const uint2 proc_dim, const uint2 ker_dims, const uint Wsrc,
-            const uint Wdst, decx::utils::_thr_1D* t1D, decx::utils::frag_manager* f_mgr,
+            const uint Wdst, decx::utils::Thr1D* t1D, decx::utils::frag_manager* f_mgr,
             de::DH *handle);
 
 
         static void _bilateral_uchar4_organiser(const float* src, float* dst, const float2 sigmas,
             const uint2 proc_dim, const uint2 ker_dims, const uint Wsrc,
-            const uint Wdst, decx::utils::_thr_1D* t1D, decx::utils::frag_manager* f_mgr,
+            const uint Wdst, decx::utils::Thr1D* t1D, decx::utils::frag_manager* f_mgr,
             de::DH* handle);
     }
 }
@@ -73,7 +73,7 @@ void decx::vis::_bilateral_uint8_organiser(const double*                      sr
                                            const uint2                        ker_dims,
                                            const uint                         Wsrc,
                                            const uint                         Wdst,
-                                           decx::utils::_thr_1D*              t1D,
+                                           decx::utils::Thr1D*              t1D,
                                            decx::utils::frag_manager*         f_mgr,
                                            de::DH*                            handle)
 {
@@ -121,7 +121,7 @@ void decx::vis::_bilateral_uchar4_organiser(const float*                      sr
                                            const uint2                        ker_dims,
                                            const uint                         Wsrc,
                                            const uint                         Wdst,
-                                           decx::utils::_thr_1D*              t1D,
+                                           decx::utils::Thr1D*              t1D,
                                            decx::utils::frag_manager*         f_mgr,
                                            de::DH*                            handle)
 {
@@ -188,7 +188,7 @@ static void decx::vis::_bilateral_uint8_NB(decx::_Matrix* src, decx::_Matrix* ds
     if (f_mgr == NULL) {
         return;
     }
-    decx::utils::_thr_1D t1D(conc_thr);
+    decx::utils::Thr1D t1D(conc_thr);
 
     decx::vis::_bilateral_uint8_organiser(src->Mat.GetRawPtr<double>(), 
                                           dst->Mat.GetRawPtr<double>(),
@@ -209,7 +209,7 @@ decx::vis::_bilateral_uchar4_NB(decx::_Matrix* src, decx::_Matrix* dst, const ui
     if (f_mgr == NULL) {
         return;
     }
-    decx::utils::_thr_1D t1D(conc_thr);
+    decx::utils::Thr1D t1D(conc_thr);
 
     decx::vis::_bilateral_uchar4_organiser(src->Mat.GetRawPtr<float>(), 
                                           dst->Mat.GetRawPtr<float>(),
@@ -225,7 +225,7 @@ decx::vis::_bilateral_uchar4_NB(decx::_Matrix* src, decx::_Matrix* dst, const ui
 static void decx::vis::_bilateral_uint8_BC(decx::_Matrix* src, decx::_Matrix* dst, const uint2 neighbor_dims, const float2 sigmas_raw, 
     de::DH* handle, const int border_type)
 {
-    uint2 tmp_src_dims = make_uint2(decx::utils::ceil<uint>(src->Width() + neighbor_dims.x - 1, 16) * 16,
+    uint2 tmp_src_dims = make_uint2(decx::utils::idiv_ceil<uint>(src->Width() + neighbor_dims.x - 1, 16) * 16,
         src->Height() + neighbor_dims.y - 1);
 
     decx::PtrInfo<uint8_t> tmp_src;
@@ -257,7 +257,7 @@ static void decx::vis::_bilateral_uint8_BC(decx::_Matrix* src, decx::_Matrix* ds
     if (f_mgr == NULL) {
         return;
     }
-    decx::utils::_thr_1D t1D(conc_thr);
+    decx::utils::Thr1D t1D(conc_thr);
 
     decx::vis::_bilateral_uint8_organiser((double*)tmp_src.ptr, dst->Mat.GetRawPtr<double>(),
                                                    make_float2(powf(sigmas_raw.x, 2) * 2, powf(sigmas_raw.y, 2) * 2),
@@ -275,7 +275,7 @@ static void decx::vis::_bilateral_uint8_BC(decx::_Matrix* src, decx::_Matrix* ds
 static void decx::vis::_bilateral_uchar4_BC(decx::_Matrix* src, decx::_Matrix* dst, const uint2 neighbor_dims, const float2 sigmas_raw, 
     de::DH* handle, const int border_type)
 {
-    uint2 tmp_src_dims = make_uint2(decx::utils::ceil<uint>(src->Width() + neighbor_dims.x - 1, 8) * 8,
+    uint2 tmp_src_dims = make_uint2(decx::utils::idiv_ceil<uint>(src->Width() + neighbor_dims.x - 1, 8) * 8,
         src->Height() + neighbor_dims.y - 1);
 
     decx::PtrInfo<float> tmp_src;
@@ -308,7 +308,7 @@ static void decx::vis::_bilateral_uchar4_BC(decx::_Matrix* src, decx::_Matrix* d
     if (f_mgr == NULL) {
         return;
     }
-    decx::utils::_thr_1D t1D(conc_thr);
+    decx::utils::Thr1D t1D(conc_thr);
 
     decx::vis::_bilateral_uchar4_organiser((float*)tmp_src.ptr, dst->Mat.GetRawPtr<float>(),
                                                    make_float2(powf(sigmas_raw.x, 2) * 2, powf(sigmas_raw.y, 2) * 2),

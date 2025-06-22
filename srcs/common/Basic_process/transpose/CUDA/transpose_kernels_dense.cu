@@ -99,8 +99,8 @@ decx::blas::transpose2D_b4_dense(const float* src,
                                decx::cuda_stream* S)
 {
     dim3 transp_thread_0(32, 8);
-    dim3 transp_grid_0(decx::utils::ceil<uint>(proc_dims_dst.y, 32),
-        decx::utils::ceil<uint>(proc_dims_dst.x, 32));
+    dim3 transp_grid_0(decx::utils::idiv_ceil<uint>(proc_dims_dst.y, 32),
+        decx::utils::idiv_ceil<uint>(proc_dims_dst.x, 32));
 
     decx::blas::GPUK::CKC(cu_transpose2D_b4_dense) << <transp_grid_0, transp_thread_0, 0, S->get_raw_stream_ref() >> > (
         src, dst, pitchsrc, pitchdst, proc_dims_dst);

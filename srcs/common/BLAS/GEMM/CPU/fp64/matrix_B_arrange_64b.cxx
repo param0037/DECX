@@ -248,7 +248,7 @@ _matrix_B_arrange_64b_exec(const double* __restrict src,            // pointer o
     const uint32_t ptime_w = proc_dims_v4.x / block_W_v4;
     const uint32_t _LW = proc_dims_v4.x % block_W_v4;
 
-    const uint32_t ptime_h = decx::utils::ceil<uint32_t>(proc_dims_v4.y, block_H);
+    const uint32_t ptime_h = decx::utils::idiv_ceil<uint32_t>(proc_dims_v4.y, block_H);
     const uint32_t _LH = proc_dims_v4.y % block_H;
 
     for (uint32_t i = 0; i < ptime_h; ++i) 
@@ -291,7 +291,7 @@ void decx::blas::matrix_B_arrange_64b(const double*                     src,
                                       const uint32_t                    pitchsrc_v1,
                                       const uint32_t                    Llen, 
                                       const decx::utils::frag_manager*  _fmgr_WH,   // Aligned to 8 on width
-                                      decx::utils::_thr_2D*             t2D)
+                                      decx::utils::Thr2D*             t2D)
 {
 #if defined(__x86_64__) || defined(__i386__)
     constexpr uint32_t _alignment = 4;
@@ -315,7 +315,7 @@ void decx::blas::matrix_B_arrange_64b(const double*                     src,
         loc_dst = dst + i * _fmgr_WH[1].frag_len * _alignment_x2;
         for (uint32_t j = 0; j < t2D->thread_w - 1; ++j) 
         {
-            t2D->_async_thread[i * t2D->thread_w + j] = decx::cpu::register_task_default(
+            t2D->_async_thread[i * t2D->thread_w + j] = decx::cpu::RegisterTaskLoadBalanced(
                 decx::blas::CPUK::_matrix_B_arrange_64b_exec<_cplxf, 2, 16>,
                 loc_src, loc_dst, proc_dims, pitchsrc_v1, Llen);
             loc_src += _fmgr_WH[0].frag_len * _alignment;
@@ -324,7 +324,7 @@ void decx::blas::matrix_B_arrange_64b(const double*                     src,
         const uint32_t _LW = _fmgr_WH[0].is_left ? _fmgr_WH[0].frag_left_over : _fmgr_WH[0].frag_len;
 
         proc_dims.x = _LW;
-        t2D->_async_thread[(i+1)*t2D->thread_w - 1] = decx::cpu::register_task_default(
+        t2D->_async_thread[(i+1)*t2D->thread_w - 1] = decx::cpu::RegisterTaskLoadBalanced(
             decx::blas::CPUK::_matrix_B_arrange_64b_exec<_cplxf, 2, 16>,
             loc_src, loc_dst, proc_dims, pitchsrc_v1, Llen);
     }
@@ -333,7 +333,7 @@ void decx::blas::matrix_B_arrange_64b(const double*                     src,
 }
 
 template void decx::blas::matrix_B_arrange_64b<true>(const double*, double*, const uint32_t,
-    const uint32_t, const decx::utils::frag_manager*, decx::utils::_thr_2D*);
+    const uint32_t, const decx::utils::frag_manager*, decx::utils::Thr2D*);
 
 template void decx::blas::matrix_B_arrange_64b<false>(const double*, double*, const uint32_t,
-    const uint32_t, const decx::utils::frag_manager*, decx::utils::_thr_2D*);
+    const uint32_t, const decx::utils::frag_manager*, decx::utils::Thr2D*);

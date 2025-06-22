@@ -59,14 +59,14 @@ public:
 
 
     _CRSR_
-    void plan(const uint32_t concurrency, const uint2 dst_dims_v1, const uint8_t datatype_size,
+    void plan(const uint32_t simd_align, const uint32_t concurrency, const uint2 dst_dims_v1, const uint8_t datatype_size,
         const de::Interpolate_Types intp_type, const uint2 src_dims_v1, de::DH* handle, 
         uint64_t min_thread_proc = _EW_MIN_THREAD_PROC_DEFAULT_CPU_);
 
 
     template <typename _type_in, typename _type_out>
     void run(const _type_in* src, const float2* map, _type_out* dst, const uint32_t pitchmat_v1, 
-        const uint32_t pitchdst_v1, decx::utils::_thr_1D* t1D);
+        const uint32_t pitchdst_v1, decx::utils::Thr1D* t1D);
 
 
     static void release(decx::cpu_VGT2D_planner* fake_this);

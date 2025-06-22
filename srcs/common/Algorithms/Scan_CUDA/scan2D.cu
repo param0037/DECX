@@ -120,21 +120,21 @@ void decx::scan::cuda_scan2D_config::generate_scan_config(const uint2 _proc_dims
     decx::scan::cuda_scan2D_key_param_configs _kp_configs;
     _kp_configs._generate_configs<_type_in, _type_out>(_is_full_scan);
 
-    this->_dev_src._dims = make_uint2(decx::utils::ceil<uint32_t>(_proc_dims.x, _kp_configs._align_src) * _kp_configs._align_src, _proc_dims.y);
-    this->_dev_dst._dims = make_uint2(decx::utils::ceil<uint32_t>(_proc_dims.x, _kp_configs._align_dst) * _kp_configs._align_dst, _proc_dims.y);
+    this->_dev_src._dims = make_uint2(decx::utils::idiv_ceil<uint32_t>(_proc_dims.x, _kp_configs._align_src) * _kp_configs._align_src, _proc_dims.y);
+    this->_dev_dst._dims = make_uint2(decx::utils::idiv_ceil<uint32_t>(_proc_dims.x, _kp_configs._align_dst) * _kp_configs._align_dst, _proc_dims.y);
 
-    this->_scan_h_grid.x = decx::utils::ceil<uint32_t>(this->_dev_dst._dims.x, 32 * _kp_configs.proc_VL_H);
+    this->_scan_h_grid.x = decx::utils::idiv_ceil<uint32_t>(this->_dev_dst._dims.x, 32 * _kp_configs.proc_VL_H);
     this->_scan_h_grid.z = 1;
 
     if (_is_full_scan) {
-        this->_scan_h_grid.y = decx::utils::ceil<uint32_t>(this->_dev_dst._dims.y, 8);
+        this->_scan_h_grid.y = decx::utils::idiv_ceil<uint32_t>(this->_dev_dst._dims.y, 8);
     }
     else {
-        this->_scan_h_grid.y = decx::utils::ceil<uint32_t>(this->_dev_dst._dims.y, 8 * _kp_configs._auxiliary_proc_V);
+        this->_scan_h_grid.y = decx::utils::idiv_ceil<uint32_t>(this->_dev_dst._dims.y, 8 * _kp_configs._auxiliary_proc_V);
     }
 
-    this->_scan_v_grid = dim3(decx::utils::ceil<uint32_t>(this->_dev_dst._dims.x, 32 * _kp_configs.proc_VL_V),
-        decx::utils::ceil<uint32_t>(this->_dev_dst._dims.y, 32));
+    this->_scan_v_grid = dim3(decx::utils::idiv_ceil<uint32_t>(this->_dev_dst._dims.x, 32 * _kp_configs.proc_VL_V),
+        decx::utils::idiv_ceil<uint32_t>(this->_dev_dst._dims.y, 32));
 
 
     this->_dev_tmp._dims = _dev_dst._dims;
@@ -183,18 +183,18 @@ void decx::scan::cuda_scan2D_config::generate_scan_config(decx::Ptr2D_Info<void>
     decx::scan::cuda_scan2D_key_param_configs _kp_configs;
     _kp_configs._generate_configs<_type_in, _type_out>(_is_full_scan);
 
-    this->_scan_h_grid.x = decx::utils::ceil<uint32_t>(_proc_dims.x, 32 * _kp_configs.proc_VL_H);
+    this->_scan_h_grid.x = decx::utils::idiv_ceil<uint32_t>(_proc_dims.x, 32 * _kp_configs.proc_VL_H);
     this->_scan_h_grid.z = 1;
 
     if (_is_full_scan) {
-        this->_scan_h_grid.y = decx::utils::ceil<uint32_t>(_proc_dims.y, 8);
+        this->_scan_h_grid.y = decx::utils::idiv_ceil<uint32_t>(_proc_dims.y, 8);
     }
     else {
-        this->_scan_h_grid.y = decx::utils::ceil<uint32_t>(_proc_dims.y, 8 * _kp_configs._auxiliary_proc_V);
+        this->_scan_h_grid.y = decx::utils::idiv_ceil<uint32_t>(_proc_dims.y, 8 * _kp_configs._auxiliary_proc_V);
     }
 
-    this->_scan_v_grid = dim3(decx::utils::ceil<uint32_t>(this->_dev_dst._dims.x, 32 * _kp_configs.proc_VL_V),
-        decx::utils::ceil<uint32_t>(this->_dev_dst._dims.y, 32));
+    this->_scan_v_grid = dim3(decx::utils::idiv_ceil<uint32_t>(this->_dev_dst._dims.x, 32 * _kp_configs.proc_VL_V),
+        decx::utils::idiv_ceil<uint32_t>(this->_dev_dst._dims.y, 32));
     // fuck
     if (std::is_same<_type_in, uint8_t>::value) 
     {

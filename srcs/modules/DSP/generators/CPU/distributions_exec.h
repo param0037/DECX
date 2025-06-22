@@ -65,7 +65,7 @@ static void decx::gen::_gaussian2D_fp32_caller(float* target, const float expect
 {
     decx::utils::frag_manager f_mgr;
     decx::utils::frag_manager_gen(&f_mgr, proc_dims.y, decx::cpu::_get_permitted_concurrency());
-    decx::utils::_thread_arrange_1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::ThreadArrange1D t1D(decx::cpu::_get_permitted_concurrency());
 
     const uint8_t occupied_length = (uint8_t)(proc_dims.x % 8);
 
@@ -82,15 +82,15 @@ static void decx::gen::_gaussian2D_fp32_caller(float* target, const float expect
 
     float* loc_target = target;
     for (int thread_id = 0; thread_id < t1D.total_thread - 1; ++thread_id) {
-        t1D._async_thread[thread_id] = decx::cpu::register_task_default( decx::gen::CPUK::_gaussian2D_fp32,
-            loc_target, expect, diveation, make_uint2(decx::utils::ceil<uint32_t>(proc_dims.x, 8), f_mgr.frag_len),
+        t1D._async_thread[thread_id] = decx::cpu::RegisterTaskLoadBalanced( decx::gen::CPUK::_gaussian2D_fp32,
+            loc_target, expect, diveation, make_uint2(decx::utils::idiv_ceil<uint32_t>(proc_dims.x, 8), f_mgr.frag_len),
             Wsrc, clip_range, blend_var._vf, resolution);
 
         loc_target += (Wsrc * f_mgr.frag_len);
     }
     const uint32_t _L = f_mgr.is_left ? f_mgr.frag_left_over : f_mgr.frag_len;
-    t1D._async_thread[t1D.total_thread - 1] = decx::cpu::register_task_default( decx::gen::CPUK::_gaussian2D_fp32,
-        loc_target, expect, diveation, make_uint2(decx::utils::ceil<uint32_t>(proc_dims.x, 8), _L),
+    t1D._async_thread[t1D.total_thread - 1] = decx::cpu::RegisterTaskLoadBalanced( decx::gen::CPUK::_gaussian2D_fp32,
+        loc_target, expect, diveation, make_uint2(decx::utils::idiv_ceil<uint32_t>(proc_dims.x, 8), _L),
         Wsrc, clip_range, blend_var._vf, resolution);
 
     t1D.__sync_all_threads();

@@ -28,12 +28,12 @@
 * DEALINGS IN THE SOFTWARE.
 */
 
-#include "../../../../common/Basic_process/gather/CPU/common/cpu_vgather_planner.h"
-#include "../../../core/thread_management/thread_arrange.h"
-#include "../../../../common/FMGR/fragment_arrangment.h"
+#include <Basic_process/gather/CPU/common/cpu_vgather_planner.h>
+#include <thread_management/thread_arrange.h>
+#include <FMGR/fragment_arrangment.h>
 #include "../resample.h"
-#include "../../../../common/Basic_process/gather/CPU/gather_kernels.h"
-#include "../../../core/resources_manager/decx_resource.h"
+#include <Basic_process/gather/CPU/gather_kernels.h>
+#include <resources_manager/decx_resource.h>
 
 
 static decx::ResourceHandle g_VGT2D_hdlr;
@@ -56,13 +56,13 @@ resample_caller(const decx::_Matrix* src, const decx::_Matrix* map, decx::_Matri
         g_VGT2D_hdlr.RegisterResource(new decx::cpu_VGT2D_planner, 5, decx::cpu_VGT2D_planner::release);
     }
 
-    decx::utils::_thr_1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::Thr1D t1D(decx::cpu::_get_permitted_concurrency());
 
     auto* VGT = g_VGT2D_hdlr.get_resource_raw_ptr<decx::cpu_VGT2D_planner>();
 
     g_VGT2D_hdlr.lock();
 
-    VGT->plan(decx::cpu::_get_permitted_concurrency(), make_uint2(dst->Width(), dst->Height()), 
+    VGT->plan(32, decx::cpu::_get_permitted_concurrency(), make_uint2(dst->Width(), dst->Height()), 
         sizeof(uint8_t), intp_type, make_uint2(src->Width(), src->Height()), 
         de::GetLastError());
 

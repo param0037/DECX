@@ -130,7 +130,7 @@ template void decx::dsp::fft::cpu_FFT1D_planner<double>::_apart_for_smaller_FFTs
 
 
 template <typename _data_type>
-void decx::dsp::fft::cpu_FFT1D_planner<_data_type>::plan(const uint64_t signal_len, decx::utils::_thr_1D* t1D, de::DH* handle)
+void decx::dsp::fft::cpu_FFT1D_planner<_data_type>::plan(const uint64_t signal_len, decx::utils::Thr1D* t1D, de::DH* handle)
 {
     constexpr uint32_t alignment = _CPU_FFT_PROC_ALIGN_(_data_type);
     constexpr uint32_t threshold_fragment = sizeof(_data_type) == 8 ? _MAX_TILING_CPU_FFT_FP64_ : _MAX_TILING_CPU_FFT_FP32_;
@@ -164,7 +164,7 @@ void decx::dsp::fft::cpu_FFT1D_planner<_data_type>::plan(const uint64_t signal_l
         _store_pitch *= _current_radix;
     }
     uint32_t _fraction_num = min(this->_permitted_concurrency, 
-        decx::utils::ceil<uint32_t>(this->_signal_length / this->_smaller_FFTs[0].get_signal_len(), alignment));
+        decx::utils::idiv_ceil<uint32_t>(this->_signal_length / this->_smaller_FFTs[0].get_signal_len(), alignment));
         
     decx::utils::frag_manager_gen_Nx(this->_smaller_FFTs[0].get_thread_patching_modify(),
         this->_signal_length / this->_smaller_FFTs[0].get_signal_len(),
@@ -173,7 +173,7 @@ void decx::dsp::fft::cpu_FFT1D_planner<_data_type>::plan(const uint64_t signal_l
     for (uint32_t i = 1; i < this->_smaller_FFTs.effective_size(); ++i) 
     {
         _fraction_num = min(this->_permitted_concurrency, 
-            decx::utils::ceil<uint32_t>(this->_outer_kernel_info[i]._store_pitch, alignment));
+            decx::utils::idiv_ceil<uint32_t>(this->_outer_kernel_info[i]._store_pitch, alignment));
 
         decx::utils::frag_manager_gen_Nx(this->_smaller_FFTs[i].get_thread_patching_modify(),
             this->_outer_kernel_info[i]._store_pitch,
@@ -183,8 +183,8 @@ void decx::dsp::fft::cpu_FFT1D_planner<_data_type>::plan(const uint64_t signal_l
     this->_allocate_spaces(handle);
 }
 
-template void decx::dsp::fft::cpu_FFT1D_planner<float>::plan(const uint64_t, decx::utils::_thr_1D*, de::DH*);
-template void decx::dsp::fft::cpu_FFT1D_planner<double>::plan(const uint64_t, decx::utils::_thr_1D*, de::DH*);
+template void decx::dsp::fft::cpu_FFT1D_planner<float>::plan(const uint64_t, decx::utils::Thr1D*, de::DH*);
+template void decx::dsp::fft::cpu_FFT1D_planner<double>::plan(const uint64_t, decx::utils::Thr1D*, de::DH*);
 
 
 template <typename _data_type>
@@ -308,7 +308,7 @@ void decx::dsp::fft::cpu_FFT1D_planner<_data_type>::_allocate_spaces(de::DH* han
         Check_Runtime_Error(handle);
     }
 
-    const uint64_t _tmp_alloc_size = decx::utils::align<uint64_t>(this->_signal_length, alignment) * sizeof(_data_type) * 2;
+    const uint64_t _tmp_alloc_size = decx::utils::ialign_up<uint64_t>(this->_signal_length, alignment) * sizeof(_data_type) * 2;
     int32_t rval = 0;
     rval |= this->_tmp1.Allocate(_tmp_alloc_size, PAGABLE, handle);
     rval |= this->_tmp2.Allocate(_tmp_alloc_size, PAGABLE, handle);
@@ -340,7 +340,7 @@ template void decx::dsp::fft::cpu_FFT1D_smaller<double>::set_length(const uint32
 
 
 template <typename _data_type>
-void decx::dsp::fft::cpu_FFT1D_smaller<_data_type>::plan(decx::utils::_thr_1D* t1D)
+void decx::dsp::fft::cpu_FFT1D_smaller<_data_type>::plan(decx::utils::Thr1D* t1D)
 {
     decx::dsp::fft::_radix_apart<false>(this->_signal_length, &this->_radixes);
     
@@ -356,8 +356,8 @@ void decx::dsp::fft::cpu_FFT1D_smaller<_data_type>::plan(decx::utils::_thr_1D* t
     this->_W_table._generate_table(t1D);
 }
 
-template void decx::dsp::fft::cpu_FFT1D_smaller<float>::plan(decx::utils::_thr_1D* t1D);
-template void decx::dsp::fft::cpu_FFT1D_smaller<double>::plan(decx::utils::_thr_1D* t1D);
+template void decx::dsp::fft::cpu_FFT1D_smaller<float>::plan(decx::utils::Thr1D* t1D);
+template void decx::dsp::fft::cpu_FFT1D_smaller<double>::plan(decx::utils::Thr1D* t1D);
 
 
 template <typename _data_type>

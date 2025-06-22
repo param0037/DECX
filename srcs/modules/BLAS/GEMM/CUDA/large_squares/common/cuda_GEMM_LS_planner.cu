@@ -76,13 +76,13 @@ template <typename _data_type>
 float decx::blas::cuda_GEMM_LS_planner<_data_type>::
 padding_efficiency(const uint2 proc_dims_v1, const uint32_t L, const decx::blas::CGKP* _kernel_info) const
 {
-    uint2 cover_dims_dst = make_uint2(decx::utils::align<uint32_t>(proc_dims_v1.x, _kernel_info->_LWH.y),
-                                 decx::utils::align<uint32_t>(proc_dims_v1.y, _kernel_info->_LWH.z));
+    uint2 cover_dims_dst = make_uint2(decx::utils::ialign_up<uint32_t>(proc_dims_v1.x, _kernel_info->_LWH.y),
+                                 decx::utils::ialign_up<uint32_t>(proc_dims_v1.y, _kernel_info->_LWH.z));
                                  
     float efficiency = ((float)proc_dims_v1.x / (float)cover_dims_dst.x) * 
                        ((float)proc_dims_v1.y / (float)cover_dims_dst.y);
 
-    efficiency *= ((float)L / (float)decx::utils::align<uint32_t>(L, _kernel_info->_LWH.x));
+    efficiency *= ((float)L / (float)decx::utils::ialign_up<uint32_t>(L, _kernel_info->_LWH.x));
     
     return efficiency;
 }
@@ -122,7 +122,7 @@ decx::blas::cuda_GEMM_LS_planner<float>::plan(const decx::_matrix_layout* A_layo
     const uint32_t _L = this->_A_layout.width;
     const uint2 proc_dims_v1 = make_uint2(this->_B_layout.width, this->_A_layout.height);
 
-    const uint32_t pitch_AT = decx::utils::align<uint32_t>(this->_A_layout.height, 128);
+    const uint32_t pitch_AT = decx::utils::ialign_up<uint32_t>(this->_A_layout.height, 128);
     this->_AT.SetDims(pitch_AT, this->_B_layout.width);
     const uint64_t AT_size = this->_AT.GetDims().x * this->_AT.GetDims().y * sizeof(float);
 
@@ -177,7 +177,7 @@ decx::blas::cuda_GEMM_LS_planner<de::Half>::plan(const decx::_matrix_layout* A_l
     const uint32_t _L = this->_A_layout.width;
     const uint2 proc_dims_v1 = make_uint2(this->_B_layout.width, this->_A_layout.height);
 
-    const uint32_t pitch_AT = decx::utils::align<uint32_t>(this->_A_layout.height, 256);
+    const uint32_t pitch_AT = decx::utils::ialign_up<uint32_t>(this->_A_layout.height, 256);
     this->_AT.SetDims(pitch_AT, this->_B_layout.width);
     const uint64_t AT_size = this->_AT.GetDims().x * this->_AT.GetDims().y * sizeof(de::Half);
 

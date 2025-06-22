@@ -86,7 +86,7 @@ public:
     
     template <typename _type_out> _CRSR_ 
     void plan(const decx::_matrix_layout* src_layout, const decx::_matrix_layout* dst_layout, 
-        decx::utils::_thread_arrange_1D* t1D, de::DH* handle);
+        decx::utils::ThreadArrange1D* t1D, de::DH* handle);
 
 
     uint2 get_signal_dims() const;
@@ -123,10 +123,10 @@ public:
 
     
     template <typename _type_in>
-    void Forward(decx::_Matrix* src, decx::_Matrix* dst, decx::utils::_thread_arrange_1D* t1D) const;
+    void Forward(decx::_Matrix* src, decx::_Matrix* dst, decx::utils::ThreadArrange1D* t1D) const;
 
     template <typename _type_out>
-    void Inverse(decx::_Matrix* src, decx::_Matrix* dst, decx::utils::_thread_arrange_1D* t1D) const;
+    void Inverse(decx::_Matrix* src, decx::_Matrix* dst, decx::utils::ThreadArrange1D* t1D) const;
 
 
     ~cpu_FFT2D_planner();

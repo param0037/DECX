@@ -98,7 +98,7 @@ public:
         this->_p_interval = p_read;
     }
 
-    void count_intervals(uint32_t* p_num, decx::utils::_thread_arrange_1D* t1D);
+    void count_intervals(uint32_t* p_num, decx::utils::ThreadArrange1D* t1D);
 
     
     _THREAD_FUNCTION_ static

@@ -48,7 +48,7 @@ decx::blas::GPUK::cu_block_dot2D_1way_h_fp32(const float4 * __restrict   A,
     uint64_t LDG_dex = Wsrc_v4 * tidy + tidx;
     uint64_t STG_dex = Wdst_v1 * tidy + blockIdx.x;
 
-    uint32_t proc_W_v4 = decx::utils::ceil<uint32_t>(proc_dims.x, 4);
+    uint32_t proc_W_v4 = decx::utils::idiv_ceil<uint32_t>(proc_dims.x, 4);
 
     decx::utils::_cuda_vec128 _recv_A, _recv_B;
     _recv_A._vf = decx::utils::vec4_set1_fp32(0);
@@ -110,7 +110,7 @@ decx::blas::GPUK::cu_block_dot2D_1way_v_fp32(const float4 * __restrict    A,
     * process goes all the way down vertically. The process stops at exactly 
     * where the matrix ends.
     */
-    if (tidx < decx::utils::ceil<uint32_t>(proc_dims_v1.x, 4) && tidy < proc_dims_v1.y) {
+    if (tidx < decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.x, 4) && tidy < proc_dims_v1.y) {
         _recv_A._vf = A[LDG_dex];
         _recv_B._vf = B[LDG_dex];
     }
@@ -145,7 +145,7 @@ decx::blas::GPUK::cu_block_dot2D_1way_v_fp32(const float4 * __restrict    A,
     
     _recv_B._vf = _workspace[threadIdx.y][threadIdx.x];
 
-    if (tidx < decx::utils::ceil<uint32_t>(proc_dims_v1.x, 4) && threadIdx.y == 0) {
+    if (tidx < decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.x, 4) && threadIdx.y == 0) {
         dst[STG_dex] = _recv_B._vf;
     }
 }
@@ -171,7 +171,7 @@ decx::blas::GPUK::cu_block_dot2D_1way_h_fp16_L1(const float4 * __restrict   A,
     uint64_t LDG_dex = Wsrc_v8 * tidy + tidx;
     uint64_t STG_dex = Wdst_v1 * tidy + blockIdx.x;
 
-    uint32_t proc_W_v8 = decx::utils::ceil<uint32_t>(proc_dims.x, 8);
+    uint32_t proc_W_v8 = decx::utils::idiv_ceil<uint32_t>(proc_dims.x, 8);
 
     decx::utils::_cuda_vec128 _recv_A, _recv_B;
     _recv_A._vf = decx::utils::vec4_set1_fp32(0);
@@ -221,7 +221,7 @@ decx::blas::GPUK::cu_block_dot2D_1way_h_fp16_L2(const float4 * __restrict   A,
     uint64_t LDG_dex = Wsrc_v8 * tidy + tidx;
     uint64_t STG_dex = Wdst_v1 * tidy + blockIdx.x;
 
-    uint32_t proc_W_v8 = decx::utils::ceil<uint32_t>(proc_dims.x, 8);
+    uint32_t proc_W_v8 = decx::utils::idiv_ceil<uint32_t>(proc_dims.x, 8);
 
     decx::utils::_cuda_vec128 _recv_A, _recv_B;
     _recv_A._vf = decx::utils::vec4_set1_fp32(0);
@@ -271,7 +271,7 @@ decx::blas::GPUK::cu_block_dot2D_1way_h_fp16_L3(const float4 * __restrict   A,
     uint64_t LDG_dex = Wsrc_v8 * tidy + tidx;
     uint64_t STG_dex = Wdst_v1 * tidy + blockIdx.x;
 
-    uint32_t proc_W_v8 = decx::utils::ceil<uint32_t>(proc_dims.x, 8);
+    uint32_t proc_W_v8 = decx::utils::idiv_ceil<uint32_t>(proc_dims.x, 8);
 
     decx::utils::_cuda_vec128 _recv_A, _recv_B;
     _recv_A._vf = decx::utils::vec4_set1_fp32(0);
@@ -336,7 +336,7 @@ decx::blas::GPUK::cu_block_dot2D_1way_v_fp16_L1(const float4 * __restrict   A,
     * process goes all the way down vertically. The process stops at exactly
     * where the matrix ends.
     */
-    if (tidx < decx::utils::ceil<uint32_t>(proc_dims_v1.x, 8) && tidy < proc_dims_v1.y) {
+    if (tidx < decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.x, 8) && tidy < proc_dims_v1.y) {
         _recv_A._vf = A[LDG_dex];
         _recv_B._vf = B[LDG_dex];
     }
@@ -377,7 +377,7 @@ decx::blas::GPUK::cu_block_dot2D_1way_v_fp16_L1(const float4 * __restrict   A,
 
     __syncthreads();
 
-    if (STG_dex_x < decx::utils::ceil<uint32_t>(proc_dims_v1.x, 4) && threadIdx.y < 2) {
+    if (STG_dex_x < decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.x, 4) && threadIdx.y < 2) {
         tmp1._vf = _workspace[threadIdx.y][threadIdx.x];
         dst[blockIdx.y * Wdst_v4 + STG_dex_x] = tmp1._vf;
     }
@@ -413,7 +413,7 @@ decx::blas::GPUK::cu_block_dot2D_1way_v_fp16_L2(const float4 * __restrict   A,
     * process goes all the way down vertically. The process stops at exactly
     * where the matrix ends.
     */
-    if (tidx < decx::utils::ceil<uint32_t>(proc_dims_v1.x, 8) && tidy < proc_dims_v1.y) {
+    if (tidx < decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.x, 8) && tidy < proc_dims_v1.y) {
         _recv_A._vf = A[LDG_dex];
         _recv_B._vf = B[LDG_dex];
     }
@@ -459,7 +459,7 @@ decx::blas::GPUK::cu_block_dot2D_1way_v_fp16_L2(const float4 * __restrict   A,
 
     tmp1._vf = _workspace[threadIdx.y][threadIdx.x];
 
-    if (tidx < decx::utils::ceil<uint32_t>(proc_dims_v1.x, 8) && threadIdx.y == 0) {
+    if (tidx < decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.x, 8) && threadIdx.y == 0) {
         dst[blockIdx.y * Wdst_v8 + tidx] = tmp1._vf;
     }
 #endif
@@ -495,7 +495,7 @@ decx::blas::GPUK::cu_block_dot2D_1way_v_fp16_L3(const float4 * __restrict   A,
     * process goes all the way down vertically. The process stops at exactly
     * where the matrix ends.
     */
-    if (tidx < decx::utils::ceil<uint32_t>(proc_dims_v1.x, 8) && tidy < proc_dims_v1.y) {
+    if (tidx < decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.x, 8) && tidy < proc_dims_v1.y) {
         _recv_A._vf = A[LDG_dex];
         _recv_B._vf = B[LDG_dex];
     }
@@ -527,7 +527,7 @@ decx::blas::GPUK::cu_block_dot2D_1way_v_fp16_L3(const float4 * __restrict   A,
 
     tmp1._vf = _workspace[threadIdx.y][threadIdx.x];
 
-    if (tidx < decx::utils::ceil<uint32_t>(proc_dims_v1.x, 8) && threadIdx.y == 0) {
+    if (tidx < decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.x, 8) && threadIdx.y == 0) {
         dst[blockIdx.y * Wdst_v8 + tidx] = tmp1._vf;
     }
 #endif

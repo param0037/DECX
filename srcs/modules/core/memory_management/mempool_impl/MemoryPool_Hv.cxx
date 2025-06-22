@@ -44,7 +44,7 @@ decx::MemPool_Hv::MemPool_Hv()
 
 
 
-bool decx::MemPool_Hv::search_for_idle(size_t req_size, int begin_dex, decx::MemBlock** _ptr)
+bool decx::MemPool_Hv::search_for_idle(uint64_t req_size, int begin_dex, decx::MemBlock** _ptr)
 {
     bool _found = false;
 
@@ -78,12 +78,12 @@ bool decx::MemPool_Hv::search_for_idle(size_t req_size, int begin_dex, decx::Mem
 }
 
 
-void decx::MemPool_Hv::allocate(size_t req_size, decx::MemBlock** _ptr)
+void decx::MemPool_Hv::allocate(uint64_t req_size, decx::MemBlock** _ptr)
 {
     this->_mtx.lock();
 
-    const int begin_dex = decx::utils::_GetHighest_abd(
-        decx::utils::clamp_min<size_t>(req_size, Min_Alloc_Bytes)) - dex_to_pow_bias;
+    const int begin_dex = decx::utils::i_getMSB_idx_conservative<uint64_t>(
+        decx::utils::clamp_min<uint64_t>(req_size, Min_Alloc_Bytes)) - dex_to_pow_bias;
     decx::MemBlock* _MBPtr = NULL;
 
     const bool _found = this->search_for_idle(req_size, begin_dex, &_MBPtr);
@@ -91,7 +91,7 @@ void decx::MemPool_Hv::allocate(size_t req_size, decx::MemBlock** _ptr)
 
     if (!_found)
     {
-        size_t alloc_size = (uint64_t)1 << (begin_dex + dex_to_pow_bias);
+        uint64_t alloc_size = (uint64_t)1 << (begin_dex + dex_to_pow_bias);
         auto chunk_set = this->mem_chunk_set_list.begin() + begin_dex;
         chunk_set->mem_chunk_list.emplace_back(
             decx::MemChunk_Hv(alloc_size, req_size, begin_dex, chunk_set->list_length));

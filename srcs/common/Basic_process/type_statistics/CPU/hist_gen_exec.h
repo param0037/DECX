@@ -72,7 +72,7 @@ namespace decx
 //{
 //    decx::utils::frag_manager f_mgr;
 //    decx::utils::frag_manager_gen(&f_mgr, proc_dims.y, decx::cpu::_get_permitted_concurrency());
-//    decx::utils::_thread_arrange_1D t1D(decx::cpu::_get_permitted_concurrency());
+//    decx::utils::ThreadArrange1D t1D(decx::cpu::_get_permitted_concurrency());
 //
 //    const uint8_t _leagal_space_v4 = (proc_dims.x % 4) ? (uint8_t)(proc_dims.x - (proc_dims.x / 4) * 4) : 4;
 //    
@@ -103,7 +103,7 @@ namespace decx
 //        uint64_t* loc_hist = _hist_for_threads.ptr;
 //
 //        for (int thread_id = 0; thread_id < t1D.total_thread - 1; ++thread_id) {
-//            t1D._async_thread[thread_id] = decx::cpu::register_task_default(decx::bp::CPUK::_histgen2D_u8,
+//            t1D._async_thread[thread_id] = decx::cpu::RegisterTaskLoadBalanced(decx::bp::CPUK::_histgen2D_u8,
 //                loc_src, loc_hist,
 //                make_uint2(proc_dims.x, f_mgr.frag_len), Wsrc,
 //                _mask);
@@ -112,7 +112,7 @@ namespace decx
 //            loc_hist += 256 * 4;
 //        }
 //        const uint32_t _L = f_mgr.is_left ? f_mgr.frag_left_over : f_mgr.frag_len;
-//        t1D._async_thread[t1D.total_thread - 1] = decx::cpu::register_task_default(decx::bp::CPUK::_histgen2D_u8,
+//        t1D._async_thread[t1D.total_thread - 1] = decx::cpu::RegisterTaskLoadBalanced(decx::bp::CPUK::_histgen2D_u8,
 //            loc_src, loc_hist,
 //            make_uint2(proc_dims.x, _L), Wsrc,
 //            _mask);
@@ -145,7 +145,7 @@ static void decx::bp::_histgen2D_u8_u64_caller(const uint8_t* src, uint64_t* his
 {
     decx::utils::frag_manager f_mgr;
     decx::utils::frag_manager_gen(&f_mgr, proc_dims.y, decx::cpu::_get_permitted_concurrency());
-    decx::utils::_thread_arrange_1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::ThreadArrange1D t1D(decx::cpu::_get_permitted_concurrency());
 
     const uint8_t _leagal_space_v4 = (proc_dims.x % 4) ? (uint8_t)(proc_dims.x % 4) : 4;
     
@@ -157,29 +157,23 @@ static void decx::bp::_histgen2D_u8_u64_caller(const uint8_t* src, uint64_t* his
     const uint8_t* loc_src = src;
     uint64_t* loc_hist = _hist_for_threads.ptr;
 
-    for (int thread_id = 0; thread_id < t1D.total_thread - 1; ++thread_id) {
-        t1D._async_thread[thread_id] = decx::cpu::register_task_default(decx::bp::CPUK::_histgen2D_u8_u64,
+    for (int thread_id = 0; thread_id < t1D.total_thread; ++thread_id) {
+        t1D._async_thread[thread_id] = decx::cpu::RegisterTaskLoadBalanced(decx::bp::CPUK::_histgen2D_u8_u64,
             loc_src, loc_hist,
-            make_uint2(proc_dims.x, f_mgr.frag_len), Wsrc,
+            make_uint2(proc_dims.x, f_mgr.GetFragLenById(thread_id)), Wsrc,
             _leagal_space_v4);
 
         loc_src += (Wsrc * f_mgr.frag_len);
         loc_hist += 256;
     }
-    const uint32_t _L = f_mgr.is_left ? f_mgr.frag_left_over : f_mgr.frag_len;
-    t1D._async_thread[t1D.total_thread - 1] = decx::cpu::register_task_default(decx::bp::CPUK::_histgen2D_u8_u64,
-        loc_src, loc_hist,
-        make_uint2(proc_dims.x, _L), Wsrc,
-        _leagal_space_v4);
-
     t1D.__sync_all_threads();
 
     __m256i accu, recv;
     if (t1D.total_thread > 1) {
         for (uint32_t i = 0; i < 256 / 4; ++i) {
-            accu = _mm256_load_si256((__m256i*)_hist_for_threads.ptr + i);
+            accu = _mm256_load_si256((__m256i*)_hist_for_threads + i);
             for (int threadId = 1; threadId < t1D.total_thread; ++threadId) {
-                recv = _mm256_load_si256((__m256i*)_hist_for_threads.ptr + i + threadId * 256 / 4);
+                recv = _mm256_load_si256((__m256i*)_hist_for_threads + i + threadId * 256 / 4);
                 accu = _mm256_add_epi64(accu, recv);
             }
             _mm256_store_si256((__m256i*)histogram + i, accu);

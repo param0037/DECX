@@ -70,11 +70,11 @@ void decx::blas::cuda_DP2D_configs<_type_in>::generate_config(const uint2 proc_d
         _proc_align = _CU_REDUCE1D_MEM_ALIGN_8B_;
     }
 
-    const uint64_t _proc_W_v = decx::utils::ceil<uint64_t>(this->_proc_dims.x, _proc_align);
+    const uint64_t _proc_W_v = decx::utils::idiv_ceil<uint64_t>(this->_proc_dims.x, _proc_align);
     this->_dev_mat_dims = make_uint2(_proc_W_v * _proc_align, this->_proc_dims.y);
 
     this->_first_kernel_config =
-        dim3(decx::utils::ceil<uint32_t>(_proc_W_v, _REDUCE2D_BLOCK_DIM_X_), decx::utils::ceil<uint32_t>(this->_proc_dims.y, _REDUCE2D_BLOCK_DIM_Y_));
+        dim3(decx::utils::idiv_ceil<uint32_t>(_proc_W_v, _REDUCE2D_BLOCK_DIM_X_), decx::utils::idiv_ceil<uint32_t>(this->_proc_dims.y, _REDUCE2D_BLOCK_DIM_Y_));
 
     const uint32_t _proc_dim_len = _is_reduce_h ? this->_first_kernel_config.x : this->_first_kernel_config.y;
 
@@ -107,11 +107,11 @@ void decx::blas::cuda_DP2D_configs<_type_in>::generate_config(const uint2 proc_d
     else {
         /*uint32_t _alloc_dst_size = 0;
         if (std::is_same<_type_in, de::Half>::value && _fp16_accu == decx::Fp16_Accuracy_Levels::Fp16_Accurate_L1) {
-            _alloc_dst_size = decx::utils::ceil<uint32_t>(
+            _alloc_dst_size = decx::utils::idiv_ceil<uint32_t>(
                 _is_reduce_h ? this->_proc_dims.y : this->_proc_dims.x, _CU_REDUCE1D_MEM_ALIGN_4B_) * _CU_REDUCE1D_MEM_ALIGN_4B_ * sizeof(float);
         }
         else {
-            _alloc_dst_size = decx::utils::ceil<uint32_t>(
+            _alloc_dst_size = decx::utils::idiv_ceil<uint32_t>(
                 _is_reduce_h ? this->_proc_dims.y : this->_proc_dims.x, _CU_REDUCE1D_MEM_ALIGN_4B_) * _CU_REDUCE1D_MEM_ALIGN_4B_ * sizeof(_type_in);
         }
         if (decx::alloc::_device_malloc(&this->_dev_dst, _alloc_dst_size, true, S)) {
@@ -141,11 +141,11 @@ void decx::blas::cuda_DP2D_configs<_type_in>::alloc_buffers(decx::cuda_stream* S
     if (!this->_post_proc_needed) {
         uint32_t _alloc_dst_size = 0;
         if (std::is_same<_type_in, de::Half>::value && _fp16_accu == decx::Fp16_Accuracy_Levels::Fp16_Accurate_L1) {
-            _alloc_dst_size = decx::utils::align<uint32_t>(
+            _alloc_dst_size = decx::utils::ialign_up<uint32_t>(
                 _is_reduce_h ? this->_proc_dims.y : this->_proc_dims.x, _CU_REDUCE1D_MEM_ALIGN_4B_) * sizeof(float);
         }
         else {
-            _alloc_dst_size = decx::utils::align<uint32_t>(
+            _alloc_dst_size = decx::utils::ialign_up<uint32_t>(
                 _is_reduce_h ? this->_proc_dims.y : this->_proc_dims.x, _CU_REDUCE1D_MEM_ALIGN_4B_) * sizeof(_type_in);
         }
         this->_dev_dst.Allocate(_alloc_dst_size, CUDA_DEVICE, de::GetLastError(), true, S);

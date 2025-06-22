@@ -320,7 +320,7 @@ decx::vis::CPUK::_gaussian_H_uchar4_fp32_ST(const float* src, const float* kerne
 
 void decx::vis::_gaussian_H_uint8_caller(const double* src, 
     const float* kernel, float* dst, const uint2 proc_dim, const uint32_t Wker,
-    const uint Wsrc, const uint Wdst, const ushort reg_WL, decx::utils::_thr_1D* t1D,
+    const uint Wsrc, const uint Wdst, const ushort reg_WL, decx::utils::Thr1D* t1D,
     const uint _loop)
 {
     const double* tmp_src_ptr = src;
@@ -333,7 +333,7 @@ void decx::vis::_gaussian_H_uint8_caller(const double* src,
     size_t frag_dst = (size_t)f_mgr.frag_len * (size_t)Wdst;
 
     for (int i = 0; i < t1D->total_thread - 1; ++i) {
-        t1D->_async_thread[i] = decx::cpu::register_task_default(decx::vis::CPUK::_gaussian_H_uint8_fp32_ST,
+        t1D->_async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(decx::vis::CPUK::_gaussian_H_uint8_fp32_ST,
             tmp_src_ptr, kernel, tmp_dst_ptr,
             make_uint2(proc_dim.x, f_mgr.frag_len), Wker, Wsrc, Wdst, reg_WL, _loop);
 
@@ -341,7 +341,7 @@ void decx::vis::_gaussian_H_uint8_caller(const double* src,
         tmp_dst_ptr += frag_dst;
     }
     const uint32_t _L = f_mgr.is_left ? f_mgr.frag_left_over : f_mgr.frag_len;
-    t1D->_async_thread[t1D->total_thread - 1] = decx::cpu::register_task_default(decx::vis::CPUK::_gaussian_H_uint8_fp32_ST,
+    t1D->_async_thread[t1D->total_thread - 1] = decx::cpu::RegisterTaskLoadBalanced(decx::vis::CPUK::_gaussian_H_uint8_fp32_ST,
         tmp_src_ptr, kernel, tmp_dst_ptr,
         make_uint2(proc_dim.x, _L), Wker, Wsrc, Wdst, reg_WL, _loop);
 
@@ -353,7 +353,7 @@ void decx::vis::_gaussian_H_uint8_caller(const double* src,
 
 void decx::vis::_gaussian_H_uchar4_caller(const float* src, 
     const float* kernel, float* dst, const uint2 proc_dim, const uint32_t Wker,
-    const uint Wsrc, const uint Wdst, const ushort reg_WL, decx::utils::_thr_1D* t1D,
+    const uint Wsrc, const uint Wdst, const ushort reg_WL, decx::utils::Thr1D* t1D,
     const uint _loop)
 {
     const float* tmp_src_ptr = src;
@@ -366,7 +366,7 @@ void decx::vis::_gaussian_H_uchar4_caller(const float* src,
     size_t frag_dst = (size_t)f_mgr.frag_len * (size_t)Wdst;
 
     for (int i = 0; i < t1D->total_thread - 1; ++i) {
-        t1D->_async_thread[i] = decx::cpu::register_task_default(decx::vis::CPUK::_gaussian_H_uchar4_fp32_ST,
+        t1D->_async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(decx::vis::CPUK::_gaussian_H_uchar4_fp32_ST,
             tmp_src_ptr, kernel, tmp_dst_ptr,
             make_uint2(proc_dim.x, f_mgr.frag_len), Wker, Wsrc, Wdst, reg_WL, _loop);
 
@@ -374,7 +374,7 @@ void decx::vis::_gaussian_H_uchar4_caller(const float* src,
         tmp_dst_ptr += frag_dst;
     }
     const uint32_t _L = f_mgr.is_left ? f_mgr.frag_left_over : f_mgr.frag_len;
-    t1D->_async_thread[t1D->total_thread - 1] = decx::cpu::register_task_default(decx::vis::CPUK::_gaussian_H_uchar4_fp32_ST,
+    t1D->_async_thread[t1D->total_thread - 1] = decx::cpu::RegisterTaskLoadBalanced(decx::vis::CPUK::_gaussian_H_uchar4_fp32_ST,
         tmp_src_ptr, kernel, tmp_dst_ptr,
         make_uint2(proc_dim.x, _L), Wker, Wsrc, Wdst, reg_WL, _loop);
 
@@ -384,7 +384,7 @@ void decx::vis::_gaussian_H_uchar4_caller(const float* src,
 
 
 void decx::vis::_gaussian_V_uint8_caller(const float* src, const float* kernel, double* dst, const uint2 proc_dim, const uint32_t Hker,
-    const uint Wsrc, const uint Wdst, decx::utils::_thr_1D* t1D)
+    const uint Wsrc, const uint Wdst, decx::utils::Thr1D* t1D)
 {
     const float* tmp_src_ptr = src;
     double* tmp_dst_ptr = dst;
@@ -396,7 +396,7 @@ void decx::vis::_gaussian_V_uint8_caller(const float* src, const float* kernel, 
     size_t frag_dst = (size_t)f_mgr.frag_len * (size_t)Wdst;
 
     for (int i = 0; i < t1D->total_thread - 1; ++i) {
-        t1D->_async_thread[i] = decx::cpu::register_task_default(decx::vis::CPUK::_gaussian_V_uint8_fp32,
+        t1D->_async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(decx::vis::CPUK::_gaussian_V_uint8_fp32,
             tmp_src_ptr, kernel, tmp_dst_ptr,
             Hker, Wsrc, Wdst, make_uint2(proc_dim.x, f_mgr.frag_len));
 
@@ -404,7 +404,7 @@ void decx::vis::_gaussian_V_uint8_caller(const float* src, const float* kernel, 
         tmp_dst_ptr += frag_dst;
     }
     const uint32_t _L = f_mgr.is_left ? f_mgr.frag_left_over : f_mgr.frag_len;
-    t1D->_async_thread[t1D->total_thread - 1] = decx::cpu::register_task_default(decx::vis::CPUK::_gaussian_V_uint8_fp32,
+    t1D->_async_thread[t1D->total_thread - 1] = decx::cpu::RegisterTaskLoadBalanced(decx::vis::CPUK::_gaussian_V_uint8_fp32,
         tmp_src_ptr, kernel, tmp_dst_ptr,
         Hker, Wsrc, Wdst, make_uint2(proc_dim.x, _L));
 

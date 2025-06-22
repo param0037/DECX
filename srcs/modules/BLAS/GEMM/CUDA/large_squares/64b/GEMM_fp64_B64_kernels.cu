@@ -75,7 +75,7 @@ cu_GEMM_fp64_kernel_16_64_64(const double* __restrict A,   const double* __restr
     const uint32_t loc_tid_Ay = loc_tid_1d / _loc_LDG_Ax;
     const uint32_t tid_Ay = loc_tid_Ay + blockIdx.y * 64;
 
-    const uint32_t W_v2 = decx::utils::fast_uint_ceil2<uint32_t>(proc_dims_v1.x);
+    const uint32_t W_v2 = decx::utils::ifdiv2_ceil<uint32_t>(proc_dims_v1.x);
 
     __shared__ double _frag_A[64][16 + 1];
     __shared__ double2 _frag_B[16][64 / 2];
@@ -95,7 +95,7 @@ cu_GEMM_fp64_kernel_16_64_64(const double* __restrict A,   const double* __restr
         _accu[k]._vf = decx::utils::vec4_set1_fp32(0);
     }
 
-    for (uint32_t i = 0; i < decx::utils::ceil<uint32_t>(_L_v1, 16); ++i)
+    for (uint32_t i = 0; i < decx::utils::idiv_ceil<uint32_t>(_L_v1, 16); ++i)
     {
         // Load from A
         if (_Lloc_A < _L_v1){
@@ -147,7 +147,7 @@ cu_GEMM_fp64_kernel_16_64_64(const double* __restrict A,   const double* __restr
     // Store the results to dst.
     const uint64_t dex_dst = tidx * 2 + tidy * pitchdst_v1 * 8;
 
-    if (tidx < decx::utils::fast_uint_ceil2<uint32_t>(proc_dims_v1.x))
+    if (tidx < decx::utils::ifdiv2_ceil<uint32_t>(proc_dims_v1.x))
     {
 #pragma unroll
         for (uint32_t k = 0; k < 8; ++k) {
@@ -181,7 +181,7 @@ cu_GEMM_fp64_F_kernel_16_64_64(const double* __restrict A,   const double* __res
     const uint32_t loc_tid_Ay = loc_tid_1d / _loc_LDG_Ax;
     const uint32_t tid_Ay = loc_tid_Ay + blockIdx.y * 64;
 
-    const uint32_t W_v2 = decx::utils::fast_uint_ceil2<uint32_t>(proc_dims_v1.x);
+    const uint32_t W_v2 = decx::utils::ifdiv2_ceil<uint32_t>(proc_dims_v1.x);
 
     __shared__ double _frag_A[64][16 + 1];
     __shared__ double2 _frag_B[16][64 / 2];
@@ -201,7 +201,7 @@ cu_GEMM_fp64_F_kernel_16_64_64(const double* __restrict A,   const double* __res
         _accu[k]._vf = decx::utils::vec4_set1_fp32(0);
     }
 
-    for (uint32_t i = 0; i < decx::utils::ceil<uint32_t>(_L_v1, 16); ++i)
+    for (uint32_t i = 0; i < decx::utils::idiv_ceil<uint32_t>(_L_v1, 16); ++i)
     {
         // Load from A
         if (_Lloc_A < _L_v1){
@@ -253,7 +253,7 @@ cu_GEMM_fp64_F_kernel_16_64_64(const double* __restrict A,   const double* __res
     // Store the results to dst.
     const uint64_t dex_dst = tidx * 2 + tidy * pitchdst_v1 * 8;
 
-    if (tidx < decx::utils::fast_uint_ceil2<uint32_t>(proc_dims_v1.x))
+    if (tidx < decx::utils::ifdiv2_ceil<uint32_t>(proc_dims_v1.x))
     {
 #pragma unroll
         for (uint32_t k = 0; k < 8; ++k) 

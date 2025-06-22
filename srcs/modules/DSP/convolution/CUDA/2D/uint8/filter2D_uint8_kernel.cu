@@ -86,14 +86,14 @@ decx::dsp::GPUK::cu_filter2D_NB_u8_Kfp32_fp32(const double* __restrict src,
 
     uint64_t dex_src = tidx + tidy * (uint64_t)pitchsrc_v8;
 
-    const uint2 _ldg_bound_v8 = make_uint2(decx::utils::ceil<uint32_t>(conv_area.x + kernel_dims.x - 1, 8),
+    const uint2 _ldg_bound_v8 = make_uint2(decx::utils::idiv_ceil<uint32_t>(conv_area.x + kernel_dims.x - 1, 8),
         conv_area.y + kernel_dims.y - 1);
 
     constexpr uint32_t _ext_w_v8 = _ext_w / 8;
     constexpr uint32_t _row_cover_x_v8 = _CU_FILTER2D_FP32_BLOCK_X_ * 8 / 8;
     __shared__ double _row[_CU_FILTER2D_FP32_BLOCK_Y_][_row_cover_x_v8 + _ext_w_v8 + 1];
 
-    const uint32_t _k_loop_w_v8 = decx::utils::ceil<uint32_t>(kernel_dims.x - 1, 8);
+    const uint32_t _k_loop_w_v8 = decx::utils::idiv_ceil<uint32_t>(kernel_dims.x - 1, 8);
     //const uint32_t _k_loop_w_L = (kernel_dims.x - 1) % 8 ? (kernel_dims.x - 1) % 8 : 8;
     decx::utils::_cuda_vec64 _recv[2];
     _recv[0]._vf2 = decx::utils::vec2_set1_fp32(0);
@@ -158,7 +158,7 @@ decx::dsp::GPUK::cu_filter2D_NB_u8_Kfp32_fp32(const double* __restrict src,
     }
 
     uint64_t dex_dst = tidx + tidy * (uint64_t)pitchdst_v8;
-    if (tidx < decx::utils::ceil<uint32_t>(conv_area.x, 8) && tidy < conv_area.y) {
+    if (tidx < decx::utils::idiv_ceil<uint32_t>(conv_area.x, 8) && tidy < conv_area.y) {
         dst[dex_dst * 2] = _accu[0]._vf;
         dst[dex_dst * 2 + 1] = _accu[1]._vf;
     }
@@ -180,15 +180,15 @@ decx::dsp::GPUK::cu_filter2D_NB_u8_Kfp32_u8(const double* __restrict src,
 
     uint64_t dex_src = tidx + tidy * (uint64_t)pitchsrc_v8;
 
-    const uint2 _ldg_bound_v8 = make_uint2(decx::utils::ceil<uint32_t>(conv_area.x + kernel_dims.x - 1, 8),
+    const uint2 _ldg_bound_v8 = make_uint2(decx::utils::idiv_ceil<uint32_t>(conv_area.x + kernel_dims.x - 1, 8),
         conv_area.y + kernel_dims.y - 1);
 
     constexpr uint32_t _ext_w_v8 = _ext_w / 8;
     constexpr uint32_t _row_cover_x_v8 = _CU_FILTER2D_FP32_BLOCK_X_ * 8 / 8;
     __shared__ double _row[_CU_FILTER2D_FP32_BLOCK_Y_][_row_cover_x_v8 + _ext_w_v8 + 1];
 
-    const uint32_t _k_loop_w_v8 = decx::utils::ceil<uint32_t>(kernel_dims.x - 1, 8);
-    const uint32_t _k_loop_w_L = (kernel_dims.x - 1) % 8 ? (kernel_dims.x - 1) % 8 : 8;
+    const uint32_t _k_loop_w_v8 = decx::utils::idiv_ceil<uint32_t>(kernel_dims.x - 1, 8);
+    // const uint32_t _k_loop_w_L = (kernel_dims.x - 1) % 8 ? (kernel_dims.x - 1) % 8 : 8;
     decx::utils::_cuda_vec64 _recv[2];
     _recv[0]._vf2 = decx::utils::vec2_set1_fp32(0);
     _recv[1]._vf2 = decx::utils::vec2_set1_fp32(0);
@@ -252,7 +252,7 @@ decx::dsp::GPUK::cu_filter2D_NB_u8_Kfp32_u8(const double* __restrict src,
     }
 
     uint64_t dex_dst = tidx + tidy * (uint64_t)pitchdst_v8;
-    if (tidx < decx::utils::ceil<uint32_t>(conv_area.x, 8) && tidy < conv_area.y) 
+    if (tidx < decx::utils::idiv_ceil<uint32_t>(conv_area.x, 8) && tidy < conv_area.y) 
     {
         _recv[0]._v_uint8[0] = __float2int_rn(_accu[0]._vf.x);
         _recv[0]._v_uint8[1] = __float2int_rn(_accu[0]._vf.y);
@@ -279,7 +279,7 @@ decx::dsp::GPUK::cu_filter2D_BC_u8_Kfp32_fp32(const double* __restrict src,
     const uint32_t tidx = threadIdx.x + blockIdx.x * blockDim.x;
     const uint32_t tidy = threadIdx.y + blockIdx.y * blockDim.y;
 
-    const uint32_t _ldg_bound_x = decx::utils::ceil<uint32_t>(conv_area.x + kernel_dims.x - 1, 8);
+    const uint32_t _ldg_bound_x = decx::utils::idiv_ceil<uint32_t>(conv_area.x + kernel_dims.x - 1, 8);
     const uint32_t _KH_half = (kernel_dims.y >> 1);
     int64_t dex_src = tidx + tidy * (int64_t)pitchsrc_v8 - _KH_half * pitchsrc_v8;
 
@@ -287,8 +287,8 @@ decx::dsp::GPUK::cu_filter2D_BC_u8_Kfp32_fp32(const double* __restrict src,
     constexpr uint32_t _row_cover_x_v8 = _CU_FILTER2D_FP32_BLOCK_X_ * 8 / 8;
     __shared__ double _row[_CU_FILTER2D_FP32_BLOCK_Y_][_row_cover_x_v8 + _ext_w_v8 + 1];
 
-    const uint32_t _k_loop_w_v8 = decx::utils::ceil<uint32_t>(kernel_dims.x - 1, 8);
-    const uint32_t _k_loop_w_L = (kernel_dims.x - 1) % 8 ? (kernel_dims.x - 1) % 8 : 8;
+    const uint32_t _k_loop_w_v8 = decx::utils::idiv_ceil<uint32_t>(kernel_dims.x - 1, 8);
+    // const uint32_t _k_loop_w_L = (kernel_dims.x - 1) % 8 ? (kernel_dims.x - 1) % 8 : 8;
     decx::utils::_cuda_vec64 _recv[2];
     _recv[0]._vf2 = decx::utils::vec2_set1_fp32(0);
     _recv[1]._vf2 = decx::utils::vec2_set1_fp32(0);
@@ -353,7 +353,7 @@ decx::dsp::GPUK::cu_filter2D_BC_u8_Kfp32_fp32(const double* __restrict src,
     }
 
     uint64_t dex_dst = tidx + tidy * (uint64_t)pitchdst_v8;
-    if (tidx < decx::utils::ceil<uint32_t>(conv_area.x, 8) && tidy < conv_area.y) {
+    if (tidx < decx::utils::idiv_ceil<uint32_t>(conv_area.x, 8) && tidy < conv_area.y) {
         dst[dex_dst * 2] = _accu[0]._vf;
         dst[dex_dst * 2 + 1] = _accu[1]._vf;
     }
@@ -372,7 +372,7 @@ decx::dsp::GPUK::cu_filter2D_BC_u8_Kfp32_u8(const double* __restrict src,
     const uint32_t tidx = threadIdx.x + blockIdx.x * blockDim.x;
     const uint32_t tidy = threadIdx.y + blockIdx.y * blockDim.y;
 
-    const uint32_t _ldg_bound_x = decx::utils::ceil<uint32_t>(conv_area.x + kernel_dims.x - 1, 8);
+    const uint32_t _ldg_bound_x = decx::utils::idiv_ceil<uint32_t>(conv_area.x + kernel_dims.x - 1, 8);
     const uint32_t _KH_half = (kernel_dims.y >> 1);
     int64_t dex_src = tidx + tidy * (int64_t)pitchsrc_v8 - _KH_half * pitchsrc_v8;
 
@@ -380,8 +380,8 @@ decx::dsp::GPUK::cu_filter2D_BC_u8_Kfp32_u8(const double* __restrict src,
     constexpr uint32_t _row_cover_x_v8 = _CU_FILTER2D_FP32_BLOCK_X_ * 8 / 8;
     __shared__ double _row[_CU_FILTER2D_FP32_BLOCK_Y_][_row_cover_x_v8 + _ext_w_v8 + 1];
 
-    const uint32_t _k_loop_w_v8 = decx::utils::ceil<uint32_t>(kernel_dims.x - 1, 8);
-    const uint32_t _k_loop_w_L = (kernel_dims.x - 1) % 8 ? (kernel_dims.x - 1) % 8 : 8;
+    const uint32_t _k_loop_w_v8 = decx::utils::idiv_ceil<uint32_t>(kernel_dims.x - 1, 8);
+    // const uint32_t _k_loop_w_L = (kernel_dims.x - 1) % 8 ? (kernel_dims.x - 1) % 8 : 8;
     decx::utils::_cuda_vec64 _recv[2];
     _recv[0]._vf2 = decx::utils::vec2_set1_fp32(0);
     _recv[1]._vf2 = decx::utils::vec2_set1_fp32(0);
@@ -448,7 +448,7 @@ decx::dsp::GPUK::cu_filter2D_BC_u8_Kfp32_u8(const double* __restrict src,
     }
 
     uint64_t dex_dst = tidx + tidy * (uint64_t)pitchdst_v8;
-    if (tidx < decx::utils::ceil<uint32_t>(conv_area.x, 8) && tidy < conv_area.y) 
+    if (tidx < decx::utils::idiv_ceil<uint32_t>(conv_area.x, 8) && tidy < conv_area.y) 
     {
         _recv[0]._v_uint8[0] = __float2int_rn(_accu[0]._vf.x);
         _recv[0]._v_uint8[1] = __float2int_rn(_accu[0]._vf.y);

@@ -91,7 +91,7 @@ GEMM_cplxf_dp_kernel_strassen1x2(const double* __restrict A_line,   const double
 {
     uint32_t B_dex = 0;
     decx::utils::simd::xmm256_reg _accu[2];
-    const uint32_t _L_v2 = decx::utils::fast_uint_ceil2<uint32_t>(_linear);
+    const uint32_t _L_v2 = decx::utils::ifdiv2_ceil<uint32_t>(_linear);
 
     if (!_first) {
         _accu[0]._vd = _mm256_load_pd(dst);                 _accu[1]._vd = _mm256_load_pd(dst + 4);
@@ -168,7 +168,7 @@ GEMM_cplxf_dp_kernel_strassen2x1(const double* __restrict A_line,       const do
 {
     uint32_t B_dex = 0;
     decx::utils::simd::xmm128_reg _accu[4];
-    const uint32_t _L_v2 = decx::utils::fast_uint_ceil2<uint32_t>(_linear);
+    const uint32_t _L_v2 = decx::utils::ifdiv2_ceil<uint32_t>(_linear);
 
     if (!_first) {
         _accu[0]._vd = _mm_load_pd(dst);                 _accu[1]._vd = _mm_load_pd(dst + 2);
@@ -267,7 +267,7 @@ GEMM_cplxf_dp_kernel_strassen1x1(const double* __restrict A_line,       const do
 {
     uint32_t B_dex = 0;
     decx::utils::simd::xmm128_reg _accu[2];
-    const uint32_t _L_v2 = decx::utils::fast_uint_ceil2<uint32_t>(_linear);
+    const uint32_t _L_v2 = decx::utils::ifdiv2_ceil<uint32_t>(_linear);
 
     if (!_first) {
         _accu[0]._vd = _mm_load_pd(dst);                 _accu[1]._vd = _mm_load_pd(dst + 2);
@@ -342,7 +342,7 @@ GEMM_cplxf_dp_kernel_strassen2x2(const double* __restrict A_line,       const do
 {
     uint32_t B_dex = 0;
     decx::utils::simd::xmm256_reg _accu[4];
-    const uint32_t _L_v2 = decx::utils::fast_uint_ceil2<uint32_t>(_linear);
+    const uint32_t _L_v2 = decx::utils::ifdiv2_ceil<uint32_t>(_linear);
 
     if (!_first) {
         _accu[0]._vd = _mm256_load_pd(dst);                 _accu[1]._vd = _mm256_load_pd(dst + 4);

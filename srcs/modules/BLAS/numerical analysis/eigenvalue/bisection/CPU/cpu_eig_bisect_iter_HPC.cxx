@@ -50,13 +50,13 @@ void decx::blas::cpu_eig_bisect_count_interval<_data_type>::set_count_num(const 
 {
     if (this->_total != proc_len) {
         this->_total = proc_len;
-        this->_total_v = decx::utils::ceil<uint64_t>(this->_total, this->_alignment);
+        this->_total_v = decx::utils::idiv_ceil<uint64_t>(this->_total, this->_alignment);
 
         if (this->_total / this->_concurrency > this->_min_thread_proc){
             decx::utils::frag_manager_gen_Nx(&this->_fmgr, this->_total, this->_concurrency, this->_alignment);
         }
         else{
-            const uint32_t real_conc = decx::utils::ceil<uint64_t>(this->_total, this->_min_thread_proc);
+            const uint32_t real_conc = decx::utils::idiv_ceil<uint64_t>(this->_total, this->_min_thread_proc);
             decx::utils::frag_manager_gen_Nx(&this->_fmgr, this->_total, real_conc, this->_alignment);
         }
     }
@@ -66,19 +66,21 @@ template void decx::blas::cpu_eig_bisect_count_interval<float>::set_count_num(co
 
 
 template <>
-void decx::blas::cpu_eig_bisect_count_interval<float>::count_intervals(uint32_t* p_num, decx::utils::_thread_arrange_1D* t1D)
+void decx::blas::cpu_eig_bisect_count_interval<float>::count_intervals(uint32_t* p_num, decx::utils::ThreadArrange1D* t1D)
 {
-    const uint32_t frag_len = this->_fmgr.get_frag_len();
+    const uint32_t frag_len = this->_fmgr.GetFragLen();
 
     this->caller(update_intrv,
         t1D,
+        decx::cpu::ThreadDispatchMethod_e::Dispatch_ByID,
+        EW_SLOT_ID_MONOTONIC(0),
         decx::TArg_still<decx::blas::cpu_eig_bisect_count_interval<float>*>    (this),
         decx::TArg_var<const T_interval*>  ([&](const int32_t i){return this->_p_interval + i * frag_len;}),
         decx::TArg_var<T_interval*>  ([&](const int32_t i){return this->_intrv_buf.GetRawPtr() + i * frag_len * 2;}),
         decx::TArg_var<const float*>  ([&](const int32_t i){return this->_p_midps + i * frag_len;}),
         decx::TArg_var<float*>        ([&](const int32_t i){return this->_mid_arr_buf.GetRawPtr() + i * frag_len * 2;}),
         decx::TArg_still<uint32_t>    (this->_N),
-        decx::TArg_var<uint32_t>      ([&](const int32_t i){return this->get_fmgr()->get_frag_len_by_id(i);}),
+        decx::TArg_var<uint32_t>      ([&](const int32_t i){return this->get_fmgr()->GetFragLenById(i);}),
         decx::TArg_var<uint32_t*>      ([&](const int32_t i){return this->_count_buffer.GetRawPtr() + i;})
     );
 
@@ -120,7 +122,7 @@ update_intrv(decx::blas::cpu_eig_bisect_count_interval<float>* _fake_this,
 {
     int32_t _next_valid_num = 0;
 
-    for (int32_t i = 0; i < decx::utils::ceil<uint32_t>(proc_len, 8); ++i)
+    for (int32_t i = 0; i < decx::utils::idiv_ceil<uint32_t>(proc_len, 8); ++i)
     {
         decx::utils::simd::xmm256_reg _count_mid;
         _count_mid._vi = decx::blas::CPUK::count_v8_eigv_fp32(
@@ -179,7 +181,7 @@ init(const _data_type*  p_diag,         const _data_type* p_off_diag,
     rval |= this->_interval_stack.Allocate(this->_max_interval_num * sizeof(decx::blas::eig_bisect_interval<_data_type>), PAGABLE, handle);
     
     // Allocate the count buffer
-    const uint32_t max_mid_count_num = decx::utils::align<uint32_t>(this->_max_interval_num - 1, 8);
+    const uint32_t max_mid_count_num = decx::utils::ialign_up<uint32_t>(this->_max_interval_num - 1, 8);
     rval |= this->_mid_points.Reallocate(this->_max_interval_num * sizeof(_data_type), handle, true, true);
 
     auto* p_1st_interval = this->_interval_stack.GetRawPtr();
@@ -202,7 +204,7 @@ template void decx::blas::cpu_eig_bisect_iter_HPC<float>::init(const float*, con
 template <>
 void decx::blas::cpu_eig_bisect_iter_HPC<float>::iter(const float* p_diag, const float* p_off_diag, const uint32_t N)
 {
-    decx::utils::_thr_1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::Thr1D t1D(decx::cpu::_get_permitted_concurrency());
 
     auto* p_1st_interval = this->_interval_stack.GetRawPtr();
     

@@ -110,7 +110,7 @@ void decx::dsp::_cpl32_extract_caller(const de::CPf* src, float* dst, const uint
         decx::utils::frag_manager f_mgr;
         decx::utils::frag_manager_gen(&f_mgr, _proc_dims.y, conc_thr);
 
-        decx::utils::_thread_arrange_1D t1D(conc_thr);
+        decx::utils::ThreadArrange1D t1D(conc_thr);
 
         const double* loc_src = (double*)src;
         float* loc_dst = dst;
@@ -120,7 +120,7 @@ void decx::dsp::_cpl32_extract_caller(const de::CPf* src, float* dst, const uint
         const uint64_t frag_dst = Wdst * f_mgr.frag_len;
 
         for (int i = 0; i < conc_thr - 1; ++i) {
-            t1D._async_thread[i] = decx::cpu::register_task_default(
+            t1D._async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(
                 kernel, loc_src, loc_dst, _frag_proc_dims, Wsrc, Wdst);
 
             loc_src += frag_src;
@@ -128,7 +128,7 @@ void decx::dsp::_cpl32_extract_caller(const de::CPf* src, float* dst, const uint
         }
         const size_t L_proc = f_mgr.is_left ? f_mgr.frag_left_over : f_mgr.frag_len;
         _frag_proc_dims.y = L_proc;
-        t1D._async_thread[conc_thr - 1] = decx::cpu::register_task_default(
+        t1D._async_thread[conc_thr - 1] = decx::cpu::RegisterTaskLoadBalanced(
             kernel, loc_src, loc_dst, _frag_proc_dims, Wsrc, Wdst);
 
         t1D.__sync_all_threads();

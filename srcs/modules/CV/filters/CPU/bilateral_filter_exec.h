@@ -111,7 +111,7 @@ namespace decx
 
         void _bilateral_uint8_caller(const double* src, const float* _exp_chart_dist, const float* _exp_chart_diff, double* dst,
             const uint2 proc_dim, const uint2 ker_dims, const uint Wsrc, const uint Wdst, const ushort reg_WL,
-            decx::utils::_thr_1D* t1D, decx::utils::frag_manager* f_mgr, const uint _loop);
+            decx::utils::Thr1D* t1D, decx::utils::frag_manager* f_mgr, const uint _loop);
 
 
         _THREAD_FUNCTION_ void
@@ -122,7 +122,7 @@ namespace decx
 
         void _bilateral_uchar4_caller(const float* src, const float* _exp_chart_dist, const float* _exp_chart_diff, float* dst,
             const uint2 proc_dim, const uint2 ker_dims, const uint Wsrc, const uint Wdst, const ushort reg_WL,
-            decx::utils::_thr_1D* t1D, decx::utils::frag_manager* f_mgr, const uint _loop);
+            decx::utils::Thr1D* t1D, decx::utils::frag_manager* f_mgr, const uint _loop);
     }
 }
 

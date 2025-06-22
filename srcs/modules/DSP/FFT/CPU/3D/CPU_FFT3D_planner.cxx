@@ -75,7 +75,7 @@ template void decx::dsp::fft::cpu_FFT3D_planner<double>::plan_transpose_configs<
 
 template <typename _data_type>
 template <typename _type_out>
-_CRSR_ void decx::dsp::fft::cpu_FFT3D_planner<_data_type>::plan(decx::utils::_thread_arrange_1D* t1D, 
+_CRSR_ void decx::dsp::fft::cpu_FFT3D_planner<_data_type>::plan(decx::utils::ThreadArrange1D* t1D, 
                                                               const decx::_tensor_layout* src_layout, 
                                                               const decx::_tensor_layout* dst_layout, 
                                                               de::DH* handle)
@@ -104,16 +104,16 @@ _CRSR_ void decx::dsp::fft::cpu_FFT3D_planner<_data_type>::plan(decx::utils::_th
     this->_FFT_W._FFT_info.plan(t1D);
     this->_FFT_H._FFT_info.plan(t1D);
 
-    this->_aligned_proc_dims.x = decx::utils::align<uint32_t>(this->_signal_dims.x, _proc_alignment);
-    this->_aligned_proc_dims.y = decx::utils::align<uint32_t>(this->_signal_dims.y, _proc_alignment);
-    //this->_aligned_proc_dims.z = decx::utils::align<uint32_t>(this->_signal_dims.z, dst_layout->_single_element_size == 1 ? 8 : 4);
-    this->_aligned_proc_dims.z = decx::utils::align<uint32_t>(this->_signal_dims.z, 
+    this->_aligned_proc_dims.x = decx::utils::ialign_up<uint32_t>(this->_signal_dims.x, _proc_alignment);
+    this->_aligned_proc_dims.y = decx::utils::ialign_up<uint32_t>(this->_signal_dims.y, _proc_alignment);
+    //this->_aligned_proc_dims.z = decx::utils::ialign_up<uint32_t>(this->_signal_dims.z, dst_layout->_single_element_size == 1 ? 8 : 4);
+    this->_aligned_proc_dims.z = decx::utils::ialign_up<uint32_t>(this->_signal_dims.z, 
                                                               sizeof(_type_out) == 1 ? 8 : _proc_alignment);
 
     uint32_t _FFTD_lane_num_effective, _conc_FFTD_num;
     // Thread distribution for FFT along depth dimension
     _FFTD_lane_num_effective = this->_signal_dims.y * this->_signal_dims.z;
-    _conc_FFTD_num = min(decx::utils::ceil<uint32_t>(_FFTD_lane_num_effective, _proc_alignment), this->_concurrency);
+    _conc_FFTD_num = min(decx::utils::idiv_ceil<uint32_t>(_FFTD_lane_num_effective, _proc_alignment), this->_concurrency);
     decx::utils::frag_manager_gen_Nx(&this->_FFT_D._f_mgr, _FFTD_lane_num_effective, _conc_FFTD_num, _proc_alignment);
     this->_FFT_D._FFT_zip_info_LDG.set_attributes(src_layout->wpitch, this->_signal_dims.y);
     this->_FFT_D._FFT_zip_info_STG.set_attributes(this->_signal_dims.y, this->_signal_dims.y);
@@ -122,7 +122,7 @@ _CRSR_ void decx::dsp::fft::cpu_FFT3D_planner<_data_type>::plan(decx::utils::_th
 
     // Thread distribution for FFT along width dimension
     _FFTD_lane_num_effective = this->_signal_dims.x * this->_signal_dims.z;
-    _conc_FFTD_num = min(decx::utils::ceil<uint32_t>(_FFTD_lane_num_effective, _proc_alignment), this->_concurrency);
+    _conc_FFTD_num = min(decx::utils::idiv_ceil<uint32_t>(_FFTD_lane_num_effective, _proc_alignment), this->_concurrency);
     decx::utils::frag_manager_gen_Nx(&this->_FFT_W._f_mgr, _FFTD_lane_num_effective, _conc_FFTD_num, _proc_alignment);
     this->_FFT_W._FFT_zip_info_LDG.set_attributes(this->_signal_dims.x, this->_signal_dims.x);
     this->_FFT_W._FFT_zip_info_STG.set_attributes(this->_signal_dims.x, this->_signal_dims.x);
@@ -131,7 +131,7 @@ _CRSR_ void decx::dsp::fft::cpu_FFT3D_planner<_data_type>::plan(decx::utils::_th
 
     // Thread distribution for FFT along height dimension
     _FFTD_lane_num_effective = this->_signal_dims.x * this->_signal_dims.y;
-    _conc_FFTD_num = min(decx::utils::ceil<uint32_t>(_FFTD_lane_num_effective, _proc_alignment), this->_concurrency);
+    _conc_FFTD_num = min(decx::utils::idiv_ceil<uint32_t>(_FFTD_lane_num_effective, _proc_alignment), this->_concurrency);
     decx::utils::frag_manager_gen_Nx(&this->_FFT_H._f_mgr, _FFTD_lane_num_effective, _conc_FFTD_num, _proc_alignment);
     this->_FFT_H._FFT_zip_info_LDG.set_attributes(this->_FFT_D._pitchdst, this->_signal_dims.x);
     this->_FFT_H._FFT_zip_info_STG.set_attributes(dst_layout->dpitch, this->_signal_dims.x, dst_layout->wpitch, this->_signal_dims.y);
@@ -143,23 +143,23 @@ _CRSR_ void decx::dsp::fft::cpu_FFT3D_planner<_data_type>::plan(decx::utils::_th
     this->template plan_transpose_configs<_type_out>(handle);
 }
 
-template void decx::dsp::fft::cpu_FFT3D_planner<float>::plan<de::CPf>(decx::utils::_thread_arrange_1D*,
+template void decx::dsp::fft::cpu_FFT3D_planner<float>::plan<de::CPf>(decx::utils::ThreadArrange1D*,
     const decx::_tensor_layout*, const decx::_tensor_layout*, de::DH*);
 
-template void decx::dsp::fft::cpu_FFT3D_planner<float>::plan<float>(decx::utils::_thread_arrange_1D*,
+template void decx::dsp::fft::cpu_FFT3D_planner<float>::plan<float>(decx::utils::ThreadArrange1D*,
     const decx::_tensor_layout*, const decx::_tensor_layout*, de::DH*);
 
-template void decx::dsp::fft::cpu_FFT3D_planner<float>::plan<uint8_t>(decx::utils::_thread_arrange_1D*,
+template void decx::dsp::fft::cpu_FFT3D_planner<float>::plan<uint8_t>(decx::utils::ThreadArrange1D*,
     const decx::_tensor_layout*, const decx::_tensor_layout*, de::DH*);
 
 
-template void decx::dsp::fft::cpu_FFT3D_planner<double>::plan<de::CPd>(decx::utils::_thread_arrange_1D*,
+template void decx::dsp::fft::cpu_FFT3D_planner<double>::plan<de::CPd>(decx::utils::ThreadArrange1D*,
     const decx::_tensor_layout*, const decx::_tensor_layout*, de::DH*);
 
-template void decx::dsp::fft::cpu_FFT3D_planner<double>::plan<double>(decx::utils::_thread_arrange_1D*,
+template void decx::dsp::fft::cpu_FFT3D_planner<double>::plan<double>(decx::utils::ThreadArrange1D*,
     const decx::_tensor_layout*, const decx::_tensor_layout*, de::DH*);
 
-template void decx::dsp::fft::cpu_FFT3D_planner<double>::plan<uint8_t>(decx::utils::_thread_arrange_1D*,
+template void decx::dsp::fft::cpu_FFT3D_planner<double>::plan<uint8_t>(decx::utils::ThreadArrange1D*,
     const decx::_tensor_layout*, const decx::_tensor_layout*, de::DH*);
 
 
@@ -181,7 +181,7 @@ void _CRSR_ decx::dsp::fft::cpu_FFT3D_planner<_data_type>::allocate_buffers(de::
     rval |= this->_tmp2.Allocate(_buffer_size * sizeof(_data_type) * 2, PAGABLE, handle);
 
     const uint32_t _concurrency = decx::cpu::_get_permitted_concurrency();
-    //const uint32_t _tile_frag_pitch = decx::utils::align<uint32_t>(max(max(this->_signal_dims.x, this->_signal_dims.y), this->_signal_dims.z), 4);
+    //const uint32_t _tile_frag_pitch = decx::utils::ialign_up<uint32_t>(max(max(this->_signal_dims.x, this->_signal_dims.y), this->_signal_dims.z), 4);
     const uint32_t _tile_frag_pitch = max(max(this->_signal_dims.x, this->_signal_dims.y), this->_signal_dims.z);
 
     this->_tiles.define_capacity(_concurrency);

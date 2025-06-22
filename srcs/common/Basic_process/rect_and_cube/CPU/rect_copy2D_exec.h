@@ -121,19 +121,16 @@ static void decx::_cpy2D_anybit_caller(_T_ele* src, _T_ele* dst, const uint32_t 
     decx::utils::frag_manager f_mgr;
     decx::utils::frag_manager_gen(&f_mgr, cpy_area.y, conc_thr);
 
-    decx::utils::_thread_arrange_1D t1D(conc_thr);
+    decx::utils::ThreadArrange1D t1D(conc_thr);
     
     _T_ele* tmp_src = src, * tmp_dst = dst;
-    for (int i = 0; i < conc_thr - 1; ++i) {
-        t1D._async_thread[i] = decx::cpu::register_task_default(decx::_cpy2D_plane<_T_ele>,
-            tmp_src, tmp_dst, Wsrc, Wdst, make_uint2(cpy_area.x, f_mgr.frag_len));
+    for (int i = 0; i < conc_thr; ++i) {
+        t1D._async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(decx::_cpy2D_plane<_T_ele>,
+            tmp_src, tmp_dst, Wsrc, Wdst, make_uint2(cpy_area.x, f_mgr.GetFragLenByID(i)));
 
         tmp_src += (uint64_t)Wsrc * (uint64_t)f_mgr.frag_len;
         tmp_dst += (uint64_t)Wdst * (uint64_t)f_mgr.frag_len;
     }
-    const uint32_t _L = f_mgr.is_left ? f_mgr.frag_left_over : f_mgr.frag_len;
-    t1D._async_thread[conc_thr - 1] = decx::cpu::register_task_default(decx::_cpy2D_plane<_T_ele>,
-        tmp_src, tmp_dst, Wsrc, Wdst, make_uint2(cpy_area.x, _L));
 
     for (int i = 0; i < conc_thr; ++i) {
         t1D._async_thread[i].get();

@@ -171,11 +171,11 @@ void cu_MatArr_channel_sum4_1D(float4* src, float4* dst, const size_t len, const
 static
 void decx::MatArray_channel_sum_4_f(_MatrixArray<float>* src, _Matrix<float>* dst, de::DH* handle)
 {
-    const int Wsrc = decx::utils::ceil<int>(src->width, 4)/* * 4*/;        // align to 4
+    const int Wsrc = decx::utils::idiv_ceil<int>(src->width, 4)/* * 4*/;        // align to 4
     const int Hsrc = src->height;
     const int Mat_num = src->ArrayNumber;
 
-    const int Hfrag = (int)(decx::utils::ceil<size_t>(fragment_4 / 4, Mat_num * Wsrc));
+    const int Hfrag = (int)(decx::utils::idiv_ceil<size_t>(fragment_4 / 4, Mat_num * Wsrc));
     const size_t frag_plane = Hfrag * Wsrc;
     const size_t true_frag = frag_plane * Mat_num;
 
@@ -210,13 +210,13 @@ void decx::MatArray_channel_sum_4_f(_MatrixArray<float>* src, _Matrix<float>* ds
 
     checkCudaErrors(cudaDeviceSynchronize());
     
-    const int __iter = decx::utils::ceil<int>(Hsrc, Hfrag);
+    const int __iter = decx::utils::idiv_ceil<int>(Hsrc, Hfrag);
     size_t plane_shift_src = frag_plane,
         plane_shift_dst = 0;
 
     const dim3 block(_BLOCK_DEFAULT_, _BLOCK_DEFAULT_);
-    const dim3 grid(decx::utils::ceil<int>(Hfrag, _BLOCK_DEFAULT_),
-        decx::utils::ceil<int>(Wsrc, _BLOCK_DEFAULT_));
+    const dim3 grid(decx::utils::idiv_ceil<int>(Hfrag, _BLOCK_DEFAULT_),
+        decx::utils::idiv_ceil<int>(Wsrc, _BLOCK_DEFAULT_));
 
     for (int i = 0; i < __iter; ++i) {
         H_cpy_dst = (Hsrc - i * Hfrag) > 0 ? Hfrag : (Hsrc - i * Hfrag);
@@ -273,7 +273,7 @@ static void decx::dev_MatArray_channel_sum_4_f(_GPU_MatrixArray<float>* src, _GP
     
     const size_t _len_eq = src->_plane / 4;
     
-    cu_MatArr_channel_sum4_1D << <decx::utils::ceil<size_t>(_len_eq, decx::cuP.prop.maxThreadsPerBlock), decx::cuP.prop.maxThreadsPerBlock >> > (
+    cu_MatArr_channel_sum4_1D << <decx::utils::idiv_ceil<size_t>(_len_eq, decx::cuP.prop.maxThreadsPerBlock), decx::cuP.prop.maxThreadsPerBlock >> > (
         reinterpret_cast<float4*>(src->MatArr.ptr), reinterpret_cast<float4*>(dst->Mat.ptr), _len_eq, src->ArrayNumber);
 }
 #endif

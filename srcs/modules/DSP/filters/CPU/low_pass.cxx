@@ -200,7 +200,7 @@ de::dsp::cpu::LowPass1D_Ideal(de::Vector& src, de::Vector& dst, const size_t cut
     
     const size_t proc_len = _src->_length / 4;
     if (proc_len > decx::cpu::_get_permitted_concurrency()) {
-        decx::utils::_thread_arrange_1D t1D(decx::cpu::_get_permitted_concurrency());
+        decx::utils::ThreadArrange1D t1D(decx::cpu::_get_permitted_concurrency());
         decx::utils::frag_manager f_mgr;
         decx::utils::frag_manager_gen(&f_mgr, proc_len, t1D.total_thread);
 
@@ -209,7 +209,7 @@ de::dsp::cpu::LowPass1D_Ideal(de::Vector& src, de::Vector& dst, const size_t cut
         size_t _global_ptr_offset = 0;
 
         for (int i = 0; i < t1D.total_thread - 1; ++i) {
-            t1D._async_thread[i] = decx::cpu::register_task_default(
+            t1D._async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(
                 decx::dsp::CPUK::ideal_LP1D_cpl32_ST,
                 _loc_src, _loc_dst, cutoff_frequency,
                 f_mgr.frag_num, _src->length, _global_ptr_offset);
@@ -219,7 +219,7 @@ de::dsp::cpu::LowPass1D_Ideal(de::Vector& src, de::Vector& dst, const size_t cut
             _loc_dst += _global_ptr_offset;
         }
         const size_t _L = f_mgr.is_left ? f_mgr.frag_left_over : f_mgr.frag_len;
-        t1D._async_thread[t1D.total_thread - 1] = decx::cpu::register_task_default(
+        t1D._async_thread[t1D.total_thread - 1] = decx::cpu::RegisterTaskLoadBalanced(
             decx::dsp::CPUK::ideal_LP1D_cpl32_ST,
             _loc_src, _loc_dst, cutoff_frequency,
             _L, _src->length, _global_ptr_offset);
@@ -252,7 +252,7 @@ de::dsp::cpu::LowPass2D_Ideal(de::Matrix& src, de::Matrix& dst, const de::Point2
     decx::_Matrix* _dst = dynamic_cast<decx::_Matrix*>(&dst);
 
     const uint pitch = _src->Pitch() / 4;
-    decx::utils::_thread_arrange_1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::ThreadArrange1D t1D(decx::cpu::_get_permitted_concurrency());
     decx::utils::frag_manager f_mgr;
     decx::utils::frag_manager_gen(&f_mgr, _src->Height(), t1D.total_thread);
 
@@ -266,7 +266,7 @@ de::dsp::cpu::LowPass2D_Ideal(de::Matrix& src, de::Matrix& dst, const de::Point2
         double* _loc_dst = (double*)_dst->Mat;
 
         for (int i = 0; i < t1D.total_thread - 1; ++i) {
-            t1D._async_thread[i] = decx::cpu::register_task_default( decx::dsp::CPUK::ideal_LP2D_cpl32_ST,
+            t1D._async_thread[i] = decx::cpu::RegisterTaskLoadBalanced( decx::dsp::CPUK::ideal_LP2D_cpl32_ST,
                 _loc_src, _loc_dst,
                 _proc_dims, real_bound,
                 make_uint2(cutoff_frequency.x, cutoff_frequency.y),
@@ -277,7 +277,7 @@ de::dsp::cpu::LowPass2D_Ideal(de::Matrix& src, de::Matrix& dst, const de::Point2
             _loc_dst += frag_size;
         }
         _proc_dims.y = f_mgr.is_left ? f_mgr.frag_left_over : f_mgr.frag_len;
-        t1D._async_thread[t1D.total_thread - 1] = decx::cpu::register_task_default( decx::dsp::CPUK::ideal_LP2D_cpl32_ST,
+        t1D._async_thread[t1D.total_thread - 1] = decx::cpu::RegisterTaskLoadBalanced( decx::dsp::CPUK::ideal_LP2D_cpl32_ST,
             _loc_src, _loc_dst,
             _proc_dims, real_bound,
             make_uint2(cutoff_frequency.x, cutoff_frequency.y),
@@ -312,7 +312,7 @@ de::dsp::cpu::ButterWorth_LP2D(de::Matrix& src, de::Matrix& dst, const float cut
     decx::_Matrix* _dst = dynamic_cast<decx::_Matrix*>(&dst);
 
     const uint pitch = _src->Pitch() / 4;
-    decx::utils::_thread_arrange_1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::ThreadArrange1D t1D(decx::cpu::_get_permitted_concurrency());
     decx::utils::frag_manager f_mgr;
     decx::utils::frag_manager_gen(&f_mgr, _src->Height(), t1D.total_thread);
 
@@ -326,7 +326,7 @@ de::dsp::cpu::ButterWorth_LP2D(de::Matrix& src, de::Matrix& dst, const float cut
         double* _loc_dst = (double*)_dst->Mat;
 
         for (int i = 0; i < t1D.total_thread - 1; ++i) {
-            t1D._async_thread[i] = decx::cpu::register_task_default( decx::dsp::CPUK::ButterWorth_Window2D_cpl32,
+            t1D._async_thread[i] = decx::cpu::RegisterTaskLoadBalanced( decx::dsp::CPUK::ButterWorth_Window2D_cpl32,
                 _loc_src, _loc_dst, order, cutoff_freq, _proc_dims, real_bound,
                 f_mgr.frag_len * i, pitch);
 
@@ -334,7 +334,7 @@ de::dsp::cpu::ButterWorth_LP2D(de::Matrix& src, de::Matrix& dst, const float cut
             _loc_dst += frag_size;
         }
         _proc_dims.y = f_mgr.is_left ? f_mgr.frag_left_over : f_mgr.frag_len;
-        t1D._async_thread[t1D.total_thread - 1] = decx::cpu::register_task_default( decx::dsp::CPUK::ButterWorth_Window2D_cpl32,
+        t1D._async_thread[t1D.total_thread - 1] = decx::cpu::RegisterTaskLoadBalanced( decx::dsp::CPUK::ButterWorth_Window2D_cpl32,
             _loc_src, _loc_dst, order, cutoff_freq, _proc_dims, real_bound,
             f_mgr.frag_len * (t1D.total_thread - 1), pitch);
 

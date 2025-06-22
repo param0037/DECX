@@ -58,7 +58,7 @@ class decx::cpu_Generator2D : public decx::cpu_ElementWise2D_planner
 {
 public:
     template <typename FuncType, typename _data_type, class ...Args>
-    void fill_caller(FuncType&& f, _data_type* buf, const uint32_t pitch_v1, decx::utils::_thr_1D *t1D, Args&& ...additional)
+    void fill_caller(FuncType&& f, _data_type* buf, const uint32_t pitch_v1, decx::utils::Thr1D *t1D, Args&& ...additional)
     {
         _data_type* loc_ptr = buf;
 
@@ -72,7 +72,7 @@ public:
                     make_uint2(j < this->_thread_dist.x - 1 ? this->_fmgr_WH[0].frag_len : this->_fmgr_WH[0].last_frag_len,
                             i < this->_thread_dist.y - 1 ? this->_fmgr_WH[1].frag_len : this->_fmgr_WH[1].last_frag_len);
 
-                t1D->_async_thread[_thr_cnt] = decx::cpu::register_task_default(f, loc_ptr, proc_dims, pitch_v1, additional...);
+                t1D->_async_thread[_thr_cnt] = decx::cpu::RegisterTaskByID(f, _thr_cnt, loc_ptr, proc_dims, pitch_v1, additional...);
                 
                 loc_ptr += this->_fmgr_WH[0].frag_len;
                 ++_thr_cnt;

@@ -118,7 +118,7 @@ transpose_block_1b(const uint64_t* __restrict   src,
 
     const uint32_t _Hv8 = proc_dims_v1.y / 8;
     const uint32_t _LH = proc_dims_v1.y % 8;
-    const uint32_t _Wv8 = decx::utils::ceil<uint32_t>(proc_dims_v1.x, 8);
+    const uint32_t _Wv8 = decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.x, 8);
     const uint32_t _LW = proc_dims_v1.x % 8;
 
     for (uint32_t i = 0; i < _Hv8; ++i) 
@@ -211,7 +211,7 @@ transpose_1b_caller(const uint64_t* src,
                     uint64_t* dst, 
                     const uint32_t pitchsrc_v8, 
                     const uint32_t pitchdst_v8, 
-                    decx::utils::_thread_arrange_1D* t1D) const
+                    decx::utils::ThreadArrange1D* t1D) const
 {
     const uint64_t* src_loc = src;
     uint64_t* dst_loc = dst;
@@ -223,7 +223,7 @@ transpose_1b_caller(const uint64_t* src,
 
         for (uint32_t j = 0; j < this->_thread_dist2D.x; ++j)
         {
-            t1D->_async_thread[i * this->_thread_dist2D.x + j] = decx::cpu::register_task_default(
+            t1D->_async_thread[i * this->_thread_dist2D.x + j] = decx::cpu::RegisterTaskLoadBalanced(
                 decx::blas::CPUK::transpose_1b_kernel, src_loc, dst_loc,
                 &this->_blocking_configs[this->_thread_dist2D.x * i + j], pitchsrc_v8, pitchdst_v8);
 

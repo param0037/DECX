@@ -56,7 +56,7 @@ void decx::_GPU_Vector::_attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, si
     }
     this->length = length;
     this->_init = (_type != de::_DATA_TYPES_FLAGS_::_VOID_);
-    this->_length = decx::utils::ceil<size_t>(length, (size_t)_alignment) * (size_t)_alignment;
+    this->_length = decx::utils::idiv_ceil<size_t>(length, (size_t)_alignment) * (size_t)_alignment;
     this->total_bytes = this->_length * this->_single_element_size;
 }
 

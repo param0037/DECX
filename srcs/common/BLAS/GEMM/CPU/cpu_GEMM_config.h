@@ -106,10 +106,10 @@ public:
         const decx::_matrix_layout* layout_C = NULL);
 
     template <bool _cplxf>
-    void Run(decx::_Matrix* A, decx::_Matrix* B, decx::_Matrix* dst, decx::utils::_thread_arrange_2D* t2D);
+    void Run(decx::_Matrix* A, decx::_Matrix* B, decx::_Matrix* dst, decx::utils::ThreadArrange2D* t2D);
 
     template <bool _cplxf>
-    void Run(decx::_Matrix* A, decx::_Matrix* B, decx::_Matrix* C, decx::_Matrix* dst, decx::utils::_thread_arrange_2D* t2D);
+    void Run(decx::_Matrix* A, decx::_Matrix* B, decx::_Matrix* C, decx::_Matrix* dst, decx::utils::ThreadArrange2D* t2D);
 
 
     uint2 GetThreadDist_B() const;

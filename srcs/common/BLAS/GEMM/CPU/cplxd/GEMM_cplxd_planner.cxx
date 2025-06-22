@@ -41,7 +41,7 @@ namespace blas
     template <bool _ABC> static
         void GEMM_cplxd_caller(const de::CPd* A, const de::CPd* B, de::CPd* dst, const decx::_matrix_layout* layout_A,
             const decx::_matrix_layout* layout_dst, const uint32_t Llen, const decx::utils::frag_manager* f_mgrH,
-            const decx::blas::GEMM_blocking_config* _thread_configs, decx::utils::_thr_2D* t1D, const de::CPd* C = NULL);
+            const decx::blas::GEMM_blocking_config* _thread_configs, decx::utils::Thr2D* t1D, const de::CPd* C = NULL);
 }
 }
 
@@ -51,7 +51,7 @@ decx::blas::GEMM_cplxd_caller(const de::CPd* A,                            const
                               de::CPd* dst,                                const decx::_matrix_layout* layout_A,
                               const decx::_matrix_layout* layout_dst,      const uint32_t Llen,
                               const decx::utils::frag_manager* f_mgrWH,    const decx::blas::GEMM_blocking_config* _thread_configs, 
-                              decx::utils::_thr_2D* t2D,                   const de::CPd* C)
+                              decx::utils::Thr2D* t2D,                   const de::CPd* C)
 {
     const de::CPd* A_loc = A;
     const de::CPd* B_loc = B;
@@ -68,7 +68,7 @@ decx::blas::GEMM_cplxd_caller(const de::CPd* A,                            const
         {
             const auto* conf_ptr = &_thread_configs[t2D->thread_w * i + j];
 
-            t2D->_async_thread[t2D->thread_w * i + j] = decx::cpu::register_task_default(
+            t2D->_async_thread[t2D->thread_w * i + j] = decx::cpu::RegisterTaskLoadBalanced(
                 decx::blas::CPUK::GEMM_cplxd_kernel<_ABC>, A_loc, B_loc, dst_loc, conf_ptr,
                 layout_A->pitch, conf_ptr->_fmgr_L.total, layout_dst->pitch, C_loc);
 
@@ -79,7 +79,7 @@ decx::blas::GEMM_cplxd_caller(const de::CPd* A,                            const
 
         const auto* conf_ptr = &_thread_configs[t2D->thread_w * (i + 1) - 1];
 
-        t2D->_async_thread[t2D->thread_w * (i + 1) - 1] = decx::cpu::register_task_default(
+        t2D->_async_thread[t2D->thread_w * (i + 1) - 1] = decx::cpu::RegisterTaskLoadBalanced(
             decx::blas::CPUK::GEMM_cplxd_kernel<_ABC>, A_loc, B_loc, dst_loc, conf_ptr,
             layout_A->pitch, conf_ptr->_fmgr_L.total, layout_dst->pitch, C_loc);
 
@@ -91,17 +91,17 @@ decx::blas::GEMM_cplxd_caller(const de::CPd* A,                            const
 
 template void decx::blas::GEMM_cplxd_caller<true>(const de::CPd*, const de::CPd*, de::CPd*, const decx::_matrix_layout*,
     const decx::_matrix_layout*, const uint32_t, const decx::utils::frag_manager*,
-    const decx::blas::GEMM_blocking_config*, decx::utils::_thr_2D*, const de::CPd*);
+    const decx::blas::GEMM_blocking_config*, decx::utils::Thr2D*, const de::CPd*);
 
 template void decx::blas::GEMM_cplxd_caller<false>(const de::CPd*, const de::CPd*, de::CPd*, const decx::_matrix_layout*,
     const decx::_matrix_layout*, const uint32_t, const decx::utils::frag_manager*,
-    const decx::blas::GEMM_blocking_config*, decx::utils::_thr_2D*, const de::CPd*);
+    const decx::blas::GEMM_blocking_config*, decx::utils::Thr2D*, const de::CPd*);
 
 
 
 template <> template <>
 void decx::blas::cpu_GEMM_planner<de::CPd>::Run<true>(decx::_Matrix* A, decx::_Matrix* B, decx::_Matrix* dst,
-    decx::utils::_thread_arrange_2D* t2D)
+    decx::utils::ThreadArrange2D* t2D)
 {
     // Arrange matrix B
     decx::blas::matrix_B_arrange_cplxd(B->Mat.GetRawPtr<de::CPd>(), 
@@ -122,7 +122,7 @@ void decx::blas::cpu_GEMM_planner<de::CPd>::Run<true>(decx::_Matrix* A, decx::_M
 
 template <> template <>
 void decx::blas::cpu_GEMM_planner<de::CPd>::Run<true>(decx::_Matrix* A, decx::_Matrix* B, 
-    decx::_Matrix* C, decx::_Matrix* dst, decx::utils::_thread_arrange_2D* t2D)
+    decx::_Matrix* C, decx::_Matrix* dst, decx::utils::ThreadArrange2D* t2D)
 {
     // Arrange matrix B
     decx::blas::matrix_B_arrange_cplxd(B->Mat.GetRawPtr<de::CPd>(),

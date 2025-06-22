@@ -88,7 +88,7 @@ public:
     _CRSR_ const decx::dsp::fft::FKI1D* get_kernel_info_ptr(const uint32_t _id) const;
 
 
-    _CRSR_ void plan(decx::utils::_thr_1D* t1D);
+    _CRSR_ void plan(decx::utils::Thr1D* t1D);
 
 
     uint32_t get_signal_len() const;
@@ -160,14 +160,14 @@ public:
 
 
     template <typename _type_in>
-    void Forward(decx::_Vector* src, decx::_Vector* dst, decx::utils::_thread_arrange_1D* t1D) const;
+    void Forward(decx::_Vector* src, decx::_Vector* dst, decx::utils::ThreadArrange1D* t1D) const;
 
 
     template <typename _type_out>
-    void Inverse(decx::_Vector* src, decx::_Vector* dst, decx::utils::_thread_arrange_1D* t1D) const;
+    void Inverse(decx::_Vector* src, decx::_Vector* dst, decx::utils::ThreadArrange1D* t1D) const;
 
 
-    void plan(const uint64_t signal_len, decx::utils::_thr_1D* t1D, de::DH *handle);
+    void plan(const uint64_t signal_len, decx::utils::Thr1D* t1D, de::DH *handle);
 
 
     const decx::dsp::fft::FKT1D* get_tile_ptr(const uint32_t _thread_id) const;

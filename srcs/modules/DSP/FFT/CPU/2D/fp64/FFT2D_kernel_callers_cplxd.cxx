@@ -126,7 +126,7 @@ decx::dsp::fft::_FFT2D_H_entire_rows_cplxd(const _type_in* __restrict           
                                            const decx::dsp::fft::cpu_FFT2D_planner<double>*  planner,
                                            const uint32_t                                   pitch_src,
                                            const uint32_t                                   pitch_dst,
-                                           decx::utils::_thread_arrange_1D*                 t1D,
+                                           decx::utils::ThreadArrange1D*                 t1D,
                                            bool _is_FFTH)
 {
     const decx::utils::frag_manager* f_mgr = _is_FFTH ? planner->get_thread_dist_H() : planner->get_thread_dist_V();
@@ -136,7 +136,7 @@ decx::dsp::fft::_FFT2D_H_entire_rows_cplxd(const _type_in* __restrict           
     de::CPd* _dst_loc_ptr = dst;
 
     for (uint32_t i = 0; i < f_mgr->frag_num - 1; ++i) {
-        t1D->_async_thread[i] = decx::cpu::register_task_default(decx::dsp::fft::CPUK::_FFT2D_smaller_2rows_cplxd<_type_in, _conj>,
+        t1D->_async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(decx::dsp::fft::CPUK::_FFT2D_smaller_2rows_cplxd<_type_in, _conj>,
             _src_loc_ptr,               _dst_loc_ptr, 
             planner->get_tile_ptr(i),
             pitch_src,                  pitch_dst, 
@@ -146,7 +146,7 @@ decx::dsp::fft::_FFT2D_H_entire_rows_cplxd(const _type_in* __restrict           
         _dst_loc_ptr += f_mgr->frag_len * pitch_dst;
     }
 
-    t1D->_async_thread[f_mgr->frag_num - 1] = decx::cpu::register_task_default(decx::dsp::fft::CPUK::_FFT2D_smaller_2rows_cplxd<_type_in, _conj>,
+    t1D->_async_thread[f_mgr->frag_num - 1] = decx::cpu::RegisterTaskLoadBalanced(decx::dsp::fft::CPUK::_FFT2D_smaller_2rows_cplxd<_type_in, _conj>,
             _src_loc_ptr,               _dst_loc_ptr, 
             planner->get_tile_ptr(f_mgr->frag_num - 1),
             pitch_src,                  pitch_dst, 
@@ -156,22 +156,22 @@ decx::dsp::fft::_FFT2D_H_entire_rows_cplxd(const _type_in* __restrict           
 }
 
 template void decx::dsp::fft::_FFT2D_H_entire_rows_cplxd<double, true>(const double* __restrict, de::CPd* __restrict, const decx::dsp::fft::cpu_FFT2D_planner<double>*,
-    const uint32_t, const uint32_t, decx::utils::_thread_arrange_1D*, const bool);
+    const uint32_t, const uint32_t, decx::utils::ThreadArrange1D*, const bool);
 
 template void decx::dsp::fft::_FFT2D_H_entire_rows_cplxd<de::CPd, true>(const de::CPd* __restrict, de::CPd* __restrict, const decx::dsp::fft::cpu_FFT2D_planner<double>*,
-    const uint32_t, const uint32_t, decx::utils::_thread_arrange_1D*, const bool);
+    const uint32_t, const uint32_t, decx::utils::ThreadArrange1D*, const bool);
 
 template void decx::dsp::fft::_FFT2D_H_entire_rows_cplxd<double, false>(const double* __restrict, de::CPd* __restrict, const decx::dsp::fft::cpu_FFT2D_planner<double>*,
-    const uint32_t, const uint32_t, decx::utils::_thread_arrange_1D*, const bool);
+    const uint32_t, const uint32_t, decx::utils::ThreadArrange1D*, const bool);
 
 template void decx::dsp::fft::_FFT2D_H_entire_rows_cplxd<de::CPd, false>(const de::CPd* __restrict, de::CPd* __restrict, const decx::dsp::fft::cpu_FFT2D_planner<double>*,
-    const uint32_t, const uint32_t, decx::utils::_thread_arrange_1D*, const bool);
+    const uint32_t, const uint32_t, decx::utils::ThreadArrange1D*, const bool);
 
 template void decx::dsp::fft::_FFT2D_H_entire_rows_cplxd<uint8_t, true>(const uint8_t* __restrict, de::CPd* __restrict, const decx::dsp::fft::cpu_FFT2D_planner<double>*,
-    const uint32_t, const uint32_t, decx::utils::_thread_arrange_1D*, const bool);
+    const uint32_t, const uint32_t, decx::utils::ThreadArrange1D*, const bool);
 
 template void decx::dsp::fft::_FFT2D_H_entire_rows_cplxd<uint8_t, false>(const uint8_t* __restrict, de::CPd* __restrict, const decx::dsp::fft::cpu_FFT2D_planner<double>*,
-    const uint32_t, const uint32_t, decx::utils::_thread_arrange_1D*, const bool);
+    const uint32_t, const uint32_t, decx::utils::ThreadArrange1D*, const bool);
 
 
 
@@ -225,7 +225,7 @@ decx::dsp::fft::CPUK::_IFFT2D_smaller_2rows_cplxd(const de::CPd* __restrict     
         else if constexpr (std::is_same_v<_type_out, uint8_t>) {
             decx::dsp::fft::CPUK::
                 store_entire_row_transpose_cplxd_u8(&_double_buffer,  (int16_t*)_dst_loc_ptr, 
-                                                    _tiles,           decx::utils::ceil<uint32_t>(_FFT_info->get_signal_len(), 2), 
+                                                    _tiles,           decx::utils::idiv_ceil<uint32_t>(_FFT_info->get_signal_len(), 2), 
                                                     _pitch_dst,       i == (_f_mgr_H.frag_num - 1) ? _L : 2);
         }
         else {
@@ -255,7 +255,7 @@ decx::dsp::fft::_IFFT2D_H_entire_rows_cplxd(const de::CPd* __restrict           
                                             const decx::dsp::fft::cpu_FFT2D_planner<double>*  planner,
                                             const uint32_t                                   pitch_src,
                                             const uint32_t                                   pitch_dst,
-                                            decx::utils::_thread_arrange_1D*                 t1D,
+                                            decx::utils::ThreadArrange1D*                 t1D,
                                             bool _is_FFTH)
 {
     const decx::utils::frag_manager* f_mgr = _is_FFTH ? planner->get_thread_dist_H() : planner->get_thread_dist_V();
@@ -265,7 +265,7 @@ decx::dsp::fft::_IFFT2D_H_entire_rows_cplxd(const de::CPd* __restrict           
     _type_out* _dst_loc_ptr = dst;
 
     for (uint32_t i = 0; i < f_mgr->frag_num - 1; ++i) {
-        t1D->_async_thread[i] = decx::cpu::register_task_default(decx::dsp::fft::CPUK::_IFFT2D_smaller_2rows_cplxd<_type_out>,
+        t1D->_async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(decx::dsp::fft::CPUK::_IFFT2D_smaller_2rows_cplxd<_type_out>,
             _src_loc_ptr,               _dst_loc_ptr, 
             planner->get_tile_ptr(i),
             pitch_src,                  pitch_dst, 
@@ -275,7 +275,7 @@ decx::dsp::fft::_IFFT2D_H_entire_rows_cplxd(const de::CPd* __restrict           
         _dst_loc_ptr += f_mgr->frag_len * pitch_dst;
     }
     const uint32_t _L = f_mgr->is_left ? f_mgr->frag_left_over : f_mgr->frag_len;
-    t1D->_async_thread[f_mgr->frag_num - 1] = decx::cpu::register_task_default(decx::dsp::fft::CPUK::_IFFT2D_smaller_2rows_cplxd<_type_out>,
+    t1D->_async_thread[f_mgr->frag_num - 1] = decx::cpu::RegisterTaskLoadBalanced(decx::dsp::fft::CPUK::_IFFT2D_smaller_2rows_cplxd<_type_out>,
             _src_loc_ptr,               _dst_loc_ptr, 
             planner->get_tile_ptr(f_mgr->frag_num - 1),
             pitch_src,                  pitch_dst, 
@@ -285,10 +285,10 @@ decx::dsp::fft::_IFFT2D_H_entire_rows_cplxd(const de::CPd* __restrict           
 }
 
 template void decx::dsp::fft::_IFFT2D_H_entire_rows_cplxd<double>(const de::CPd* __restrict, double* __restrict, const decx::dsp::fft::cpu_FFT2D_planner<double>*,
-    const uint32_t, const uint32_t, decx::utils::_thread_arrange_1D*, bool);
+    const uint32_t, const uint32_t, decx::utils::ThreadArrange1D*, bool);
 
 template void decx::dsp::fft::_IFFT2D_H_entire_rows_cplxd<de::CPd>(const de::CPd* __restrict, de::CPd* __restrict, const decx::dsp::fft::cpu_FFT2D_planner<double>*,
-    const uint32_t, const uint32_t, decx::utils::_thread_arrange_1D*, bool);
+    const uint32_t, const uint32_t, decx::utils::ThreadArrange1D*, bool);
 
 template void decx::dsp::fft::_IFFT2D_H_entire_rows_cplxd<uint8_t>(const de::CPd* __restrict, uint8_t* __restrict, const decx::dsp::fft::cpu_FFT2D_planner<double>*,
-    const uint32_t, const uint32_t, decx::utils::_thread_arrange_1D*, bool);
+    const uint32_t, const uint32_t, decx::utils::ThreadArrange1D*, bool);

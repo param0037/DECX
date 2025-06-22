@@ -278,23 +278,19 @@ void decx::bp::_maximum_1D_caller(T_kernel _cmp_kernel, const T_data* src, const
     // the number of available concurrent threads
     const uint conc_thr = decx::cpu::_get_permitted_concurrency();
     decx::utils::frag_manager fr_mgr;
-    decx::utils::frag_manager_gen(&fr_mgr, decx::utils::ceil<uint64_t>(len, _align), conc_thr);
+    decx::utils::frag_manager_gen(&fr_mgr, decx::utils::idiv_ceil<uint64_t>(len, _align), conc_thr);
 
-    decx::utils::_thread_arrange_1D t1D(conc_thr);
+    decx::utils::ThreadArrange1D t1D(conc_thr);
     T_data* res_arr = new T_data[conc_thr];
     const uint8_t _occupied_length = (len % _align);
 
     const T_data* tmp_src = src;
     const uint64_t proc_len = fr_mgr.frag_len * _align;
-    for (int i = 0; i < conc_thr - 1; ++i) {
-        t1D._async_thread[i] = decx::cpu::register_task_default(
-            _cmp_kernel, tmp_src, proc_len / _align, res_arr + i, _occupied_length);
+    for (int i = 0; i < conc_thr; ++i) {
+        t1D._async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(
+            _cmp_kernel, tmp_src, fr_mgr.GetFragLenById(i), res_arr + i, _occupied_length);
         tmp_src += proc_len;
     }
-    const uint64_t _L = fr_mgr.is_left ? fr_mgr.frag_left_over : fr_mgr.frag_len;
-    t1D._async_thread[conc_thr - 1] = decx::cpu::register_task_default(
-        _cmp_kernel, tmp_src, _L, res_arr + conc_thr - 1, _occupied_length);
-
     t1D.__sync_all_threads();
 
     T_data res;
@@ -313,22 +309,19 @@ void decx::bp::_minimum_1D_caller(T_kernel _cmp_kernel, const T_data* src, const
     // the number of available concurrent threads
     const uint conc_thr = decx::cpu::_get_permitted_concurrency();
     decx::utils::frag_manager fr_mgr;
-    decx::utils::frag_manager_gen(&fr_mgr, decx::utils::ceil<uint64_t>(len, _align), conc_thr);
+    decx::utils::frag_manager_gen(&fr_mgr, decx::utils::idiv_ceil<uint64_t>(len, _align), conc_thr);
 
-    decx::utils::_thread_arrange_1D t1D(conc_thr);
+    decx::utils::ThreadArrange1D t1D(conc_thr);
     T_data* res_arr = new T_data[conc_thr];
     const uint8_t _occupied_length = (len % _align);
 
     const T_data* tmp_src = src;
     const uint64_t proc_len = fr_mgr.frag_len * _align;
-    for (int i = 0; i < conc_thr - 1; ++i) {
-        t1D._async_thread[i] = decx::cpu::register_task_default(
-            _cmp_kernel, tmp_src, proc_len / _align, res_arr + i, _occupied_length);
+    for (int i = 0; i < conc_thr; ++i) {
+        t1D._async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(
+            _cmp_kernel, tmp_src, fr_mgr.GetFragLenById(i), res_arr + i, _occupied_length);
         tmp_src += proc_len;
     }
-    const uint64_t _L = fr_mgr.is_left ? fr_mgr.frag_left_over : fr_mgr.frag_len;
-    t1D._async_thread[conc_thr - 1] = decx::cpu::register_task_default(
-        _cmp_kernel, tmp_src, _L, res_arr + conc_thr - 1, _occupied_length);
 
     t1D.__sync_all_threads();
 
@@ -347,9 +340,9 @@ static void decx::bp::_min_max_1D_caller(T_kernel _cmp_kernel, const T_data* src
     // the number of available concurrent threads
     const uint conc_thr = decx::cpu::_get_permitted_concurrency();
     decx::utils::frag_manager fr_mgr;
-    decx::utils::frag_manager_gen(&fr_mgr, decx::utils::ceil<uint64_t>(len, _align), conc_thr);
+    decx::utils::frag_manager_gen(&fr_mgr, decx::utils::idiv_ceil<uint64_t>(len, _align), conc_thr);
 
-    decx::utils::_thread_arrange_1D t1D(conc_thr);
+    decx::utils::ThreadArrange1D t1D(conc_thr);
     decx::PtrInfo<T_data> vec_min, vec_max;
     int32_t rval = 0;
     rval |= vec_min.Allocate(conc_thr * sizeof(T_data), PAGABLE, de::GetLastError());
@@ -359,15 +352,11 @@ static void decx::bp::_min_max_1D_caller(T_kernel _cmp_kernel, const T_data* src
 
     const T_data* tmp_src = src;
     const uint64_t proc_len = fr_mgr.frag_len * _align;
-    for (int i = 0; i < conc_thr - 1; ++i) {
-        t1D._async_thread[i] = decx::cpu::register_task_default(
-            _cmp_kernel, tmp_src, proc_len / _align, vec_min + i, vec_max + i, _occupied_length);
+    for (int i = 0; i < conc_thr; ++i) {
+        t1D._async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(
+            _cmp_kernel, tmp_src, fr_mgr.GetFragLenById(i), vec_min + i, vec_max + i, _occupied_length);
         tmp_src += proc_len;
     }
-    const uint64_t _L = fr_mgr.is_left ? fr_mgr.frag_left_over : fr_mgr.frag_len;
-    t1D._async_thread[conc_thr - 1] = decx::cpu::register_task_default(
-        _cmp_kernel, tmp_src, _L, vec_min + conc_thr - 1, vec_max + conc_thr - 1, _occupied_length);
-
     t1D.__sync_all_threads();
 
     T_data res;
@@ -395,21 +384,17 @@ void decx::bp::_maximum_2D_caller(T_kernel          _cmp_kernel,
     decx::utils::frag_manager_gen(&fr_mgr, proc_dims.y, conc_thr);
     const uint8_t _occupied_length = (proc_dims.x % _align);
 
-    decx::utils::_thread_arrange_1D t1D(conc_thr);
+    decx::utils::ThreadArrange1D t1D(conc_thr);
     T_data* res_arr = new T_data[conc_thr];
 
     const T_data* tmp_src = src;
     const size_t proc_size = fr_mgr.frag_len * Wsrc;
-    for (int i = 0; i < conc_thr - 1; ++i)
+    for (int i = 0; i < conc_thr; ++i)
     {
-        t1D._async_thread[i] = decx::cpu::register_task_default(
-            _cmp_kernel, tmp_src, make_uint2(decx::utils::ceil<uint32_t>(proc_dims.x, _align), fr_mgr.frag_len), res_arr + i, Wsrc, _occupied_length);
+        t1D._async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(
+            _cmp_kernel, tmp_src, make_uint2(decx::utils::idiv_ceil<uint32_t>(proc_dims.x, _align), fr_mgr.GetFragLenById(i)), res_arr + i, Wsrc, _occupied_length);
         tmp_src += proc_size;
     }
-    const uint32_t _L = fr_mgr.is_left ? fr_mgr.frag_left_over : fr_mgr.frag_len;
-    t1D._async_thread[conc_thr - 1] = decx::cpu::register_task_default(
-        _cmp_kernel, tmp_src, make_uint2(decx::utils::ceil<uint32_t>(proc_dims.x, _align), _L), res_arr + conc_thr - 1, Wsrc, _occupied_length);
-
     t1D.__sync_all_threads();
 
     T_data res;
@@ -432,20 +417,17 @@ void decx::bp::_minimum_2D_caller(T_kernel _cmp_kernel, const T_data* src, const
     decx::utils::frag_manager_gen(&fr_mgr, proc_dims.y, conc_thr);
     const uint8_t _occupied_length = (proc_dims.x % _align);
 
-    decx::utils::_thread_arrange_1D t1D(conc_thr);
+    decx::utils::ThreadArrange1D t1D(conc_thr);
     T_data* res_arr = new T_data[conc_thr];
 
     const T_data* tmp_src = src;
     const size_t proc_size = fr_mgr.frag_len * Wsrc;
-    for (int i = 0; i < conc_thr - 1; ++i)
+    for (int i = 0; i < conc_thr; ++i)
     {
-        t1D._async_thread[i] = decx::cpu::register_task_default(
-            _cmp_kernel, tmp_src, make_uint2(decx::utils::ceil<uint32_t>(proc_dims.x, _align), fr_mgr.frag_len), res_arr + i, Wsrc, _occupied_length);
+        t1D._async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(
+            _cmp_kernel, tmp_src, make_uint2(decx::utils::idiv_ceil<uint32_t>(proc_dims.x, _align), fr_mgr.GetFragLenById(i)), res_arr + i, Wsrc, _occupied_length);
         tmp_src += proc_size;
     }
-    const uint32_t _L = fr_mgr.is_left ? fr_mgr.frag_left_over : fr_mgr.frag_len;
-    t1D._async_thread[conc_thr - 1] = decx::cpu::register_task_default(
-        _cmp_kernel, tmp_src, make_uint2(decx::utils::ceil<uint32_t>(proc_dims.x, _align), _L), res_arr + conc_thr - 1, Wsrc, _occupied_length);
 
     t1D.__sync_all_threads();
 
@@ -469,7 +451,7 @@ void decx::bp::_min_max_2D_caller(T_kernel _cmp_kernel, const T_data* src, const
     decx::utils::frag_manager_gen(&fr_mgr, proc_dims.y, conc_thr);
     const uint8_t _occupied_length = (proc_dims.x % _align);
 
-    decx::utils::_thread_arrange_1D t1D(conc_thr);
+    decx::utils::ThreadArrange1D t1D(conc_thr);
     decx::PtrInfo<T_data> vec_min, vec_max;
     int32_t rval = 0;
     rval |= vec_min.Allocate(conc_thr * sizeof(T_data), PAGABLE, de::GetLastError());
@@ -479,16 +461,11 @@ void decx::bp::_min_max_2D_caller(T_kernel _cmp_kernel, const T_data* src, const
     const size_t proc_size = fr_mgr.frag_len * Wsrc;
     for (int i = 0; i < conc_thr - 1; ++i)
     {
-        t1D._async_thread[i] = decx::cpu::register_task_default(
-            _cmp_kernel, tmp_src, make_uint2(decx::utils::ceil<uint32_t>(proc_dims.x, _align), fr_mgr.frag_len), 
+        t1D._async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(
+            _cmp_kernel, tmp_src, make_uint2(decx::utils::idiv_ceil<uint32_t>(proc_dims.x, _align), fr_mgr.GetFragLenById(i)), 
             vec_min + i, vec_max + i, Wsrc, _occupied_length);
         tmp_src += proc_size;
     }
-    const uint32_t _L = fr_mgr.is_left ? fr_mgr.frag_left_over : fr_mgr.frag_len;
-    t1D._async_thread[conc_thr - 1] = decx::cpu::register_task_default(
-        _cmp_kernel, tmp_src, make_uint2(decx::utils::ceil<uint32_t>(proc_dims.x, _align), _L), 
-        vec_min + conc_thr - 1, vec_max + conc_thr - 1, Wsrc, _occupied_length);
-
     t1D.__sync_all_threads();
 
     T_data res;

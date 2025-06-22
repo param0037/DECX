@@ -60,6 +60,9 @@ namespace blas {
 		_DECX_API_ void GEMM(de::Matrix& A, de::Matrix& B, de::Matrix& C, de::Matrix& dst);
 
 
+		_DECX_API_ void GEMV(de::Matrix& A, de::Vector& B, de::Vector& dst);
+
+
 		_DECX_API_ void Transpose(de::InputMatrix& src, de::OutputMatrix& dst);
 
 	}

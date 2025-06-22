@@ -112,7 +112,7 @@ transpose_block_8b(const double* __restrict   src,
 
     const uint32_t _Hv2 = proc_dims_v1.y / 2;
     const uint32_t _LH = proc_dims_v1.y & 1;
-    const uint32_t _Wv2 = decx::utils::ceil<uint32_t>(proc_dims_v1.x, 2);
+    const uint32_t _Wv2 = decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.x, 2);
     const uint32_t _LW = proc_dims_v1.x & 1;
 
     for (uint32_t i = 0; i < _Hv2; ++i) 
@@ -226,7 +226,7 @@ transpose_8b_caller(const double* src,
                     double* dst, 
                     const uint32_t pitchsrc_v1, 
                     const uint32_t pitchdst_v1, 
-                    decx::utils::_thread_arrange_1D* t1D) const
+                    decx::utils::ThreadArrange1D* t1D) const
 {
     const double* src_loc = src;
     double* dst_loc = dst;
@@ -238,7 +238,7 @@ transpose_8b_caller(const double* src,
 
         for (uint32_t j = 0; j < this->_thread_dist2D.x; ++j) 
         {
-            t1D->_async_thread[i * this->_thread_dist2D.x + j] = decx::cpu::register_task_default(
+            t1D->_async_thread[i * this->_thread_dist2D.x + j] = decx::cpu::RegisterTaskLoadBalanced(
                 decx::blas::CPUK::transpose_8b_kernel, src_loc, dst_loc,
                 &this->_blocking_configs[this->_thread_dist2D.x * i + j], pitchsrc_v1, pitchdst_v1);
 
@@ -256,7 +256,7 @@ void decx::blas::_cpu_transpose_config::
 transpose_8b_MC_caller(const double* src,           double* dst,
                        const uint32_t pitchsrc_v1,  const uint32_t pitchdst_v1, 
                        const uint32_t ch_num,       const uint64_t gch_src_v1, 
-                       const uint64_t gch_dst_v1,   decx::utils::_thread_arrange_1D* t1D) const
+                       const uint64_t gch_dst_v1,   decx::utils::ThreadArrange1D* t1D) const
 {
     const double* src_loc = src;
     double* dst_loc = dst;
@@ -268,7 +268,7 @@ transpose_8b_MC_caller(const double* src,           double* dst,
 
         for (uint32_t j = 0; j < this->_thread_dist2D.x; ++j)
         {
-            t1D->_async_thread[i * this->_thread_dist2D.x + j] = decx::cpu::register_task_default(
+            t1D->_async_thread[i * this->_thread_dist2D.x + j] = decx::cpu::RegisterTaskLoadBalanced(
                 decx::blas::CPUK::transpose_8b_kernel_MC, src_loc, dst_loc,
                 &this->_blocking_configs[this->_thread_dist2D.x * i + j], 
                 pitchsrc_v1, pitchdst_v1, ch_num, gch_src_v1, gch_dst_v1);
@@ -285,7 +285,7 @@ transpose_8b_MC_caller(const double* src,           double* dst,
 void decx::blas::_cpu_transpose_MC_config::
 transpose_8b_caller(const double* src,              double* dst, 
                     const uint32_t pitchsrc_v1,     const uint32_t pitchdst_v1, 
-                    decx::utils::_thread_arrange_1D* t1D) const
+                    decx::utils::ThreadArrange1D* t1D) const
 {
     if (this->_divide_ch) 
     {
@@ -295,7 +295,7 @@ transpose_8b_caller(const double* src,              double* dst,
         double* dst_loc = dst;
         for (uint32_t i = 0; i < _conc - 1; ++i) 
         {
-            t1D->_async_thread[i] = decx::cpu::register_task_default(
+            t1D->_async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(
                 decx::blas::CPUK::transpose_8b_kernel_MC, src_loc, dst_loc,
                 &this->_blocking_conf, pitchsrc_v1, pitchdst_v1, 
                 this->_fmgr_ch.frag_len, this->_ch_gap_src, this->_ch_gap_dst);
@@ -303,7 +303,7 @@ transpose_8b_caller(const double* src,              double* dst,
             src_loc += this->_fmgr_ch.frag_len * this->_ch_gap_src;
             dst_loc += this->_fmgr_ch.frag_len * this->_ch_gap_dst;
         }
-        t1D->_async_thread[_conc - 1] = decx::cpu::register_task_default(
+        t1D->_async_thread[_conc - 1] = decx::cpu::RegisterTaskLoadBalanced(
             decx::blas::CPUK::transpose_8b_kernel_MC, src_loc, dst_loc,
             &this->_blocking_conf, pitchsrc_v1, pitchdst_v1,
             this->_fmgr_ch.last_frag_len, this->_ch_gap_src, this->_ch_gap_dst);

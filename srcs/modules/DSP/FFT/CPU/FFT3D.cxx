@@ -62,7 +62,7 @@ namespace dsp {
 template <typename _type_in>
 static void decx::dsp::fft::FFT3D_caller_cplxf(decx::_Tensor* src, decx::_Tensor* dst, de::DH* handle)
 {
-    decx::utils::_thread_arrange_1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::ThreadArrange1D t1D(decx::cpu::_get_permitted_concurrency());
 
     if (decx::dsp::fft::FFT3D_cplxf32_planner._res_ptr == NULL) {
         decx::dsp::fft::FFT3D_cplxf32_planner.RegisterResource(new decx::dsp::fft::cpu_FFT3D_planner<float>,
@@ -89,7 +89,7 @@ static void decx::dsp::fft::FFT3D_caller_cplxf(decx::_Tensor* src, decx::_Tensor
 template <typename _type_in>
 static void decx::dsp::fft::FFT3D_caller_cplxd(decx::_Tensor* src, decx::_Tensor* dst, de::DH* handle)
 {
-    decx::utils::_thread_arrange_1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::ThreadArrange1D t1D(decx::cpu::_get_permitted_concurrency());
 
     if (decx::dsp::fft::FFT3D_cplxd64_planner._res_ptr == NULL) {
         decx::dsp::fft::FFT3D_cplxd64_planner.RegisterResource(new decx::dsp::fft::cpu_FFT3D_planner<double>,
@@ -116,7 +116,7 @@ static void decx::dsp::fft::FFT3D_caller_cplxd(decx::_Tensor* src, decx::_Tensor
 template <typename _type_out>
 static void decx::dsp::fft::IFFT3D_caller_cplxd(decx::_Tensor* src, decx::_Tensor* dst, de::DH* handle)
 {
-    decx::utils::_thread_arrange_1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::ThreadArrange1D t1D(decx::cpu::_get_permitted_concurrency());
 
     if (decx::dsp::fft::IFFT3D_cplxd64_planner._res_ptr == NULL) {
         decx::dsp::fft::IFFT3D_cplxd64_planner.RegisterResource(new decx::dsp::fft::cpu_FFT3D_planner<double>,
@@ -143,7 +143,7 @@ static void decx::dsp::fft::IFFT3D_caller_cplxd(decx::_Tensor* src, decx::_Tenso
 template <typename _type_out>
 static void decx::dsp::fft::IFFT3D_caller_cplxf(decx::_Tensor* src, decx::_Tensor* dst, de::DH* handle)
 {
-    decx::utils::_thread_arrange_1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::ThreadArrange1D t1D(decx::cpu::_get_permitted_concurrency());
 
     if (decx::dsp::fft::IFFT3D_cplxf32_planner._res_ptr == NULL) {
         decx::dsp::fft::IFFT3D_cplxf32_planner.RegisterResource(new decx::dsp::fft::cpu_FFT3D_planner<float>,

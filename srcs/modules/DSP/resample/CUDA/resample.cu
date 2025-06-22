@@ -63,7 +63,7 @@ void decx::resample2D_caller(const decx::_GPU_Matrix* src, const decx::_GPU_Matr
     auto* planner = decx::cu_VGT2D.get_resource_raw_ptr<decx::cuda_VGT2D_planner>();
     planner->plan<_type_in, _type_out>(interpolate_mode, &src->get_layout(), &dst->get_layout());
     
-    planner->run<_type_in, _type_out>((_type_in*)src->Mat.ptr, (float2*)map->Mat.ptr, (_type_out*)dst->Mat.ptr, map->Pitch(), dst->Pitch(), S);
+    planner->run<_type_in, _type_out>((_type_in*)src->Mat, (float2*)map->Mat, (_type_out*)dst->Mat, map->Pitch(), dst->Pitch(), S);
 
     E->event_record(S);
     E->synchronize();

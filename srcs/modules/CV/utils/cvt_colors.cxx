@@ -441,11 +441,11 @@ void decx::vis::_channel_ops_UC42UC_caller(decx::vis::channel_ops_kernel kernel,
                                             const float* src, float* dst, const int2 dims, 
                                             const uint32_t pitchsrc, const uint32_t pitchdst)
 {
-    decx::utils::_thread_arrange_1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::ThreadArrange1D t1D(decx::cpu::_get_permitted_concurrency());
     decx::utils::frag_manager f_mgr;
     decx::utils::frag_manager_gen(&f_mgr, dims.y, t1D.total_thread);
 
-    int2 sub_dims = make_int2(decx::utils::ceil<uint32_t>(dims.x, 4), f_mgr.frag_len);
+    int2 sub_dims = make_int2(decx::utils::idiv_ceil<uint32_t>(dims.x, 4), f_mgr.frag_len);
 
     uint64_t fragment_src = pitchsrc * (uint64_t)sub_dims.y, 
              fragment_dst = (pitchdst / 4) * (uint64_t)sub_dims.y,
@@ -453,7 +453,7 @@ void decx::vis::_channel_ops_UC42UC_caller(decx::vis::channel_ops_kernel kernel,
              offset_dst = 0;
 
     for (int i = 0; i < t1D.total_thread - 1; ++i) {
-        t1D._async_thread[i] = decx::cpu::register_task_default(kernel, src + offset_src, dst + offset_dst, sub_dims,
+        t1D._async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(kernel, src + offset_src, dst + offset_dst, sub_dims,
             pitchsrc, pitchdst);
         offset_src += fragment_src;
         offset_dst += fragment_dst;
@@ -461,7 +461,7 @@ void decx::vis::_channel_ops_UC42UC_caller(decx::vis::channel_ops_kernel kernel,
 
     sub_dims.y = f_mgr.is_left ? f_mgr.frag_left_over : f_mgr.frag_len;
     t1D._async_thread[decx::cpu::_get_permitted_concurrency() - 1] =
-        decx::cpu::register_task_default(kernel, src + offset_src, dst + offset_dst, sub_dims,
+        decx::cpu::RegisterTaskLoadBalanced(kernel, src + offset_src, dst + offset_dst, sub_dims,
             pitchsrc, pitchdst);
 
     t1D.__sync_all_threads();
@@ -473,11 +473,11 @@ void decx::vis::_channel_ops_UC42UC4_caller(decx::vis::channel_ops_kernel kernel
                                             const float* src, float* dst, const int2 dims, 
                                             const uint32_t pitchsrc, const uint32_t pitchdst)
 {
-    decx::utils::_thread_arrange_1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::ThreadArrange1D t1D(decx::cpu::_get_permitted_concurrency());
     decx::utils::frag_manager f_mgr;
     decx::utils::frag_manager_gen(&f_mgr, dims.y, t1D.total_thread);
 
-    int2 sub_dims = make_int2(decx::utils::ceil<uint32_t>(dims.x, 8), f_mgr.frag_len);
+    int2 sub_dims = make_int2(decx::utils::idiv_ceil<uint32_t>(dims.x, 8), f_mgr.frag_len);
 
     uint64_t fragment_src = pitchsrc * (uint64_t)sub_dims.y, 
              fragment_dst = pitchdst * (uint64_t)sub_dims.y,
@@ -485,7 +485,7 @@ void decx::vis::_channel_ops_UC42UC4_caller(decx::vis::channel_ops_kernel kernel
              offset_dst = 0;
 
     for (int i = 0; i < t1D.total_thread - 1; ++i) {
-        t1D._async_thread[i] = decx::cpu::register_task_default(kernel, src + offset_src, dst + offset_dst, sub_dims,
+        t1D._async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(kernel, src + offset_src, dst + offset_dst, sub_dims,
             pitchsrc, pitchdst);
         offset_src += fragment_src;
         offset_dst += fragment_dst;
@@ -493,7 +493,7 @@ void decx::vis::_channel_ops_UC42UC4_caller(decx::vis::channel_ops_kernel kernel
 
     sub_dims.y = f_mgr.is_left ? f_mgr.frag_left_over : f_mgr.frag_len;
     t1D._async_thread[decx::cpu::_get_permitted_concurrency() - 1] =
-        decx::cpu::register_task_default(kernel, src + offset_src, dst + offset_dst, sub_dims,
+        decx::cpu::RegisterTaskLoadBalanced(kernel, src + offset_src, dst + offset_dst, sub_dims,
             pitchsrc, pitchdst);
 
     t1D.__sync_all_threads();

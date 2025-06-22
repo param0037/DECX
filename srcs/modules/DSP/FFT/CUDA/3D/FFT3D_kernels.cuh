@@ -173,8 +173,8 @@ decx::dsp::fft::FFT3D_1st_C2C_caller_cplxf(const float4* __restrict     src,
                                            const uint32_t               _paral,
                                            decx::cuda_stream*           S)
 {
-    dim3 _grid(decx::utils::ceil<uint32_t>(min(_pitchsrc_v2, _pitchdst_v2), _FFT2D_BLOCK_X_),
-               decx::utils::ceil<uint32_t>((_signal_len / _radix) * _paral, _FFT2D_BLOCK_Y_));
+    dim3 _grid(decx::utils::idiv_ceil<uint32_t>(min(_pitchsrc_v2, _pitchdst_v2), _FFT2D_BLOCK_X_),
+               decx::utils::idiv_ceil<uint32_t>((_signal_len / _radix) * _paral, _FFT2D_BLOCK_Y_));
 
     dim3 _block(_FFT2D_BLOCK_X_, _FFT2D_BLOCK_Y_);
 
@@ -217,8 +217,8 @@ decx::dsp::fft::FFT3D_1st_C2C_caller_cplxd(const double2* __restrict     src,
                                            const uint32_t               _paral,
                                            decx::cuda_stream*           S)
 {
-    dim3 _grid(decx::utils::ceil<uint32_t>(min(_pitchsrc_v1, _pitchdst_v1), _FFT2D_BLOCK_X_),
-               decx::utils::ceil<uint32_t>((_signal_len / _radix) * _paral, _FFT2D_BLOCK_Y_));
+    dim3 _grid(decx::utils::idiv_ceil<uint32_t>(min(_pitchsrc_v1, _pitchdst_v1), _FFT2D_BLOCK_X_),
+               decx::utils::idiv_ceil<uint32_t>((_signal_len / _radix) * _paral, _FFT2D_BLOCK_Y_));
 
     dim3 _block(_FFT2D_BLOCK_X_, _FFT2D_BLOCK_Y_);
 
@@ -260,8 +260,8 @@ decx::dsp::fft::FFT3D_C2C_caller_cplxf(const float4* __restrict src,
                                    const uint32_t _paral, 
                                    decx::cuda_stream* S)
 {
-    dim3 _grid(decx::utils::ceil<uint32_t>(min(_pitchsrc_v2, _pitchdst_v2), _FFT2D_BLOCK_X_),
-        decx::utils::ceil<uint32_t>((_kernel_info->_signal_len / _radix) * _paral, _FFT2D_BLOCK_Y_));
+    dim3 _grid(decx::utils::idiv_ceil<uint32_t>(min(_pitchsrc_v2, _pitchdst_v2), _FFT2D_BLOCK_X_),
+        decx::utils::idiv_ceil<uint32_t>((_kernel_info->_signal_len / _radix) * _paral, _FFT2D_BLOCK_Y_));
     dim3 _block(_FFT2D_BLOCK_X_, _FFT2D_BLOCK_Y_);
 
     switch (_radix)
@@ -303,8 +303,8 @@ decx::dsp::fft::FFT3D_C2C_caller_cplxd(const double2* __restrict src,
                                    const uint32_t _paral, 
                                    decx::cuda_stream* S)
 {
-    dim3 _grid(decx::utils::ceil<uint32_t>(min(_pitchsrc_v1, _pitchdst_v1), _FFT2D_BLOCK_X_),
-        decx::utils::ceil<uint32_t>((_kernel_info->_signal_len / _radix) * _paral, _FFT2D_BLOCK_Y_));
+    dim3 _grid(decx::utils::idiv_ceil<uint32_t>(min(_pitchsrc_v1, _pitchdst_v1), _FFT2D_BLOCK_X_),
+        decx::utils::idiv_ceil<uint32_t>((_kernel_info->_signal_len / _radix) * _paral, _FFT2D_BLOCK_Y_));
     dim3 _block(_FFT2D_BLOCK_X_, _FFT2D_BLOCK_Y_);
 
     switch (_radix)

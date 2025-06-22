@@ -58,14 +58,14 @@ decx::blas::cpu_GEMM_planner<_data_type>::_plan_for_B_arrangement(de::DH* handle
         make_uint2(this->_layout_B->height, this->_layout_B->width));
 
     this->_arranged_B.SetDims(make_uint2(this->_layout_B->height * _alignment_2x,
-        decx::utils::ceil<uint32_t>(this->_layout_B->width, _alignment_2x)));
+        decx::utils::idiv_ceil<uint32_t>(this->_layout_B->width, _alignment_2x)));
     this->_arranged_B.Allocate(PAGABLE, sizeof(_data_type), handle);
 
     this->_thread_config.Allocate(this->_concurrency * sizeof(decx::blas::GEMM_blocking_config), PAGABLE, handle);
 
     // plan for fragment manager for matrix B arrangement
     decx::utils::frag_manager_gen_Nx(this->_fmgr_WH_B, 
-                                     decx::utils::ceil<uint32_t>(this->_layout_B->pitch, _alignment), 
+                                     decx::utils::idiv_ceil<uint32_t>(this->_layout_B->pitch, _alignment), 
                                      this->_thread_dist_B.x, 2);
 
     decx::utils::frag_manager_gen_Nx(this->_fmgr_WH_B + 1, 
@@ -92,7 +92,7 @@ decx::blas::cpu_GEMM_planner<_data_type>::_plan_for_exectutors(const bool _cplxf
 
     // plan for fragment manager for GEMM
     decx::utils::frag_manager_gen_Nx(this->_fmgr_WH_dst, 
-                                     decx::utils::ceil<uint32_t>(this->_proc_dims_v1.x, _alignment), 
+                                     decx::utils::idiv_ceil<uint32_t>(this->_proc_dims_v1.x, _alignment), 
                                      this->_thread_dist_dst.x, 2);
     if (_cplxf) {
         // If is for complex_f32, the height has to be configured by _Nx with N=2 

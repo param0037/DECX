@@ -61,23 +61,19 @@ void decx::vis::VEVID_u8_caller(const double* src,
                                 const float _phase_gain,
                                 const float _original_gain)
 {
-    decx::utils::_thread_arrange_1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::ThreadArrange1D t1D(decx::cpu::_get_permitted_concurrency());
     decx::utils::frag_manager f_mgr;
     decx::utils::frag_manager_gen(&f_mgr, proc_H, t1D.total_thread);
 
     const double* _loc_src = src;
     float* _loc_dst = dst;
-    for (uint32_t i = 0; i < t1D.total_thread - 1; ++i) {
-        t1D._async_thread[i] = decx::cpu::register_task_default(decx::vis::CPUK::_VEVID_u8_kernel,
-            _loc_src, _loc_dst, pitchsrc_v8, pitchdst_v1, f_mgr.frag_len, _phase_gain, _original_gain);
+    for (uint32_t i = 0; i < t1D.total_thread; ++i) {
+        t1D._async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(decx::vis::CPUK::_VEVID_u8_kernel,
+            _loc_src, _loc_dst, pitchsrc_v8, pitchdst_v1, f_mgr.GetFragLenByID(i), _phase_gain, _original_gain);
 
-        _loc_src += pitchsrc_v8 * f_mgr.frag_len;
-        _loc_dst += pitchdst_v1 * f_mgr.frag_len;
+        _loc_src += pitchsrc_v8 * f_mgr.GetFragLen();
+        _loc_dst += pitchdst_v1 * f_mgr.GetFragLen();
     }
-    const uint32_t _L = f_mgr.is_left ? f_mgr.frag_left_over : f_mgr.frag_len;
-    t1D._async_thread[t1D.total_thread - 1] = decx::cpu::register_task_default(decx::vis::CPUK::_VEVID_u8_kernel,
-        _loc_src, _loc_dst, pitchsrc_v8, pitchdst_v1, _L, _phase_gain, _original_gain);
-
     t1D.__sync_all_threads();
 }
 
@@ -90,7 +86,7 @@ _DECX_API_ de::DH de::vis::cpu::VEVID_gray(de::Matrix& src, de::Matrix& dst, con
     decx::_Matrix* _src = dynamic_cast<decx::_Matrix*>(&src);
     decx::_Matrix* _dst = dynamic_cast<decx::_Matrix*>(&dst);
 
-    const uint2 _tmp_dims = make_uint2(decx::utils::align<uint32_t>(_src->Width(), 8), _src->Height());
+    const uint2 _tmp_dims = make_uint2(decx::utils::ialign_up<uint32_t>(_src->Width(), 8), _src->Height());
     decx::PtrInfo<float> _tmp;
     if (decx::alloc::_host_virtual_page_malloc(&_tmp, _tmp_dims.x * _tmp_dims.y * sizeof(float))) {
         decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION, ALLOC_FAIL);

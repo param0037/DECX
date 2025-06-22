@@ -37,7 +37,7 @@
 void 
 decx::dsp::complex_rotate_fp32_caller(const double* src, const float angle, double* dst, const size_t _proc_len)
 {
-    decx::utils::_thread_arrange_1D t1D((uint)decx::cpu::_get_permitted_concurrency());
+    decx::utils::ThreadArrange1D t1D((uint)decx::cpu::_get_permitted_concurrency());
 
     decx::utils::frag_manager f_mgr;
     decx::utils::frag_manager_gen(&f_mgr, _proc_len, t1D.total_thread);
@@ -48,13 +48,13 @@ decx::dsp::complex_rotate_fp32_caller(const double* src, const float angle, doub
     const double* _loc_src = src;
     double* _loc_dst = dst;
     for (int i = 0; i < t1D.total_thread - 1; ++i) {
-        t1D._async_thread[i] = decx::cpu::register_task_default( decx::calc::CPUK::cp_mul_c_fvec4_ST,
+        t1D._async_thread[i] = decx::cpu::RegisterTaskLoadBalanced( decx::calc::CPUK::cp_mul_c_fvec4_ST,
             _loc_src, *((double*)&_rot_factor), _loc_dst, f_mgr.frag_len);
         _loc_src += f_mgr.frag_len;
         _loc_dst += f_mgr.frag_len;
     }
     const size_t _L = f_mgr.is_left ? f_mgr.frag_left_over : f_mgr.frag_len;
-    t1D._async_thread[t1D.total_thread - 1] = decx::cpu::register_task_default( decx::calc::CPUK::cp_mul_c_fvec4_ST,
+    t1D._async_thread[t1D.total_thread - 1] = decx::cpu::RegisterTaskLoadBalanced( decx::calc::CPUK::cp_mul_c_fvec4_ST,
         _loc_src, *((double*)&_rot_factor), _loc_dst, _L);
 
     t1D.__sync_all_threads();

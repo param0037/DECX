@@ -73,7 +73,7 @@ decx::dsp::cpu_Filter2D_planner<_data_type>::plan(const uint32_t concurrency,
 
     constexpr uint32_t _alignment = 32 / sizeof(_data_type);
 
-    const uint32_t conv_dim_W_v = decx::utils::ceil<uint32_t>(this->_conv_dims_v1.x, _alignment);
+    const uint32_t conv_dim_W_v = decx::utils::idiv_ceil<uint32_t>(this->_conv_dims_v1.x, _alignment);
     decx::utils::frag_manager_gen_Nx(&this->_thread_blocking_conf._fmgrH, this->_conv_dims_v1.y, this->_thread_dist.y, _CONV2_BLOCK_H_);
     decx::utils::frag_manager_gen_Nx(&this->_thread_blocking_conf._fmgrW, conv_dim_W_v, this->_thread_dist.x, _CONV2_BLOCK_W_);
 
@@ -83,7 +83,7 @@ decx::dsp::cpu_Filter2D_planner<_data_type>::plan(const uint32_t concurrency,
     if (this->_padding_method != de::extend_label::_EXTEND_NONE_) 
     {
         const uint32_t conv_W = this->_layout_src.width + this->_layout_kernel.width - 1;
-        this->_ext_src.SetDims(decx::utils::align<uint32_t>(conv_W, _alignment), this->_layout_src.height);
+        this->_ext_src.SetDims(decx::utils::ialign_up<uint32_t>(conv_W, _alignment), this->_layout_src.height);
         rval |= this->_ext_src.Allocate(PAGABLE, sizeof(_data_type), handle);
     }
 

@@ -92,7 +92,7 @@ void decx::blas::_cpu_transpose_config::
 config(const uint8_t _element_byte, const uint32_t concurrency, const uint2 src_dims_v1, de::DH* handle)
 {
     const decx::blas::_transpose_profiles_bytes _profile = 
-        decx::blas::_profiles[decx::utils::_GetHighest_abd(_element_byte)];
+        decx::blas::_profiles[decx::utils::i_getMSB_idx_conservative<uint8_t>(_element_byte)];
 
     this->_concurrency = concurrency;
 
@@ -144,14 +144,14 @@ _cpu_transpose_MC_config::config(const uint8_t _element_byte,
     this->_channel_num = ch_num;
 
     const decx::blas::_transpose_profiles_bytes _profile =
-        decx::blas::_profiles[decx::utils::_GetHighest_abd(_element_byte)];
+        decx::blas::_profiles[decx::utils::i_getMSB_idx_conservative<uint8_t>(_element_byte)];
 
     this->_parallel_transp_config._concurrency = concurrency;
     this->_parallel_transp_config._element_byte = _element_byte;
 
     const uint32_t _L1_size = decx::cpu::_get_L1_data_cache_size_per_core();
     // The total size of 2 planes
-    const uint64_t size_2planes = decx::utils::align<uint32_t>(src_dims_v1.x, _profile._alignment) * 
+    const uint64_t size_2planes = decx::utils::ialign_up<uint32_t>(src_dims_v1.x, _profile._alignment) * 
         src_dims_v1.y * 2 * _element_byte;
 
     this->_parallel_transp_config._src_proc_dims_v1 = src_dims_v1;

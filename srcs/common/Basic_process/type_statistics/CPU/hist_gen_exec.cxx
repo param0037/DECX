@@ -44,7 +44,7 @@
 //    decx::utils::simd::xmm128_reg recv;
 //    decx::utils::simd::xmm256_reg reg;
 //
-//    const uint32_t _procW_v4 = decx::utils::ceil<uint32_t>(proc_dims.x, 4);
+//    const uint32_t _procW_v4 = decx::utils::idiv_ceil<uint32_t>(proc_dims.x, 4);
 //    // Flush the histogram buffer
 //    for (int i = 0; i < 256; ++i) {
 //        _mm256_store_si256((__m256i*)_hist + i, _mm256_set1_epi64x(0));
@@ -89,7 +89,7 @@ decx::bp::CPUK::_histgen2D_u8_u64(const uint8_t* __restrict     src,
     uint64_t dex_src = 0;
     uint8_t tmp[4];
 
-    const uint32_t _procW_v4 = decx::utils::ceil<uint32_t>(proc_dims.x, 4);
+    const uint32_t _procW_v4 = decx::utils::idiv_ceil<uint32_t>(proc_dims.x, 4);
     // Flush the histogram buffer
     for (int i = 0; i < 256 / 4; ++i) {
         _mm256_store_si256((__m256i*)_hist + i, _mm256_set1_epi64x(0));

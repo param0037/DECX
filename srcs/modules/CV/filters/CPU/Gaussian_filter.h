@@ -64,7 +64,7 @@ namespace decx
 static void decx::vis::_gaussian_uint8_NB(decx::_Matrix* src, decx::vis::gaussian_kernel1D* kernel_H, decx::vis::gaussian_kernel1D* kernel_V, decx::_Matrix* dst,
     de::DH* handle)
 {
-    const uint2 Hconv_res_dims = make_uint2(decx::utils::ceil<uint32_t>(dst->Width(), 16) * 16, 
+    const uint2 Hconv_res_dims = make_uint2(decx::utils::idiv_ceil<uint32_t>(dst->Width(), 16) * 16, 
         src->Height() + kernel_V->_ker_length - 1);
 
     decx::PtrInfo<float> _Hconv_res;
@@ -75,7 +75,7 @@ static void decx::vis::_gaussian_uint8_NB(decx::_Matrix* src, decx::vis::gaussia
     }
 
     const uint conc_thr = (uint)decx::cpu::_get_permitted_concurrency();
-    decx::utils::_thr_1D t1D(conc_thr);
+    decx::utils::Thr1D t1D(conc_thr);
 
     const uint _loop = (kernel_H->_ker_length - 1) / 16;
     ushort reg_WL = (ushort)(kernel_H->_ker_length - _loop * 16);
@@ -105,9 +105,9 @@ static void decx::vis::_gaussian_uint8_NB(decx::_Matrix* src, decx::vis::gaussia
 static void decx::vis::_gaussian_uint8_BC_zero(decx::_Matrix* src, decx::vis::gaussian_kernel1D* kernel_H, decx::vis::gaussian_kernel1D* kernel_V, decx::_Matrix* dst,
     de::DH* handle)
 {
-    const uint2 tmp_src_dims = make_uint2(decx::utils::ceil<uint>(src->Width() + kernel_H->_ker_length - 1, 16) * 16,
+    const uint2 tmp_src_dims = make_uint2(decx::utils::idiv_ceil<uint>(src->Width() + kernel_H->_ker_length - 1, 16) * 16,
         src->Height());
-    const uint2 Hconv_res_dims = make_uint2(decx::utils::ceil<uint32_t>(dst->Width(), 16) * 16, 
+    const uint2 Hconv_res_dims = make_uint2(decx::utils::idiv_ceil<uint32_t>(dst->Width(), 16) * 16, 
         src->Height() + kernel_V->_ker_length - 1);
 
     decx::PtrInfo<uint8_t> tmp_src;
@@ -131,7 +131,7 @@ static void decx::vis::_gaussian_uint8_BC_zero(decx::_Matrix* src, decx::vis::ga
                                         make_uint2(src->Width(), src->Height()));
 
     const uint conc_thr = (uint)decx::cpu::_get_permitted_concurrency();
-    decx::utils::_thr_1D t1D(conc_thr);
+    decx::utils::Thr1D t1D(conc_thr);
 
     const uint _loop = (kernel_H->_ker_length - 1) / 16;
     ushort reg_WL = (ushort)(kernel_H->_ker_length - _loop * 16);
@@ -163,9 +163,9 @@ static void decx::vis::_gaussian_uint8_BC_zero(decx::_Matrix* src, decx::vis::ga
 static void decx::vis::_gaussian_uint8_BC_reflect(decx::_Matrix* src, decx::vis::gaussian_kernel1D* kernel_H, decx::vis::gaussian_kernel1D* kernel_V, decx::_Matrix* dst,
     de::DH* handle)
 {
-    const uint2 tmp_src_dims = make_uint2(decx::utils::ceil<uint>(src->Width() + kernel_H->_ker_length - 1, 16) * 16,
+    const uint2 tmp_src_dims = make_uint2(decx::utils::idiv_ceil<uint>(src->Width() + kernel_H->_ker_length - 1, 16) * 16,
         src->Height());
-    const uint2 Hconv_res_dims = make_uint2(decx::utils::ceil<uint32_t>(dst->Width(), 16) * 16, 
+    const uint2 Hconv_res_dims = make_uint2(decx::utils::idiv_ceil<uint32_t>(dst->Width(), 16) * 16, 
         src->Height() + kernel_V->_ker_length - 1);
 
     decx::PtrInfo<uint8_t> tmp_src;
@@ -186,7 +186,7 @@ static void decx::vis::_gaussian_uint8_BC_reflect(decx::_Matrix* src, decx::vis:
         src->Pitch(), tmp_src_dims.x, src->Width(), src->Height(), handle);
 
     const uint conc_thr = (uint)decx::cpu::_get_permitted_concurrency();
-    decx::utils::_thr_1D t1D(conc_thr);
+    decx::utils::Thr1D t1D(conc_thr);
 
     const uint _loop = (kernel_H->_ker_length - 1) / 16;
     ushort reg_WL = (ushort)(kernel_H->_ker_length - _loop * 16);
@@ -283,7 +283,7 @@ namespace decx
 static void decx::vis::_gaussian_uchar4_NB(decx::_Matrix* src, decx::vis::gaussian_kernel1D* kernel_H, decx::vis::gaussian_kernel1D* kernel_V, decx::_Matrix* dst,
     de::DH* handle)
 {
-    const uint2 Hconv_res_dims = make_uint2(decx::utils::ceil<uint32_t>(dst->Width(), 4) * 4 * 4, 
+    const uint2 Hconv_res_dims = make_uint2(decx::utils::idiv_ceil<uint32_t>(dst->Width(), 4) * 4 * 4, 
         src->Height() + kernel_V->_ker_length - 1);
 
     decx::PtrInfo<float> _Hconv_res;
@@ -294,7 +294,7 @@ static void decx::vis::_gaussian_uchar4_NB(decx::_Matrix* src, decx::vis::gaussi
     }
 
     const uint conc_thr = (uint)decx::cpu::_get_permitted_concurrency();
-    decx::utils::_thr_1D t1D(conc_thr);
+    decx::utils::Thr1D t1D(conc_thr);
 
     const uint _loop = (kernel_H->_ker_length - 1) / 4;
     ushort reg_WL = (ushort)(kernel_H->_ker_length - _loop * 4);
@@ -324,9 +324,9 @@ static void decx::vis::_gaussian_uchar4_NB(decx::_Matrix* src, decx::vis::gaussi
 static void decx::vis::_gaussian_uchar4_BC_zero(decx::_Matrix* src, decx::vis::gaussian_kernel1D* kernel_H, decx::vis::gaussian_kernel1D* kernel_V, decx::_Matrix* dst,
     de::DH* handle)
 {
-    const uint2 tmp_src_dims = make_uint2(decx::utils::ceil<uint>(src->Width() + kernel_H->_ker_length - 1, 4) * 4,
+    const uint2 tmp_src_dims = make_uint2(decx::utils::idiv_ceil<uint>(src->Width() + kernel_H->_ker_length - 1, 4) * 4,
         src->Height());
-    const uint2 Hconv_res_dims = make_uint2(decx::utils::ceil<uint32_t>(dst->Width(), 4) * 4 * 4, 
+    const uint2 Hconv_res_dims = make_uint2(decx::utils::idiv_ceil<uint32_t>(dst->Width(), 4) * 4 * 4, 
         src->Height() + kernel_V->_ker_length - 1);
 
     decx::PtrInfo<float> tmp_src;
@@ -350,7 +350,7 @@ static void decx::vis::_gaussian_uchar4_BC_zero(decx::_Matrix* src, decx::vis::g
                                       make_uint2(src->Width(), src->Height()));
 
     const uint conc_thr = (uint)decx::cpu::_get_permitted_concurrency();
-    decx::utils::_thr_1D t1D(conc_thr);
+    decx::utils::Thr1D t1D(conc_thr);
 
     const uint _loop = (kernel_H->_ker_length - 1) / 4;
     ushort reg_WL = (ushort)(kernel_H->_ker_length - _loop * 4);
@@ -359,7 +359,7 @@ static void decx::vis::_gaussian_uchar4_BC_zero(decx::_Matrix* src, decx::vis::g
     decx::vis::_gaussian_H_uchar4_caller((float*)tmp_src.ptr, 
                                         kernel_H->_kernel_data.ptr, 
                                         _mid_ptr, 
-                                        make_uint2(decx::utils::ceil<uint32_t>(dst->Pitch(), 4), dst->Height()),
+                                        make_uint2(decx::utils::idiv_ceil<uint32_t>(dst->Pitch(), 4), dst->Height()),
                                         kernel_H->_ker_length,
                                         tmp_src_dims.x,
                                         Hconv_res_dims.x, 
@@ -368,7 +368,7 @@ static void decx::vis::_gaussian_uchar4_BC_zero(decx::_Matrix* src, decx::vis::g
     decx::vis::_gaussian_V_uint8_caller(_Hconv_res.ptr, 
                                         kernel_V->_kernel_data.ptr, 
                                         dst->Mat.GetRawPtr<double>(),
-                                        make_uint2(decx::utils::ceil<uint32_t>(dst->Pitch(), 4), dst->Height()),
+                                        make_uint2(decx::utils::idiv_ceil<uint32_t>(dst->Pitch(), 4), dst->Height()),
                                         kernel_V->_ker_length, 
                                         Hconv_res_dims.x, 
                                         dst->Pitch() / 2, &t1D);
@@ -382,9 +382,9 @@ static void decx::vis::_gaussian_uchar4_BC_zero(decx::_Matrix* src, decx::vis::g
 static void decx::vis::_gaussian_uchar4_BC_reflect(decx::_Matrix* src, decx::vis::gaussian_kernel1D* kernel_H, decx::vis::gaussian_kernel1D* kernel_V, decx::_Matrix* dst,
     de::DH* handle)
 {
-    const uint2 tmp_src_dims = make_uint2(decx::utils::ceil<uint>(src->Width() + kernel_H->_ker_length - 1, 4) * 4,
+    const uint2 tmp_src_dims = make_uint2(decx::utils::idiv_ceil<uint>(src->Width() + kernel_H->_ker_length - 1, 4) * 4,
         src->Height());
-    const uint2 Hconv_res_dims = make_uint2(decx::utils::ceil<uint32_t>(dst->Width(), 4) * 4 * 4, 
+    const uint2 Hconv_res_dims = make_uint2(decx::utils::idiv_ceil<uint32_t>(dst->Width(), 4) * 4 * 4, 
         src->Height() + kernel_V->_ker_length - 1);
 
     decx::PtrInfo<float> tmp_src;
@@ -406,7 +406,7 @@ static void decx::vis::_gaussian_uchar4_BC_reflect(decx::_Matrix* src, decx::vis
         src->Pitch(), tmp_src_dims.x, src->Width(), src->Height(), handle);
 
     const uint conc_thr = (uint)decx::cpu::_get_permitted_concurrency();
-    decx::utils::_thr_1D t1D(conc_thr);
+    decx::utils::Thr1D t1D(conc_thr);
 
     const uint _loop = (kernel_H->_ker_length - 1) / 4;
     ushort reg_WL = (ushort)(kernel_H->_ker_length - _loop * 4);
@@ -415,7 +415,7 @@ static void decx::vis::_gaussian_uchar4_BC_reflect(decx::_Matrix* src, decx::vis
     decx::vis::_gaussian_H_uchar4_caller((float*)tmp_src.ptr, 
                                         kernel_H->_kernel_data.ptr, 
                                         _mid_ptr, 
-                                        make_uint2(decx::utils::ceil<uint32_t>(dst->Pitch(), 4), dst->Height()), 
+                                        make_uint2(decx::utils::idiv_ceil<uint32_t>(dst->Pitch(), 4), dst->Height()), 
                                         kernel_H->_ker_length,
                                         tmp_src_dims.x,
                                         Hconv_res_dims.x, 
@@ -426,7 +426,7 @@ static void decx::vis::_gaussian_uchar4_BC_reflect(decx::_Matrix* src, decx::vis
     decx::vis::_gaussian_V_uint8_caller(_Hconv_res.ptr, 
                                         kernel_V->_kernel_data.ptr, 
                                         dst->Mat.GetRawPtr<double>(),
-                                        make_uint2(decx::utils::ceil<uint32_t>(dst->Pitch(), 4), dst->Height()),
+                                        make_uint2(decx::utils::idiv_ceil<uint32_t>(dst->Pitch(), 4), dst->Height()),
                                         kernel_V->_ker_length, 
                                         Hconv_res_dims.x, 
                                         dst->Pitch() / 2, &t1D);

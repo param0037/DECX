@@ -430,7 +430,7 @@ void decx::vis::_bilateral_uint8_ST(const double* __restrict     src,
     {
         const uint32_t _loopW = f_mgrW.is_left ? f_mgrW.frag_num - 1 : f_mgrW.frag_num;
 
-        for (int k = 0; k < _loopW; ++k) {
+        for (int k = 0; k < f_mgrW.GetFragNum(); ++k) {
             decx::vis::CPUK::_bilateral_rect_fixed_uint8_ST(
                 DECX_PTR_SHF_XY_SAME_TYPE(src, i * _BLOCKED_CONV2_UINT8_H_, k * 2 * _BLOCKED_CONV2_UINT8_W_, Wsrc * 2),
                 _exp_chart_dist, _exp_chart_diff,
@@ -559,7 +559,7 @@ void decx::vis::_bilateral_uint8_caller(const double*               src,
                                         const uint32_t                  Wsrc,
                                         const uint32_t                  Wdst,
                                         const ushort                reg_WL,
-                                        decx::utils::_thr_1D*       t1D,
+                                        decx::utils::Thr1D*       t1D,
                                         decx::utils::frag_manager*  f_mgr,
                                         const uint32_t                  _loop)
 {
@@ -569,7 +569,7 @@ void decx::vis::_bilateral_uint8_caller(const double*               src,
     uint64_t frag_dst = (uint64_t)f_mgr->frag_len * (uint64_t)Wdst * 2;
 
     for (int i = 0; i < t1D->total_thread - 1; ++i) {
-        t1D->_async_thread[i] = decx::cpu::register_task_default(decx::vis::_bilateral_uint8_ST,
+        t1D->_async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(decx::vis::_bilateral_uint8_ST,
             tmp_src_ptr, _exp_chart_dist, _exp_chart_diff, tmp_dst_ptr,
             make_uint2(proc_dim.x, f_mgr->frag_len), neighbor_dims, Wsrc, Wdst, reg_WL, _loop);
 
@@ -577,7 +577,7 @@ void decx::vis::_bilateral_uint8_caller(const double*               src,
         tmp_dst_ptr += frag_dst;
     }
     const uint32_t _L = f_mgr->is_left ? f_mgr->frag_left_over : f_mgr->frag_len;
-    t1D->_async_thread[t1D->total_thread - 1] = decx::cpu::register_task_default(decx::vis::_bilateral_uint8_ST,
+    t1D->_async_thread[t1D->total_thread - 1] = decx::cpu::RegisterTaskLoadBalanced(decx::vis::_bilateral_uint8_ST,
         tmp_src_ptr, _exp_chart_dist, _exp_chart_diff, tmp_dst_ptr,
         make_uint2(proc_dim.x, _L), neighbor_dims, Wsrc, Wdst, reg_WL, _loop);
 
@@ -597,7 +597,7 @@ void decx::vis::_bilateral_uchar4_caller(const float*               src,
                                         const uint32_t                  Wsrc,
                                         const uint32_t                  Wdst,
                                         const ushort                reg_WL,
-                                        decx::utils::_thr_1D*       t1D,
+                                        decx::utils::Thr1D*       t1D,
                                         decx::utils::frag_manager*  f_mgr,
                                         const uint32_t                  _loop)
 {
@@ -607,7 +607,7 @@ void decx::vis::_bilateral_uchar4_caller(const float*               src,
     uint64_t frag_dst = (uint64_t)f_mgr->frag_len * (uint64_t)Wdst;
 
     for (int i = 0; i < t1D->total_thread - 1; ++i) {
-        t1D->_async_thread[i] = decx::cpu::register_task_default(decx::vis::_bilateral_uchar4_ST,
+        t1D->_async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(decx::vis::_bilateral_uchar4_ST,
             tmp_src_ptr, _exp_chart_dist, _exp_chart_diff, tmp_dst_ptr,
             make_uint2(proc_dim.x, f_mgr->frag_len), neighbor_dims, Wsrc, Wdst, reg_WL, _loop);
 
@@ -615,7 +615,7 @@ void decx::vis::_bilateral_uchar4_caller(const float*               src,
         tmp_dst_ptr += frag_dst;
     }
     const uint32_t _L = f_mgr->is_left ? f_mgr->frag_left_over : f_mgr->frag_len;
-    t1D->_async_thread[t1D->total_thread - 1] = decx::cpu::register_task_default(decx::vis::_bilateral_uchar4_ST,
+    t1D->_async_thread[t1D->total_thread - 1] = decx::cpu::RegisterTaskLoadBalanced(decx::vis::_bilateral_uchar4_ST,
         tmp_src_ptr, _exp_chart_dist, _exp_chart_diff, tmp_dst_ptr,
         make_uint2(proc_dim.x, _L), neighbor_dims, Wsrc, Wdst, reg_WL, _loop);
 

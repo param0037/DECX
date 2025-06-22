@@ -40,10 +40,10 @@ namespace blas{
 }
 
 #ifdef _DECX_CPU_PARTS_
-#define _EIG_INTERVAL_ALIGN_ __align__(decx::utils::align<uint32_t>(2 * sizeof(_data_type) + 8, 4))
+#define _EIG_INTERVAL_ALIGN_ __align__(decx::utils::ialign_up<uint32_t>(2 * sizeof(_data_type) + 8, 4))
 #endif
 #ifdef _DECX_CUDA_PARTS_
-#define _EIG_INTERVAL_ALIGN_ __align__(decx::utils::align<uint32_t>(2 * sizeof(_data_type) + 8, 16))
+#define _EIG_INTERVAL_ALIGN_ __align__(decx::utils::ialign_up<uint32_t>(2 * sizeof(_data_type) + 8, 16))
 #endif
 
 

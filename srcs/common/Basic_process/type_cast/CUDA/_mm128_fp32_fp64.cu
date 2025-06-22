@@ -90,7 +90,7 @@ decx::type_cast::_mm128_cvtfp32_fp64_caller1D(const float4*           src,
 {
     const uint block_length = decx::cuda::_get_cuda_prop().maxThreadsPerBlock;
     decx::type_cast::GPUK::cu_mm128_cvtfp32_fp641D
-        << <decx::utils::ceil<size_t>(proc_len, block_length), block_length, 0, S->get_raw_stream_ref() >> > (src, dst, proc_len);
+        << <decx::utils::idiv_ceil<size_t>(proc_len, block_length), block_length, 0, S->get_raw_stream_ref() >> > (src, dst, proc_len);
 }
 
 
@@ -102,7 +102,7 @@ decx::type_cast::_mm128_cvtfp64_fp32_caller1D(const double2*          src,
 {
     const uint block_length = decx::cuda::_get_cuda_prop().maxThreadsPerBlock;
     decx::type_cast::GPUK::cu_mm128_cvtfp64_fp321D
-        << <decx::utils::ceil<size_t>(proc_len, block_length), block_length, 0, S->get_raw_stream_ref() >> > (src, dst, proc_len);
+        << <decx::utils::idiv_ceil<size_t>(proc_len, block_length), block_length, 0, S->get_raw_stream_ref() >> > (src, dst, proc_len);
 }
 
 
@@ -177,7 +177,7 @@ void decx::type_cast::_mm128_cvtfp32_fp64_caller2D(const float4*         src,
                                   decx::cuda_stream*    S)
 {
     dim3 block(16, 16);
-    dim3 grid(decx::utils::ceil<size_t>(proc_dims.y, 16), decx::utils::ceil<size_t>(proc_dims.x, 16));
+    dim3 grid(decx::utils::idiv_ceil<size_t>(proc_dims.y, 16), decx::utils::idiv_ceil<size_t>(proc_dims.x, 16));
 
     decx::type_cast::GPUK::cu_mm128_cvtfp32_fp642D << <grid, block, 0, S->get_raw_stream_ref() >> > (src, dst, proc_dims, Wsrc, Wdst);
 }
@@ -192,7 +192,7 @@ void decx::type_cast::_mm128_cvtfp64_fp32_caller2D(const double2*        src,
                                                    decx::cuda_stream*    S)
 {
     dim3 block(16, 16);
-    dim3 grid(decx::utils::ceil<size_t>(proc_dims.y, 16), decx::utils::ceil<size_t>(proc_dims.x, 16));
+    dim3 grid(decx::utils::idiv_ceil<size_t>(proc_dims.y, 16), decx::utils::idiv_ceil<size_t>(proc_dims.x, 16));
 
     decx::type_cast::GPUK::cu_mm128_cvtfp64_fp322D << <grid, block, 0, S->get_raw_stream_ref() >> > (src, dst, proc_dims, Wsrc, Wdst);
 }

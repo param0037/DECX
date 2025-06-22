@@ -45,7 +45,7 @@ decx::reduce::GPUK::cu_warp_reduce_cmp2D_h_fp32(const float4 * __restrict   src,
     uint64_t LDG_dex = Wsrc_v4 * tidy + tidx;
     uint64_t STG_dex = Wdst_v1 * tidy + blockIdx.x;
 
-    uint32_t proc_W_v4 = decx::utils::ceil<uint32_t>(proc_dims.x, 4);
+    uint32_t proc_W_v4 = decx::utils::idiv_ceil<uint32_t>(proc_dims.x, 4);
 
     float _one_of_element;
     // The first thread of a warp load the value from the very beginning of the matrix of each row
@@ -107,7 +107,7 @@ decx::reduce::GPUK::cu_warp_reduce_cmp2D_h_fp16(const float4 * __restrict   src,
     uint64_t LDG_dex = Wsrc_v8 * tidy + tidx;
     uint64_t STG_dex = Wdst_v1 * tidy + blockIdx.x;
 
-    uint32_t proc_W_v8 = decx::utils::ceil<uint32_t>(proc_dims.x, 8);
+    uint32_t proc_W_v8 = decx::utils::idiv_ceil<uint32_t>(proc_dims.x, 8);
 
     __half _one_of_element;
     // The first thread of a warp load the value from the very beginning of the matrix of each row
@@ -175,7 +175,7 @@ decx::reduce::GPUK::cu_warp_reduce_cmp2D_h_u8(const int4 * __restrict     src,
     uint64_t LDG_dex = Wsrc_v16 * tidy + tidx;
     uint64_t STG_dex = Wdst_v1 * tidy + blockIdx.x;
 
-    uint32_t proc_W_v16 = decx::utils::ceil<uint32_t>(proc_dims.x, 16);
+    uint32_t proc_W_v16 = decx::utils::idiv_ceil<uint32_t>(proc_dims.x, 16);
 
     uint8_t _one_of_element;
     // The first thread of a warp load the value from the very beginning of the matrix of each row
@@ -249,7 +249,7 @@ template __global__ void decx::reduce::GPUK::cu_warp_reduce_cmp2D_h_u8<false>(co
 //    uint64_t LDG_dex = Wsrc_v4 * tidy + tidx;
 //    uint64_t STG_dex = Wdst_v1 * blockIdx.x + tidy;
 //
-//    uint32_t proc_W_v4 = decx::utils::ceil<uint32_t>(proc_dims.x, 4);
+//    uint32_t proc_W_v4 = decx::utils::idiv_ceil<uint32_t>(proc_dims.x, 4);
 //
 //    float _one_of_element;
 //    // The first thread of a warp load the value from the very beginning of the matrix of each row
@@ -312,7 +312,7 @@ template __global__ void decx::reduce::GPUK::cu_warp_reduce_cmp2D_h_u8<false>(co
 //    uint64_t LDG_dex = Wsrc_v8 * tidy + tidx;
 //    uint64_t STG_dex = Wdst_v1 * blockIdx.x + tidy;
 //
-//    uint32_t proc_W_v8 = decx::utils::ceil<uint32_t>(proc_dims.x, 8);
+//    uint32_t proc_W_v8 = decx::utils::idiv_ceil<uint32_t>(proc_dims.x, 8);
 //
 //    __half _one_of_element;
 //    // The first thread of a warp load the value from the very beginning of the matrix of each row
@@ -373,7 +373,7 @@ template __global__ void decx::reduce::GPUK::cu_warp_reduce_cmp2D_h_u8<false>(co
 //    uint64_t LDG_dex = Wsrc_v16 * tidy + tidx;
 //    uint64_t STG_dex = Wdst_v1 * blockIdx.x + tidy;
 //
-//    uint32_t proc_W_v16 = decx::utils::ceil<uint32_t>(proc_dims.x, 16);
+//    uint32_t proc_W_v16 = decx::utils::idiv_ceil<uint32_t>(proc_dims.x, 16);
 //
 //    uint8_t _one_of_element;
 //    // The first thread of a warp load the value from the very beginning of the matrix of each row

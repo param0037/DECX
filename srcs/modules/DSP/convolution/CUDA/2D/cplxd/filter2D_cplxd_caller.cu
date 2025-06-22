@@ -46,8 +46,8 @@ _cu_Filter2D_cplxd_caller(const decx::dsp::cuda_Filter2D_planner<de::CPd>* _fake
 {
     if (_fake_this->_conv_border_method != de::extend_label::_EXTEND_NONE_) 
     {
-        checkCudaErrors(cudaMemcpy2DAsync((de::CPd*)_fake_this->_ext_src._ptr.ptr + (_fake_this->_kernel_layout->width >> 1),
-            _fake_this->_ext_src._dims.x * sizeof(de::CPd),
+        checkCudaErrors(cudaMemcpy2DAsync((de::CPd*)_fake_this->_ext_src + (_fake_this->_kernel_layout->width >> 1),
+            _fake_this->_ext_src.GetDims().x * sizeof(de::CPd),
             src,
             _fake_this->_src_layout->pitch * sizeof(de::CPd),
             _fake_this->_src_layout->width * sizeof(de::CPd),
@@ -57,10 +57,10 @@ _cu_Filter2D_cplxd_caller(const decx::dsp::cuda_Filter2D_planner<de::CPd>* _fake
         
         decx::dsp::GPUK::cu_filter2D_BC_cplxd<_ext_w> << <_fake_this->_grid, _fake_this->_block, 
                                                     0, S->get_raw_stream_ref() >> > (
-            (double2*)_fake_this->_ext_src._ptr.ptr,
+            (double2*)_fake_this->_ext_src,
             (de::CPd*)kernel,
             (double2*)dst,
-            _fake_this->_ext_src._dims.x,
+            _fake_this->_ext_src.GetDims().x,
             pitchdst_v1,
             make_uint3(_fake_this->_kernel_layout->width, 
                        _fake_this->_kernel_layout->height, 
@@ -116,5 +116,5 @@ decx::dsp::cuda_Filter2D_planner<de::CPd>::run(decx::_GPU_Matrix* src, decx::_GP
 {
     _cu_F2_CPLXD_Kcaller _kernel_ptr = decx::dsp::_cu_F2_CPLXD_Kcallers[(this->_kernel_layout->width - 2) / 2];
 
-    _kernel_ptr(this, (double2*)src->Mat.ptr, (de::CPd*)kernel->Mat.ptr, (double2*)dst->Mat.ptr, dst->get_layout().pitch, S);
+    _kernel_ptr(this, (double2*)src->Mat, (de::CPd*)kernel->Mat, (double2*)dst->Mat, dst->get_layout().pitch, S);
 }

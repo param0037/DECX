@@ -65,7 +65,7 @@ void decx::blas::GEMM_64b(decx::_Matrix* A, decx::_Matrix* B, decx::_Matrix* dst
         Check_Runtime_Error(handle);
     }
 
-    decx::utils::_thread_arrange_2D t2D(_planner->GetThreadDist_B().y, _planner->GetThreadDist_B().x);
+    decx::utils::ThreadArrange2D t2D(_planner->GetThreadDist_B().y, _planner->GetThreadDist_B().x);
     if constexpr (_ABC) {
         _planner->Run<_cplxf>(A, B, C, dst, &t2D);
     }

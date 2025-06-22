@@ -56,12 +56,12 @@ namespace decx
 
 
 _CRSR_ void decx::cpu_VGT2D_planner::
-plan(const uint32_t concurrency,    const uint2 dst_dims_v1, 
-     const uint8_t datatype_size,   const de::Interpolate_Types intp_type, 
-     const uint2 src_dims_v1,       
-     de::DH* handle,                const uint64_t min_thread_proc)
+plan(const uint32_t simd_align,             const uint32_t concurrency,    
+     const uint2 dst_dims_v1,               const uint8_t datatype_size,   
+     const de::Interpolate_Types intp_type, const uint2 src_dims_v1,       
+     de::DH* handle,                        const uint64_t min_thread_proc)
 {
-    decx::cpu_ElementWise2D_planner::plan(concurrency, dst_dims_v1, datatype_size, datatype_size, min_thread_proc);
+    decx::cpu_ElementWise2D_planner::plan(simd_align, concurrency, dst_dims_v1, datatype_size, datatype_size, min_thread_proc);
     
     this->_interpolate_type = intp_type;
     
@@ -89,7 +89,7 @@ plan(const uint32_t concurrency,    const uint2 dst_dims_v1,
 template <typename _type_in, typename _type_out> void 
 decx::cpu_VGT2D_planner::run(const _type_in* src,          const float2* map, 
                              _type_out* dst,                const uint32_t pitchmap_v1,    
-                             const uint32_t pitchdst_v1,    decx::utils::_thr_1D* t1D)
+                             const uint32_t pitchdst_v1,    decx::utils::Thr1D* t1D)
 {
     uint64_t dex_map = 0, dex_dst = 0;
     uint32_t _thr_cnt = 0;
@@ -110,7 +110,7 @@ decx::cpu_VGT2D_planner::run(const _type_in* src,          const float2* map,
                 make_uint2(j < this->_thread_dist.x - 1 ? this->_fmgr_WH[0].frag_len : this->_fmgr_WH[0].last_frag_len,
                         i < this->_thread_dist.y - 1 ? this->_fmgr_WH[1].frag_len : this->_fmgr_WH[1].last_frag_len);
 
-            t1D->_async_thread[_thr_cnt] = decx::cpu::register_task_default(exec_ptr, src, map + dex_map, dst + dex_dst, 
+            t1D->_async_thread[_thr_cnt] = decx::cpu::RegisterTaskByID(exec_ptr, _thr_cnt, src, map + dex_map, dst + dex_dst, 
                 proc_dims_v, this->_pitchsrc_v1, pitchmap_v1, pitchdst_v1, (uint8_t*)this->_addr_mgrs + _thr_cnt * addr_mgr_size);
             
             dex_map += this->_fmgr_WH[0].frag_len * this->_alignment;
@@ -122,10 +122,10 @@ decx::cpu_VGT2D_planner::run(const _type_in* src,          const float2* map,
 }
 
 template void decx::cpu_VGT2D_planner::run<float>(const float*, const float2*, float*, const uint32_t,    
-    const uint32_t, decx::utils::_thr_1D*);
+    const uint32_t, decx::utils::Thr1D*);
 
 template void decx::cpu_VGT2D_planner::run<uint8_t>(const uint8_t*, const float2*, uint8_t*, const uint32_t,    
-    const uint32_t, decx::utils::_thr_1D*);
+    const uint32_t, decx::utils::Thr1D*);
 
 
 void decx::cpu_VGT2D_planner::release(decx::cpu_VGT2D_planner* fake_this)

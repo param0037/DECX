@@ -223,7 +223,7 @@ decx::reduce::GPUK::cu_warp_reduce_sum2D_flatten_fp32(const float4 * __restrict 
     uint64_t LDG_dex = Wsrc_v4 * tidy + tidx;
     uint64_t STG_dex = blockIdx.y * gridDim.x + blockIdx.x;
     
-    uint32_t proc_W_v4 = decx::utils::ceil<uint32_t>(proc_dims.x, 4);
+    uint32_t proc_W_v4 = decx::utils::idiv_ceil<uint32_t>(proc_dims.x, 4);
 
     /*
     * Shared memory for the reduced results of 8 warps in a block
@@ -284,7 +284,7 @@ decx::reduce::GPUK::cu_warp_reduce_sum2D_flatten_i32(const int4 * __restrict   s
     uint64_t LDG_dex = Wsrc_v4 * tidy + tidx;
     uint64_t STG_dex = blockIdx.y * gridDim.x + blockIdx.x;
     
-    uint32_t proc_W_v4 = decx::utils::ceil<uint32_t>(proc_dims.x, 4);
+    uint32_t proc_W_v4 = decx::utils::idiv_ceil<uint32_t>(proc_dims.x, 4);
 
     /*
     * Shared memory for the reduced results of 8 warps in a block
@@ -345,7 +345,7 @@ decx::reduce::GPUK::cu_warp_reduce_sum2D_flatten_fp64(const double2 * __restrict
     uint64_t LDG_dex = Wsrc_v4 * tidy + tidx;
     uint64_t STG_dex = blockIdx.y * gridDim.x + blockIdx.x;
     
-    uint32_t proc_W_v2 = decx::utils::ceil<uint32_t>(proc_dims.x, 2);
+    uint32_t proc_W_v2 = decx::utils::idiv_ceil<uint32_t>(proc_dims.x, 2);
 
     /*
     * Shared memory for the reduced results of 8 warps in a block
@@ -406,7 +406,7 @@ decx::reduce::GPUK::cu_warp_reduce_sum2D_flatten_fp16_L1(const float4 * __restri
     uint64_t LDG_dex = Wsrc_v4 * tidy + tidx;
     uint64_t STG_dex = blockIdx.y * gridDim.x + blockIdx.x;
     
-    uint32_t proc_W_v8 = decx::utils::ceil<uint32_t>(proc_dims_v1.x, 8);
+    uint32_t proc_W_v8 = decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.x, 8);
 
     /*
     * Shared memory for the reduced results of 8 warps in a block
@@ -466,7 +466,7 @@ decx::reduce::GPUK::cu_warp_reduce_sum2D_flatten_fp16_L2(const float4 * __restri
     uint64_t LDG_dex = Wsrc_v4 * tidy + tidx;
     uint64_t STG_dex = blockIdx.y * gridDim.x + blockIdx.x;
     
-    uint32_t proc_W_v8 = decx::utils::ceil<uint32_t>(proc_dims_v1.x, 8);
+    uint32_t proc_W_v8 = decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.x, 8);
 
     /*
     * Shared memory for the reduced results of 8 warps in a block
@@ -528,7 +528,7 @@ decx::reduce::GPUK::cu_warp_reduce_sum2D_flatten_fp16_L3(const float4 * __restri
     uint64_t LDG_dex = Wsrc_v4 * tidy + tidx;
     uint64_t STG_dex = blockIdx.y * gridDim.x + blockIdx.x;
     
-    uint32_t proc_W_v8 = decx::utils::ceil<uint32_t>(proc_dims_v1.x, 8);
+    uint32_t proc_W_v8 = decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.x, 8);
 
     /*
     * Shared memory for the reduced results of 8 warps in a block
@@ -589,7 +589,7 @@ decx::reduce::GPUK::cu_warp_reduce_sum2D_flatten_u8_i32(const int4 * __restrict 
     uint64_t LDG_dex = Wsrc_v4 * tidy + tidx;
     uint64_t STG_dex = blockIdx.y * gridDim.x + blockIdx.x;
     
-    uint32_t proc_W_v16 = decx::utils::ceil<uint32_t>(proc_dims_v1.x, 16);
+    uint32_t proc_W_v16 = decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.x, 16);
 
     /*
     * Shared memory for the reduced results of 8 warps in a block

@@ -360,7 +360,7 @@ static void decx::reduce::matrix_reduce2D_full_sum_fp32(decx::_Matrix* src, de::
     }
 
     decx::PtrInfo<void> _d_src;
-    const uint2 alloc_dims = make_uint2(decx::utils::ceil<uint32_t>(src->Width(), 4) * 4, src->Height());
+    const uint2 alloc_dims = make_uint2(decx::utils::idiv_ceil<uint32_t>(src->Width(), 4) * 4, src->Height());
     _d_src.Allocate(alloc_dims.x * alloc_dims.y * sizeof(float), CUDA_DEVICE, de::GetLastError(), true, S);
 
     // Transfer data from host to deivce
@@ -407,7 +407,7 @@ static void decx::reduce::matrix_reduce2D_full_sum_fp16(decx::_Matrix* src, de::
     }
 
     decx::PtrInfo<void> _d_src;
-    const uint2 alloc_dims = make_uint2(decx::utils::ceil<uint32_t>(src->Width(), 8) * 8, src->Height());
+    const uint2 alloc_dims = make_uint2(decx::utils::idiv_ceil<uint32_t>(src->Width(), 8) * 8, src->Height());
     _d_src.Allocate(alloc_dims.x * alloc_dims.y * sizeof(de::Half), CUDA_DEVICE, de::GetLastError(), true, S);
 
     // Transfer data from host to deivce
@@ -466,7 +466,7 @@ static void decx::reduce::matrix_reduce2D_full_sum_u8_i32(decx::_Matrix* src, de
     }
 
     decx::PtrInfo<void> _d_src;
-    const uint2 alloc_dims = make_uint2(decx::utils::ceil<uint32_t>(src->Width(), 16) * 16, src->Height());
+    const uint2 alloc_dims = make_uint2(decx::utils::idiv_ceil<uint32_t>(src->Width(), 16) * 16, src->Height());
     _d_src.Allocate(alloc_dims.x * alloc_dims.y * sizeof(uint8_t), CUDA_DEVICE, de::GetLastError(), true, S);
 
     // Transfer data from host to deivce
@@ -550,7 +550,7 @@ static void decx::reduce::matrix_reduce2D_full_sum_fp64(decx::_Matrix* src, de::
     }
 
     decx::PtrInfo<void> _d_src;
-    const uint2 alloc_dims = make_uint2(decx::utils::ceil<uint32_t>(src->Width(), 2) * 2, src->Height());
+    const uint2 alloc_dims = make_uint2(decx::utils::idiv_ceil<uint32_t>(src->Width(), 2) * 2, src->Height());
     _d_src.Allocate(alloc_dims.x * alloc_dims.y * sizeof(double), CUDA_DEVICE, de::GetLastError(), true, S);
 
     // Transfer data from host to deivce
@@ -646,7 +646,7 @@ static void decx::reduce::matrix_reduce2D_full_sum_i32(decx::_Matrix* src, de::N
     }
 
     decx::PtrInfo<void> _d_src;
-    const uint2 alloc_dims = make_uint2(decx::utils::ceil<uint32_t>(src->Width(), 4) * 4, src->Height());
+    const uint2 alloc_dims = make_uint2(decx::utils::idiv_ceil<uint32_t>(src->Width(), 4) * 4, src->Height());
     _d_src.Allocate(alloc_dims.x * alloc_dims.y * sizeof(int32_t), CUDA_DEVICE, de::GetLastError(), true, S);
 
     // Transfer data from host to deivce

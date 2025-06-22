@@ -43,7 +43,7 @@ void decx::_tensor_layout::_attribute_assign(const de::_DATA_TYPES_FLAGS_ _type,
     this->height = _height;
     this->depth = _depth;
 
-    this->wpitch = decx::utils::align<uint32_t>(_width, 4);
+    this->wpitch = decx::utils::ialign_up<uint32_t>(_width, 4);
 
     uint32_t _alignment = 1;
     switch (this->_single_element_size)
@@ -61,7 +61,7 @@ void decx::_tensor_layout::_attribute_assign(const de::_DATA_TYPES_FLAGS_ _type,
     default:
         break;
     }
-    this->dpitch = decx::utils::align<uint32_t>(_depth, _alignment);
+    this->dpitch = decx::utils::ialign_up<uint32_t>(_depth, _alignment);
 
     this->dp_x_wp = static_cast<uint64_t>(this->dpitch) * static_cast<uint64_t>(this->wpitch);
 

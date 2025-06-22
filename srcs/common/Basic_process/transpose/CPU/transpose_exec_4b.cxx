@@ -110,7 +110,7 @@ transpose_block_4b(const float* __restrict   src,
 
     const uint32_t _Hv4 = proc_dims_v1.y / 4;
     const uint32_t _LH = proc_dims_v1.y % 4;
-    const uint32_t _Wv4 = decx::utils::ceil<uint32_t>(proc_dims_v1.x, 4);
+    const uint32_t _Wv4 = decx::utils::idiv_ceil<uint32_t>(proc_dims_v1.x, 4);
     const uint32_t _LW = proc_dims_v1.x % 4;
 
     for (uint32_t i = 0; i < _Hv4; ++i) 
@@ -187,7 +187,7 @@ transpose_4b_kernel(const float* __restrict                 src,
 
 
 void decx::blas::_cpu_transpose_config::transpose_4b_caller(const float* src, float* dst, 
-    const uint32_t pitchsrc_v1, const uint32_t pitchdst_v1, decx::utils::_thread_arrange_1D* t1D) const
+    const uint32_t pitchsrc_v1, const uint32_t pitchdst_v1, decx::utils::ThreadArrange1D* t1D) const
 {
     const float* src_loc = src;
     float* dst_loc = dst;
@@ -199,7 +199,7 @@ void decx::blas::_cpu_transpose_config::transpose_4b_caller(const float* src, fl
 
         for (uint32_t j = 0; j < this->_thread_dist2D.x; ++j) 
         {
-            t1D->_async_thread[i * this->_thread_dist2D.x + j] = decx::cpu::register_task_default(
+            t1D->_async_thread[i * this->_thread_dist2D.x + j] = decx::cpu::RegisterTaskLoadBalanced(
                 decx::blas::CPUK::transpose_4b_kernel, src_loc, dst_loc,
                 &this->_blocking_configs[this->_thread_dist2D.x * i + j], pitchsrc_v1, pitchdst_v1);
 

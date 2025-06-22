@@ -142,7 +142,7 @@ conv1_fp32_kernel(const float* __restrict   src,
     uint64_t dex_src = 0, dex_dst = 0;
     uint32_t dex_ker = 0;
 
-    for (uint32_t j = 0; j < decx::utils::ceil<uint32_t>(proc_len_v1, 8); ++j)
+    for (uint32_t j = 0; j < decx::utils::idiv_ceil<uint32_t>(proc_len_v1, 8); ++j)
     {
         decx::dsp::CPUK::conv1_fp32_spot_v8(src + dex_src, kernel, dst + dex_dst, kernel_len);
 

@@ -107,7 +107,7 @@ public:
     void _alloc_table(const uint64_t _len, de::DH *handle);
 
 
-    void _generate_table(decx::utils::_thr_1D* t1D);
+    void _generate_table(decx::utils::Thr1D* t1D);
 
 
     void _release();

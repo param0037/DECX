@@ -46,8 +46,8 @@ de::vis::cpu::Find_Edge(de::Matrix& src, de::Matrix& dst, const float _L_thresho
     decx::_Matrix* _src = dynamic_cast<decx::_Matrix*>(&src);
     decx::_Matrix* _dst = dynamic_cast<decx::_Matrix*>(&dst);
     
-    const uint2 Dmap_dims = make_uint2(decx::utils::ceil<uint>(_src->Width() - 2, 8) * 8, _src->Height() - 2);
-    const uint2 Gmap_dims = make_uint2(decx::utils::ceil<uint>(Dmap_dims.x + 2, 8) * 8, _src->Height());
+    const uint2 Dmap_dims = make_uint2(decx::utils::idiv_ceil<uint>(_src->Width() - 2, 8) * 8, _src->Height() - 2);
+    const uint2 Gmap_dims = make_uint2(decx::utils::idiv_ceil<uint>(Dmap_dims.x + 2, 8) * 8, _src->Height());
     const uint2 _proc_dims = Dmap_dims;
 
     decx::PtrInfo<float> gradient_info_map, dir_info_map;
@@ -74,7 +74,7 @@ de::vis::cpu::Find_Edge(de::Matrix& src, de::Matrix& dst, const float _L_thresho
             break;
         }
 
-        decx::utils::_thread_arrange_1D t1D(decx::cpu::_get_permitted_concurrency());
+        decx::utils::ThreadArrange1D t1D(decx::cpu::_get_permitted_concurrency());
         decx::utils::frag_manager f_mgr;
         decx::utils::frag_manager_gen(&f_mgr, _proc_dims.y, t1D.total_thread);
 
@@ -88,7 +88,7 @@ de::vis::cpu::Find_Edge(de::Matrix& src, de::Matrix& dst, const float _L_thresho
         float* loc_D = (float*)dir_info_map;
 
         for (int i = 0; i < t1D.total_thread - 1; ++i) {
-            t1D._async_thread[i] = decx::cpu::register_task_default(_op_ptr,
+            t1D._async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(_op_ptr,
                 loc_src, loc_G, loc_D, Gmap_dims.x, Dmap_dims.x,
                 _src->Pitch(), make_uint2(_proc_dims.x / 8, f_mgr.frag_len));
 
@@ -97,7 +97,7 @@ de::vis::cpu::Find_Edge(de::Matrix& src, de::Matrix& dst, const float _L_thresho
             loc_D += frag_D;
         }
         const uint32_t _L = f_mgr.is_left ? f_mgr.frag_left_over : f_mgr.frag_len;
-        t1D._async_thread[t1D.total_thread - 1] = decx::cpu::register_task_default(_op_ptr,
+        t1D._async_thread[t1D.total_thread - 1] = decx::cpu::RegisterTaskLoadBalanced(_op_ptr,
             loc_src, loc_G, loc_D, Gmap_dims.x, Dmap_dims.x,
             _src->Pitch(), make_uint2(_proc_dims.x / 8, _L));
 
@@ -112,7 +112,7 @@ de::vis::cpu::Find_Edge(de::Matrix& src, de::Matrix& dst, const float _L_thresho
         rval |= cache.Allocate(t1D.total_thread * 48 * sizeof(float), PAGABLE, handle);
 
         for (int i = 0; i < t1D.total_thread - 1; ++i) {
-            t1D._async_thread[i] = decx::cpu::register_task_default(decx::vis::CPUK::_Edge_Detector_Post_processing,
+            t1D._async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(decx::vis::CPUK::_Edge_Detector_Post_processing,
                 loc_G, loc_D, cache + i * 48, (uint64_t*)loc_dst, Gmap_dims.x, Dmap_dims.x,
                 _dst->Pitch() / 8, make_uint2(Dmap_dims.x / 8, f_mgr.frag_len), make_float2(powf(_L_threshold, 2), powf(_H_threshold, 2)));
 
@@ -121,7 +121,7 @@ de::vis::cpu::Find_Edge(de::Matrix& src, de::Matrix& dst, const float _L_thresho
             loc_D += frag_D;
         }
 
-        t1D._async_thread[t1D.total_thread - 1] = decx::cpu::register_task_default(decx::vis::CPUK::_Edge_Detector_Post_processing,
+        t1D._async_thread[t1D.total_thread - 1] = decx::cpu::RegisterTaskLoadBalanced(decx::vis::CPUK::_Edge_Detector_Post_processing,
             loc_G, loc_D, cache + (t1D.total_thread - 1) * 48, (uint64_t*)loc_dst, Gmap_dims.x, Dmap_dims.x,
             _dst->Pitch() / 8, make_uint2(Dmap_dims.x / 8, _L), make_float2(powf(_L_threshold, 2), powf(_H_threshold, 2)));
 

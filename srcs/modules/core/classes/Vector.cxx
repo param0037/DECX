@@ -58,7 +58,7 @@ void decx::_Vector::_attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, size_t
 
     this->length = len;
     this->_init = true;
-    this->_length = decx::utils::align<size_t>(len, _alignment);
+    this->_length = decx::utils::ialign_up<size_t>(len, _alignment);
     this->total_bytes = this->_length * this->_single_element_size;
 }
 

@@ -88,8 +88,8 @@ void decx::vis::NLM_RGB_r16(decx::_Matrix* src, decx::_Matrix* dst, uint search_
     const uint eq_ker_len = (search_window_radius * 2 + 1) * (search_window_radius * 2 + 1),
         eq_Wker = search_window_radius * 2 + 1;
 
-    const uint2 dst_buf_dim = make_uint2(decx::utils::ceil<uint>(dst->Width(), 64) * 64,
-        decx::utils::ceil<uint>(dst->Height(), 16) * 16);
+    const uint2 dst_buf_dim = make_uint2(decx::utils::idiv_ceil<uint>(dst->Width(), 64) * 64,
+        decx::utils::idiv_ceil<uint>(dst->Height(), 16) * 16);
 
     const uint2 _work_space_dim = make_uint2(dst_buf_dim.x + 32, dst_buf_dim.y + 32);
 
@@ -101,18 +101,13 @@ void decx::vis::NLM_RGB_r16(decx::_Matrix* src, decx::_Matrix* dst, uint search_
     }
 
     decx::PtrInfo<float4> WS_buffer, dst_buffer;
-    if (decx::alloc::_device_malloc(&WS_buffer, _work_space_dim.x * _work_space_dim.y * sizeof(uchar4), true, S)) {
-        
-        exit(-1);
-    }
-    if (decx::alloc::_device_malloc(&dst_buffer, dst_buf_dim.x * dst_buf_dim.y * sizeof(uchar4), true, S)) {
-        
-        exit(-1);
-    }
+    int32_t rval = 0;
+    rval |= WS_buffer.Allocate(_work_space_dim.x * _work_space_dim.y * sizeof(uchar4), CUDA_DEVICE, de::GetLastError(), true, S);
+    rval |= dst_buffer.Allocate(dst_buf_dim.x * dst_buf_dim.y * sizeof(uchar4), CUDA_DEVICE, de::GetLastError(), true, S);
 
-    checkCudaErrors(cudaMemcpy2DAsync((uchar4*)WS_buffer.ptr + _work_space_dim.x * 16 + 16,
+    checkCudaErrors(cudaMemcpy2DAsync((uchar4*)WS_buffer + _work_space_dim.x * 16 + 16,
         _work_space_dim.x * sizeof(uchar4),
-        src->Mat.ptr, src->Pitch() * sizeof(uchar4),
+        (void*)src->Mat, src->Pitch() * sizeof(uchar4),
         src->Width() * sizeof(uchar4), src->Height(), cudaMemcpyHostToDevice, S->get_raw_stream_ref()));
 
     const dim3 block(16, 16);
@@ -122,13 +117,13 @@ void decx::vis::NLM_RGB_r16(decx::_Matrix* src, decx::_Matrix* dst, uint search_
     {
     case 1:
         cu_NLM_r16_BGR_N3x3 << <grid, block, 0, S->get_raw_stream_ref() >> > (
-            WS_buffer.ptr, dst_buffer.ptr, _work_space_dim.x / 4, dst_buf_dim.x / 4,
+            (float4*)WS_buffer, (float4*)dst_buffer, _work_space_dim.x / 4, dst_buf_dim.x / 4,
             eq_ker_len, eq_Wker, kernel_shift, h * h);
         break;
 
     case 2:
         cu_NLM_r16_BGR_N5x5 << <grid, block, 0, S->get_raw_stream_ref() >> > (
-            WS_buffer.ptr, dst_buffer.ptr, _work_space_dim.x / 4, dst_buf_dim.x / 4,
+            (float4*)WS_buffer, (float4*)dst_buffer, _work_space_dim.x / 4, dst_buf_dim.x / 4,
             eq_ker_len, eq_Wker, kernel_shift, h * h);
         break;
 
@@ -136,15 +131,15 @@ void decx::vis::NLM_RGB_r16(decx::_Matrix* src, decx::_Matrix* dst, uint search_
         break;
     }
 
-    checkCudaErrors(cudaMemcpy2DAsync(dst->Mat.ptr, dst->Pitch() * sizeof(uchar4),
-        dst_buffer.ptr, dst_buf_dim.x * sizeof(uchar4), dst->Width() * sizeof(uchar4), dst->Height(),
+    checkCudaErrors(cudaMemcpy2DAsync((void*)dst->Mat, dst->Pitch() * sizeof(uchar4),
+        (void*)dst_buffer, dst_buf_dim.x * sizeof(uchar4), dst->Width() * sizeof(uchar4), dst->Height(),
         cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
 
     checkCudaErrors(cudaDeviceSynchronize());
     S->detach();
 
-    decx::alloc::_device_dealloc(&WS_buffer);
-    decx::alloc::_device_dealloc(&dst_buffer);
+    WS_buffer.Free();
+    dst_buffer.Free();
 }
 
 
@@ -157,8 +152,8 @@ void decx::vis::NLM_RGB_r16_keep_alpha(decx::_Matrix* src, decx::_Matrix* dst, u
     const uint eq_ker_len = (search_window_radius * 2 + 1) * (search_window_radius * 2 + 1),
         eq_Wker = search_window_radius * 2 + 1;
 
-    const uint2 dst_buf_dim = make_uint2(decx::utils::ceil<uint>(dst->Width(), 64) * 64,
-        decx::utils::ceil<uint>(dst->Height(), 16) * 16);
+    const uint2 dst_buf_dim = make_uint2(decx::utils::idiv_ceil<uint>(dst->Width(), 64) * 64,
+        decx::utils::idiv_ceil<uint>(dst->Height(), 16) * 16);
 
     const uint2 _work_space_dim = make_uint2(dst_buf_dim.x + 32, dst_buf_dim.y + 32);
 
@@ -170,18 +165,13 @@ void decx::vis::NLM_RGB_r16_keep_alpha(decx::_Matrix* src, decx::_Matrix* dst, u
     }
 
     decx::PtrInfo<float4> WS_buffer, dst_buffer;
-    if (decx::alloc::_device_malloc(&WS_buffer, _work_space_dim.x * _work_space_dim.y * sizeof(uchar4), true, S)) {
-        
-        exit(-1);
-    }
-    if (decx::alloc::_device_malloc(&dst_buffer, dst_buf_dim.x * dst_buf_dim.y * sizeof(uchar4), true, S)) {
-        
-        exit(-1);
-    }
+    int32_t rval = 0;
+    rval |= WS_buffer.Allocate(_work_space_dim.x * _work_space_dim.y * sizeof(uchar4), CUDA_DEVICE, de::GetLastError(), true, S);
+    rval |= dst_buffer.Allocate(dst_buf_dim.x * dst_buf_dim.y * sizeof(uchar4), CUDA_DEVICE, de::GetLastError(), true, S);
 
-    checkCudaErrors(cudaMemcpy2DAsync((uchar4*)WS_buffer.ptr + _work_space_dim.x * 16 + 16,
+    checkCudaErrors(cudaMemcpy2DAsync((uchar4*)WS_buffer + _work_space_dim.x * 16 + 16,
         _work_space_dim.x * sizeof(uchar4),
-        src->Mat.ptr, src->Pitch() * sizeof(uchar4),
+        (void*)src->Mat, src->Pitch() * sizeof(uchar4),
         src->Width() * sizeof(uchar4), src->Height(), cudaMemcpyHostToDevice, S->get_raw_stream_ref()));
 
     const dim3 block(16, 16);
@@ -191,13 +181,13 @@ void decx::vis::NLM_RGB_r16_keep_alpha(decx::_Matrix* src, decx::_Matrix* dst, u
     {
     case 1:
         cu_NLM_r16_BGR_KPAL_N3x3 << <grid, block, 0, S->get_raw_stream_ref() >> > (
-            WS_buffer.ptr, dst_buffer.ptr, _work_space_dim.x / 4, dst_buf_dim.x / 4,
+            (float4*)WS_buffer, (float4*)dst_buffer, _work_space_dim.x / 4, dst_buf_dim.x / 4,
             eq_ker_len, eq_Wker, kernel_shift, h * h);
         break;
 
     case 2:
         cu_NLM_r16_BGR_KPAL_N5x5 << <grid, block, 0, S->get_raw_stream_ref() >> > (
-            WS_buffer.ptr, dst_buffer.ptr, _work_space_dim.x / 4, dst_buf_dim.x / 4,
+            (float4*)WS_buffer, (float4*)dst_buffer, _work_space_dim.x / 4, dst_buf_dim.x / 4,
             eq_ker_len, eq_Wker, kernel_shift, h * h);
         break;
 
@@ -205,15 +195,15 @@ void decx::vis::NLM_RGB_r16_keep_alpha(decx::_Matrix* src, decx::_Matrix* dst, u
         break;
     }
 
-    checkCudaErrors(cudaMemcpy2DAsync(dst->Mat.ptr, dst->Pitch() * sizeof(uchar4),
-        dst_buffer.ptr, dst_buf_dim.x * sizeof(uchar4), dst->Width() * sizeof(uchar4), dst->Height(),
+    checkCudaErrors(cudaMemcpy2DAsync((void*)dst->Mat, dst->Pitch() * sizeof(uchar4),
+        (void*)dst_buffer, dst_buf_dim.x * sizeof(uchar4), dst->Width() * sizeof(uchar4), dst->Height(),
         cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
 
     checkCudaErrors(cudaDeviceSynchronize());
     S->detach();
 
-    decx::alloc::_device_dealloc(&WS_buffer);
-    decx::alloc::_device_dealloc(&dst_buffer);
+    WS_buffer.Free();
+    dst_buffer.Free();
 }
 
 
@@ -226,8 +216,8 @@ void decx::vis::NLM_RGB_r8(decx::_Matrix* src, decx::_Matrix* dst, uint search_w
     const uint eq_ker_len = (search_window_radius * 2 + 1) * (search_window_radius * 2 + 1),
         eq_Wker = search_window_radius * 2 + 1;
 
-    const uint2 dst_buf_dim = make_uint2(decx::utils::ceil<uint>(dst->Width(), 64) * 64,
-        decx::utils::ceil<uint>(dst->Height(), 16) * 16);
+    const uint2 dst_buf_dim = make_uint2(decx::utils::idiv_ceil<uint>(dst->Width(), 64) * 64,
+        decx::utils::idiv_ceil<uint>(dst->Height(), 16) * 16);
 
     const uint2 _work_space_dim = make_uint2(dst_buf_dim.x + 16, dst_buf_dim.y + 16);
 
@@ -239,18 +229,13 @@ void decx::vis::NLM_RGB_r8(decx::_Matrix* src, decx::_Matrix* dst, uint search_w
     }
 
     decx::PtrInfo<float4> WS_buffer, dst_buffer;
-    if (decx::alloc::_device_malloc(&WS_buffer, _work_space_dim.x * _work_space_dim.y * sizeof(uchar4), true, S)) {
-        
-        exit(-1);
-    }
-    if (decx::alloc::_device_malloc(&dst_buffer, dst_buf_dim.x * dst_buf_dim.y * sizeof(uchar4), true, S)) {
-        
-        exit(-1);
-    }
+    int32_t rval = 0;
+    rval |= WS_buffer.Allocate(_work_space_dim.x * _work_space_dim.y * sizeof(uchar4), CUDA_DEVICE, de::GetLastError(), true, S);
+    rval |= dst_buffer.Allocate(dst_buf_dim.x * dst_buf_dim.y * sizeof(uchar4), CUDA_DEVICE, de::GetLastError(), true, S);
 
-    checkCudaErrors(cudaMemcpy2DAsync((uchar4*)WS_buffer.ptr + _work_space_dim.x * 8 + 8,
+    checkCudaErrors(cudaMemcpy2DAsync((uchar4*)WS_buffer + _work_space_dim.x * 8 + 8,
         _work_space_dim.x * sizeof(uchar4),
-        src->Mat.ptr, src->Pitch() * sizeof(uchar4),
+        (void*)src->Mat, src->Pitch() * sizeof(uchar4),
         src->Width() * sizeof(uchar4), src->Height(), cudaMemcpyHostToDevice, S->get_raw_stream_ref()));
 
     const dim3 block(16, 16);
@@ -260,13 +245,13 @@ void decx::vis::NLM_RGB_r8(decx::_Matrix* src, decx::_Matrix* dst, uint search_w
     {
     case 1:
         cu_NLM_r8_BGR_N3x3 << <grid, block, 0, S->get_raw_stream_ref() >> > (
-            WS_buffer.ptr, dst_buffer.ptr, _work_space_dim.x / 4, dst_buf_dim.x / 4,
+            (float4*)WS_buffer, (float4*)dst_buffer, _work_space_dim.x / 4, dst_buf_dim.x / 4,
             eq_ker_len, eq_Wker, kernel_shift, h * h);
         break;
 
     case 2:
         cu_NLM_r8_BGR_N5x5 << <grid, block, 0, S->get_raw_stream_ref() >> > (
-            WS_buffer.ptr, dst_buffer.ptr, _work_space_dim.x / 4, dst_buf_dim.x / 4,
+            (float4*)WS_buffer, (float4*)dst_buffer, _work_space_dim.x / 4, dst_buf_dim.x / 4,
             eq_ker_len, eq_Wker, kernel_shift, h * h);
         break;
 
@@ -274,15 +259,15 @@ void decx::vis::NLM_RGB_r8(decx::_Matrix* src, decx::_Matrix* dst, uint search_w
         break;
     }
     
-    checkCudaErrors(cudaMemcpy2DAsync(dst->Mat.ptr, dst->Pitch() * sizeof(uchar4),
-        dst_buffer.ptr, dst_buf_dim.x * sizeof(uchar4), dst->Width() * sizeof(uchar4), dst->Height(),
+    checkCudaErrors(cudaMemcpy2DAsync((void*)dst->Mat, dst->Pitch() * sizeof(uchar4),
+        (void*)dst_buffer, dst_buf_dim.x * sizeof(uchar4), dst->Width() * sizeof(uchar4), dst->Height(),
         cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
 
     checkCudaErrors(cudaDeviceSynchronize());
     S->detach();
 
-    decx::alloc::_device_dealloc(&WS_buffer);
-    decx::alloc::_device_dealloc(&dst_buffer);
+    WS_buffer.Free();
+    dst_buffer.Free();
 }
 
 
@@ -296,8 +281,8 @@ void decx::vis::NLM_RGB_r8_keep_alpha(decx::_Matrix* src, decx::_Matrix* dst, ui
     const uint eq_ker_len = (search_window_radius * 2 + 1) * (search_window_radius * 2 + 1),
         eq_Wker = search_window_radius * 2 + 1;
 
-    const uint2 dst_buf_dim = make_uint2(decx::utils::ceil<uint>(dst->Width(), 64) * 64,
-        decx::utils::ceil<uint>(dst->Height(), 16) * 16);
+    const uint2 dst_buf_dim = make_uint2(decx::utils::idiv_ceil<uint>(dst->Width(), 64) * 64,
+        decx::utils::idiv_ceil<uint>(dst->Height(), 16) * 16);
 
     const uint2 _work_space_dim = make_uint2(dst_buf_dim.x + 16, dst_buf_dim.y + 16);
 
@@ -309,18 +294,13 @@ void decx::vis::NLM_RGB_r8_keep_alpha(decx::_Matrix* src, decx::_Matrix* dst, ui
     }
 
     decx::PtrInfo<float4> WS_buffer, dst_buffer;
-    if (decx::alloc::_device_malloc(&WS_buffer, _work_space_dim.x * _work_space_dim.y * sizeof(uchar4), true, S)) {
-        
-        exit(-1);
-    }
-    if (decx::alloc::_device_malloc(&dst_buffer, dst_buf_dim.x * dst_buf_dim.y * sizeof(uchar4), true, S)) {
-        
-        exit(-1);
-    }
+    int32_t rval = 0;
+    rval |= WS_buffer.Allocate(_work_space_dim.x * _work_space_dim.y * sizeof(uchar4), CUDA_DEVICE, de::GetLastError(), true, S);
+    rval |= dst_buffer.Allocate(dst_buf_dim.x * dst_buf_dim.y * sizeof(uchar4), CUDA_DEVICE, de::GetLastError(), true, S);
 
-    checkCudaErrors(cudaMemcpy2DAsync((uchar4*)WS_buffer.ptr + _work_space_dim.x * 8 + 8,
+    checkCudaErrors(cudaMemcpy2DAsync((uchar4*)WS_buffer + _work_space_dim.x * 8 + 8,
         _work_space_dim.x * sizeof(uchar4),
-        src->Mat.ptr, src->Pitch() * sizeof(uchar4),
+        (void*)src->Mat, src->Pitch() * sizeof(uchar4),
         src->Width() * sizeof(uchar4), src->Height(), cudaMemcpyHostToDevice, S->get_raw_stream_ref()));
 
     const dim3 block(16, 16);
@@ -330,13 +310,13 @@ void decx::vis::NLM_RGB_r8_keep_alpha(decx::_Matrix* src, decx::_Matrix* dst, ui
     {
     case 1:
         cu_NLM_r8_BGR_KPAL_N3x3 << <grid, block, 0, S->get_raw_stream_ref() >> > (
-            WS_buffer.ptr, dst_buffer.ptr, _work_space_dim.x / 4, dst_buf_dim.x / 4,
+            (float4*)WS_buffer, (float4*)dst_buffer, _work_space_dim.x / 4, dst_buf_dim.x / 4,
             eq_ker_len, eq_Wker, kernel_shift, h * h);
         break;
 
     case 2:
         cu_NLM_r8_BGR_KPAL_N5x5 << <grid, block, 0, S->get_raw_stream_ref() >> > (
-            WS_buffer.ptr, dst_buffer.ptr, _work_space_dim.x / 4, dst_buf_dim.x / 4,
+            (float4*)WS_buffer, (float4*)dst_buffer, _work_space_dim.x / 4, dst_buf_dim.x / 4,
             eq_ker_len, eq_Wker, kernel_shift, h * h);
         break;
 
@@ -344,15 +324,15 @@ void decx::vis::NLM_RGB_r8_keep_alpha(decx::_Matrix* src, decx::_Matrix* dst, ui
         break;
     }
 
-    checkCudaErrors(cudaMemcpy2DAsync(dst->Mat.ptr, dst->Pitch() * sizeof(uchar4),
-        dst_buffer.ptr, dst_buf_dim.x * sizeof(uchar4), dst->Width() * sizeof(uchar4), dst->Height(),
+    checkCudaErrors(cudaMemcpy2DAsync((void*)dst->Mat, dst->Pitch() * sizeof(uchar4),
+        (void*)dst_buffer, dst_buf_dim.x * sizeof(uchar4), dst->Width() * sizeof(uchar4), dst->Height(),
         cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
 
     checkCudaErrors(cudaDeviceSynchronize());
     S->detach();
 
-    decx::alloc::_device_dealloc(&WS_buffer);
-    decx::alloc::_device_dealloc(&dst_buffer);
+    WS_buffer.Free();
+    dst_buffer.Free();
 }
 
 
@@ -366,8 +346,8 @@ void decx::vis::NLM_gray_r16(decx::_Matrix* src, decx::_Matrix* dst, uint search
     const uint eq_ker_len = (search_window_radius * 2 + 1) * (search_window_radius * 2 + 1),
         eq_Wker = search_window_radius * 2 + 1;
 
-    const uint2 dst_buf_dim = make_uint2(decx::utils::ceil<uint>(dst->Width(), 256) * 256,
-        decx::utils::ceil<uint>(dst->Height(), 16) * 16);
+    const uint2 dst_buf_dim = make_uint2(decx::utils::idiv_ceil<uint>(dst->Width(), 256) * 256,
+        decx::utils::idiv_ceil<uint>(dst->Height(), 16) * 16);
 
     const uint2 _work_space_dim = make_uint2(dst_buf_dim.x + 32, dst_buf_dim.y + 32);
 
@@ -379,18 +359,13 @@ void decx::vis::NLM_gray_r16(decx::_Matrix* src, decx::_Matrix* dst, uint search
     }
 
     decx::PtrInfo<float4> WS_buffer, dst_buffer;
-    if (decx::alloc::_device_malloc(&WS_buffer, _work_space_dim.x * _work_space_dim.y * sizeof(uchar), true, S)) {
-        
-        exit(-1);
-    }
-    if (decx::alloc::_device_malloc(&dst_buffer, dst_buf_dim.x * dst_buf_dim.y * sizeof(uchar), true, S)) {
-        
-        exit(-1);
-    }
+    int32_t rval = 0;
+    rval |= WS_buffer.Allocate(_work_space_dim.x * _work_space_dim.y * sizeof(uchar), CUDA_DEVICE, de::GetLastError(), true, S);
+    rval |= dst_buffer.Allocate(dst_buf_dim.x * dst_buf_dim.y * sizeof(uchar), CUDA_DEVICE, de::GetLastError(), true, S);
 
-    checkCudaErrors(cudaMemcpy2DAsync((uchar*)WS_buffer.ptr + _work_space_dim.x * 16 + 16,
+    checkCudaErrors(cudaMemcpy2DAsync((uchar*)WS_buffer + _work_space_dim.x * 16 + 16,
         _work_space_dim.x * sizeof(uchar),
-        src->Mat.ptr, src->Pitch() * sizeof(uchar),
+        (void*)src->Mat, src->Pitch() * sizeof(uchar),
         src->Width() * sizeof(uchar), src->Height(), cudaMemcpyHostToDevice, S->get_raw_stream_ref()));
 
     const dim3 block(16, 16);
@@ -400,13 +375,13 @@ void decx::vis::NLM_gray_r16(decx::_Matrix* src, decx::_Matrix* dst, uint search
     {
     case 1:
         cu_NLM_r16_gray_N3x3 << <grid, block, 0, S->get_raw_stream_ref() >> > (
-            WS_buffer.ptr, dst_buffer.ptr, _work_space_dim.x / 16, dst_buf_dim.x / 16,
+            (float4*)WS_buffer, (float4*)dst_buffer, _work_space_dim.x / 16, dst_buf_dim.x / 16,
             eq_ker_len, eq_Wker, kernel_shift, h * h);
         break;
 
     case 2:
         cu_NLM_r16_gray_N5x5 << <grid, block, 0, S->get_raw_stream_ref() >> > (
-            WS_buffer.ptr, dst_buffer.ptr, _work_space_dim.x / 16, dst_buf_dim.x / 16,
+            (float4*)WS_buffer, (float4*)dst_buffer, _work_space_dim.x / 16, dst_buf_dim.x / 16,
             eq_ker_len, eq_Wker, kernel_shift, h * h);
         break;
         
@@ -414,15 +389,15 @@ void decx::vis::NLM_gray_r16(decx::_Matrix* src, decx::_Matrix* dst, uint search
         break;
     }
 
-    checkCudaErrors(cudaMemcpy2DAsync(dst->Mat.ptr, dst->Pitch() * sizeof(uchar),
-        dst_buffer.ptr, dst_buf_dim.x * sizeof(uchar), dst->Width() * sizeof(uchar), dst->Height(),
+    checkCudaErrors(cudaMemcpy2DAsync((void*)dst->Mat, dst->Pitch() * sizeof(uchar),
+        (void*)dst_buffer, dst_buf_dim.x * sizeof(uchar), dst->Width() * sizeof(uchar), dst->Height(),
         cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
 
     checkCudaErrors(cudaDeviceSynchronize()); 
     S->detach();
 
-    decx::alloc::_device_dealloc(&WS_buffer);
-    decx::alloc::_device_dealloc(&dst_buffer);
+    WS_buffer.Free();
+    dst_buffer.Free();
 }
 
 
@@ -435,8 +410,8 @@ void decx::vis::NLM_gray_r8(decx::_Matrix* src, decx::_Matrix* dst, uint search_
     const uint eq_ker_len = (search_window_radius * 2 + 1) * (search_window_radius * 2 + 1),
         eq_Wker = search_window_radius * 2 + 1;
 
-    const uint2 dst_buf_dim = make_uint2(decx::utils::ceil<uint>(dst->Width(), 256) * 256,
-        decx::utils::ceil<uint>(dst->Height(), 16) * 16);
+    const uint2 dst_buf_dim = make_uint2(decx::utils::idiv_ceil<uint>(dst->Width(), 256) * 256,
+        decx::utils::idiv_ceil<uint>(dst->Height(), 16) * 16);
 
     const uint2 _work_space_dim = make_uint2(dst_buf_dim.x + 16, dst_buf_dim.y + 16);
 
@@ -448,18 +423,13 @@ void decx::vis::NLM_gray_r8(decx::_Matrix* src, decx::_Matrix* dst, uint search_
     }
 
     decx::PtrInfo<float4> WS_buffer, dst_buffer;
-    if (decx::alloc::_device_malloc(&WS_buffer, _work_space_dim.x * _work_space_dim.y * sizeof(uchar), true, S)) {
-        
-        exit(-1);
-    }
-    if (decx::alloc::_device_malloc(&dst_buffer, dst_buf_dim.x * dst_buf_dim.y * sizeof(uchar), true, S)) {
-        
-        exit(-1);
-    }
+    int32_t rval = 0;
+    rval |= WS_buffer.Allocate(_work_space_dim.x * _work_space_dim.y * sizeof(uchar), CUDA_DEVICE, de::GetLastError(), true, S);
+    rval |= dst_buffer.Allocate(dst_buf_dim.x * dst_buf_dim.y * sizeof(uchar), CUDA_DEVICE, de::GetLastError(), true, S);
 
-    checkCudaErrors(cudaMemcpy2DAsync((uchar*)WS_buffer.ptr + _work_space_dim.x * 8 + 8,
+    checkCudaErrors(cudaMemcpy2DAsync((uchar*)WS_buffer + _work_space_dim.x * 8 + 8,
         _work_space_dim.x * sizeof(uchar),
-        src->Mat.ptr, src->Pitch() * sizeof(uchar),
+        (void*)src->Mat, src->Pitch() * sizeof(uchar),
         src->Width() * sizeof(uchar), src->Height(), cudaMemcpyHostToDevice, S->get_raw_stream_ref()));
 
     const dim3 block(16, 16);
@@ -469,13 +439,13 @@ void decx::vis::NLM_gray_r8(decx::_Matrix* src, decx::_Matrix* dst, uint search_
     {
     case 1:
         cu_NLM_r8_gray_N3x3 << <grid, block, 0, S->get_raw_stream_ref() >> > (
-            WS_buffer.ptr, dst_buffer.ptr, _work_space_dim.x / 16, dst_buf_dim.x / 16,
+            (float4*)WS_buffer, (float4*)dst_buffer, _work_space_dim.x / 16, dst_buf_dim.x / 16,
             eq_ker_len, eq_Wker, kernel_shift, h * h);
         break;
 
     case 2:
         cu_NLM_r8_gray_N5x5 << <grid, block, 0, S->get_raw_stream_ref() >> > (
-            WS_buffer.ptr, dst_buffer.ptr, _work_space_dim.x / 16, dst_buf_dim.x / 16,
+            (float4*)WS_buffer, (float4*)dst_buffer, _work_space_dim.x / 16, dst_buf_dim.x / 16,
             eq_ker_len, eq_Wker, kernel_shift, h * h);
         break;
 
@@ -483,15 +453,15 @@ void decx::vis::NLM_gray_r8(decx::_Matrix* src, decx::_Matrix* dst, uint search_
         break;
     }
 
-    checkCudaErrors(cudaMemcpy2DAsync(dst->Mat.ptr, dst->Pitch() * sizeof(uchar),
-        dst_buffer.ptr, dst_buf_dim.x * sizeof(uchar), dst->Width() * sizeof(uchar), dst->Height(),
+    checkCudaErrors(cudaMemcpy2DAsync((void*)dst->Mat, dst->Pitch() * sizeof(uchar),
+        (void*)dst_buffer, dst_buf_dim.x * sizeof(uchar), dst->Width() * sizeof(uchar), dst->Height(),
         cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
 
     checkCudaErrors(cudaDeviceSynchronize());
     S->detach();
 
-    decx::alloc::_device_dealloc(&WS_buffer);
-    decx::alloc::_device_dealloc(&dst_buffer);
+    WS_buffer.Free();
+    dst_buffer.Free();
 }
 
 

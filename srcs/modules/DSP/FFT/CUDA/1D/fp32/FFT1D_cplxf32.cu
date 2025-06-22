@@ -32,7 +32,7 @@
 #include "../CUDA_FFT1D_planner.cuh"
 #include "../FFT1D_1st_kernels_dense.cuh"
 #include "../../2D/FFT2D_kernels.cuh"
-#include "../../../../../../common/Basic_process/transpose/CUDA/transpose_kernels.cuh"
+#include <Basic_process/transpose/CUDA/transpose_kernels.cuh>
 #include "../FFT1D_kernel_callers.cuh"
 #include "../../2D/FFT2D_1way_kernel_callers.cuh"
 
@@ -46,7 +46,7 @@ void decx::dsp::fft::_cuda_FFT1D_planner<float>::Forward(decx::_Vector* src, dec
                                                       _formal_FFT2D_ptr->get_tmp2_ptr<void>());
     
     checkCudaErrors(cudaMemcpyAsync(_double_buffer.get_buffer2<void>(), 
-        src->Vec.ptr, 
+        (void*)src->Vec, 
         src->Len() * sizeof(_type_in),
         cudaMemcpyHostToDevice, S->get_raw_stream_ref()));
 
@@ -66,7 +66,7 @@ void decx::dsp::fft::_cuda_FFT1D_planner<float>::Forward(decx::_Vector* src, dec
         _formal_FFT2D_ptr->get_FFT_info(decx::dsp::fft::_FFT_AlongW),
         S);
 
-    checkCudaErrors(cudaMemcpyAsync(dst->Vec.ptr, 
+    checkCudaErrors(cudaMemcpyAsync((void*)dst->Vec, 
         _double_buffer.GetLeadingBufPtr<void>(), 
         src->Len() * sizeof(de::CPf),
         cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
@@ -85,7 +85,7 @@ void decx::dsp::fft::_cuda_FFT1D_planner<float>::Forward(decx::_GPU_Vector* src,
     decx::utils::double_buffer_manager _double_buffer(_formal_FFT2D_ptr->get_tmp1_ptr<void>(),
                                                       _formal_FFT2D_ptr->get_tmp2_ptr<void>());
 
-    decx::dsp::fft::FFT1D_partition_cplxf_1st_caller<_type_in, false>(src->Vec.ptr, &_double_buffer,
+    decx::dsp::fft::FFT1D_partition_cplxf_1st_caller<_type_in, false>((const void*)src->Vec, &_double_buffer,
         _formal_FFT2D_ptr->get_FFT_info(decx::dsp::fft::_FFT_AlongH),
         S);
 
@@ -97,7 +97,7 @@ void decx::dsp::fft::_cuda_FFT1D_planner<float>::Forward(decx::_GPU_Vector* src,
 
     _double_buffer.UpdateStatus();
 
-    decx::dsp::fft::FFT1D_partition_cplxf_end_caller<_FFT1D_END_(de::CPf)>(&_double_buffer, dst->Vec.ptr,
+    decx::dsp::fft::FFT1D_partition_cplxf_end_caller<_FFT1D_END_(de::CPf)>(&_double_buffer, (void*)dst->Vec,
         _formal_FFT2D_ptr->get_FFT_info(decx::dsp::fft::_FFT_AlongW),
         S);
 }
@@ -115,7 +115,7 @@ void decx::dsp::fft::_cuda_FFT1D_planner<float>::Inverse(decx::_Vector* src, dec
     decx::utils::double_buffer_manager _double_buffer(_formal_FFT2D_ptr->get_tmp1_ptr<void>(),
                                                       _formal_FFT2D_ptr->get_tmp2_ptr<void>());
 
-    checkCudaErrors(cudaMemcpyAsync(_double_buffer.get_buffer2<void>(), src->Vec.ptr, src->Len() * sizeof(de::CPf),
+    checkCudaErrors(cudaMemcpyAsync(_double_buffer.get_buffer2<void>(), (void*)src->Vec, src->Len() * sizeof(de::CPf),
         cudaMemcpyHostToDevice, S->get_raw_stream_ref()));
 
     decx::dsp::fft::FFT1D_partition_cplxf_1st_caller<de::CPf, true>(NULL, &_double_buffer,
@@ -134,7 +134,7 @@ void decx::dsp::fft::_cuda_FFT1D_planner<float>::Inverse(decx::_Vector* src, dec
         _formal_FFT2D_ptr->get_FFT_info(decx::dsp::fft::_FFT_AlongW),
         S);
 
-    checkCudaErrors(cudaMemcpyAsync(dst->Vec.ptr, _double_buffer.GetLeadingBufPtr<void>(), src->Len() * sizeof(_type_out),
+    checkCudaErrors(cudaMemcpyAsync((void*)dst->Vec, _double_buffer.GetLeadingBufPtr<void>(), src->Len() * sizeof(_type_out),
         cudaMemcpyDeviceToHost, S->get_raw_stream_ref()));
 }
 
@@ -151,7 +151,7 @@ void decx::dsp::fft::_cuda_FFT1D_planner<float>::Inverse(decx::_GPU_Vector* src,
     decx::utils::double_buffer_manager _double_buffer(_formal_FFT2D_ptr->get_tmp1_ptr<void>(),
                                                       _formal_FFT2D_ptr->get_tmp2_ptr<void>());
 
-    decx::dsp::fft::FFT1D_partition_cplxf_1st_caller<de::CPf, true>(src->Vec.ptr, &_double_buffer,
+    decx::dsp::fft::FFT1D_partition_cplxf_1st_caller<de::CPf, true>((const void*)src->Vec, &_double_buffer,
         _formal_FFT2D_ptr->get_FFT_info(decx::dsp::fft::_FFT_AlongH),
         S, this->get_signal_length());
 
@@ -163,7 +163,7 @@ void decx::dsp::fft::_cuda_FFT1D_planner<float>::Inverse(decx::_GPU_Vector* src,
 
     _double_buffer.UpdateStatus();
 
-    decx::dsp::fft::FFT1D_partition_cplxf_end_caller<_IFFT1D_END_(_type_out)>(&_double_buffer, dst->Vec.ptr,
+    decx::dsp::fft::FFT1D_partition_cplxf_end_caller<_IFFT1D_END_(_type_out)>(&_double_buffer, (void*)dst->Vec,
         _formal_FFT2D_ptr->get_FFT_info(decx::dsp::fft::_FFT_AlongW),
         S);
 }

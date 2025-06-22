@@ -72,11 +72,11 @@ decx::blas::cuda_DP1D_configs<_type_in>::cuda_DP1D_configs(const uint64_t _proc_
         _proc_align = _CU_REDUCE1D_MEM_ALIGN_8B_;
     }
 
-    const uint64_t _proc_len_v = decx::utils::ceil<uint64_t>(_proc_len, _proc_align);
+    const uint64_t _proc_len_v = decx::utils::idiv_ceil<uint64_t>(_proc_len, _proc_align);
     rval |= this->_dev_A.Allocate(_proc_len_v * _proc_align * sizeof(_type_in), CUDA_DEVICE, de::GetLastError(), true, S);
     rval |= this->_dev_B.Allocate(_proc_len_v * _proc_align * sizeof(_type_in), CUDA_DEVICE, de::GetLastError(), true, S);
 
-    const uint64_t grid_len_k1 = decx::utils::ceil<uint64_t>(_proc_len_v, _REDUCE1D_BLOCK_DIM_);
+    const uint64_t grid_len_k1 = decx::utils::idiv_ceil<uint64_t>(_proc_len_v, _REDUCE1D_BLOCK_DIM_);
     this->_grid_len_k1 = grid_len_k1;
 
     uint8_t ele_size_dst = 1;
@@ -178,11 +178,11 @@ decx::blas::cuda_DP1D_configs<_type_in>::cuda_DP1D_configs(decx::PtrInfo<void> d
         _proc_align = _CU_REDUCE1D_MEM_ALIGN_8B_;
     }
 
-    const uint64_t _proc_len_v = decx::utils::ceil<uint64_t>(_proc_len, _proc_align);
+    const uint64_t _proc_len_v = decx::utils::idiv_ceil<uint64_t>(_proc_len, _proc_align);
     this->_dev_A = dev_A;
     this->_dev_B = dev_B;
 
-    const uint64_t grid_len_k1 = decx::utils::ceil<uint64_t>(_proc_len_v, _REDUCE1D_BLOCK_DIM_);
+    const uint64_t grid_len_k1 = decx::utils::idiv_ceil<uint64_t>(_proc_len_v, _REDUCE1D_BLOCK_DIM_);
     this->_grid_len_k1 = grid_len_k1;
 
     uint8_t ele_size_dst = 1;

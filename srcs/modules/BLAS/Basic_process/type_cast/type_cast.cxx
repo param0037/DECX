@@ -39,7 +39,7 @@ void decx::type_cast::cpu::_type_cast1D_organiser(const void* src, void* dst, co
     using namespace decx::type_cast;
     using namespace de;
     decx::cpu_ElementWise1D_planner _planner;
-    decx::utils::_thr_1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::Thr1D t1D(decx::cpu::_get_permitted_concurrency());
 
     if (cvt_method == TypeCast_Method::CVT_FP32_FP64) {
         decx::type_cast::typecast1D_general_caller<float, double>(&decx::type_cast::CPUK::_v256_cvtps_pd1D, &_planner, 
@@ -91,7 +91,7 @@ void decx::type_cast::cpu::_type_cast2D_organiser(const void* src, void* dst, co
     using namespace de;
 
     decx::cpu_ElementWise2D_planner _planner;
-    decx::utils::_thr_1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::Thr1D t1D(decx::cpu::_get_permitted_concurrency());
 
     if (cvt_method == TypeCast_Method::CVT_FP32_FP64) {
         decx::type_cast::typecast2D_general_caller(&decx::type_cast::CPUK::_v256_cvtps_pd2D, &_planner, 
