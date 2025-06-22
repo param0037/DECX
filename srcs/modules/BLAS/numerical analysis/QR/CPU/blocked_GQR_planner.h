@@ -28,11 +28,15 @@
 * DEALINGS IN THE SOFTWARE.
 */
 
+#ifndef _BLOCKED_GQR_PLANNER_H_
+#define _BLOCKED_GQR_PLANNER_H_
+
 #include <basic.h>
 #include <vector_defines.h>
 #include <allocators.h>
 #include <SIMD/intrinsics_ops.h>
 #include <Basic_process/transpose/CPU/transpose2D_config.h>
+#include <BLAS/MVM/CPU/MVM_planner.h>
 
 
 namespace decx
@@ -49,6 +53,14 @@ template <typename _data_type>
 class decx::blas::Blocked_GQR_planner
 {
 private:
+    enum class BlockedGQR_BufType_e {
+        BGQR_Buffer_IWY,
+        BGQR_Buffer_V,
+        BGQR_Buffer_W,
+        BGQR_Buffer_src
+    };
+
+private:
     uint2                                       _block_dims;
     uint32_t                                    _align_bytes;
 
@@ -60,18 +72,16 @@ private:
     decx::Ptr2D_Info<_data_type>                _W_tile;
     decx::Ptr2D_Info<_data_type>                _IWY;
 
-    decx::PtrInfo<void>                      _simd_post_masks;
+    decx::PtrInfo<void>                         _simd_post_masks;
 
     decx::blas::_cpu_transpose_config           _tp_ldg_config;
 
     decx::PtrInfo<decx::utils::frag_manager>    _fmgrs_apply_HH;
 
+    decx::utils::frag_manager                   _fmgr_updateW;
 
-private:
-    inline uint32_t GetAlignedStartOffsetPanel(const uint32_t local_col_id, const uint32_t panel_pitch) {
-        const uint32_t alignment = this->_align_bytes / sizeof(_data_type);
-        return (local_col_id / alignment) * alignment + local_col_id * panel_pitch;
-    }
+    decx::PtrInfo<decx::blas::cpu_MVM_planner<_data_type>> _w_update_helpers;
+
 
 private:
     void Process_SingleCol_HH(const _data_type* __restrict p_col,
@@ -79,9 +89,7 @@ private:
         const uint32_t local_col_id, const uint32_t proc_len_v1);
 
 
-    static void UpdateW(decx::blas::Blocked_GQR_planner<_data_type>* fake_this, 
-        const _data_type* __restrict pV_now, const _data_type* __restrict pV_last, _data_type* __restrict pW,
-        const uint32_t local_col_id, const uint32_t proc_len_v1);
+    static void UpdateW(decx::blas::Blocked_GQR_planner<_data_type>* fake_this, const uint32_t local_col_id);
 
 
     int32_t GetPostMask(const uint32_t L_front, void* p_in) const;
@@ -94,10 +102,15 @@ private:
     _THREAD_GENERAL_
     static uint32_t CalcProcLenV(const uint32_t local_col_id, const uint8_t alignment, const uint32_t proc_len_v1)
     {
+        if (proc_len_v1 < alignment) {
+            return 1;
+        }
         uint32_t left = local_col_id % (uint32_t)alignment;
         uint32_t post_length = proc_len_v1 - (alignment - left);
         return post_length / alignment + 1;
     }
+
+    int32_t Config_W_updator();
 
 public:
     Blocked_GQR_planner() {
@@ -118,16 +131,27 @@ public:
     void Process_HouseHolder();
 
 
-    const _data_type* GetV() const
-    {
+    const _data_type* GetV() const {
         return this->_V_tile.template GetRawPtrConst<_data_type>();
     }
 
-    const _data_type* GetTile() const
-    {
+    const _data_type* GetW() const {
+        return this->_W_tile.template GetRawPtrConst<_data_type>();
+    }
+
+    const _data_type* GetIWY() const {
+        return this->_IWY.template GetRawPtrConst<_data_type>();
+    }
+
+    const _data_type* GetTile() const {
         return this->_src_tile.template GetRawPtrConst<_data_type>();
     }
 
+protected:
+    _data_type* GetAlignedBufAddr(const BlockedGQR_BufType_e buf_type, const uint32_t col_id, const uint32_t row_id);
 
+public:
     void Release();
 };
+
+#endif
