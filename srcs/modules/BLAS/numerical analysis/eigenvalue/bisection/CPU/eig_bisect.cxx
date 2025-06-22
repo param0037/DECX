@@ -58,7 +58,7 @@ decx::blas::cpu_eig_bisection<_data_type>::Init(const uint32_t conc,
         return;
     }
 
-    this->_aligned_N = decx::utils::align<uint32_t>(this->_layout.width, this->_alignment);
+    this->_aligned_N = decx::utils::ialign_up<uint32_t>(this->_layout.width, this->_alignment);
     this->_diag.Allocate(this->_aligned_N * sizeof(_data_type), PAGABLE, handle);
 
     // Puls one to fit the process of finding Gerschgorin boundary.
@@ -68,9 +68,9 @@ decx::blas::cpu_eig_bisection<_data_type>::Init(const uint32_t conc,
     this->_shared_mem.Allocate(4 * this->_concurrency * sizeof(_data_type), PAGABLE, handle);
 
     // Initialize the diagonal extractor
-    this->_diag_extractor.plan(this->_concurrency, this->_layout.width, sizeof(_data_type), sizeof(_data_type));
+    this->_diag_extractor.plan(32, this->_concurrency, this->_layout.width, sizeof(_data_type), sizeof(_data_type));
 
-    this->_Gersch_bound_founder.plan(this->_concurrency, this->_layout.width, 
+    this->_Gersch_bound_founder.plan(32, this->_concurrency, this->_layout.width, 
         sizeof(_data_type), sizeof(_data_type), 1);
     this->_Gersch_bound_founder.alloc_shared_mem((this->_concurrency + 1) * sizeof(_data_type) * 200, handle);
 }
@@ -124,6 +124,8 @@ void decx::blas::cpu_eig_bisection<_data_type>::calc_Gerschgorin_bound(decx::uti
 
     this->_Gersch_bound_founder.caller(decx::blas::CPUK::Gerschgorin_bound_fp32,
         t1D,
+        decx::cpu::ThreadDispatchMethod_e::Dispatch_ByID,
+        EW_SLOT_ID_MONOTONIC(0),
         decx::TArg_var<const float*>([this, p_dist](const int32_t i){return this->_diag + i * p_dist->GetFragLen();}),
         decx::TArg_var<const float*>([this, p_dist](const int32_t i){return this->_off_diag + i * p_dist->GetFragLen();}),
         decx::TArg_var<float*>      ([u_ptr](const int32_t i)->float*{return u_ptr + i;}),

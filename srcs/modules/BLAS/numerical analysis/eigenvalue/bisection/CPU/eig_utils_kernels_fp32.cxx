@@ -143,7 +143,7 @@ count_intervals_fp32_v8(const float* __restrict p_diag,
                         const uint32_t          N, 
                         const uint32_t          proc_len)
 {
-    for (int32_t i = 0; i < decx::utils::ceil<uint32_t>(proc_len, 8); ++i)
+    for (int32_t i = 0; i < decx::utils::idiv_ceil<uint32_t>(proc_len, 8); ++i)
     {
         decx::utils::simd::xmm256_reg _count_mid;
         _count_mid._vi = decx::blas::CPUK::count_v8_eigv_fp32(
