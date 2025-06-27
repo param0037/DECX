@@ -41,15 +41,15 @@ namespace blas
 {
 namespace CPUK
 {
-static void UpdateW_k1_v8_fp32(const float* __restrict pV, 
-                               float* __restrict       pW, 
+static void UpdateW_k1_v4_fp64(const double* __restrict pV, 
+                               double* __restrict       pW, 
                                const uint32_t          proc_len_v1)
 {
-    const __m256 scalar = _mm256_set1_ps(2.0f);
-    for (int32_t i = 0; i < decx::utils::idiv_ceil<uint32_t>(proc_len_v1, 8); ++i){
+    const __m256d scalar = _mm256_set1_pd(2.0f);
+    for (int32_t i = 0; i < decx::utils::idiv_ceil<uint32_t>(proc_len_v1, 4); ++i){
         decx::utils::simd::xmm256_reg Vval;
-        Vval._vf = _mm256_load_ps((float*)(pV + i * 8));
-        _mm256_store_ps((float*)(pW + i * 8), _mm256_mul_ps(Vval._vf, scalar));
+        Vval._vd = _mm256_load_pd((double*)(pV + (i << 2)));
+        _mm256_store_pd((double*)(pW + (i << 2)), _mm256_mul_pd(Vval._vd, scalar));
     }
 }
 
@@ -65,45 +65,47 @@ static void UpdateW_k1_v8_fp32(const float* __restrict pV,
  */
 template <bool IWY_initial>
 _THREAD_FUNCTION_ static void 
-CalcIWY_blocked_v8_fp32(const float* __restrict        pV_last, 
-                        const float* __restrict        pW_last, 
-                        float* __restrict              pIWY,
+CalcIWY_blocked_v4_fp64(const double* __restrict        pV_last, 
+                        const double* __restrict        pW_last, 
+                        double* __restrict              pIWY,
                         const uint2                    start_idx_WH,
-                        const uint2                    proc_sizes_v8_WH,
+                        const uint2                    proc_sizes_v4_WH,
                         const uint32_t                 pitch_IWY_v1,
-                        const void*                    p_post_mask_v8)
+                        const void*                    p_post_mask_v4)
 {
     int2 g_coord_WH = make_int2(start_idx_WH.x, start_idx_WH.y);
-    const __m256 post_mask_v8 = _mm256_loadu_ps((const float*)p_post_mask_v8);
+    const __m256d post_mask_v4 = _mm256_loadu_pd((const double*)p_post_mask_v4);
+    const double* p_mask = (double*)p_post_mask_v4;
+    printf("%lf, %lf, %lf, %lf\n", p_mask[0], p_mask[1], p_mask[2], p_mask[3]);
 
-    for (int32_t i = 0; i < proc_sizes_v8_WH.y; ++i)
+    for (int32_t i = 0; i < proc_sizes_v4_WH.y; ++i)
     {
         // Load value from W as the scalar of this row.
-        float Wval = pW_last[i];
-        __m256 Wval_v8 = _mm256_set1_ps(Wval);
-        float* pIWY_row = pIWY + i * pitch_IWY_v1;
+        double Wval = pW_last[i];
+        __m256d Wval_v4 = _mm256_set1_pd(Wval);
+        double* pIWY_row = pIWY + i * pitch_IWY_v1;
         g_coord_WH.x = start_idx_WH.x;
-        for (int32_t j = 0; j < proc_sizes_v8_WH.x; ++j)
+        for (int32_t j = 0; j < proc_sizes_v4_WH.x; ++j)
         {
-            __m256 Vval_v8 = _mm256_load_ps(pV_last + j * 8);
-            __m256 product_v8 = _mm256_mul_ps(Vval_v8, Wval_v8);
+            __m256d Vval_v4 = _mm256_load_pd(pV_last + (j << 2));
+            __m256d product_v4 = _mm256_mul_pd(Vval_v4, Wval_v4);
 
-            decx::utils::simd::xmm256_reg IWY_v8;
-            IWY_v8._vf = _mm256_setzero_ps();
+            decx::utils::simd::xmm256_reg IWY_v4;
+            IWY_v4._vd = _mm256_setzero_pd();
             if constexpr (IWY_initial) {
-                if ((g_coord_WH.y / 8) == (g_coord_WH.x / 8)){
-                    IWY_v8._arrf[g_coord_WH.y % 8] = 1.0f;
+                if ((g_coord_WH.y >> 2) == (g_coord_WH.x >> 2)){
+                    IWY_v4._arrd[g_coord_WH.y % 4] = 1.0;
                 }
             }
             else{
-                IWY_v8._vf = _mm256_load_ps(pIWY_row + j * 8);
+                IWY_v4._vd = _mm256_load_pd(pIWY_row + (j << 2));
             }
             if (j == 0) {       // Mask the first lane
-                product_v8 = _mm256_and_ps(product_v8, post_mask_v8);
+                product_v4 = _mm256_and_pd(product_v4, post_mask_v4);
             }
-            product_v8 = _mm256_sub_ps(IWY_v8._vf, product_v8);
-            _mm256_store_ps(pIWY_row + j * 8, product_v8);
-            g_coord_WH.x += 8;
+            product_v4 = _mm256_sub_pd(IWY_v4._vd, product_v4);
+            _mm256_store_pd(pIWY_row + (j << 2), product_v4);
+            g_coord_WH.x += 4;
         }
         ++g_coord_WH.y;
     }
@@ -115,42 +117,45 @@ CalcIWY_blocked_v8_fp32(const float* __restrict        pV_last,
 
 
 template <> void 
-decx::blas::Blocked_GQR_planner<float>::sUpdateW(decx::blas::Blocked_GQR_planner<float>* fake_this,
+decx::blas::Blocked_GQR_planner<double>::sUpdateW(decx::blas::Blocked_GQR_planner<double>* fake_this,
                                                  const uint32_t                          local_col_id)
 {
-    const uint32_t alignment = fake_this->_align_bytes / sizeof(float);
+    const uint32_t alignment = fake_this->_align_bytes / sizeof(double);
     const uint32_t proc_len_v1 = fake_this->_block_dims.y - local_col_id;
 
     decx::utils::Thr1D t1D(fake_this->_fmgr_updateW.GetFragNum());
     const uint32_t pitchIWY = fake_this->_IWY.GetDims().x;
     
     if (local_col_id == 0) {
-        const float* pV_now = fake_this->GetV() + 0;
-        float* pW = (float*)fake_this->_W_tile + 0;
-        CPUK::UpdateW_k1_v8_fp32(pV_now, pW, proc_len_v1);
+        const double* pV_now = fake_this->GetV() + 0;
+        double* pW = (double*)fake_this->_W_tile + 0;
+        CPUK::UpdateW_k1_v4_fp64(pV_now, pW, proc_len_v1);
     }
     else {
         uint8_t post_mask[32];
-        fake_this->GetPostMask((local_col_id - 1) % 8, post_mask);
-        auto* pFunc = local_col_id == 1 ? CPUK::CalcIWY_blocked_v8_fp32<true> : CPUK::CalcIWY_blocked_v8_fp32<false>;
+        fake_this->GetPostMask((local_col_id - 1) % 4, post_mask);
+        auto* pFunc = local_col_id == 1 ? CPUK::CalcIWY_blocked_v4_fp64<true> : CPUK::CalcIWY_blocked_v4_fp64<false>;
         
-        const float* pV = fake_this->GetAlignedBufAddr(BlockedGQR_BufType_e::BGQR_Buffer_V, local_col_id - 1, local_col_id - 1);    // V(k-1:end, k-1)
-        const float* pW = fake_this->GetAlignedBufAddr(BlockedGQR_BufType_e::BGQR_Buffer_W, 0, local_col_id - 1);                   // W(:, k-1:end)
-        float* pIWY = fake_this->GetAlignedBufAddr(BlockedGQR_BufType_e::BGQR_Buffer_IWY, local_col_id - 1, 0);                     // IWY(:, k-1:end)
+        const double* pV = fake_this->GetAlignedBufAddr(BlockedGQR_BufType_e::BGQR_Buffer_V, local_col_id - 1, local_col_id - 1);    // V(k-1:end, k-1)
+        const double* pW = fake_this->GetAlignedBufAddr(BlockedGQR_BufType_e::BGQR_Buffer_W, 0, local_col_id - 1);                   // W(:, k-1:end)
+        double* pIWY = fake_this->GetAlignedBufAddr(BlockedGQR_BufType_e::BGQR_Buffer_IWY, local_col_id - 1, 0);                     // IWY(:, k-1:end)
 
+        fake_this->_fmgr_updateW.DumpInfo();
+        printf("pIWY: %p\n", pIWY);
         decx::cpu_ElementWise1D_planner::
             sCaller(pFunc, &fake_this->_fmgr_updateW, &t1D, 
                 decx::cpu::ThreadDispatchMethod_e::Dispatch_ByID,
                 EW_SLOT_ID_MONOTONIC(0),
-                decx::TArg_still<const float*>(pV),
-                decx::TArg_var<const float*>([&](const int32_t i){return pW + i * fake_this->_fmgr_updateW.GetFragLenById(0);}),
-                decx::TArg_var<float*>([&](const int32_t i){return pIWY + i * pitchIWY * fake_this->_fmgr_updateW.GetFragLenById(0);}),
+                decx::TArg_still<const double*>(pV),
+                decx::TArg_var<const double*>([&](const int32_t i){return pW + i * fake_this->_fmgr_updateW.GetFragLenById(0);}),
+                decx::TArg_var<double*>([&](const int32_t i){return pIWY + i * pitchIWY * fake_this->_fmgr_updateW.GetFragLenById(0);}),
                 decx::TArg_var<uint2>([&](const int32_t i){return make_uint2(0, i * fake_this->_fmgr_updateW.GetFragLenById(0));}),
-                decx::TArg_var<uint2>([&](const int32_t i){return make_uint2(decx::utils::idiv_ceil<uint32_t>(proc_len_v1, 8), fake_this->_fmgr_updateW.GetFragLenById(i));}),
+                decx::TArg_var<uint2>([&](const int32_t i){return make_uint2(decx::utils::idiv_ceil<uint32_t>(proc_len_v1, 4), fake_this->_fmgr_updateW.GetFragLenById(i));}),
                 decx::TArg_still<uint32_t>(pitchIWY),
                 decx::TArg_still<void*>((void*)post_mask));
-                    
+        
         // Update W
+
         fake_this->_w_update_helpers[(local_col_id - 1) / alignment].Run(
             fake_this->GetAlignedBufAddr(BlockedGQR_BufType_e::BGQR_Buffer_IWY, local_col_id - 1, 0),           // IWY(:, k-1:end)
             fake_this->GetAlignedBufAddr(BlockedGQR_BufType_e::BGQR_Buffer_V, local_col_id - 1, local_col_id),  // V(k-1:end, k)

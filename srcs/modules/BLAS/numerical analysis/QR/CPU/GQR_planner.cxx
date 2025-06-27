@@ -28,34 +28,3 @@
 * DEALINGS IN THE SOFTWARE.
 */
 
-#include <BLAS/MVM/CPU/MVM_planner.h>
-#include <Classes/Matrix.h>
-#include <Classes/Vector.h>
-
-
-namespace de
-{
-namespace blas{
-namespace cpu{
-
-    _DECX_API_ void GEMV(de::Matrix& A, de::Vector& B, de::Vector& dst);
-
-}
-}
-}
-
-
-_DECX_API_ void de::blas::cpu::GEMV(de::Matrix& A, de::Vector& B, de::Vector& dst)
-{
-    decx::_Matrix* _A = dynamic_cast<decx::_Matrix*>(&A);
-    decx::_Vector* _B = dynamic_cast<decx::_Vector*>(&B);
-    decx::_Vector* _dst = dynamic_cast<decx::_Vector*>(&dst);
-
-    decx::blas::cpu_MVM_planner<double> planner;
-    planner.Config(make_uint2(_A->Width(), _A->Height()));
-
-    _dst->re_construct(de::_FP32_, _A->Height());
-
-    planner.Run((double*)_A->Mat, (double*)_B->Vec, (double*)_dst->Vec, _A->Pitch());
-    return;
-}

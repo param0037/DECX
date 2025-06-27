@@ -44,6 +44,7 @@ decx::blas::cpu_MVM_planner<_data_type>::cpu_MVM_planner()
 }
 
 template decx::blas::cpu_MVM_planner<float>::cpu_MVM_planner();
+template decx::blas::cpu_MVM_planner<double>::cpu_MVM_planner();
 
 
 template <typename _data_type>
@@ -51,6 +52,7 @@ decx::blas::cpu_MVM_planner<_data_type>::~cpu_MVM_planner()
 {}
 
 template decx::blas::cpu_MVM_planner<float>::~cpu_MVM_planner();
+template decx::blas::cpu_MVM_planner<double>::~cpu_MVM_planner();
 
 
 template <typename _data_type>
@@ -95,7 +97,7 @@ int32_t decx::blas::cpu_MVM_planner<_data_type>::Config(const uint2 mat_dims)
 }
 
 template int32_t decx::blas::cpu_MVM_planner<float>::Config(const uint2 mat_dims);
-// template int32_t decx::blas::cpu_MVM_planner<double>::Config(const uint2 mat_dims);
+template int32_t decx::blas::cpu_MVM_planner<double>::Config(const uint2 mat_dims);
 
 
 template <typename _data_type>
@@ -149,6 +151,7 @@ void decx::blas::cpu_MVM_planner<_data_type>::AlignMaskGen(const uint32_t width_
 }
 
 template void decx::blas::cpu_MVM_planner<float>::AlignMaskGen(const uint32_t width_leftover, const uint32_t simd_align_byte);
+template void decx::blas::cpu_MVM_planner<double>::AlignMaskGen(const uint32_t width_leftover, const uint32_t simd_align_byte);
 
 
 template <typename _data_type>
@@ -159,4 +162,4 @@ int32_t decx::blas::cpu_MVM_planner<_data_type>::Release(cpu_MVM_planner<_data_t
 }
 
 template int32_t decx::blas::cpu_MVM_planner<float>::Release(cpu_MVM_planner<float>*);
-// template int32_t decx::blas::cpu_MVM_planner<double>::Release(cpu_MVM_planner<double>*);
+template int32_t decx::blas::cpu_MVM_planner<double>::Release(cpu_MVM_planner<double>*);

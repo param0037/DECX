@@ -36,6 +36,73 @@
 
 #define MODULE_TAG "debug"
 
+// _DECX_API_ void de::blas::cpu::GQRF(de::Matrix& src, de::Matrix& Q, de::Matrix& R)
+// {
+//     de::DH* handle = de::GetLastError();
+
+//     decx::_Matrix* _src = dynamic_cast<decx::_Matrix*>(&src);
+//     decx::_Matrix* _Q = dynamic_cast<decx::_Matrix*>(&Q);
+//     decx::_Matrix* _R = dynamic_cast<decx::_Matrix*>(&R);
+
+//     decx::blas::Blocked_GQR_planner<float> _planner;
+
+//     // de::cpu::DecxSetThreadingNum(1);
+
+//     decx::utils::Thr1D t1D(decx::cpu::_get_permitted_concurrency());
+
+//     const uint32_t block_dim = 8;
+
+//     _planner.Config(make_uint2(block_dim, _src->Height()), handle);
+    
+//     // for (int loop = 0; loop < 1000; ++loop) {
+//     for (int i = 0; i < _src->Width() / block_dim; ++i) {
+//         if (i == 0) {
+//             // Flush buffers
+//             _planner.FlushAllTiles();
+
+//             // // Load to panel
+//             _planner.LoadSrcTile(_src->Mat.GetRawPtr<float>(), i, _src->Pitch(), &t1D);
+
+//             // // Calculate block householder
+//             _planner.Process_HouseHolder();
+//         }
+//     }
+//     // }
+
+//     const float* V = _planner.GetIWY();
+//     printf("IWY\n");
+//     // const float* V = _planner.GetTile();
+//     for (int j = 0; j < 16; ++j) {
+//         for (int i = 0; i < _src->Height(); ++i) {
+//             printf("%f, ", V[j * decx::utils::ialign_up<uint32_t>(src.Height(), 8) + i]);
+//         }
+//         printf("\n");
+//     }
+
+//     V = _planner.GetW();
+//     printf("W\n");
+//     // const float* V = _planner.GetTile();
+//     for (int j = 0; j < 8; ++j) {
+//         for (int i = 0; i < _src->Height(); ++i) {
+//             printf("%f, ", V[j * decx::utils::ialign_up<uint32_t>(src.Height(), 8) + i]);
+//         }
+//         printf("\n");
+//     }
+//     V = _planner.GetV();
+//     printf("V\n");
+//     // const float* V = _planner.GetTile();
+//     for (int j = 0; j < 8; ++j) {
+//         for (int i = 0; i < _src->Height(); ++i) {
+//             printf("%f, ", V[j * decx::utils::ialign_up<uint32_t>(src.Height(), 8) + i]);
+//         }
+//         printf("\n");
+//     }
+
+//     _planner.Release();
+// }
+
+
+
 _DECX_API_ void de::blas::cpu::GQRF(de::Matrix& src, de::Matrix& Q, de::Matrix& R)
 {
     de::DH* handle = de::GetLastError();
@@ -44,9 +111,9 @@ _DECX_API_ void de::blas::cpu::GQRF(de::Matrix& src, de::Matrix& Q, de::Matrix& 
     decx::_Matrix* _Q = dynamic_cast<decx::_Matrix*>(&Q);
     decx::_Matrix* _R = dynamic_cast<decx::_Matrix*>(&R);
 
-    decx::blas::Blocked_GQR_planner<float> _planner;
+    decx::blas::Blocked_GQR_planner<double> _planner;
 
-    // de::cpu::DecxSetThreadingNum(1);
+    de::cpu::DecxSetThreadingNum(1);
 
     decx::utils::Thr1D t1D(decx::cpu::_get_permitted_concurrency());
 
@@ -61,7 +128,7 @@ _DECX_API_ void de::blas::cpu::GQRF(de::Matrix& src, de::Matrix& Q, de::Matrix& 
             _planner.FlushAllTiles();
 
             // // Load to panel
-            _planner.LoadSrcTile(_src->Mat.GetRawPtr<float>(), i, _src->Pitch(), &t1D);
+            _planner.LoadSrcTile(_src->Mat.GetRawPtr<double>(), i, _src->Pitch(), &t1D);
 
             // // Calculate block householder
             _planner.Process_HouseHolder();
@@ -69,12 +136,12 @@ _DECX_API_ void de::blas::cpu::GQRF(de::Matrix& src, de::Matrix& Q, de::Matrix& 
     }
     // }
 
-    const float* V = _planner.GetIWY();
+    const double* V = _planner.GetIWY();
     printf("IWY\n");
     // const float* V = _planner.GetTile();
     for (int j = 0; j < 16; ++j) {
         for (int i = 0; i < _src->Height(); ++i) {
-            printf("%f, ", V[j * decx::utils::ialign_up<uint32_t>(src.Height(), 8) + i]);
+            printf("%lf, ", V[j * decx::utils::ialign_up<uint32_t>(src.Height(), 4) + i]);
         }
         printf("\n");
     }
@@ -84,7 +151,7 @@ _DECX_API_ void de::blas::cpu::GQRF(de::Matrix& src, de::Matrix& Q, de::Matrix& 
     // const float* V = _planner.GetTile();
     for (int j = 0; j < 8; ++j) {
         for (int i = 0; i < _src->Height(); ++i) {
-            printf("%f, ", V[j * decx::utils::ialign_up<uint32_t>(src.Height(), 8) + i]);
+            printf("%lf, ", V[j * decx::utils::ialign_up<uint32_t>(src.Height(), 4) + i]);
         }
         printf("\n");
     }
@@ -93,7 +160,7 @@ _DECX_API_ void de::blas::cpu::GQRF(de::Matrix& src, de::Matrix& Q, de::Matrix& 
     // const float* V = _planner.GetTile();
     for (int j = 0; j < 8; ++j) {
         for (int i = 0; i < _src->Height(); ++i) {
-            printf("%f, ", V[j * decx::utils::ialign_up<uint32_t>(src.Height(), 8) + i]);
+            printf("%lf, ", V[j * decx::utils::ialign_up<uint32_t>(src.Height(), 4) + i]);
         }
         printf("\n");
     }

@@ -84,21 +84,9 @@ private:
 
 
 private:
-    void Process_SingleCol_HH(const _data_type* __restrict p_col,
-        _data_type* __restrict p_V,
-        const uint32_t local_col_id, const uint32_t proc_len_v1);
-
-
-    static void UpdateW(decx::blas::Blocked_GQR_planner<_data_type>* fake_this, const uint32_t local_col_id);
-
-
     int32_t GetPostMask(const uint32_t L_front, void* p_in) const;
     
-
-    static void ApplyRefactors(decx::blas::Blocked_GQR_planner<_data_type>* fake_this,
-        const _data_type* Vk, _data_type* panel_next, const uint32_t local_col_id, const uint2 submat_dims);
     
-
     _THREAD_GENERAL_
     static uint32_t CalcProcLenV(const uint32_t local_col_id, const uint8_t alignment, const uint32_t proc_len_v1)
     {
@@ -111,6 +99,15 @@ private:
     }
 
     int32_t Config_W_updator();
+
+public:
+    static void sColHouseHolderTF(decx::blas::Blocked_GQR_planner<_data_type>* _fake_this, const uint32_t local_col_id);
+
+
+    static void sUpdateW(decx::blas::Blocked_GQR_planner<_data_type>* fake_this, const uint32_t local_col_id);
+
+
+    static void sApplyReflectors(decx::blas::Blocked_GQR_planner<_data_type>* fake_this, const uint32_t local_col_id);
 
 public:
     Blocked_GQR_planner() {

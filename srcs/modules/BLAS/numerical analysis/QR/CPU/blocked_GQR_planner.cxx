@@ -44,6 +44,17 @@ static decx::utils::simd::xmm256_reg post_mask256_gen_v8(const uint8_t L_front)
 }
 
 
+static decx::utils::simd::xmm256_reg post_mask256_gen_v4(const uint8_t L_front)
+{
+    decx::utils::simd::xmm256_reg mask;
+    mask._vi = _mm256_setzero_si256();
+    for (uint8_t i = L_front; i < 4; ++i) {
+        mask._arrull[i] = 0xffffffffffffffffU;
+    }
+    return mask;
+}
+
+
 template <typename _data_type>
 void decx::blas::Blocked_GQR_planner<_data_type>::Config(const uint2 block_dims, de::DH* handle)
 {
@@ -71,8 +82,22 @@ void decx::blas::Blocked_GQR_planner<_data_type>::Config(const uint2 block_dims,
 
     // Generating masks
     uint8_t* post_mask_ptr = this->_simd_post_masks.GetRawPtr<uint8_t>();
-    for (int32_t i = 0; i < alignment; ++i){
-        decx::utils::simd::xmm256_reg mask = post_mask256_gen_v8(i);
+    for (int32_t i = 0; i < alignment; ++i)
+    {
+        decx::utils::simd::xmm256_reg mask;
+        mask._vf = _mm256_setzero_ps();
+        switch (alignment)
+        {
+        case 8:
+            mask = post_mask256_gen_v8(i);
+            break;
+        case 4:
+            mask = post_mask256_gen_v4(i);
+            break;
+        
+        default:
+            break;
+        }
         _mm256_store_ps((float*)(post_mask_ptr + this->_align_bytes * i), mask._vf);
     }
 
@@ -94,6 +119,7 @@ void decx::blas::Blocked_GQR_planner<_data_type>::Config(const uint2 block_dims,
 }
 
 template void decx::blas::Blocked_GQR_planner<float>::Config(const uint2 block_dims, de::DH* handle);
+template void decx::blas::Blocked_GQR_planner<double>::Config(const uint2 block_dims, de::DH* handle);
 
 
 template <typename _data_type>
@@ -111,6 +137,7 @@ void decx::blas::Blocked_GQR_planner<_data_type>::FlushAllTiles()
 }
 
 template void decx::blas::Blocked_GQR_planner<float>::FlushAllTiles();
+template void decx::blas::Blocked_GQR_planner<double>::FlushAllTiles();
 
 
 static uint32_t calc_proc_len_v(const uint32_t    local_col_id, 
@@ -139,6 +166,7 @@ decx::blas::Blocked_GQR_planner<_data_type>::Release()
 }
 
 template void decx::blas::Blocked_GQR_planner<float>::Release();
+template void decx::blas::Blocked_GQR_planner<double>::Release();
 
 
 template <typename _data_type> int32_t 
@@ -150,7 +178,7 @@ decx::blas::Blocked_GQR_planner<_data_type>::GetPostMask(const uint32_t L_front,
     const uint8_t* post_mask_ptr = this->_simd_post_masks.template GetRawPtrConst<uint8_t>();
     switch (this->_align_bytes)
     {
-    case 32:
+    case 32:        // AVX256
         _mm256_storeu_ps((float*)p_in, _mm256_load_ps((float*)(post_mask_ptr + this->_align_bytes * L_front)));
         break;
     
@@ -162,6 +190,7 @@ decx::blas::Blocked_GQR_planner<_data_type>::GetPostMask(const uint32_t L_front,
 }
 
 template int32_t decx::blas::Blocked_GQR_planner<float>::GetPostMask(const uint32_t L_front, void* p_in) const;
+template int32_t decx::blas::Blocked_GQR_planner<double>::GetPostMask(const uint32_t L_front, void* p_in) const;
 
 
 template <typename _data_type>
@@ -180,6 +209,7 @@ int32_t decx::blas::Blocked_GQR_planner<_data_type>::Config_W_updator()
 }
 
 template int32_t decx::blas::Blocked_GQR_planner<float>::Config_W_updator();
+template int32_t decx::blas::Blocked_GQR_planner<double>::Config_W_updator();
 
 
 template <typename _data_type>
@@ -187,38 +217,19 @@ void decx::blas::Blocked_GQR_planner<_data_type>::Process_HouseHolder()
 {
     const uint32_t panel_pitch = this->_src_tile.GetDims().x;
 
-    decx::utils::Thr1D t1D(16);
-
-    for (int col_id = 0; col_id < this->_block_dims.x; ++col_id) 
+    // for (int col_id = 0; col_id < this->_block_dims.x; ++col_id) 
+    for (int col_id = 0; col_id < 5; ++col_id) 
     {
-        // Calculate householder reflector
-        this->Process_SingleCol_HH(this->GetAlignedBufAddr(BlockedGQR_BufType_e::BGQR_Buffer_src, col_id, col_id),
-                                   this->GetAlignedBufAddr(BlockedGQR_BufType_e::BGQR_Buffer_V, col_id, col_id),
-                                   this->_block_dims.y - col_id, col_id);
+        sColHouseHolderTF(this, col_id);
 
-        if (col_id < this->_block_dims.x - 1) {
-            const decx::utils::frag_manager* fmgr = this->_fmgrs_apply_HH + col_id;
-            
-            const _data_type* pV = this->GetAlignedBufAddr(BlockedGQR_BufType_e::BGQR_Buffer_V, col_id, col_id);
-            _data_type* pPanel = this->GetAlignedBufAddr(BlockedGQR_BufType_e::BGQR_Buffer_src, col_id, col_id + 1);
+        sApplyReflectors(this, col_id);
 
-            decx::cpu_ElementWise1D_planner::
-            sCaller(decx::blas::Blocked_GQR_planner<_data_type>::ApplyRefactors, fmgr, &t1D, 
-                decx::cpu::ThreadDispatchMethod_e::Dispatch_ByID,
-                EW_SLOT_ID_MONOTONIC(0),
-                decx::TArg_still<decx::blas::Blocked_GQR_planner<_data_type>*>(this),
-                decx::TArg_still<const _data_type*>(pV),
-                decx::TArg_var<_data_type*>      ([&](const int32_t i){return pPanel + i * 1 * panel_pitch;}),
-                decx::TArg_still<int32_t>(col_id),
-                decx::TArg_var<uint2>([&](const int32_t i){return make_uint2(fmgr->GetFragLenById(i), this->_block_dims.y - col_id);})
-            );
-        }
-
-        this->UpdateW(this, col_id);
+        sUpdateW(this, col_id);
     }
 }
 
 template void decx::blas::Blocked_GQR_planner<float>::Process_HouseHolder();
+template void decx::blas::Blocked_GQR_planner<double>::Process_HouseHolder();
 
 
 template <typename _data_type>
@@ -228,14 +239,24 @@ void decx::blas::Blocked_GQR_planner<_data_type>::LoadSrcTile(
         const uint32_t pitchsrc_v1,
         decx::utils::Thr1D* t1D)
 {
-    this->_tp_ldg_config.transpose_4b_caller(src + block_id * pitchsrc_v1 + block_id * this->_block_dims.x, 
-        this->_src_tile.template GetRawPtr<_data_type>(), 
-        pitchsrc_v1, 
-        this->_src_tile.GetDims().x, 
-        t1D);
+    if constexpr (sizeof(_data_type) == 4) {
+        this->_tp_ldg_config.transpose_4b_caller(src + block_id * pitchsrc_v1 + block_id * this->_block_dims.x, 
+            this->_src_tile.template GetRawPtr<_data_type>(), 
+            pitchsrc_v1, 
+            this->_src_tile.GetDims().x, 
+            t1D);
+    }
+    else if constexpr (sizeof(_data_type) == 8) {
+        this->_tp_ldg_config.transpose_8b_caller(src + block_id * pitchsrc_v1 + block_id * this->_block_dims.x, 
+            this->_src_tile.template GetRawPtr<_data_type>(), 
+            pitchsrc_v1, 
+            this->_src_tile.GetDims().x, 
+            t1D);
+    }
 }
 
-template void decx::blas::Blocked_GQR_planner<float>::LoadSrcTile(const float* src, const uint32_t block_id, const uint32_t pitchsrc_v1, decx::utils::Thr1D* t1D);
+template void decx::blas::Blocked_GQR_planner<float>::LoadSrcTile(const float*, const uint32_t, const uint32_t, decx::utils::Thr1D*);
+template void decx::blas::Blocked_GQR_planner<double>::LoadSrcTile(const double*, const uint32_t, const uint32_t, decx::utils::Thr1D*);
 
 
 template <typename _data_type>
@@ -260,3 +281,4 @@ _data_type* decx::blas::Blocked_GQR_planner<_data_type>::GetAlignedBufAddr(
 }
 
 template float* decx::blas::Blocked_GQR_planner<float>::GetAlignedBufAddr(const decx::blas::Blocked_GQR_planner<float>::BlockedGQR_BufType_e, const uint32_t, const uint32_t);
+template double* decx::blas::Blocked_GQR_planner<double>::GetAlignedBufAddr(const decx::blas::Blocked_GQR_planner<double>::BlockedGQR_BufType_e, const uint32_t, const uint32_t);

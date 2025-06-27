@@ -204,14 +204,12 @@ namespace simd
 #endif
 
 #if defined(__aarch64__) || defined(__arm__)
-    inline float32x4_t vswap_middle_f32(float32x4_t __src)
-    {
+    inline float32x4_t vswap_middle_f32(float32x4_t __src) {
         return vzip1q_f32(__src, vextq_f32(__src, __src, 2));
     }
 
     
-    inline decx::utils::simd::xmm128_reg& vdupq_n_zeros(decx::utils::simd::xmm128_reg& reg)
-    {
+    inline decx::utils::simd::xmm128_reg& vdupq_n_zeros(decx::utils::simd::xmm128_reg& reg) {
         reg._vui = veorq_u32(reg._vui, reg._vui);
         return reg;
     }
