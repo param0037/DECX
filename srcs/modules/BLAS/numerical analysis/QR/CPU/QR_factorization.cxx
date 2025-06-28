@@ -36,6 +36,7 @@
 
 #define MODULE_TAG "debug"
 
+
 // _DECX_API_ void de::blas::cpu::GQRF(de::Matrix& src, de::Matrix& Q, de::Matrix& R)
 // {
 //     de::DH* handle = de::GetLastError();
@@ -50,7 +51,7 @@
 
 //     decx::utils::Thr1D t1D(decx::cpu::_get_permitted_concurrency());
 
-//     const uint32_t block_dim = 8;
+//     const uint32_t block_dim = 16;
 
 //     _planner.Config(make_uint2(block_dim, _src->Height()), handle);
     
@@ -82,7 +83,7 @@
 //     V = _planner.GetW();
 //     printf("W\n");
 //     // const float* V = _planner.GetTile();
-//     for (int j = 0; j < 8; ++j) {
+//     for (int j = 0; j < 16; ++j) {
 //         for (int i = 0; i < _src->Height(); ++i) {
 //             printf("%f, ", V[j * decx::utils::ialign_up<uint32_t>(src.Height(), 8) + i]);
 //         }
@@ -91,7 +92,7 @@
 //     V = _planner.GetV();
 //     printf("V\n");
 //     // const float* V = _planner.GetTile();
-//     for (int j = 0; j < 8; ++j) {
+//     for (int j = 0; j < 16; ++j) {
 //         for (int i = 0; i < _src->Height(); ++i) {
 //             printf("%f, ", V[j * decx::utils::ialign_up<uint32_t>(src.Height(), 8) + i]);
 //         }
@@ -113,11 +114,11 @@ _DECX_API_ void de::blas::cpu::GQRF(de::Matrix& src, de::Matrix& Q, de::Matrix& 
 
     decx::blas::Blocked_GQR_planner<double> _planner;
 
-    de::cpu::DecxSetThreadingNum(1);
+    // de::cpu::DecxSetThreadingNum(1);
 
     decx::utils::Thr1D t1D(decx::cpu::_get_permitted_concurrency());
 
-    const uint32_t block_dim = 8;
+    const uint32_t block_dim = 16;
 
     _planner.Config(make_uint2(block_dim, _src->Height()), handle);
     
@@ -149,7 +150,7 @@ _DECX_API_ void de::blas::cpu::GQRF(de::Matrix& src, de::Matrix& Q, de::Matrix& 
     V = _planner.GetW();
     printf("W\n");
     // const float* V = _planner.GetTile();
-    for (int j = 0; j < 8; ++j) {
+    for (int j = 0; j < 16; ++j) {
         for (int i = 0; i < _src->Height(); ++i) {
             printf("%lf, ", V[j * decx::utils::ialign_up<uint32_t>(src.Height(), 4) + i]);
         }
@@ -158,7 +159,7 @@ _DECX_API_ void de::blas::cpu::GQRF(de::Matrix& src, de::Matrix& Q, de::Matrix& 
     V = _planner.GetV();
     printf("V\n");
     // const float* V = _planner.GetTile();
-    for (int j = 0; j < 8; ++j) {
+    for (int j = 0; j < 16; ++j) {
         for (int i = 0; i < _src->Height(); ++i) {
             printf("%lf, ", V[j * decx::utils::ialign_up<uint32_t>(src.Height(), 4) + i]);
         }

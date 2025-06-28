@@ -146,7 +146,7 @@ decx::blas::Blocked_GQR_planner<float>::sUpdateW(decx::blas::Blocked_GQR_planner
                 decx::TArg_var<const float*>([&](const int32_t i){return pW + i * fake_this->_fmgr_updateW.GetFragLenById(0);}),
                 decx::TArg_var<float*>([&](const int32_t i){return pIWY + i * pitchIWY * fake_this->_fmgr_updateW.GetFragLenById(0);}),
                 decx::TArg_var<uint2>([&](const int32_t i){return make_uint2(0, i * fake_this->_fmgr_updateW.GetFragLenById(0));}),
-                decx::TArg_var<uint2>([&](const int32_t i){return make_uint2(decx::utils::idiv_ceil<uint32_t>(proc_len_v1, 8), fake_this->_fmgr_updateW.GetFragLenById(i));}),
+                decx::TArg_var<uint2>([&](const int32_t i){return make_uint2(decx::utils::idiv_ceil<uint32_t>(proc_len_v1 + 1, 8), fake_this->_fmgr_updateW.GetFragLenById(i));}),
                 decx::TArg_still<uint32_t>(pitchIWY),
                 decx::TArg_still<void*>((void*)post_mask));
                     

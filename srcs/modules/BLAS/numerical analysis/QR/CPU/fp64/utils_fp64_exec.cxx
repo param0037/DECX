@@ -76,7 +76,6 @@ CalcIWY_blocked_v4_fp64(const double* __restrict        pV_last,
     int2 g_coord_WH = make_int2(start_idx_WH.x, start_idx_WH.y);
     const __m256d post_mask_v4 = _mm256_loadu_pd((const double*)p_post_mask_v4);
     const double* p_mask = (double*)p_post_mask_v4;
-    printf("%lf, %lf, %lf, %lf\n", p_mask[0], p_mask[1], p_mask[2], p_mask[3]);
 
     for (int32_t i = 0; i < proc_sizes_v4_WH.y; ++i)
     {
@@ -85,6 +84,13 @@ CalcIWY_blocked_v4_fp64(const double* __restrict        pV_last,
         __m256d Wval_v4 = _mm256_set1_pd(Wval);
         double* pIWY_row = pIWY + i * pitch_IWY_v1;
         g_coord_WH.x = start_idx_WH.x;
+
+        // printf("proc_sizes_v4_WH.x=%d, pV_last: [", proc_sizes_v4_WH.x);
+        // for (int test = 0; test < 16; ++test) {
+        //     printf("%lf, ", pV_last[test]);
+        // }
+        // printf("]\n");
+
         for (int32_t j = 0; j < proc_sizes_v4_WH.x; ++j)
         {
             __m256d Vval_v4 = _mm256_load_pd(pV_last + (j << 2));
@@ -139,9 +145,7 @@ decx::blas::Blocked_GQR_planner<double>::sUpdateW(decx::blas::Blocked_GQR_planne
         const double* pV = fake_this->GetAlignedBufAddr(BlockedGQR_BufType_e::BGQR_Buffer_V, local_col_id - 1, local_col_id - 1);    // V(k-1:end, k-1)
         const double* pW = fake_this->GetAlignedBufAddr(BlockedGQR_BufType_e::BGQR_Buffer_W, 0, local_col_id - 1);                   // W(:, k-1:end)
         double* pIWY = fake_this->GetAlignedBufAddr(BlockedGQR_BufType_e::BGQR_Buffer_IWY, local_col_id - 1, 0);                     // IWY(:, k-1:end)
-
-        fake_this->_fmgr_updateW.DumpInfo();
-        printf("pIWY: %p\n", pIWY);
+        
         decx::cpu_ElementWise1D_planner::
             sCaller(pFunc, &fake_this->_fmgr_updateW, &t1D, 
                 decx::cpu::ThreadDispatchMethod_e::Dispatch_ByID,
@@ -150,12 +154,11 @@ decx::blas::Blocked_GQR_planner<double>::sUpdateW(decx::blas::Blocked_GQR_planne
                 decx::TArg_var<const double*>([&](const int32_t i){return pW + i * fake_this->_fmgr_updateW.GetFragLenById(0);}),
                 decx::TArg_var<double*>([&](const int32_t i){return pIWY + i * pitchIWY * fake_this->_fmgr_updateW.GetFragLenById(0);}),
                 decx::TArg_var<uint2>([&](const int32_t i){return make_uint2(0, i * fake_this->_fmgr_updateW.GetFragLenById(0));}),
-                decx::TArg_var<uint2>([&](const int32_t i){return make_uint2(decx::utils::idiv_ceil<uint32_t>(proc_len_v1, 4), fake_this->_fmgr_updateW.GetFragLenById(i));}),
+                decx::TArg_var<uint2>([&](const int32_t i){return make_uint2(decx::utils::idiv_ceil<uint32_t>(proc_len_v1 + 1, 4), fake_this->_fmgr_updateW.GetFragLenById(i));}),
                 decx::TArg_still<uint32_t>(pitchIWY),
                 decx::TArg_still<void*>((void*)post_mask));
         
         // Update W
-
         fake_this->_w_update_helpers[(local_col_id - 1) / alignment].Run(
             fake_this->GetAlignedBufAddr(BlockedGQR_BufType_e::BGQR_Buffer_IWY, local_col_id - 1, 0),           // IWY(:, k-1:end)
             fake_this->GetAlignedBufAddr(BlockedGQR_BufType_e::BGQR_Buffer_V, local_col_id - 1, local_col_id),  // V(k-1:end, k)

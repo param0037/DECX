@@ -140,18 +140,6 @@ template void decx::blas::Blocked_GQR_planner<float>::FlushAllTiles();
 template void decx::blas::Blocked_GQR_planner<double>::FlushAllTiles();
 
 
-static uint32_t calc_proc_len_v(const uint32_t    local_col_id, 
-                                const uint8_t     alignment, 
-                                const uint32_t    proc_len_v1)
-{
-    int32_t L_front = local_col_id % (uint32_t)alignment;
-    int32_t first_lane = alignment - L_front;
-    int32_t is_left = first_lane == 0 ? 0 : 1;
-    int32_t post_length = proc_len_v1 - first_lane;
-    post_length = post_length < 0 ? 0 : post_length;
-    return decx::utils::idiv_ceil<uint32_t>(post_length, alignment) + is_left;
-}
-
 template <typename _data_type> void
 decx::blas::Blocked_GQR_planner<_data_type>::Release()
 {
@@ -217,8 +205,8 @@ void decx::blas::Blocked_GQR_planner<_data_type>::Process_HouseHolder()
 {
     const uint32_t panel_pitch = this->_src_tile.GetDims().x;
 
-    // for (int col_id = 0; col_id < this->_block_dims.x; ++col_id) 
-    for (int col_id = 0; col_id < 5; ++col_id) 
+    for (int col_id = 0; col_id < this->_block_dims.x; ++col_id) 
+    // for (int col_id = 0; col_id < 5; ++col_id) 
     {
         sColHouseHolderTF(this, col_id);
 

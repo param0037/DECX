@@ -204,7 +204,7 @@ template <typename _Ty>
 #ifdef _DECX_CUDA_PARTS_
 __host__ __device__
 #endif
-constexpr static inline 
+static inline 
 typename std::enable_if<std::is_same<_Ty, int32_t>::value  ||
                         std::is_same<_Ty, uint32_t>::value || 
                         std::is_same<_Ty, int64_t>::value  ||
@@ -213,7 +213,7 @@ typename std::enable_if<std::is_same<_Ty, int32_t>::value  ||
                         std::is_same<_Ty, uint8_t>::value, _Ty>::type
 iabs(_Ty n) noexcept 
 {
-    constexpr int32_t max_bit_idx = sizeof(_Ty) * 8 - 1;
+    const int32_t max_bit_idx = sizeof(_Ty) * 8 - 1;
     return (n ^ (n >> max_bit_idx)) - (n >> max_bit_idx);
 }
 
