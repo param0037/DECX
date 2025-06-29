@@ -85,12 +85,6 @@ CalcIWY_blocked_v4_fp64(const double* __restrict        pV_last,
         double* pIWY_row = pIWY + i * pitch_IWY_v1;
         g_coord_WH.x = start_idx_WH.x;
 
-        // printf("proc_sizes_v4_WH.x=%d, pV_last: [", proc_sizes_v4_WH.x);
-        // for (int test = 0; test < 16; ++test) {
-        //     printf("%lf, ", pV_last[test]);
-        // }
-        // printf("]\n");
-
         for (int32_t j = 0; j < proc_sizes_v4_WH.x; ++j)
         {
             __m256d Vval_v4 = _mm256_load_pd(pV_last + (j << 2));
@@ -131,6 +125,10 @@ decx::blas::Blocked_GQR_planner<double>::sUpdateW(decx::blas::Blocked_GQR_planne
 
     decx::utils::Thr1D t1D(fake_this->_fmgr_updateW.GetFragNum());
     const uint32_t pitchIWY = fake_this->_IWY.GetDims().x;
+
+    if (fake_this->_block_dims.y == fake_this->_block_dims.x && local_col_id == fake_this->_block_dims.x - 1) {
+        return;
+    }
     
     if (local_col_id == 0) {
         const double* pV_now = fake_this->GetV() + 0;
