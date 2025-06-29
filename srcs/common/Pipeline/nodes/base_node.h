@@ -28,54 +28,49 @@
 * DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef _BRANCH_SPLIT_H_
-#define _BRANCH_SPLIT_H_
+#ifndef _BASE_NODE_H_
+#define _BASE_NODE_H_
 
-#include "node_base.h"
+#define _NODE_NAME_MAX_LENGTH_ 64
 
+#include <task_info.h>
 
 namespace decx
 {
-namespace utils
-{
-    class BranchSplit;
+    class BaseNode;
+
+
+    enum class NodeTaskDriveMode_e
+    {
+        NodeDrvMode_Timer = 0,
+        NodeDrvMode_Semaphore = 1,
+    };
 }
-}
 
-
-#define MAX_BRANCH_NUM 32
-#define PREDICATED_DATA_MAX_LENGTH 1024
-
-
-class decx::utils::BranchSplit : public decx::utils::NodeBase
+class decx::BaseNode
 {
 private:
-    decx::PtrInfo<void> _node_data_buf;
-    decx::utils::NodeBase* _branch_heads[MAX_BRANCH_NUM];
-    uint32_t _branch_num;
+    char _node_name[_NODE_NAME_MAX_LENGTH_];
+    NodeTaskDriveMode_e _drv_mode;
+    DecxTaskInfo_t _task_info;
 
-    const void* _data_in;
+    decx::BaseNode* _prev;
+    decx::BaseNode* _next;
+
+    // Timer (if used)
+    
+
+private:
+    // DataBuffers
 
 public:
-    BranchSplit();
+    BaseNode();
 
 
-    BranchSplit(const char* node_name);
+    BaseNode(const char* node_name);
 
 
-    int32_t SetPredicatedData(void* p_data, const uint64_t size, const bool use_buitin_buffer = false, de::DH* handle = nullptr);
-
-
-    int32_t RegisterBranchHead(decx::utils::NodeBase* p_branch_head);
-
-
-    int32_t PredicatorRegister(PredicatorFunc_t* node_func);
-
-
-    int32_t AllocateNodeBufData(de::DH* handle);
-
-
-    virtual int32_t Process() override;
+    BaseNode(const char* node_name, const decx::NodeTaskDriveMode_e drv_mode);
 };
 
 #endif

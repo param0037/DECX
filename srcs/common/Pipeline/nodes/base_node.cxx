@@ -28,56 +28,27 @@
 * DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef _CONCURRENT_SPLIT_H_
-#define _CONCURRENT_SPLIT_H_
+#include "base_node.h"
 
-#include "node_base.h"
-#include <thread_management/thread_pool.h>
 
-namespace decx
+decx::BaseNode::BaseNode()
 {
-namespace utils
-{
-    class ConcurrentSplit;
-    class Synchronize;
-
-    struct StreamHeaderInfo_t
-    {
-        decx::utils::NodeBase*       _p_stream_head;
-        int32_t                      _thread_id;
-        decx::utils::Synchronize*    _p_sync;
-        std::future<void>            _future;
-        decx::cpu::ThreadDispatchMethod_e _dispatch_method;
-    };
-}
+    memset(this, 0, sizeof(decx::BaseNode));
 }
 
-#define MAX_CONCURRENT_BRANCHS_NUM 64
 
-class decx::utils::ConcurrentSplit : public decx::utils::NodeBase
+decx::BaseNode::BaseNode(const char* node_name)
 {
-private:
-    decx::utils::StreamHeaderInfo_t _header_info_arr[MAX_CONCURRENT_BRANCHS_NUM];
-    uint32_t _branch_num;
-
-    static _THREAD_FUNCTION_ void BranchFunctionByID(decx::utils::ConcurrentSplit* _fake_this, const uint32_t branch_id);
-
-public:
-    ConcurrentSplit();
+    memset(this, 0, sizeof(decx::BaseNode));
+    strcpy(this->_node_name, node_name);
+}
 
 
-    ConcurrentSplit(const char* node_name);
+decx::BaseNode::BaseNode(const char* node_name, const decx::NodeTaskDriveMode_e drv_mode)
+{
+    memset(this, 0, sizeof(decx::BaseNode));
+    strcpy(this->_node_name, node_name);
+    this->_drv_mode = drv_mode;
+}
 
 
-    decx::utils::StreamHeaderInfo_t* GetStreamInfoByID(const uint32_t id);
-    decx::utils::StreamHeaderInfo_t* GetStreamInfoByStreamHeader(const decx::utils::NodeBase* p_stream_header);
-
-
-    int32_t RegisterBranchHead(decx::utils::NodeBase* p_conc_split, const decx::cpu::ThreadDispatchMethod_e method = decx::cpu::ThreadDispatchMethod_e::Dispatch_NewSlot,
-        const int32_t slot_id = 0);
-
-
-    virtual int32_t Process() override;
-};
-
-#endif

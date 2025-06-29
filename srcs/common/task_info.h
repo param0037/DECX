@@ -28,37 +28,16 @@
 * DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef _SYNCHRONIZE_H_
-#define _SYNCHRONIZE_H_
 
-#include "node_base.h"
-#include "concurrent_split.h"
+#ifndef _TASK_INFO_H_
+#define _TASK_INFO_H_
 
-namespace decx
+#include <basic.h>
+
+struct DecxTaskInfo_t
 {
-namespace utils
-{
-    class Synchronize;
-}
-}
-
-class decx::utils::Synchronize : public decx::utils::NodeBase
-{
-private:
-    std::future<void>* _p_sync_streams[MAX_CONCURRENT_BRANCHS_NUM];
-    uint32_t _sync_streams_num;
-
-public:
-    Synchronize();
-
-
-    Synchronize(const char* node_name);
-
-
-    int32_t RegisterOneStream(decx::utils::ConcurrentSplit* p_conc_split, decx::utils::NodeBase* p_stream_head);
-
-
-    virtual int32_t Process() override;
+    void* _p_task_func;
+    int32_t _slot_id;
 };
 
 #endif
