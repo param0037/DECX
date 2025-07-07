@@ -32,58 +32,68 @@
 #ifndef _TASK_QUEUE_H_
 #define _TASK_QUEUE_H_
 
-#if defined(_DECX_CPU_PARTS_)
 
 #include <basic.h>
 #include <Array/Dynamic_Array.h>
+#include <Concurrent/task_handle.h>
 
 
 namespace decx
 {
-#ifdef _DECX_CORE_CPU_
-    /**
-    * This threadpool is designed for intensive tasks. That is, system will exit when the number of actual thread
-    * exceeds that of the maximum thread. There is no other object that is corresponding to each thread.
-    * Each thread can be used repeatedly as long as it is sleeping
-    */
-    class ThreadPool;
-#endif
-
+namespace core
+{
     class ThreadTaskQueue;
+
+
+    enum class TaskQueueSwitch : uint8_t
+    {
+        TaskQueue_OFF = 0,
+        TaskQueue_ON = 1,
+    };
+}
 }
 
 
-typedef std::packaged_task<void()> Task;
-
-
-class decx::ThreadTaskQueue
+class decx::core::ThreadTaskQueue
 {
-public:
+private:
     // private variables for each thread
     std::mutex _mtx;
     std::condition_variable _cv;
 
-    decx::utils::Dynamic_Array<Task> _task_queue;
+    decx::utils::Dynamic_Array<decx::core::TaskImplHandle_t> _task_queue;
 
-    bool _shutdown;
+    uint8_t _shutdown;
 
+    decx::core::TaskQueueBehaviour_e _behaviour;
+    decx::core::TaskQueueUsage_e     _usage;
+
+public:
     ThreadTaskQueue();
+
+
+    void Switch(const TaskQueueSwitch switch_stage);
+
+
+    _THREAD_GENERAL_ void ThreadMainLoop();
+
+
+    std::mutex& GetMutex() {
+        return this->_mtx;
+    }
+
+
+    std::condition_variable& GetCondVar() {
+        return this->_cv;
+    }
+
+
+    uint64_t GetCurrentTaskNum();
+
+
+    int32_t RegisterTask(decx::core::TaskImplHandle_t task_hdlr);
 };
 
-
-
-namespace decx 
-{
-    template <class FuncType, class ...Args>
-    static std::future<void> InsertTaskBack(decx::ThreadTaskQueue* _tq, FuncType&& f, Args&& ...args) {
-        _tq->_task_queue.emplace_back(std::bind(std::forward<FuncType>(f), std::forward<Args>(args)...));
-
-        return _tq->_task_queue.back()->get_future();
-    }
-}
-
-
-#endif      // if defined(_DECX_CPU_PARTS_)
 
 
 #endif      // ifndef _TASK_QUEUE_H_

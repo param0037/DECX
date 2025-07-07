@@ -32,8 +32,46 @@
 #include "task_queue.h"
 
 
-
-decx::ThreadTaskQueue::ThreadTaskQueue() 
+decx::core::ThreadTaskQueue::ThreadTaskQueue() 
 {
     this->_shutdown = false;
+}
+
+
+_THREAD_GENERAL_
+void decx::core::ThreadTaskQueue::ThreadMainLoop()
+{
+    while (!this->_shutdown)
+    {
+        std::unique_lock<std::mutex> lock{ this->_mtx };
+        while ((this->_task_queue.size() == 0) && (!this->_shutdown)) {
+            this->_cv.wait(lock);
+        }
+
+        if (this->_task_queue.size() != 0) {
+            decx::core::TaskImplHandle_t* task = this->_task_queue.back();
+            (*task)->Execute();     // execute the tast
+            this->_task_queue.pop_back();
+        }
+    }
+    return;
+}
+
+
+void decx::core::ThreadTaskQueue::Switch(const TaskQueueSwitch switch_stage)
+{
+    this->_shutdown = (TaskQueueSwitch::TaskQueue_OFF == switch_stage) ? 1 : 0;
+}
+
+
+uint64_t decx::core::ThreadTaskQueue::GetCurrentTaskNum()
+{
+    return this->_task_queue.size();
+}
+
+
+int32_t decx::core::ThreadTaskQueue::RegisterTask(decx::core::TaskImplHandle_t task_hdlr)
+{
+    this->_task_queue.emplace_back(task_hdlr);
+    return 0;
 }

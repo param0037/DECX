@@ -81,7 +81,6 @@ public:
 
     void __sync_all_threads(const uint2 _range) {
         if (_range.y > this->total_thread) {
-            Print_Error_Message(4, "__sync_all_threads failure: memory out of bound");
             return;
         }
         for (int i = _range.x; i < _range.y; ++i) {
@@ -148,7 +147,6 @@ public:
 
     void __sync_all_threads(const uint2 _range) {
         if (_range.y > this->total_thread) {
-            Print_Error_Message(4, "memory out of bound\n");
             return;
         }
         for (int i = _range.x; i < _range.y; ++i) {

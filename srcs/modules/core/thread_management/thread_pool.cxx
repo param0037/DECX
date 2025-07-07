@@ -33,18 +33,18 @@
 #define MODULE_TAG "Builtin_Threadpool"
 
 
-void decx::ThreadPool::FindOptimalTaskQueueID(size_t* id)
+void decx::core::ThreadPool::FindOptimalTaskQueueID(uint64_t* id)
 {
-    size_t task_que_len = this->current_thread_num;
-    size_t res_id = 0,
-        least_len = (this->_task_schd)->_task_queue.size();
+    uint64_t task_que_len = this->current_thread_num;
+    uint64_t res_id = 0,
+        least_len = (this->_task_schd)->GetCurrentTaskNum();
 
     if (least_len != 0) {
-        for (size_t i = 1; i < task_que_len; ++i)
+        for (uint64_t i = 1; i < task_que_len; ++i)
         {
-            decx::ThreadTaskQueue* tmp_iter = this->_task_schd + i;
+            decx::core::ThreadTaskQueue* tmp_iter = this->_task_schd + i;
 
-            size_t current_len = tmp_iter->_task_queue.size();
+            uint64_t current_len = tmp_iter->GetCurrentTaskNum();
 
             if (current_len != 0) {
                 if (current_len < least_len)
@@ -63,18 +63,18 @@ void decx::ThreadPool::FindOptimalTaskQueueID(size_t* id)
 }
 
 
-void decx::ThreadPool::FindOptimalTaskQueueID_Ranged(size_t* id, const uint2 _range)
+void decx::core::ThreadPool::FindOptimalTaskQueueID_Ranged(uint64_t* id, const uint2 _range)
 {
-    size_t task_que_len = this->current_thread_num;
-    size_t res_id = 0,
-        least_len = (this->_task_schd + _range.x)->_task_queue.size();
+    uint64_t task_que_len = this->current_thread_num;
+    uint64_t res_id = 0,
+        least_len = (this->_task_schd + _range.x)->GetCurrentTaskNum();
 
     if (least_len != 0) {
-        for (size_t i = _range.x + 1; i < _range.y; ++i)
+        for (uint64_t i = _range.x + 1; i < _range.y; ++i)
         {
-            decx::ThreadTaskQueue* tmp_iter = this->_task_schd + i;
+            decx::core::ThreadTaskQueue* tmp_iter = this->_task_schd + i;
 
-            size_t current_len = tmp_iter->_task_queue.size();
+            uint64_t current_len = tmp_iter->GetCurrentTaskNum();
 
             if (current_len != 0) {
                 if (current_len < least_len)
@@ -94,41 +94,28 @@ void decx::ThreadPool::FindOptimalTaskQueueID_Ranged(size_t* id, const uint2 _ra
 
 
 _THREAD_FUNCTION_
-void decx::ThreadPool::ThreadMainLoop(const size_t queue_id)
+void decx::core::ThreadPool::ThreadMainLoop(const uint64_t queue_id)
 {
-    decx::ThreadTaskQueue* thread_unit = &(this->_task_schd[queue_id]);
-
-    while (!thread_unit->_shutdown)
-    {
-        std::unique_lock<std::mutex> lock{ thread_unit->_mtx };
-        while ((thread_unit->_task_queue.size() == 0) && (!thread_unit->_shutdown)) {
-            thread_unit->_cv.wait(lock);
-        }
-
-        if (thread_unit->_task_queue.size() != 0) {
-            Task* task = thread_unit->_task_queue.back();
-            (*task)();     // execute the tast
-            thread_unit->_task_queue.pop_back();
-        }
-    }
+    decx::core::ThreadTaskQueue* thread_unit = &(this->_task_schd[queue_id]);
+    thread_unit->ThreadMainLoop();
     return;
 }
 
 
-void decx::ThreadPool::Start()
+void decx::core::ThreadPool::Start()
 {
     this->_all_shutdown = false;
 
     for (int i = 0; i < this->current_thread_num; ++i) {
-        new(this->_task_schd + i) decx::ThreadTaskQueue();
+        new(this->_task_schd + i) decx::core::ThreadTaskQueue();
     }
-    for (size_t i = 0; i < this->current_thread_num; ++i) {
-        new(this->_thr_list + i) std::thread(&decx::ThreadPool::ThreadMainLoop, this, i);
+    for (uint64_t i = 0; i < this->current_thread_num; ++i) {
+        new(this->_thr_list + i) std::thread(&decx::core::ThreadPool::ThreadMainLoop, this, i);
     }
 }
 
 
-decx::ThreadPool::ThreadPool(const int thread_num, const bool start_at_begin)
+decx::core::ThreadPool::ThreadPool(const int thread_num, const bool start_at_begin)
 {
     this->_all_shutdown = true;
     this->_max_thr_num = MAX_THREAD_NUM;
@@ -136,7 +123,7 @@ decx::ThreadPool::ThreadPool(const int thread_num, const bool start_at_begin)
 
     this->_hardware_concurrent = std::thread::hardware_concurrency();
 
-    this->_task_schd = (decx::ThreadTaskQueue*)malloc(this->_max_thr_num * sizeof(decx::ThreadTaskQueue));
+    this->_task_schd = (decx::core::ThreadTaskQueue*)malloc(this->_max_thr_num * sizeof(decx::core::ThreadTaskQueue));
     this->_thr_list = (std::thread*)malloc(this->_max_thr_num * sizeof(std::thread));
 
     this->_sync_label = 0;
@@ -148,7 +135,7 @@ decx::ThreadPool::ThreadPool(const int thread_num, const bool start_at_begin)
 }
 
 
-void decx::ThreadPool::AppendThreads(const int add_thread_num)
+void decx::core::ThreadPool::AppendThreads(const int add_thread_num)
 {
     if (this->current_thread_num + add_thread_num > this->_max_thr_num) {
         DECX_LOG_ERR("Thread number is excessive");
@@ -156,26 +143,26 @@ void decx::ThreadPool::AppendThreads(const int add_thread_num)
     }
     else {
         for (int32_t i = 0; i < add_thread_num; ++i) {
-            new(this->_task_schd + this->current_thread_num + i) decx::ThreadTaskQueue();
+            new(this->_task_schd + this->current_thread_num + i) decx::core::ThreadTaskQueue();
         }
         for (int32_t i = 0, idx = this->current_thread_num; i < add_thread_num; ++i, ++idx) {
-            new(this->_thr_list + idx) std::thread(&decx::ThreadPool::ThreadMainLoop, this, idx);
+            new(this->_thr_list + idx) std::thread(&decx::core::ThreadPool::ThreadMainLoop, this, idx);
         }
         this->current_thread_num += add_thread_num;
     }
 }
 
 
-void decx::ThreadPool::TerminateAllThreads()
+void decx::core::ThreadPool::TerminateAllThreads()
 {
     for (int i = 0; i < this->current_thread_num; ++i) {
         std::thread* _iter = this->_thr_list + i;
-        decx::ThreadTaskQueue* Tschd_iter = this->_task_schd + i;
+        decx::core::ThreadTaskQueue* Tschd_iter = this->_task_schd + i;
         {
-            std::unique_lock<std::mutex> lck(Tschd_iter->_mtx);
-            Tschd_iter->_shutdown = true;
+            std::unique_lock<std::mutex> lck(Tschd_iter->GetMutex());
+            Tschd_iter->Switch(TaskQueueSwitch::TaskQueue_OFF);
         }
-        Tschd_iter->_cv.notify_one();
+        Tschd_iter->GetCondVar().notify_one();
         _iter->join();
     }
 
@@ -184,7 +171,7 @@ void decx::ThreadPool::TerminateAllThreads()
 
 
 
-decx::ThreadPool::~ThreadPool() {
+decx::core::ThreadPool::~ThreadPool() {
     if (!this->_all_shutdown) {
         TerminateAllThreads();
     }
@@ -198,37 +185,44 @@ decx::ThreadPool::~ThreadPool() {
 }
 
 
-
-_DECX_API_ decx::ThreadTaskQueue* decx::cpu::GetTaskQueueByID(const uint64_t _idx)
-{
-    return &(decx::thread_pool->_task_schd[_idx]);
-}
+decx::core::ThreadPool* decx::core::thread_pool;
 
 
-_DECX_API_ uint64_t decx::cpu::GetOptimalThreadID()
+_DECX_API_ uint64_t decx::core::GetOptimalThreadID()
 {
     uint64_t res_id;
-    decx::thread_pool->FindOptimalTaskQueueID(&res_id);
+    decx::core::thread_pool->FindOptimalTaskQueueID(&res_id);
     return res_id;
 }
 
 
-_DECX_API_ uint64_t decx::cpu::GetOptimalThreadID_Ranged(const uint2 range)
+_DECX_API_ uint64_t decx::core::GetOptimalThreadID_Ranged(const uint2 range)
 {
     uint64_t res_id;
-    decx::thread_pool->FindOptimalTaskQueueID_Ranged(&res_id, range);
+    decx::core::thread_pool->FindOptimalTaskQueueID_Ranged(&res_id, range);
     return res_id;
 }
 
 
-_DECX_API_ uint64_t decx::cpu::GetCurrentThreadNum()
+_DECX_API_ uint64_t decx::core::GetCurrentThreadNum()
 {
-    return decx::thread_pool->current_thread_num;
+    return decx::core::thread_pool->current_thread_num;
 }
 
 
-_DECX_API_ uint64_t decx::cpu::AppendThread()
+_DECX_API_ uint64_t decx::core::AppendThread()
 {
-    decx::thread_pool->AppendThreads(1);
-    return decx::cpu::GetCurrentThreadNum() - 1;
+    decx::core::thread_pool->AppendThreads(1);
+    return decx::core::GetCurrentThreadNum() - 1;
+}
+
+
+_DECX_API_ int32_t decx::cpu::InsertTaskByID(decx::core::TaskImplHandle_t task, const uint32_t id)
+{
+    auto* p_task_queue = decx::core::thread_pool->_task_schd + id;
+    p_task_queue->GetMutex().lock();
+    p_task_queue->RegisterTask(task);
+    p_task_queue->GetMutex().unlock();
+    p_task_queue->GetCondVar().notify_one();
+    return 0;
 }
