@@ -36,9 +36,6 @@ file(GLOB_RECURSE THREAD_POOL "${DECX_WORLD_ABS_DIR}/srcs/modules/core/thread_ma
 file(GLOB_RECURSE GEN "${DECX_WORLD_ABS_DIR}/srcs/modules/core/generator/*.cxx")
 file(GLOB_RECURSE HANDLE "${DECX_WORLD_ABS_DIR}/srcs/modules/core/handle/*.cxx")
 
-include("${DECX_WORLD_ABS_DIR}/srcs/common/SIMD/x86_64/intrin_x86_64.cmake")
-file(GLOB_RECURSE ARITHMETIC "${DECX_WORLD_ABS_DIR}/srcs/modules/BLAS/Arithmetic/*.cxx")
-
 add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/common/Element_wise" "${DECX_SUBBUILD_BIN_DIR}/EW_CPU")
 add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/common/FMGR" "${DECX_SUBBUILD_BIN_DIR}/FMGR_CPU")
 add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/modules/core/memory_management/CPU" "${DECX_SUBBUILD_BIN_DIR}/modules/core/mem_pool_host")
@@ -54,7 +51,7 @@ else()
 endif()
 
 add_library(${PROJECT_NAME} SHARED 
-    ${CORE} ${CLASSES} ${RESMGR} ${THREAD_POOL} ${CONFIGS} ${GEN} ${ARITHMETIC} ${INTRIN_X86_64} ${HANDLE})
+    ${CORE} ${CLASSES} ${RESMGR} ${THREAD_POOL} ${CONFIGS} ${GEN} ${HANDLE})
 
 
 target_link_libraries(DECX_core_CPU PRIVATE EW_CPU
