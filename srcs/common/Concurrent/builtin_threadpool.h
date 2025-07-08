@@ -77,7 +77,7 @@ namespace core
     _DECX_API_ uint64_t GetCurrentThreadNum();
 
 
-    _DECX_API_ uint64_t AppendThread();
+    _DECX_API_ uint64_t ThreadpoolAddSot(const TaskQueueUsage_e usage, const TaskQueueBehaviour_e behaviour);
 }
 }
 

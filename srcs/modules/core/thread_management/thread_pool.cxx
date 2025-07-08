@@ -210,7 +210,7 @@ _DECX_API_ uint64_t decx::core::GetCurrentThreadNum()
 }
 
 
-_DECX_API_ uint64_t decx::core::AppendThread()
+_DECX_API_ uint64_t decx::core::ThreadpoolAddSot(const TaskQueueUsage_e usage, const TaskQueueBehaviour_e behaviour)
 {
     decx::core::thread_pool->AppendThreads(1);
     return decx::core::GetCurrentThreadNum() - 1;
