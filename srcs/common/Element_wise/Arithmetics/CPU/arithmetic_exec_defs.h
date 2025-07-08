@@ -110,4 +110,17 @@ kernel_name(const type_in* __restrict src,                      \
 }                                                               \
 
 
+// #define _OP_1D_VO_(kernel_name, type_in, type_out, intrinsics)  \
+// _THREAD_FUNCTION_ void decx::CPUK::                             \
+// kernel_name(const type_in* __restrict src,                      \
+//             type_in* __restrict dst,                            \
+//             const uint64_t proc_len_v)                          \
+// {                                                               \
+// volatile int32_t g_s = 0;                                       \
+//     for (uint64_t i = 0; i < proc_len_v; ++i){                  \
+//         g_s += ((rand() % 100) - 200);  \
+//     }                                                           \
+// }                                                               \
+
+
 #endif

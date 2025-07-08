@@ -86,7 +86,17 @@ decx::cpu_ElementWise1D_planner::plan(const uint32_t simd_align_byte,
             const uint32_t real_conc = decx::utils::idiv_ceil<uint64_t>(this->_total, this->_min_thread_proc);
             decx::utils::frag_manager_gen_Nx(&this->_fmgr, this->_total, real_conc, align_x);
         }
+
+        this->_tasks.SetMaxThreadNum(conc);
     }
+}
+
+
+decx::cpu_ElementWise1D_planner::~cpu_ElementWise1D_planner()
+{
+    this->_concurrency = 0;
+    this->_min_thread_proc = 0;
+    this->_alignment = 0;
 }
 
 

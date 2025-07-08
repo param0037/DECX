@@ -35,8 +35,6 @@
 #include <FMGR/fragment_arrangment.h>
 #include <configs/config.h>
 
-#include <thread_argument.h>
-
 #ifdef _DECX_CPU_PARTS_
 #include <thread_management/thread_arrange.h>
 #include <thread_management/thread_pool.h>
