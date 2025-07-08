@@ -35,10 +35,6 @@
 
 #include "../basic.h"
 
-#ifndef MODULE_TAG
-#define MODULE_TAG ""
-#endif
-
 namespace decx
 {
     namespace utils {
@@ -52,10 +48,10 @@ template <typename _Ty>
 class decx::utils::Fixed_Length_Array
 {
 private:
-    _Ty* _data;
+    decx::PtrInfo<_Ty> _data;
 
-    size_t _memory_capacity;
-    size_t _current_length;
+    uint64_t _memory_capacity;
+    uint64_t _current_length;
 
     // The first element
     _Ty* _begin_ptr;
@@ -75,7 +71,7 @@ public:
     Fixed_Length_Array();
 
 
-    Fixed_Length_Array(const size_t length);
+    Fixed_Length_Array(const uint64_t length);
 
 
     /**
@@ -83,7 +79,7 @@ public:
     * Since after this class is constructed defaultly, the physical capacity is zero
     * @param _new_length : The physical capacity of the array
     */
-    void define_capacity(const size_t _new_length);
+    void PreMalloc(const uint64_t _new_length);
 
 
     /**
@@ -92,13 +88,13 @@ public:
      * @return _Ty* pointer of the epscified element. If there is no element in the array
      * the return value will be unexpected
      */
-    _Ty& operator[](const size_t _index);
+    _Ty& operator[](const uint64_t _index);
 
 
-    const _Ty* get_const_ptr(const uint64_t _index) const;
+    const _Ty* GetConstPtr(const uint64_t _index) const;
 
 
-    _Ty* get_ptr(const uint64_t _index);
+    _Ty* GetPtr(const uint64_t _index);
 
 
     /**
@@ -107,7 +103,7 @@ public:
      * @return None
      */
     template<typename... Args>
-    void emplace_back(Args&&... args);
+    int32_t emplace_back(Args&&... args);
 
     /**
      * @brief Get the last element of the array
@@ -138,8 +134,7 @@ public:
      *
      * @return The size of the array
      */
-    size_t size();
-
+    uint64_t size();
 
     /**
      * @brief Clear all the element and move Array::_begin_ptr to Array::_data - 1
@@ -150,6 +145,8 @@ public:
 
     uint64_t effective_size() const;
 
+
+    int32_t Space();
 
 
     ~Fixed_Length_Array();
@@ -168,7 +165,7 @@ bool decx::utils::Fixed_Length_Array<_Ty>::check_vaild_space_req()
 template <typename _Ty>
 decx::utils::Fixed_Length_Array<_Ty>::Fixed_Length_Array()
 {
-    this->_data = NULL;
+    // this->_data = NULL;
     this->_begin_ptr = NULL;
     this->_end_ptr = NULL;
 }
@@ -181,13 +178,13 @@ uint64_t decx::utils::Fixed_Length_Array<_Ty>::effective_size() const
 }
 
 
-
 template <typename _Ty>
-decx::utils::Fixed_Length_Array<_Ty>::Fixed_Length_Array(const size_t length)
+decx::utils::Fixed_Length_Array<_Ty>::Fixed_Length_Array(const uint64_t length)
 {
-    this->_data = NULL;
-    this->_data = (_Ty*)malloc(length * sizeof(_Ty));
-    if (this->_data == NULL) {
+    // this->_data = NULL;
+    // this->_data = (_Ty*)malloc(length * sizeof(_Ty));
+    this->_data.Allocate(length * sizeof(_Ty), PAGABLE);
+    if (this->_data.IsValid() == 0) {
         DECX_LOG_ERR("malloc failed, this->_data is NULL");
         exit(-1);
     }
@@ -195,22 +192,21 @@ decx::utils::Fixed_Length_Array<_Ty>::Fixed_Length_Array(const size_t length)
     this->_current_length = 0;
 
     this->_begin_ptr = this->_data - 1;
-    this->_end_ptr = this->_data;
+    this->_end_ptr = this->_data.GetRawPtr();
 }
 
 
-
-
 template <typename _Ty>
-void decx::utils::Fixed_Length_Array<_Ty>::define_capacity(const size_t length)
+void decx::utils::Fixed_Length_Array<_Ty>::PreMalloc(const uint64_t length)
 {
-    if (this->_data != NULL) {
-        free(this->_data);
-        this->_data = NULL;
+    if (this->_data.IsValid()) {
+        this->_data.Free();
     }
-    this->_data = (_Ty*)malloc(length * sizeof(_Ty));
+    
+    // this->_data = (_Ty*)malloc(length * sizeof(_Ty));
+    this->_data.Allocate(length * sizeof(_Ty), PAGABLE);
 
-    if (this->_data == NULL) {
+    if (this->_data.IsValid() == 0) {
         DECX_LOG_ERR("malloc failed, this->_data is NULL");
         exit(-1);
     }
@@ -218,13 +214,12 @@ void decx::utils::Fixed_Length_Array<_Ty>::define_capacity(const size_t length)
     this->_current_length = 0;
 
     this->_begin_ptr = this->_data - 1;
-    this->_end_ptr = this->_data;
+    this->_end_ptr = this->_data.GetRawPtr();
 }
 
 
-
 template <typename _Ty>
-_Ty& decx::utils::Fixed_Length_Array<_Ty>::operator[](const size_t _index)
+_Ty& decx::utils::Fixed_Length_Array<_Ty>::operator[](const uint64_t _index)
 {
     return *(this->_begin_ptr + _index);
 }
@@ -232,40 +227,49 @@ _Ty& decx::utils::Fixed_Length_Array<_Ty>::operator[](const size_t _index)
 
 
 template <typename _Ty>
-const _Ty* decx::utils::Fixed_Length_Array<_Ty>::get_const_ptr(const uint64_t _index) const
+const _Ty* decx::utils::Fixed_Length_Array<_Ty>::GetConstPtr(const uint64_t _index) const
 {
     return (this->_begin_ptr + _index);
 }
 
 
 template <typename _Ty>
-_Ty* decx::utils::Fixed_Length_Array<_Ty>::get_ptr(const uint64_t _index)
+_Ty* decx::utils::Fixed_Length_Array<_Ty>::GetPtr(const uint64_t _index)
 {
     return (this->_begin_ptr + _index);
 }
 
 
-
 template<typename _Ty>
-template<typename... Args>
-void decx::utils::Fixed_Length_Array<_Ty>::emplace_back(Args&&... args)
+int32_t decx::utils::Fixed_Length_Array<_Ty>::Space()
 {
     if (!this->check_vaild_space_req()) {
         DECX_LOG_ERR("Buffer already full, with allocated length=%ld current length=%ld", this->_memory_capacity, this->_current_length);
-        exit(-1);
+        return -1;
     }
     if (this->_current_length == 0) {
         ++this->_begin_ptr;
     }
-    new (this->_end_ptr) _Ty{ std::forward<Args>(args)... };
     ++this->_end_ptr;
     ++this->_current_length;
+    return 0;
 }
 
 
+template<typename _Ty>
+template<typename... Args>
+int32_t decx::utils::Fixed_Length_Array<_Ty>::emplace_back(Args&&... args)
+{
+    int32_t rval = this->Space();
+    if (rval){
+        return rval;
+    }
+    new (this->_end_ptr - 1) _Ty{ std::forward<Args>(args)... };
+    return 0;
+}
 
 template <typename _Ty>
-size_t decx::utils::Fixed_Length_Array<_Ty>::size()
+uint64_t decx::utils::Fixed_Length_Array<_Ty>::size()
 {
     return this->_current_length;
 }
@@ -285,7 +289,6 @@ _Ty* decx::utils::Fixed_Length_Array<_Ty>::back()
 }
 
 
-
 template<typename _Ty>
 _Ty* decx::utils::Fixed_Length_Array<_Ty>::pop_back()
 {
@@ -300,14 +303,15 @@ void decx::utils::Fixed_Length_Array<_Ty>::clear()
 {
     this->_current_length = 0;
     this->_begin_ptr = this->_data - 1;
-    this->_end_ptr = this->_data;
+    this->_end_ptr = this->_data.GetRawPtr();
 }
 
 
 template<typename _Ty>
 decx::utils::Fixed_Length_Array<_Ty>::~Fixed_Length_Array()
 {
-    free(this->_data);
+    // free(this->_data);
+    this->_data.Free();
 }
 
 
