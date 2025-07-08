@@ -226,13 +226,13 @@ bool decx::utils::Dynamic_Array<_Ty>::check_vaild_space_req()
 
 
 template <typename _Ty>
-_Ty& decx::utils::Dynamic_Array<_Ty>::operator[](const size_t _index)
+_Ty& decx::utils::Dynamic_Array<_Ty>::operator[](const uint64_t _index)
 {
     return *(this->_begin_ptr + _index);
 }
 
 template <typename _Ty>
-const _Ty& decx::utils::Dynamic_Array<_Ty>::operator[](const size_t _index) const
+const _Ty& decx::utils::Dynamic_Array<_Ty>::operator[](const uint64_t _index) const
 {
     return *(this->_begin_ptr + _index);
 }
