@@ -31,6 +31,7 @@
 #include <log_console.h>
 #include <stdarg.h>
 #include <time.h>
+#include <thread_management/global_mutex_array.h>
 
 #ifdef Windows
 #include <Windows.h>
@@ -154,6 +155,8 @@ void DECX_Log_Console_Exec(const DecxInternalLogLevel log_level,
                            const char *__restrict func_name, 
                            const char *__restrict msg)
 {
+    DecxGlobalMtx_Lock(Decx_GMtxId_LogConsole);
+    
     char time_info[32];
 #if _DECX_CONSOLE_LOG_ENABLE_ACCURATE_TIME_
     GetSysTimeMsAccurate(time_info, 32);
@@ -186,4 +189,5 @@ void DECX_Log_Console_Exec(const DecxInternalLogLevel log_level,
     }
 
     ResetConsoleColor;
+    DecxGlobalMtx_Unlock(Decx_GMtxId_LogConsole);
 }
