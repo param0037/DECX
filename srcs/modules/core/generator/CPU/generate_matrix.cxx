@@ -47,7 +47,7 @@ template <typename _data_type>
 static void decx::cpu_generate2D(decx::_Matrix* mat, const _data_type val)
 {
     decx::cpu_Generator2D planner;
-    const uint32_t conc = decx::cpu::_get_permitted_concurrency();
+    const uint32_t conc = DecxGetPermitConcurrency();
     planner.plan(32, conc, make_uint2(mat->Width(), mat->Height()), sizeof(_data_type), sizeof(_data_type));
     
     decx::utils::ThreadArrange1D t1D(conc);
@@ -62,7 +62,7 @@ static void decx::cpu_random2D(decx::_Matrix* mat, const double min, const doubl
     }
 
     decx::cpu_Generator2D planner;
-    const uint32_t conc = decx::cpu::_get_permitted_concurrency();
+    const uint32_t conc = DecxGetPermitConcurrency();
     const int32_t element_size = mat->get_layout()._single_element_size;
     planner.plan(32, conc, make_uint2(mat->Width(), mat->Height()), element_size, element_size);
     
@@ -86,8 +86,6 @@ static void decx::cpu_random2D(decx::_Matrix* mat, const double min, const doubl
 
 _DECX_API_ void de::cpu::Generate(de::OutputMatrix mat, const de::_DATA_TYPES_FLAGS_ type_out, de::Number val)
 {
-    de::GetLastError();
-
     decx::_Matrix* _mat = dynamic_cast<decx::_Matrix*>(&mat);
 
     switch (type_out)
@@ -104,8 +102,6 @@ _DECX_API_ void de::cpu::Generate(de::OutputMatrix mat, const de::_DATA_TYPES_FL
 _DECX_API_ void de::cpu::Random(de::OutputMatrix mat, const de::_DATA_TYPES_FLAGS_ type_out, 
         const uint32_t width, const uint32_t height, const int32_t seed, const de::Point2D_d range)
 {
-    de::GetLastError();
-
     decx::_Matrix* _mat = dynamic_cast<decx::_Matrix*>(&mat);
 
     _mat->re_construct(type_out, width, height);

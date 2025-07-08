@@ -42,7 +42,7 @@ decx::vis::CPUK::Sobel_XY_uint8(const uint8_t* __restrict  src,
                                  const uint32_t             Wsrc,           // in vec1
                                  const uint2                proc_dims)
 {
-    size_t dex_G = 0, dex_src = 0, dex_D;
+    uint64_t dex_G = 0, dex_src = 0, dex_D;
 
     decx::utils::simd::xmm128_reg recv, reg1, reg2, reg3, accuY, accuX;
     decx::utils::simd::xmm256_reg Gv8_fp32, RADv8_fp32, tmp, tmp1;

@@ -35,12 +35,12 @@
 _THREAD_FUNCTION_ void
 decx::dsp::CPUK::ideal_LP1D_cpl32_ST(const double* __restrict    src, 
                                         double* __restrict          dst, 
-                                        const size_t                cutoff_freq,
-                                        const size_t                _proc_len,
-                                        const size_t                real_bound, 
-                                        const size_t                global_dex_offset)
+                                        const uint64_t                cutoff_freq,
+                                        const uint64_t                _proc_len,
+                                        const uint64_t                real_bound, 
+                                        const uint64_t                global_dex_offset)
 {
-    size_t loc_dex = 0;
+    uint64_t loc_dex = 0;
 
     decx::utils::simd::xmm256_reg recv, store;
     const __m256i _lower_bound = _mm256_set1_epi64x(cutoff_freq),
@@ -81,7 +81,7 @@ decx::dsp::CPUK::ButterWorth_Window2D_cpl32(const double* __restrict    src,
                                             const uint                  global_dex_offset_Y,
                                             const uint                  pitch)
 {
-    size_t loc_dex = 0;
+    uint64_t loc_dex = 0;
 
     __m256i axis_valueXY, _half_pass, dex_values;
     const uint2 _half_dims = make_uint2(real_bound.x / 2, real_bound.y / 2);
@@ -143,13 +143,13 @@ decx::dsp::CPUK::ideal_LP2D_cpl32_ST(const double* __restrict    src,
                                         const uint                  pitch,
                                         const uint2                 global_dex_offset)
 {
-    size_t dex = 0, row_base = 0;
+    uint64_t dex = 0, row_base = 0;
     
     __m256i _is_eff;
     decx::utils::simd::xmm256_reg recv, store;
     // (x1, y1), (x2, y2), (x3, y3), (x4, y4)
     __m256i current_dex;
-    const __m256i _lower_bounds = _mm256_set1_epi64x(*((size_t*)&cutoff_freq)),
+    const __m256i _lower_bounds = _mm256_set1_epi64x(*((uint64_t*)&cutoff_freq)),
                   _upper_bounds = _mm256_setr_epi32(real_bound.x - cutoff_freq.x, real_bound.y - cutoff_freq.y,
                                                     real_bound.x - cutoff_freq.x, real_bound.y - cutoff_freq.y,
                                                     real_bound.x - cutoff_freq.x, real_bound.y - cutoff_freq.y,
@@ -186,11 +186,11 @@ decx::dsp::CPUK::ideal_LP2D_cpl32_ST(const double* __restrict    src,
 
 
 _DECX_API_ de::DH
-de::dsp::cpu::LowPass1D_Ideal(de::Vector& src, de::Vector& dst, const size_t cutoff_frequency)
+de::dsp::cpu::LowPass1D_Ideal(de::Vector& src, de::Vector& dst, const uint64_t cutoff_frequency)
 {
     de::DH handle;
-    if (!decx::cpu::_is_CPU_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CPU_not_init,
+    if (!decx::cpu::DecxGetIsCPUInit()) {
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_CPU_not_init,
             CPU_NOT_INIT);
         return handle;
     }
@@ -198,15 +198,15 @@ de::dsp::cpu::LowPass1D_Ideal(de::Vector& src, de::Vector& dst, const size_t cut
     decx::_Vector* _src = dynamic_cast<decx::_Vector*>(&src);
     decx::_Vector* _dst = dynamic_cast<decx::_Vector*>(&dst);
     
-    const size_t proc_len = _src->_length / 4;
-    if (proc_len > decx::cpu::_get_permitted_concurrency()) {
-        decx::utils::ThreadArrange1D t1D(decx::cpu::_get_permitted_concurrency());
+    const uint64_t proc_len = _src->_length / 4;
+    if (proc_len > DecxGetPermitConcurrency()) {
+        decx::utils::ThreadArrange1D t1D(DecxGetPermitConcurrency());
         decx::utils::frag_manager f_mgr;
         decx::utils::frag_manager_gen(&f_mgr, proc_len, t1D.total_thread);
 
         const double* _loc_src = (const double*)_src->Vec;
         double* _loc_dst = (double*)_dst->Vec;
-        size_t _global_ptr_offset = 0;
+        uint64_t _global_ptr_offset = 0;
 
         for (int i = 0; i < t1D.total_thread - 1; ++i) {
             t1D._async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(
@@ -218,7 +218,7 @@ de::dsp::cpu::LowPass1D_Ideal(de::Vector& src, de::Vector& dst, const size_t cut
             _loc_src += _global_ptr_offset;
             _loc_dst += _global_ptr_offset;
         }
-        const size_t _L = f_mgr.is_left ? f_mgr.frag_left_over : f_mgr.frag_len;
+        const uint64_t _L = f_mgr.is_left ? f_mgr.frag_left_over : f_mgr.frag_len;
         t1D._async_thread[t1D.total_thread - 1] = decx::cpu::RegisterTaskLoadBalanced(
             decx::dsp::CPUK::ideal_LP1D_cpl32_ST,
             _loc_src, _loc_dst, cutoff_frequency,
@@ -242,8 +242,8 @@ _DECX_API_ de::DH
 de::dsp::cpu::LowPass2D_Ideal(de::Matrix& src, de::Matrix& dst, const de::Point2D cutoff_frequency)
 {
     de::DH handle;
-    if (!decx::cpu::_is_CPU_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CPU_not_init,
+    if (!decx::cpu::DecxGetIsCPUInit()) {
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_CPU_not_init,
             CPU_NOT_INIT);
         return handle;
     }
@@ -252,16 +252,16 @@ de::dsp::cpu::LowPass2D_Ideal(de::Matrix& src, de::Matrix& dst, const de::Point2
     decx::_Matrix* _dst = dynamic_cast<decx::_Matrix*>(&dst);
 
     const uint pitch = _src->Pitch() / 4;
-    decx::utils::ThreadArrange1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::ThreadArrange1D t1D(DecxGetPermitConcurrency());
     decx::utils::frag_manager f_mgr;
     decx::utils::frag_manager_gen(&f_mgr, _src->Height(), t1D.total_thread);
 
-    const size_t frag_size = (size_t)f_mgr.frag_len * (size_t)pitch * 4;
+    const uint64_t frag_size = (uint64_t)f_mgr.frag_len * (uint64_t)pitch * 4;
 
     uint2 _proc_dims = make_uint2(pitch, f_mgr.frag_len);
     const uint2 real_bound = make_uint2(_src->Width(), _src->Height());
 
-    if (_src->Height() > decx::cpu::_get_permitted_concurrency()) {
+    if (_src->Height() > DecxGetPermitConcurrency()) {
         const double* _loc_src = (const double*)_src->Mat;
         double* _loc_dst = (double*)_dst->Mat;
 
@@ -302,8 +302,8 @@ _DECX_API_ de::DH
 de::dsp::cpu::ButterWorth_LP2D(de::Matrix& src, de::Matrix& dst, const float cutoff_freq, const int order)
 {
     de::DH handle;
-    if (!decx::cpu::_is_CPU_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CPU_not_init,
+    if (!decx::cpu::DecxGetIsCPUInit()) {
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_CPU_not_init,
             CPU_NOT_INIT);
         return handle;
     }
@@ -312,16 +312,16 @@ de::dsp::cpu::ButterWorth_LP2D(de::Matrix& src, de::Matrix& dst, const float cut
     decx::_Matrix* _dst = dynamic_cast<decx::_Matrix*>(&dst);
 
     const uint pitch = _src->Pitch() / 4;
-    decx::utils::ThreadArrange1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::ThreadArrange1D t1D(DecxGetPermitConcurrency());
     decx::utils::frag_manager f_mgr;
     decx::utils::frag_manager_gen(&f_mgr, _src->Height(), t1D.total_thread);
 
-    const size_t frag_size = (size_t)f_mgr.frag_len * (size_t)pitch * 4;
+    const uint64_t frag_size = (uint64_t)f_mgr.frag_len * (uint64_t)pitch * 4;
 
     uint2 _proc_dims = make_uint2(pitch, f_mgr.frag_len);
     const uint2 real_bound = make_uint2(_src->Width(), _src->Height());
 
-    if (_src->Height() > decx::cpu::_get_permitted_concurrency()) {
+    if (_src->Height() > DecxGetPermitConcurrency()) {
         const double* _loc_src = (const double*)_src->Mat;
         double* _loc_dst = (double*)_dst->Mat;
 

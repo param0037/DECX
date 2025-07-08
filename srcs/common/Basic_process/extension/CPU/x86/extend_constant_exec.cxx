@@ -85,8 +85,8 @@ decx::bp::CPUK::_extend_constant1D_b32(const float* __restrict   src,
                                       float* __restrict         dst,
                                       const float               val,
                                       const decx::bp::extend_reflect_exec_params* b_rfct,
-                                      const size_t              _actual_w_v1,
-                                      const size_t              _original_w_v8)
+                                      const uint64_t              _actual_w_v1,
+                                      const uint64_t              _original_w_v8)
 {
     const __m256i f = decx::bp::e_rfct_exep_get_shufflevar_f_b32(b_rfct);
     const __m256i b = decx::bp::e_rfct_exep_get_shufflevar_b_b32(b_rfct);
@@ -134,7 +134,7 @@ decx::bp::CPUK::_extend_H_constant2D_b32(const float* __restrict   src,
 
     __m256 reg0, reg1, store;
 
-    size_t dex_src = 0, dex_dst = 0;
+    uint64_t dex_src = 0, dex_dst = 0;
 
     for (uint32_t i = 0; i < _original_dims_v8.y; ++i) 
     {
@@ -178,8 +178,8 @@ decx::bp::CPUK::_extend_constant1D_b64(const double* __restrict   src,
                                       double* __restrict         dst,
                                       const double              _val,
                                       const decx::bp::extend_reflect_exec_params* b_rfct,
-                                      const size_t              _actual_w_v1,
-                                      const size_t              _original_w_v4)
+                                      const uint64_t              _actual_w_v1,
+                                      const uint64_t              _original_w_v4)
 {
     const __m256i f = decx::bp::e_rfct_exep_get_shufflevar_f_b64(b_rfct);
     const __m256i b = decx::bp::e_rfct_exep_get_shufflevar_b_b64(b_rfct);
@@ -231,7 +231,7 @@ decx::bp::CPUK::_extend_H_constant2D_b64(const double* __restrict   src,
 
     decx::utils::simd::xmm256_reg reg0, reg1, store;
 
-    size_t dex_src = 0, dex_dst = 0;
+    uint64_t dex_src = 0, dex_dst = 0;
 
     for (uint32_t i = 0; i < _original_dims_v8.y; ++i) 
     {
@@ -276,7 +276,7 @@ decx::bp::CPUK::_extend_H_constant2D_b64(const double* __restrict   src,
 
 
 _THREAD_FUNCTION_ void decx::bp::CPUK::_extend_constant1D_b8(const uint8_t* src, uint8_t* dst, const uint8_t _val,
-    const decx::bp::extend_reflect_exec_params* b_rfct, const size_t _actual_w_v1, const size_t _original_w_v8)
+    const decx::bp::extend_reflect_exec_params* b_rfct, const uint64_t _actual_w_v1, const uint64_t _original_w_v8)
 {
     const __m128i f = decx::bp::e_rfct_exep_get_shufflevar_f_b8(b_rfct);
     const __m128i b = decx::bp::e_rfct_exep_get_shufflevar_b_b8(b_rfct);
@@ -323,7 +323,7 @@ decx::bp::CPUK::_extend_H_constant2D_b8(const uint8_t* __restrict   src,
 
     decx::utils::simd::xmm128_reg reg0, reg1, store;
 
-    size_t dex_src = 0, dex_dst = 0;
+    uint64_t dex_src = 0, dex_dst = 0;
 
     for (uint32_t i = 0; i < _original_dims_v16.y; ++i) 
     {
@@ -363,7 +363,7 @@ decx::bp::CPUK::_extend_H_constant2D_b8(const uint8_t* __restrict   src,
 
 
 _THREAD_FUNCTION_ void decx::bp::CPUK::_extend_constant1D_b16(const uint16_t* src, uint16_t* dst, const uint16_t _val,
-    const decx::bp::extend_reflect_exec_params* b_rfct, const size_t _actual_w_v1, const size_t _original_w_v8)
+    const decx::bp::extend_reflect_exec_params* b_rfct, const uint64_t _actual_w_v1, const uint64_t _original_w_v8)
 {
     const __m128i f = decx::bp::e_rfct_exep_get_shufflevar_f_b16(b_rfct);
     const __m128i b = decx::bp::e_rfct_exep_get_shufflevar_b_b16(b_rfct);
@@ -411,7 +411,7 @@ decx::bp::CPUK::_extend_H_constant2D_b16(const uint16_t* __restrict   src,
 
     decx::utils::simd::xmm128_reg reg0, reg1, store;
 
-    size_t dex_src = 0, dex_dst = 0;
+    uint64_t dex_src = 0, dex_dst = 0;
 
     for (uint32_t i = 0; i < _original_dims_v16.y; ++i) 
     {
@@ -454,7 +454,7 @@ decx::bp::CPUK::_extend_V_constant2D_m256(float* __restrict   dst,        // poi
                                         const uint          Hsrc, 
                                         const uint32_t      Wdst)       // in float
 {
-    size_t _put = 0;
+    uint64_t _put = 0;
 
     for (uint i = 0; i < _top; ++i) 
     {

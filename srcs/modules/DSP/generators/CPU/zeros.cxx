@@ -34,12 +34,12 @@
 
 _DECX_API_ void de::dsp::cpu::Zeros(de::Vector& src)
 {
-    de::ResetLastError();
+    DecxResetLastHandle
 
     decx::_Vector* _src = dynamic_cast<decx::_Vector*>(&src);
 
     if (!_src->is_init()) {
-        decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_CLASS_NOT_INIT,
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_CLASS_NOT_INIT,
             CLASS_NOT_INIT);
         return;
     }
@@ -50,11 +50,11 @@ _DECX_API_ void de::dsp::cpu::Zeros(de::Vector& src)
 
 _DECX_API_ void de::dsp::cpu::Zeros(de::Matrix& src)
 {
-    de::ResetLastError();
+    DecxResetLastHandle
     decx::_Matrix* _src = dynamic_cast<decx::_Matrix*>(&src);
 
     if (!_src->is_init()) {
-        decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_CLASS_NOT_INIT,
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_CLASS_NOT_INIT,
             CLASS_NOT_INIT);
         return;
     }
@@ -65,11 +65,11 @@ _DECX_API_ void de::dsp::cpu::Zeros(de::Matrix& src)
 
 _DECX_API_ void de::dsp::cpu::Zeros(de::Tensor& src)
 {
-    de::ResetLastError();
+    DecxResetLastHandle
     decx::_Tensor* _src = dynamic_cast<decx::_Tensor*>(&src);
 
     if (!_src->is_init()) {
-        decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_CLASS_NOT_INIT,
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_CLASS_NOT_INIT,
             CLASS_NOT_INIT);
         return;
     }

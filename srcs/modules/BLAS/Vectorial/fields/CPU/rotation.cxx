@@ -59,7 +59,7 @@ decx::fields::CPUK::rotation_field3D_fp32(const float* __restrict     src,
                                           const uint                  dp_x_wp,
                                           const uint                  d_pitch)
 {
-    size_t loc_dex = 0;
+    uint64_t loc_dex = 0;
     __m128 _reg, tmp1, tmp2;
     decx::utils::simd::xmm128_reg _pFX_px, _pFY_py, _pFZ_pz;
 

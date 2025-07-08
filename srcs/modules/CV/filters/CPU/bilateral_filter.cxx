@@ -35,10 +35,10 @@ _DECX_API_ void
 de::vis::cpu::Bilateral_Filter(de::Matrix& src, de::Matrix& dst, const de::Point2D neighbor_dims,
     const float sigma_space, const float sigma_color, const int border_type)
 {
-    de::ResetLastError();
+    DecxResetLastHandle
 
-    if (!decx::cpu::_is_CPU_init()) {
-        decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_CPU_not_init,
+    if (!decx::cpu::DecxGetIsCPUInit()) {
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_CPU_not_init,
             CPU_NOT_INIT);
         return;
     }

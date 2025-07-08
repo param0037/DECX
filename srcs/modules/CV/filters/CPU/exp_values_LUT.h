@@ -52,13 +52,13 @@ private:
     decx::PtrInfo<float> _LUT;
 
 public:
-    size_t _len;
+    uint64_t _len;
     float _sigma;
 
-    _exp_LUT(const size_t length, const float sigma);
+    _exp_LUT(const uint64_t length, const float sigma);
 
 
-    size_t Length();
+    uint64_t Length();
 
 
     float* get_data();

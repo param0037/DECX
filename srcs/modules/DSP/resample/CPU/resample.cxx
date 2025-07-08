@@ -56,13 +56,13 @@ resample_caller(const decx::_Matrix* src, const decx::_Matrix* map, decx::_Matri
         g_VGT2D_hdlr.RegisterResource(new decx::cpu_VGT2D_planner, 5, decx::cpu_VGT2D_planner::release);
     }
 
-    decx::utils::Thr1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::Thr1D t1D(DecxGetPermitConcurrency());
 
     auto* VGT = g_VGT2D_hdlr.get_resource_raw_ptr<decx::cpu_VGT2D_planner>();
 
     g_VGT2D_hdlr.lock();
 
-    VGT->plan(32, decx::cpu::_get_permitted_concurrency(), make_uint2(dst->Width(), dst->Height()), 
+    VGT->plan(32, DecxGetPermitConcurrency(), make_uint2(dst->Width(), dst->Height()), 
         sizeof(uint8_t), intp_type, make_uint2(src->Width(), src->Height()), 
         de::GetLastError());
 
@@ -75,14 +75,14 @@ resample_caller(const decx::_Matrix* src, const decx::_Matrix* map, decx::_Matri
 _DECX_API_ void 
 de::dsp::cpu::Resample(de::InputMatrix src, de::InputMatrix map, de::OutputMatrix dst, de::Interpolate_Types interpoate_mode)
 {
-    de::ResetLastError();
+    DecxResetLastHandle
 
     const decx::_Matrix* _src = dynamic_cast<const decx::_Matrix*>(&src);
     const decx::_Matrix* _map = dynamic_cast<const decx::_Matrix*>(&map);
     decx::_Matrix* _dst = dynamic_cast<decx::_Matrix*>(&dst);
 
-    if (!decx::cpu::_is_CPU_init()){
-        decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_CPU_not_init,
+    if (!decx::cpu::DecxGetIsCPUInit()){
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_CPU_not_init,
             CPU_NOT_INIT);
         return;
     }

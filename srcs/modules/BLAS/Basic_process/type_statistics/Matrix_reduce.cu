@@ -119,8 +119,8 @@ static void decx::reduce::dev_reduce_cmp2D_full_caller(decx::_GPU_Matrix* src, d
 _DECX_API_ de::DH de::cuda::Sum(de::Matrix& src, de::Number& res, const uint32_t _fp16_accu)
 {
     de::DH handle;
-    if (!decx::cuda::_is_CUDA_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
+    if (!decx::cuda::DecxGetIsCUDAInit()) {
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
         return handle;
     }
 
@@ -136,8 +136,8 @@ _DECX_API_ de::DH de::cuda::Sum(de::Matrix& src, de::Number& res, const uint32_t
 _DECX_API_ de::DH de::cuda::Max(de::Matrix& src, de::Number& res)
 {
     de::DH handle;
-    if (!decx::cuda::_is_CUDA_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
+    if (!decx::cuda::DecxGetIsCUDAInit()) {
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
         return handle;
     }
 
@@ -154,8 +154,8 @@ _DECX_API_ de::DH de::cuda::Max(de::Matrix& src, de::Number& res)
 _DECX_API_ de::DH de::cuda::Min(de::Matrix& src, de::Number& res)
 {
     de::DH handle;
-    if (!decx::cuda::_is_CUDA_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
+    if (!decx::cuda::DecxGetIsCUDAInit()) {
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
         return handle;
     }
 
@@ -170,8 +170,8 @@ _DECX_API_ de::DH de::cuda::Min(de::Matrix& src, de::Number& res)
 _DECX_API_ de::DH de::cuda::Sum(de::GPU_Matrix& src, de::Number& res, const uint32_t _fp16_accu)
 {
     de::DH handle;
-    if (!decx::cuda::_is_CUDA_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
+    if (!decx::cuda::DecxGetIsCUDAInit()) {
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
         return handle;
     }
 
@@ -187,8 +187,8 @@ _DECX_API_ de::DH de::cuda::Sum(de::GPU_Matrix& src, de::Number& res, const uint
 _DECX_API_ de::DH de::cuda::Max(de::GPU_Matrix& src, de::Number& res)
 {
     de::DH handle;
-    if (!decx::cuda::_is_CUDA_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
+    if (!decx::cuda::DecxGetIsCUDAInit()) {
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
         return handle;
     }
 
@@ -203,8 +203,8 @@ _DECX_API_ de::DH de::cuda::Max(de::GPU_Matrix& src, de::Number& res)
 _DECX_API_ de::DH de::cuda::Min(de::GPU_Matrix& src, de::Number& res)
 {
     de::DH handle;
-    if (!decx::cuda::_is_CUDA_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
+    if (!decx::cuda::DecxGetIsCUDAInit()) {
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
         return handle;
     }
 
@@ -450,8 +450,8 @@ static void decx::reduce::dev_reduce_cmp2D_1way_caller(decx::_GPU_Matrix* src, d
 _DECX_API_ de::DH de::cuda::Sum(de::Matrix& src, de::Vector& dst, const int _reduce2D_mode, const uint32_t _fp16_accu)
 {
     de::DH handle;
-    if (!decx::cuda::_is_CUDA_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
+    if (!decx::cuda::DecxGetIsCUDAInit()) {
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
         return handle;
     }
 
@@ -459,7 +459,7 @@ _DECX_API_ de::DH de::cuda::Sum(de::Matrix& src, de::Vector& dst, const int _red
     decx::_Vector* _dst = dynamic_cast<decx::_Vector*>(&dst);
 
     if (_reduce2D_mode != de::REDUCE_METHOD::_REDUCE2D_V_ && _reduce2D_mode != de::REDUCE_METHOD::_REDUCE2D_H_) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_ErrorFlag, MEANINGLESS_FLAG);
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_ErrorFlag, MEANINGLESS_FLAG);
         return handle;
     }
     decx::reduce::reduce_sum2D_1way_caller(_src, _dst, _reduce2D_mode, _fp16_accu);
@@ -472,8 +472,8 @@ _DECX_API_ de::DH de::cuda::Sum(de::Matrix& src, de::Vector& dst, const int _red
 _DECX_API_ de::DH de::cuda::Sum(de::GPU_Matrix& src, de::GPU_Vector& dst, const int _reduce2D_mode, const uint32_t _fp16_accu)
 {
     de::DH handle;
-    if (!decx::cuda::_is_CUDA_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
+    if (!decx::cuda::DecxGetIsCUDAInit()) {
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
         return handle;
     }
 
@@ -481,7 +481,7 @@ _DECX_API_ de::DH de::cuda::Sum(de::GPU_Matrix& src, de::GPU_Vector& dst, const 
     decx::_GPU_Vector* _dst = dynamic_cast<decx::_GPU_Vector*>(&dst);
 
     if (_reduce2D_mode != de::REDUCE_METHOD::_REDUCE2D_V_ && _reduce2D_mode != de::REDUCE_METHOD::_REDUCE2D_H_) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_ErrorFlag, MEANINGLESS_FLAG);
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_ErrorFlag, MEANINGLESS_FLAG);
         return handle;
     }
     decx::reduce::dev_reduce_sum2D_1way_caller(_src, _dst, _reduce2D_mode, _fp16_accu);
@@ -494,8 +494,8 @@ _DECX_API_ de::DH de::cuda::Sum(de::GPU_Matrix& src, de::GPU_Vector& dst, const 
 _DECX_API_ de::DH de::cuda::Max(de::Matrix& src, de::Vector& dst, const int _reduce2D_mode)
 {
     de::DH handle;
-    if (!decx::cuda::_is_CUDA_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
+    if (!decx::cuda::DecxGetIsCUDAInit()) {
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
         return handle;
     }
 
@@ -503,7 +503,7 @@ _DECX_API_ de::DH de::cuda::Max(de::Matrix& src, de::Vector& dst, const int _red
     decx::_Vector* _dst = dynamic_cast<decx::_Vector*>(&dst);
 
     if (_reduce2D_mode != de::REDUCE_METHOD::_REDUCE2D_V_ && _reduce2D_mode != de::REDUCE_METHOD::_REDUCE2D_H_) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_ErrorFlag, MEANINGLESS_FLAG);
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_ErrorFlag, MEANINGLESS_FLAG);
         return handle;
     }
     decx::reduce::reduce_cmp2D_1way_caller<true>(_src, _dst, _reduce2D_mode);
@@ -516,8 +516,8 @@ _DECX_API_ de::DH de::cuda::Max(de::Matrix& src, de::Vector& dst, const int _red
 _DECX_API_ de::DH de::cuda::Max(de::GPU_Matrix& src, de::GPU_Vector& dst, const int _reduce2D_mode)
 {
     de::DH handle;
-    if (!decx::cuda::_is_CUDA_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
+    if (!decx::cuda::DecxGetIsCUDAInit()) {
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
         return handle;
     }
 
@@ -525,7 +525,7 @@ _DECX_API_ de::DH de::cuda::Max(de::GPU_Matrix& src, de::GPU_Vector& dst, const 
     decx::_GPU_Vector* _dst = dynamic_cast<decx::_GPU_Vector*>(&dst);
 
     if (_reduce2D_mode != de::REDUCE_METHOD::_REDUCE2D_V_ && _reduce2D_mode != de::REDUCE_METHOD::_REDUCE2D_H_) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_ErrorFlag, MEANINGLESS_FLAG);
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_ErrorFlag, MEANINGLESS_FLAG);
         return handle;
     }
     decx::reduce::dev_reduce_cmp2D_1way_caller<true>(_src, _dst, _reduce2D_mode);
@@ -538,8 +538,8 @@ _DECX_API_ de::DH de::cuda::Max(de::GPU_Matrix& src, de::GPU_Vector& dst, const 
 _DECX_API_ de::DH de::cuda::Min(de::Matrix& src, de::Vector& dst, const int _reduce2D_mode)
 {
     de::DH handle;
-    if (!decx::cuda::_is_CUDA_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
+    if (!decx::cuda::DecxGetIsCUDAInit()) {
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
         return handle;
     }
 
@@ -547,7 +547,7 @@ _DECX_API_ de::DH de::cuda::Min(de::Matrix& src, de::Vector& dst, const int _red
     decx::_Vector* _dst = dynamic_cast<decx::_Vector*>(&dst);
 
     if (_reduce2D_mode != de::REDUCE_METHOD::_REDUCE2D_V_ && _reduce2D_mode != de::REDUCE_METHOD::_REDUCE2D_H_) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_ErrorFlag, MEANINGLESS_FLAG);
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_ErrorFlag, MEANINGLESS_FLAG);
         return handle;
     }
     decx::reduce::reduce_cmp2D_1way_caller<false>(_src, _dst, _reduce2D_mode);
@@ -560,8 +560,8 @@ _DECX_API_ de::DH de::cuda::Min(de::Matrix& src, de::Vector& dst, const int _red
 _DECX_API_ de::DH de::cuda::Min(de::GPU_Matrix& src, de::GPU_Vector& dst, const int _reduce2D_mode)
 {
     de::DH handle;
-    if (!decx::cuda::_is_CUDA_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
+    if (!decx::cuda::DecxGetIsCUDAInit()) {
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
         return handle;
     }
 
@@ -569,7 +569,7 @@ _DECX_API_ de::DH de::cuda::Min(de::GPU_Matrix& src, de::GPU_Vector& dst, const 
     decx::_GPU_Vector* _dst = dynamic_cast<decx::_GPU_Vector*>(&dst);
 
     if (_reduce2D_mode != de::REDUCE_METHOD::_REDUCE2D_V_ && _reduce2D_mode != de::REDUCE_METHOD::_REDUCE2D_H_) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_ErrorFlag, MEANINGLESS_FLAG);
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_ErrorFlag, MEANINGLESS_FLAG);
         return handle;
     }
     decx::reduce::dev_reduce_cmp2D_1way_caller<false>(_src, _dst, _reduce2D_mode);

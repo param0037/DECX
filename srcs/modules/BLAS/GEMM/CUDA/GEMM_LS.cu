@@ -67,13 +67,13 @@ static void decx::blas::GEMM_fp32(decx::_GPU_Matrix* A,     decx::_GPU_Matrix* B
     decx::cuda_stream* S = NULL;
     S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
     if (S == NULL) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_CUDA_STREAM, CUDA_STREAM_ACCESS_FAIL);
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_CUDA_STREAM, CUDA_STREAM_ACCESS_FAIL);
         return;
     }
     decx::cuda_event* E = NULL;
     E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
     if (E == NULL) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_CUDA_STREAM, CUDA_STREAM_ACCESS_FAIL);
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_CUDA_STREAM, CUDA_STREAM_ACCESS_FAIL);
         return;
     }
 
@@ -118,13 +118,13 @@ static void decx::blas::GEMM_fp16(decx::_GPU_Matrix* A,     decx::_GPU_Matrix* B
     decx::cuda_stream* S = NULL;
     S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
     if (S == NULL) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_CUDA_STREAM, CUDA_STREAM_ACCESS_FAIL);
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_CUDA_STREAM, CUDA_STREAM_ACCESS_FAIL);
         return;
     }
     decx::cuda_event* E = NULL;
     E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
     if (E == NULL) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_CUDA_STREAM, CUDA_STREAM_ACCESS_FAIL);
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_CUDA_STREAM, CUDA_STREAM_ACCESS_FAIL);
         return;
     }
 
@@ -169,13 +169,13 @@ static void decx::blas::GEMM_fp64(decx::_GPU_Matrix* A,     decx::_GPU_Matrix* B
     decx::cuda_stream* S = NULL;
     S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
     if (S == NULL) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_CUDA_STREAM, CUDA_STREAM_ACCESS_FAIL);
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_CUDA_STREAM, CUDA_STREAM_ACCESS_FAIL);
         return;
     }
     decx::cuda_event* E = NULL;
     E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
     if (E == NULL) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_CUDA_STREAM, CUDA_STREAM_ACCESS_FAIL);
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_CUDA_STREAM, CUDA_STREAM_ACCESS_FAIL);
         return;
     }
     
@@ -219,13 +219,13 @@ static void decx::blas::GEMM_cplxf(decx::_GPU_Matrix* A,     decx::_GPU_Matrix* 
     decx::cuda_stream* S = NULL;
     S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
     if (S == NULL) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_CUDA_STREAM, CUDA_STREAM_ACCESS_FAIL);
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_CUDA_STREAM, CUDA_STREAM_ACCESS_FAIL);
         return;
     }
     decx::cuda_event* E = NULL;
     E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
     if (E == NULL) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_CUDA_STREAM, CUDA_STREAM_ACCESS_FAIL);
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_CUDA_STREAM, CUDA_STREAM_ACCESS_FAIL);
         return;
     }
 
@@ -270,13 +270,13 @@ static void decx::blas::GEMM_cplxd(decx::_GPU_Matrix* A,     decx::_GPU_Matrix* 
     decx::cuda_stream* S = NULL;
     S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
     if (S == NULL) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_CUDA_STREAM, CUDA_STREAM_ACCESS_FAIL);
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_CUDA_STREAM, CUDA_STREAM_ACCESS_FAIL);
         return;
     }
     decx::cuda_event* E = NULL;
     E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
     if (E == NULL) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_CUDA_STREAM, CUDA_STREAM_ACCESS_FAIL);
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_CUDA_STREAM, CUDA_STREAM_ACCESS_FAIL);
         return;
     }
 

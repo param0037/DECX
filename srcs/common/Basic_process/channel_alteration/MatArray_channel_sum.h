@@ -80,14 +80,14 @@ __global__
 * @param _plane : frag_plane in float4
 * @param Wfrag : in float4, Wfrag / 4
 */
-void cu_MatArr_channel_sum4(float4* src, float4* dst, const size_t _plane,
+void cu_MatArr_channel_sum4(float4* src, float4* dst, const uint64_t _plane,
     const int Hfrag, const int Wfrag, const int Mat_num)
 {
     int tidx = threadIdx.x + blockIdx.x * blockDim.x;
     int tidy = threadIdx.y + blockIdx.y * blockDim.y;
 
     float4 reg_tmp, ans = make_float4(0.f, 0.f, 0.f, 0.f);
-    size_t dex = tidx * Wfrag + tidy;
+    uint64_t dex = tidx * Wfrag + tidy;
 
     if (tidx < Hfrag && tidy < Wfrag) {
         for (int i = 0; i < Mat_num; ++i) {
@@ -145,14 +145,14 @@ __global__
 * @param len : _plane in float4
 * @param Wfrag : in float4, Wfrag / 4
 */
-void cu_MatArr_channel_sum4_1D(float4* src, float4* dst, const size_t len, const int Mat_num)
+void cu_MatArr_channel_sum4_1D(float4* src, float4* dst, const uint64_t len, const int Mat_num)
 {
-    size_t tid = threadIdx.x + blockDim.x * blockIdx.x;
+    uint64_t tid = threadIdx.x + blockDim.x * blockIdx.x;
     float4 _ans = make_float4(0, 0, 0, 0), tmp;
 
     if (tid < len) {
         for (int i = 0; i < Mat_num; ++i) {
-            tmp = src[tid + (size_t)i * len];
+            tmp = src[tid + (uint64_t)i * len];
             _ans.x = __fadd_rn(tmp.x, _ans.x);
             _ans.y = __fadd_rn(tmp.y, _ans.y);
             _ans.z = __fadd_rn(tmp.z, _ans.z);
@@ -175,9 +175,9 @@ void decx::MatArray_channel_sum_4_f(_MatrixArray<float>* src, _Matrix<float>* ds
     const int Hsrc = src->height;
     const int Mat_num = src->ArrayNumber;
 
-    const int Hfrag = (int)(decx::utils::idiv_ceil<size_t>(fragment_4 / 4, Mat_num * Wsrc));
-    const size_t frag_plane = Hfrag * Wsrc;
-    const size_t true_frag = frag_plane * Mat_num;
+    const int Hfrag = (int)(decx::utils::idiv_ceil<uint64_t>(fragment_4 / 4, Mat_num * Wsrc));
+    const uint64_t frag_plane = Hfrag * Wsrc;
+    const uint64_t true_frag = frag_plane * Mat_num;
 
     decx::PtrInfo<float4> dev_tmp;
     if (decx::alloc::_device_malloc(&dev_tmp, 2 * (true_frag + frag_plane) * sizeof(float4))) {
@@ -211,7 +211,7 @@ void decx::MatArray_channel_sum_4_f(_MatrixArray<float>* src, _Matrix<float>* ds
     checkCudaErrors(cudaDeviceSynchronize());
     
     const int __iter = decx::utils::idiv_ceil<int>(Hsrc, Hfrag);
-    size_t plane_shift_src = frag_plane,
+    uint64_t plane_shift_src = frag_plane,
         plane_shift_dst = 0;
 
     const dim3 block(_BLOCK_DEFAULT_, _BLOCK_DEFAULT_);
@@ -271,9 +271,9 @@ static void decx::dev_MatArray_channel_sum_4_f(_GPU_MatrixArray<float>* src, _GP
         return;
     }
     
-    const size_t _len_eq = src->_plane / 4;
+    const uint64_t _len_eq = src->_plane / 4;
     
-    cu_MatArr_channel_sum4_1D << <decx::utils::idiv_ceil<size_t>(_len_eq, decx::cuP.prop.maxThreadsPerBlock), decx::cuP.prop.maxThreadsPerBlock >> > (
+    cu_MatArr_channel_sum4_1D << <decx::utils::idiv_ceil<uint64_t>(_len_eq, decx::cuP.prop.maxThreadsPerBlock), decx::cuP.prop.maxThreadsPerBlock >> > (
         reinterpret_cast<float4*>(src->MatArr.ptr), reinterpret_cast<float4*>(dst->Mat.ptr), _len_eq, src->ArrayNumber);
 }
 #endif

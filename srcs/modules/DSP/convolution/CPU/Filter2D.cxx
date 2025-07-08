@@ -63,7 +63,7 @@ void decx::dsp::filter2D_fp32(decx::_Matrix* src, decx::_Matrix* kernel, decx::_
 
     auto* _planner = decx::dsp::g_cpu_filter2D_fp32.get_resource_raw_ptr<decx::dsp::cpu_Filter2D_planner<float>>();
 
-    const uint32_t _conc = decx::cpu::_get_permitted_concurrency();
+    const uint32_t _conc = DecxGetPermitConcurrency();
 
     if (_planner->changed(_conc, src, kernel, dst, padding)) {
         _planner->plan(_conc, &src->get_layout(), &kernel->get_layout(), &dst->get_layout(), de::GetLastError(), padding);
@@ -94,7 +94,7 @@ void decx::dsp::filter2D_64b(decx::_Matrix* src, decx::_Matrix* kernel, decx::_M
 
     auto* _planner = decx::dsp::g_cpu_filter2D_64b.get_resource_raw_ptr<decx::dsp::cpu_Filter2D_planner<double>>();
 
-    const uint32_t _conc = decx::cpu::_get_permitted_concurrency();
+    const uint32_t _conc = DecxGetPermitConcurrency();
     if (_planner->changed(_conc, src, kernel, dst, padding)) {
         _planner->plan(_conc, &src->get_layout(), &kernel->get_layout(), &dst->get_layout(), de::GetLastError(), padding);
     }
@@ -110,7 +110,7 @@ _DECX_API_ void
 de::dsp::cpu::Filter2D(de::Matrix& src, de::Matrix& kernel, de::Matrix& dst, const de::extend_label padding_method, 
     const de::_DATA_TYPES_FLAGS_ output_type)
 {
-    de::ResetLastError();
+    DecxResetLastHandle
     
     decx::_Matrix* _src = dynamic_cast<decx::_Matrix*>(&src);
     decx::_Matrix* _kernel = dynamic_cast<decx::_Matrix*>(&kernel);

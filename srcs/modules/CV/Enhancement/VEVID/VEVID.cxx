@@ -61,7 +61,7 @@ void decx::vis::VEVID_u8_caller(const double* src,
                                 const float _phase_gain,
                                 const float _original_gain)
 {
-    decx::utils::ThreadArrange1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::ThreadArrange1D t1D(DecxGetPermitConcurrency());
     decx::utils::frag_manager f_mgr;
     decx::utils::frag_manager_gen(&f_mgr, proc_H, t1D.total_thread);
 
@@ -89,7 +89,7 @@ _DECX_API_ de::DH de::vis::cpu::VEVID_gray(de::Matrix& src, de::Matrix& dst, con
     const uint2 _tmp_dims = make_uint2(decx::utils::ialign_up<uint32_t>(_src->Width(), 8), _src->Height());
     decx::PtrInfo<float> _tmp;
     if (decx::alloc::_host_virtual_page_malloc(&_tmp, _tmp_dims.x * _tmp_dims.y * sizeof(float))) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION, ALLOC_FAIL);
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_ALLOCATION, ALLOC_FAIL);
         return handle;
     }
 

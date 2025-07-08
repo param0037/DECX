@@ -34,7 +34,7 @@
 #include <log_console.h>
 
 
-void decx::_Vector::_attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, size_t len)
+void decx::_Vector::_attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, uint64_t len)
 {
     this->type = _type;
     this->_single_element_size = decx::core::_size_mapping(_type);
@@ -58,7 +58,7 @@ void decx::_Vector::_attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, size_t
 
     this->length = len;
     this->_init = true;
-    this->_length = decx::utils::ialign_up<size_t>(len, _alignment);
+    this->_length = decx::utils::ialign_up<uint64_t>(len, _alignment);
     this->total_bytes = this->_length * this->_single_element_size;
 }
 
@@ -82,7 +82,7 @@ void decx::_Vector::re_alloc_data_space(const uint32_t _pre_store_type)
 }
 
 
-void decx::_Vector::construct(const de::_DATA_TYPES_FLAGS_ _type, size_t length)
+void decx::_Vector::construct(const de::_DATA_TYPES_FLAGS_ _type, uint64_t length)
 {
     this->_attribute_assign(_type, length);
 
@@ -91,12 +91,12 @@ void decx::_Vector::construct(const de::_DATA_TYPES_FLAGS_ _type, size_t length)
 
 
 
-void decx::_Vector::re_construct(const de::_DATA_TYPES_FLAGS_ _type, size_t length)
+void decx::_Vector::re_construct(const de::_DATA_TYPES_FLAGS_ _type, uint64_t length)
 {
     // If all the parameters are the same, it is meaningless to re-construt the data
     if (this->type != _type || this->length != length)
     {
-        const size_t pre_size = this->total_bytes;
+        const uint64_t pre_size = this->total_bytes;
 
         this->_attribute_assign(_type, length);
 
@@ -118,7 +118,7 @@ decx::_Vector::_Vector()
 }
 
 
-decx::_Vector::_Vector(const de::_DATA_TYPES_FLAGS_ _type, size_t length)
+decx::_Vector::_Vector(const de::_DATA_TYPES_FLAGS_ _type, uint64_t length)
 {
     this->_attribute_assign(_type, length);
     this->alloc_data_space();
@@ -127,7 +127,7 @@ decx::_Vector::_Vector(const de::_DATA_TYPES_FLAGS_ _type, size_t length)
 
 
 
-size_t decx::_Vector::Len() const
+uint64_t decx::_Vector::Len() const
 {
     return this->length;
 }
@@ -146,13 +146,13 @@ de::Vector* de::CreateVectorPtr()
 }
 
 
-de::Vector& de::CreateVectorRef(const de::_DATA_TYPES_FLAGS_ _type, size_t len)
+de::Vector& de::CreateVectorRef(const de::_DATA_TYPES_FLAGS_ _type, uint64_t len)
 {
     return *(new decx::_Vector(_type, len));
 }
 
 
-de::Vector* de::CreateVectorPtr(const de::_DATA_TYPES_FLAGS_ _type, size_t len)
+de::Vector* de::CreateVectorPtr(const de::_DATA_TYPES_FLAGS_ _type, uint64_t len)
 {
     return new decx::_Vector(_type, len);
 }

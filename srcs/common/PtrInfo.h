@@ -35,7 +35,7 @@
 #include <include.h>
 #include <log_console.h>
 #include <decx_alloc_interface.h>
-
+#include <Handle/decx_handle.h>
 
 namespace decx
 {
@@ -109,9 +109,9 @@ public:
 
 
 #ifdef _DECX_CUDA_PARTS_
-    int32_t Allocate(const uint64_t size, const DecxMemoryType_e alloc_type, de::DH* handle = nullptr, const bool zero_initialize = true, decx::cuda_stream* S = nullptr)
+    int32_t Allocate(const uint64_t size, const DecxMemoryType_e alloc_type, const bool zero_initialize = true, decx::cuda_stream* S = nullptr)
 #else
-    int32_t Allocate(const uint64_t size, const DecxMemoryType_e alloc_type, de::DH* handle = nullptr, const bool zero_initialize = true)
+    int32_t Allocate(const uint64_t size, const DecxMemoryType_e alloc_type, const bool zero_initialize = true)
 #endif
     {
         this->_mem_type = alloc_type;
@@ -124,9 +124,7 @@ public:
             if (zero_initialize){
                 rval |= DecxMemset(this->block, size, 0);
             }
-            if (handle != nullptr && rval != 0){
-                decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION, ALLOC_FAIL);
-            }
+            DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_ALLOCATION, ALLOC_FAIL);
             break;
 
 #ifdef _DECX_CUDA_PARTS_
@@ -135,9 +133,7 @@ public:
             if (zero_initialize){
                 rval |= DecxCUDAMemset(this->block, size, 0, S);
             }
-            if (handle != nullptr && rval != 0){
-                decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_CUDA_ALLOCATION, DEV_ALLOC_FAIL);
-            }
+            DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_CUDA_ALLOCATION, DEV_ALLOC_FAIL);
             break;
 #endif
 
@@ -149,9 +145,9 @@ public:
 
     
     #ifdef _DECX_CUDA_PARTS_
-    int32_t Reallocate(const uint64_t size, de::DH* handle = nullptr, const bool zero_initialize = true, decx::cuda_stream* S = nullptr, const bool lazy_alloc = false)
+    int32_t Reallocate(const uint64_t size, const bool zero_initialize = true, decx::cuda_stream* S = nullptr, const bool lazy_alloc = false)
 #else
-    int32_t Reallocate(const uint64_t size, de::DH* handle = nullptr, const bool zero_initialize = true, const bool lazy_alloc = false)
+    int32_t Reallocate(const uint64_t size, const bool zero_initialize = true, const bool lazy_alloc = false)
 #endif
     {
         int32_t rval = 0;
@@ -166,9 +162,7 @@ public:
             if (zero_initialize){
                 rval |= DecxMemset(this->block, size, 0);
             }
-            if (handle != nullptr && rval != 0){
-                decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION, ALLOC_FAIL);
-            }
+            DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_ALLOCATION, ALLOC_FAIL);
         return rval;
 
 #ifdef _DECX_CUDA_PARTS_
@@ -180,9 +174,7 @@ public:
             if (zero_initialize){
                 rval |= DecxCUDAMemset(this->block, size, 0, S);
             }
-            if (handle != nullptr && rval != 0){
-                decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_CUDA_ALLOCATION, DEV_ALLOC_FAIL);
-            }
+            DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_CUDA_ALLOCATION, DEV_ALLOC_FAIL);
         return rval;
 #endif
 
@@ -219,6 +211,14 @@ public:
     operator+(const uint64_t offset)
     {
         return this->GetRawPtr<_type_out>() + offset;
+    }
+
+
+    template <typename _type_out = _Ty>
+    typename std::enable_if<!std::is_same<_type_out, void>::value, _type_out>::type*
+    operator-(const uint64_t offset)
+    {
+        return this->GetRawPtr<_type_out>() - offset;
     }
 
 
@@ -330,36 +330,36 @@ public:
 
 #ifdef _DECX_CUDA_PARTS_
     int32_t Allocate(const DecxMemoryType_e mem_type,   const uint32_t element_size = sizeof(_Ty), 
-                     de::DH* handle = nullptr,          const bool zero_initialize = true,
+                     const bool zero_initialize = true,
                     decx::cuda_stream* S = nullptr)
 #else
     int32_t Allocate(const DecxMemoryType_e mem_type,   const uint32_t element_size = sizeof(_Ty), 
-                     de::DH* handle = nullptr,          const bool zero_initialize = true)
+                     const bool zero_initialize = true)
 #endif
     {
         const uint64_t size_alloca = (uint64_t)this->_dims.x * (uint64_t)this->_dims.y * element_size;
 #ifdef _DECX_CUDA_PARTS_
-        int32_t rval = this->_ptr.Allocate(size_alloca, mem_type, handle, zero_initialize, S);
+        int32_t rval = this->_ptr.Allocate(size_alloca, mem_type, zero_initialize, S);
 #else
-        int32_t rval = this->_ptr.Allocate(size_alloca, mem_type, handle, zero_initialize);
+        int32_t rval = this->_ptr.Allocate(size_alloca, mem_type, zero_initialize);
 #endif
         return rval;
     }
 
     
 #ifdef _DECX_CUDA_PARTS_
-    int32_t Reallocate(const uint32_t element_size = sizeof(_Ty),   de::DH* handle = nullptr,
+    int32_t Reallocate(const uint32_t element_size = sizeof(_Ty),
                     const bool zero_initialize = true,           decx::cuda_stream* S = nullptr, const bool lazy_alloc = false)
 #else
-    int32_t Reallocate(const uint32_t element_size = sizeof(_Ty),   de::DH* handle = nullptr,
+    int32_t Reallocate(const uint32_t element_size = sizeof(_Ty),
                     const bool zero_initialize = true,              const bool lazy_alloc = false)
 #endif
     {
         const uint64_t size_alloca = (uint64_t)this->_dims.x * (uint64_t)this->_dims.y * element_size;
 #ifdef _DECX_CUDA_PARTS_
-        int32_t rval = this->_ptr.Reallocate(size_alloca, handle, zero_initialize, S, lazy_alloc);
+        int32_t rval = this->_ptr.Reallocate(size_alloca, zero_initialize, S, lazy_alloc);
 #else
-        int32_t rval = this->_ptr.Reallocate(size_alloca, handle, zero_initialize, lazy_alloc);
+        int32_t rval = this->_ptr.Reallocate(size_alloca, zero_initialize, lazy_alloc);
 #endif
         return rval;
     }
@@ -384,6 +384,14 @@ public:
         return this->GetRawPtr<_type_out>() + offset;
     }
 
+
+    template <typename _type_out = _Ty>
+    typename std::enable_if<!std::is_same<_type_out, void>::value, _type_out>::type*
+    operator-(const uint64_t offset)
+    {
+        return this->GetRawPtr<_type_out>() - offset;
+    }
+
     
     template <typename _type_out = _Ty>
     typename std::enable_if<!std::is_same<_type_out, void>::value, _type_out>::type&
@@ -402,27 +410,27 @@ public:
 
 
 #ifdef _DECX_CUDA_PARTS_
-    int32_t Allocate(const uint64_t size, const DecxMemoryType_e alloc_type, de::DH* handle = nullptr, const bool zero_initialize = true, decx::cuda_stream* S = nullptr)
+    int32_t Allocate(const uint64_t size, const DecxMemoryType_e alloc_type, const bool zero_initialize = true, decx::cuda_stream* S = nullptr)
     {
-        return this->_ptr.Allocate(size, alloc_type, handle, zero_initialize, S);
+        return this->_ptr.Allocate(size, alloc_type, zero_initialize, S);
     }
 #else
-    int32_t Allocate(const uint64_t size, const DecxMemoryType_e alloc_type, de::DH* handle = nullptr, const bool zero_initialize = true)
+    int32_t Allocate(const uint64_t size, const DecxMemoryType_e alloc_type, const bool zero_initialize = true)
     {
-        return this->_ptr.Allocate(size, alloc_type, handle, zero_initialize);
+        return this->_ptr.Allocate(size, alloc_type, zero_initialize);
     }
 #endif
 
 
 #ifdef _DECX_CUDA_PARTS_
-    int32_t Reallocate(const uint64_t size, de::DH* handle = nullptr, const bool zero_initialize = true, decx::cuda_stream* S = nullptr, const bool lazy_alloc = false)
+    int32_t Reallocate(const uint64_t size, const bool zero_initialize = true, decx::cuda_stream* S = nullptr, const bool lazy_alloc = false)
     {
-        return this->_ptr.Reallocate(size, handle, zero_initialize, S, lazy_alloc);
+        return this->_ptr.Reallocate(size, zero_initialize, S, lazy_alloc);
     }
 #else
-    int32_t Reallocate(const uint64_t size, de::DH* handle = nullptr, const bool zero_initialize = true, const bool lazy_alloc = false)
+    int32_t Reallocate(const uint64_t size, const bool zero_initialize = true, const bool lazy_alloc = false)
     {
-        return this->_ptr.Reallocate(size, handle, zero_initialize, lazy_alloc);
+        return this->_ptr.Reallocate(size, zero_initialize, lazy_alloc);
     }
 #endif
 };

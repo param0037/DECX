@@ -36,7 +36,7 @@
 _THREAD_FUNCTION_ void
 decx::type_cast::CPUK::_v256_cvtui8_i32_1D(const uint8_t* __restrict  src, 
                                            int32_t* __restrict        dst, 
-                                           const size_t             proc_len)
+                                           const uint64_t             proc_len)
 {
     decx::utils::simd::xmm128_reg recv;
     decx::utils::simd::xmm256_reg store;
@@ -135,7 +135,7 @@ _v256_cvti32_ui8_saturated1D(const int32_t* __restrict      src,
 _THREAD_FUNCTION_ void
 decx::type_cast::CPUK::_v256_cvti32_ui8_truncate1D(const int32_t* __restrict      src, 
                                                    uint8_t* __restrict              dst, 
-                                                   const size_t                 proc_len)
+                                                   const uint64_t                 proc_len)
 {
     decx::utils::simd::xmm256_reg recv;
     __m256i reg;
@@ -177,9 +177,9 @@ _v256_cvti32_ui8_truncate_clamp_zero1D(const int32_t* __restrict      src,
 
 // void decx::type_cast::_cvtui8_i32_caller1D(const float*         src, 
 //                                            float*               dst, 
-//                                            const size_t         proc_len)
+//                                            const uint64_t         proc_len)
 // {
-//     decx::utils::ThreadArrange1D t1D(decx::cpu::_get_permitted_concurrency());
+//     decx::utils::ThreadArrange1D t1D(DecxGetPermitConcurrency());
 
 //     bool _is_MT = proc_len > 1024 * t1D.total_thread;
 
@@ -197,7 +197,7 @@ _v256_cvti32_ui8_truncate_clamp_zero1D(const int32_t* __restrict      src,
 //             loc_src += f_mgr.frag_len * 2;
 //             loc_dst += f_mgr.frag_len * 8;
 //         }
-//         const size_t _L = f_mgr.is_left ? f_mgr.frag_left_over : f_mgr.frag_len;
+//         const uint64_t _L = f_mgr.is_left ? f_mgr.frag_left_over : f_mgr.frag_len;
 //         t1D._async_thread[t1D.total_thread - 1] = decx::cpu::RegisterTaskLoadBalanced( decx::type_cast::CPUK::_v256_cvtui8_i32_1D,
 //             loc_src, loc_dst, _L);
 
@@ -419,7 +419,7 @@ _v256_cvti32_ui8_truncate_clamp_zero2D(const int32_t* __restrict      src,
     decx::utils::simd::xmm256_reg recv;
     __m256i reg;
 
-    size_t dex_src = 0, dex_dst = 0;
+    uint64_t dex_src = 0, dex_dst = 0;
 
     for (int i = 0; i < proc_dims.y; ++i) {
         dex_src = i * Wsrc;
@@ -479,14 +479,14 @@ decx::type_cast::_cvti32_ui8_selector2D(const int32_t flag)
 //                                            const uint           Wsrc, 
 //                                            const uint           Wdst)
 // {
-//     decx::utils::ThreadArrange1D t1D(decx::cpu::_get_permitted_concurrency());
+//     decx::utils::ThreadArrange1D t1D(DecxGetPermitConcurrency());
 //     decx::utils::frag_manager f_mgr;
 //     decx::utils::frag_manager_gen(&f_mgr, proc_dims.y, t1D.total_thread);
 
 //     const float* loc_src = src;
 //     float* loc_dst = dst;
 
-//     const size_t frag_src = Wsrc * f_mgr.frag_len,
+//     const uint64_t frag_src = Wsrc * f_mgr.frag_len,
 //         frag_dst = Wdst * f_mgr.frag_len;
 
 //     for (int i = 0; i < t1D.total_thread - 1; ++i) {
@@ -516,14 +516,14 @@ decx::type_cast::_cvti32_ui8_selector2D(const int32_t flag)
 //                                            de::DH*              handle)
 // {
 //     using namespace decx::type_cast;
-//     decx::utils::ThreadArrange1D t1D(decx::cpu::_get_permitted_concurrency());
+//     decx::utils::ThreadArrange1D t1D(DecxGetPermitConcurrency());
 //     decx::utils::frag_manager f_mgr;
 //     decx::utils::frag_manager_gen(&f_mgr, proc_dims.y, t1D.total_thread);
 
 //     const float* loc_src = src;
 //     int* loc_dst = dst;
 
-//     const size_t frag_src = Wsrc * f_mgr.frag_len,
+//     const uint64_t frag_src = Wsrc * f_mgr.frag_len,
 //         frag_dst = Wdst * f_mgr.frag_len;
 
 //     decx::type_cast::CPUK::_cvt_i32_u8_kernel2D exec_kernrel_ptr = NULL;
@@ -547,7 +547,7 @@ decx::type_cast::_cvti32_ui8_selector2D(const int32_t flag)
 //         break;
 
 //     default:
-//         decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_INVALID_PARAM,
+//         DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_INVALID_PARAM,
 //             INVALID_PARAM);
 //         return;
 //         break;

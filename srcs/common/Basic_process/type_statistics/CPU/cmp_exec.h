@@ -57,15 +57,15 @@ namespace decx
             * @param res_vec : the result vector in __m256
             */
             _THREAD_FUNCTION_ void
-                _maximum_vec8_fp32_1D(const float* src, const size_t len, float* res_vec, const uint8_t _occupied_length);
+                _maximum_vec8_fp32_1D(const float* src, const uint64_t len, float* res_vec, const uint8_t _occupied_length);
 
 
             _THREAD_FUNCTION_ void
-                _minimum_vec8_fp32_1D(const float* src, const size_t len, float* res_vec, const uint8_t _occupied_length);
+                _minimum_vec8_fp32_1D(const float* src, const uint64_t len, float* res_vec, const uint8_t _occupied_length);
 
 
             _THREAD_FUNCTION_ void
-                _min_max_vec8_fp32_1D(const float* src, const size_t len, float* res_min, float* res_max, const uint8_t _occupied_length);
+                _min_max_vec8_fp32_1D(const float* src, const uint64_t len, float* res_min, float* res_max, const uint8_t _occupied_length);
 
 
             /*
@@ -146,24 +146,24 @@ namespace decx
             * @param res_vec : the result vector in __m256
             */
             _THREAD_FUNCTION_ void
-                _maximum_vec4_fp64_1D(const double* src, const size_t len, double* res_vec, const uint8_t _occupied_length);
+                _maximum_vec4_fp64_1D(const double* src, const uint64_t len, double* res_vec, const uint8_t _occupied_length);
 
 
             _THREAD_FUNCTION_ void
-                _minimum_vec4_fp64_1D(const double* src, const size_t len, double* res_vec, const uint8_t _occupied_length);
+                _minimum_vec4_fp64_1D(const double* src, const uint64_t len, double* res_vec, const uint8_t _occupied_length);
 
 
             _THREAD_FUNCTION_ void
-                _min_max_vec4_fp64_1D(const double* src, const size_t len, double* res_min, double* res_max, const uint8_t _occupied_length);
+                _min_max_vec4_fp64_1D(const double* src, const uint64_t len, double* res_min, double* res_max, const uint8_t _occupied_length);
 
 
-            typedef void (*_cmp_kernel_fp32_1D) (const float*, const size_t, float*, const uint8_t);
-            typedef void (*_cmp_kernel_fp64_1D) (const double*, const size_t, double*, const uint8_t);
-            typedef void (*_cmp_kernel_uint8_1D) (const uint8_t*, const size_t, uint8_t*, const uint8_t);
+            typedef void (*_cmp_kernel_fp32_1D) (const float*, const uint64_t, float*, const uint8_t);
+            typedef void (*_cmp_kernel_fp64_1D) (const double*, const uint64_t, double*, const uint8_t);
+            typedef void (*_cmp_kernel_uint8_1D) (const uint8_t*, const uint64_t, uint8_t*, const uint8_t);
 
-            typedef void (*_bicmp_kernel_fp32_1D) (const float*, const size_t, float*, float*, const uint8_t);
-            typedef void (*_bicmp_kernel_fp64_1D) (const double*, const size_t, double*, double*, const uint8_t);
-            typedef void (*_bicmp_kernel_uint8_1D) (const uint8_t*, const size_t, uint8_t*, uint8_t*, const uint8_t);
+            typedef void (*_bicmp_kernel_fp32_1D) (const float*, const uint64_t, float*, float*, const uint8_t);
+            typedef void (*_bicmp_kernel_fp64_1D) (const double*, const uint64_t, double*, double*, const uint8_t);
+            typedef void (*_bicmp_kernel_uint8_1D) (const uint8_t*, const uint64_t, uint8_t*, uint8_t*, const uint8_t);
 
             typedef void (*_cmp_kernel_fp32_2D) (const float*, const uint2, float*, const uint32_t, const uint8_t);
             typedef void (*_cmp_kernel_fp64_2D) (const double*, const uint2, double*, const uint32_t, const uint8_t);
@@ -180,15 +180,15 @@ namespace decx
         * @param res_vec : the result vector in __m256
         */
         template <typename T_kernel, typename T_data, uint8_t _align>
-        static void _maximum_1D_caller(T_kernel _cmp_kernel, const T_data* src, const size_t len, T_data* res_vec);
+        static void _maximum_1D_caller(T_kernel _cmp_kernel, const T_data* src, const uint64_t len, T_data* res_vec);
 
 
         template <typename T_kernel, typename T_data, uint8_t _align>
-        static void _minimum_1D_caller(T_kernel _cmp_kernel, const T_data* src, const size_t len, T_data* res_vec);
+        static void _minimum_1D_caller(T_kernel _cmp_kernel, const T_data* src, const uint64_t len, T_data* res_vec);
 
 
         template <typename T_kernel, typename T_data, uint8_t _align>
-        static void _min_max_1D_caller(T_kernel _cmp_kernel, const T_data* src, const size_t len, T_data* res_min, T_data* res_max);
+        static void _min_max_1D_caller(T_kernel _cmp_kernel, const T_data* src, const uint64_t len, T_data* res_min, T_data* res_max);
 
 
         /*
@@ -273,10 +273,10 @@ static inline __m128i decx::bp::CPUK::extend_shufflevar_v16(const uint8_t _occup
 
 
 template <typename T_kernel, typename T_data, uint8_t _align>
-void decx::bp::_maximum_1D_caller(T_kernel _cmp_kernel, const T_data* src, const size_t len, T_data* res_vec)
+void decx::bp::_maximum_1D_caller(T_kernel _cmp_kernel, const T_data* src, const uint64_t len, T_data* res_vec)
 {
     // the number of available concurrent threads
-    const uint conc_thr = decx::cpu::_get_permitted_concurrency();
+    const uint conc_thr = DecxGetPermitConcurrency();
     decx::utils::frag_manager fr_mgr;
     decx::utils::frag_manager_gen(&fr_mgr, decx::utils::idiv_ceil<uint64_t>(len, _align), conc_thr);
 
@@ -304,10 +304,10 @@ void decx::bp::_maximum_1D_caller(T_kernel _cmp_kernel, const T_data* src, const
 
 
 template <typename T_kernel, typename T_data, uint8_t _align>
-void decx::bp::_minimum_1D_caller(T_kernel _cmp_kernel, const T_data* src, const size_t len, T_data* res_vec)
+void decx::bp::_minimum_1D_caller(T_kernel _cmp_kernel, const T_data* src, const uint64_t len, T_data* res_vec)
 {
     // the number of available concurrent threads
-    const uint conc_thr = decx::cpu::_get_permitted_concurrency();
+    const uint conc_thr = DecxGetPermitConcurrency();
     decx::utils::frag_manager fr_mgr;
     decx::utils::frag_manager_gen(&fr_mgr, decx::utils::idiv_ceil<uint64_t>(len, _align), conc_thr);
 
@@ -335,10 +335,10 @@ void decx::bp::_minimum_1D_caller(T_kernel _cmp_kernel, const T_data* src, const
 
 
 template <typename T_kernel, typename T_data, uint8_t _align>
-static void decx::bp::_min_max_1D_caller(T_kernel _cmp_kernel, const T_data* src, const size_t len, T_data* res_min, T_data* res_max)
+static void decx::bp::_min_max_1D_caller(T_kernel _cmp_kernel, const T_data* src, const uint64_t len, T_data* res_min, T_data* res_max)
 {
     // the number of available concurrent threads
-    const uint conc_thr = decx::cpu::_get_permitted_concurrency();
+    const uint conc_thr = DecxGetPermitConcurrency();
     decx::utils::frag_manager fr_mgr;
     decx::utils::frag_manager_gen(&fr_mgr, decx::utils::idiv_ceil<uint64_t>(len, _align), conc_thr);
 
@@ -379,7 +379,7 @@ void decx::bp::_maximum_2D_caller(T_kernel          _cmp_kernel,
                                   T_data*           res_vec)
 {
     // the number of available concurrent threads
-    const uint conc_thr = decx::cpu::_get_permitted_concurrency();
+    const uint conc_thr = DecxGetPermitConcurrency();
     decx::utils::frag_manager fr_mgr;
     decx::utils::frag_manager_gen(&fr_mgr, proc_dims.y, conc_thr);
     const uint8_t _occupied_length = (proc_dims.x % _align);
@@ -388,7 +388,7 @@ void decx::bp::_maximum_2D_caller(T_kernel          _cmp_kernel,
     T_data* res_arr = new T_data[conc_thr];
 
     const T_data* tmp_src = src;
-    const size_t proc_size = fr_mgr.frag_len * Wsrc;
+    const uint64_t proc_size = fr_mgr.frag_len * Wsrc;
     for (int i = 0; i < conc_thr; ++i)
     {
         t1D._async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(
@@ -412,7 +412,7 @@ void decx::bp::_minimum_2D_caller(T_kernel _cmp_kernel, const T_data* src, const
     const uint32_t Wsrc, T_data* res_vec)
 {
     // the number of available concurrent threads
-    const uint conc_thr = decx::cpu::_get_permitted_concurrency();
+    const uint conc_thr = DecxGetPermitConcurrency();
     decx::utils::frag_manager fr_mgr;
     decx::utils::frag_manager_gen(&fr_mgr, proc_dims.y, conc_thr);
     const uint8_t _occupied_length = (proc_dims.x % _align);
@@ -421,7 +421,7 @@ void decx::bp::_minimum_2D_caller(T_kernel _cmp_kernel, const T_data* src, const
     T_data* res_arr = new T_data[conc_thr];
 
     const T_data* tmp_src = src;
-    const size_t proc_size = fr_mgr.frag_len * Wsrc;
+    const uint64_t proc_size = fr_mgr.frag_len * Wsrc;
     for (int i = 0; i < conc_thr; ++i)
     {
         t1D._async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(
@@ -446,7 +446,7 @@ void decx::bp::_min_max_2D_caller(T_kernel _cmp_kernel, const T_data* src, const
     const uint32_t Wsrc, T_data* res_min, T_data* res_max)
 {
     // the number of available concurrent threads
-    const uint conc_thr = decx::cpu::_get_permitted_concurrency();
+    const uint conc_thr = DecxGetPermitConcurrency();
     decx::utils::frag_manager fr_mgr;
     decx::utils::frag_manager_gen(&fr_mgr, proc_dims.y, conc_thr);
     const uint8_t _occupied_length = (proc_dims.x % _align);
@@ -458,7 +458,7 @@ void decx::bp::_min_max_2D_caller(T_kernel _cmp_kernel, const T_data* src, const
     rval |= vec_max.Allocate(conc_thr * sizeof(T_data), PAGABLE, de::GetLastError());
 
     const T_data* tmp_src = src;
-    const size_t proc_size = fr_mgr.frag_len * Wsrc;
+    const uint64_t proc_size = fr_mgr.frag_len * Wsrc;
     for (int i = 0; i < conc_thr - 1; ++i)
     {
         t1D._async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(

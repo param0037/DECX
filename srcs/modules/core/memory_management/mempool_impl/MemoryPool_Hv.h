@@ -72,7 +72,7 @@ public:
      * @param req_size Indicated by users
      * @param _ptr The destinated pointer of decx::MemBlock
      */
-    void allocate(size_t req_size, decx::MemBlock** _ptr);
+    void allocate(uint64_t req_size, decx::MemBlock** _ptr);
 
     /**
      * @brief Deallocate a decx::MemBlock, precisely speaking, label it idle
@@ -102,7 +102,7 @@ private:
      * @return true Found an idle block
      * @return false Haven't found any idle block
      */
-    bool search_for_idle(size_t req_size, int begin_dex, decx::MemBlock** _ptr);
+    bool search_for_idle(uint64_t req_size, int begin_dex, decx::MemBlock** _ptr);
 
 };
 

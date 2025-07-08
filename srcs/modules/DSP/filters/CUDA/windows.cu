@@ -40,10 +40,10 @@ decx::dsp::GPUK::cu_Gaussian_Window1D_cpl32(const float4* __restrict         src
                                                float4* __restrict               dst, 
                                                const float                      u, 
                                                const float                      sigma, 
-                                               const size_t                     _proc_len, 
-                                               const size_t                     real_bound)
+                                               const uint64_t                     _proc_len, 
+                                               const uint64_t                     real_bound)
 {
-    size_t dex = threadIdx.x + blockIdx.x * blockDim.x;
+    uint64_t dex = threadIdx.x + blockIdx.x * blockDim.x;
     float4 recv, store;
     long long axis_value = 0, half_len = real_bound / 2;
     bool _half_pass = false;
@@ -78,11 +78,11 @@ __global__ void
 decx::dsp::GPUK::cu_Triangluar_Window1D_cpl32(const float4* __restrict       src,
                                                 float4* __restrict              dst, 
                                                 const long long                 origin, 
-                                                const size_t                    radius,
-                                                const size_t                    _proc_len,
-                                                const size_t                    real_bound)
+                                                const uint64_t                    radius,
+                                                const uint64_t                    _proc_len,
+                                                const uint64_t                    real_bound)
 {
-    size_t dex = threadIdx.x + blockIdx.x * blockDim.x;
+    uint64_t dex = threadIdx.x + blockIdx.x * blockDim.x;
     float4 recv, store;
     long long axis_value = 0, half_len = real_bound / 2, dist = 0;
     bool _half_pass = false, _is_excced = false;
@@ -126,7 +126,7 @@ decx::dsp::GPUK::cu_Cone_Window2D_cpl32(const float4* __restrict         src,
 {
     uint idx = threadIdx.x + blockIdx.x * blockDim.x;
     uint idy = threadIdx.y + blockIdx.y * blockDim.y;
-    size_t dex = 0;
+    uint64_t dex = 0;
 
     int Xaxis_value = 0, Yaxis_value = 0,
         half_lenX = real_bound.x / 2, half_lenY = real_bound.y / 2;
@@ -177,7 +177,7 @@ decx::dsp::GPUK::cu_Gaussian_Window2D_cpl32_no_correlation(const float4* __restr
 {
     uint idx = threadIdx.x + blockIdx.x * blockDim.x;
     uint idy = threadIdx.y + blockIdx.y * blockDim.y;
-    size_t dex = 0;
+    uint64_t dex = 0;
 
     int Xaxis_value = 0, Yaxis_value = 0, 
         half_lenX = real_bound.x / 2, half_lenY = real_bound.y / 2;
@@ -230,7 +230,7 @@ decx::dsp::GPUK::cu_Gaussian_Window2D_cpl32(const float4* __restrict src,
 {
     uint idx = threadIdx.x + blockIdx.x * blockDim.x;
     uint idy = threadIdx.y + blockIdx.y * blockDim.y;
-    size_t dex = 0;
+    uint64_t dex = 0;
 
     int Xaxis_value = 0, Yaxis_value = 0, 
         half_lenX = real_bound.x / 2, half_lenY = real_bound.y / 2;
@@ -279,8 +279,8 @@ _DECX_API_ de::DH
 de::dsp::cuda::Gaussian_Window1D(de::GPU_Vector& src, de::GPU_Vector& dst, const float u, const float sigma)
 {
     de::DH handle;
-    if (!decx::cuda::_is_CUDA_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
+    if (!decx::cuda::DecxGetIsCUDAInit()) {
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
         
         return handle;
     }
@@ -291,14 +291,14 @@ de::dsp::cuda::Gaussian_Window1D(de::GPU_Vector& src, de::GPU_Vector& dst, const
     decx::cuda_stream* S = NULL;
     S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
     if (S == NULL) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CUDA_STREAM, CUDA_STREAM_ACCESS_FAIL);
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_CUDA_STREAM, CUDA_STREAM_ACCESS_FAIL);
         
         return handle;
     }
 
-    const size_t _proc_len_v2 = _src->_length / 2;
-    decx::dsp::GPUK::cu_Gaussian_Window1D_cpl32 << <decx::utils::idiv_ceil<size_t>(_proc_len_v2, decx::cuda::_get_cuda_prop().maxThreadsPerBlock),
-        decx::cuda::_get_cuda_prop().maxThreadsPerBlock, 0, S->get_raw_stream_ref() >> > (
+    const uint64_t _proc_len_v2 = _src->_length / 2;
+    decx::dsp::GPUK::cu_Gaussian_Window1D_cpl32 << <decx::utils::idiv_ceil<uint64_t>(_proc_len_v2, decx::cuda::DecxGetCUDAProp().maxThreadsPerBlock),
+        decx::cuda::DecxGetCUDAProp().maxThreadsPerBlock, 0, S->get_raw_stream_ref() >> > (
             (float4*)_src->Vec.ptr, (float4*)_dst->Vec.ptr, u, sigma, _proc_len_v2, _src->length);
 
     checkCudaErrors(cudaDeviceSynchronize());
@@ -313,11 +313,11 @@ de::dsp::cuda::Gaussian_Window1D(de::GPU_Vector& src, de::GPU_Vector& dst, const
 
 
 _DECX_API_ de::DH
-de::dsp::cuda::Triangular_Window1D(de::GPU_Vector& src, de::GPU_Vector& dst, const long long origin, const size_t radius)
+de::dsp::cuda::Triangular_Window1D(de::GPU_Vector& src, de::GPU_Vector& dst, const long long origin, const uint64_t radius)
 {
     de::DH handle;
-    if (!decx::cuda::_is_CUDA_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
+    if (!decx::cuda::DecxGetIsCUDAInit()) {
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
         
         return handle;
     }
@@ -328,14 +328,14 @@ de::dsp::cuda::Triangular_Window1D(de::GPU_Vector& src, de::GPU_Vector& dst, con
     decx::cuda_stream* S = NULL;
     S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
     if (S == NULL) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CUDA_STREAM, CUDA_STREAM_ACCESS_FAIL);
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_CUDA_STREAM, CUDA_STREAM_ACCESS_FAIL);
         
         return handle;
     }
 
-    const size_t _proc_len_v2 = _src->_length / 2;
-    decx::dsp::GPUK::cu_Triangluar_Window1D_cpl32 << <decx::utils::idiv_ceil<size_t>(_proc_len_v2, decx::cuda::_get_cuda_prop().maxThreadsPerBlock),
-        decx::cuda::_get_cuda_prop().maxThreadsPerBlock, 0, S->get_raw_stream_ref() >> > (
+    const uint64_t _proc_len_v2 = _src->_length / 2;
+    decx::dsp::GPUK::cu_Triangluar_Window1D_cpl32 << <decx::utils::idiv_ceil<uint64_t>(_proc_len_v2, decx::cuda::DecxGetCUDAProp().maxThreadsPerBlock),
+        decx::cuda::DecxGetCUDAProp().maxThreadsPerBlock, 0, S->get_raw_stream_ref() >> > (
             (float4*)_src->Vec.ptr, (float4*)_dst->Vec.ptr, origin, radius, _proc_len_v2, _src->length);
 
     checkCudaErrors(cudaDeviceSynchronize());
@@ -353,8 +353,8 @@ _DECX_API_ de::DH
 de::dsp::cuda::Cone_Window2D(de::GPU_Matrix& src, de::GPU_Matrix& dst, const de::Point2D origin, const float radius)
 {
     de::DH handle;
-    if (!decx::cuda::_is_CUDA_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
+    if (!decx::cuda::DecxGetIsCUDAInit()) {
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
         
         return handle;
     }
@@ -365,7 +365,7 @@ de::dsp::cuda::Cone_Window2D(de::GPU_Matrix& src, de::GPU_Matrix& dst, const de:
     decx::cuda_stream* S = NULL;
     S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
     if (S == NULL) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CUDA_STREAM, CUDA_STREAM_ACCESS_FAIL);
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_CUDA_STREAM, CUDA_STREAM_ACCESS_FAIL);
         
         return handle;
     }
@@ -397,8 +397,8 @@ de::dsp::cuda::Gaussian_Window2D(
     de::GPU_Matrix& src, de::GPU_Matrix& dst, const de::Point2D_f u, const de::Point2D_f sigma, const float p)
 {
     de::DH handle;
-    if (!decx::cuda::_is_CUDA_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
+    if (!decx::cuda::DecxGetIsCUDAInit()) {
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
         
         return handle;
     }
@@ -409,7 +409,7 @@ de::dsp::cuda::Gaussian_Window2D(
     decx::cuda_stream* S = NULL;
     S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
     if (S == NULL) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CUDA_STREAM, CUDA_STREAM_ACCESS_FAIL);
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_CUDA_STREAM, CUDA_STREAM_ACCESS_FAIL);
         
         return handle;
     }
@@ -429,7 +429,7 @@ de::dsp::cuda::Gaussian_Window2D(
     }
     else {
         if (!(p < 1.f && p > -1.f)) {
-            decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_INVALID_PARAM, INVALID_PARAM);
+            DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_INVALID_PARAM, INVALID_PARAM);
             DECX_LOG_ERR(INVALID_PARAM);
             return handle;
         }

@@ -117,7 +117,7 @@ void decx::_cpy2D_plane(const T* __restrict src, T* __restrict dst, const uint32
 template <typename _T_ele>
 static void decx::_cpy2D_anybit_caller(_T_ele* src, _T_ele* dst, const uint32_t Wsrc, const uint32_t Wdst, const uint2 cpy_area)
 {
-    const uint32_t conc_thr = (uint32_t)decx::cpu::_get_permitted_concurrency();
+    const uint32_t conc_thr = (uint32_t)DecxGetPermitConcurrency();
     decx::utils::frag_manager f_mgr;
     decx::utils::frag_manager_gen(&f_mgr, cpy_area.y, conc_thr);
 

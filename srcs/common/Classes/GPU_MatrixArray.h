@@ -98,11 +98,11 @@ namespace decx
 
         de::_DATA_TYPES_FLAGS_ type;
 
-        size_t element_num, _element_num,
+        uint64_t element_num, _element_num,
             total_bytes,    // The real total bytes of the MatrixArray memory block, ATTENTION : NO '_' at the front
             ArrayNumber;    // The number of matrices that share the same sizes
 
-        size_t plane, _plane;
+        uint64_t plane, _plane;
 
 
         _GPU_MatrixArray();

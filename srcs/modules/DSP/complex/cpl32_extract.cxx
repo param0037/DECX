@@ -42,7 +42,7 @@ _DECX_API_ de::DH de::dsp::cpu::Module(de::Matrix& src, de::Matrix& dst)
 
     if (_src->Type() != de::_DATA_TYPES_FLAGS_::_COMPLEX_F32_ ||
         _dst->Type() != de::_DATA_TYPES_FLAGS_::_FP32_) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_TYPE_MOT_MATCH,
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_TYPE_MOT_MATCH,
             TYPE_ERROR_NOT_MATCH);
         return handle;
     }
@@ -64,7 +64,7 @@ _DECX_API_ de::DH de::dsp::cpu::Angle(de::Matrix& src, de::Matrix& dst)
 
     if (_src->Type() != de::_DATA_TYPES_FLAGS_::_COMPLEX_F32_ ||
         _dst->Type() != de::_DATA_TYPES_FLAGS_::_FP32_) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_TYPE_MOT_MATCH,
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_TYPE_MOT_MATCH,
             TYPE_ERROR_NOT_MATCH);
         return handle;
     }

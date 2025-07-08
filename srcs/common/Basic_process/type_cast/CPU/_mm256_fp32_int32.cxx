@@ -46,7 +46,7 @@ decx::type_cast::CPUK::_v256_cvtps_i32(const float* __restrict src, int32_t* __r
 
 
 _THREAD_FUNCTION_ void
-decx::type_cast::CPUK::_v256_cvti32_ps(const int32_t* __restrict src, float* __restrict dst, const size_t proc_num)
+decx::type_cast::CPUK::_v256_cvti32_ps(const int32_t* __restrict src, float* __restrict dst, const uint64_t proc_num)
 {
     decx::utils::simd::xmm256_reg recv, store;
 
@@ -61,11 +61,11 @@ decx::type_cast::CPUK::_v256_cvti32_ps(const int32_t* __restrict src, float* __r
 
 // void decx::type_cast::_cvtfp32_i32_caller(const float* src, float* dst, const uint64_t proc_num)
 // {
-//     const size_t proc_num_vec4 = proc_num / 8;
+//     const uint64_t proc_num_vec4 = proc_num / 8;
 
-//     decx::utils::ThreadArrange1D t1D(decx::cpu::_get_permitted_concurrency());
+//     decx::utils::ThreadArrange1D t1D(DecxGetPermitConcurrency());
     
-//     const bool _is_MT = (proc_num_vec4 > (1024 * (size_t)t1D.total_thread));
+//     const bool _is_MT = (proc_num_vec4 > (1024 * (uint64_t)t1D.total_thread));
 
 //     if (_is_MT) {
 //         decx::utils::frag_manager f_mgr;
@@ -77,8 +77,8 @@ decx::type_cast::CPUK::_v256_cvti32_ps(const int32_t* __restrict src, float* __r
 //         for (int i = 0; i < t1D.total_thread - 1; ++i) {
 //             t1D._async_thread[i] = decx::cpu::RegisterTaskLoadBalanced( decx::type_cast::CPUK::_v256_cvtps_i32,
 //                 loc_src, loc_dst, f_mgr.frag_len);
-//             loc_src += ((size_t)f_mgr.frag_len << 3);
-//             loc_dst += ((size_t)f_mgr.frag_len << 3);
+//             loc_src += ((uint64_t)f_mgr.frag_len << 3);
+//             loc_dst += ((uint64_t)f_mgr.frag_len << 3);
 //         }
 //         t1D._async_thread[t1D.total_thread - 1] = decx::cpu::RegisterTaskLoadBalanced(
 //             decx::type_cast::CPUK::_v256_cvtps_i32, loc_src, loc_dst, f_mgr.frag_len);
@@ -94,13 +94,13 @@ decx::type_cast::CPUK::_v256_cvti32_ps(const int32_t* __restrict src, float* __r
 
 
 
-// void decx::type_cast::_cvti32_fp32_caller(const float* src, float* dst, const size_t proc_num)
+// void decx::type_cast::_cvti32_fp32_caller(const float* src, float* dst, const uint64_t proc_num)
 // {
-//     const size_t proc_num_vec4 = proc_num / 8;
+//     const uint64_t proc_num_vec4 = proc_num / 8;
 
-//     decx::utils::ThreadArrange1D t1D(decx::cpu::_get_permitted_concurrency());
+//     decx::utils::ThreadArrange1D t1D(DecxGetPermitConcurrency());
     
-//     const bool _is_MT = (proc_num_vec4 > (1024 * (size_t)t1D.total_thread));
+//     const bool _is_MT = (proc_num_vec4 > (1024 * (uint64_t)t1D.total_thread));
 
 //     if (_is_MT) {
 //         decx::utils::frag_manager f_mgr;
@@ -112,8 +112,8 @@ decx::type_cast::CPUK::_v256_cvti32_ps(const int32_t* __restrict src, float* __r
 //         for (int i = 0; i < t1D.total_thread - 1; ++i) {
 //             t1D._async_thread[i] = decx::cpu::RegisterTaskLoadBalanced( decx::type_cast::CPUK::_v256_cvti32_ps,
 //                 loc_src, loc_dst, f_mgr.frag_len);
-//             loc_src += ((size_t)f_mgr.frag_len << 3);
-//             loc_dst += ((size_t)f_mgr.frag_len << 3);
+//             loc_src += ((uint64_t)f_mgr.frag_len << 3);
+//             loc_dst += ((uint64_t)f_mgr.frag_len << 3);
 //         }
 //         t1D._async_thread[t1D.total_thread - 1] = decx::cpu::RegisterTaskLoadBalanced(
 //             decx::type_cast::CPUK::_v256_cvti32_ps, loc_src, loc_dst, f_mgr.frag_len);

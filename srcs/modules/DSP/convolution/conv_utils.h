@@ -131,19 +131,19 @@ namespace decx
         uint _loop;
 
         decx::utils::frag_manager* f_mgr; 
-        size_t page_size_dst;
-        size_t page_size_src;
-        size_t page_size_ker;
+        uint64_t page_size_dst;
+        uint64_t page_size_src;
+        uint64_t page_size_ker;
         uint channel_size;
 
         _Conv2_MK_Props_fp32(const uint2                 _ker_dims, 
                              const uint                  _W_original_src, 
                              const uint                  _W_tmp_src, 
-                             const size_t                _page_size, 
+                             const uint64_t                _page_size, 
                              const uint                  _channel_size,
                              decx::utils::frag_manager*  _f_mgr,
-                             const size_t                _page_size_src = 0,      // set only when non-border conv2d occurs
-                             const size_t                _page_size_ker = 0);       // set only when multi-kernel conv2d occurs
+                             const uint64_t                _page_size_src = 0,      // set only when non-border conv2d occurs
+                             const uint64_t                _page_size_ker = 0);       // set only when multi-kernel conv2d occurs
     }_C2_MK32;
 
 
@@ -157,19 +157,19 @@ namespace decx
         uint _loop;
 
         decx::utils::frag_manager* f_mgr; 
-        size_t page_size_dst;
-        size_t page_size_src;
-        size_t page_size_ker;
+        uint64_t page_size_dst;
+        uint64_t page_size_src;
+        uint64_t page_size_ker;
         uint channel_size;
 
         _Conv2_MK_Props_fp64(const uint2                 _ker_dims,
                              const uint                  _W_original_src, 
                              const uint                  _W_tmp_src, 
-                             const size_t                _page_size, 
+                             const uint64_t                _page_size, 
                              const uint                  _channel_size,
                              decx::utils::frag_manager*  _f_mgr,
-                             const size_t                _page_size_src = 0,      // set only when non-border conv2d occurs
-                             const size_t                _page_size_ker = 0);       // set only when multi-kernel conv2d occurs
+                             const uint64_t                _page_size_src = 0,      // set only when non-border conv2d occurs
+                             const uint64_t                _page_size_ker = 0);       // set only when multi-kernel conv2d occurs
 
     }_C2_MK64;
 }
@@ -178,11 +178,11 @@ namespace decx
 namespace decx
 {
     static void _thread_dispatch_for_conv2(decx::utils::frag_manager** f_mgr,
-        const size_t tot, const uint thread_num, const uint N, const uint Wproc);
+        const uint64_t tot, const uint thread_num, const uint N, const uint Wproc);
 
 
     static void _thread_dispatch_for_conv2_fp64(decx::utils::frag_manager** f_mgr,
-        const size_t tot, const uint thread_num, const uint N, const uint Wproc);
+        const uint64_t tot, const uint thread_num, const uint N, const uint Wproc);
 }
 
 
@@ -195,14 +195,14 @@ namespace decx
 #define _CONV2_THR_DIST_CRIT_FP64_R9R12_ 128
 
 
-static void decx::_thread_dispatch_for_conv2(decx::utils::frag_manager** f_mgr, const size_t tot,
+static void decx::_thread_dispatch_for_conv2(decx::utils::frag_manager** f_mgr, const uint64_t tot,
     const uint thread_num, const uint N, const uint Wproc)
 {
     decx::utils::frag_manager* f_mgr_N = new decx::utils::frag_manager;
     decx::utils::frag_manager_gen_Nx(f_mgr_N, tot, thread_num, N);
 
     if (f_mgr_N->is_left) {
-        size_t _exceeded = (size_t)(f_mgr_N->frag_left_over - f_mgr_N->frag_len) * (size_t)Wproc;
+        uint64_t _exceeded = (uint64_t)(f_mgr_N->frag_left_over - f_mgr_N->frag_len) * (uint64_t)Wproc;
         if (_exceeded > _CONV2_THR_DIST_CRIT_R5R8_) {
             decx::utils::frag_manager_gen(f_mgr_N, tot, thread_num);
             *f_mgr = f_mgr_N;
@@ -214,14 +214,14 @@ static void decx::_thread_dispatch_for_conv2(decx::utils::frag_manager** f_mgr, 
 
 
 
-static void decx::_thread_dispatch_for_conv2_fp64(decx::utils::frag_manager** f_mgr, const size_t tot,
+static void decx::_thread_dispatch_for_conv2_fp64(decx::utils::frag_manager** f_mgr, const uint64_t tot,
     const uint thread_num, const uint N, const uint Wproc)
 {
     decx::utils::frag_manager* f_mgr_N = new decx::utils::frag_manager;
     decx::utils::frag_manager_gen_Nx(f_mgr_N, tot, thread_num, N);
 
     if (f_mgr_N->is_left) {
-        size_t _exceeded = (size_t)(f_mgr_N->frag_left_over - f_mgr_N->frag_len) * (size_t)Wproc;
+        uint64_t _exceeded = (uint64_t)(f_mgr_N->frag_left_over - f_mgr_N->frag_len) * (uint64_t)Wproc;
         if (_exceeded > _CONV2_THR_DIST_CRIT_FP64_R5R8_) {
             decx::utils::frag_manager_gen(f_mgr_N, tot, thread_num);
             *f_mgr = f_mgr_N;

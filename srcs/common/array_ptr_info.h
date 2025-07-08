@@ -52,7 +52,7 @@ namespace decx
 template <typename T>
 struct decx::utils::ArrayPtrInfo
 {
-    size_t _gap;        // The gap between the pointers (or the size of the space in the medium)
+    uint64_t _gap;        // The gap between the pointers (or the size of the space in the medium)
     T* _ptr;            // The forst pointer   
     T** _ptr_arr;       // The pointer array that stores all the pointers
     uint _len;          // The length of the pointer array
@@ -64,7 +64,7 @@ struct decx::utils::ArrayPtrInfo
     }
 
 
-    ArrayPtrInfo(const uint length, const size_t _size, T* __first) {
+    ArrayPtrInfo(const uint length, const uint64_t _size, T* __first) {
         this->_len = length;
         this->_gap = _size;
         this->_ptr = __first;
@@ -88,8 +88,8 @@ struct decx::utils::ArrayPtrInfo
 template <typename T>
 struct decx::utils::ArrayPtrInfo_MT
 {
-    size_t _thr_proc_size;      // the size of an area process by one thread
-    size_t _arr_len;
+    uint64_t _thr_proc_size;      // the size of an area process by one thread
+    uint64_t _arr_len;
     decx::utils::ArrayPtrInfo<T>* _apis_arr;
 
     ArrayPtrInfo_MT() {
@@ -106,7 +106,7 @@ struct decx::utils::ArrayPtrInfo_MT
     * @param page_size : The size of a single page
     */
     ArrayPtrInfo_MT(const uint _thr_num, T* _first_ptr, const uint page_num, 
-        const size_t _proc_size, const size_t page_size_dst) 
+        const uint64_t _proc_size, const uint64_t page_size_dst) 
     {
         this->_thr_proc_size = _proc_size;
         this->_arr_len = _thr_num;

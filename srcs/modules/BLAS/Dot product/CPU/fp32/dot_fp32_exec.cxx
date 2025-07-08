@@ -33,13 +33,13 @@
 
 
 _THREAD_FUNCTION_ void
-decx::dot::CPUK::_dot_vec8_fp32(const float* A, const float* B, const size_t len, float* res_vec)
+decx::dot::CPUK::_dot_vec8_fp32(const float* A, const float* B, const uint64_t len, float* res_vec)
 {
     __m256 tmp_recv1, tmp_recv2, sum_vec8 = _mm256_set1_ps(0);
 
     for (uint i = 0; i < len; ++i) {
-        tmp_recv1 = _mm256_load_ps(A + ((size_t)i << 3));
-        tmp_recv2 = _mm256_load_ps(B + ((size_t)i << 3));
+        tmp_recv1 = _mm256_load_ps(A + ((uint64_t)i << 3));
+        tmp_recv2 = _mm256_load_ps(B + ((uint64_t)i << 3));
         sum_vec8 = _mm256_fmadd_ps(tmp_recv1, tmp_recv2, sum_vec8);
     }
 
@@ -47,10 +47,10 @@ decx::dot::CPUK::_dot_vec8_fp32(const float* A, const float* B, const size_t len
 }
 
 
-void decx::dot::_dot_fp32_1D_caller(const float* A, const float* B, const size_t len, float* res_vec)
+void decx::dot::_dot_fp32_1D_caller(const float* A, const float* B, const uint64_t len, float* res_vec)
 {
     // the number of available concurrent threads
-    const uint conc_thr = decx::cpu::_get_permitted_concurrency();
+    const uint conc_thr = DecxGetPermitConcurrency();
     decx::utils::frag_manager fr_mgr;
     decx::utils::frag_manager_gen(&fr_mgr, len / 8, conc_thr);
     decx::utils::ThreadArrange1D t1D(conc_thr);
@@ -58,7 +58,7 @@ void decx::dot::_dot_fp32_1D_caller(const float* A, const float* B, const size_t
     float* res_arr = new float[conc_thr];
 
     const float* tmp_A_ptr = A, * tmp_B_ptr = B;
-    const size_t proc_len = fr_mgr.GetFragLen() * 8;
+    const uint64_t proc_len = fr_mgr.GetFragLen() * 8;
     for (int i = 0; i < conc_thr; ++i) {
         t1D._async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(
             decx::dot::CPUK::_dot_vec8_fp32, tmp_A_ptr, tmp_B_ptr, fr_mgr.GetFragLenById(i) / 8, res_arr + i);

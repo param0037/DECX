@@ -35,10 +35,10 @@
 _DECX_API_ void de::blas::cuda::
 Arithmetic(de::InputGPUMatrix A, de::InputGPUMatrix B, de::OutputGPUMatrix dst, const int32_t arith_flag)
 {
-    de::ResetLastError();
+    DecxResetLastHandle
 
-    if (!decx::cuda::_is_CUDA_init()){
-        decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_CUDA_not_init,
+    if (!decx::cuda::DecxGetIsCUDAInit()){
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_CUDA_not_init,
             CUDA_NOT_INIT);
         return;
     }
@@ -47,13 +47,13 @@ Arithmetic(de::InputGPUMatrix A, de::InputGPUMatrix B, de::OutputGPUMatrix dst, 
     decx::cuda_event* E = NULL;
     S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
     if (S == NULL){
-        decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_CUDA_STREAM,
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_CUDA_STREAM,
             CUDA_STREAM_ACCESS_FAIL);
         return;
     }
     E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
     if (E == NULL){
-        decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_CUDA_EVENT,
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_CUDA_EVENT,
             CUDA_EVENT_ACCESS_FAIL);
         return;
     }
@@ -64,7 +64,7 @@ Arithmetic(de::InputGPUMatrix A, de::InputGPUMatrix B, de::OutputGPUMatrix dst, 
 
     if ((arith_flag > de::MAX && arith_flag < de::SUB) || 
         (arith_flag > de::MAX | de::OP_INV && arith_flag < de::SUB | de::OP_INV)){
-        decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_UNSUPPORTED_TYPE,
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_UNSUPPORTED_TYPE,
             "Sine or Cosine are not binary operators");
     }
     else{
@@ -83,7 +83,7 @@ Arithmetic(de::InputGPUMatrix A, de::InputGPUMatrix B, de::OutputGPUMatrix dst, 
 _DECX_API_ void de::blas::cuda::
 Arithmetic(de::InputGPUMatrix src, de::OutputGPUMatrix dst, const int32_t arith_flag)
 {
-    de::ResetLastError();
+    DecxResetLastHandle
 
     const decx::_GPU_Matrix* _src = dynamic_cast<const decx::_GPU_Matrix*>(&src);
     decx::_GPU_Matrix* _dst = dynamic_cast<decx::_GPU_Matrix*>(&dst);
@@ -92,13 +92,13 @@ Arithmetic(de::InputGPUMatrix src, de::OutputGPUMatrix dst, const int32_t arith_
     decx::cuda_event* E = NULL;
     S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
     if (S == NULL){
-        decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_CUDA_STREAM,
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_CUDA_STREAM,
             CUDA_STREAM_ACCESS_FAIL);
         return;
     }
     E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
     if (E == NULL){
-        decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_CUDA_EVENT,
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_CUDA_EVENT,
             CUDA_EVENT_ACCESS_FAIL);
         return;
     }
@@ -108,7 +108,7 @@ Arithmetic(de::InputGPUMatrix src, de::OutputGPUMatrix dst, const int32_t arith_
         decx::blas::mat_arithmetic_caller_VO(_src, _dst, arith_flag, S, de::GetLastError());
     }
     else{
-        decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_UNSUPPORTED_TYPE,
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_UNSUPPORTED_TYPE,
             "Sine or Cosine are not binary operators");
     }
 

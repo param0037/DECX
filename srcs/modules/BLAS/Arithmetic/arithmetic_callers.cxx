@@ -37,19 +37,16 @@ void decx::blas::
 mat_arithmetic_caller_VVO(const decx::_Matrix*  A, 
                           const decx::_Matrix*  B, 
                           decx::_Matrix*        dst, 
-                          const int32_t         arith_flag,
-                          de::DH*               handle)
+                          const int32_t         arith_flag)
 {
     using namespace decx::CPUK;
 
     decx::cpu_ElementWise1D_planner _planner;
-    decx::utils::Thr1D t1D(decx::cpu::_get_permitted_concurrency());
 
     const int32_t _kernel_dex = decx::blas::_find_arith_kernel_id<0>(arith_flag);
-
     void* _kernel_ptr = NULL;
-
     const uint64_t proc_len_flatten_v1 = static_cast<uint64_t>(A->Pitch()) * static_cast<uint64_t>(A->Height());
+    const uint32_t conc = DecxGetPermitConcurrency();
 
     switch (A->Type())
     {
@@ -57,11 +54,10 @@ mat_arithmetic_caller_VVO(const decx::_Matrix*  A,
         // Obtain the kernel ptr according to flag
         _kernel_ptr = g_arithmetic_cpu_kernel_LUT[0][_kernel_dex];
         // Do the plan
-        _planner.plan(32, t1D.total_thread, proc_len_flatten_v1, sizeof(float), sizeof(float));
+        _planner.plan(32, conc, proc_len_flatten_v1, sizeof(float), sizeof(float));
         // Call the kernel
-        _planner.caller(
+        _planner.Caller(
             (arithmetic_kernels_1D_VVO<float, float, float>*)_kernel_ptr,
-            &t1D,
             decx::cpu::ThreadDispatchMethod_e::Dispatch_ByID,
             EW_SLOT_ID_MONOTONIC(0),
             decx::TArg_var<const float*>([&](const int32_t i){return (const float*)A->Mat + i * _planner.get_fmgr()->GetFragLen();}),
@@ -76,11 +72,10 @@ mat_arithmetic_caller_VVO(const decx::_Matrix*  A,
     case de::_DATA_TYPES_FLAGS_::_FP64_:
         _kernel_ptr = g_arithmetic_cpu_kernel_LUT[1][_kernel_dex];
 
-        _planner.plan(32, t1D.total_thread, proc_len_flatten_v1, sizeof(double), sizeof(double));
+        _planner.plan(32, conc, proc_len_flatten_v1, sizeof(double), sizeof(double));
 
-        _planner.caller(
+        _planner.Caller(
             (arithmetic_kernels_1D_VVO<double, double, double>*)_kernel_ptr,
-            &t1D,
             decx::cpu::ThreadDispatchMethod_e::Dispatch_ByID,
             EW_SLOT_ID_MONOTONIC(0),
             decx::TArg_var<const double*>([&](const int32_t i){return (const double*)A->Mat + i * _planner.get_fmgr()->GetFragLen();}),
@@ -93,7 +88,7 @@ mat_arithmetic_caller_VVO(const decx::_Matrix*  A,
         break;
 
     default:
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_UNSUPPORTED_TYPE,
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_UNSUPPORTED_TYPE,
             "Unsupported type when performing arithmetic");
         break;
     }
@@ -103,30 +98,25 @@ mat_arithmetic_caller_VVO(const decx::_Matrix*  A,
 void decx::blas::
 mat_arithmetic_caller_VO(const decx::_Matrix*  src, 
                          decx::_Matrix*        dst, 
-                         const int32_t         arith_flag,
-                         de::DH*               handle)
+                         const int32_t         arith_flag)
 {
     using namespace decx::CPUK;
 
     decx::cpu_ElementWise1D_planner _planner;
-    decx::utils::Thr1D t1D(decx::cpu::_get_permitted_concurrency());
-
     const int32_t _kernel_dex = decx::blas::_find_arith_kernel_id<0>(arith_flag);
-
     void* _kernel_ptr = NULL;
-
     const uint64_t proc_len_flatten_v1 = static_cast<uint64_t>(src->Pitch()) * static_cast<uint64_t>(src->Height());
+    const uint32_t conc = DecxGetPermitConcurrency();
 
     switch (src->Type())
     {
     case de::_DATA_TYPES_FLAGS_::_FP32_:
         _kernel_ptr = g_arithmetic_cpu_kernel_LUT[0][_kernel_dex];
 
-        _planner.plan(32, t1D.total_thread, proc_len_flatten_v1, sizeof(float), sizeof(float));
+        _planner.plan(32, conc, proc_len_flatten_v1, sizeof(float), sizeof(float));
 
-        _planner.caller(
+        _planner.Caller(
             (arithmetic_kernels_1D_VO<float, float>*)_kernel_ptr,   
-            &t1D,
             decx::cpu::ThreadDispatchMethod_e::Dispatch_ByID,
             EW_SLOT_ID_MONOTONIC(0),
             decx::TArg_var<const float*>([&](const int32_t i){return (const float*)src->Mat + i * _planner.get_fmgr()->GetFragLen();}),
@@ -139,11 +129,10 @@ mat_arithmetic_caller_VO(const decx::_Matrix*  src,
     case de::_DATA_TYPES_FLAGS_::_FP64_:
         _kernel_ptr = g_arithmetic_cpu_kernel_LUT[1][_kernel_dex];
 
-        _planner.plan(32, t1D.total_thread, proc_len_flatten_v1, sizeof(double), sizeof(double));
+        _planner.plan(32, conc, proc_len_flatten_v1, sizeof(double), sizeof(double));
         
-        _planner.caller(
+        _planner.Caller(
             (arithmetic_kernels_1D_VO<double, double>*)_kernel_ptr,
-            &t1D,
             decx::cpu::ThreadDispatchMethod_e::Dispatch_ByID,
             EW_SLOT_ID_MONOTONIC(0),
             decx::TArg_var<const double*>([&](const int32_t i){return (const double*)src->Mat + i * _planner.get_fmgr()->GetFragLen();}),
@@ -154,7 +143,7 @@ mat_arithmetic_caller_VO(const decx::_Matrix*  src,
         break;
 
     default:
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_UNSUPPORTED_TYPE,
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_UNSUPPORTED_TYPE,
             "Unsupported type when performing arithmetic");
         break;
     }
@@ -165,27 +154,25 @@ void decx::blas::
 vec_arithmetic_caller_VVO(const decx::_Vector*  A, 
                           const decx::_Vector*  B, 
                           decx::_Vector*        dst, 
-                          const int32_t         arith_flag,
-                          de::DH*               handle)
+                          const int32_t         arith_flag)
 {
     using namespace decx::CPUK;
 
     decx::cpu_ElementWise1D_planner _planner;
-    decx::utils::Thr1D t1D(decx::cpu::_get_permitted_concurrency());
     
     const int32_t _kernel_dex = decx::blas::_find_arith_kernel_id<0>(arith_flag);
     void* _kernel_ptr = NULL;
+    const uint32_t conc = DecxGetPermitConcurrency();
 
     switch (A->Type())
     {
     case de::_DATA_TYPES_FLAGS_::_FP32_:
         _kernel_ptr = g_arithmetic_cpu_kernel_LUT[0][_kernel_dex];
 
-        _planner.plan(32, t1D.total_thread, A->Len(), sizeof(float), sizeof(float));
+        _planner.plan(32, conc, A->Len(), sizeof(float), sizeof(float));
 
-        _planner.caller(
+        _planner.Caller(
             (arithmetic_kernels_1D_VVO<float, float, float>*)_kernel_ptr,
-            &t1D,
             decx::cpu::ThreadDispatchMethod_e::Dispatch_ByID,
             EW_SLOT_ID_MONOTONIC(0),
             decx::TArg_var<const float*>([&](const int32_t i){return A->Vec.GetRawPtrConst<float>() + i * _planner.get_fmgr()->GetFragLen();}),
@@ -200,11 +187,10 @@ vec_arithmetic_caller_VVO(const decx::_Vector*  A,
     case de::_DATA_TYPES_FLAGS_::_FP64_:
         _kernel_ptr = g_arithmetic_cpu_kernel_LUT[1][_kernel_dex];
 
-        _planner.plan(32, t1D.total_thread, A->Len(), sizeof(double), sizeof(double));
+        _planner.plan(32, conc, A->Len(), sizeof(double), sizeof(double));
 
-        _planner.caller(
+        _planner.Caller(
             (arithmetic_kernels_1D_VVO<double, double, double>*)_kernel_ptr,
-            &t1D,
             decx::cpu::ThreadDispatchMethod_e::Dispatch_ByID,
             EW_SLOT_ID_MONOTONIC(0),
             decx::TArg_var<const double*>([&](const int32_t i){return A->Vec.GetRawPtrConst<double>() + i * _planner.get_fmgr()->GetFragLen();}),
@@ -217,7 +203,7 @@ vec_arithmetic_caller_VVO(const decx::_Vector*  A,
         break;
     
     default:
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_UNSUPPORTED_TYPE,
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_UNSUPPORTED_TYPE,
             "Unsupported type when performing arithmetic");
         break;
     }
@@ -227,27 +213,24 @@ vec_arithmetic_caller_VVO(const decx::_Vector*  A,
 void decx::blas::
 vec_arithmetic_caller_VO(const decx::_Vector*  src, 
                          decx::_Vector*        dst, 
-                         const int32_t         arith_flag,
-                         de::DH*               handle)
+                         const int32_t         arith_flag)
 {
     using namespace decx::CPUK;
 
     decx::cpu_ElementWise1D_planner _planner;
-    decx::utils::Thr1D t1D(decx::cpu::_get_permitted_concurrency());
-
     const int32_t _kernel_dex = decx::blas::_find_arith_kernel_id<0>(arith_flag);
     void* _kernel_ptr = NULL;
+    const uint32_t conc = DecxGetPermitConcurrency();
 
     switch (src->Type())
     {
     case de::_DATA_TYPES_FLAGS_::_FP32_:
         _kernel_ptr = g_arithmetic_cpu_kernel_LUT[0][_kernel_dex];
 
-        _planner.plan(32, t1D.total_thread, src->Len(), sizeof(float), sizeof(float));
+        _planner.plan(32, conc, src->Len(), sizeof(float), sizeof(float));
 
-        _planner.caller(
-            (arithmetic_kernels_1D_VO<float, float>*)_kernel_ptr,   
-            &t1D,
+        _planner.Caller(
+            (arithmetic_kernels_1D_VO<float, float>*)_kernel_ptr,
             decx::cpu::ThreadDispatchMethod_e::Dispatch_ByID,
             EW_SLOT_ID_MONOTONIC(0),
             decx::TArg_var<const float*>([&](const int32_t i){return (const float*)src->Vec + i * _planner.get_fmgr()->GetFragLen();}),
@@ -261,11 +244,10 @@ vec_arithmetic_caller_VO(const decx::_Vector*  src,
     case de::_DATA_TYPES_FLAGS_::_FP64_:
         _kernel_ptr = g_arithmetic_cpu_kernel_LUT[1][_kernel_dex];
 
-        _planner.plan(32, t1D.total_thread, src->Len(), sizeof(double), sizeof(double));
+        _planner.plan(32, conc, src->Len(), sizeof(double), sizeof(double));
 
-        _planner.caller(
+        _planner.Caller(
             (arithmetic_kernels_1D_VO<double, double>*)_kernel_ptr,
-            &t1D,
             decx::cpu::ThreadDispatchMethod_e::Dispatch_ByID,
             EW_SLOT_ID_MONOTONIC(0),
             decx::TArg_var<const double*>([&](const int32_t i){return (const double*)src->Vec + i * _planner.get_fmgr()->GetFragLen();}),
@@ -277,7 +259,7 @@ vec_arithmetic_caller_VO(const decx::_Vector*  src,
         break;
     
     default:
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_UNSUPPORTED_TYPE,
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_UNSUPPORTED_TYPE,
             "Unsupported type when performing arithmetic");
         break;
     }

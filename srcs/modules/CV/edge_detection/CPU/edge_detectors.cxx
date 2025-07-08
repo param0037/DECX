@@ -36,9 +36,9 @@
 _DECX_API_ de::DH
 de::vis::cpu::Find_Edge(de::Matrix& src, de::Matrix& dst, const float _L_threshold, const float _H_threshold, const int method)
 {
-    de::DH* handle = de::GetLastError();
-    if (!decx::cpu::_is_CPU_init()) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_CPU_not_init,
+    de::DH* handle = 
+    if (!decx::cpu::DecxGetIsCPUInit()) {
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_CPU_not_init,
             CPU_NOT_INIT);
         return *handle;
     }
@@ -59,7 +59,7 @@ de::vis::cpu::Find_Edge(de::Matrix& src, de::Matrix& dst, const float _L_thresho
 
     decx::PtrInfo<float> cache;
 
-    if (_proc_dims.y > decx::cpu::_get_permitted_concurrency() * 64) 
+    if (_proc_dims.y > DecxGetPermitConcurrency() * 64) 
     {
         decx::vis::CPUK::_canny_operator_ptr _op_ptr = NULL;
         switch (method)
@@ -74,14 +74,14 @@ de::vis::cpu::Find_Edge(de::Matrix& src, de::Matrix& dst, const float _L_thresho
             break;
         }
 
-        decx::utils::ThreadArrange1D t1D(decx::cpu::_get_permitted_concurrency());
+        decx::utils::ThreadArrange1D t1D(DecxGetPermitConcurrency());
         decx::utils::frag_manager f_mgr;
         decx::utils::frag_manager_gen(&f_mgr, _proc_dims.y, t1D.total_thread);
 
-        const size_t frag_src = (size_t)f_mgr.frag_len * (size_t)_src->Pitch();
-        const size_t frag_dst = (size_t)f_mgr.frag_len * (size_t)_dst->Pitch();
-        const size_t frag_G = (size_t)f_mgr.frag_len * (size_t)Gmap_dims.x;
-        const size_t frag_D = (size_t)f_mgr.frag_len * (size_t)Dmap_dims.x;
+        const uint64_t frag_src = (uint64_t)f_mgr.frag_len * (uint64_t)_src->Pitch();
+        const uint64_t frag_dst = (uint64_t)f_mgr.frag_len * (uint64_t)_dst->Pitch();
+        const uint64_t frag_G = (uint64_t)f_mgr.frag_len * (uint64_t)Gmap_dims.x;
+        const uint64_t frag_D = (uint64_t)f_mgr.frag_len * (uint64_t)Dmap_dims.x;
 
         const uint8_t* loc_src = (uint8_t*)_src->Mat;
         float* loc_G = (float*)gradient_info_map;

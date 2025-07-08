@@ -55,7 +55,7 @@ decx::MemChunk_Hv::MemChunk_Hv(int pool_dex, int chunk_set_dex)
 
 
 
-decx::MemChunk_Hv::MemChunk_Hv(size_t size, size_t req_size, int pool_dex, int chunk_set_dex)
+decx::MemChunk_Hv::MemChunk_Hv(uint64_t size, uint64_t req_size, int pool_dex, int chunk_set_dex)
 {
     this->chunk_size = size;
 
@@ -96,11 +96,11 @@ decx::MemChunk_Hv::MemChunk_Hv(size_t size, size_t req_size, int pool_dex, int c
 
 
 
-decx::MemBlock* decx::MemChunk_Hv::split(int dex, size_t req_size)
+decx::MemBlock* decx::MemChunk_Hv::split(int dex, uint64_t req_size)
 {
     decx::MemBlock* block_split = *(this->mem_block_list.begin() + dex);
     
-    size_t splited_size = block_split->block_size - req_size;
+    uint64_t splited_size = block_split->block_size - req_size;
     
     decx::MemBlock* block_insert = (decx::MemBlock*)malloc(sizeof(decx::MemBlock));
     block_insert->block_size = splited_size;

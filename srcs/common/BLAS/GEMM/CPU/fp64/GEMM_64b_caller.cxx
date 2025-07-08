@@ -40,6 +40,7 @@
 #include "arm/GEMM_cplxf_kernels_aarch64.h"
 #endif
 
+#include <task_info.h>
 
 namespace decx
 {

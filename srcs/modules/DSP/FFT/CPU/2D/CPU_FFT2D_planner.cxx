@@ -115,7 +115,7 @@ void decx::dsp::fft::cpu_FFT2D_planner<_data_type>::plan(const decx::_matrix_lay
     // Plan for FFTs on two dimensions
     this->_FFT_H.plan(t1D);
     this->_FFT_V.plan(t1D);
-    const uint32_t _concurrency = decx::cpu::_get_permitted_concurrency();
+    const uint32_t _concurrency = DecxGetPermitConcurrency();
     // Thread distribution on FFT_H
     const uint32_t _conc_FFT_1D_H = min(decx::utils::idiv_ceil<uint32_t>(this->_signal_dims.y, _alignment), this->_concurrency);
     decx::utils::frag_manager_gen_Nx(&this->_thread_dist_FFTH, this->_signal_dims.y, _conc_FFT_1D_H, _alignment);
@@ -125,7 +125,7 @@ void decx::dsp::fft::cpu_FFT2D_planner<_data_type>::plan(const decx::_matrix_lay
     decx::utils::frag_manager_gen_Nx(&this->_thread_dist_FFTV, this->_signal_dims.x, _conc_FFT_1D_V, _alignment);
 
     const uint32_t _alloc_tiles_num = max(_conc_FFT_1D_H, _conc_FFT_1D_V);
-    this->_tiles.define_capacity(_alloc_tiles_num);
+    this->_tiles.PreMalloc(_alloc_tiles_num);
     
     const uint32_t _tile_frag_pitch = decx::utils::ialign_up<uint32_t>(max(this->_signal_dims.x, this->_signal_dims.y), _alignment);
 
@@ -228,7 +228,7 @@ template const decx::utils::frag_manager* decx::dsp::fft::cpu_FFT2D_planner<doub
 template <typename _data_type>
 const decx::dsp::fft::FKT1D* decx::dsp::fft::cpu_FFT2D_planner<_data_type>::get_tile_ptr(const uint32_t _id) const
 {
-    return this->_tiles.get_const_ptr(_id);
+    return this->_tiles.GetConstPtr(_id);
 }
 
 template const decx::dsp::fft::FKT1D* decx::dsp::fft::cpu_FFT2D_planner<float>::get_tile_ptr(const uint32_t _id) const;

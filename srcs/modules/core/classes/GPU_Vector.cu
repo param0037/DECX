@@ -35,7 +35,7 @@
 #define MODULE_TAG "GPU_Vector"
 
 
-void decx::_GPU_Vector::_attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, size_t length)
+void decx::_GPU_Vector::_attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, uint64_t length)
 {
     this->type = _type;
     this->_single_element_size = decx::core::_size_mapping(_type);
@@ -56,7 +56,7 @@ void decx::_GPU_Vector::_attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, si
     }
     this->length = length;
     this->_init = (_type != de::_DATA_TYPES_FLAGS_::_VOID_);
-    this->_length = decx::utils::idiv_ceil<size_t>(length, (size_t)_alignment) * (size_t)_alignment;
+    this->_length = decx::utils::idiv_ceil<uint64_t>(length, (uint64_t)_alignment) * (uint64_t)_alignment;
     this->total_bytes = this->_length * this->_single_element_size;
 }
 
@@ -152,7 +152,7 @@ void decx::_GPU_Vector::re_alloc_data_space()
 }
 
 
-void decx::_GPU_Vector::construct(const de::_DATA_TYPES_FLAGS_ _type, size_t length)
+void decx::_GPU_Vector::construct(const de::_DATA_TYPES_FLAGS_ _type, uint64_t length)
 {
     this->_attribute_assign(_type, length);
 
@@ -160,10 +160,10 @@ void decx::_GPU_Vector::construct(const de::_DATA_TYPES_FLAGS_ _type, size_t len
 }
 
 
-void decx::_GPU_Vector::re_construct(const de::_DATA_TYPES_FLAGS_ _type, size_t length)
+void decx::_GPU_Vector::re_construct(const de::_DATA_TYPES_FLAGS_ _type, uint64_t length)
 {
     if (this->type != _type || this->length != _length) {
-        const size_t pre_size = this->total_bytes;
+        const uint64_t pre_size = this->total_bytes;
 
         this->_attribute_assign(_type, length);
 
@@ -174,7 +174,7 @@ void decx::_GPU_Vector::re_construct(const de::_DATA_TYPES_FLAGS_ _type, size_t 
 }
 
 
-decx::_GPU_Vector::_GPU_Vector(const de::_DATA_TYPES_FLAGS_ _type, size_t length)
+decx::_GPU_Vector::_GPU_Vector(const de::_DATA_TYPES_FLAGS_ _type, uint64_t length)
 {
     this->construct(_type, length);
 }
@@ -224,13 +224,13 @@ de::GPU_Vector* de::CreateGPUVectorPtr() {
 
 
 
-de::GPU_Vector& de::CreateGPUVectorRef(const de::_DATA_TYPES_FLAGS_ _type, const size_t length) {
+de::GPU_Vector& de::CreateGPUVectorRef(const de::_DATA_TYPES_FLAGS_ _type, const uint64_t length) {
     return *(new decx::_GPU_Vector(_type, length));
 }
 
 
 
-de::GPU_Vector* de::CreateGPUVectorPtr(const de::_DATA_TYPES_FLAGS_ _type, const size_t length) {
+de::GPU_Vector* de::CreateGPUVectorPtr(const de::_DATA_TYPES_FLAGS_ _type, const uint64_t length) {
     return new decx::_GPU_Vector(_type, length);
 }
 
@@ -245,7 +245,7 @@ _DECX_API_ de::DH de::cuda::PinMemory(de::Vector& src)
     cudaError_t _err = cudaHostRegister(_src->Vec.GetRawPtr(), _src->get_total_bytes(), cudaHostRegisterPortable);
     if (_err != cudaSuccess) {
         if (_err == cudaErrorHostMemoryAlreadyRegistered) {
-            decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_HOST_MEM_REGISTERED, HOST_MEM_REGISTERED);
+            DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_HOST_MEM_REGISTERED, HOST_MEM_REGISTERED);
         }
         else {
             checkCudaErrors(_err);
@@ -265,7 +265,7 @@ _DECX_API_ de::DH de::cuda::UnpinMemory(de::Vector& src)
 
     if (_err != cudaSuccess) {
         if (_err == cudaErrorHostMemoryNotRegistered) {
-            decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_HOST_MEM_UNREGISTERED, HOST_MEM_UNREGISTERED);
+            DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_HOST_MEM_UNREGISTERED, HOST_MEM_UNREGISTERED);
         }
         else {
             checkCudaErrors(_err);

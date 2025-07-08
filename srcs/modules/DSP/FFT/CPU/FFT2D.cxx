@@ -61,7 +61,7 @@ namespace dsp {
 template <typename _type_in>
 static void decx::dsp::fft::FFT2D_caller_cplxf(decx::_Matrix* src, decx::_Matrix* dst, de::DH* handle)
 {
-    decx::utils::ThreadArrange1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::ThreadArrange1D t1D(DecxGetPermitConcurrency());
     
     if (decx::dsp::fft::cpu_FFT2D_cplxf32_planner._res_ptr == NULL) {
         decx::dsp::fft::cpu_FFT2D_cplxf32_planner.RegisterResource(new decx::dsp::fft::cpu_FFT2D_planner<float>,
@@ -88,7 +88,7 @@ static void decx::dsp::fft::FFT2D_caller_cplxf(decx::_Matrix* src, decx::_Matrix
 template <typename _type_in>
 static void decx::dsp::fft::FFT2D_caller_cplxd(decx::_Matrix* src, decx::_Matrix* dst, de::DH* handle)
 {
-    decx::utils::ThreadArrange1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::ThreadArrange1D t1D(DecxGetPermitConcurrency());
 
     if (decx::dsp::fft::g_cpu_FFT2D_cplxd64_planner._res_ptr == NULL) {
         decx::dsp::fft::g_cpu_FFT2D_cplxd64_planner.RegisterResource(new decx::dsp::fft::cpu_FFT2D_planner<double>,
@@ -114,7 +114,7 @@ static void decx::dsp::fft::FFT2D_caller_cplxd(decx::_Matrix* src, decx::_Matrix
 template <typename _type_out>
 static void decx::dsp::fft::IFFT2D_caller_cplxf(decx::_Matrix* src, decx::_Matrix* dst, de::DH* handle)
 {
-    decx::utils::ThreadArrange1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::ThreadArrange1D t1D(DecxGetPermitConcurrency());
     
     if (decx::dsp::fft::cpu_IFFT2D_cplxf32_planner._res_ptr == NULL) {
         decx::dsp::fft::cpu_IFFT2D_cplxf32_planner.RegisterResource(new decx::dsp::fft::cpu_FFT2D_planner<float>,
@@ -141,7 +141,7 @@ static void decx::dsp::fft::IFFT2D_caller_cplxf(decx::_Matrix* src, decx::_Matri
 template <typename _type_out>
 static void decx::dsp::fft::IFFT2D_caller_cplxd(decx::_Matrix* src, decx::_Matrix* dst, de::DH* handle)
 {
-    decx::utils::ThreadArrange1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::ThreadArrange1D t1D(DecxGetPermitConcurrency());
     
     if (decx::dsp::fft::g_cpu_IFFT2D_cplxd64_planner._res_ptr == NULL) {
         decx::dsp::fft::g_cpu_IFFT2D_cplxd64_planner.RegisterResource(new decx::dsp::fft::cpu_FFT2D_planner<double>,
@@ -166,14 +166,14 @@ static void decx::dsp::fft::IFFT2D_caller_cplxd(decx::_Matrix* src, decx::_Matri
 
 _DECX_API_ void de::dsp::cpu::FFT(de::Matrix& src, de::Matrix& dst, const de::_DATA_TYPES_FLAGS_ _output_type)
 {
-    de::ResetLastError();
+    DecxResetLastHandle
     
     decx::_Matrix* _src = dynamic_cast<decx::_Matrix*>(&src);
     decx::_Matrix* _dst = dynamic_cast<decx::_Matrix*>(&dst);
 
     if (!(decx::dsp::fft::validate_type_FFT2D(_src->Type()) && decx::dsp::fft::validate_type_FFT2D(_output_type)))
     {
-        decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_UNSUPPORTED_TYPE,
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_UNSUPPORTED_TYPE,
             "FFT2D CUDA only supports float, double, uint8_t, de::CPf and de::CPd input");
         return;
     }
@@ -224,7 +224,7 @@ _DECX_API_ void de::dsp::cpu::FFT(de::Matrix& src, de::Matrix& dst, const de::_D
 
 _DECX_API_ void de::dsp::cpu::IFFT(de::Matrix& src, de::Matrix& dst, const de::_DATA_TYPES_FLAGS_ _output_type)
 {
-    de::ResetLastError();
+    DecxResetLastHandle
 
     decx::_Matrix* _src = dynamic_cast<decx::_Matrix*>(&src);
     decx::_Matrix* _dst = dynamic_cast<decx::_Matrix*>(&dst);
@@ -235,7 +235,7 @@ _DECX_API_ void de::dsp::cpu::IFFT(de::Matrix& src, de::Matrix& dst, const de::_
     case de::_DATA_TYPES_FLAGS_::_FP32_:
         // reconstruct the destinated matrix
         if (_src->Type() != de::_DATA_TYPES_FLAGS_::_COMPLEX_F32_) {
-            decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_TYPE_MOT_MATCH,
+            DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_TYPE_MOT_MATCH,
                 "The nominated datatype should be identical with that of the input matrix");
             return;
         }
@@ -259,7 +259,7 @@ _DECX_API_ void de::dsp::cpu::IFFT(de::Matrix& src, de::Matrix& dst, const de::_
     case de::_DATA_TYPES_FLAGS_::_COMPLEX_F32_:
         // reconstruct the destinated matrix
         if (_src->Type() != de::_DATA_TYPES_FLAGS_::_COMPLEX_F32_) {
-            decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_TYPE_MOT_MATCH,
+            DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_TYPE_MOT_MATCH,
                 "The nominated datatype should be identical with that of the input matrix");
             return;
         }
@@ -271,7 +271,7 @@ _DECX_API_ void de::dsp::cpu::IFFT(de::Matrix& src, de::Matrix& dst, const de::_
     case de::_DATA_TYPES_FLAGS_::_FP64_:
         // reconstruct the destinated matrix
         if (_src->Type() != de::_DATA_TYPES_FLAGS_::_COMPLEX_F64_) {
-            decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_TYPE_MOT_MATCH,
+            DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_TYPE_MOT_MATCH,
                 "The nominated datatype should be identical with that of the input matrix");
             return;
         }
@@ -283,7 +283,7 @@ _DECX_API_ void de::dsp::cpu::IFFT(de::Matrix& src, de::Matrix& dst, const de::_
     case de::_DATA_TYPES_FLAGS_::_COMPLEX_F64_:
         // reconstruct the destinated matrix
         if (_src->Type() != de::_DATA_TYPES_FLAGS_::_COMPLEX_F64_) {
-            decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_TYPE_MOT_MATCH,
+            DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_TYPE_MOT_MATCH,
                 "The nominated datatype should be identical with that of the input matrix");
             return;
         }

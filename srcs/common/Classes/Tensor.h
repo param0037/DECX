@@ -33,8 +33,8 @@
 #define _TENSOR_H_
 
 
-#include "../basic.h"
-#include "../../modules/core/allocators.h"
+#include <basic.h>
+#include <allocators.h>
 #include "classes_util.h"
 #include "type_info.h"
 
@@ -286,7 +286,7 @@ extern "C"
         const uint32_t _depth);
 
 
-    _DECX_API_ DECX_Handle DE_GetTensorProp(const DECX_Tensor src, DECX_TensorLayout* prop);
+    _DECX_API_ void DE_GetTensorProp(const DECX_Tensor src, DECX_TensorLayout* prop);
 #ifdef __cplusplus
 }
 #endif      // # ifdef __cplusplus

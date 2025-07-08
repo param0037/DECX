@@ -34,10 +34,10 @@
 _DECX_API_ void de::cpu::Extend(de::Vector& src, de::Vector& dst, const uint32_t left, const uint32_t right,
     const de::extend_label extend_type, const de::Number val)
 {
-    de::ResetLastError();
+    DecxResetLastHandle
 
-    if (!decx::cpu::_is_CPU_init()) {
-        decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_CPU_not_init,
+    if (!decx::cpu::DecxGetIsCPUInit()) {
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_CPU_not_init,
             CPU_NOT_INIT);
         return;
     }
@@ -46,7 +46,7 @@ _DECX_API_ void de::cpu::Extend(de::Vector& src, de::Vector& dst, const uint32_t
     decx::_Vector* _dst = dynamic_cast<decx::_Vector*>(&dst);
 
     if (!_src->is_init()) {
-        decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_CLASS_NOT_INIT,
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_CLASS_NOT_INIT,
             CLASS_NOT_INIT);
         return;
     }
@@ -71,10 +71,10 @@ _DECX_API_ void de::cpu::Extend(de::Vector& src, de::Vector& dst, const uint32_t
 _DECX_API_ void de::cpu::Extend(de::Matrix& src, de::Matrix& dst, const uint32_t left, const uint32_t right,
     const uint32_t top, const uint32_t bottom, const de::extend_label extend_type, const de::Number val)
 {
-    de::ResetLastError();
+    DecxResetLastHandle
 
-    if (!decx::cpu::_is_CPU_init()) {
-        decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_CPU_not_init,
+    if (!decx::cpu::DecxGetIsCPUInit()) {
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_CPU_not_init,
             CPU_NOT_INIT);
         return;
     }
@@ -83,7 +83,7 @@ _DECX_API_ void de::cpu::Extend(de::Matrix& src, de::Matrix& dst, const uint32_t
     decx::_Matrix* _dst = dynamic_cast<decx::_Matrix*>(&dst);
 
     if (!_src->is_init()) {
-        decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_CLASS_NOT_INIT,
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_CLASS_NOT_INIT,
             CLASS_NOT_INIT);
         return;
     }

@@ -47,7 +47,7 @@ namespace decx
             * @param proc_len : length of processed area, in vec4
             */
             __global__ void
-            cu_mm128_cvtfp32_i321D(const float4* src, int4* dst, const size_t proc_len);
+            cu_mm128_cvtfp32_i321D(const float4* src, int4* dst, const uint64_t proc_len);
 
 
             /**
@@ -56,13 +56,13 @@ namespace decx
             * @param proc_len : length of processed area, in vec4
             */
             __global__ void
-            cu_mm128_cvti32_fp321D(const int4* src, float4* dst, const size_t proc_len);
+            cu_mm128_cvti32_fp321D(const int4* src, float4* dst, const uint64_t proc_len);
         }
 
-        void _mm128_cvtfp32_i32_caller1D(const float4* src, int4* dst, const size_t proc_len, decx::cuda_stream* S);
+        void _mm128_cvtfp32_i32_caller1D(const float4* src, int4* dst, const uint64_t proc_len, decx::cuda_stream* S);
 
 
-        void _mm128_cvti32_fp32_caller1D(const int4* src, float4* dst, const size_t proc_len, decx::cuda_stream* S);
+        void _mm128_cvti32_fp32_caller1D(const int4* src, float4* dst, const uint64_t proc_len, decx::cuda_stream* S);
     }
 }
 

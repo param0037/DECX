@@ -68,9 +68,16 @@ extern "C"{
 // #endif
 
 // MODULE_TAG should be defined first
+#ifdef MODULE_TAG
 #define DECX_LOG_ERR(...)       DECX_LOG(LOG_ERROR,   MODULE_TAG, __FUNCTION__, __VA_ARGS__)
 #define DECX_LOG_WARN(...)      DECX_LOG(LOG_WARNING, MODULE_TAG, __FUNCTION__, __VA_ARGS__)
 #define DECX_LOG_NOTICE(...)    DECX_LOG(LOG_NOTICE,  MODULE_TAG, __FUNCTION__, __VA_ARGS__)
 #define DECX_LOG_INFO(...)      DECX_LOG(LOG_INFO,    MODULE_TAG, __FUNCTION__, __VA_ARGS__)
+#else
+#define DECX_LOG_ERR(...)       DECX_LOG(LOG_ERROR,   "Internal", __FUNCTION__, __VA_ARGS__)
+#define DECX_LOG_WARN(...)      DECX_LOG(LOG_WARNING, "Internal", __FUNCTION__, __VA_ARGS__)
+#define DECX_LOG_NOTICE(...)    DECX_LOG(LOG_NOTICE,  "Internal", __FUNCTION__, __VA_ARGS__)
+#define DECX_LOG_INFO(...)      DECX_LOG(LOG_INFO,    "Internal", __FUNCTION__, __VA_ARGS__)
+#endif
 
 #endif

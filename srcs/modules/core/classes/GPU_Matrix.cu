@@ -119,7 +119,7 @@ void decx::_GPU_Matrix::re_construct(const de::_DATA_TYPES_FLAGS_ _type, uint32_
     // If all the parameters are the same, it is meaningless to re-construt the data
     if (this->_layout.width != _width || this->_layout.height != _height)
     {
-        const size_t pre_size = this->total_bytes;
+        const uint64_t pre_size = this->total_bytes;
         this->_attribute_assign(_type, _width, _height);
 
         if (this->total_bytes > pre_size) {
@@ -139,7 +139,7 @@ void decx::_GPU_Matrix::_attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, co
     this->_layout.pitch = this->_layout.pitch;
     this->_init = (_type != de::_DATA_TYPES_FLAGS_::_VOID_);
 
-    uint64_t element_num = static_cast<size_t>(this->_layout.pitch) * static_cast<uint64_t>(_height);
+    uint64_t element_num = static_cast<uint64_t>(this->_layout.pitch) * static_cast<uint64_t>(_height);
 
     this->total_bytes = (element_num)*this->_layout._single_element_size;
 }
@@ -285,7 +285,7 @@ _DECX_API_ de::DH de::cuda::PinMemory(de::Matrix& src)
     cudaError_t _err = cudaHostRegister(_src->Mat.GetRawPtr(), _src->get_total_bytes(), cudaHostRegisterPortable);
     if (_err != cudaSuccess) {
         if (_err == cudaErrorHostMemoryAlreadyRegistered) {
-            decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_HOST_MEM_REGISTERED, HOST_MEM_REGISTERED);
+            DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_HOST_MEM_REGISTERED, HOST_MEM_REGISTERED);
         }
         else {
             checkCudaErrors(_err);
@@ -305,7 +305,7 @@ _DECX_API_ de::DH de::cuda::UnpinMemory(de::Matrix& src)
 
     if (_err != cudaSuccess) {
         if (_err == cudaErrorHostMemoryNotRegistered) {
-            decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_HOST_MEM_UNREGISTERED, HOST_MEM_UNREGISTERED);
+            DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_HOST_MEM_UNREGISTERED, HOST_MEM_UNREGISTERED);
         }
         else {
             checkCudaErrors(_err);

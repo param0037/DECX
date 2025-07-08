@@ -51,7 +51,7 @@ namespace decx
             * @param res_vec : the result vector in __m256
             */
             _THREAD_FUNCTION_ void
-                _dot_vec8_fp32(const float* A, const float* B, const size_t len, float* res_vec);
+                _dot_vec8_fp32(const float* A, const float* B, const uint64_t len, float* res_vec);
         }
 
         /*
@@ -59,7 +59,7 @@ namespace decx
         * @param len : the proccess length of single thread, in __m256
         * @param res_vec : the result vector in __m256
         */
-        void _dot_fp32_1D_caller(const float* A, const float* B, const size_t len, float* res_vec);
+        void _dot_fp32_1D_caller(const float* A, const float* B, const uint64_t len, float* res_vec);
     }
 }
 

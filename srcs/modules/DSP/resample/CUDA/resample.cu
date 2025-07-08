@@ -50,11 +50,11 @@ void decx::resample2D_caller(const decx::_GPU_Matrix* src, const decx::_GPU_Matr
     S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
     E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
     if (S == NULL) {
-        decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_CUDA_STREAM, CUDA_STREAM_ACCESS_FAIL);
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_CUDA_STREAM, CUDA_STREAM_ACCESS_FAIL);
         return;
     }
     if (E == NULL) {
-        decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_CUDA_EVENT, CUDA_EVENT_ACCESS_FAIL);
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_CUDA_EVENT, CUDA_EVENT_ACCESS_FAIL);
         return;
     }
 
@@ -78,7 +78,7 @@ void decx::resample2D_caller(const decx::_GPU_Matrix* src, const decx::_GPU_Matr
 _DECX_API_ void de::dsp::cuda::Resample(de::InputGPUMatrix src, de::InputGPUMatrix map, de::OutputGPUMatrix dst,
     de::Interpolate_Types interpoate_mode)
 {
-    de::ResetLastError();
+    DecxResetLastHandle
 
     const decx::_GPU_Matrix* _src = dynamic_cast<const decx::_GPU_Matrix*>(&src);
     const decx::_GPU_Matrix* _map = dynamic_cast<const decx::_GPU_Matrix*>(&map);

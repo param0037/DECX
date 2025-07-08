@@ -177,7 +177,7 @@ static void decx::type_cast::typecast1D_general_caller(
     const _type_in* src,            _type_out* dst,                             
     const uint64_t proc_len,        decx::utils::Thr1D* t1D)
 {
-    _planner->plan(32, decx::cpu::_get_permitted_concurrency(), proc_len, sizeof(_type_in), sizeof(_type_out));
+    _planner->plan(32, DecxGetPermitConcurrency(), proc_len, sizeof(_type_in), sizeof(_type_out));
 
     _planner->caller(_kernel_ptr,
         t1D,
@@ -198,7 +198,7 @@ static void decx::type_cast::typecast2D_general_caller(
     const uint2 proc_dims,                                      const uint32_t Wsrc, 
     const uint32_t Wdst,                                        decx::utils::Thr1D* t1D)
 {
-    _planner->plan(32, decx::cpu::_get_permitted_concurrency(), proc_dims, sizeof(_type_in), sizeof(_type_out));
+    _planner->plan(32, DecxGetPermitConcurrency(), proc_dims, sizeof(_type_in), sizeof(_type_out));
 
     _planner->caller(_kernel_ptr,
         t1D,

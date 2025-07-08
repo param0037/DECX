@@ -80,8 +80,8 @@ void decx::bp::
 e_rfct_exep_gen_b32(decx::bp::extend_reflect_exec_params* _src, 
                     const uint32_t _left,
                     const uint32_t _right, 
-                    const size_t _actual_w_v1, 
-                    const size_t _Wsrc_v)
+                    const uint64_t _actual_w_v1, 
+                    const uint64_t _Wsrc_v)
 {
 #if defined(__x86_64__) || defined(__i386__)
     uint32_t constexpr _alignment = 8;
@@ -105,8 +105,8 @@ void decx::bp::
 e_rfct_exep_gen_b8(decx::bp::extend_reflect_exec_params* _src, 
                    const uint32_t _left,
                    const uint32_t _right, 
-                   const size_t _actual_w_v1, 
-                   const size_t _Wsrc_v)
+                   const uint64_t _actual_w_v1, 
+                   const uint64_t _Wsrc_v)
 {
     _src->_left = _left;
     _src->_right = _right;
@@ -121,7 +121,7 @@ e_rfct_exep_gen_b8(decx::bp::extend_reflect_exec_params* _src,
 
 
 void decx::bp::e_rfct_exep_gen_b16(decx::bp::extend_reflect_exec_params* _src, const uint32_t _left,
-    const uint32_t _right, const size_t _actual_w_v1, const size_t _Wsrc_v)
+    const uint32_t _right, const uint64_t _actual_w_v1, const uint64_t _Wsrc_v)
 {
     _src->_left = _left;
     _src->_right = _right;
@@ -136,7 +136,7 @@ void decx::bp::e_rfct_exep_gen_b16(decx::bp::extend_reflect_exec_params* _src, c
 
 
 void decx::bp::e_rfct_exep_gen_b64(decx::bp::extend_reflect_exec_params* _src, const uint32_t _left,
-    const uint32_t _right, const size_t _actual_w_v1, const size_t _Wsrc_v)
+    const uint32_t _right, const uint64_t _actual_w_v1, const uint64_t _Wsrc_v)
 {
 #if defined(__x86_64__) || defined(__i386__)
     uint32_t constexpr _alignment = 4;

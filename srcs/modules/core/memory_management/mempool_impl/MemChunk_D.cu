@@ -55,7 +55,7 @@ decx::MemChunk_D::MemChunk_D(int pool_dex, int chunk_set_dex)
 
 
 
-decx::MemChunk_D::MemChunk_D(size_t size, size_t req_size, int pool_dex, int chunk_set_dex)
+decx::MemChunk_D::MemChunk_D(uint64_t size, uint64_t req_size, int pool_dex, int chunk_set_dex)
 {
     this->chunk_size = size;
 

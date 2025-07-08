@@ -51,7 +51,7 @@ namespace decx
             * @param res_vec : the result vector in __m256
             */
             _THREAD_FUNCTION_ static void
-                _summing_vec8_fp32(const float* src, const size_t len, float* res_vec);
+                _summing_vec8_fp32(const float* src, const uint64_t len, float* res_vec);
 
 
             /*
@@ -60,7 +60,7 @@ namespace decx
             * @param res_vec : the result vector in __m256d
             */
             _THREAD_FUNCTION_ static void
-                _summing_vec4_fp64(const double* src, const size_t len, double* res_vec);
+                _summing_vec4_fp64(const double* src, const uint64_t len, double* res_vec);
         }
 
         /*
@@ -68,7 +68,7 @@ namespace decx
         * @param len : the proccess length of single thread, in __m256
         * @param res_vec : the result vector in __m256
         */
-        static void _summing_fp32_1D_caller(const float* src, const size_t len, float* res_vec);
+        static void _summing_fp32_1D_caller(const float* src, const uint64_t len, float* res_vec);
 
 
         /*
@@ -76,19 +76,19 @@ namespace decx
         * @param len : the proccess length of single thread, in __m256
         * @param res_vec : the result vector in __m256
         */
-        static void _summing_fp64_1D_caller(const double* src, const size_t len, double* res_vec);
+        static void _summing_fp64_1D_caller(const double* src, const uint64_t len, double* res_vec);
     }
 }
 
 
 
 _THREAD_FUNCTION_ static void
-decx::bp::CPUK::_summing_vec8_fp32(const float* src, const size_t len, float* res_vec)
+decx::bp::CPUK::_summing_vec8_fp32(const float* src, const uint64_t len, float* res_vec)
 {
     __m256 tmp_recv, sum_vec8 = _mm256_set1_ps(0);
 
     for (uint i = 0; i < len; ++i) {
-        tmp_recv = _mm256_load_ps(src + ((size_t)i << 3));
+        tmp_recv = _mm256_load_ps(src + ((uint64_t)i << 3));
         sum_vec8 = _mm256_add_ps(tmp_recv, sum_vec8);
     }
     
@@ -97,12 +97,12 @@ decx::bp::CPUK::_summing_vec8_fp32(const float* src, const size_t len, float* re
 
 
 _THREAD_FUNCTION_ static void
-decx::bp::CPUK::_summing_vec4_fp64(const double* src, const size_t len, double* res_vec)
+decx::bp::CPUK::_summing_vec4_fp64(const double* src, const uint64_t len, double* res_vec)
 {
     __m256d tmp_recv, sum_vec8 = _mm256_set1_pd(0);
 
     for (uint i = 0; i < len; ++i) {
-        tmp_recv = _mm256_load_pd(src + ((size_t)i << 2));
+        tmp_recv = _mm256_load_pd(src + ((uint64_t)i << 2));
         sum_vec8 = _mm256_add_pd(tmp_recv, sum_vec8);
     }
 
@@ -111,10 +111,10 @@ decx::bp::CPUK::_summing_vec4_fp64(const double* src, const size_t len, double* 
 
 
 
-static void decx::bp::_summing_fp32_1D_caller(const float* src, const size_t len, float* res_vec)
+static void decx::bp::_summing_fp32_1D_caller(const float* src, const uint64_t len, float* res_vec)
 {
     // the number of available concurrent threads
-    const uint conc_thr = decx::cpu::_get_permitted_concurrency();
+    const uint conc_thr = DecxGetPermitConcurrency();
     decx::utils::frag_manager fr_mgr;
     decx::utils::frag_manager_gen(&fr_mgr, len / 8, conc_thr);
 
@@ -142,10 +142,10 @@ static void decx::bp::_summing_fp32_1D_caller(const float* src, const size_t len
 
 
 
-static void decx::bp::_summing_fp64_1D_caller(const double* src, const size_t len, double* res_vec)
+static void decx::bp::_summing_fp64_1D_caller(const double* src, const uint64_t len, double* res_vec)
 {
     // the number of available concurrent threads
-    const uint conc_thr = decx::cpu::_get_permitted_concurrency();
+    const uint conc_thr = DecxGetPermitConcurrency();
     decx::utils::frag_manager fr_mgr;
     decx::utils::frag_manager_gen(&fr_mgr, len / 4, conc_thr);
 
@@ -153,7 +153,7 @@ static void decx::bp::_summing_fp64_1D_caller(const double* src, const size_t le
     decx::utils::ThreadArrange1D t1D(conc_thr);
 
     const double* tmp_src = src;
-    const size_t proc_len = fr_mgr.frag_len * 4;
+    const uint64_t proc_len = fr_mgr.frag_len * 4;
     for (int i = 0; i < conc_thr; ++i) {
         t1D._async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(
             decx::bp::CPUK::_summing_vec4_fp64, tmp_src, fr_mgr.GetFragLenById(i), res_arr + i);

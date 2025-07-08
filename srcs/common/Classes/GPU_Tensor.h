@@ -116,11 +116,11 @@ namespace decx
 
 
         decx::PtrInfo<void> Tens;
-        size_t element_num;        // is the number of all the ACTIVE elements
-        size_t total_bytes;        // is the size of ALL(including pitch) elements
+        uint64_t element_num;        // is the number of all the ACTIVE elements
+        uint64_t total_bytes;        // is the size of ALL(including pitch) elements
 
 
-        size_t _element_num;        // the total number of elements, including Non_active numbers
+        uint64_t _element_num;        // the total number of elements, including Non_active numbers
 
 
         void _attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, const uint32_t _width, const uint32_t _height, const uint32_t _depth);

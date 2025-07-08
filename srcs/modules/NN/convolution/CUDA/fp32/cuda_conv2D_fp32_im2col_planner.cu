@@ -127,7 +127,7 @@ void decx::nn::cuda_conv2D_im2col_kernel_arrange<float>::release()
 void decx::nn::cuda_conv2D_fp32_im2col_planner::_kernel_launch_config(const uint32_t _proc_idx,
     const uint32_t _proc_h)
 {
-    decx::nn::cuda_conv2D_im2col_kernel_params* _ptr = this->_params_array.get_ptr(_proc_idx);
+    decx::nn::cuda_conv2D_im2col_kernel_params* _ptr = this->_params_array.GetPtr(_proc_idx);
     
     _ptr->_proc_H = _proc_h;
     _ptr->_im2col_bufW = this->_I2C_wpitch * _proc_h;
@@ -220,7 +220,7 @@ decx::nn::cuda_conv2D_fp32_im2col_planner::plan(const decx::_tensor_layout* src_
                                      src_layout->height / strides.y);
     }
     else {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ErrorFlag, MEANINGLESS_FLAG);
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_ErrorFlag, MEANINGLESS_FLAG);
         return;
     }
     
@@ -252,7 +252,7 @@ decx::nn::cuda_conv2D_fp32_im2col_planner::plan(const decx::_tensor_layout* src_
         this->_ext_src_buf.Allocate(CUDA_DEVICE, src_layout->dpitch * sizeof(float), handle, true, S);
     }
 
-    this->_params_array.define_capacity(_conv_div_info.frag_num);
+    this->_params_array.PreMalloc(_conv_div_info.frag_num);
     for (uint32_t i = 0; i < _conv_div_info.frag_num - 1; ++i) {
         this->_params_array.emplace_back();
         this->_kernel_launch_config(i, _conv_div_info.frag_len);
@@ -288,7 +288,7 @@ void _CRSR_
 decx::nn::cuda_conv2D_fp32_im2col_planner::run_single_frag_NB(const uint32_t _proc_idx,
     decx::cuda_stream* S)
 {
-    decx::nn::cuda_conv2D_im2col_kernel_params* _ptr = this->_params_array.get_ptr(_proc_idx);
+    decx::nn::cuda_conv2D_im2col_kernel_params* _ptr = this->_params_array.GetPtr(_proc_idx);
     const decx::_tensor_layout* _kernel_layout = this->_kernel_manager._kernel_layout;
 
     switch (this->_src_layout->dpitch)
@@ -373,7 +373,7 @@ template <bool _boundless_T, bool _boundless_B> void _CRSR_
 decx::nn::cuda_conv2D_fp32_im2col_planner::run_single_frag_BC(const uint32_t _proc_idx,
                                                               decx::cuda_stream* S)
 {
-    decx::nn::cuda_conv2D_im2col_kernel_params* _ptr = this->_params_array.get_ptr(_proc_idx);
+    decx::nn::cuda_conv2D_im2col_kernel_params* _ptr = this->_params_array.GetPtr(_proc_idx);
     const decx::_tensor_layout* _kernel_layout = this->_kernel_manager._kernel_layout;
 
     switch (this->_src_layout->dpitch)

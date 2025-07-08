@@ -35,6 +35,8 @@
 #include "configuration.h"
 #include "compile_params.h"
 
+#include <string.h>
+
 #ifdef __cplusplus
 // STL
 #include <vector>
@@ -63,7 +65,7 @@
 #include <stdlib.h>
 #include <malloc.h>
 #include <time.h>
-
+#include <stdint.h>
 #endif
 
 // Windows

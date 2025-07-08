@@ -82,12 +82,12 @@ void decx::vis::_bilateral_uint8_organiser(const double*                      sr
     
     decx::PtrInfo<float> _exp_chart_dist, _exp_chart_diff;
     if (decx::alloc::_host_virtual_page_malloc(&_exp_chart_dist, _exp_chart_dist_len * sizeof(float))) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION,
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_ALLOCATION,
             ALLOC_FAIL);
         return;
     }
     if (decx::alloc::_host_virtual_page_malloc(&_exp_chart_diff, _exp_chart_diff_len * sizeof(float))) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION,
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_ALLOCATION,
             ALLOC_FAIL);
         return;
     }
@@ -129,12 +129,12 @@ void decx::vis::_bilateral_uchar4_organiser(const float*                      sr
     const uint _exp_chart_dist_len = max(ker_dims.x, ker_dims.y) / 2 + 1;
     constexpr uint _exp_chart_diff_len = 256;
     if (decx::alloc::_host_virtual_page_malloc(&_exp_chart_dist, _exp_chart_dist_len * sizeof(float))) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION,
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_ALLOCATION,
             ALLOC_FAIL);
         return;
     }
     if (decx::alloc::_host_virtual_page_malloc(&_exp_chart_diff, _exp_chart_diff_len * sizeof(float))) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION,
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_ALLOCATION,
             ALLOC_FAIL);
         return;
     }
@@ -182,7 +182,7 @@ namespace decx
 
 static void decx::vis::_bilateral_uint8_NB(decx::_Matrix* src, decx::_Matrix* dst, const uint2 neighbor_dims, const float2 sigmas_raw, de::DH* handle)
 {
-    const uint conc_thr = (uint)decx::cpu::_get_permitted_concurrency();
+    const uint conc_thr = (uint)DecxGetPermitConcurrency();
     decx::utils::frag_manager* f_mgr = NULL;
     decx::_thread_dispatch_for_conv2(&f_mgr, dst->Height(), conc_thr, _BLOCKED_CONV2_UINT8_H_, dst->Pitch() / 8);
     if (f_mgr == NULL) {
@@ -203,7 +203,7 @@ static void decx::vis::_bilateral_uint8_NB(decx::_Matrix* src, decx::_Matrix* ds
 static void 
 decx::vis::_bilateral_uchar4_NB(decx::_Matrix* src, decx::_Matrix* dst, const uint2 neighbor_dims, const float2 sigmas_raw, de::DH* handle)
 {
-    const uint conc_thr = (uint)decx::cpu::_get_permitted_concurrency();
+    const uint conc_thr = (uint)DecxGetPermitConcurrency();
     decx::utils::frag_manager* f_mgr = NULL;
     decx::_thread_dispatch_for_conv2(&f_mgr, dst->Height(), conc_thr, _BLOCKED_CONV2_UINT8_H_, dst->Pitch() / 4);
     if (f_mgr == NULL) {
@@ -230,7 +230,7 @@ static void decx::vis::_bilateral_uint8_BC(decx::_Matrix* src, decx::_Matrix* ds
 
     decx::PtrInfo<uint8_t> tmp_src;
     if (decx::alloc::_host_virtual_page_malloc(&tmp_src, tmp_src_dims.x * tmp_src_dims.y * sizeof(uint8_t))) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION,
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_ALLOCATION,
             ALLOC_FAIL);
         return;
     }
@@ -251,7 +251,7 @@ static void decx::vis::_bilateral_uint8_BC(decx::_Matrix* src, decx::_Matrix* ds
         break;
     }
 
-    const uint32_t conc_thr = (uint32_t)decx::cpu::_get_permitted_concurrency();
+    const uint32_t conc_thr = (uint32_t)DecxGetPermitConcurrency();
     decx::utils::frag_manager* f_mgr = NULL;
     decx::_thread_dispatch_for_conv2(&f_mgr, dst->Height(), conc_thr, _BLOCKED_CONV2_UINT8_H_, dst->Pitch() / 8);
     if (f_mgr == NULL) {
@@ -280,7 +280,7 @@ static void decx::vis::_bilateral_uchar4_BC(decx::_Matrix* src, decx::_Matrix* d
 
     decx::PtrInfo<float> tmp_src;
     if (decx::alloc::_host_virtual_page_malloc(&tmp_src, tmp_src_dims.x * tmp_src_dims.y * sizeof(uchar4))) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION,
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_ALLOCATION,
             ALLOC_FAIL);
         return;
     }
@@ -301,7 +301,7 @@ static void decx::vis::_bilateral_uchar4_BC(decx::_Matrix* src, decx::_Matrix* d
         break;
     }
 
-    const uint conc_thr = (uint)decx::cpu::_get_permitted_concurrency();
+    const uint conc_thr = (uint)DecxGetPermitConcurrency();
     decx::utils::frag_manager* f_mgr = NULL;
     decx::_thread_dispatch_for_conv2(&f_mgr, dst->Height(), conc_thr, _BLOCKED_CONV2_UINT8_H_, dst->Pitch() / 4);
     

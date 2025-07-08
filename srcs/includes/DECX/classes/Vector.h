@@ -26,7 +26,7 @@ namespace de
         Vector() {}
 
 
-        virtual size_t Len() const = 0;
+        virtual uint64_t Len() const = 0;
 
 
         template <typename _ptr_type>
@@ -62,10 +62,10 @@ namespace de
     _DECX_API_ de::Vector* CreateVectorPtr();
 
 
-    _DECX_API_ de::Vector& CreateVectorRef(const de::_DATA_TYPES_FLAGS_ _type, size_t len);
+    _DECX_API_ de::Vector& CreateVectorRef(const de::_DATA_TYPES_FLAGS_ _type, uint64_t len);
 
 
-    _DECX_API_ de::Vector* CreateVectorPtr(const de::_DATA_TYPES_FLAGS_ _type, size_t len);
+    _DECX_API_ de::Vector* CreateVectorPtr(const de::_DATA_TYPES_FLAGS_ _type, uint64_t len);
 }
 #endif
 

@@ -17,9 +17,9 @@ __global__
 * This kernel function contains multiply-add operation
 * @param thr_num : The threads number is half of the total length
 */
-void decx::bp::GPUK::cu_sum_vec4_fp32(float4* A, float4* B, const size_t thr_num, const size_t dst_len)
+void decx::bp::GPUK::cu_sum_vec4_fp32(float4* A, float4* B, const uint64_t thr_num, const uint64_t dst_len)
 {
-    size_t tid = threadIdx.x + blockIdx.x * blockDim.x;
+    uint64_t tid = threadIdx.x + blockIdx.x * blockDim.x;
 
     __shared__ float4 shmem[REDUCTION_BLOCK_SIZE];
     float4 tmp[2];
@@ -74,10 +74,10 @@ __global__
 * This kernel function contains multiply-add operation
 * @param thr_num : The threads number is half of the total length
 */
-void decx::bp::GPUK::cu_sum_vec8_fp16(float4* A, float4* B, const size_t thr_num, const size_t dst_len)
+void decx::bp::GPUK::cu_sum_vec8_fp16(float4* A, float4* B, const uint64_t thr_num, const uint64_t dst_len)
 {
 #if __ABOVE_SM_53
-    size_t tid = threadIdx.x + blockIdx.x * blockDim.x;
+    uint64_t tid = threadIdx.x + blockIdx.x * blockDim.x;
 
     __shared__ float4 shmem[REDUCTION_BLOCK_SIZE];
     half2_8 tmp[2];
@@ -132,9 +132,9 @@ __global__
 * This kernel function contains multiply-add operation
 * @param thr_num : The threads number is half of the total length
 */
-void decx::bp::GPUK::cu_sum_vec8_fp16_accu_fp16_output(float4* A, float4* B, const size_t thr_num, const size_t dst_len)
+void decx::bp::GPUK::cu_sum_vec8_fp16_accu_fp16_output(float4* A, float4* B, const uint64_t thr_num, const uint64_t dst_len)
 {
-    size_t tid = threadIdx.x + blockIdx.x * blockDim.x;
+    uint64_t tid = threadIdx.x + blockIdx.x * blockDim.x;
 
     __shared__ float4 shmem[REDUCTION_BLOCK_SIZE * 2];
 
@@ -217,9 +217,9 @@ __global__
 * This kernel function contains multiply-add operation
 * @param thr_num : The threads number is half of the total length
 */
-void decx::bp::GPUK::cu_sum_vec8_fp16_accu_fp32_output(float4* A, float4* B, const size_t thr_num, const size_t dst_len)
+void decx::bp::GPUK::cu_sum_vec8_fp16_accu_fp32_output(float4* A, float4* B, const uint64_t thr_num, const uint64_t dst_len)
 {
-    size_t tid = threadIdx.x + blockIdx.x * blockDim.x;
+    uint64_t tid = threadIdx.x + blockIdx.x * blockDim.x;
 
     __shared__ float4 shmem[REDUCTION_BLOCK_SIZE * 2];
 

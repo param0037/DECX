@@ -58,8 +58,8 @@ de::DH de::vis::ColorTransform(de::Matrix& src, de::Matrix& dst, const de::vis::
     decx::_Matrix* _src = dynamic_cast<decx::_Matrix*>(&src);
     decx::_Matrix* _dst = dynamic_cast<decx::_Matrix*>(&dst);
 
-    if (!decx::cpu::_is_CPU_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CPU_not_init,
+    if (!decx::cpu::DecxGetIsCPUInit()) {
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_CPU_not_init,
             CPU_NOT_INIT);
         return handle;
     }
@@ -106,7 +106,7 @@ de::DH de::vis::ColorTransform(de::Matrix& src, de::Matrix& dst, const de::vis::
         break;
 
     default:
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_ErrorFlag,
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_ErrorFlag,
             MEANINGLESS_FLAG);
         break;
     }

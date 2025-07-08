@@ -441,7 +441,7 @@ void decx::vis::_channel_ops_UC42UC_caller(decx::vis::channel_ops_kernel kernel,
                                             const float* src, float* dst, const int2 dims, 
                                             const uint32_t pitchsrc, const uint32_t pitchdst)
 {
-    decx::utils::ThreadArrange1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::ThreadArrange1D t1D(DecxGetPermitConcurrency());
     decx::utils::frag_manager f_mgr;
     decx::utils::frag_manager_gen(&f_mgr, dims.y, t1D.total_thread);
 
@@ -460,7 +460,7 @@ void decx::vis::_channel_ops_UC42UC_caller(decx::vis::channel_ops_kernel kernel,
     }
 
     sub_dims.y = f_mgr.is_left ? f_mgr.frag_left_over : f_mgr.frag_len;
-    t1D._async_thread[decx::cpu::_get_permitted_concurrency() - 1] =
+    t1D._async_thread[DecxGetPermitConcurrency() - 1] =
         decx::cpu::RegisterTaskLoadBalanced(kernel, src + offset_src, dst + offset_dst, sub_dims,
             pitchsrc, pitchdst);
 
@@ -473,7 +473,7 @@ void decx::vis::_channel_ops_UC42UC4_caller(decx::vis::channel_ops_kernel kernel
                                             const float* src, float* dst, const int2 dims, 
                                             const uint32_t pitchsrc, const uint32_t pitchdst)
 {
-    decx::utils::ThreadArrange1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::ThreadArrange1D t1D(DecxGetPermitConcurrency());
     decx::utils::frag_manager f_mgr;
     decx::utils::frag_manager_gen(&f_mgr, dims.y, t1D.total_thread);
 
@@ -492,7 +492,7 @@ void decx::vis::_channel_ops_UC42UC4_caller(decx::vis::channel_ops_kernel kernel
     }
 
     sub_dims.y = f_mgr.is_left ? f_mgr.frag_left_over : f_mgr.frag_len;
-    t1D._async_thread[decx::cpu::_get_permitted_concurrency() - 1] =
+    t1D._async_thread[DecxGetPermitConcurrency() - 1] =
         decx::cpu::RegisterTaskLoadBalanced(kernel, src + offset_src, dst + offset_dst, sub_dims,
             pitchsrc, pitchdst);
 

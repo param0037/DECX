@@ -66,11 +66,11 @@ namespace de
 namespace decx
 {
 namespace blas{
-    void mat_arithmetic_caller_VVO(const decx::_Matrix* A, const decx::_Matrix* B, decx::_Matrix* dst, const int32_t arith_flag, de::DH* handle);
-    void vec_arithmetic_caller_VVO(const decx::_Vector* A, const decx::_Vector* B, decx::_Vector* dst, const int32_t arith_flag, de::DH* handle);
+    void mat_arithmetic_caller_VVO(const decx::_Matrix* A, const decx::_Matrix* B, decx::_Matrix* dst, const int32_t arith_flag);
+    void vec_arithmetic_caller_VVO(const decx::_Vector* A, const decx::_Vector* B, decx::_Vector* dst, const int32_t arith_flag);
 
-    void mat_arithmetic_caller_VO(const decx::_Matrix* src, decx::_Matrix* dst, const int32_t arith_flag, de::DH* handle);
-    void vec_arithmetic_caller_VO(const decx::_Vector* src, decx::_Vector* dst, const int32_t arith_flag, de::DH* handle);
+    void mat_arithmetic_caller_VO(const decx::_Matrix* src, decx::_Matrix* dst, const int32_t arith_flag);
+    void vec_arithmetic_caller_VO(const decx::_Vector* src, decx::_Vector* dst, const int32_t arith_flag);
 }
 }
 #endif
@@ -78,11 +78,11 @@ namespace blas{
 namespace decx
 {
 namespace blas{
-    void mat_arithmetic_caller_VVO(const decx::_GPU_Matrix* A, const decx::_GPU_Matrix* B, decx::_GPU_Matrix* dst, const int32_t arith_flag, decx::cuda_stream* S, de::DH* handle);
-    void vec_arithmetic_caller_VVO(const decx::_GPU_Vector* A, const decx::_GPU_Vector* B, decx::_GPU_Vector* dst, const int32_t arith_flag, decx::cuda_stream* S, de::DH* handle);
+    void mat_arithmetic_caller_VVO(const decx::_GPU_Matrix* A, const decx::_GPU_Matrix* B, decx::_GPU_Matrix* dst, const int32_t arith_flag, decx::cuda_stream* S);
+    void vec_arithmetic_caller_VVO(const decx::_GPU_Vector* A, const decx::_GPU_Vector* B, decx::_GPU_Vector* dst, const int32_t arith_flag, decx::cuda_stream* S);
 
-    void mat_arithmetic_caller_VO(const decx::_GPU_Matrix* src, decx::_GPU_Matrix* dst, const int32_t arith_flag, decx::cuda_stream* S, de::DH* handle);
-    void vec_arithmetic_caller_VO(const decx::_GPU_Vector* src, decx::_GPU_Vector* dst, const int32_t arith_flag, decx::cuda_stream* S, de::DH* handle);
+    void mat_arithmetic_caller_VO(const decx::_GPU_Matrix* src, decx::_GPU_Matrix* dst, const int32_t arith_flag, decx::cuda_stream* S);
+    void vec_arithmetic_caller_VO(const decx::_GPU_Vector* src, decx::_GPU_Vector* dst, const int32_t arith_flag, decx::cuda_stream* S);
 }
 }
 #endif

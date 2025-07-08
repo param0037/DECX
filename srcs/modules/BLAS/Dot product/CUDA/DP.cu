@@ -72,7 +72,7 @@ static void decx::blas::_vector_dot_caller(decx::_Vector* A, decx::_Vector* B, d
         decx::blas::vector_dot_cplxf(A, B, res);
     }
     else {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_UNSUPPORTED_TYPE, UNSUPPORTED_TYPE);
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_UNSUPPORTED_TYPE, UNSUPPORTED_TYPE);
     }
 }
 
@@ -93,7 +93,7 @@ static void decx::blas::_dev_vector_dot_caller(decx::_GPU_Vector* A, decx::_GPU_
         decx::blas::dev_vector_dot_cplxf(A, B, res);
     }
     else {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_UNSUPPORTED_TYPE, UNSUPPORTED_TYPE);
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_UNSUPPORTED_TYPE, UNSUPPORTED_TYPE);
     }
 }
 
@@ -101,10 +101,10 @@ static void decx::blas::_dev_vector_dot_caller(decx::_GPU_Vector* A, decx::_GPU_
 
 _DECX_API_ void de::blas::cuda::Dot_product(de::Vector& A, de::Vector& B, de::Number& res, const uint32_t _fp16_accu)
 {
-    de::ResetLastError();
+    DecxResetLastHandle
 
-    if (!decx::cuda::_is_CUDA_init()) {
-        decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
+    if (!decx::cuda::DecxGetIsCUDAInit()) {
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
         return;
     }
 
@@ -118,10 +118,10 @@ _DECX_API_ void de::blas::cuda::Dot_product(de::Vector& A, de::Vector& B, de::Nu
 
 _DECX_API_ void de::blas::cuda::Dot_product(de::GPU_Vector& A, de::GPU_Vector& B, de::Number& res, const uint32_t _fp16_accu)
 {
-    de::GetLastError();
+    
 
-    if (!decx::cuda::_is_CUDA_init()) {
-        decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
+    if (!decx::cuda::DecxGetIsCUDAInit()) {
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
         return;
     }
 
@@ -141,8 +141,8 @@ static void decx::blas::matrix_dot2D_1way_fp32_selector(decx::_Matrix* A, decx::
         decx::blas::matrix_dot_1way_fp32<false>(A, B, dst);
     }
     else {
-        decx::err::handle_error_info_modify(handle,
-            decx::DECX_error_types::DECX_FAIL_ErrorFlag, MEANINGLESS_FLAG);
+        DecxAssignLastHandle(handle,
+            DecxErrorTypes_e::DECX_FAIL_ErrorFlag, MEANINGLESS_FLAG);
     }
 }
 
@@ -158,8 +158,8 @@ static void decx::blas::matrix_dot2D_1way_fp16_selector(decx::_Matrix* A, decx::
         decx::blas::matrix_dot_1way_fp16<false>(A, B, dst, _fp16_accu);
     }
     else {
-        decx::err::handle_error_info_modify(handle,
-            decx::DECX_error_types::DECX_FAIL_ErrorFlag, MEANINGLESS_FLAG);
+        DecxAssignLastHandle(handle,
+            DecxErrorTypes_e::DECX_FAIL_ErrorFlag, MEANINGLESS_FLAG);
     }
 }
 
@@ -168,7 +168,7 @@ static void decx::blas::matrix_dot2D_1way_fp16_selector(decx::_Matrix* A, decx::
 _DECX_API_ void
 de::blas::cuda::Dot_product(de::Matrix& A, de::Matrix& B, de::Vector& dst, const de::REDUCE_METHOD _rd_method, const uint32_t _fp16_accu)
 {
-    de::ResetLastError();
+    DecxResetLastHandle
 
     decx::_Matrix* _A = dynamic_cast<decx::_Matrix*>(&A);
     decx::_Matrix* _B = dynamic_cast<decx::_Matrix*>(&B);

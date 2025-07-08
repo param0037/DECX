@@ -31,7 +31,7 @@ decx::vis::CPUK::_generate_hist_uc8(const float* __restrict src,
     decx::utils::frag_manager f_mgr;
     decx::utils::frag_manager_gen(&f_mgr, proc_dims.x, 32);
 
-    size_t dex_src = 0;
+    uint64_t dex_src = 0;
     decx::utils::simd::xmm256_reg _recv;
 
     for (int i = 0; i < proc_dims.y; ++i) {

@@ -129,11 +129,11 @@
 
 //     this->_init = _type != de::_DATA_TYPES_FLAGS_::_VOID_;
 
-//     this->plane = static_cast<size_t>(_width) * static_cast<size_t>(_height);
-//     this->_plane = static_cast<size_t>(this->_layout.pitch) * static_cast<size_t>(this->_layout.height);
+//     this->plane = static_cast<uint64_t>(_width) * static_cast<uint64_t>(_height);
+//     this->_plane = static_cast<uint64_t>(this->_layout.pitch) * static_cast<uint64_t>(this->_layout.height);
 
-//     this->element_num = static_cast<size_t>(this->plane) * static_cast<size_t>(MatrixNum);
-//     this->_element_num = static_cast<size_t>(this->_plane) * static_cast<size_t>(MatrixNum);
+//     this->element_num = static_cast<uint64_t>(this->plane) * static_cast<uint64_t>(MatrixNum);
+//     this->_element_num = static_cast<uint64_t>(this->_plane) * static_cast<uint64_t>(MatrixNum);
 
 //     this->total_bytes = (this->_element_num) * this->_layout._single_element_size;
 // }
@@ -155,7 +155,7 @@
 //     if (this->type != type || this->_layout.width != _width || this->_layout.height != _height || 
 //         this->ArrayNumber != MatrixNum)
 //     {
-//         const size_t pre_size = this->total_bytes;
+//         const uint64_t pre_size = this->total_bytes;
 
 //         this->_attribute_assign(_type, _width, _height, MatrixNum);
 
@@ -295,7 +295,7 @@
 //     cudaError_t _err = cudaHostRegister(_src->MatArr.ptr, _src->get_total_bytes(), cudaHostRegisterPortable);
 //     if (_err != cudaSuccess) {
 //         if (_err == cudaErrorHostMemoryAlreadyRegistered) {
-//             decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_HOST_MEM_REGISTERED, HOST_MEM_REGISTERED);
+//             DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_HOST_MEM_REGISTERED, HOST_MEM_REGISTERED);
 //         }
 //         else {
 //             checkCudaErrors(_err);
@@ -315,7 +315,7 @@
 
 //     if (_err != cudaSuccess) {
 //         if (_err == cudaErrorHostMemoryNotRegistered) {
-//             decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_HOST_MEM_UNREGISTERED, HOST_MEM_UNREGISTERED);
+//             DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_HOST_MEM_UNREGISTERED, HOST_MEM_UNREGISTERED);
 //         }
 //         else {
 //             checkCudaErrors(_err);

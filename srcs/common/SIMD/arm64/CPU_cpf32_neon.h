@@ -183,14 +183,14 @@ namespace CPUK
 // {
 //     namespace fft
 //     {
-//         typedef void (*__called_ST_func_first) (const float*, double*, const size_t, const uint2);
+//         typedef void (*__called_ST_func_first) (const float*, double*, const uint64_t, const uint2);
 
-//         typedef void (*__called_ST_func_IFFT_first) (const double*, double*, const size_t, const uint2);
+//         typedef void (*__called_ST_func_IFFT_first) (const double*, double*, const uint64_t, const uint2);
 
-//         typedef void (*__called_ST_func) (const double*, double*, const size_t, const size_t, const uint2);
-//         typedef void (*_called_ST_func) (const double*, double*, const double*, const size_t, const size_t, const uint2);
+//         typedef void (*__called_ST_func) (const double*, double*, const uint64_t, const uint64_t, const uint2);
+//         typedef void (*_called_ST_func) (const double*, double*, const double*, const uint64_t, const uint64_t, const uint2);
 
-//         typedef void (*__called_ST_IFFT_last) (const double*, float*, const size_t, const size_t, const uint2);
+//         typedef void (*__called_ST_IFFT_last) (const double*, float*, const uint64_t, const uint64_t, const uint2);
 //     }
 // }
 

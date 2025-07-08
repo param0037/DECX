@@ -36,9 +36,9 @@ _THREAD_FUNCTION_ void
 decx::tf::CPUK::_vec4_mul_mat4x4_fp32_1D(const float* __restrict        src, 
                                          float* __restrict              dst, 
                                          const decx::_Mat4x4f           _tf_mat,
-                                         const size_t                   _proc_len)
+                                         const uint64_t                   _proc_len)
 {
-    size_t loc_dex = 0;
+    uint64_t loc_dex = 0;
 
     __m128 reg;
     decx::_Vector4f recv, store;
@@ -71,9 +71,9 @@ _THREAD_FUNCTION_ void
 decx::tf::CPUK::_vec3_mul_mat4x3_fp32_1D(const float* __restrict        src, 
                                          float* __restrict              dst, 
                                          const decx::_Mat4x4f           _tf_mat,
-                                         const size_t                   _proc_len)
+                                         const uint64_t                   _proc_len)
 {
-    size_t loc_dex = 0;
+    uint64_t loc_dex = 0;
 
     __m128 reg;
     decx::_Vector4f recv, store;
@@ -115,8 +115,8 @@ de::tf::cpu::Vec_transform(de::Vector& src, de::Vector& dst, de::Matrix& transfo
 {
     de::DH handle;
     
-    if (!decx::cpu::_is_CPU_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CPU_not_init,
+    if (!decx::cpu::DecxGetIsCPUInit()) {
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_CPU_not_init,
             CPU_NOT_INIT);
         return handle;
     }
@@ -126,7 +126,7 @@ de::tf::cpu::Vec_transform(de::Vector& src, de::Vector& dst, de::Matrix& transfo
     decx::_Vector* _dst = dynamic_cast<decx::_Vector*>(&dst);
 
     if (_src->type == de::_DATA_TYPES_FLAGS_::_VECTOR4F_ || _src->type == de::_DATA_TYPES_FLAGS_::_VECTOR3F_) {
-        const size_t _proc_len = _src->_length / 4;
+        const uint64_t _proc_len = _src->_length / 4;
 
         decx::_Mat4x4f _tf_mat4_by_4;
         for (int i = 0; i < 4; ++i) {
@@ -143,7 +143,7 @@ de::tf::cpu::Vec_transform(de::Vector& src, de::Vector& dst, de::Matrix& transfo
             kernel = decx::tf::CPUK::_vec3_mul_mat4x3_fp32_1D;
         }
 
-        decx::utils::ThreadArrange1D t1D(decx::cpu::_get_permitted_concurrency());
+        decx::utils::ThreadArrange1D t1D(DecxGetPermitConcurrency());
         decx::utils::frag_manager f_mgr;
         decx::utils::frag_manager_gen(&f_mgr, _proc_len, t1D.total_thread);
 
@@ -158,7 +158,7 @@ de::tf::cpu::Vec_transform(de::Vector& src, de::Vector& dst, de::Matrix& transfo
         }
     }
     else {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_TYPE_MOT_MATCH,
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_TYPE_MOT_MATCH,
             TYPE_ERROR_NOT_MATCH);
         return handle;
     }

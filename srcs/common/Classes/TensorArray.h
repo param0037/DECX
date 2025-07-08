@@ -76,7 +76,7 @@ namespace de
         virtual void Reinterpret(const de::_DATA_TYPES_FLAGS_ _new_type) = 0;
 
 
-        virtual de::DH Extract_SoftCopy(const uint32_t index, de::Tensor& dst) const = 0;
+        virtual void Extract_SoftCopy(const uint32_t index, de::Tensor& dst) const = 0;
 
 
         virtual void release() = 0;
@@ -205,7 +205,7 @@ namespace decx
         virtual void Reinterpret(const de::_DATA_TYPES_FLAGS_ _new_type);
 
 
-        virtual de::DH Extract_SoftCopy(const uint32_t index, de::Tensor& dst) const;
+        virtual void Extract_SoftCopy(const uint32_t index, de::Tensor& dst) const;
 
 
         virtual void release();

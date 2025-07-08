@@ -49,10 +49,10 @@ namespace de
 _DECX_API_ void
 de::cuda::Transpose(de::GPU_Matrix& src, de::GPU_Matrix& dst)
 {
-    de::ResetLastError();
+    DecxResetLastHandle
 
-    if (!decx::cuda::_is_CUDA_init()) {
-        decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_CUDA_not_init, 
+    if (!decx::cuda::DecxGetIsCUDAInit()) {
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_CUDA_not_init, 
         CUDA_NOT_INIT);
         return;
     }
@@ -84,7 +84,7 @@ de::cuda::Transpose(de::GPU_Matrix& src, de::GPU_Matrix& dst)
             make_uint2(_dst->Width(), _dst->Height()), _src->Pitch(), _dst->Pitch(), S);
         break;
     default:
-        decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_INVALID_PARAM, INVALID_PARAM);
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_INVALID_PARAM, INVALID_PARAM);
         S->detach();
         E->detach();
         return;
@@ -106,9 +106,9 @@ de::cuda::Transpose(de::GPU_Vector& src, de::GPU_Vector& dst)
 {
     de::DH handle;
 
-    if (!decx::cuda::_is_CUDA_init()) {
+    if (!decx::cuda::DecxGetIsCUDAInit()) {
         
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
         return handle;
     }
 
@@ -124,7 +124,7 @@ de::cuda::Transpose(de::GPU_Vector& src, de::GPU_Vector& dst)
         decx::blas::transpose2D_b4_dense((float*)_src->Vec, (float*)_dst->Vec, make_uint2(1133, 1011), 1011, 1133, S);
     }
     else {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_INVALID_PARAM, INVALID_PARAM);
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_INVALID_PARAM, INVALID_PARAM);
         S->detach();
         return handle;
     }

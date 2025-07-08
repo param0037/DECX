@@ -68,7 +68,7 @@ struct _DECX_API_ decx::MemBlock
 {
     uchar* _ptr;
     bool _idle;
-    size_t block_size;
+    uint64_t block_size;
     uint _ref_times;
 
     decx::MemLoc _loc;
@@ -86,7 +86,7 @@ struct _DECX_API_ decx::MemBlock
      * @param prev Pointer to the previous block
      * @param next Pointer to the next one
      */
-    MemBlock(size_t size, bool idle, decx::MemLoc* mem_loc, uchar* ptr,
+    MemBlock(uint64_t size, bool idle, decx::MemLoc* mem_loc, uchar* ptr,
         decx::MemBlock* prev, decx::MemBlock* next);
 
 

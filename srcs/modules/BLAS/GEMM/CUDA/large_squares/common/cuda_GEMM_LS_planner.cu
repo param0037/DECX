@@ -113,7 +113,7 @@ decx::blas::cuda_GEMM_LS_planner<float>::plan(const decx::_matrix_layout* A_layo
                                            decx::cuda_stream* S,
                                            const uint64_t aux_memory_budget)
 {
-    this->_device_prop = &decx::cuda::_get_cuda_prop();
+    this->_device_prop = &decx::cuda::DecxGetCUDAProp();
 
     this->_A_layout = *A_layout;
     this->_B_layout = *B_layout;
@@ -168,7 +168,7 @@ decx::blas::cuda_GEMM_LS_planner<de::Half>::plan(const decx::_matrix_layout* A_l
                                               decx::cuda_stream* S,
                                               const uint64_t aux_memory_budget)
 {
-    this->_device_prop = &decx::cuda::_get_cuda_prop();
+    this->_device_prop = &decx::cuda::DecxGetCUDAProp();
 
     this->_A_layout = *A_layout;
     this->_B_layout = *B_layout;
@@ -222,26 +222,26 @@ validate(const decx::_GPU_Matrix* A,    const decx::_GPU_Matrix* B,
          const de::Number* alpha,       const de::Number* beta)
 {
     if (A->Width() != B->Height()){
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_DimsNotMatching,
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_DimsNotMatching,
             "The width of matrix A and height of matrix B must be identical");
     }
 
     if (C == NULL){
         if(A->Type() != B->Type()){
-            decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_TYPE_MOT_MATCH,
+            DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_TYPE_MOT_MATCH,
                 "Types of the input matrices must be matched");
         }
     }
     else{
         if(A->Type() ^ B->Type() ^ C->Type()){
-            decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_TYPE_MOT_MATCH,
+            DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_TYPE_MOT_MATCH,
                 "Types of the input matrices must be matched");
         }
     }
 
     if (alpha != NULL && beta != NULL){
         if (alpha->Type() != A->Type() || beta->Type() != A->Type()){
-            decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_TYPE_MOT_MATCH,
+            DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_TYPE_MOT_MATCH,
                 "The input scalar alpha and beta must match the type of input matrices");
             return;
         }

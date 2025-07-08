@@ -242,7 +242,7 @@ extern "C"
         de::DH handle;
 
         if (prop == NULL) {
-            decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_INVALID_PARAM,
+            DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_INVALID_PARAM,
                 INVALID_PARAM);
             return _CAST_HANDLE_(DECX_Handle, handle);
         }

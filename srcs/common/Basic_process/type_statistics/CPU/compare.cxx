@@ -38,13 +38,13 @@ de::DH de::cpu::Max(de::Matrix& src, void* res)
 {
     de::DH handle;
 
-    if (!decx::cpu::_is_CPU_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CPU_not_init,
+    if (!decx::cpu::DecxGetIsCPUInit()) {
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_CPU_not_init,
             CPU_NOT_INIT);
         return handle;
     }
     if (res == NULL) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_INVALID_PARAM,
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_INVALID_PARAM,
             INVALID_PARAM);
         return handle;
     }
@@ -85,14 +85,14 @@ de::DH de::cpu::Max(de::Vector& src, void* res)
 {
     de::DH handle;
 
-    if (!decx::cpu::_is_CPU_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CPU_not_init,
+    if (!decx::cpu::DecxGetIsCPUInit()) {
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_CPU_not_init,
             CPU_NOT_INIT);
             DECX_LOG_ERR(CPU_NOT_INIT);
         return handle;
     }
     if (res == NULL) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_INVALID_PARAM,
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_INVALID_PARAM,
             INVALID_PARAM);
         return handle;
     }
@@ -131,13 +131,13 @@ de::DH de::cpu::Min(de::Matrix& src, void* res)
 {
     de::DH handle;
 
-    if (!decx::cpu::_is_CPU_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CPU_not_init,
+    if (!decx::cpu::DecxGetIsCPUInit()) {
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_CPU_not_init,
             CPU_NOT_INIT);
         return handle;
     }
     if (res == NULL) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_INVALID_PARAM,
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_INVALID_PARAM,
             INVALID_PARAM);
         return handle;
     }
@@ -178,14 +178,14 @@ de::DH de::cpu::Min(de::Vector& src, void* res)
 {
     de::DH handle;
 
-    if (!decx::cpu::_is_CPU_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CPU_not_init,
+    if (!decx::cpu::DecxGetIsCPUInit()) {
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_CPU_not_init,
             CPU_NOT_INIT);
             DECX_LOG_ERR(CPU_NOT_INIT);
         return handle;
     }
     if (res == NULL) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_INVALID_PARAM,
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_INVALID_PARAM,
             INVALID_PARAM);
         return handle;
     }

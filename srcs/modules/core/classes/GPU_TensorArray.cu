@@ -42,10 +42,10 @@ void decx::_GPU_TensorArray::_attribute_assign(const de::_DATA_TYPES_FLAGS_ _typ
 
     this->_layout._attribute_assign(_type, _width, _height, _depth);
 
-    this->_gap = this->_layout.dp_x_wp * static_cast<size_t>(this->_layout.height);
+    this->_gap = this->_layout.dp_x_wp * static_cast<uint64_t>(this->_layout.height);
 
-    this->element_num = static_cast<size_t>(this->_layout.depth) * this->_layout.plane[0] * static_cast<size_t>(this->tensor_num);
-    this->_element_num = static_cast<size_t>(this->tensor_num) * this->_gap;
+    this->element_num = static_cast<uint64_t>(this->_layout.depth) * this->_layout.plane[0] * static_cast<uint64_t>(this->tensor_num);
+    this->_element_num = static_cast<uint64_t>(this->tensor_num) * this->_gap;
     this->total_bytes = this->_element_num * this->_layout._single_element_size;
 }
 
@@ -179,7 +179,7 @@ void decx::_GPU_TensorArray::re_construct(const de::_DATA_TYPES_FLAGS_ _type, co
     if (this->type != _type || this->_layout.width != _width || this->_layout.height != _height || 
         this->_layout.depth != _depth || this->tensor_num != _tensor_num)
     {
-        const size_t pre_size = this->total_bytes;
+        const uint64_t pre_size = this->total_bytes;
 
         this->_attribute_assign(_type, _width, _height, _depth, _tensor_num);
 
@@ -247,7 +247,7 @@ de::DH decx::_GPU_TensorArray::Extract_SoftCopy(const uint32_t index, de::GPU_Te
     decx::_GPU_Tensor* _dst = dynamic_cast<decx::_GPU_Tensor*>(&dst);
 
     if (index > this->TensorNum() - 1) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_DimsNotMatching,
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_DimsNotMatching,
             "Overrange\n");
         return handle;
     }
@@ -316,7 +316,7 @@ _DECX_API_ de::DH de::cuda::PinMemory(de::TensorArray& src)
     cudaError_t _err = cudaHostRegister(_src->TensArr.GetRawPtr(), _src->get_total_bytes(), cudaHostRegisterPortable);
     if (_err != cudaSuccess) {
         if (_err == cudaErrorHostMemoryAlreadyRegistered) {
-            decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_HOST_MEM_REGISTERED, HOST_MEM_REGISTERED);
+            DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_HOST_MEM_REGISTERED, HOST_MEM_REGISTERED);
         }
         else {
             checkCudaErrors(_err);
@@ -336,7 +336,7 @@ _DECX_API_ de::DH de::cuda::UnpinMemory(de::TensorArray& src)
 
     if (_err != cudaSuccess) {
         if (_err == cudaErrorHostMemoryNotRegistered) {
-            decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_HOST_MEM_UNREGISTERED, HOST_MEM_UNREGISTERED);
+            DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_HOST_MEM_UNREGISTERED, HOST_MEM_UNREGISTERED);
         }
         else {
             checkCudaErrors(_err);

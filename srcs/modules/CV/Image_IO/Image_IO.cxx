@@ -114,7 +114,7 @@ de::DH de::vis::ReadImage(const char* img_path, de::Matrix& src)
     SDL_Surface* image = NULL;
     image = IMG_Load(img_path);
     if (image == NULL) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_IMAGE_LOAD_FAILED,
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_IMAGE_LOAD_FAILED,
             IMAGE_LOAD_FAIL);
         return handle;
     }

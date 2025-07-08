@@ -50,5 +50,3 @@ decx::BaseNode::BaseNode(const char* node_name, const decx::NodeTaskDriveMode_e 
     strcpy(this->_node_name, node_name);
     this->_drv_mode = drv_mode;
 }
-
-

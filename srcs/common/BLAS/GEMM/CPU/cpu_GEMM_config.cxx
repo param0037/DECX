@@ -148,7 +148,7 @@ decx::blas::cpu_GEMM_planner<_data_type>::plan(const uint32_t concurrency,
     this->_proc_dims_v1 = make_uint2(this->_layout_B->width, this->_layout_A->height);
 
     this->_plan_for_B_arrangement(handle);
-    if (handle->error_type != decx::DECX_error_types::DECX_SUCCESS) {
+    if (handle->error_type != DecxErrorTypes_e::DECX_SUCCESS) {
         return;
     }
 
@@ -200,13 +200,13 @@ void _CRSR_ decx::blas::cpu_GEMM_planner<_data_type>::Validate(de::DH* handle,
                                                                const decx::_matrix_layout* layout_C)
 {
     if (layout_A->width != layout_B->height) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_DimsNotMatching,
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_DimsNotMatching,
             "The width of matrix A should be consistent to the height of matrix B");
         return;
     }
     if (layout_C) {
         if (layout_C->height != layout_A->height || layout_C->width != layout_B->width) {
-            decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_DimsNotMatching,
+            DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_DimsNotMatching,
                 "The height and width of the matrix C should be identical to that of matrix A and matrix B, respectively");
             return;
         }

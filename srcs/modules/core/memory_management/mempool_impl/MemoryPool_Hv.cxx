@@ -29,7 +29,7 @@
 */
 
 #include "MemoryPool_Hv.h"
-
+#include <decx_utils_functions.h>
 
 decx::MemPool_Hv* decx::MemPool_Hv::_instance;
 

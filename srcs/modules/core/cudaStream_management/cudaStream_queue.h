@@ -55,7 +55,7 @@ class decx::cudaStream_Queue
 private:
     std::mutex _mtx;
 
-    size_t true_capacity;
+    uint64_t true_capacity;
 
     decx::PtrInfo<decx::cuda_stream> _cuda_stream_arr;
 
@@ -70,7 +70,7 @@ private:
     decx::cuda_stream* add_stream_physical(const int flag);
 
 public:
-    size_t _cuda_stream_num;
+    uint64_t _cuda_stream_num;
 
 
     cudaStream_Queue();

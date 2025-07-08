@@ -471,8 +471,8 @@ de::DH de::vis::cuda::NLM_RGB(de::Matrix& src, de::Matrix& dst, uint search_wind
 {
     de::DH handle;
 
-    if (!decx::cuda::_is_CUDA_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
+    if (!decx::cuda::DecxGetIsCUDAInit()) {
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
         exit(-1);
     }
 
@@ -495,8 +495,8 @@ de::DH de::vis::cuda::NLM_RGB_keep_alpha(de::Matrix& src, de::Matrix& dst, uint 
 {
     de::DH handle;
 
-    if (!decx::cuda::_is_CUDA_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
+    if (!decx::cuda::DecxGetIsCUDAInit()) {
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
         exit(-1);
     }
 
@@ -519,8 +519,8 @@ de::DH de::vis::cuda::NLM_Gray(de::Matrix& src, de::Matrix& dst, uint search_win
 {
     de::DH handle;
 
-    if (!decx::cuda::_is_CUDA_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
+    if (!decx::cuda::DecxGetIsCUDAInit()) {
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
         exit(-1);
     }
 

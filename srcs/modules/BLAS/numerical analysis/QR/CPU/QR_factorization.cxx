@@ -39,7 +39,7 @@
 
 // _DECX_API_ void de::blas::cpu::GQRF(de::Matrix& src, de::Matrix& Q, de::Matrix& R)
 // {
-//     de::DH* handle = de::GetLastError();
+//     de::DH* handle = 
 
 //     decx::_Matrix* _src = dynamic_cast<decx::_Matrix*>(&src);
 //     decx::_Matrix* _Q = dynamic_cast<decx::_Matrix*>(&Q);
@@ -49,7 +49,7 @@
 
 //     // de::cpu::DecxSetThreadingNum(1);
 
-//     decx::utils::Thr1D t1D(decx::cpu::_get_permitted_concurrency());
+//     decx::utils::Thr1D t1D(DecxGetPermitConcurrency());
 
 //     const uint32_t block_dim = 16;
 
@@ -106,7 +106,7 @@
 
 _DECX_API_ void de::blas::cpu::GQRF(de::Matrix& src, de::Matrix& Q, de::Matrix& R)
 {
-    de::DH* handle = de::GetLastError();
+    de::DH* handle = 
 
     decx::_Matrix* _src = dynamic_cast<decx::_Matrix*>(&src);
     decx::_Matrix* _Q = dynamic_cast<decx::_Matrix*>(&Q);
@@ -116,7 +116,7 @@ _DECX_API_ void de::blas::cpu::GQRF(de::Matrix& src, de::Matrix& Q, de::Matrix& 
 
     // de::cpu::DecxSetThreadingNum(1);
 
-    decx::utils::Thr1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::Thr1D t1D(DecxGetPermitConcurrency());
 
     const uint32_t block_dim = 16;
 

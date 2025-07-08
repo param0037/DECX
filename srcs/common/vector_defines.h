@@ -159,7 +159,7 @@ static inline uint4 make_uint4(const uint x, const uint y, const uint z, const u
 
 
 
-static inline ulong2 make_ulong2(const size_t x, const size_t y) {
+static inline ulong2 make_ulong2(const uint64_t x, const uint64_t y) {
     ulong2 ans;
     ans.x = x;
     ans.y = y;

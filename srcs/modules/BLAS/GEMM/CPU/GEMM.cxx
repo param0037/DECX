@@ -47,7 +47,7 @@ namespace blas {
 
 _DECX_API_ void de::blas::cpu::GEMM(de::Matrix& A, de::Matrix& B, de::Matrix& dst)
 {
-    de::ResetLastError();
+    DecxResetLastHandle
 
     decx::_Matrix* _A = dynamic_cast<decx::_Matrix*>(&A);
     decx::_Matrix* _B = dynamic_cast<decx::_Matrix*>(&B);
@@ -80,7 +80,7 @@ _DECX_API_ void de::blas::cpu::GEMM(de::Matrix& A, de::Matrix& B, de::Matrix& ds
 
 _DECX_API_ void de::blas::cpu::GEMM(de::Matrix& A, de::Matrix& B, de::Matrix &C, de::Matrix& dst)
 {
-    de::ResetLastError();
+    DecxResetLastHandle
 
     decx::_Matrix* _A = dynamic_cast<decx::_Matrix*>(&A);
     decx::_Matrix* _B = dynamic_cast<decx::_Matrix*>(&B);

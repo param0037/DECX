@@ -106,13 +106,13 @@ void decx::blas::Blocked_GQR_planner<_data_type>::Config(const uint2 block_dims,
 
     rval |= this->_fmgrs_apply_HH.Allocate((this->_block_dims.x - 1) * sizeof(decx::utils::frag_manager), PAGABLE, handle);
     for (int32_t i = 0; i < block_dims.x - 1; ++i){
-        decx::utils::frag_manager_gen(this->_fmgrs_apply_HH + i, this->_block_dims.x - i - 1, decx::cpu::_get_permitted_concurrency());
+        decx::utils::frag_manager_gen(this->_fmgrs_apply_HH + i, this->_block_dims.x - i - 1, DecxGetPermitConcurrency());
     }
 
     this->_IWY.SetDims(decx::utils::ialign_up<uint32_t>(this->_block_dims.y, alignment), this->_block_dims.y);
     rval |= this->_IWY.Allocate(PAGABLE, sizeof(_data_type), handle);
 
-    decx::utils::frag_manager_gen(&this->_fmgr_updateW, this->_block_dims.y, decx::cpu::_get_permitted_concurrency());
+    decx::utils::frag_manager_gen(&this->_fmgr_updateW, this->_block_dims.y, DecxGetPermitConcurrency());
 
     rval |= this->Config_W_updator();
     // return rval;

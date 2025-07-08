@@ -70,18 +70,18 @@ static void decx::dsp::filter2D_fp32(decx::_GPU_Matrix* src,
     S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
     E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
     if (S == NULL) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_CUDA_STREAM,
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_CUDA_STREAM,
             CUDA_STREAM_ACCESS_FAIL);
         return;
     }
     if (E == NULL) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_CUDA_EVENT,
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_CUDA_EVENT,
             CUDA_EVENT_ACCESS_FAIL);
         return;
     }
 
     if (!decx::dsp::cuda_Filter2D_planner<float>::validate_kerW(kernel->Width())) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ConvBadKernel,
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_ConvBadKernel,
             CU_FILTER2D_KERNEL_OVERRANGED);
         return;
     }
@@ -131,18 +131,18 @@ decx::dsp::filter2D_fp64(decx::_GPU_Matrix* src,
     S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
     E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
     if (S == NULL) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_CUDA_STREAM,
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_CUDA_STREAM,
             CUDA_STREAM_ACCESS_FAIL);
         return;
     }
     if (E == NULL) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_CUDA_EVENT,
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_CUDA_EVENT,
             CUDA_EVENT_ACCESS_FAIL);
         return;
     }
 
     if (!decx::dsp::cuda_Filter2D_planner<double>::validate_kerW(kernel->Width())) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ConvBadKernel,
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_ConvBadKernel,
             CU_FILTER2D_KERNEL_OVERRANGED);
         return;
     }
@@ -192,18 +192,18 @@ decx::dsp::filter2D_cplxf(decx::_GPU_Matrix* src,
     S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
     E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
     if (S == NULL) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_CUDA_STREAM,
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_CUDA_STREAM,
             CUDA_STREAM_ACCESS_FAIL);
         return;
     }
     if (E == NULL) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_CUDA_EVENT,
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_CUDA_EVENT,
             CUDA_EVENT_ACCESS_FAIL);
         return;
     }
 
     if (!decx::dsp::cuda_Filter2D_planner<double>::validate_kerW(kernel->Width())) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ConvBadKernel,
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_ConvBadKernel,
             CU_FILTER2D_KERNEL_OVERRANGED);
         return;
     }
@@ -254,18 +254,18 @@ decx::dsp::filter2D_cplxd(decx::_GPU_Matrix* src,
     S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
     E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
     if (S == NULL) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_CUDA_STREAM,
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_CUDA_STREAM,
             CUDA_STREAM_ACCESS_FAIL);
         return;
     }
     if (E == NULL) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_CUDA_EVENT,
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_CUDA_EVENT,
             CUDA_EVENT_ACCESS_FAIL);
         return;
     }
 
     if (!decx::dsp::cuda_Filter2D_planner<de::CPd>::validate_kerW(kernel->Width())) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ConvBadKernel,
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_ConvBadKernel,
             CU_FILTER2D_KERNEL_OVERRANGED);
         return;
     }
@@ -315,18 +315,18 @@ static void decx::dsp::filter2D_u8(decx::_GPU_Matrix* src,
     S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
     E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
     if (S == NULL) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_CUDA_STREAM,
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_CUDA_STREAM,
             CUDA_STREAM_ACCESS_FAIL);
         return;
     }
     if (E == NULL) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_CUDA_EVENT,
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_CUDA_EVENT,
             CUDA_EVENT_ACCESS_FAIL);
         return;
     }
 
     if (!decx::dsp::cuda_Filter2D_planner<uint8_t>::validate_kerW(kernel->Width())) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ConvBadKernel,
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_ConvBadKernel,
             CU_FILTER2D_KERNEL_OVERRANGED);
         return;
     }
@@ -366,7 +366,7 @@ static void decx::dsp::filter2D_u8(decx::_GPU_Matrix* src,
 _DECX_API_ void de::dsp::cuda::Filter2D(de::GPU_Matrix& src, de::GPU_Matrix& kernel, de::GPU_Matrix& dst,
     const de::extend_label _extend_method, const de::_DATA_TYPES_FLAGS_ output_type)
 {
-    de::ResetLastError();
+    DecxResetLastHandle
 
     decx::_GPU_Matrix* _src = dynamic_cast<decx::_GPU_Matrix*>(&src);
     decx::_GPU_Matrix* _kernel = dynamic_cast<decx::_GPU_Matrix*>(&kernel);
@@ -389,7 +389,7 @@ _DECX_API_ void de::dsp::cuda::Filter2D(de::GPU_Matrix& src, de::GPU_Matrix& ker
     case de::_DATA_TYPES_FLAGS_::_UINT8_:
         if (output_type != de::_DATA_TYPES_FLAGS_::_UINT8_ && 
             output_type != de::_DATA_TYPES_FLAGS_::_FP32_){
-            decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_UNSUPPORTED_TYPE,
+            DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_UNSUPPORTED_TYPE,
                 "Filter2D with UINT8 input only supports FP32 and UINT8 outpput");
             return;
         }

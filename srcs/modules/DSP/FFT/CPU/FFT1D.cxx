@@ -60,7 +60,7 @@ namespace dsp {
 template <typename _type_in>
 void decx::dsp::fft::FFT1D_caller(decx::_Vector* src, decx::_Vector* dst, de::DH* handle)
 {
-    decx::utils::Thr1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::Thr1D t1D(DecxGetPermitConcurrency());
 
     if (decx::dsp::fft::g_cpu_FFT1D_cplxf32_planner._res_ptr == NULL) {
         decx::dsp::fft::g_cpu_FFT1D_cplxf32_planner.RegisterResource(new decx::dsp::fft::cpu_FFT1D_planner<float>,
@@ -86,7 +86,7 @@ void decx::dsp::fft::FFT1D_caller(decx::_Vector* src, decx::_Vector* dst, de::DH
 template <typename _type_in>
 void decx::dsp::fft::FFT1D_caller_cplxd(decx::_Vector* src, decx::_Vector* dst, de::DH* handle)
 {
-    decx::utils::Thr1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::Thr1D t1D(DecxGetPermitConcurrency());
     
     if (decx::dsp::fft::g_cpu_FFT1D_cplxd64_planner._res_ptr == NULL) {
         decx::dsp::fft::g_cpu_FFT1D_cplxd64_planner.RegisterResource(new decx::dsp::fft::cpu_FFT1D_planner<double>,
@@ -112,7 +112,7 @@ void decx::dsp::fft::FFT1D_caller_cplxd(decx::_Vector* src, decx::_Vector* dst, 
 template <typename _type_out>
 void decx::dsp::fft::IFFT1D_caller(decx::_Vector* src, decx::_Vector* dst, de::DH* handle)
 {
-    decx::utils::Thr1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::Thr1D t1D(DecxGetPermitConcurrency());
 
     if (decx::dsp::fft::g_cpu_IFFT1D_cplxf32_planner._res_ptr == NULL) {
         decx::dsp::fft::g_cpu_IFFT1D_cplxf32_planner.RegisterResource(new decx::dsp::fft::cpu_FFT1D_planner<float>,
@@ -138,7 +138,7 @@ void decx::dsp::fft::IFFT1D_caller(decx::_Vector* src, decx::_Vector* dst, de::D
 template <typename _type_out>
 void decx::dsp::fft::IFFT1D_caller_cplxd(decx::_Vector* src, decx::_Vector* dst, de::DH* handle)
 {
-    decx::utils::Thr1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::Thr1D t1D(DecxGetPermitConcurrency());
 
     if (decx::dsp::fft::g_cpu_IFFT1D_cplxd64_planner._res_ptr == NULL) {
         decx::dsp::fft::g_cpu_IFFT1D_cplxd64_planner.RegisterResource(new decx::dsp::fft::cpu_FFT1D_planner<double>,
@@ -164,10 +164,10 @@ void decx::dsp::fft::IFFT1D_caller_cplxd(decx::_Vector* src, decx::_Vector* dst,
 
 _DECX_API_ void de::dsp::cpu::FFT(de::Vector& src, de::Vector& dst)
 {
-    de::ResetLastError();
+    DecxResetLastHandle
 
-    if (!decx::cpu::_is_CPU_init()) {
-        decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_CPU_not_init, 
+    if (!decx::cpu::DecxGetIsCPUInit()) {
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_CPU_not_init, 
             CPU_NOT_INIT);
         return;
     }
@@ -193,7 +193,7 @@ _DECX_API_ void de::dsp::cpu::FFT(de::Vector& src, de::Vector& dst)
         break;
 
     default:
-        decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_ErrorFlag, 
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_ErrorFlag, 
             MEANINGLESS_FLAG);
         break;
     }
@@ -203,10 +203,10 @@ _DECX_API_ void de::dsp::cpu::FFT(de::Vector& src, de::Vector& dst)
 
 _DECX_API_ void de::dsp::cpu::IFFT(de::Vector& src, de::Vector& dst, const de::_DATA_TYPES_FLAGS_ _output_type)
 {
-    de::ResetLastError();
+    DecxResetLastHandle
 
-    if (!decx::cpu::_is_CPU_init()) {
-        decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_CPU_not_init,
+    if (!decx::cpu::DecxGetIsCPUInit()) {
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_CPU_not_init,
             CPU_NOT_INIT);
         return;
     }
@@ -232,7 +232,7 @@ _DECX_API_ void de::dsp::cpu::IFFT(de::Vector& src, de::Vector& dst, const de::_
         break;
 
     default:
-        decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_ErrorFlag, 
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_ErrorFlag, 
             MEANINGLESS_FLAG);
         break;
     }

@@ -37,11 +37,11 @@ decx::dsp::CPUK::Gaussian_Window1D_cpl32(const double* __restrict    src,
                                             double* __restrict          dst, 
                                             const float                 u, 
                                             const float                 sigma, 
-                                            const size_t                _proc_len,
-                                            const size_t                real_bound,
-                                            const size_t                global_dex_offset)
+                                            const uint64_t                _proc_len,
+                                            const uint64_t                real_bound,
+                                            const uint64_t                global_dex_offset)
 {
-    size_t loc_dex = 0;
+    uint64_t loc_dex = 0;
 
     const __m256i half_len = _mm256_set1_epi64x(real_bound / 2);
     __m256i current_dex, _half_pass;
@@ -91,12 +91,12 @@ _THREAD_FUNCTION_ void
 decx::dsp::CPUK::Triangular_Window1D_cpl32(const double* __restrict      src, 
                                               double* __restrict            dst, 
                                               const long long               center, 
-                                              const size_t                  radius,
-                                              const size_t                  _proc_len,
-                                              const size_t                  real_bound, 
-                                              const size_t                  global_dex_offset)
+                                              const uint64_t                  radius,
+                                              const uint64_t                  _proc_len,
+                                              const uint64_t                  real_bound, 
+                                              const uint64_t                  global_dex_offset)
 {
-    size_t loc_dex = 0;
+    uint64_t loc_dex = 0;
 
     decx::utils::simd::xmm256_reg recv, store, _not_exceeded;
     const __m256i half_len = _mm256_set1_epi64x(real_bound / 2);
@@ -152,7 +152,7 @@ decx::dsp::CPUK::Gaussian_Window2D_cpl32_no_corrolation(const double* __restrict
                                                            const uint                  global_dex_offset_Y,
                                                            const uint                  pitch)
 {
-    size_t loc_dex = 0;
+    uint64_t loc_dex = 0;
 
     __m256i axis_valueXY, _half_pass, dex_values;
     const uint2 _half_dims = make_uint2(real_bound.x / 2, real_bound.y / 2);
@@ -166,7 +166,7 @@ decx::dsp::CPUK::Gaussian_Window2D_cpl32_no_corrolation(const double* __restrict
                                                    real_bound.x - 1, real_bound.y - 1, 
                                                    real_bound.x - 1, real_bound.y - 1, 
                                                    real_bound.x - 1, real_bound.y - 1);
-    const __m256 _us = _mm256_castsi256_ps(_mm256_set1_epi64x(*((size_t*)&u))),
+    const __m256 _us = _mm256_castsi256_ps(_mm256_set1_epi64x(*((uint64_t*)&u))),
                  _sigmas_sq = _mm256_setr_ps(-sigma.x * sigma.x * 2, -sigma.y * sigma.y * 2, 
                      -sigma.x * sigma.x * 2, -sigma.y * sigma.y * 2, 
                      -sigma.x * sigma.x * 2, -sigma.y * sigma.y * 2, 
@@ -218,7 +218,7 @@ decx::dsp::CPUK::Gaussian_Window2D_cpl32(const double* __restrict    src,
                                             const uint                  global_dex_offset_Y,
                                             const uint                  pitch)
 {
-    size_t loc_dex = 0;
+    uint64_t loc_dex = 0;
 
     __m256i axis_valueXY, _half_pass, dex_values;
     const uint2 _half_dims = make_uint2(real_bound.x / 2, real_bound.y / 2);
@@ -234,7 +234,7 @@ decx::dsp::CPUK::Gaussian_Window2D_cpl32(const double* __restrict    src,
                                                    real_bound.x - 1, real_bound.y - 1, 
                                                    real_bound.x - 1, real_bound.y - 1, 
                                                    real_bound.x - 1, real_bound.y - 1);
-    const __m256 _us = _mm256_castsi256_ps(_mm256_set1_epi64x(*((size_t*)&u))),
+    const __m256 _us = _mm256_castsi256_ps(_mm256_set1_epi64x(*((uint64_t*)&u))),
                  _sigmas_sq = _mm256_setr_ps(sigma.x * sigma.x, sigma.y * sigma.y,
                      sigma.x * sigma.x, sigma.y * sigma.y,
                      sigma.x * sigma.x, sigma.y * sigma.y,
@@ -288,7 +288,7 @@ decx::dsp::CPUK::Cone_Window2D_cpl32(const double* __restrict        src,
                                         const uint                      global_dex_offset_Y, 
                                         const uint                      pitch)
 {
-    size_t loc_dex = 0;
+    uint64_t loc_dex = 0;
     decx::utils::simd::xmm256_reg recv, store, _weights, _not_exceeded;
 
     __m256i current_dex, _hfps;
@@ -341,8 +341,8 @@ _DECX_API_ de::DH
 de::dsp::cpu::Gaussian_Window1D(de::Vector& src, de::Vector& dst, const float u, const float sigma)
 {
     de::DH handle;
-    if (!decx::cpu::_is_CPU_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CPU_not_init,
+    if (!decx::cpu::DecxGetIsCPUInit()) {
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_CPU_not_init,
             CPU_NOT_INIT);
         return handle;
     }
@@ -350,15 +350,15 @@ de::dsp::cpu::Gaussian_Window1D(de::Vector& src, de::Vector& dst, const float u,
     decx::_Vector* _src = dynamic_cast<decx::_Vector*>(&src);
     decx::_Vector* _dst = dynamic_cast<decx::_Vector*>(&dst);
 
-    const size_t proc_len = _src->_length / 4;
-    if (proc_len > decx::cpu::_get_permitted_concurrency()) {
-        decx::utils::ThreadArrange1D t1D(decx::cpu::_get_permitted_concurrency());
+    const uint64_t proc_len = _src->_length / 4;
+    if (proc_len > DecxGetPermitConcurrency()) {
+        decx::utils::ThreadArrange1D t1D(DecxGetPermitConcurrency());
         decx::utils::frag_manager f_mgr;
         decx::utils::frag_manager_gen(&f_mgr, proc_len, t1D.total_thread);
 
         const double* _loc_src = (const double*)_src->Vec;
         double* _loc_dst = (double*)_dst->Vec;
-        size_t _global_ptr_offset = 0;
+        uint64_t _global_ptr_offset = 0;
 
         for (int i = 0; i < t1D.total_thread - 1; ++i) {
             t1D._async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(
@@ -370,7 +370,7 @@ de::dsp::cpu::Gaussian_Window1D(de::Vector& src, de::Vector& dst, const float u,
             _loc_src += _global_ptr_offset;
             _loc_dst += _global_ptr_offset;
         }
-        const size_t _L = f_mgr.is_left ? f_mgr.frag_left_over : f_mgr.frag_len;
+        const uint64_t _L = f_mgr.is_left ? f_mgr.frag_left_over : f_mgr.frag_len;
         t1D._async_thread[t1D.total_thread - 1] = decx::cpu::RegisterTaskLoadBalanced(
             decx::dsp::CPUK::Gaussian_Window1D_cpl32,
             _loc_src, _loc_dst, u, sigma,
@@ -391,11 +391,11 @@ de::dsp::cpu::Gaussian_Window1D(de::Vector& src, de::Vector& dst, const float u,
 
 
 _DECX_API_ de::DH
-de::dsp::cpu::Triangular_Window1D(de::Vector& src, de::Vector& dst, const long long center, const size_t radius)
+de::dsp::cpu::Triangular_Window1D(de::Vector& src, de::Vector& dst, const long long center, const uint64_t radius)
 {
     de::DH handle;
-    if (!decx::cpu::_is_CPU_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CPU_not_init,
+    if (!decx::cpu::DecxGetIsCPUInit()) {
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_CPU_not_init,
             CPU_NOT_INIT);
         return handle;
     }
@@ -403,15 +403,15 @@ de::dsp::cpu::Triangular_Window1D(de::Vector& src, de::Vector& dst, const long l
     decx::_Vector* _src = dynamic_cast<decx::_Vector*>(&src);
     decx::_Vector* _dst = dynamic_cast<decx::_Vector*>(&dst);
 
-    const size_t proc_len = _src->_length / 4;
-    if (proc_len > decx::cpu::_get_permitted_concurrency()) {
-        decx::utils::ThreadArrange1D t1D(decx::cpu::_get_permitted_concurrency());
+    const uint64_t proc_len = _src->_length / 4;
+    if (proc_len > DecxGetPermitConcurrency()) {
+        decx::utils::ThreadArrange1D t1D(DecxGetPermitConcurrency());
         decx::utils::frag_manager f_mgr;
         decx::utils::frag_manager_gen(&f_mgr, proc_len, t1D.total_thread);
 
         const double* _loc_src = (const double*)_src->Vec;
         double* _loc_dst = (double*)_dst->Vec;
-        size_t _global_ptr_offset = 0;
+        uint64_t _global_ptr_offset = 0;
 
         for (int i = 0; i < t1D.total_thread - 1; ++i) {
             t1D._async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(
@@ -423,7 +423,7 @@ de::dsp::cpu::Triangular_Window1D(de::Vector& src, de::Vector& dst, const long l
             _loc_src += _global_ptr_offset;
             _loc_dst += _global_ptr_offset;
         }
-        const size_t _L = f_mgr.is_left ? f_mgr.frag_left_over : f_mgr.frag_len;
+        const uint64_t _L = f_mgr.is_left ? f_mgr.frag_left_over : f_mgr.frag_len;
         t1D._async_thread[t1D.total_thread - 1] = decx::cpu::RegisterTaskLoadBalanced(
             decx::dsp::CPUK::Triangular_Window1D_cpl32,
             _loc_src, _loc_dst, center, radius,
@@ -446,8 +446,8 @@ _DECX_API_ de::DH
 de::dsp::cpu::Gaussian_Window2D(de::Matrix& src, de::Matrix& dst, const de::Point2D_f u, const de::Point2D_f sigma, const float p)
 {
     de::DH handle;
-    if (!decx::cpu::_is_CPU_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CPU_not_init,
+    if (!decx::cpu::DecxGetIsCPUInit()) {
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_CPU_not_init,
             CPU_NOT_INIT);
         return handle;
     }
@@ -456,11 +456,11 @@ de::dsp::cpu::Gaussian_Window2D(de::Matrix& src, de::Matrix& dst, const de::Poin
     decx::_Matrix* _dst = dynamic_cast<decx::_Matrix*>(&dst);
 
     const uint pitch = _src->Pitch() / 4;
-    decx::utils::ThreadArrange1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::ThreadArrange1D t1D(DecxGetPermitConcurrency());
     decx::utils::frag_manager f_mgr;
     decx::utils::frag_manager_gen(&f_mgr, _src->Height(), t1D.total_thread);
 
-    const size_t frag_size = (size_t)f_mgr.frag_len * (size_t)pitch * 4;
+    const uint64_t frag_size = (uint64_t)f_mgr.frag_len * (uint64_t)pitch * 4;
 
     uint2 _proc_dims = make_uint2(pitch, f_mgr.frag_len);
     const uint2 real_bound = make_uint2(_src->Width(), _src->Height());
@@ -468,13 +468,13 @@ de::dsp::cpu::Gaussian_Window2D(de::Matrix& src, de::Matrix& dst, const de::Poin
     bool _corrolated = (p != 0);
     if (_corrolated) {
         if (!(p < 1.f && p > -1.f)) {
-            decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_INVALID_PARAM,
+            DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_INVALID_PARAM,
                 INVALID_PARAM);
             return handle;
         }
     }
 
-    if (_src->Height() > decx::cpu::_get_permitted_concurrency()) {
+    if (_src->Height() > DecxGetPermitConcurrency()) {
         const double* _loc_src = (const double*)_src->Mat;
         double* _loc_dst = (double*)_dst->Mat;
 
@@ -538,8 +538,8 @@ _DECX_API_ de::DH
 de::dsp::cpu::Cone_Window2D(de::Matrix& src, de::Matrix& dst, const de::Point2D origin, const float radius)
 {
     de::DH handle;
-    if (!decx::cpu::_is_CPU_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CPU_not_init,
+    if (!decx::cpu::DecxGetIsCPUInit()) {
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_CPU_not_init,
             CPU_NOT_INIT);
         return handle;
     }
@@ -548,16 +548,16 @@ de::dsp::cpu::Cone_Window2D(de::Matrix& src, de::Matrix& dst, const de::Point2D 
     decx::_Matrix* _dst = dynamic_cast<decx::_Matrix*>(&dst);
 
     const uint pitch = _src->Pitch() / 4;
-    decx::utils::ThreadArrange1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::ThreadArrange1D t1D(DecxGetPermitConcurrency());
     decx::utils::frag_manager f_mgr;
     decx::utils::frag_manager_gen(&f_mgr, _src->Height(), t1D.total_thread);
 
-    const size_t frag_size = (size_t)f_mgr.frag_len * (size_t)pitch * 4;
+    const uint64_t frag_size = (uint64_t)f_mgr.frag_len * (uint64_t)pitch * 4;
 
     uint2 _proc_dims = make_uint2(pitch, f_mgr.frag_len);
     const uint2 real_bound = make_uint2(_src->Width(), _src->Height());
 
-    if (_src->Height() > decx::cpu::_get_permitted_concurrency()) {
+    if (_src->Height() > DecxGetPermitConcurrency()) {
         const double* _loc_src = (const double*)_src->Mat;
         double* _loc_dst = (double*)_dst->Mat;
 

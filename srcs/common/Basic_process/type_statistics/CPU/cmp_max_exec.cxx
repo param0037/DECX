@@ -303,14 +303,14 @@ decx::bp::CPUK::_min_max_vec4_fp64_2D(const double* __restrict src, const uint2 
 
 
 _THREAD_FUNCTION_ void
-decx::bp::CPUK::_maximum_vec4_fp64_1D(const double* __restrict src, const size_t len, double* res_vec,
+decx::bp::CPUK::_maximum_vec4_fp64_1D(const double* __restrict src, const uint64_t len, double* res_vec,
     const uint8_t _occupied_length)
 {
     __m256d tmp_recv, sum_vec4 = _mm256_load_pd(src);
     const __m256i _shuffle_var = decx::bp::CPUK::extend_shufflevar_v4(_occupied_length);
 
     for (uint i = 0; i < len - 1; ++i) {
-        tmp_recv = _mm256_load_pd(src + ((size_t)i << 2));
+        tmp_recv = _mm256_load_pd(src + ((uint64_t)i << 2));
         sum_vec4 = _mm256_max_pd(tmp_recv, sum_vec4);
     }
     tmp_recv = _mm256_load_pd(src + ((uint64_t)(len - 1) << 2));
@@ -323,7 +323,7 @@ decx::bp::CPUK::_maximum_vec4_fp64_1D(const double* __restrict src, const size_t
 
 
 _THREAD_FUNCTION_ void
-decx::bp::CPUK::_min_max_vec4_fp64_1D(const double* __restrict src, const size_t len, double* res_min,
+decx::bp::CPUK::_min_max_vec4_fp64_1D(const double* __restrict src, const uint64_t len, double* res_min,
     double* res_max, const uint8_t _occupied_length)
 {
     __m256d tmp_recv, min_vec4 = _mm256_load_pd(src);
@@ -331,7 +331,7 @@ decx::bp::CPUK::_min_max_vec4_fp64_1D(const double* __restrict src, const size_t
     const __m256i _shuffle_var = decx::bp::CPUK::extend_shufflevar_v4(_occupied_length);
 
     for (uint i = 0; i < len - 1; ++i) {
-        tmp_recv = _mm256_load_pd(src + ((size_t)i << 2));
+        tmp_recv = _mm256_load_pd(src + ((uint64_t)i << 2));
         min_vec4 = _mm256_min_pd(tmp_recv, min_vec4);
         max_vec4 = _mm256_max_pd(tmp_recv, max_vec4);
     }

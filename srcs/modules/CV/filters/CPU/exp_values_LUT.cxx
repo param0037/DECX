@@ -33,7 +33,7 @@
 #include "../../../core/allocators.h"
 
 
-decx::vis::_exp_LUT::_exp_LUT(const size_t length, const float sigma)
+decx::vis::_exp_LUT::_exp_LUT(const uint64_t length, const float sigma)
 {
     this->_len = length;
     if (decx::alloc::_host_virtual_page_malloc(&this->_LUT, this->_len * sizeof(float))) {
@@ -45,7 +45,7 @@ decx::vis::_exp_LUT::_exp_LUT(const size_t length, const float sigma)
 }
 
 
-size_t decx::vis::_exp_LUT::Length()
+uint64_t decx::vis::_exp_LUT::Length()
 {
     return this->_len;
 }

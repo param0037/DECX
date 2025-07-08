@@ -140,16 +140,16 @@ namespace decx
 
 
         // The true size of a Tensor, including pitch
-        size_t _gap;
+        uint64_t _gap;
 
         // The number of all the active elements in the TensorArray
-        size_t element_num;
+        uint64_t element_num;
 
         // The number of all the elements in the TensorArray, including pitch
-        size_t _element_num;
+        uint64_t _element_num;
 
         // The size of all the elements in the TensorArray, including pitch
-        size_t total_bytes;
+        uint64_t total_bytes;
 
 
         void construct(const de::_DATA_TYPES_FLAGS_ _type, const uint _width, const uint _height, const uint _depth, const uint _tensor_num);

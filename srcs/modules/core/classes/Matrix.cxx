@@ -127,7 +127,7 @@ void decx::_Matrix::re_construct(const de::_DATA_TYPES_FLAGS_ type, uint32_t _wi
     // If all the parameters are the same, it is meaningless to re-construt the data
     if (this->type != type || this->_layout.width != _width || this->_layout.height != _height)
     {
-        const size_t pre_size = this->total_bytes;
+        const uint64_t pre_size = this->total_bytes;
 
         this->_attribute_assign(type, _width, _height);
 
@@ -150,7 +150,7 @@ void decx::_Matrix::_attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, const 
     this->_init = true;
 
     this->_init = _type != de::_DATA_TYPES_FLAGS_::_VOID_;
-    uint64_t element_num = static_cast<size_t>(this->_layout.pitch) * static_cast<size_t>(_height);
+    uint64_t element_num = static_cast<uint64_t>(this->_layout.pitch) * static_cast<uint64_t>(_height);
     this->total_bytes = (element_num)*this->_layout._single_element_size;
 }
 
@@ -284,18 +284,17 @@ extern "C"
     }
 
 
-    _DECX_API_ DECX_Handle DE_GetMatrixProp(const DECX_Matrix src, DECX_MatrixLayout* prop)
+    _DECX_API_ void DE_GetMatrixProp(const DECX_Matrix src, DECX_MatrixLayout* prop)
     {
+        DecxResetLastHandle();
+        
         decx::_Matrix* _src = (decx::_Matrix*)src;
-        de::DH handle;
 
         if (prop == NULL) {
-            decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_INVALID_PARAM,
-                INVALID_PARAM);
-            return _CAST_HANDLE_(DECX_Handle, handle);
+            DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_INVALID_PARAM, INVALID_PARAM);
+            return;
         }
         memcpy(prop, &_src->get_layout(), sizeof(DECX_MatrixLayout));
-        return _CAST_HANDLE_(DECX_Handle, handle);
     }
 #ifdef __cplusplus
 }

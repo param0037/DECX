@@ -63,19 +63,19 @@ namespace decx
 namespace bp {
 namespace CPUK {
     _THREAD_FUNCTION_ void _extend_reflect1D_b32(const float* src, float *buffer, float* dst, 
-        const decx::bp::extend_reflect_exec_params* b_rfct, const size_t _actual_w_v1, const size_t _original_w_v8);
+        const decx::bp::extend_reflect_exec_params* b_rfct, const uint64_t _actual_w_v1, const uint64_t _original_w_v8);
 
 
     _THREAD_FUNCTION_ void _extend_reflect1D_b64(const double* src, double* buffer, double* dst,
-        const decx::bp::extend_reflect_exec_params* b_rfct, const size_t _actual_w_v1, const size_t _original_w_v4);
+        const decx::bp::extend_reflect_exec_params* b_rfct, const uint64_t _actual_w_v1, const uint64_t _original_w_v4);
 
 
     _THREAD_FUNCTION_ void _extend_reflect1D_b8(const uint8_t* src, uint8_t* buffer, uint8_t* dst,
-        const decx::bp::extend_reflect_exec_params* b_rfct, const size_t _actual_w_v1, const size_t _original_w_v8);
+        const decx::bp::extend_reflect_exec_params* b_rfct, const uint64_t _actual_w_v1, const uint64_t _original_w_v8);
 
 
     _THREAD_FUNCTION_ void _extend_reflect1D_b16(const uint16_t* src, uint16_t* buffer, uint16_t* dst,
-        const decx::bp::extend_reflect_exec_params* b_rfct, const size_t _actual_w_v1, const size_t _original_w_v8);
+        const decx::bp::extend_reflect_exec_params* b_rfct, const uint64_t _actual_w_v1, const uint64_t _original_w_v8);
 
 
     _THREAD_FUNCTION_ void _extend_H_reflect2D_b32(const float* src, float* buffer, float* dst,

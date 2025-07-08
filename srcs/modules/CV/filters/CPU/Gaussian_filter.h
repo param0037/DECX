@@ -69,12 +69,12 @@ static void decx::vis::_gaussian_uint8_NB(decx::_Matrix* src, decx::vis::gaussia
 
     decx::PtrInfo<float> _Hconv_res;
     if (decx::alloc::_host_virtual_page_malloc(&_Hconv_res, Hconv_res_dims.x * Hconv_res_dims.y * sizeof(float))) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION,
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_ALLOCATION,
             ALLOC_FAIL);
         return;
     }
 
-    const uint conc_thr = (uint)decx::cpu::_get_permitted_concurrency();
+    const uint conc_thr = (uint)DecxGetPermitConcurrency();
     decx::utils::Thr1D t1D(conc_thr);
 
     const uint _loop = (kernel_H->_ker_length - 1) / 16;
@@ -113,12 +113,12 @@ static void decx::vis::_gaussian_uint8_BC_zero(decx::_Matrix* src, decx::vis::ga
     decx::PtrInfo<uint8_t> tmp_src;
     decx::PtrInfo<float> _Hconv_res;
     if (decx::alloc::_host_virtual_page_malloc(&tmp_src, tmp_src_dims.x * tmp_src_dims.y * sizeof(uint8_t))) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION,
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_ALLOCATION,
             ALLOC_FAIL);
         return;
     }
     if (decx::alloc::_host_virtual_page_malloc(&_Hconv_res, Hconv_res_dims.x * Hconv_res_dims.y * sizeof(float))) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION,
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_ALLOCATION,
             ALLOC_FAIL);
         return;
     }
@@ -130,7 +130,7 @@ static void decx::vis::_gaussian_uint8_BC_zero(decx::_Matrix* src, decx::vis::ga
                                         tmp_src_dims.x, 
                                         make_uint2(src->Width(), src->Height()));
 
-    const uint conc_thr = (uint)decx::cpu::_get_permitted_concurrency();
+    const uint conc_thr = (uint)DecxGetPermitConcurrency();
     decx::utils::Thr1D t1D(conc_thr);
 
     const uint _loop = (kernel_H->_ker_length - 1) / 16;
@@ -171,12 +171,12 @@ static void decx::vis::_gaussian_uint8_BC_reflect(decx::_Matrix* src, decx::vis:
     decx::PtrInfo<uint8_t> tmp_src;
     decx::PtrInfo<float> _Hconv_res;
     if (decx::alloc::_host_virtual_page_malloc(&tmp_src, tmp_src_dims.x * tmp_src_dims.y * sizeof(uint8_t))) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION,
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_ALLOCATION,
             ALLOC_FAIL);
         return;
     }
     if (decx::alloc::_host_virtual_page_malloc(&_Hconv_res, Hconv_res_dims.x * Hconv_res_dims.y * sizeof(float))) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION,
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_ALLOCATION,
             ALLOC_FAIL);
         return;
     }
@@ -185,7 +185,7 @@ static void decx::vis::_gaussian_uint8_BC_reflect(decx::_Matrix* src, decx::vis:
     decx::bp::_extend_LR_reflect_b8_2D(src->Mat.GetRawPtr<uint8_t>(), tmp_src.ptr, make_uint2(kernel_H->_ker_length / 2, kernel_H->_ker_length / 2),
         src->Pitch(), tmp_src_dims.x, src->Width(), src->Height(), handle);
 
-    const uint conc_thr = (uint)decx::cpu::_get_permitted_concurrency();
+    const uint conc_thr = (uint)DecxGetPermitConcurrency();
     decx::utils::Thr1D t1D(conc_thr);
 
     const uint _loop = (kernel_H->_ker_length - 1) / 16;
@@ -288,12 +288,12 @@ static void decx::vis::_gaussian_uchar4_NB(decx::_Matrix* src, decx::vis::gaussi
 
     decx::PtrInfo<float> _Hconv_res;
     if (decx::alloc::_host_virtual_page_malloc(&_Hconv_res, Hconv_res_dims.x * Hconv_res_dims.y * sizeof(float))) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION,
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_ALLOCATION,
             ALLOC_FAIL);
         return;
     }
 
-    const uint conc_thr = (uint)decx::cpu::_get_permitted_concurrency();
+    const uint conc_thr = (uint)DecxGetPermitConcurrency();
     decx::utils::Thr1D t1D(conc_thr);
 
     const uint _loop = (kernel_H->_ker_length - 1) / 4;
@@ -331,13 +331,13 @@ static void decx::vis::_gaussian_uchar4_BC_zero(decx::_Matrix* src, decx::vis::g
 
     decx::PtrInfo<float> tmp_src;
     decx::PtrInfo<float> _Hconv_res;
-    if (decx::alloc::_host_virtual_page_malloc(&tmp_src, (size_t)tmp_src_dims.x * (size_t)tmp_src_dims.y * sizeof(uchar4))) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION,
+    if (decx::alloc::_host_virtual_page_malloc(&tmp_src, (uint64_t)tmp_src_dims.x * (uint64_t)tmp_src_dims.y * sizeof(uchar4))) {
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_ALLOCATION,
             ALLOC_FAIL);
         return;
     }
-    if (decx::alloc::_host_virtual_page_malloc(&_Hconv_res, (size_t)Hconv_res_dims.x * (size_t)Hconv_res_dims.y * sizeof(float))) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION,
+    if (decx::alloc::_host_virtual_page_malloc(&_Hconv_res, (uint64_t)Hconv_res_dims.x * (uint64_t)Hconv_res_dims.y * sizeof(float))) {
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_ALLOCATION,
             ALLOC_FAIL);
         return;
     }
@@ -349,7 +349,7 @@ static void decx::vis::_gaussian_uchar4_BC_zero(decx::_Matrix* src, decx::vis::g
                                       tmp_src_dims.x, 
                                       make_uint2(src->Width(), src->Height()));
 
-    const uint conc_thr = (uint)decx::cpu::_get_permitted_concurrency();
+    const uint conc_thr = (uint)DecxGetPermitConcurrency();
     decx::utils::Thr1D t1D(conc_thr);
 
     const uint _loop = (kernel_H->_ker_length - 1) / 4;
@@ -391,12 +391,12 @@ static void decx::vis::_gaussian_uchar4_BC_reflect(decx::_Matrix* src, decx::vis
     decx::PtrInfo<float> _Hconv_res;
 
     if (decx::alloc::_host_virtual_page_malloc(&tmp_src, tmp_src_dims.x * tmp_src_dims.y * sizeof(uchar4))) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION,
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_ALLOCATION,
             ALLOC_FAIL);
         return;
     }
     if (decx::alloc::_host_virtual_page_malloc(&_Hconv_res, Hconv_res_dims.x * Hconv_res_dims.y * sizeof(float))) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_ALLOCATION,
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_ALLOCATION,
             ALLOC_FAIL);
         return;
     }
@@ -405,7 +405,7 @@ static void decx::vis::_gaussian_uchar4_BC_reflect(decx::_Matrix* src, decx::vis
     decx::bp::_extend_LR_reflect_b32_2D(src->Mat.GetRawPtr<float>(), tmp_src.ptr, make_uint2(kernel_H->_ker_length / 2, kernel_H->_ker_length / 2),
         src->Pitch(), tmp_src_dims.x, src->Width(), src->Height(), handle);
 
-    const uint conc_thr = (uint)decx::cpu::_get_permitted_concurrency();
+    const uint conc_thr = (uint)DecxGetPermitConcurrency();
     decx::utils::Thr1D t1D(conc_thr);
 
     const uint _loop = (kernel_H->_ker_length - 1) / 4;

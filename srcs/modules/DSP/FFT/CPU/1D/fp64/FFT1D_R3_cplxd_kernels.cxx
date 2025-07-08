@@ -81,7 +81,7 @@ decx::dsp::fft::CPUK::_FFT1D_R3_cplxd64_1st_C2C(const de::CPd* __restrict     sr
     decx::utils::simd::xmm256_reg res;
     decx::utils::simd::xmm256_reg tmp1, tmp2;
 
-    const size_t total_Bcalc_num = signal_length / 3;
+    const uint64_t total_Bcalc_num = signal_length / 3;
 
     for (uint32_t i = 0; i < total_Bcalc_num; ++i) 
     {

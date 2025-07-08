@@ -51,19 +51,19 @@ namespace decx
 
 
         void e_rfct_exep_gen_b32(decx::bp::extend_reflect_exec_params* _src, const uint32_t _left,
-            const uint32_t _right, const size_t _actual_w_v1, const size_t _Wsrc_v);
+            const uint32_t _right, const uint64_t _actual_w_v1, const uint64_t _Wsrc_v);
 
 
         void e_rfct_exep_gen_b8(decx::bp::extend_reflect_exec_params* _src, const uint32_t _left,
-            const uint32_t _right, const size_t _actual_w_v1, const size_t _Wsrc_v);
+            const uint32_t _right, const uint64_t _actual_w_v1, const uint64_t _Wsrc_v);
 
 
         void e_rfct_exep_gen_b16(decx::bp::extend_reflect_exec_params* _src, const uint32_t _left,
-            const uint32_t _right, const size_t _actual_w_v1, const size_t _Wsrc_v);
+            const uint32_t _right, const uint64_t _actual_w_v1, const uint64_t _Wsrc_v);
 
 
         void e_rfct_exep_gen_b64(decx::bp::extend_reflect_exec_params* _src, const uint32_t _left,
-            const uint32_t _right, const size_t _actual_w_v1, const size_t _Wsrc_v);
+            const uint32_t _right, const uint64_t _actual_w_v1, const uint64_t _Wsrc_v);
 
 
         uint32_t e_rfct_exep_get_buffer_len(const decx::bp::extend_reflect_exec_params* _src);

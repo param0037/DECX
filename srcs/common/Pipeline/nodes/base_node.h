@@ -33,7 +33,7 @@
 
 #define _NODE_NAME_MAX_LENGTH_ 64
 
-#include <task_info.h>
+#include <Concurrent/task_handle.h>
 
 namespace decx
 {
@@ -52,7 +52,7 @@ class decx::BaseNode
 private:
     char _node_name[_NODE_NAME_MAX_LENGTH_];
     NodeTaskDriveMode_e _drv_mode;
-    DecxTaskInfo_t _task_info;
+    decx::core::TaskHandle_t _task_info;
 
     decx::BaseNode* _prev;
     decx::BaseNode* _next;

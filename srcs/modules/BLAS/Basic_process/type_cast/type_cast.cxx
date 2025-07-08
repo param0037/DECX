@@ -39,7 +39,7 @@ void decx::type_cast::cpu::_type_cast1D_organiser(const void* src, void* dst, co
     using namespace decx::type_cast;
     using namespace de;
     decx::cpu_ElementWise1D_planner _planner;
-    decx::utils::Thr1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::Thr1D t1D(DecxGetPermitConcurrency());
 
     if (cvt_method == TypeCast_Method::CVT_FP32_FP64) {
         decx::type_cast::typecast1D_general_caller<float, double>(&decx::type_cast::CPUK::_v256_cvtps_pd1D, &_planner, 
@@ -76,7 +76,7 @@ void decx::type_cast::cpu::_type_cast1D_organiser(const void* src, void* dst, co
             (const uint8_t*)src, (float*)dst, proc_len, &t1D);
     }
     else {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_INVALID_PARAM,
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_INVALID_PARAM,
             INVALID_PARAM);
         return;
     }
@@ -91,7 +91,7 @@ void decx::type_cast::cpu::_type_cast2D_organiser(const void* src, void* dst, co
     using namespace de;
 
     decx::cpu_ElementWise2D_planner _planner;
-    decx::utils::Thr1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::Thr1D t1D(DecxGetPermitConcurrency());
 
     if (cvt_method == TypeCast_Method::CVT_FP32_FP64) {
         decx::type_cast::typecast2D_general_caller(&decx::type_cast::CPUK::_v256_cvtps_pd2D, &_planner, 
@@ -132,7 +132,7 @@ void decx::type_cast::cpu::_type_cast2D_organiser(const void* src, void* dst, co
             (const uint8_t*)src, (float*)dst, proc_dims, Wsrc, Wdst, &t1D);
     }
     else {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_INVALID_PARAM,
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_INVALID_PARAM,
             INVALID_PARAM);
         return;
     }
@@ -143,9 +143,9 @@ _DECX_API_ void de::cpu::TypeCast(de::InputVector src, de::OutputVector dst, con
 {
     using namespace decx::type_cast;
 
-    de::ResetLastError();
-    if (!decx::cpu::_is_CPU_init()) {
-        decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_CPU_not_init,
+    DecxResetLastHandle
+    if (!decx::cpu::DecxGetIsCPUInit()) {
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_CPU_not_init,
             CPU_NOT_INIT);
     }
 
@@ -153,7 +153,7 @@ _DECX_API_ void de::cpu::TypeCast(de::InputVector src, de::OutputVector dst, con
     decx::_Vector* _dst = dynamic_cast<decx::_Vector*>(&dst);
 
     if (!_src->is_init()) {
-        decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_CLASS_NOT_INIT,
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_CLASS_NOT_INIT,
             CLASS_NOT_INIT);
     }
 
@@ -166,9 +166,9 @@ _DECX_API_ void de::cpu::TypeCast(de::InputMatrix src, de::OutputMatrix dst, con
 {
     using namespace decx::type_cast;
 
-    de::ResetLastError();
-    if (!decx::cpu::_is_CPU_init()) {
-        decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_CPU_not_init,
+    DecxResetLastHandle
+    if (!decx::cpu::DecxGetIsCPUInit()) {
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_CPU_not_init,
             CPU_NOT_INIT);
     }
 
@@ -176,7 +176,7 @@ _DECX_API_ void de::cpu::TypeCast(de::InputMatrix src, de::OutputMatrix dst, con
     decx::_Matrix* _dst = dynamic_cast<decx::_Matrix*>(&dst);
 
     if (!_src->is_init()) {
-        decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_CLASS_NOT_INIT,
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_CLASS_NOT_INIT,
             CLASS_NOT_INIT);
     }
 

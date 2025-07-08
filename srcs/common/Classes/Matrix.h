@@ -314,7 +314,7 @@ extern "C"
     /*
     * @return : [Width, Height]
     */
-    _DECX_API_ DECX_Handle DE_GetMatrixProp(const DECX_Matrix src, DECX_MatrixLayout* prop);
+    _DECX_API_ void DE_GetMatrixProp(const DECX_Matrix src, DECX_MatrixLayout* prop);
 #ifdef __cplusplus
 }
 #endif      // # ifdef __cplusplus

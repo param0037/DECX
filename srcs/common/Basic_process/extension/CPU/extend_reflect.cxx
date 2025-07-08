@@ -35,7 +35,7 @@
 
 
 void decx::bp::_extend_reflect_b32_1D(const float* src, float* dst, const uint32_t _left, const uint32_t _right,
-    const size_t _length_src, const size_t _actual_Lsrc, de::DH* handle)
+    const uint64_t _length_src, const uint64_t _actual_Lsrc, de::DH* handle)
 {
 #if defined(__x86_64__) || defined(__i386__)
     constexpr uint32_t _alignment = 8;
@@ -123,7 +123,7 @@ void decx::bp::_extend_reflect_b32_2D(const float* src, float* dst, const uint4 
     decx::bp::extend_reflect_exec_params b_rfct;
     decx::bp::e_rfct_exep_gen_b32(&b_rfct, _ext.x, _ext.y, _actual_Wsrc, Wsrc / _alignment);
 
-    const uint32_t _conc = decx::cpu::_get_permitted_concurrency();
+    const uint32_t _conc = DecxGetPermitConcurrency();
     const uint32_t _buffer_frag_len = decx::bp::e_rfct_exep_get_buffer_len(&b_rfct);
 
     decx::PtrInfo<float> buffer;
@@ -173,7 +173,7 @@ _extend_reflect_b64_2D(const double* src,           double* dst, const uint4 _ex
     decx::bp::extend_reflect_exec_params b_rfct;
     decx::bp::e_rfct_exep_gen_b64(&b_rfct, _ext.x, _ext.y, _actual_Wsrc, Wsrc / _alignment);
 
-    const uint32_t _conc = decx::cpu::_get_permitted_concurrency();
+    const uint32_t _conc = DecxGetPermitConcurrency();
     const uint32_t _buffer_frag_len = decx::bp::e_rfct_exep_get_buffer_len(&b_rfct);
 
     decx::PtrInfo<double> buffer;
@@ -216,7 +216,7 @@ void decx::bp::_extend_reflect_b8_2D(const uint8_t* src,    uint8_t* dst,
     decx::bp::extend_reflect_exec_params b_rfct;
     decx::bp::e_rfct_exep_gen_b8(&b_rfct, _ext.x, _ext.y, _actual_Wsrc, Wsrc / 16);
 
-    const uint32_t _conc = decx::cpu::_get_permitted_concurrency();
+    const uint32_t _conc = DecxGetPermitConcurrency();
     const uint32_t _buffer_frag_len = decx::bp::e_rfct_exep_get_buffer_len(&b_rfct);
 
     decx::PtrInfo<uint8_t> buffer;
@@ -259,7 +259,7 @@ void decx::bp::_extend_reflect_b16_2D(const uint16_t* src,      uint16_t* dst,
     decx::bp::extend_reflect_exec_params b_rfct;
     decx::bp::e_rfct_exep_gen_b16(&b_rfct, _ext.x, _ext.y, _actual_Wsrc, Wsrc / 8);
 
-    const uint32_t _conc = decx::cpu::_get_permitted_concurrency();
+    const uint32_t _conc = DecxGetPermitConcurrency();
     const uint32_t _buffer_frag_len = decx::bp::e_rfct_exep_get_buffer_len(&b_rfct);
 
     decx::PtrInfo<uint16_t> buffer;

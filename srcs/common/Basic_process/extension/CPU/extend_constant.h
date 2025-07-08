@@ -50,7 +50,7 @@ namespace decx
         * @param _actual_Lsrc : The actual length of src, in element
         */
         void _extend_constant_b32_1D(const float* src, float* dst, const float _val, const uint32_t _left, const uint32_t _right,
-            const size_t _length_src, const size_t _actual_Lsrc, de::DH* handle);
+            const uint64_t _length_src, const uint64_t _actual_Lsrc, de::DH* handle);
 
 
         /**
@@ -62,7 +62,7 @@ namespace decx
         * @param _actual_Lsrc : The actual length of src, in element
         */
         void _extend_constant_b64_1D(const double* src, double* dst, const double _val, const uint32_t _left, const uint32_t _right,
-            const size_t _length_src, const size_t _actual_Lsrc, de::DH* handle);
+            const uint64_t _length_src, const uint64_t _actual_Lsrc, de::DH* handle);
 
 
         /**
@@ -74,7 +74,7 @@ namespace decx
         * @param _actual_Lsrc : The actual length of src, in element
         */
         void _extend_constant_b8_1D(const uint8_t* src, uint8_t* dst, const uint8_t _val, const uint32_t _left, const uint32_t _right,
-            const size_t _length_src, const size_t _actual_Lsrc, de::DH* handle);
+            const uint64_t _length_src, const uint64_t _actual_Lsrc, de::DH* handle);
 
 
         /**
@@ -86,7 +86,7 @@ namespace decx
         * @param _actual_Lsrc : The actual length of src, in element
         */
         void _extend_constant_b16_1D(const uint16_t* src, uint16_t* dst, const uint16_t _val, const uint32_t _left, const uint32_t _right,
-            const size_t _length_src, const size_t _actual_Lsrc, de::DH* handle);
+            const uint64_t _length_src, const uint64_t _actual_Lsrc, de::DH* handle);
 
 
         /**

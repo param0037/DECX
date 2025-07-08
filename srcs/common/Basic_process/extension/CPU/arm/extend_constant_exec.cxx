@@ -85,8 +85,8 @@ decx::bp::CPUK::_extend_constant1D_b32(const float* __restrict   src,
                                       float* __restrict         dst,
                                       const float               val,
                                       const decx::bp::extend_reflect_exec_params* b_rfct,
-                                      const size_t              _actual_w_v1,
-                                      const size_t              _original_w_v4)
+                                      const uint64_t              _actual_w_v1,
+                                      const uint64_t              _original_w_v4)
 {
     const uint8x16_t _idx = decx::bp::e_rfct_exep_get_tbl_b32(b_rfct);
     
@@ -175,8 +175,8 @@ decx::bp::CPUK::_extend_constant1D_b64(const double* __restrict   src,
                                       double* __restrict         dst,
                                       const double              _val,
                                       const decx::bp::extend_reflect_exec_params* b_rfct,
-                                      const size_t              _actual_w_v1,
-                                      const size_t              _original_w_v4)
+                                      const uint64_t              _actual_w_v1,
+                                      const uint64_t              _original_w_v4)
 {
     const uint8x16_t _idx = decx::bp::e_rfct_exep_get_tbl_b64(b_rfct);
 

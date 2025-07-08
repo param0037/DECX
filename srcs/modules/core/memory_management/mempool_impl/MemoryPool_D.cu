@@ -30,6 +30,7 @@
 
 
 #include "MemoryPool_D.h"
+#include <decx_utils_functions.h>
 
 
 decx::MemPool_D* decx::MemPool_D::_instance = NULL;

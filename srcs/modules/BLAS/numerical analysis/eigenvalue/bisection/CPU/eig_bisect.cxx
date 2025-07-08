@@ -53,7 +53,7 @@ decx::blas::cpu_eig_bisection<_data_type>::Init(const uint32_t conc,
     this->_iter_scheduler.set_max_err(max_err);
 
     if (this->_layout.width != this->_layout.width){
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_DimsNotMatching,
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_DimsNotMatching,
             "The input should be a square matrix");
         return;
     }

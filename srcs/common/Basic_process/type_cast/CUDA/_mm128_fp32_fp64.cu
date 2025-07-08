@@ -37,7 +37,7 @@
 __global__ void
 decx::type_cast::GPUK::cu_mm128_cvtfp32_fp641D(const float4* __restrict     src, 
                                                double2* __restrict          dst, 
-                                               const size_t                 proc_len)
+                                               const uint64_t                 proc_len)
 {
     const uint tid = threadIdx.x + blockIdx.x * blockDim.x;
 
@@ -61,7 +61,7 @@ decx::type_cast::GPUK::cu_mm128_cvtfp32_fp641D(const float4* __restrict     src,
 __global__ void
 decx::type_cast::GPUK::cu_mm128_cvtfp64_fp321D(const double2* __restrict    src, 
                                                float4* __restrict           dst, 
-                                               const size_t                 proc_len)
+                                               const uint64_t                 proc_len)
 {
     const uint tid = threadIdx.x + blockIdx.x * blockDim.x;
 
@@ -85,24 +85,24 @@ decx::type_cast::GPUK::cu_mm128_cvtfp64_fp321D(const double2* __restrict    src,
 void 
 decx::type_cast::_mm128_cvtfp32_fp64_caller1D(const float4*           src, 
                                                 double2*                dst, 
-                                                const size_t            proc_len, 
+                                                const uint64_t            proc_len, 
                                                 decx::cuda_stream*      S)
 {
-    const uint block_length = decx::cuda::_get_cuda_prop().maxThreadsPerBlock;
+    const uint block_length = decx::cuda::DecxGetCUDAProp().maxThreadsPerBlock;
     decx::type_cast::GPUK::cu_mm128_cvtfp32_fp641D
-        << <decx::utils::idiv_ceil<size_t>(proc_len, block_length), block_length, 0, S->get_raw_stream_ref() >> > (src, dst, proc_len);
+        << <decx::utils::idiv_ceil<uint64_t>(proc_len, block_length), block_length, 0, S->get_raw_stream_ref() >> > (src, dst, proc_len);
 }
 
 
 void 
 decx::type_cast::_mm128_cvtfp64_fp32_caller1D(const double2*          src, 
                                                 float4*                 dst, 
-                                                const size_t            proc_len, 
+                                                const uint64_t            proc_len, 
                                                 decx::cuda_stream*      S)
 {
-    const uint block_length = decx::cuda::_get_cuda_prop().maxThreadsPerBlock;
+    const uint block_length = decx::cuda::DecxGetCUDAProp().maxThreadsPerBlock;
     decx::type_cast::GPUK::cu_mm128_cvtfp64_fp321D
-        << <decx::utils::idiv_ceil<size_t>(proc_len, block_length), block_length, 0, S->get_raw_stream_ref() >> > (src, dst, proc_len);
+        << <decx::utils::idiv_ceil<uint64_t>(proc_len, block_length), block_length, 0, S->get_raw_stream_ref() >> > (src, dst, proc_len);
 }
 
 
@@ -119,7 +119,7 @@ decx::type_cast::GPUK::cu_mm128_cvtfp32_fp642D(const float4* __restrict         
     const uint tidx = threadIdx.x + blockIdx.x * blockDim.x;
     const uint tidy = threadIdx.y + blockIdx.y * blockDim.y;
 
-    const size_t dex_src = tidx * Wsrc + tidy,
+    const uint64_t dex_src = tidx * Wsrc + tidy,
         dex_dst = tidx * Wdst + tidy * 2;
 
     decx::utils::_cuda_vec128 recv, store0, store1;
@@ -150,7 +150,7 @@ decx::type_cast::GPUK::cu_mm128_cvtfp64_fp322D(const double2* __restrict        
     const uint tidx = threadIdx.x + blockIdx.x * blockDim.x;
     const uint tidy = threadIdx.y + blockIdx.y * blockDim.y;
 
-    const size_t dex_src = tidx * Wsrc + tidy * 2,
+    const uint64_t dex_src = tidx * Wsrc + tidy * 2,
         dex_dst = tidx * Wdst + tidy;
 
     decx::utils::_cuda_vec128 recv0, recv1, store;
@@ -177,7 +177,7 @@ void decx::type_cast::_mm128_cvtfp32_fp64_caller2D(const float4*         src,
                                   decx::cuda_stream*    S)
 {
     dim3 block(16, 16);
-    dim3 grid(decx::utils::idiv_ceil<size_t>(proc_dims.y, 16), decx::utils::idiv_ceil<size_t>(proc_dims.x, 16));
+    dim3 grid(decx::utils::idiv_ceil<uint64_t>(proc_dims.y, 16), decx::utils::idiv_ceil<uint64_t>(proc_dims.x, 16));
 
     decx::type_cast::GPUK::cu_mm128_cvtfp32_fp642D << <grid, block, 0, S->get_raw_stream_ref() >> > (src, dst, proc_dims, Wsrc, Wdst);
 }
@@ -192,7 +192,7 @@ void decx::type_cast::_mm128_cvtfp64_fp32_caller2D(const double2*        src,
                                                    decx::cuda_stream*    S)
 {
     dim3 block(16, 16);
-    dim3 grid(decx::utils::idiv_ceil<size_t>(proc_dims.y, 16), decx::utils::idiv_ceil<size_t>(proc_dims.x, 16));
+    dim3 grid(decx::utils::idiv_ceil<uint64_t>(proc_dims.y, 16), decx::utils::idiv_ceil<uint64_t>(proc_dims.x, 16));
 
     decx::type_cast::GPUK::cu_mm128_cvtfp64_fp322D << <grid, block, 0, S->get_raw_stream_ref() >> > (src, dst, proc_dims, Wsrc, Wdst);
 }

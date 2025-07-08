@@ -36,8 +36,8 @@ de::DH de::cpu::Dot(de::Vector& A, de::Vector& B, float* res)
 {
     de::DH handle;
 
-    if (!decx::cpu::_is_CPU_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CPU_not_init,
+    if (!decx::cpu::DecxGetIsCPUInit()) {
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_CPU_not_init,
             CPU_NOT_INIT);
         return handle;
     }
@@ -46,7 +46,7 @@ de::DH de::cpu::Dot(de::Vector& A, de::Vector& B, float* res)
     decx::_Vector* _B = dynamic_cast<decx::_Vector*>(&B);
 
     if (_A->length != _B->length) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_DimsNotMatching,
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_DimsNotMatching,
             MAT_DIM_NOT_MATCH);
         return handle;
     }
@@ -63,8 +63,8 @@ de::DH de::cpu::Dot(de::Matrix& A, de::Matrix& B, float* res)
 {
     de::DH handle;
 
-    if (!decx::cpu::_is_CPU_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CPU_not_init,
+    if (!decx::cpu::DecxGetIsCPUInit()) {
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_CPU_not_init,
             CPU_NOT_INIT);
         return handle;
     }
@@ -73,7 +73,7 @@ de::DH de::cpu::Dot(de::Matrix& A, de::Matrix& B, float* res)
     decx::_Matrix* _B = dynamic_cast<decx::_Matrix*>(&B);
 
     if (_A->Width() != _B->Width() || _A->Height() != _B->Height()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_DimsNotMatching,
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_DimsNotMatching,
             MAT_DIM_NOT_MATCH);
         return handle;
     }
@@ -90,8 +90,8 @@ de::DH de::cpu::Dot(de::Tensor& A, de::Tensor& B, float* res)
 {
     de::DH handle;
 
-    if (!decx::cpu::_is_CPU_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CPU_not_init,
+    if (!decx::cpu::DecxGetIsCPUInit()) {
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_CPU_not_init,
             CPU_NOT_INIT);
         return handle;
     }
@@ -100,7 +100,7 @@ de::DH de::cpu::Dot(de::Tensor& A, de::Tensor& B, float* res)
     decx::_Tensor* _B = dynamic_cast<decx::_Tensor*>(&B);
 
     if (_A->Width() != _B->Width() || _A->Height() != _B->Height() || _A->Depth() != _B->Depth()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_DimsNotMatching,
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_DimsNotMatching,
             MAT_DIM_NOT_MATCH);
         return handle;
     }

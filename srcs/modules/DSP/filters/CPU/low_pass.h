@@ -45,8 +45,8 @@ namespace decx {
     namespace dsp {
         namespace CPUK {
             _THREAD_FUNCTION_ void
-            ideal_LP1D_cpl32_ST(const double* src, double* dst, const size_t cutoff_freq, const size_t _proc_len, 
-                const size_t real_bound, const size_t global_dex_offset);
+            ideal_LP1D_cpl32_ST(const double* src, double* dst, const uint64_t cutoff_freq, const uint64_t _proc_len, 
+                const uint64_t real_bound, const uint64_t global_dex_offset);
 
             /*
             * @param _proc_dims : ~.x -> width of the processed area; ~.y -> height of the processed area;
@@ -73,7 +73,7 @@ namespace decx {
 namespace de {
     namespace dsp {
         namespace cpu {
-            _DECX_API_ de::DH LowPass1D_Ideal(de::Vector& src, de::Vector& dst, const size_t cutoff_frequency);
+            _DECX_API_ de::DH LowPass1D_Ideal(de::Vector& src, de::Vector& dst, const uint64_t cutoff_frequency);
 
 
             _DECX_API_ de::DH LowPass2D_Ideal(de::Matrix& src, de::Matrix& dst, const de::Point2D cutoff_frequency);

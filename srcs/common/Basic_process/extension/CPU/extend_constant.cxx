@@ -36,7 +36,7 @@
 
 
 void decx::bp::_extend_constant_b32_1D(const float* src, float* dst, const float _val,
-    const uint32_t _left, const uint32_t _right, const size_t _length_src, const size_t _actual_Lsrc, de::DH* handle)
+    const uint32_t _left, const uint32_t _right, const uint64_t _length_src, const uint64_t _actual_Lsrc, de::DH* handle)
 {
     decx::bp::extend_reflect_exec_params b_rfct;
     decx::bp::e_rfct_exep_gen_b32(&b_rfct, _left, _right, _actual_Lsrc, _length_src / 8);
@@ -46,7 +46,7 @@ void decx::bp::_extend_constant_b32_1D(const float* src, float* dst, const float
 
 
 void decx::bp::_extend_constant_b64_1D(const double* src, double* dst, const double _val, const uint32_t _left, const uint32_t _right,
-    const size_t _length_src, const size_t _actual_Lsrc, de::DH* handle)
+    const uint64_t _length_src, const uint64_t _actual_Lsrc, de::DH* handle)
 {
     decx::bp::extend_reflect_exec_params b_rfct;
     decx::bp::e_rfct_exep_gen_b64(&b_rfct, _left, _right, _actual_Lsrc, _length_src / 4);
@@ -57,7 +57,7 @@ void decx::bp::_extend_constant_b64_1D(const double* src, double* dst, const dou
 
 
 void decx::bp::_extend_constant_b8_1D(const uint8_t* src, uint8_t* dst, const uint8_t val, const uint32_t _left, const uint32_t _right,
-    const size_t _length_src, const size_t _actual_Lsrc, de::DH* handle)
+    const uint64_t _length_src, const uint64_t _actual_Lsrc, de::DH* handle)
 {
     decx::bp::extend_reflect_exec_params b_rfct;
     decx::bp::e_rfct_exep_gen_b8(&b_rfct, _left, _right, _actual_Lsrc, _length_src / 16);
@@ -67,7 +67,7 @@ void decx::bp::_extend_constant_b8_1D(const uint8_t* src, uint8_t* dst, const ui
 
 
 void decx::bp::_extend_constant_b16_1D(const uint16_t* src, uint16_t* dst, const uint16_t val, const uint32_t _left, const uint32_t _right,
-    const size_t _length_src, const size_t _actual_Lsrc, de::DH* handle)
+    const uint64_t _length_src, const uint64_t _actual_Lsrc, de::DH* handle)
 {
     decx::bp::extend_reflect_exec_params b_rfct;
     decx::bp::e_rfct_exep_gen_b8(&b_rfct, _left, _right, _actual_Lsrc, _length_src / 8);
@@ -89,7 +89,7 @@ void decx::bp::_extend_constant_b32_2D(const float* src, float* dst, const float
     decx::bp::extend_reflect_exec_params b_rfct;
     decx::bp::e_rfct_exep_gen_b32(&b_rfct, _ext.x, _ext.y, _actual_Wsrc, Wsrc / _alignment);
 
-    decx::utils::Thr1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::Thr1D t1D(DecxGetPermitConcurrency());
     decx::utils::frag_manager fmgr_H;
     decx::utils::frag_manager_gen(&fmgr_H, Hsrc, t1D.total_thread);
 
@@ -137,7 +137,7 @@ _extend_constant_b64_2D(const double* src,              double* dst,
     decx::bp::extend_reflect_exec_params b_rfct;
     decx::bp::e_rfct_exep_gen_b64(&b_rfct, _ext.x, _ext.y, _actual_Wsrc, Wsrc / _alignment);
 
-    decx::utils::Thr1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::Thr1D t1D(DecxGetPermitConcurrency());
     decx::utils::frag_manager fmgr_H;
     decx::utils::frag_manager_gen(&fmgr_H, Hsrc, t1D.total_thread);
 
@@ -178,7 +178,7 @@ _extend_constant_b8_2D(const uint8_t* src,          uint8_t* dst,
     decx::bp::extend_reflect_exec_params b_rfct;
     decx::bp::e_rfct_exep_gen_b8(&b_rfct, _ext.x, _ext.y, _actual_Wsrc, Wsrc / 16);
 
-    decx::utils::Thr1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::Thr1D t1D(DecxGetPermitConcurrency());
     decx::utils::frag_manager fmgr_H;
     decx::utils::frag_manager_gen(&fmgr_H, Hsrc, t1D.total_thread);
 
@@ -218,7 +218,7 @@ void decx::bp::_extend_constant_b16_2D(const uint16_t* src,         uint16_t* ds
     decx::bp::extend_reflect_exec_params b_rfct;
     decx::bp::e_rfct_exep_gen_b16(&b_rfct, _ext.x, _ext.y, _actual_Wsrc, Wsrc / 8);
 
-    decx::utils::Thr1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::Thr1D t1D(DecxGetPermitConcurrency());
     decx::utils::frag_manager fmgr_H;
     decx::utils::frag_manager_gen(&fmgr_H, Hsrc, t1D.total_thread);
 

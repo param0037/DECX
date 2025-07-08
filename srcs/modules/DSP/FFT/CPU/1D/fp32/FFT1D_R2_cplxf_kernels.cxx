@@ -70,7 +70,7 @@ decx::dsp::fft::CPUK::_FFT1D_R2_cplxf32_1st_C2C(const de::CPf* __restrict     sr
     __m256 recv_P0, recv_P1;
     decx::utils::simd::xmm256_reg res;
 
-    const size_t total_Bcalc_num = (signal_length >> 1);
+    const uint64_t total_Bcalc_num = (signal_length >> 1);
 
     for (uint32_t i = 0; i < total_Bcalc_num; ++i) 
     {

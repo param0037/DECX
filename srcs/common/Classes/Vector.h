@@ -73,7 +73,7 @@ namespace de
         Vector() {}
 
 
-        virtual size_t Len() const = 0;
+        virtual uint64_t Len() const = 0;
 
 
         template <typename _ptr_type>
@@ -118,7 +118,7 @@ namespace decx
     class _DECX_API_ _Vector : public de::Vector
     {
     private:
-        void _attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, size_t len);
+        void _attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, uint64_t len);
 
 
         void alloc_data_space();
@@ -129,7 +129,7 @@ namespace decx
         bool _init;
 
     public:
-        size_t length,
+        uint64_t length,
             _length,    // It is aligned with 8
             total_bytes;
 
@@ -149,7 +149,7 @@ namespace decx
         _Vector();
 
 
-        _Vector(const de::_DATA_TYPES_FLAGS_ _type, size_t length);
+        _Vector(const de::_DATA_TYPES_FLAGS_ _type, uint64_t length);
 
 
         virtual uint64_t Len() const;
@@ -190,10 +190,10 @@ namespace de
     _DECX_API_ de::Vector* CreateVectorPtr();
 
 
-    _DECX_API_ de::Vector& CreateVectorRef(const de::_DATA_TYPES_FLAGS_ _type, size_t len);
+    _DECX_API_ de::Vector& CreateVectorRef(const de::_DATA_TYPES_FLAGS_ _type, uint64_t len);
 
 
-    _DECX_API_ de::Vector* CreateVectorPtr(const de::_DATA_TYPES_FLAGS_ _type, size_t len);
+    _DECX_API_ de::Vector* CreateVectorPtr(const de::_DATA_TYPES_FLAGS_ _type, uint64_t len);
 }
 #endif
 

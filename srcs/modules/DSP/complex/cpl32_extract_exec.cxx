@@ -106,7 +106,7 @@ void decx::dsp::_cpl32_extract_caller(const de::CPf* src, float* dst, const uint
 {
     if (kernel != NULL) 
     {
-        uint32_t conc_thr = decx::cpu::_get_permitted_concurrency();
+        uint32_t conc_thr = DecxGetPermitConcurrency();
         decx::utils::frag_manager f_mgr;
         decx::utils::frag_manager_gen(&f_mgr, _proc_dims.y, conc_thr);
 
@@ -126,7 +126,7 @@ void decx::dsp::_cpl32_extract_caller(const de::CPf* src, float* dst, const uint
             loc_src += frag_src;
             loc_dst += frag_dst;
         }
-        const size_t L_proc = f_mgr.is_left ? f_mgr.frag_left_over : f_mgr.frag_len;
+        const uint64_t L_proc = f_mgr.is_left ? f_mgr.frag_left_over : f_mgr.frag_len;
         _frag_proc_dims.y = L_proc;
         t1D._async_thread[conc_thr - 1] = decx::cpu::RegisterTaskLoadBalanced(
             kernel, loc_src, loc_dst, _frag_proc_dims, Wsrc, Wdst);

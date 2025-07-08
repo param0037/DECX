@@ -66,12 +66,12 @@ decx::nn::conv2D_im2col_fp32_caller(decx::_GPU_Tensor* src,
     S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
     E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
     if (S == NULL) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_CUDA_STREAM,
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_CUDA_STREAM,
             CUDA_STREAM_ACCESS_FAIL);
         return;
     }
     if (E == NULL) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_CUDA_EVENT,
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_CUDA_EVENT,
             CUDA_EVENT_ACCESS_FAIL);
         return;
     }

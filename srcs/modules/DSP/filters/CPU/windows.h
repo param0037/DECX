@@ -52,8 +52,8 @@ namespace decx {
             * @param global_dex_offset : Offset of global dex, in its own element (de::CPf)
             */
             _THREAD_FUNCTION_ void
-            Gaussian_Window1D_cpl32(const double* src, double* dst, const float u, const float sigma, const size_t _proc_len,
-                const size_t real_bound, const size_t global_dex_offset);
+            Gaussian_Window1D_cpl32(const double* src, double* dst, const float u, const float sigma, const uint64_t _proc_len,
+                const uint64_t real_bound, const uint64_t global_dex_offset);
 
 
             _THREAD_FUNCTION_ void
@@ -79,8 +79,8 @@ namespace decx {
             * @param global_dex_offset : Offset of global dex, in its own element (de::CPf)
             */
             _THREAD_FUNCTION_ void
-            Triangular_Window1D_cpl32(const double* src, double* dst, const long long center, const size_t radius, const size_t _proc_len,
-                const size_t real_bound, const size_t global_dex_offset);
+            Triangular_Window1D_cpl32(const double* src, double* dst, const long long center, const uint64_t radius, const uint64_t _proc_len,
+                const uint64_t real_bound, const uint64_t global_dex_offset);
         }
     }
 }
@@ -93,7 +93,7 @@ namespace de {
             _DECX_API_ de::DH Gaussian_Window1D(de::Vector& src, de::Vector& dst, const float u, const float sigma);
 
 
-            _DECX_API_ de::DH Triangular_Window1D(de::Vector& src, de::Vector& dst, const long long center, size_t radius);
+            _DECX_API_ de::DH Triangular_Window1D(de::Vector& src, de::Vector& dst, const long long center, uint64_t radius);
 
 
             _DECX_API_ de::DH Gaussian_Window2D(de::Matrix& src, de::Matrix& dst, const de::Point2D_f u, const de::Point2D_f sigma, const float p);

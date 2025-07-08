@@ -60,7 +60,7 @@ struct decx::dsp::CUDA_FFT_Configs
     * @param vec_len : The effective length of a signal (padding NOT included), i.e.
     * decx::_Vector<type>::length
     */
-    void FFT1D_config_gen(const size_t vec_len, de::DH* handle);
+    void FFT1D_config_gen(const uint64_t vec_len, de::DH* handle);
 };
 
 

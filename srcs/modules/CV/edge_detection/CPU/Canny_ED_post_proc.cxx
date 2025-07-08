@@ -76,7 +76,7 @@ decx::vis::CPUK::_Edge_Detector_Post_processing(const float* __restrict      G_i
                                                 const uint2                  proc_dims, 
                                                 const float2                 _thres)
 {
-    size_t dex_G = 0, dex_D = 0, dex_dst = 0;
+    uint64_t dex_G = 0, dex_D = 0, dex_dst = 0;
     bool is_max = false, is_keep = false;
 
     decx::utils::simd::xmm256_reg recv_G, recv_R, reg, reg1;

@@ -42,7 +42,7 @@ namespace decx {
     namespace dsp {
         namespace GPUK {
             __global__ void
-            cu_ideal_LP1D_cpl32(const float4* src, float4* dst, const size_t _proc_len, const size_t real_bound, const size_t cutoff_freq);
+            cu_ideal_LP1D_cpl32(const float4* src, float4* dst, const uint64_t _proc_len, const uint64_t real_bound, const uint64_t cutoff_freq);
 
 
             /*
@@ -60,7 +60,7 @@ namespace decx {
 namespace de {
     namespace dsp {
         namespace cuda {
-            _DECX_API_ de::DH LowPass1D_Ideal(de::GPU_Vector& src, de::GPU_Vector& dst, const size_t cutoff_frequency);
+            _DECX_API_ de::DH LowPass1D_Ideal(de::GPU_Vector& src, de::GPU_Vector& dst, const uint64_t cutoff_frequency);
 
 
             _DECX_API_ de::DH LowPass2D_Ideal(de::GPU_Matrix& src, de::GPU_Matrix& dst, const de::Point2D cutoff_frequency);

@@ -148,7 +148,7 @@ decx::dsp::fft::CPUK::_FFT1D_R5_cplxf32_1st_C2C(const de::CPf* __restrict    src
     __m256 recv_P0, recv_P1, recv_P2, recv_P3, recv_P4;
     decx::utils::simd::xmm256_reg res;
 
-    const size_t total_Bcalc_num = signal_length / 5;
+    const uint64_t total_Bcalc_num = signal_length / 5;
 
     for (uint32_t i = 0; i < total_Bcalc_num; ++i) 
     {
@@ -204,7 +204,7 @@ decx::dsp::fft::CPUK::_FFT1D_R5_cplxf32_mid_C2C(const de::CPf* __restrict       
     __m256 recv_P0, recv_P1, recv_P2, recv_P3, recv_P4;
     decx::utils::simd::xmm256_reg res;
 
-    const size_t total_Bcalc_num = _kernel_info->_signal_len / 5;
+    const uint64_t total_Bcalc_num = _kernel_info->_signal_len / 5;
 
     uint32_t dex = 0;
     uint32_t warp_loc_id;

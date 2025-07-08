@@ -63,10 +63,10 @@ int32_t decx::blas::cpu_MVM_planner<_data_type>::Config(const uint2 mat_dims)
     const uint32_t simd_align_byte = 32;
     this->_alignment = simd_align_byte / sizeof(_data_type);
 
-    this->_concurrency = decx::cpu::_get_permitted_concurrency();
+    this->_concurrency = DecxGetPermitConcurrency();
 
     // Use only half of L1 cache size in case there is not enough space.
-    uint64_t L1_cache_data_percore = (decx::cpu::_get_L1_data_cache_size_per_core() / 2) / sizeof(_data_type);
+    uint64_t L1_cache_data_percore = (decx::cpu::DecxGetL1DataCacheSize_PerCore() / 2) / sizeof(_data_type);
     uint32_t block_h = 0;
 
     // Concurrency is distributed along HEIGHT only

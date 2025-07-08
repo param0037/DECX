@@ -46,8 +46,8 @@ namespace decx
     namespace dsp {
         namespace GPUK {
             __global__ void
-            cu_Gaussian_Window1D_cpl32(const float4* src, float4* dst, const float u, const float sigma, const size_t _proc_len, 
-                const size_t real_bound);
+            cu_Gaussian_Window1D_cpl32(const float4* src, float4* dst, const float u, const float sigma, const uint64_t _proc_len, 
+                const uint64_t real_bound);
 
 
             __global__ void
@@ -61,8 +61,8 @@ namespace decx
 
 
             __global__ void
-            cu_Triangluar_Window1D_cpl32(const float4* src, float4* dst, const long long origin, const size_t radius, 
-                const size_t _proc_len, const size_t real_bound);
+            cu_Triangluar_Window1D_cpl32(const float4* src, float4* dst, const long long origin, const uint64_t radius, 
+                const uint64_t _proc_len, const uint64_t real_bound);
 
 
             __global__ void
@@ -87,7 +87,7 @@ namespace de {
             _DECX_API_ de::DH Gaussian_Window2D(de::GPU_Matrix& src, de::GPU_Matrix& dst, const de::Point2D_f u, const de::Point2D_f sigma, const float p);
 
 
-            _DECX_API_ de::DH Triangular_Window1D(de::GPU_Vector& src, de::GPU_Vector& dst, const long long origin, const size_t radius);
+            _DECX_API_ de::DH Triangular_Window1D(de::GPU_Vector& src, de::GPU_Vector& dst, const long long origin, const uint64_t radius);
 
 
             _DECX_API_ de::DH Cone_Window2D(de::GPU_Matrix& src, de::GPU_Matrix& dst, const de::Point2D origin, const float radius);

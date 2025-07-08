@@ -53,7 +53,7 @@ class decx::cudaEvent_Queue
 private:
     std::mutex _mtx;
 
-    size_t true_capacity;
+    uint64_t true_capacity;
 
     decx::PtrInfo<decx::cuda_event> _cuda_event_arr;
 
@@ -68,7 +68,7 @@ private:
     decx::cuda_event* add_event_physical(const int flag);
 
 public:
-    size_t _cuda_event_num;
+    uint64_t _cuda_event_num;
 
 
     cudaEvent_Queue();

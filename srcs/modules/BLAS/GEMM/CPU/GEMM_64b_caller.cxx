@@ -45,7 +45,7 @@ void decx::blas::GEMM_64b(decx::_Matrix* A, decx::_Matrix* B, decx::_Matrix* dst
 
     decx::blas::g_cpu_GEMM_64b_planner.lock();
 
-    const uint32_t _conc = decx::cpu::_get_permitted_concurrency();
+    const uint32_t _conc = DecxGetPermitConcurrency();
     //const uint32_t _conc = 1;
 
     auto* _planner = decx::blas::g_cpu_GEMM_64b_planner.get_resource_raw_ptr<decx::blas::cpu_GEMM_planner<double>>();
@@ -61,7 +61,7 @@ void decx::blas::GEMM_64b(decx::_Matrix* A, decx::_Matrix* B, decx::_Matrix* dst
 
     // Plan if changed
     if (_planner->Changed(_conc, &A->get_layout(), &B->get_layout())) {
-        _planner->plan(decx::cpu::_get_permitted_concurrency(), &A->get_layout(), &B->get_layout(), de::GetLastError());
+        _planner->plan(DecxGetPermitConcurrency(), &A->get_layout(), &B->get_layout(), de::GetLastError());
         Check_Runtime_Error(handle);
     }
 

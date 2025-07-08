@@ -64,8 +64,8 @@ static void decx::gen::_gaussian2D_fp32_caller(float* target, const float expect
     const uint2 proc_dims, const uint32_t Wsrc, const float2 clip_range, const uint32_t resolution)
 {
     decx::utils::frag_manager f_mgr;
-    decx::utils::frag_manager_gen(&f_mgr, proc_dims.y, decx::cpu::_get_permitted_concurrency());
-    decx::utils::ThreadArrange1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::frag_manager_gen(&f_mgr, proc_dims.y, DecxGetPermitConcurrency());
+    decx::utils::ThreadArrange1D t1D(DecxGetPermitConcurrency());
 
     const uint8_t occupied_length = (uint8_t)(proc_dims.x % 8);
 

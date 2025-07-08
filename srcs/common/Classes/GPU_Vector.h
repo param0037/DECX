@@ -46,7 +46,7 @@ namespace de
         GPU_Vector() {}
 
 
-        virtual size_t Len() const = 0;
+        virtual uint64_t Len() const = 0;
 
 
         virtual void release() = 0;
@@ -80,7 +80,7 @@ namespace decx
         bool _init;
 
     public:
-        size_t length,
+        uint64_t length,
             _length,    // It is aligned with 4
             total_bytes;
 
@@ -94,13 +94,13 @@ namespace decx
         _GPU_Vector();
 
 
-        void _attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, size_t length);
+        void _attribute_assign(const de::_DATA_TYPES_FLAGS_ _type, uint64_t length);
 
 
-        void construct(const de::_DATA_TYPES_FLAGS_ _type, const size_t length);
+        void construct(const de::_DATA_TYPES_FLAGS_ _type, const uint64_t length);
 
 
-        void re_construct(const de::_DATA_TYPES_FLAGS_ _type, const size_t length);
+        void re_construct(const de::_DATA_TYPES_FLAGS_ _type, const uint64_t length);
 
 
         void alloc_data_space();
@@ -109,7 +109,7 @@ namespace decx
         void re_alloc_data_space();
 
 
-        _GPU_Vector(const de::_DATA_TYPES_FLAGS_ _type, size_t length);
+        _GPU_Vector(const de::_DATA_TYPES_FLAGS_ _type, uint64_t length);
 
 
         virtual uint64_t Len() const;
@@ -151,10 +151,10 @@ namespace de
     _DECX_API_ de::GPU_Vector* CreateGPUVectorPtr();
 
 
-    _DECX_API_ de::GPU_Vector& CreateGPUVectorRef(const de::_DATA_TYPES_FLAGS_ _type, const size_t length);
+    _DECX_API_ de::GPU_Vector& CreateGPUVectorRef(const de::_DATA_TYPES_FLAGS_ _type, const uint64_t length);
 
 
-    _DECX_API_ de::GPU_Vector* CreateGPUVectorPtr(const de::_DATA_TYPES_FLAGS_ _type, const size_t length);
+    _DECX_API_ de::GPU_Vector* CreateGPUVectorPtr(const de::_DATA_TYPES_FLAGS_ _type, const uint64_t length);
 }
 
 

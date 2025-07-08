@@ -166,11 +166,11 @@ static void decx::dsp::fft::_IFFT3D_caller_cplxd(decx::_GPU_Tensor* src, decx::_
 
 _DECX_API_ void de::dsp::cuda::FFT(de::GPU_Tensor& src, de::GPU_Tensor& dst, const de::_DATA_TYPES_FLAGS_ _output_type)
 {
-    de::ResetLastError();
+    DecxResetLastHandle
 
-    if (!decx::cuda::_is_CUDA_init()) {
-        decx::err::handle_error_info_modify(de::GetLastError(), 
-            decx::DECX_error_types::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
+    if (!decx::cuda::DecxGetIsCUDAInit()) {
+        DecxAssignLastHandle(
+            DecxErrorTypes_e::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
         return;
     }
 
@@ -184,7 +184,7 @@ _DECX_API_ void de::dsp::cuda::FFT(de::GPU_Tensor& src, de::GPU_Tensor& dst, con
     
     if (!(decx::dsp::fft::validate_type_FFT2D(_src->Type()) && decx::dsp::fft::validate_type_FFT2D(_output_type)))
     {
-        decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_UNSUPPORTED_TYPE,
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_UNSUPPORTED_TYPE,
             "FFT2D CUDA only supports float, double, uint8_t, de::CPf and de::CPd input");
         return;
     }
@@ -227,7 +227,7 @@ _DECX_API_ void de::dsp::cuda::FFT(de::GPU_Tensor& src, de::GPU_Tensor& dst, con
         break;
 
     default:
-        decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_UNSUPPORTED_TYPE,
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_UNSUPPORTED_TYPE,
             UNSUPPORTED_TYPE);
         break;
     }
@@ -243,9 +243,9 @@ _DECX_API_ void de::dsp::cuda::FFT(de::GPU_Tensor& src, de::GPU_Tensor& dst, con
 
 _DECX_API_ void de::dsp::cuda::IFFT(de::GPU_Tensor& src, de::GPU_Tensor& dst, const de::_DATA_TYPES_FLAGS_ _output_type)
 {
-    if (!decx::cuda::_is_CUDA_init()) {
-        decx::err::handle_error_info_modify(de::GetLastError(),
-            decx::DECX_error_types::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
+    if (!decx::cuda::DecxGetIsCUDAInit()) {
+        DecxAssignLastHandle(de::GetLastError(),
+            DecxErrorTypes_e::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
         return;
     }
 
@@ -258,7 +258,7 @@ _DECX_API_ void de::dsp::cuda::IFFT(de::GPU_Tensor& src, de::GPU_Tensor& dst, co
     E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
 
     if (!(decx::dsp::fft::validate_type_FFT2D(_src->Type()) && decx::dsp::fft::validate_type_FFT2D(_output_type))) {
-        decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_UNSUPPORTED_TYPE,
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_UNSUPPORTED_TYPE,
             "FFT2D CUDA only supports float, double, uint8_t, de::CPf and de::CPd input");
         return;
     }
@@ -266,7 +266,7 @@ _DECX_API_ void de::dsp::cuda::IFFT(de::GPU_Tensor& src, de::GPU_Tensor& dst, co
     if (_output_type != de::_DATA_TYPES_FLAGS_::_UINT8_) // Ensures it's either fp32(cplxf) or fp64(cplxd)
     {
         if (!decx::dsp::fft::check_type_matched_FFT(_src->Type(), _output_type)) {
-            decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_TYPE_MOT_MATCH,
+            DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_TYPE_MOT_MATCH,
                 "Conversion between fp32 and fp64 in FFT is not supported");
             return;
         }
@@ -298,7 +298,7 @@ _DECX_API_ void de::dsp::cuda::IFFT(de::GPU_Tensor& src, de::GPU_Tensor& dst, co
         break;
 
     default:
-        decx::err::handle_error_info_modify(de::GetLastError(), decx::DECX_error_types::DECX_FAIL_UNSUPPORTED_TYPE,
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_UNSUPPORTED_TYPE,
             UNSUPPORTED_TYPE);
         break;
     }

@@ -39,8 +39,8 @@ de::cuda::TypeCast(de::GPU_Vector& src, de::GPU_Vector& dst, const int cvt_metho
     using namespace decx::type_cast;
 
     de::DH handle;
-    if (!decx::cuda::_is_CUDA_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CUDA_not_init,
+    if (!decx::cuda::DecxGetIsCUDAInit()) {
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_CUDA_not_init,
             CUDA_NOT_INIT);
         return handle;
     }
@@ -51,7 +51,7 @@ de::cuda::TypeCast(de::GPU_Vector& src, de::GPU_Vector& dst, const int cvt_metho
     decx::_GPU_Vector* _dst = dynamic_cast<decx::_GPU_Vector*>(&dst);
 
     if (!_src->is_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CLASS_NOT_INIT,
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_CLASS_NOT_INIT,
             CLASS_NOT_INIT);
         return handle;
     }
@@ -59,7 +59,7 @@ de::cuda::TypeCast(de::GPU_Vector& src, de::GPU_Vector& dst, const int cvt_metho
     decx::cuda_stream* S = NULL;
     S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
     if (S == NULL) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CUDA_STREAM,
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_CUDA_STREAM,
             CUDA_STREAM_ACCESS_FAIL);
         return handle;
     }
@@ -88,7 +88,7 @@ de::cuda::TypeCast(de::GPU_Vector& src, de::GPU_Vector& dst, const int cvt_metho
             (float4*)_src->Vec, (int4*)_dst->Vec, _dst->_length / 4, S);
     }
     else {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_INVALID_PARAM,
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_INVALID_PARAM,
             INVALID_PARAM);
         return handle;
     }

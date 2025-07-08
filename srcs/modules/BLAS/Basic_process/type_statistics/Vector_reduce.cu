@@ -45,7 +45,7 @@ static void decx::reduce::_vector_sum_caller(decx::_Vector* src, de::Number* res
         decx::reduce::vector_reduce_sum_fp16(src, res, _fp16_accu);
     }
     else {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_UNSUPPORTED_TYPE, UNSUPPORTED_TYPE);
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_UNSUPPORTED_TYPE, UNSUPPORTED_TYPE);
     }
 }
 
@@ -63,7 +63,7 @@ static void decx::reduce::_dev_vector_sum_caller(decx::_GPU_Vector* src, de::Num
         decx::reduce::dev_vector_reduce_sum_fp16(src, res, _fp16_accu);
     }
     else {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_UNSUPPORTED_TYPE, UNSUPPORTED_TYPE);
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_UNSUPPORTED_TYPE, UNSUPPORTED_TYPE);
     }
 }
 
@@ -84,7 +84,7 @@ static void decx::reduce::_vector_cmp_caller(decx::_Vector* src, de::Number* res
         decx::reduce::vector_reduce_cmp_fp64<_is_max>(src, res);
     }
     else {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_UNSUPPORTED_TYPE, UNSUPPORTED_TYPE);
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_UNSUPPORTED_TYPE, UNSUPPORTED_TYPE);
     }
 }
 
@@ -106,7 +106,7 @@ static void decx::reduce::_dev_vector_cmp_caller(decx::_GPU_Vector* src, de::Num
         decx::reduce::dev_vector_reduce_cmp_fp64<_is_max>(src, res);
     }
     else {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_UNSUPPORTED_TYPE, UNSUPPORTED_TYPE);
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_UNSUPPORTED_TYPE, UNSUPPORTED_TYPE);
     }
 }
 
@@ -116,8 +116,8 @@ static void decx::reduce::_dev_vector_cmp_caller(decx::_GPU_Vector* src, de::Num
 _DECX_API_ de::DH de::cuda::Sum(de::Vector& src, de::Number* res, const uint32_t _fp16_accu)
 {
     de::DH handle;
-    if (!decx::cuda::_is_CUDA_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
+    if (!decx::cuda::DecxGetIsCUDAInit()) {
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
         return handle;
     }
 
@@ -132,8 +132,8 @@ _DECX_API_ de::DH de::cuda::Sum(de::Vector& src, de::Number* res, const uint32_t
 _DECX_API_ de::DH de::cuda::Max(de::Vector& src, de::Number* res)
 {
     de::DH handle;
-    if (!decx::cuda::_is_CUDA_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
+    if (!decx::cuda::DecxGetIsCUDAInit()) {
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
         return handle;
     }
 
@@ -149,8 +149,8 @@ _DECX_API_ de::DH de::cuda::Max(de::Vector& src, de::Number* res)
 _DECX_API_ de::DH de::cuda::Min(de::Vector& src, de::Number* res)
 {
     de::DH handle;
-    if (!decx::cuda::_is_CUDA_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
+    if (!decx::cuda::DecxGetIsCUDAInit()) {
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
         return handle;
     }
 
@@ -166,8 +166,8 @@ _DECX_API_ de::DH de::cuda::Min(de::Vector& src, de::Number* res)
 _DECX_API_ de::DH de::cuda::Sum(de::GPU_Vector& src, de::Number* res, const uint32_t _fp16_accu)
 {
     de::DH handle;
-    if (!decx::cuda::_is_CUDA_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
+    if (!decx::cuda::DecxGetIsCUDAInit()) {
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
         return handle;
     }
 
@@ -182,8 +182,8 @@ _DECX_API_ de::DH de::cuda::Sum(de::GPU_Vector& src, de::Number* res, const uint
 _DECX_API_ de::DH de::cuda::Max(de::GPU_Vector& src, de::Number* res)
 {
     de::DH handle;
-    if (!decx::cuda::_is_CUDA_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
+    if (!decx::cuda::DecxGetIsCUDAInit()) {
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
         return handle;
     }
 
@@ -198,8 +198,8 @@ _DECX_API_ de::DH de::cuda::Max(de::GPU_Vector& src, de::Number* res)
 _DECX_API_ de::DH de::cuda::Min(de::GPU_Vector& src, de::Number* res)
 {
     de::DH handle;
-    if (!decx::cuda::_is_CUDA_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
+    if (!decx::cuda::DecxGetIsCUDAInit()) {
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_CUDA_not_init, CUDA_NOT_INIT);
         return handle;
     }
 

@@ -43,12 +43,12 @@ namespace cpu{
 
 _DECX_API_ void de::blas::cpu::Eigenvalue(de::InputMatrix src, float** a, float** b)
 {
-    de::ResetLastError();
+    DecxResetLastHandle
 
     const decx::_Matrix* _src = dynamic_cast<const decx::_Matrix*>(&src);
 
     decx::blas::cpu_eig_bisection<float> planner;
-    const uint32_t conc = decx::cpu::_get_permitted_concurrency();
+    const uint32_t conc = DecxGetPermitConcurrency();
     planner.Init(conc, &_src->get_layout(), 0.001, de::GetLastError());
 
     decx::utils::ThreadArrange1D t1D(conc);

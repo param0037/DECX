@@ -193,7 +193,7 @@ init(const _data_type*  p_diag,         const _data_type* p_off_diag,
 
     this->_count_intervals = decx::blas::cpu_eig_bisect_count_interval<_data_type>(
         p_diag, p_off_diag, this->_mid_points.GetRawPtr(), p_1st_interval, N);
-    this->_count_intervals.plan(decx::cpu::_get_permitted_concurrency(), 1, sizeof(_data_type), sizeof(_data_type), 1);
+    this->_count_intervals.plan(DecxGetPermitConcurrency(), 1, sizeof(_data_type), sizeof(_data_type), 1);
     this->_count_intervals.init(1024, handle);
 }
 
@@ -204,7 +204,7 @@ template void decx::blas::cpu_eig_bisect_iter_HPC<float>::init(const float*, con
 template <>
 void decx::blas::cpu_eig_bisect_iter_HPC<float>::iter(const float* p_diag, const float* p_off_diag, const uint32_t N)
 {
-    decx::utils::Thr1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::Thr1D t1D(DecxGetPermitConcurrency());
 
     auto* p_1st_interval = this->_interval_stack.GetRawPtr();
     

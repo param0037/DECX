@@ -23,7 +23,7 @@ namespace de
         GPU_Vector() {}
 
 
-        virtual size_t Len() const = 0;
+        virtual uint64_t Len() const = 0;
 
 
 
@@ -49,10 +49,10 @@ namespace de
     de::GPU_Vector* CreateGPUVectorPtr();
 
 
-    de::GPU_Vector& CreateGPUVectorRef(const de::_DATA_TYPES_FLAGS_ _type, const size_t _length);
+    de::GPU_Vector& CreateGPUVectorRef(const de::_DATA_TYPES_FLAGS_ _type, const uint64_t _length);
 
 
-    de::GPU_Vector* CreateGPUVectorPtr(const de::_DATA_TYPES_FLAGS_ _type, const size_t _length);
+    de::GPU_Vector* CreateGPUVectorPtr(const de::_DATA_TYPES_FLAGS_ _type, const uint64_t _length);
 
 
     namespace cuda

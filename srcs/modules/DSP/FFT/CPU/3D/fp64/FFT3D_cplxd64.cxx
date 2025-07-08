@@ -39,7 +39,7 @@ template <>
 template <typename _type_in>
 void _CRSR_ decx::dsp::fft::cpu_FFT3D_planner<double>::Forward(decx::_Tensor* src, decx::_Tensor* dst) const
 {
-    decx::utils::ThreadArrange1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::ThreadArrange1D t1D(DecxGetPermitConcurrency());
 
     // FFT along depth
     decx::dsp::fft::_FFT3D_H_entire_rows_cplxd<_type_in, false>((const _type_in*)src->Tens,
@@ -97,7 +97,7 @@ template <>
 template <typename _type_out>
 void _CRSR_ decx::dsp::fft::cpu_FFT3D_planner<double>::Inverse(decx::_Tensor* src, decx::_Tensor* dst) const
 {
-    decx::utils::ThreadArrange1D t1D(decx::cpu::_get_permitted_concurrency());
+    decx::utils::ThreadArrange1D t1D(DecxGetPermitConcurrency());
 
     // FFT along depth
     decx::dsp::fft::_IFFT3D_H_entire_rows_cplxd<de::CPd>((const de::CPd*)src->Tens,

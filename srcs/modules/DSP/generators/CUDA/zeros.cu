@@ -40,20 +40,20 @@ _DECX_API_ de::DH de::gen::cuda::Zeros(de::GPU_Vector& src)
     decx::_GPU_Vector* _src = dynamic_cast<decx::_GPU_Vector*>(&src);
 
     if (!_src->is_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CLASS_NOT_INIT, CLASS_NOT_INIT);
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_CLASS_NOT_INIT, CLASS_NOT_INIT);
         return handle;
     }
 
     decx::cuda_stream* S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
     if (S == NULL) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CUDA_STREAM, CUDA_STREAM_ACCESS_FAIL);
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_CUDA_STREAM, CUDA_STREAM_ACCESS_FAIL);
         return handle;
     }
 
     decx::cuda_event* E = NULL;
     E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
     if (E == NULL) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CUDA_EVENT, CUDA_EVENT_ACCESS_FAIL);
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_CUDA_EVENT, CUDA_EVENT_ACCESS_FAIL);
         return handle;
     }
 
@@ -78,20 +78,20 @@ _DECX_API_ de::DH de::gen::cuda::Zeros(de::GPU_Matrix& src)
     decx::_GPU_Matrix* _src = dynamic_cast<decx::_GPU_Matrix*>(&src);
 
     if (!_src->is_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CLASS_NOT_INIT, CLASS_NOT_INIT);
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_CLASS_NOT_INIT, CLASS_NOT_INIT);
         return handle;
     }
 
     decx::cuda_stream* S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
     if (S == NULL) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CUDA_STREAM, CUDA_STREAM_ACCESS_FAIL);
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_CUDA_STREAM, CUDA_STREAM_ACCESS_FAIL);
         return handle;
     }
 
     decx::cuda_event* E = NULL;
     E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
     if (E == NULL) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CUDA_EVENT, CUDA_EVENT_ACCESS_FAIL);
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_CUDA_EVENT, CUDA_EVENT_ACCESS_FAIL);
         return handle;
     }
 
@@ -114,20 +114,20 @@ _DECX_API_ de::DH de::gen::cuda::Zeros(de::GPU_Tensor& src)
     decx::_GPU_Tensor* _src = dynamic_cast<decx::_GPU_Tensor*>(&src);
 
     if (!_src->is_init()) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CLASS_NOT_INIT, CLASS_NOT_INIT);
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_CLASS_NOT_INIT, CLASS_NOT_INIT);
         return handle;
     }
 
     decx::cuda_stream* S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
     if (S == NULL) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CUDA_STREAM, CUDA_STREAM_ACCESS_FAIL);
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_CUDA_STREAM, CUDA_STREAM_ACCESS_FAIL);
         return handle;
     }
 
     decx::cuda_event* E = NULL; 
     E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
     if (E == NULL) {
-        decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_CUDA_EVENT, CUDA_EVENT_ACCESS_FAIL);
+        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_CUDA_EVENT, CUDA_EVENT_ACCESS_FAIL);
         return handle;
     }
 

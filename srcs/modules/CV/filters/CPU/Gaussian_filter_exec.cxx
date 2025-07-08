@@ -205,8 +205,8 @@ decx::vis::CPUK::_gaussian_V_uint8_fp32(const float* __restrict src,
                                         const uint32_t Wdst, 
                                         const uint2 proc_dims)
 {
-    size_t dex_src = 0, dex_dst = 0;
-    const size_t _shf_dex_src = (size_t)Hker * (size_t)Wsrc - 16;
+    uint64_t dex_src = 0, dex_dst = 0;
+    const uint64_t _shf_dex_src = (uint64_t)Hker * (uint64_t)Wsrc - 16;
 
     decx::conv::_v256_2f32 _accumulator;
     _accumulator._v1 = _mm256_set1_ps(0);
@@ -265,7 +265,7 @@ decx::vis::CPUK::_gaussian_H_uint8_fp32_ST(const double* src, const float* kerne
     const uint2 proc_dim, const uint32_t Wker, const uint Wsrc, const uint Wdst, const ushort reg_WL, const uint _loop)
 {
     decx::conv::_v256_2f32 res_vec8;
-    size_t dex_src = 0, dex_dst = 0;
+    uint64_t dex_src = 0, dex_dst = 0;
 
     __m256i _iv1, _iv2;
 
@@ -294,7 +294,7 @@ decx::vis::CPUK::_gaussian_H_uchar4_fp32_ST(const float* src, const float* kerne
     const uint2 proc_dim, const uint32_t Wker, const uint Wsrc, const uint Wdst, const ushort reg_WL, const uint _loop)
 {
     decx::conv::_v256_2f32 res_vec8;
-    size_t dex_src = 0, dex_dst = 0;
+    uint64_t dex_src = 0, dex_dst = 0;
 
     __m256i _iv1, _iv2;
 
@@ -327,10 +327,10 @@ void decx::vis::_gaussian_H_uint8_caller(const double* src,
     float* tmp_dst_ptr = dst;
 
     decx::utils::frag_manager f_mgr;
-    decx::utils::frag_manager_gen(&f_mgr, proc_dim.y, decx::cpu::_get_permitted_concurrency());
+    decx::utils::frag_manager_gen(&f_mgr, proc_dim.y, DecxGetPermitConcurrency());
 
-    size_t frag_src = (size_t)f_mgr.frag_len * (size_t)Wsrc;
-    size_t frag_dst = (size_t)f_mgr.frag_len * (size_t)Wdst;
+    uint64_t frag_src = (uint64_t)f_mgr.frag_len * (uint64_t)Wsrc;
+    uint64_t frag_dst = (uint64_t)f_mgr.frag_len * (uint64_t)Wdst;
 
     for (int i = 0; i < t1D->total_thread - 1; ++i) {
         t1D->_async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(decx::vis::CPUK::_gaussian_H_uint8_fp32_ST,
@@ -360,10 +360,10 @@ void decx::vis::_gaussian_H_uchar4_caller(const float* src,
     float* tmp_dst_ptr = dst;
 
     decx::utils::frag_manager f_mgr;
-    decx::utils::frag_manager_gen(&f_mgr, proc_dim.y, decx::cpu::_get_permitted_concurrency());
+    decx::utils::frag_manager_gen(&f_mgr, proc_dim.y, DecxGetPermitConcurrency());
 
-    size_t frag_src = (size_t)f_mgr.frag_len * (size_t)Wsrc;
-    size_t frag_dst = (size_t)f_mgr.frag_len * (size_t)Wdst;
+    uint64_t frag_src = (uint64_t)f_mgr.frag_len * (uint64_t)Wsrc;
+    uint64_t frag_dst = (uint64_t)f_mgr.frag_len * (uint64_t)Wdst;
 
     for (int i = 0; i < t1D->total_thread - 1; ++i) {
         t1D->_async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(decx::vis::CPUK::_gaussian_H_uchar4_fp32_ST,
@@ -390,10 +390,10 @@ void decx::vis::_gaussian_V_uint8_caller(const float* src, const float* kernel, 
     double* tmp_dst_ptr = dst;
 
     decx::utils::frag_manager f_mgr;
-    decx::utils::frag_manager_gen(&f_mgr, proc_dim.y, decx::cpu::_get_permitted_concurrency());
+    decx::utils::frag_manager_gen(&f_mgr, proc_dim.y, DecxGetPermitConcurrency());
 
-    size_t frag_src = (size_t)f_mgr.frag_len * (size_t)Wsrc;
-    size_t frag_dst = (size_t)f_mgr.frag_len * (size_t)Wdst;
+    uint64_t frag_src = (uint64_t)f_mgr.frag_len * (uint64_t)Wsrc;
+    uint64_t frag_dst = (uint64_t)f_mgr.frag_len * (uint64_t)Wdst;
 
     for (int i = 0; i < t1D->total_thread - 1; ++i) {
         t1D->_async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(decx::vis::CPUK::_gaussian_V_uint8_fp32,

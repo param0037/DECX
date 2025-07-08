@@ -73,7 +73,7 @@ void decx::dsp::fft::cpu_FFT1D_planner<_data_type>::_apart_for_smaller_FFTs(de::
     }
 
     decx::utils::Fixed_Length_Array<uint32_t> _larger_FFT_lengths;
-    _larger_FFT_lengths.define_capacity(this->_all_radixes.size());
+    _larger_FFT_lengths.PreMalloc(this->_all_radixes.size());
 
     uint32_t larger_FFT_size = 1;
     for (uint32_t i = 0; i < this->_all_radixes.size(); ++i) 
@@ -118,7 +118,7 @@ void decx::dsp::fft::cpu_FFT1D_planner<_data_type>::_apart_for_smaller_FFTs(de::
         }
     }
 
-    this->_smaller_FFTs.define_capacity(_larger_FFT_lengths.size());
+    this->_smaller_FFTs.PreMalloc(_larger_FFT_lengths.size());
     for (uint32_t i = 0; i < _larger_FFT_lengths.size(); ++i) {
         this->_smaller_FFTs.emplace_back(_larger_FFT_lengths[i], handle);
         Check_Runtime_Error(handle);
@@ -137,11 +137,11 @@ void decx::dsp::fft::cpu_FFT1D_planner<_data_type>::plan(const uint64_t signal_l
 
     this->_signal_length = signal_len;
 
-    this->_permitted_concurrency = decx::cpu::_get_permitted_concurrency();
+    this->_permitted_concurrency = DecxGetPermitConcurrency();
 
     this->_without_larger_DFT = decx::dsp::fft::_radix_apart<true>(this->_signal_length, &this->_all_radixes);
     
-    this->_smaller_FFTs.define_capacity(this->_all_radixes.size());
+    this->_smaller_FFTs.PreMalloc(this->_all_radixes.size());
 
     if (this->_signal_length > threshold_fragment) {
         this->_apart_for_smaller_FFTs(handle);
@@ -266,7 +266,7 @@ template <typename _data_type>
 const decx::dsp::fft::cpu_FFT1D_smaller<_data_type>* decx::dsp::fft::cpu_FFT1D_planner<_data_type>::get_smaller_FFT_info_ptr(const uint32_t _order) const
 {
     //return &this->_smaller_FFTs[_order];
-    return this->_smaller_FFTs.get_const_ptr(_order);
+    return this->_smaller_FFTs.GetConstPtr(_order);
 }
 
 template const decx::dsp::fft::cpu_FFT1D_smaller<float>* decx::dsp::fft::cpu_FFT1D_planner<float>::get_smaller_FFT_info_ptr(const uint32_t) const;

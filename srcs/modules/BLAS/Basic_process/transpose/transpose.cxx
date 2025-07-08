@@ -52,11 +52,11 @@ static void decx::blas::Transpose_4b(const decx::_Matrix* src, decx::_Matrix* ds
 
     decx::blas::g_cpu_transpose_4b_config.lock();
 
-    const uint32_t _conc = decx::cpu::_get_permitted_concurrency();
+    const uint32_t _conc = DecxGetPermitConcurrency();
 
     auto* _planner = decx::blas::g_cpu_transpose_4b_config.get_resource_raw_ptr < decx::blas::_cpu_transpose_config>();
     if (_planner->changed(4, _conc, make_uint2(src->Width(), src->Height()))) {
-        _planner->config(4, decx::cpu::_get_permitted_concurrency(), make_uint2(src->Width(), src->Height()), handle);
+        _planner->config(4, DecxGetPermitConcurrency(), make_uint2(src->Width(), src->Height()), handle);
         Check_Runtime_Error(handle);
     }
 
@@ -77,11 +77,11 @@ static void decx::blas::Transpose_8b(const decx::_Matrix* src, decx::_Matrix* ds
 
     decx::blas::g_cpu_transpose_8b_config.lock();
 
-    const uint32_t _conc = decx::cpu::_get_permitted_concurrency();
+    const uint32_t _conc = DecxGetPermitConcurrency();
 
     auto* _planner = decx::blas::g_cpu_transpose_8b_config.get_resource_raw_ptr<decx::blas::_cpu_transpose_config>();
     if (_planner->changed(8, _conc, make_uint2(src->Width(), src->Height()))) {
-        _planner->config(8, decx::cpu::_get_permitted_concurrency(), make_uint2(src->Width(), src->Height()), handle);
+        _planner->config(8, DecxGetPermitConcurrency(), make_uint2(src->Width(), src->Height()), handle);
         Check_Runtime_Error(handle);
     }
 
@@ -101,7 +101,7 @@ static void decx::blas::Transpose_1b(const decx::_Matrix* src, decx::_Matrix* ds
     
     decx::blas::g_cpu_transpose_1b_config.lock();
 
-    const uint32_t _conc = decx::cpu::_get_permitted_concurrency();
+    const uint32_t _conc = DecxGetPermitConcurrency();
 
     auto* _planner = decx::blas::g_cpu_transpose_1b_config.get_resource_raw_ptr < decx::blas::_cpu_transpose_config>();
     if (_planner->changed(1, _conc, make_uint2(src->Width(), src->Height()))) {
@@ -126,11 +126,11 @@ static void decx::blas::Transpose_16b(const decx::_Matrix* src, decx::_Matrix* d
 
     decx::blas::g_cpu_transpose_16b_config.lock();
 
-    const uint32_t _conc = decx::cpu::_get_permitted_concurrency();
+    const uint32_t _conc = DecxGetPermitConcurrency();
 
     auto* _planner = decx::blas::g_cpu_transpose_16b_config.get_resource_raw_ptr<decx::blas::_cpu_transpose_config>();
     if (_planner->changed(16, _conc, make_uint2(src->Width(), src->Height()))) {
-        _planner->config(16, decx::cpu::_get_permitted_concurrency(), make_uint2(src->Width(), src->Height()), handle);
+        _planner->config(16, DecxGetPermitConcurrency(), make_uint2(src->Width(), src->Height()), handle);
         Check_Runtime_Error(handle);
     }
 
@@ -143,7 +143,7 @@ static void decx::blas::Transpose_16b(const decx::_Matrix* src, decx::_Matrix* d
 
 _DECX_API_ void de::blas::cpu::Transpose(de::InputMatrix& src, de::OutputMatrix& dst)
 {
-    de::ResetLastError();
+    DecxResetLastHandle
 
     const decx::_Matrix* _src = dynamic_cast<const decx::_Matrix*>(&src);
     decx::_Matrix* _dst = dynamic_cast<decx::_Matrix*>(&dst);

@@ -40,7 +40,7 @@ class decx::MemChunk_D
 {
 public:
     uchar* header_ptr;
-    size_t chunk_size;
+    uint64_t chunk_size;
     std::vector<decx::MemBlock*> mem_block_list;
     int list_length;
 
@@ -62,7 +62,7 @@ public:
      * @param pool_dex The index of corresponding decx::MemChunkSet in memory pool.
      * @param chunk_set_dex The index of decx::MemChunk in decx::MemChunkSet.
      */
-    MemChunk_D(size_t size, size_t req_size, int pool_dex, int chunk_set_dex);
+    MemChunk_D(uint64_t size, uint64_t req_size, int pool_dex, int chunk_set_dex);
 
 
     /**
@@ -73,7 +73,7 @@ public:
      * @param split_size
      * @return decx::MemBlock* the pointer of the newly inserted decx::MemBlock
      */
-    decx::MemBlock* split(int dex, size_t split_size);
+    decx::MemBlock* split(int dex, uint64_t split_size);
 
 
     /**
@@ -114,7 +114,7 @@ class decx::MemChunkSet_D
 {
 public:
     std::vector<decx::MemChunk_D> mem_chunk_list;
-    size_t flag_size;
+    uint64_t flag_size;
     int list_length;
 
     /**

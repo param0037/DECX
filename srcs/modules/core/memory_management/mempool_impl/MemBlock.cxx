@@ -32,7 +32,7 @@
 #include "MemBlock.h"
 
 
-decx::MemBlock::MemBlock(size_t size, bool idle, decx::MemLoc* mem_loc, uchar* ptr,
+decx::MemBlock::MemBlock(uint64_t size, bool idle, decx::MemLoc* mem_loc, uchar* ptr,
     decx::MemBlock* prev, decx::MemBlock* next)
 {
     this->block_size = size;

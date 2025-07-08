@@ -59,13 +59,13 @@ static void decx::blas::_VMM_caller_fp32(decx::_Vector* vec, decx::_Matrix* mat,
     decx::cuda_stream* S = NULL;
     S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
     if (S == NULL) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_CUDA_STREAM, CUDA_STREAM_ACCESS_FAIL);
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_CUDA_STREAM, CUDA_STREAM_ACCESS_FAIL);
         return;
     }
     decx::cuda_event* E = NULL;
     E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
     if (E == NULL) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_CUDA_STREAM, CUDA_STREAM_ACCESS_FAIL);
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_CUDA_STREAM, CUDA_STREAM_ACCESS_FAIL);
         return;
     }
 
@@ -102,13 +102,13 @@ static void decx::blas::_VMM_caller_fp16(decx::_Vector* vec, decx::_Matrix* mat,
     decx::cuda_stream* S = NULL;
     S = decx::cuda::get_cuda_stream_ptr(cudaStreamNonBlocking);
     if (S == NULL) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_CUDA_STREAM, CUDA_STREAM_ACCESS_FAIL);
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_CUDA_STREAM, CUDA_STREAM_ACCESS_FAIL);
         return;
     }
     decx::cuda_event* E = NULL;
     E = decx::cuda::get_cuda_event_ptr(cudaEventBlockingSync);
     if (E == NULL) {
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_CUDA_STREAM, CUDA_STREAM_ACCESS_FAIL);
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_CUDA_STREAM, CUDA_STREAM_ACCESS_FAIL);
         return;
     }
     
@@ -142,7 +142,7 @@ static void decx::blas::_VMM_caller_fp16(decx::_Vector* vec, decx::_Matrix* mat,
 
 _DECX_API_ void de::blas::cuda::GEMM(de::Vector& A, de::Matrix& B, de::Vector& dst, const uint32_t _fp16_accu)
 {
-    de::ResetLastError();
+    DecxResetLastHandle
     
     decx::_Vector* _A = dynamic_cast<decx::_Vector*>(&A);
     decx::_Matrix* _B = dynamic_cast<decx::_Matrix*>(&B);
@@ -165,7 +165,7 @@ _DECX_API_ void de::blas::cuda::GEMM(de::Vector& A, de::Matrix& B, de::Vector& d
 
 _DECX_API_ void de::blas::cuda::GEMM(de::Matrix& A, de::Vector& B, de::Vector& dst, const uint32_t _fp16_accu)
 {
-    de::ResetLastError();
+    DecxResetLastHandle
 
     decx::_Matrix* _A = dynamic_cast<decx::_Matrix*>(&A);
     decx::_Vector* _B = dynamic_cast<decx::_Vector*>(&B);

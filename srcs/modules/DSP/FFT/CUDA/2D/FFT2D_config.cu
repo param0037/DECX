@@ -97,7 +97,7 @@ uint32_t decx::dsp::fft::_FFT2D_1way_config::get_signal_len() const
 
 const decx::dsp::fft::FKI_4_2DK* decx::dsp::fft::_FFT2D_1way_config::get_kernel_info(const uint32_t _index) const
 {
-    return this->_kernrel_infos.get_const_ptr(_index);
+    return this->_kernrel_infos.GetConstPtr(_index);
 }
 
 
@@ -111,7 +111,7 @@ void decx::dsp::fft::_FFT2D_1way_config::plan(const uint32_t signal_length)
 {
     this->_signal_length = signal_length;
     decx::dsp::fft::_radix_apart<false>(this->_signal_length, &this->_radix);
-    this->_kernrel_infos.define_capacity(this->_radix.size());
+    this->_kernrel_infos.PreMalloc(this->_radix.size());
 
     uint32_t _store_pitch = 1, _warp_proc_len = 1;
     // Generate FKI

@@ -39,16 +39,16 @@ namespace decx
     namespace alloc
     {
 #ifdef _DECX_CORE_CPU_
-        static void* aligned_malloc_Hv(size_t size, size_t alignment);
+        static void* aligned_malloc_Hv(uint64_t size, uint64_t alignment);
 
         static void aligned_free_Hv(void* _ptr);
 
-        static void* aligned_malloc_Hf(size_t size, size_t alignment);
+        static void* aligned_malloc_Hf(uint64_t size, uint64_t alignment);
 
         static void aligned_free_Hf(void* _ptr);
 #endif
 #ifdef _DECX_CORE_CUDA_
-        static void* malloc_D(size_t size, size_t alignment);
+        static void* malloc_D(uint64_t size, uint64_t alignment);
 
         static void free_D(void* _ptr);
 #endif
@@ -57,7 +57,7 @@ namespace decx
 
 
 #ifdef _DECX_CORE_CPU_
-void* decx::alloc::aligned_malloc_Hv(size_t size, size_t alignment)
+void* decx::alloc::aligned_malloc_Hv(uint64_t size, uint64_t alignment)
 {
     if (alignment & (alignment - 1)) {
         return NULL;
@@ -66,8 +66,8 @@ void* decx::alloc::aligned_malloc_Hv(size_t size, size_t alignment)
         void* raw_ptr = malloc(sizeof(void*) + size + alignment);
         if (raw_ptr)
         {
-            void* begin_ptr = (void*)((size_t)(raw_ptr)+sizeof(void*));
-            void* real_ptr = (void*)(((size_t)begin_ptr | (alignment - 1)) + 1);
+            void* begin_ptr = (void*)((uint64_t)(raw_ptr)+sizeof(void*));
+            void* real_ptr = (void*)(((uint64_t)begin_ptr | (alignment - 1)) + 1);
             ((void**)real_ptr)[-1] = raw_ptr;
             return real_ptr;
         }
@@ -85,7 +85,7 @@ void decx::alloc::aligned_free_Hv(void* _ptr)
 }
 
 
-void* decx::alloc::aligned_malloc_Hf(size_t size, size_t alignment)
+void* decx::alloc::aligned_malloc_Hf(uint64_t size, uint64_t alignment)
 {
     if (alignment & (alignment - 1)) {
         return NULL;
@@ -98,8 +98,8 @@ void* decx::alloc::aligned_malloc_Hf(size_t size, size_t alignment)
 
         if (raw_ptr)
         {
-            void* begin_ptr = (void*)((size_t)(raw_ptr)+sizeof(void*));
-            void* real_ptr = (void*)(((size_t)begin_ptr | (alignment - 1)) + 1);
+            void* begin_ptr = (void*)((uint64_t)(raw_ptr)+sizeof(void*));
+            void* real_ptr = (void*)(((uint64_t)begin_ptr | (alignment - 1)) + 1);
             ((void**)real_ptr)[-1] = raw_ptr;
             return real_ptr;
         }
@@ -125,7 +125,7 @@ void decx::alloc::aligned_free_Hf(void* _ptr)
 #ifdef _DECX_CORE_CUDA_
 
 
-void* decx::alloc::malloc_D(size_t size, size_t alignment)
+void* decx::alloc::malloc_D(uint64_t size, uint64_t alignment)
 {
     void* raw_ptr = NULL;
     checkCudaErrors(cudaMalloc(&raw_ptr, size));

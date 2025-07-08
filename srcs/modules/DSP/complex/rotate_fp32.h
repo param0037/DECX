@@ -46,7 +46,7 @@ namespace decx {
         * @param src : Output pointer
         * @param _proc_len : In vec4 (de::CPf x4)
         */
-        void complex_rotate_fp32_caller(const double* src, const float angle, double* dst, const size_t _proc_len);
+        void complex_rotate_fp32_caller(const double* src, const float angle, double* dst, const uint64_t _proc_len);
 
 
         namespace CPU {

@@ -144,8 +144,8 @@ decx::bp::CPUK::_extend_reflect1D_b32(const float* __restrict   src,
                                       float* __restrict         buffer,
                                       float* __restrict         dst,
                                       const decx::bp::extend_reflect_exec_params* b_rfct,
-                                      const size_t              _actual_w_v1,
-                                      const size_t              _original_w_v4)
+                                      const uint64_t              _actual_w_v1,
+                                      const uint64_t              _original_w_v4)
 {
     const uint8x16_t _idx = decx::bp::e_rfct_exep_get_tbl_b32(b_rfct);
 

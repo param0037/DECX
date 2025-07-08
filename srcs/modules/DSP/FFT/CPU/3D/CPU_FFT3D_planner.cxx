@@ -85,7 +85,7 @@ _CRSR_ void decx::dsp::fft::cpu_FFT3D_planner<_data_type>::plan(decx::utils::Thr
     this->_signal_dims.x = src_layout->depth;
     this->_signal_dims.y = src_layout->width;
     this->_signal_dims.z = src_layout->height;
-    this->_concurrency = decx::cpu::_get_permitted_concurrency();
+    this->_concurrency = DecxGetPermitConcurrency();
 
     this->_input_typesize = src_layout->_single_element_size;
     this->_output_typesize = dst_layout->_single_element_size;
@@ -180,11 +180,11 @@ void _CRSR_ decx::dsp::fft::cpu_FFT3D_planner<_data_type>::allocate_buffers(de::
     rval |= this->_tmp1.Allocate(_buffer_size * sizeof(_data_type) * 2, PAGABLE, handle);
     rval |= this->_tmp2.Allocate(_buffer_size * sizeof(_data_type) * 2, PAGABLE, handle);
 
-    const uint32_t _concurrency = decx::cpu::_get_permitted_concurrency();
+    const uint32_t _concurrency = DecxGetPermitConcurrency();
     //const uint32_t _tile_frag_pitch = decx::utils::ialign_up<uint32_t>(max(max(this->_signal_dims.x, this->_signal_dims.y), this->_signal_dims.z), 4);
     const uint32_t _tile_frag_pitch = max(max(this->_signal_dims.x, this->_signal_dims.y), this->_signal_dims.z);
 
-    this->_tiles.define_capacity(_concurrency);
+    this->_tiles.PreMalloc(_concurrency);
     for (uint32_t i = 0; i < _concurrency; ++i) {
         this->_tiles.emplace_back();
         this->_tiles[i].allocate_tile<_data_type>(_tile_frag_pitch, handle);
@@ -225,7 +225,7 @@ decx::dsp::fft::cpu_FFT3D_planner<double>::get_subproc(const decx::dsp::fft::FFT
 template <typename _data_type> const
 decx::dsp::fft::FKT1D* decx::dsp::fft::cpu_FFT3D_planner<_data_type>::get_tile_ptr(const uint32_t _id) const
 {
-    return this->_tiles.get_const_ptr(_id);
+    return this->_tiles.GetConstPtr(_id);
 }
 
 template const decx::dsp::fft::FKT1D* decx::dsp::fft::cpu_FFT3D_planner<float>::get_tile_ptr(const uint32_t) const;

@@ -45,16 +45,16 @@ namespace decx
 {
     namespace tf {
         namespace CPUK {
-            typedef void (*_vec_mul_mat4_kernel1D_ptr)(const float*, float*, const decx::_Mat4x4f, const size_t);
+            typedef void (*_vec_mul_mat4_kernel1D_ptr)(const float*, float*, const decx::_Mat4x4f, const uint64_t);
 
             _THREAD_FUNCTION_ void
                 _vec4_mul_mat4x4_fp32_1D(const float* src, float* dst, const decx::_Mat4x4f _tf_mat,
-                    const size_t _proc_len);
+                    const uint64_t _proc_len);
 
 
             _THREAD_FUNCTION_ void
                 _vec3_mul_mat4x3_fp32_1D(const float* src, float* dst, const decx::_Mat4x4f _tf_mat,
-                    const size_t _proc_len);
+                    const uint64_t _proc_len);
         }
 
         void Vec4_transform(decx::_Vector* src, decx::_Vector* dst, decx::_Matrix* transform_matrix, de::DH* handle);

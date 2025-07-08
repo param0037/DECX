@@ -80,7 +80,7 @@ mat_arithmetic_caller_VVO(const decx::_GPU_Matrix*  A,
         break;
 
     default:
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_UNSUPPORTED_TYPE,
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_UNSUPPORTED_TYPE,
             "Unsupported type when performing arithmetic");
         break;
     }
@@ -129,7 +129,7 @@ mat_arithmetic_caller_VO(const decx::_GPU_Matrix*   src,
         break;
 
     default:
-        decx::err::handle_error_info_modify(handle, decx::DECX_error_types::DECX_FAIL_UNSUPPORTED_TYPE,
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_UNSUPPORTED_TYPE,
             "Unsupported type when performing arithmetic");
         break;
     }

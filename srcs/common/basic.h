@@ -33,7 +33,6 @@
 
 #include "include.h"
 #include "error.h"
-#include "Handle/decx_handle.h"
 #include "vector_defines.h"
 
 #if defined(_DECX_CORE_CUDA_)

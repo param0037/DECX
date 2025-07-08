@@ -257,18 +257,14 @@ extern "C"
     }
 
     
-    _DECX_API_ DECX_Handle DE_GetTensorProp(const DECX_Tensor src, DECX_TensorLayout* prop)
+    _DECX_API_ void DE_GetTensorProp(const DECX_Tensor src, DECX_TensorLayout* prop)
     {
         decx::_Tensor* _src = (decx::_Tensor*)src;
-        de::DH handle;
-
         if (prop == NULL) {
-            decx::err::handle_error_info_modify(&handle, decx::DECX_error_types::DECX_FAIL_INVALID_PARAM,
-                INVALID_PARAM);
-            return _CAST_HANDLE_(DECX_Handle, handle);
+            DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_INVALID_PARAM, INVALID_PARAM);
+            return;
         }
         memcpy(prop, &_src->get_layout(), sizeof(DECX_TensorLayout));
-        return _CAST_HANDLE_(DECX_Handle, handle);
     }
 #ifdef __cplusplus
 }
