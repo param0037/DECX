@@ -47,13 +47,13 @@ _DECX_API_ void de::cuda::DECX_CUDA_exit()
 }
 
 
-_DECX_API_ bool decx::cuda::_is_CUDA_init()
+_DECX_API_ bool decx::cuda::DecxGetIsCUDAInit()
 {
     return decx::cuP.is_init;
 }
 
 
-_DECX_API_ cudaDeviceProp& decx::cuda::_get_cuda_prop()
+_DECX_API_ cudaDeviceProp& decx::cuda::DecxGetCUDAProp()
 {
     return decx::cuP.prop;
 }

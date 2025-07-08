@@ -70,7 +70,7 @@ namespace decx
     // Realized by DECX_allocations
     typedef struct cpuInfo_t
     {
-        size_t cpu_concurrency;
+        uint64_t cpu_concurrency;
         decx_CPUINFO _hardware_info;
         bool is_init;
 
@@ -83,38 +83,37 @@ namespace decx
 #endif
 
 
-namespace decx
-{
+#ifdef __cplusplus
+extern "C" {
+#endif
 #ifdef _DECX_CPU_PARTS_
-    namespace cpu {
-        _DECX_API_ bool _is_CPU_init();
+    _DECX_API_ uint8_t DecxGetIsCPUInit();
 
 
-        _DECX_API_ uint64_t _get_permitted_concurrency();
+    _DECX_API_ uint64_t DecxGetPermitConcurrency();
 
 
-        _DECX_API_ uint64_t _get_L1_data_cache_size_per_core();
+    _DECX_API_ uint64_t DecxGetL1DataCacheSize_PerCore();
 
 
-        _DECX_API_ uint64_t _get_L2_cache_size_per_core();
+    _DECX_API_ uint64_t DecxGetL2CacheSize_PerCore();
 
 
-        _DECX_API_ uint64_t _get_L3_cache_size();
+    _DECX_API_ uint64_t DecxGetL3CacheSize();
 
 
-        _DECX_API_ uint64_t _get_hardware_concurrency();
-    }
+    _DECX_API_ uint64_t DecxGetHWConcurrency();
+    
 #endif
 #ifdef _DECX_CUDA_PARTS_
-    namespace cuda
-    {
-        _DECX_API_ bool _is_CUDA_init();
+    _DECX_API_ uint8_t DecxGetIsCUDAInit();
 
 
-        _DECX_API_ cudaDeviceProp& _get_cuda_prop();
-    }
+    _DECX_API_ cudaDeviceProp& DecxGetCUDAProp();
 #endif
+#ifdef __cplusplus
 }
+#endif
 
 
 namespace decx
@@ -139,7 +138,7 @@ namespace de
     _DECX_API_ void InitCPUInfo();
 
     namespace cpu {
-        _DECX_API_ void DecxSetThreadingNum(const size_t _thread_num);
+        _DECX_API_ void DecxSetThreadingNum(const uint64_t _thread_num);
     }
 #endif
 }

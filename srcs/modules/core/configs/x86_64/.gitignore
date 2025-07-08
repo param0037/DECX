@@ -1,0 +1,2 @@
+cpuid_call_x86_64_masm.asm
+cpuid_call_x86_64_nasm.asm

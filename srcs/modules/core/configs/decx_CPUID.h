@@ -80,7 +80,7 @@ uint64_t _decx_get_L1_cache_size_per_phy_core(const int is_AMD);
 
 uint64_t _decx_get_L2_cache_size_per_phy_core(const int is_AMD);
 
-uint64_t _decx_get_L3_cache_size(const int is_AMD);
+uint64_t _decxDecxGetL3CacheSize(const int is_AMD);
 
 void _decx_get_CPU_freqs(decx_CPUINFO*);
 

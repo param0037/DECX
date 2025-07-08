@@ -30,6 +30,7 @@
 
 
 #include "config.h"
+#include <Handle/decx_handle.h>
 
 
 _DECX_API_ void de::InitCPUInfo()
@@ -41,64 +42,50 @@ _DECX_API_ void de::InitCPUInfo()
 }
 
 
-_DECX_API_ void de::cpu::DecxSetThreadingNum(const size_t _thread_num)
+_DECX_API_ void de::cpu::DecxSetThreadingNum(const uint64_t _thread_num)
 {
-    decx::cpI.cpu_concurrency = decx::utils::clamp_min<size_t>(_thread_num, 1);
-    de::DH handle;
+    decx::cpI.cpu_concurrency = decx::utils::clamp_min<uint64_t>(_thread_num, 1);
+    DecxResetLastHandle();
     if (_thread_num > decx::cpI._hardware_info._hardware_concurrency) {
-        decx::warn::CPU_Hyper_Threading(de::GetLastError());
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_WARN_CPU_HYPER_THREADING, CPU_HYPER_THREADING);
     }
-    else {
-        decx::err::Success(de::GetLastError());
-    }
+    
     return;
 }
 
 
-_DECX_API_ bool decx::cpu::_is_CPU_init()
+_DECX_API_ uint8_t DecxGetIsCPUInit()
 {
     return decx::cpI.is_init;
 }
 
 
-_DECX_API_ uint64_t decx::cpu::_get_permitted_concurrency()
+_DECX_API_ uint64_t DecxGetPermitConcurrency()
 {
     return decx::cpI.cpu_concurrency;
 }
 
 #if defined(__x86_64__) || defined(__i386__)
-_DECX_API_ uint64_t decx::cpu::_get_L1_data_cache_size_per_core()
+_DECX_API_ uint64_t DecxGetL1DataCacheSize_PerCore()
 {
     return _decx_get_L1_cache_size_per_phy_core(_decx_NOT_AMD_CPU(&decx::cpI._hardware_info));
 }
 
 
-_DECX_API_ uint64_t decx::cpu::_get_L2_cache_size_per_core()
+_DECX_API_ uint64_t DecxGetL2CacheSize_PerCore()
 {
     return _decx_get_L2_cache_size_per_phy_core(_decx_NOT_AMD_CPU(&decx::cpI._hardware_info));
 }
 
 
-_DECX_API_ uint64_t decx::cpu::_get_L3_cache_size()
+_DECX_API_ uint64_t DecxGetL3CacheSize()
 {
-    return _decx_get_L3_cache_size(_decx_NOT_AMD_CPU(&decx::cpI._hardware_info));
+    return _decxDecxGetL3CacheSize(_decx_NOT_AMD_CPU(&decx::cpI._hardware_info));
 }
 #endif
 
 
-_DECX_API_ uint64_t decx::cpu::_get_hardware_concurrency()
+_DECX_API_ uint64_t DecxGetHWConcurrency()
 {
     return decx::cpI._hardware_info._hardware_concurrency;
-}
-
-
-_DECX_API_ de::DH* de::GetLastError()
-{
-    return &decx::_last_error;
-}
-
-
-_DECX_API_ void de::ResetLastError()
-{
-    decx::err::Success(&decx::_last_error);
 }

@@ -83,7 +83,7 @@ uint64_t _decx_get_L2_cache_size_per_phy_core(const int not_AMD)
 #ifdef __GNUC__
 __attribute__((optimize("O0")))
 #endif
-uint64_t _decx_get_L3_cache_size(const int not_AMD)
+uint64_t _decxDecxGetL3CacheSize(const int not_AMD)
 {
     decx_reg4_x86 regs;
     regs._eax = (not_AMD == 0 ? 0x8000001D : 0x04);
@@ -175,7 +175,7 @@ int _decx_get_CPU_info(decx_CPUINFO* _info_ptr)
         _info_ptr->_hardware_concurrency = _decx_get_logical_processor_num();
         _info_ptr->_L1_data_cache_size = _decx_get_L1_cache_size_per_phy_core(_not_AMD);
         _info_ptr->_L2_data_cache_size = _decx_get_L2_cache_size_per_phy_core(_not_AMD);
-        _info_ptr->_L3_data_cache_size = _decx_get_L3_cache_size(_not_AMD);
+        _info_ptr->_L3_data_cache_size = _decxDecxGetL3CacheSize(_not_AMD);
         _decx_get_CPU_freqs(_info_ptr);
 
         return 0;
