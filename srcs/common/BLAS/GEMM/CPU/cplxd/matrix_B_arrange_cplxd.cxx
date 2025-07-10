@@ -35,21 +35,21 @@
 namespace decx
 {
 namespace blas {
-    namespace CPUK 
-    {
-        template <uint32_t block_W_v4, uint32_t block_H>
-        _THREAD_CALL_ static void _matrix_B_arrange_cplxd_block(const de::CPd* __restrict, de::CPd* __restrict, 
-            const uint32_t, const uint32_t);
+namespace CPUK 
+{
+    template <uint32_t block_W_v4, uint32_t block_H>
+    _THREAD_CALL_ static void _matrix_B_arrange_cplxd_block(const de::CPd* __restrict, de::CPd* __restrict, 
+        const uint32_t, const uint32_t);
 
 
-        _THREAD_CALL_ static void _matrix_B_arrange_cplxd_block_var(const de::CPd* __restrict, de::CPd* __restrict,
-            const uint32_t, const uint32_t, const uint2);
+    _THREAD_CALL_ static void _matrix_B_arrange_cplxd_block_var(const de::CPd* __restrict, de::CPd* __restrict,
+        const uint32_t, const uint32_t, const uint2);
 
 
-        template <uint32_t block_W_v4, uint32_t block_H>
-        _THREAD_FUNCTION_ static void _matrix_B_arrange_cplxd_exec(const de::CPd* __restrict, de::CPd* __restrict,
-            const uint2, const uint32_t, const uint32_t);
-    }
+    template <uint32_t block_W_v4, uint32_t block_H>
+    _THREAD_FUNCTION_ static void _matrix_B_arrange_cplxd_exec(const de::CPd* __restrict, de::CPd* __restrict,
+        const uint2, const uint32_t, const uint32_t);
+}
 }
 }
 
@@ -173,40 +173,39 @@ _matrix_B_arrange_cplxd_exec(const de::CPd* __restrict  src,            // point
 }
 
 
-void decx::blas::matrix_B_arrange_cplxd(const de::CPd*                      src, 
-                                        de::CPd*                            dst, 
-                                        const uint32_t                      pitchsrc_v1,
-                                        const uint32_t                      Llen, 
-                                        const decx::utils::frag_manager*    _fmgr_WH,   // Aligned to 8 on width
-                                        decx::utils::Thr2D*               t2D)
+int32_t decx::blas::
+matrix_B_arrange_cplxd(const de::CPd*                      src, 
+                       de::CPd*                            dst, 
+                       const uint32_t                      pitchsrc_v1,
+                       const uint32_t                      Llen, 
+                       const decx::utils::frag_manager*    _fmgr_WH,   // Aligned to 8 on width
+                       decx::utils::ComputeLoadsMgr2D*     t2D)
 {
+    int32_t rval = 0;
     const de::CPd* loc_src = NULL;
     de::CPd* loc_dst = NULL;
 
-    for (uint32_t i = 0; i < t2D->thread_h; ++i) 
+    uint32_t slot_id = 0;
+    for (uint32_t i = 0; i < t2D->GetDist().y; ++i) 
     {
-        uint2 proc_dims;
-        proc_dims = make_uint2(_fmgr_WH[0].frag_len, 
-                               i < t2D->thread_h - 1 ? _fmgr_WH[1].frag_len
-                                                     : _fmgr_WH[1].last_frag_len);
-
-        loc_src = src + i * _fmgr_WH[1].frag_len * pitchsrc_v1;
-        loc_dst = dst + i * _fmgr_WH[1].frag_len * 4;
-        for (uint32_t j = 0; j < t2D->thread_w - 1; ++j) 
+        loc_src = src + i * _fmgr_WH[1].GetFragLen() * pitchsrc_v1;
+        loc_dst = dst + i * _fmgr_WH[1].GetFragLen() * 4;
+        for (uint32_t j = 0; j < t2D->GetDist().x; ++j) 
         {
-            t2D->_async_thread[i * t2D->thread_w + j] = decx::cpu::RegisterTaskLoadBalanced(
-                decx::blas::CPUK::_matrix_B_arrange_cplxd_exec<2, 16>,
-                loc_src, loc_dst, proc_dims, pitchsrc_v1, Llen);
-            loc_src += _fmgr_WH[0].frag_len * 2;
-            loc_dst += _fmgr_WH[0].frag_len * Llen * 2;
-        }
-        const uint32_t _LW = _fmgr_WH[0].is_left ? _fmgr_WH[0].frag_left_over : _fmgr_WH[0].frag_len;
+            const uint2 proc_dims = make_uint2(_fmgr_WH[0].GetFragLenById(j), 
+                                               _fmgr_WH[1].GetFragLenById(i));
 
-        proc_dims.x = _LW;
-        t2D->_async_thread[(i+1)*t2D->thread_w - 1] = decx::cpu::RegisterTaskLoadBalanced(
-            decx::blas::CPUK::_matrix_B_arrange_cplxd_exec<2, 16>,
-            loc_src, loc_dst, proc_dims, pitchsrc_v1, Llen);
+            rval |= t2D->AppendTask(slot_id, decx::blas::CPUK::_matrix_B_arrange_cplxd_exec<2, 16>,
+                loc_src, loc_dst, proc_dims, pitchsrc_v1, Llen);
+            
+            loc_src += _fmgr_WH[0].GetFragLen() * 2;
+            loc_dst += _fmgr_WH[0].GetFragLen() * Llen * 2;
+            ++slot_id;
+        }
     }
 
-    t2D->__sync_all_threads();
+    rval |= t2D->RunAll();
+    rval |= t2D->SynchronizeAll();
+    rval |= t2D->ClearAll();
+    return rval;
 }

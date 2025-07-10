@@ -35,8 +35,7 @@ decx::ResourceHandle decx::blas::g_cpu_GEMM_fp32_planner;
 
 
 template <bool _ABC>
-void decx::blas::GEMM_fp32(decx::_Matrix* A, decx::_Matrix* B, decx::_Matrix* dst, de::DH* handle,
-    decx::_Matrix* C)
+void decx::blas::GEMM_fp32(decx::_Matrix* A, decx::_Matrix* B, decx::_Matrix* dst, decx::_Matrix* C)
 {
     if (decx::blas::g_cpu_GEMM_fp32_planner._res_ptr == NULL) {
         decx::blas::g_cpu_GEMM_fp32_planner.RegisterResource(new decx::blas::cpu_GEMM_planner<float>,
@@ -49,30 +48,28 @@ void decx::blas::GEMM_fp32(decx::_Matrix* A, decx::_Matrix* B, decx::_Matrix* ds
     auto* _planner = decx::blas::g_cpu_GEMM_fp32_planner.get_resource_raw_ptr<decx::blas::cpu_GEMM_planner<float>>();
     
     // Validate the sizes of the matrices
-    if constexpr (_ABC) {
-        decx::blas::cpu_GEMM_planner<float>::Validate(handle, &A->get_layout(), &B->get_layout(), &C->get_layout());
+    if_opt (_ABC) {
+        decx::blas::cpu_GEMM_planner<float>::Validate(&A->get_layout(), &B->get_layout(), &C->get_layout());
     }
     else {
-        decx::blas::cpu_GEMM_planner<float>::Validate(handle, &A->get_layout(), &B->get_layout());
+        decx::blas::cpu_GEMM_planner<float>::Validate(&A->get_layout(), &B->get_layout());
     }
-    Check_Runtime_Error(handle);
     
     // Plan if changed
     if (_planner->Changed(_conc, &A->get_layout(), &B->get_layout())) {
-        _planner->plan(DecxGetPermitConcurrency(), &A->get_layout(), &B->get_layout(), de::GetLastError());
-        Check_Runtime_Error(handle);
+        _planner->plan(DecxGetPermitConcurrency(), &A->get_layout(), &B->get_layout());
     }
     
-    decx::utils::ThreadArrange2D t2D(_planner->GetThreadDist_B().y, _planner->GetThreadDist_B().x);
-    if constexpr (_ABC) {
-        _planner->Run<false>(A, B, C, dst, &t2D);
+    // decx::utils::ThreadArrange2D t2D(_planner->GetThreadDist_B().y, _planner->GetThreadDist_B().x);
+    if_opt (_ABC) {
+        _planner->Run<false>(A, B, C, dst);
     }
     else {
-        _planner->Run<false>(A, B, dst, &t2D);
+        _planner->Run<false>(A, B, dst);
     }
     
     decx::blas::g_cpu_GEMM_fp32_planner.unlock();
 }
 
-template void decx::blas::GEMM_fp32<true>(decx::_Matrix*, decx::_Matrix*, decx::_Matrix*, de::DH*, decx::_Matrix*);
-template void decx::blas::GEMM_fp32<false>(decx::_Matrix*, decx::_Matrix*, decx::_Matrix*, de::DH*, decx::_Matrix*);
+template void decx::blas::GEMM_fp32<true>(decx::_Matrix*, decx::_Matrix*, decx::_Matrix*, decx::_Matrix*);
+template void decx::blas::GEMM_fp32<false>(decx::_Matrix*, decx::_Matrix*, decx::_Matrix*, decx::_Matrix*);

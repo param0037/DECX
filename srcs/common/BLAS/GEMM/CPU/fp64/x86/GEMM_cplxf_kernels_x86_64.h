@@ -97,7 +97,7 @@ GEMM_cplxf_dp_kernel_strassen1x2(const double* __restrict A_line,   const double
         _accu[0]._vd = _mm256_load_pd(dst);                 _accu[1]._vd = _mm256_load_pd(dst + 4);
     }
     else {
-        if constexpr (_ABC) {
+        if_opt (_ABC) {
             /**
             * Since matrix C is layouted as normal, in Strassen's Algorithm for avx2 (4x cplxf),
             * the data has to be rearranged to the same form (layout) as that in dst (and _accu registers).
@@ -175,7 +175,7 @@ GEMM_cplxf_dp_kernel_strassen2x1(const double* __restrict A_line,       const do
         _accu[2]._vd = _mm_load_pd(dst + pitchdst_v1);   _accu[3]._vd = _mm_load_pd(dst + pitchdst_v1 + 2);
     }
     else {
-        if constexpr (_ABC) {
+        if_opt (_ABC) {
             /**
             * Since matrix C is layouted as normal, in Strassen's Algorithm for avx2 (4x cplxf),
             * the data has to be rearranged to the same form (layout) as that in dst (and _accu registers).
@@ -273,7 +273,7 @@ GEMM_cplxf_dp_kernel_strassen1x1(const double* __restrict A_line,       const do
         _accu[0]._vd = _mm_load_pd(dst);                 _accu[1]._vd = _mm_load_pd(dst + 2);
     }
     else {
-        if constexpr (_ABC) {
+        if_opt (_ABC) {
             /**
             * Since matrix C is layouted as normal, in Strassen's Algorithm for avx2 (4x cplxf),
             * the data has to be rearranged to the same form (layout) as that in dst (and _accu registers).
@@ -349,7 +349,7 @@ GEMM_cplxf_dp_kernel_strassen2x2(const double* __restrict A_line,       const do
         _accu[2]._vd = _mm256_load_pd(dst + pitchdst_v1);   _accu[3]._vd = _mm256_load_pd(dst + pitchdst_v1 + 4);
     }
     else {
-        if constexpr (_ABC) {
+        if_opt (_ABC) {
             /**
             * Since matrix C is layouted as normal, in Strassen's Algorithm for avx2 (4x cplxf),
             * the data has to be rearranged to the same form (layout) as that in dst (and _accu registers).

@@ -88,7 +88,7 @@ GEMM_fp64_dp_kernel_frag(const double* __restrict    A_line,
         _accu = _mm256_load_pd(dst); 
     }
     else {
-        if constexpr (_ABC) { _accu = _mm256_load_pd(C); }
+        if_opt (_ABC) { _accu = _mm256_load_pd(C); }
         else { _accu = _mm256_setzero_pd(); }
     }
 
@@ -135,7 +135,7 @@ GEMM_fp64_dp_kernel_frag_dual(const double* __restrict  A_line,
         _accu[1] = _mm256_load_pd(dst + 4);
     }
     else {
-        if constexpr (_ABC) {
+        if_opt (_ABC) {
             _accu[0] = _mm256_load_pd(C);
             _accu[1] = _mm256_load_pd(C + 4);
         }

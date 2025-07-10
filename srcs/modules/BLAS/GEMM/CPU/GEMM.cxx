@@ -30,7 +30,7 @@
 
 
 #include "GEMM_callers.h"
-
+#include <Handle/decx_handle.h>
 
 namespace de
 {
@@ -47,28 +47,28 @@ namespace blas {
 
 _DECX_API_ void de::blas::cpu::GEMM(de::Matrix& A, de::Matrix& B, de::Matrix& dst)
 {
-    DecxResetLastHandle
+    DecxResetLastHandle();
 
     decx::_Matrix* _A = dynamic_cast<decx::_Matrix*>(&A);
     decx::_Matrix* _B = dynamic_cast<decx::_Matrix*>(&B);
     decx::_Matrix* _dst = dynamic_cast<decx::_Matrix*>(&dst);
-
+    
     switch (_A->Type())
     {
     case de::_DATA_TYPES_FLAGS_::_FP32_:
-        decx::blas::GEMM_fp32<false>(_A, _B, _dst, de::GetLastError());
+        decx::blas::GEMM_fp32<false>(_A, _B, _dst);
         break;
 
     case de::_DATA_TYPES_FLAGS_::_FP64_:
-        decx::blas::GEMM_64b<false, false>(_A, _B, _dst, de::GetLastError());
+        decx::blas::GEMM_64b<false, false>(_A, _B, _dst);
         break;
 
     case de::_DATA_TYPES_FLAGS_::_COMPLEX_F32_:
-        decx::blas::GEMM_64b<false, true>(_A, _B, _dst, de::GetLastError());
+        decx::blas::GEMM_64b<false, true>(_A, _B, _dst);
         break;
 
     case de::_DATA_TYPES_FLAGS_::_COMPLEX_F64_:
-        decx::blas::GEMM_cplxd<false>(_A, _B, _dst, de::GetLastError());
+        decx::blas::GEMM_cplxd<false>(_A, _B, _dst);
         break;
 
     default:
@@ -80,8 +80,8 @@ _DECX_API_ void de::blas::cpu::GEMM(de::Matrix& A, de::Matrix& B, de::Matrix& ds
 
 _DECX_API_ void de::blas::cpu::GEMM(de::Matrix& A, de::Matrix& B, de::Matrix &C, de::Matrix& dst)
 {
-    DecxResetLastHandle
-
+    DecxResetLastHandle();
+    
     decx::_Matrix* _A = dynamic_cast<decx::_Matrix*>(&A);
     decx::_Matrix* _B = dynamic_cast<decx::_Matrix*>(&B);
     decx::_Matrix* _C = dynamic_cast<decx::_Matrix*>(&C);
@@ -90,19 +90,19 @@ _DECX_API_ void de::blas::cpu::GEMM(de::Matrix& A, de::Matrix& B, de::Matrix &C,
     switch (_A->Type())
     {
     case de::_DATA_TYPES_FLAGS_::_FP32_:
-        decx::blas::GEMM_fp32<true>(_A, _B, _dst, de::GetLastError(), _C);
+        decx::blas::GEMM_fp32<true>(_A, _B, _dst, _C);
         break;
 
     case de::_DATA_TYPES_FLAGS_::_FP64_:
-        decx::blas::GEMM_64b<true, false>(_A, _B, _dst, de::GetLastError(), _C);
+        decx::blas::GEMM_64b<true, false>(_A, _B, _dst, _C);
         break;
 
     case de::_DATA_TYPES_FLAGS_::_COMPLEX_F32_:
-        decx::blas::GEMM_64b<true, true>(_A, _B, _dst, de::GetLastError(), _C);
+        decx::blas::GEMM_64b<true, true>(_A, _B, _dst, _C);
         break;
 
     case de::_DATA_TYPES_FLAGS_::_COMPLEX_F64_:
-        //decx::blas::GEMM_cplxd<true>(_A, _B, _dst, de::GetLastError(), _C);
+        decx::blas::GEMM_cplxd<true>(_A, _B, _dst, _C);
         break;
 
     default:

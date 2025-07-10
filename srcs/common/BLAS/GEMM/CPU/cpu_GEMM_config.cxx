@@ -43,7 +43,7 @@
 
 
 template <typename _data_type> void _CRSR_
-decx::blas::cpu_GEMM_planner<_data_type>::_plan_for_B_arrangement(de::DH* handle)
+decx::blas::cpu_GEMM_planner<_data_type>::_plan_for_B_arrangement()
 {
 #if defined(__x86_64__) || defined(__i386__)
     constexpr uint32_t _alignment = 32 / sizeof(_data_type);
@@ -59,9 +59,9 @@ decx::blas::cpu_GEMM_planner<_data_type>::_plan_for_B_arrangement(de::DH* handle
 
     this->_arranged_B.SetDims(make_uint2(this->_layout_B->height * _alignment_2x,
         decx::utils::idiv_ceil<uint32_t>(this->_layout_B->width, _alignment_2x)));
-    this->_arranged_B.Allocate(PAGABLE, sizeof(_data_type), handle);
+    this->_arranged_B.Allocate(PAGABLE, sizeof(_data_type));
 
-    this->_thread_config.Allocate(this->_concurrency * sizeof(decx::blas::GEMM_blocking_config), PAGABLE, handle);
+    this->_thread_config.Allocate(this->_concurrency * sizeof(decx::blas::GEMM_blocking_config), PAGABLE);
 
     // plan for fragment manager for matrix B arrangement
     decx::utils::frag_manager_gen_Nx(this->_fmgr_WH_B, 
@@ -73,8 +73,8 @@ decx::blas::cpu_GEMM_planner<_data_type>::_plan_for_B_arrangement(de::DH* handle
                                      this->_thread_dist_B.y, 16);
 }
 
-template void _CRSR_ decx::blas::cpu_GEMM_planner<float>::_plan_for_B_arrangement(de::DH*);
-template void _CRSR_ decx::blas::cpu_GEMM_planner<double>::_plan_for_B_arrangement(de::DH*);
+template void _CRSR_ decx::blas::cpu_GEMM_planner<float>::_plan_for_B_arrangement();
+template void _CRSR_ decx::blas::cpu_GEMM_planner<double>::_plan_for_B_arrangement();
 
 
 template <typename _data_type> void
@@ -138,7 +138,6 @@ template <typename _data_type> void _CRSR_
 decx::blas::cpu_GEMM_planner<_data_type>::plan(const uint32_t concurrency, 
                                           const decx::_matrix_layout* layout_A,
                                           const decx::_matrix_layout* layout_B, 
-                                          de::DH* handle,
                                           const bool _cplxf)
 {
     this->_concurrency = concurrency;
@@ -147,22 +146,24 @@ decx::blas::cpu_GEMM_planner<_data_type>::plan(const uint32_t concurrency,
 
     this->_proc_dims_v1 = make_uint2(this->_layout_B->width, this->_layout_A->height);
 
-    this->_plan_for_B_arrangement(handle);
-    if (handle->error_type != DecxErrorTypes_e::DECX_SUCCESS) {
-        return;
-    }
+    this->_plan_for_B_arrangement();
 
     this->_plan_for_exectutors(_cplxf);
+
+    const uint32_t max_thread_num = max(this->_thread_dist_B.x * this->_thread_dist_B.y,
+                                        this->_thread_dist_dst.x * this->_thread_dist_dst.y);
+    this->_tasks.SetMaxThreadNum(max_thread_num);
+    this->_tasks.SetDispatchMethod(decx::core::ThreadDispatchMethod_e::Dispatch_ByID);
 }
 
 template void _CRSR_ decx::blas::cpu_GEMM_planner<float>::plan(const uint32_t, const decx::_matrix_layout*,
-    const decx::_matrix_layout*, de::DH*, const bool);
+    const decx::_matrix_layout*, const bool);
 
 template void _CRSR_ decx::blas::cpu_GEMM_planner<double>::plan(const uint32_t, const decx::_matrix_layout*,
-    const decx::_matrix_layout*, de::DH*, const bool);
+    const decx::_matrix_layout*, const bool);
 
 template void _CRSR_ decx::blas::cpu_GEMM_planner<de::CPd>::plan(const uint32_t, const decx::_matrix_layout*,
-    const decx::_matrix_layout*, de::DH*, const bool);
+    const decx::_matrix_layout*, const bool);
 
 
 template <typename _data_type>
@@ -194,8 +195,7 @@ template bool decx::blas::cpu_GEMM_planner<de::CPd>::Changed(const uint32_t, con
 
 
 template <typename _data_type>
-void _CRSR_ decx::blas::cpu_GEMM_planner<_data_type>::Validate(de::DH* handle,
-                                                               const decx::_matrix_layout* layout_A, 
+void _CRSR_ decx::blas::cpu_GEMM_planner<_data_type>::Validate(const decx::_matrix_layout* layout_A, 
                                                                const decx::_matrix_layout* layout_B,
                                                                const decx::_matrix_layout* layout_C)
 {
@@ -213,37 +213,37 @@ void _CRSR_ decx::blas::cpu_GEMM_planner<_data_type>::Validate(de::DH* handle,
     }
 }
 
-template void decx::blas::cpu_GEMM_planner<float>::Validate(de::DH*, const decx::_matrix_layout*,
+template void decx::blas::cpu_GEMM_planner<float>::Validate(const decx::_matrix_layout*,
     const decx::_matrix_layout*, const decx::_matrix_layout*);
 
-template void decx::blas::cpu_GEMM_planner<double>::Validate(de::DH*, const decx::_matrix_layout*,
+template void decx::blas::cpu_GEMM_planner<double>::Validate(const decx::_matrix_layout*,
     const decx::_matrix_layout*, const decx::_matrix_layout*);
 
-template void decx::blas::cpu_GEMM_planner<de::CPd>::Validate(de::DH*, const decx::_matrix_layout*,
+template void decx::blas::cpu_GEMM_planner<de::CPd>::Validate(const decx::_matrix_layout*,
     const decx::_matrix_layout*, const decx::_matrix_layout*);
 
 
 
 template <typename _data_type>
-uint2 decx::blas::cpu_GEMM_planner<_data_type>::GetThreadDist_B() const
+const uint2& decx::blas::cpu_GEMM_planner<_data_type>::GetThreadDist_B() const
 {
     return this->_thread_dist_B;
 }
 
-template uint2 decx::blas::cpu_GEMM_planner<float>::GetThreadDist_B() const;
-template uint2 decx::blas::cpu_GEMM_planner<double>::GetThreadDist_B() const;
-template uint2 decx::blas::cpu_GEMM_planner<de::CPd>::GetThreadDist_B() const;
+template const uint2& decx::blas::cpu_GEMM_planner<float>::GetThreadDist_B() const;
+template const uint2& decx::blas::cpu_GEMM_planner<double>::GetThreadDist_B() const;
+template const uint2& decx::blas::cpu_GEMM_planner<de::CPd>::GetThreadDist_B() const;
 
 
 template <typename _data_type>
-uint2 decx::blas::cpu_GEMM_planner<_data_type>::GetThreadDist_dst() const
+const uint2& decx::blas::cpu_GEMM_planner<_data_type>::GetThreadDist_dst() const
 {
     return this->_thread_dist_dst;
 }
 
-template uint2 decx::blas::cpu_GEMM_planner<float>::GetThreadDist_dst() const;
-template uint2 decx::blas::cpu_GEMM_planner<double>::GetThreadDist_dst() const;
-template uint2 decx::blas::cpu_GEMM_planner<de::CPd>::GetThreadDist_dst() const;
+template const uint2& decx::blas::cpu_GEMM_planner<float>::GetThreadDist_dst() const;
+template const uint2& decx::blas::cpu_GEMM_planner<double>::GetThreadDist_dst() const;
+template const uint2& decx::blas::cpu_GEMM_planner<de::CPd>::GetThreadDist_dst() const;
 
 
 template <typename _data_type>

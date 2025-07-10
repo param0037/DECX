@@ -39,15 +39,15 @@ namespace decx
 {
 namespace blas {
     template <bool _ABC>
-    void GEMM_fp32(decx::_Matrix* A, decx::_Matrix* B, decx::_Matrix* dst, de::DH* handle, decx::_Matrix* C = NULL);
+    void GEMM_fp32(decx::_Matrix* A, decx::_Matrix* B, decx::_Matrix* dst, decx::_Matrix* C = NULL);
 
 
     template <bool _ABC, bool _cplxf>
-    void GEMM_64b(decx::_Matrix* A, decx::_Matrix* B, decx::_Matrix* dst, de::DH* handle, decx::_Matrix* C = NULL);
+    void GEMM_64b(decx::_Matrix* A, decx::_Matrix* B, decx::_Matrix* dst, decx::_Matrix* C = NULL);
 
 
     template <bool _ABC>
-    void GEMM_cplxd(decx::_Matrix* A, decx::_Matrix* B, decx::_Matrix* dst, de::DH* handle, decx::_Matrix* C = NULL);
+    void GEMM_cplxd(decx::_Matrix* A, decx::_Matrix* B, decx::_Matrix* dst, decx::_Matrix* C = NULL);
 }
 }
 

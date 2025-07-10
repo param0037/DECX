@@ -40,33 +40,28 @@
 #include "arm/GEMM_cplxf_kernels_aarch64.h"
 #endif
 
-#include <task_info.h>
+// #include <task_info.h>
 
 namespace decx
 {
 namespace blas
 {
-    template <bool _ABC, bool _cplxf> static
-    void GEMM_64b_caller(const double* A, const double* B, double* dst, const decx::_matrix_layout* layout_A,
-        const decx::_matrix_layout* layout_dst, const uint32_t Llen, const decx::utils::frag_manager* f_mgrH,
-        const decx::blas::GEMM_blocking_config* _thread_configs, decx::utils::Thr2D* t1D, const double* C = NULL);
+    template <bool _ABC, bool _cplxf> static int32_t GEMM_64b_caller(const double* A, const double* B, double* dst, 
+        const decx::_matrix_layout* layout_A, const decx::_matrix_layout* layout_dst, const uint32_t Llen, const decx::utils::frag_manager* f_mgrH,
+        const decx::blas::GEMM_blocking_config* _thread_configs, decx::utils::ComputeLoadsMgr2D* t1D, const double* C = NULL);
 }
 }
 
 
-template <bool _ABC, bool _cplxf> void 
+template <bool _ABC, bool _cplxf> int32_t 
 decx::blas::GEMM_64b_caller(const double* A,                            const double* B, 
                             double* dst,                                const decx::_matrix_layout* layout_A,
                             const decx::_matrix_layout* layout_dst,     const uint32_t Llen,
                             const decx::utils::frag_manager* f_mgrWH,   const decx::blas::GEMM_blocking_config* _thread_configs, 
-                            decx::utils::Thr2D* t2D,                  const double* C)
+                            decx::utils::ComputeLoadsMgr2D* t2D,                  const double* C)
 {
-#if defined(__x86_64__) || defined(__i386__)
-    constexpr uint32_t _alignment = 4;
-#endif
-#if defined(__aarch64__) || defined(__arm__)
-    constexpr uint32_t _alignment = 2;
-#endif
+    int32_t rval = 0;
+    constexpr uint32_t _alignment = decx::utils::simd::GetCPUSimdAlignBytes() / sizeof(double);
 
     const double* A_loc = A;
     const double* B_loc = B;
@@ -75,110 +70,111 @@ decx::blas::GEMM_64b_caller(const double* A,                            const do
 
     // Pointer of the kernels
     decx::blas::CPUK::GEMM_64b_kernel _kernel_ptr = NULL;
-    if constexpr (_cplxf) {
+    if_opt (_cplxf) {
         _kernel_ptr = decx::blas::CPUK::GEMM_cplxf_kernel<_ABC>;
     }
     else {
         _kernel_ptr = decx::blas::CPUK::GEMM_fp64_kernel<_ABC>;
     }
 
-    for (uint32_t i = 0; i < t2D->thread_h; ++i) 
+    uint32_t slot_id = 0;
+    for (uint32_t i = 0; i < t2D->GetDist().y; ++i) 
     {
         B_loc = B;
-        dst_loc = dst + i * layout_dst->pitch * f_mgrWH[1].frag_len;
-        C_loc = C + i * layout_dst->pitch * f_mgrWH[1].frag_len;
+        dst_loc = dst + i * layout_dst->pitch * f_mgrWH[1].GetFragLen();
+        C_loc = C + i * layout_dst->pitch * f_mgrWH[1].GetFragLen();
 
-        for (uint32_t j = 0; j < t2D->thread_w - 1; ++j) 
+        for (uint32_t j = 0; j < t2D->GetDist().x; ++j) 
         {
-            const auto* conf_ptr = &_thread_configs[t2D->thread_w * i + j];
+            const auto* conf_ptr = &_thread_configs[slot_id];
+            rval |= t2D->AppendTask(slot_id, _kernel_ptr, PACK_CPY(A_loc), PACK_CPY(B_loc), PACK_CPY(dst_loc), PACK_CPY(conf_ptr),
+                PACK_REF(layout_A->pitch), conf_ptr->_fmgr_L.total, PACK_REF(layout_dst->pitch), PACK_CPY(C_loc));
 
-            t2D->_async_thread[t2D->thread_w * i + j] = decx::cpu::RegisterTaskLoadBalanced(
-                _kernel_ptr, A_loc, B_loc, dst_loc, conf_ptr,
-                layout_A->pitch, conf_ptr->_fmgr_L.total, layout_dst->pitch, C_loc);
-
-            B_loc += f_mgrWH[0].frag_len * Llen * _alignment;
-            dst_loc += f_mgrWH[0].frag_len * _alignment;
-            if constexpr (_ABC) { C_loc += f_mgrWH[0].frag_len * _alignment; }
+            B_loc += f_mgrWH[0].GetFragLen() * Llen * _alignment;
+            dst_loc += f_mgrWH[0].GetFragLen() * _alignment;
+            if_opt (_ABC) { C_loc += f_mgrWH[0].frag_len * _alignment; }
+            ++slot_id;
         }
-
-        const auto* conf_ptr = &_thread_configs[t2D->thread_w * (i + 1) - 1];
-
-        t2D->_async_thread[t2D->thread_w * (i + 1) - 1] = decx::cpu::RegisterTaskLoadBalanced(
-            _kernel_ptr, A_loc, B_loc, dst_loc, conf_ptr,
-            layout_A->pitch, conf_ptr->_fmgr_L.total, layout_dst->pitch, C_loc);
-
-        A_loc += f_mgrWH[1].frag_len * layout_A->pitch;
+        A_loc += f_mgrWH[1].GetFragLen() * layout_A->pitch;
     }
 
-    t2D->__sync_all_threads();
+    rval |= t2D->RunAll();
+    rval |= t2D->SynchronizeAll();
+    rval |= t2D->ClearAll();
+
+    return rval;
 }
 
-template void decx::blas::GEMM_64b_caller<true, true>(const double*, const double*, double*, const decx::_matrix_layout*,
-    const decx::_matrix_layout*, const uint32_t, const decx::utils::frag_manager*,
-    const decx::blas::GEMM_blocking_config*, decx::utils::Thr2D*, const double*);
+template int32_t decx::blas::GEMM_64b_caller<true, true>(const double*, const double*, double*, const decx::_matrix_layout*,
+    const decx::_matrix_layout*, const uint32_t, const decx::utils::frag_manager*, const decx::blas::GEMM_blocking_config*, 
+    decx::utils::ComputeLoadsMgr2D*, const double*);
 
-template void decx::blas::GEMM_64b_caller<false, true>(const double*, const double*, double*, const decx::_matrix_layout*,
-    const decx::_matrix_layout*, const uint32_t, const decx::utils::frag_manager*,
-    const decx::blas::GEMM_blocking_config*, decx::utils::Thr2D*, const double*);
+template int32_t decx::blas::GEMM_64b_caller<false, true>(const double*, const double*, double*, const decx::_matrix_layout*,
+    const decx::_matrix_layout*, const uint32_t, const decx::utils::frag_manager*, const decx::blas::GEMM_blocking_config*, 
+    decx::utils::ComputeLoadsMgr2D*, const double*);
 
-template void decx::blas::GEMM_64b_caller<true, false>(const double*, const double*, double*, const decx::_matrix_layout*,
-    const decx::_matrix_layout*, const uint32_t, const decx::utils::frag_manager*,
-    const decx::blas::GEMM_blocking_config*, decx::utils::Thr2D*, const double*);
+template int32_t decx::blas::GEMM_64b_caller<true, false>(const double*, const double*, double*, const decx::_matrix_layout*,
+    const decx::_matrix_layout*, const uint32_t, const decx::utils::frag_manager*, const decx::blas::GEMM_blocking_config*, 
+    decx::utils::ComputeLoadsMgr2D*, const double*);
 
-template void decx::blas::GEMM_64b_caller<false, false>(const double*, const double*, double*, const decx::_matrix_layout*,
-    const decx::_matrix_layout*, const uint32_t, const decx::utils::frag_manager*,
-    const decx::blas::GEMM_blocking_config*, decx::utils::Thr2D*, const double*);
+template int32_t decx::blas::GEMM_64b_caller<false, false>(const double*, const double*, double*, const decx::_matrix_layout*,
+    const decx::_matrix_layout*, const uint32_t, const decx::utils::frag_manager*, const decx::blas::GEMM_blocking_config*, 
+    decx::utils::ComputeLoadsMgr2D*, const double*);
 
 
 
 template <> template <bool _cplxf>
-void decx::blas::cpu_GEMM_planner<double>::Run(decx::_Matrix* A, decx::_Matrix* B, decx::_Matrix* dst,
-    decx::utils::ThreadArrange2D* t2D)
+int32_t decx::blas::cpu_GEMM_planner<double>::Run(decx::_Matrix* A, decx::_Matrix* B, decx::_Matrix* dst)
 {
+    int32_t rval = 0;
+
+    rval |= this->_tasks.Reshape(this->GetThreadDist_B());
     // Arrange matrix B
-    decx::blas::matrix_B_arrange_64b<_cplxf>(B->Mat.GetRawPtr<double>(), 
-                                             this->_arranged_B.GetRawPtr<double>(),
-                                             B->Pitch(), 
-                                             B->Height(), this->_fmgr_WH_B, t2D);
+    rval |= decx::blas::matrix_B_arrange_64b<_cplxf>(B->Mat.GetRawPtr<double>(), 
+                                                     this->_arranged_B.GetRawPtr<double>(),
+                                                     B->Pitch(), 
+                                                     B->Height(), this->_fmgr_WH_B, &this->_tasks);
 
     // Reshape to adapt the thread distribution of kernels
-    t2D->reshape(this->GetThreadDist_dst().y, this->GetThreadDist_dst().x);
+    rval |= this->_tasks.Reshape(this->GetThreadDist_dst());
 
     // Execute GEMM
-    decx::blas::GEMM_64b_caller<false, _cplxf>(A->Mat.GetRawPtr<double>(),          this->_arranged_B.GetRawPtr<double>(),
-                                               dst->Mat.GetRawPtr<double>(),        this->_layout_A,
-                                               &dst->get_layout(), A->Width(),      this->_fmgr_WH_dst, 
-                                               this->_thread_config.GetRawPtr(),    t2D);
+    rval |= decx::blas::GEMM_64b_caller<false, _cplxf>(
+        A->Mat.GetRawPtr<double>(),          this->_arranged_B.GetRawPtr<double>(),
+        dst->Mat.GetRawPtr<double>(),        this->_layout_A,
+        &dst->get_layout(), A->Width(),      this->_fmgr_WH_dst, 
+        this->_thread_config.GetRawPtr(),    &this->_tasks);
+
+    return rval;
 }
 
-template void decx::blas::cpu_GEMM_planner<double>::Run<true>(decx::_Matrix*, decx::_Matrix*, decx::_Matrix*, 
-    decx::utils::ThreadArrange2D*);
-template void decx::blas::cpu_GEMM_planner<double>::Run<false>(decx::_Matrix*, decx::_Matrix*, decx::_Matrix*, 
-    decx::utils::ThreadArrange2D*);
-
+template int32_t decx::blas::cpu_GEMM_planner<double>::Run<true>(decx::_Matrix*, decx::_Matrix*, decx::_Matrix*);
+template int32_t decx::blas::cpu_GEMM_planner<double>::Run<false>(decx::_Matrix*, decx::_Matrix*, decx::_Matrix*);
 
 
 template <> template <bool _cplxf>
-void decx::blas::cpu_GEMM_planner<double>::Run(decx::_Matrix* A, decx::_Matrix* B, decx::_Matrix* C, decx::_Matrix* dst,
-    decx::utils::ThreadArrange2D* t2D)
+int32_t decx::blas::cpu_GEMM_planner<double>::Run(decx::_Matrix* A, decx::_Matrix* B, decx::_Matrix* C, decx::_Matrix* dst)
 {
+    int32_t rval = 0;
+    rval |= this->_tasks.Reshape(this->GetThreadDist_B());
     // Arrange matrix B
-    decx::blas::matrix_B_arrange_64b<_cplxf>(B->Mat.GetRawPtr<double>(),
-        this->_arranged_B.GetRawPtr<double>(),
-        B->Pitch(),
-        B->Height(), this->_fmgr_WH_B, t2D);
+    rval |= decx::blas::matrix_B_arrange_64b<_cplxf>(B->Mat.GetRawPtr<double>(),
+                                                     this->_arranged_B.GetRawPtr<double>(),
+                                                     B->Pitch(),
+                                                     B->Height(), this->_fmgr_WH_B, &this->_tasks);
 
     // Reshape to adapt the thread distribution of kernels
-    t2D->reshape(this->GetThreadDist_dst().y, this->GetThreadDist_dst().x);
+    rval |= this->_tasks.Reshape(this->GetThreadDist_dst());
 
     // Execute GEMM
-    decx::blas::GEMM_64b_caller<true, _cplxf>(A->Mat.GetRawPtr<double>(),       this->_arranged_B.GetRawPtr<double>(),
-                                             dst->Mat.GetRawPtr<double>(),             this->_layout_A,
-                                             &dst->get_layout(), A->Width(),    this->_fmgr_WH_dst, 
-                                             this->_thread_config.GetRawPtr(),  t2D, C->Mat.GetRawPtr<double>());
+    rval |= decx::blas::GEMM_64b_caller<true, _cplxf>(
+        A->Mat.GetRawPtr<double>(),       this->_arranged_B.GetRawPtr<double>(),
+        dst->Mat.GetRawPtr<double>(),      this->_layout_A,
+        &dst->get_layout(), A->Width(),    this->_fmgr_WH_dst, 
+        this->_thread_config.GetRawPtr(),  &this->_tasks, C->Mat.GetRawPtr<double>());
+    
+    return rval;
 }
 
-template void decx::blas::cpu_GEMM_planner<double>::Run<true>(decx::_Matrix*, decx::_Matrix*, decx::_Matrix*,
-    decx::_Matrix*, decx::utils::ThreadArrange2D*);
-template void decx::blas::cpu_GEMM_planner<double>::Run<false>(decx::_Matrix*, decx::_Matrix*, decx::_Matrix*,
-    decx::_Matrix*, decx::utils::ThreadArrange2D*);
+template int32_t decx::blas::cpu_GEMM_planner<double>::Run<true>(decx::_Matrix*, decx::_Matrix*, decx::_Matrix*, decx::_Matrix*);
+template int32_t decx::blas::cpu_GEMM_planner<double>::Run<false>(decx::_Matrix*, decx::_Matrix*, decx::_Matrix*, decx::_Matrix*);

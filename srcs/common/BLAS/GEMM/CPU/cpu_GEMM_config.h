@@ -37,6 +37,7 @@
 #include <Classes/Matrix.h>
 #include <thread_management/thread_arrange.h>
 #include "matrix_B_arrange.h"
+#include <Concurrent/compute_loads_mgr.h>
 
 
 namespace decx {
@@ -83,8 +84,10 @@ private:
     */
     decx::utils::frag_manager _fmgr_WH_dst[2];
 
+    decx::utils::ComputeLoadsMgr2D _tasks;
 
-    void _CRSR_ _plan_for_B_arrangement(de::DH* handle);
+private:
+    void _CRSR_ _plan_for_B_arrangement();
 
 
     void _plan_for_exectutors(const bool _cplxf);
@@ -99,21 +102,21 @@ public:
 
 
     void _CRSR_ plan(const uint32_t concurrency, const decx::_matrix_layout* layout_A,
-        const decx::_matrix_layout* layout_B, de::DH* handle, const bool _cplxf = false);
+        const decx::_matrix_layout* layout_B, const bool _cplxf = false);
 
 
-    static void _CRSR_ Validate(de::DH* handle, const decx::_matrix_layout* layout_A, const decx::_matrix_layout* layout_B,
+    static void _CRSR_ Validate(const decx::_matrix_layout* layout_A, const decx::_matrix_layout* layout_B,
         const decx::_matrix_layout* layout_C = NULL);
 
     template <bool _cplxf>
-    void Run(decx::_Matrix* A, decx::_Matrix* B, decx::_Matrix* dst, decx::utils::ThreadArrange2D* t2D);
+    int32_t Run(decx::_Matrix* A, decx::_Matrix* B, decx::_Matrix* dst);
 
     template <bool _cplxf>
-    void Run(decx::_Matrix* A, decx::_Matrix* B, decx::_Matrix* C, decx::_Matrix* dst, decx::utils::ThreadArrange2D* t2D);
+    int32_t Run(decx::_Matrix* A, decx::_Matrix* B, decx::_Matrix* C, decx::_Matrix* dst);
 
 
-    uint2 GetThreadDist_B() const;
-    uint2 GetThreadDist_dst() const;
+    const uint2& GetThreadDist_B() const;
+    const uint2& GetThreadDist_dst() const;
 
 
     static void Release(decx::blas::cpu_GEMM_planner<_data_type>* _fake_this);

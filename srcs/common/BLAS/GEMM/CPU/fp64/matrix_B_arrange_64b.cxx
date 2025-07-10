@@ -30,27 +30,23 @@
 
 
 #include "../matrix_B_arrange.h"
-#include "../../../../../common/SIMD/intrinsics_ops.h"
+#include <SIMD/intrinsics_ops.h>
 
 
 namespace decx
 {
 namespace blas {
-    namespace CPUK 
-    {
-        template <bool _cplxf, uint32_t block_W_v8, uint32_t block_H>
-        _THREAD_CALL_ static void _matrix_B_arrange_64b_block(const double* __restrict, double* __restrict, 
-            const uint32_t, const uint32_t);
+namespace CPUK 
+{
+    template <bool _cplxf, uint32_t block_W_v8, uint32_t block_H>
+    _THREAD_CALL_ static void _matrix_B_arrange_64b_block(const double* __restrict, double* __restrict, const uint32_t, const uint32_t);
 
-        template <bool _cplxf>
-        _THREAD_CALL_ static void _matrix_B_arrange_64b_block_var(const double* __restrict, double* __restrict,
-            const uint32_t, const uint32_t, const uint2);
+    template <bool _cplxf>
+    _THREAD_CALL_ static void _matrix_B_arrange_64b_block_var(const double* __restrict, double* __restrict, const uint32_t, const uint32_t, const uint2);
 
-
-        template <bool _cplxf, uint32_t block_W_v8, uint32_t block_H>
-        _THREAD_FUNCTION_ static void _matrix_B_arrange_64b_exec(const double* __restrict, double* __restrict,
-            const uint2, const uint32_t, const uint32_t);
-    }
+    template <bool _cplxf, uint32_t block_W_v8, uint32_t block_H>
+    _THREAD_FUNCTION_ static void _matrix_B_arrange_64b_exec(const double* __restrict, double* __restrict, const uint2, const uint32_t, const uint32_t);
+}
 }
 }
 
@@ -71,7 +67,7 @@ _matrix_B_arrange_64b_block(const double* __restrict    src,
 
         __m256d stg0, stg1;
         for (uint32_t j = 0; j < block_W_v8; ++j) {
-            if constexpr (_cplxf) {
+            if_opt (_cplxf) {
                 __m256d recv0 = _mm256_load_pd(src + dex_src);
                 __m256d recv1 = _mm256_load_pd(src + dex_src + 4);
                 recv0 = _mm256_permute4x64_pd(recv0, 0b11011000);
@@ -109,7 +105,7 @@ _matrix_B_arrange_64b_block_var(const double* __restrict    src,
         for (uint32_t j = 0; j < proc_dims_v4.x / 2; ++j) 
         {
             __m256d stg0, stg1;
-            if constexpr (_cplxf) {
+            if_opt (_cplxf) {
                 __m256d recv0 = _mm256_load_pd(src + dex_src);
                 __m256d recv1 = _mm256_load_pd(src + dex_src + 4);
                 recv0 = _mm256_permute4x64_pd(recv0, 0b11011000);
@@ -130,7 +126,7 @@ _matrix_B_arrange_64b_block_var(const double* __restrict    src,
         if (proc_dims_v4.x & 1) 
         {
             __m256d stg0, stg1 = _mm256_setzero_pd();
-            if constexpr (_cplxf) {
+            if_opt (_cplxf) {
                 __m256d recv = _mm256_load_pd(src + dex_src);
                 stg0 = _mm256_permute4x64_pd(recv, 0b11011000);
             }
@@ -163,7 +159,7 @@ _matrix_B_arrange_64b_block(const double* __restrict    src,
 
         float64x2x2_t stg;
         for (uint32_t j = 0; j < block_W_v4; ++j) {
-            if constexpr (_cplxf) {
+            if_opt (_cplxf) {
                 stg = vld2q_f64(src + dex_src);
             }
             else {
@@ -194,7 +190,7 @@ _matrix_B_arrange_64b_block_var(const double* __restrict    src,
         for (uint32_t j = 0; j < proc_dims_v2.x / 2; ++j) 
         {
             float64x2x2_t stg;
-            if constexpr (_cplxf) {
+            if_opt (_cplxf) {
                 stg = vld2q_f64(src + dex_src);
             }
             else {
@@ -210,7 +206,7 @@ _matrix_B_arrange_64b_block_var(const double* __restrict    src,
             decx::utils::simd::xmm256_reg stg;
             stg._vui.val[1] = veorq_u32(stg._vui.val[1], stg._vui.val[1]);
 
-            if constexpr (_cplxf) {
+            if_opt (_cplxf) {
                 float64x2_t recv = vld1q_f64(src + dex_src);
                 vst1q_f64(dst + dex_dst, recv);
             }
@@ -284,56 +280,48 @@ _matrix_B_arrange_64b_exec(const double* __restrict src,            // pointer o
 }
 
 
-
-template <bool _cplxf>
-void decx::blas::matrix_B_arrange_64b(const double*                     src, 
-                                      double*                           dst, 
-                                      const uint32_t                    pitchsrc_v1,
-                                      const uint32_t                    Llen, 
-                                      const decx::utils::frag_manager*  _fmgr_WH,   // Aligned to 8 on width
-                                      decx::utils::Thr2D*             t2D)
+template <bool _cplxf> int32_t decx::blas::
+matrix_B_arrange_64b(const double*                     src, 
+                     double*                           dst, 
+                     const uint32_t                    pitchsrc_v1,
+                     const uint32_t                    Llen, 
+                     const decx::utils::frag_manager*  _fmgr_WH,   // Aligned to 8 on width
+                     decx::utils::ComputeLoadsMgr2D*   t2D)
 {
-#if defined(__x86_64__) || defined(__i386__)
-    constexpr uint32_t _alignment = 4;
-#endif
-#if defined(__aarch64__) || defined(__arm__)
-    constexpr uint32_t _alignment = 2;
-#endif
+    int32_t rval = 0;
+    constexpr uint32_t _alignment = decx::utils::simd::GetCPUSimdAlignBytes() / sizeof(double);
     constexpr uint32_t _alignment_x2 = _alignment * 2;
 
     const double* loc_src = NULL;
     double* loc_dst = NULL;
 
-    for (uint32_t i = 0; i < t2D->thread_h; ++i) 
+    uint32_t slot_id = 0;
+    for (uint32_t i = 0; i < t2D->GetDist().y; ++i) 
     {
-        uint2 proc_dims;
-        proc_dims = make_uint2(_fmgr_WH[0].frag_len, 
-                               i < t2D->thread_h - 1 ? _fmgr_WH[1].frag_len
-                                                     : _fmgr_WH[1].last_frag_len);
-
-        loc_src = src + i * _fmgr_WH[1].frag_len * pitchsrc_v1;
-        loc_dst = dst + i * _fmgr_WH[1].frag_len * _alignment_x2;
-        for (uint32_t j = 0; j < t2D->thread_w - 1; ++j) 
+        loc_src = src + i * _fmgr_WH[1].GetFragLen() * pitchsrc_v1;
+        loc_dst = dst + i * _fmgr_WH[1].GetFragLen() * _alignment_x2;
+        for (uint32_t j = 0; j < t2D->GetDist().x; ++j) 
         {
-            t2D->_async_thread[i * t2D->thread_w + j] = decx::cpu::RegisterTaskLoadBalanced(
-                decx::blas::CPUK::_matrix_B_arrange_64b_exec<_cplxf, 2, 16>,
-                loc_src, loc_dst, proc_dims, pitchsrc_v1, Llen);
-            loc_src += _fmgr_WH[0].frag_len * _alignment;
-            loc_dst += _fmgr_WH[0].frag_len * Llen * _alignment;
-        }
-        const uint32_t _LW = _fmgr_WH[0].is_left ? _fmgr_WH[0].frag_left_over : _fmgr_WH[0].frag_len;
+            const uint2 proc_dims = make_uint2(_fmgr_WH[0].GetFragLenById(j), 
+                                               _fmgr_WH[1].GetFragLenById(i));
 
-        proc_dims.x = _LW;
-        t2D->_async_thread[(i+1)*t2D->thread_w - 1] = decx::cpu::RegisterTaskLoadBalanced(
-            decx::blas::CPUK::_matrix_B_arrange_64b_exec<_cplxf, 2, 16>,
-            loc_src, loc_dst, proc_dims, pitchsrc_v1, Llen);
+            rval |= t2D->AppendTask(slot_id, decx::blas::CPUK::_matrix_B_arrange_64b_exec<_cplxf, 2, 16>,
+                PACK_CPY(loc_src), PACK_CPY(loc_dst), PACK_CPY(proc_dims), PACK_REF(pitchsrc_v1), PACK_REF(Llen));
+            
+            loc_src += _fmgr_WH[0].GetFragLen() * _alignment;
+            loc_dst += _fmgr_WH[0].GetFragLen() * Llen * _alignment;
+            ++slot_id;
+        }
     }
 
-    t2D->__sync_all_threads();
+    rval |= t2D->RunAll();
+    rval |= t2D->SynchronizeAll();
+    rval |= t2D->ClearAll();
+    return rval;
 }
 
-template void decx::blas::matrix_B_arrange_64b<true>(const double*, double*, const uint32_t,
-    const uint32_t, const decx::utils::frag_manager*, decx::utils::Thr2D*);
+template int32_t decx::blas::matrix_B_arrange_64b<true>(const double*, double*, const uint32_t, const uint32_t, const decx::utils::frag_manager*, 
+    decx::utils::ComputeLoadsMgr2D*);
 
-template void decx::blas::matrix_B_arrange_64b<false>(const double*, double*, const uint32_t,
-    const uint32_t, const decx::utils::frag_manager*, decx::utils::Thr2D*);
+template int32_t decx::blas::matrix_B_arrange_64b<false>(const double*, double*, const uint32_t, const uint32_t, const decx::utils::frag_manager*, 
+    decx::utils::ComputeLoadsMgr2D*);

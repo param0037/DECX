@@ -32,38 +32,38 @@
 #ifndef _GEMM_FP32_KERNEL_X86_64_H_
 #define _GEMM_FP32_KERNEL_X86_64_H_
 
-#include "../../../../../../common/basic.h"
+#include <basic.h>
 
 
 namespace decx
 {
 namespace blas {
-    namespace CPUK 
-    {
-        template <bool _ABC>
-        static _THREAD_CALL_ void GEMM_fp32_dp_kernel_frag(const float* __restrict A_line, const float* __restrict B_lane,
-            float* __restrict dst, const uint32_t _linear, const bool _first = false, const float* __restrict C = NULL);
+namespace CPUK 
+{
+    template <bool _ABC>
+    static _THREAD_CALL_ void GEMM_fp32_dp_kernel_frag(const float* __restrict A_line, const float* __restrict B_lane,
+        float* __restrict dst, const uint32_t _linear, const bool _first = false, const float* __restrict C = NULL);
 
 
-        template <bool _ABC>
-        static _THREAD_CALL_ void GEMM_fp32_dp_kernel_frag_dual(const float* __restrict A_line, const float* __restrict B_lane,
-            float* __restrict dst, const uint32_t _linear, const bool _first = false, const float* __restrict C = NULL);
+    template <bool _ABC>
+    static _THREAD_CALL_ void GEMM_fp32_dp_kernel_frag_dual(const float* __restrict A_line, const float* __restrict B_lane,
+        float* __restrict dst, const uint32_t _linear, const bool _first = false, const float* __restrict C = NULL);
 
 
-        /*
-        * The layout of dst and C should be completely consistant. Normally it will be, by the definition of GEMM.
-        */
-        template <bool _ABC>
-        static _THREAD_FUNCTION_ void GEMM_fp32_block_kernel(const float* __restrict A, const float* __restrict B,
-            float* __restrict dst, const uint2 proc_dims_v8, const decx::utils::frag_manager* fmgrL,
-            const uint32_t pitchA_v1, const uint32_t Llen, const uint32_t pitchdst_v1, const float* __restrict C = NULL);
+    /*
+    * The layout of dst and C should be completely consistant. Normally it will be, by the definition of GEMM.
+    */
+    template <bool _ABC>
+    static _THREAD_FUNCTION_ void GEMM_fp32_block_kernel(const float* __restrict A, const float* __restrict B,
+        float* __restrict dst, const uint2 proc_dims_v8, const decx::utils::frag_manager* fmgrL,
+        const uint32_t pitchA_v1, const uint32_t Llen, const uint32_t pitchdst_v1, const float* __restrict C = NULL);
 
 
-        template <bool _ABC>
-        static _THREAD_FUNCTION_ void GEMM_fp32_kernel(const float* __restrict A, const float* __restrict B,
-            float* __restrict dst, const decx::blas::GEMM_blocking_config* config,
-            const uint32_t pitchA_v1, const uint32_t Llen, const uint32_t pitchdst_v1, const float* __restrict C = NULL);
-    }
+    template <bool _ABC>
+    static _THREAD_FUNCTION_ void GEMM_fp32_kernel(const float* __restrict A, const float* __restrict B,
+        float* __restrict dst, const decx::blas::GEMM_blocking_config* config,
+        const uint32_t pitchA_v1, const uint32_t Llen, const uint32_t pitchdst_v1, const float* __restrict C = NULL);
+}
 }
 }
 
@@ -87,7 +87,7 @@ GEMM_fp32_dp_kernel_frag(const float* __restrict    A_line,
         _accu = _mm256_load_ps(dst); 
     }
     else {
-        if constexpr (_ABC) { _accu = _mm256_load_ps(C); }
+        if_opt (_ABC) { _accu = _mm256_load_ps(C); }
         else { _accu = _mm256_setzero_ps(); }
     }
 
@@ -128,7 +128,6 @@ GEMM_fp32_dp_kernel_frag(const float* __restrict    A_line,
 }
 
 
-
 template <bool _ABC>
 static _THREAD_CALL_ void decx::blas::CPUK::
 GEMM_fp32_dp_kernel_frag_dual(const float* __restrict A_line, 
@@ -145,7 +144,7 @@ GEMM_fp32_dp_kernel_frag_dual(const float* __restrict A_line,
         _accu[1] = _mm256_load_ps(dst + 8);
     }
     else {
-        if constexpr (_ABC) { 
+        if_opt (_ABC) { 
             _accu[0] = _mm256_load_ps(C);
             _accu[1] = _mm256_load_ps(C + 8);
         }
@@ -199,23 +198,19 @@ GEMM_fp32_dp_kernel_frag_dual(const float* __restrict A_line,
             B_dex += 16;
         }
     }
+
     _mm256_store_ps(dst, _accu[0]);
     _mm256_store_ps(dst + 8, _accu[1]);
 }
 
 
-
 template <bool _ABC>
-static _THREAD_FUNCTION_ void 
-decx::blas::CPUK::GEMM_fp32_block_kernel(const float* __restrict    A,
-                                         const float* __restrict    B, 
-                                         float* __restrict          dst,
-                                         const uint2                proc_dims_v8,
-                                         const decx::utils::frag_manager* fmgrL,
-                                         const uint32_t             pitchA_v1, 
-                                         const uint32_t             Llen, 
-                                         const uint32_t             pitchdst_v1,
-                                         const float* __restrict    C)
+static _THREAD_FUNCTION_ void decx::blas::CPUK::
+GEMM_fp32_block_kernel(const float* __restrict A,               const float* __restrict B, 
+                       float* __restrict dst,                   const uint2 proc_dims_v8,
+                       const decx::utils::frag_manager* fmgrL,  const uint32_t pitchA_v1, 
+                       const uint32_t Llen,                     const uint32_t pitchdst_v1,
+                       const float* __restrict C)
 {
     uint64_t A_dex = 0, B_dex = 0, dst_dex = 0;
     
@@ -245,15 +240,11 @@ decx::blas::CPUK::GEMM_fp32_block_kernel(const float* __restrict    A,
 
 // Typically the processing sizes = [BW, BH]
 template <bool _ABC>
-static _THREAD_FUNCTION_ void 
-decx::blas::CPUK::GEMM_fp32_kernel(const float* __restrict                  A, 
-                                   const float* __restrict                  B,
-                                   float* __restrict                        dst, 
-                                   const decx::blas::GEMM_blocking_config*  config,
-                                   const uint32_t                           pitchA_v1, 
-                                   const uint32_t                           Llen, 
-                                   const uint32_t                           pitchdst_v1,
-                                   const float* __restrict                  C)
+static _THREAD_FUNCTION_ void decx::blas::CPUK::
+GEMM_fp32_kernel(const float* __restrict A,         const float* __restrict B,
+                 float* __restrict dst,             const decx::blas::GEMM_blocking_config* config,
+                 const uint32_t pitchA_v1,          const uint32_t Llen, 
+                 const uint32_t pitchdst_v1,        const float* __restrict C)
 {
     uint64_t A_dex = 0, B_dex = 0, dst_dex = 0;
 

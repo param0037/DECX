@@ -87,7 +87,7 @@ GEMM_fp64_dp_kernel_frag(const double* __restrict    A_line,
         _accu._vd = vld1q_f64(dst); 
     }
     else {
-        if constexpr (_ABC) { _accu._vd = vld1q_f64(C); }
+        if_opt (_ABC) { _accu._vd = vld1q_f64(C); }
         else { _accu._vui = veorq_u32(_accu._vui, _accu._vui); }
     }
 
@@ -131,7 +131,7 @@ GEMM_fp64_dp_kernel_frag_dual(const double* __restrict  A_line,
         _accu._vd = vld1q_f64_x2(dst);
     }
     else {
-        if constexpr (_ABC) {
+        if_opt (_ABC) {
             _accu._vd = vld1q_f64_x2(C);
         }
         else {

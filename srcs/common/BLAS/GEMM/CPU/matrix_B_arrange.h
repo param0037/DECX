@@ -37,22 +37,23 @@
 #include <thread_management/thread_arrange.h>
 #include <thread_management/thread_pool.h>
 #include <FMGR/fragment_arrangment.h>
+#include <Concurrent/compute_loads_mgr.h>
 
 
 namespace decx
 {
-    namespace blas {
-        void matrix_B_arrange_fp32(const float* src, float* dst, const uint32_t pitchsrc_v1,
-            const uint32_t pitchdst_v8, const decx::utils::frag_manager* _fmgr_WH, decx::utils::Thr2D* t2D);
+namespace blas {
+    int32_t matrix_B_arrange_fp32(const float* src, float* dst, const uint32_t pitchsrc_v1,
+        const uint32_t pitchdst_v8, const decx::utils::frag_manager* _fmgr_WH, decx::utils::ComputeLoadsMgr2D* t2D);
 
-        template <bool _cplxf>
-        void matrix_B_arrange_64b(const double* src, double* dst, const uint32_t pitchsrc_v1,
-            const uint32_t pitchdst_v8, const decx::utils::frag_manager* _fmgr_WH, decx::utils::Thr2D* t2D);
+    template <bool _cplxf>
+    int32_t matrix_B_arrange_64b(const double* src, double* dst, const uint32_t pitchsrc_v1,
+        const uint32_t pitchdst_v8, const decx::utils::frag_manager* _fmgr_WH, decx::utils::ComputeLoadsMgr2D* t2D);
 
 
-        void matrix_B_arrange_cplxd(const de::CPd* src, de::CPd* dst, const uint32_t pitchsrc_v1,
-            const uint32_t pitchdst_v8, const decx::utils::frag_manager* _fmgr_WH, decx::utils::Thr2D* t2D);
-    }
+    int32_t matrix_B_arrange_cplxd(const de::CPd* src, de::CPd* dst, const uint32_t pitchsrc_v1,
+        const uint32_t pitchdst_v8, const decx::utils::frag_manager* _fmgr_WH, decx::utils::ComputeLoadsMgr2D* t2D);
+}
 }
 
 #endif
