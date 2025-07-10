@@ -68,6 +68,19 @@ namespace core
     };
 
 
+    enum class ThreadDispatchMethod_e
+    {
+        // Always create a new thread in the threadpool for the task unconditionally.
+        Dispatch_NewSlot = 0,
+
+        // Find the task queue that holds the least tasks and push the task to it, load balanced.
+        Dispatch_LoadBalanced = 1,
+
+        // Push the task to the task queue by indicated slot ID.
+        Dispatch_ByID = 2,
+    };
+
+
     _DECX_API_ uint64_t GetOptimalThreadID();
 
 

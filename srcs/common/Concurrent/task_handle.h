@@ -44,6 +44,7 @@ namespace core
         uint8_t _task_impl[TASK_PACK_MAX_SIZE];
         // void* _p_task_handle;
         int32_t _slot_id;
+        ThreadDispatchMethod_e _dispatch_method;
     };
 }
 }
@@ -64,7 +65,7 @@ namespace decx
 namespace core
 {
 	template <typename FuncType, typename ... ArgTypes> static inline
-	int32_t TaskCreate(TaskHandle_t* task_hdlr, FuncType&& task_entry, ArgTypes&& ... args)
+	int32_t TaskCreate(const ThreadDispatchMethod_e method, int32_t slot_id, TaskHandle_t* task_hdlr, FuncType&& task_entry, ArgTypes&& ... args)
 	{
         if (nullptr == task_hdlr) {
             return -1;
@@ -72,6 +73,8 @@ namespace core
 		using TaskType = decx::core::Task<FuncType, ArgTypes...>;
 		static_assert(sizeof(TaskType) <= TASK_PACK_MAX_SIZE, "Task size is too large");
 		new(task_hdlr->_task_impl) decx::core::Task<FuncType, ArgTypes...>(std::forward<FuncType>(task_entry), std::forward<ArgTypes>(args)...);
+        task_hdlr->_dispatch_method = method;
+        task_hdlr->_slot_id = slot_id;
         return 0;
 	}
 
