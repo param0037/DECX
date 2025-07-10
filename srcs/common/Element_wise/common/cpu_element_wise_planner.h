@@ -81,6 +81,12 @@ public:
     }
 
 
+    void SetDispatchMethod(const decx::core::ThreadDispatchMethod_e method)
+    {
+        this->_tasks.SetDispatchMethod(method);
+    }
+
+
     uint64_t get_proc_len_v_by_id(const int32_t thread_id) const{
         return decx::utils::idiv_ceil<uint64_t>(this->_fmgr.GetFragLenById(thread_id), this->_alignment);
     }
@@ -94,15 +100,14 @@ public:
 
     template <typename FuncType, typename LambdaFunc_T, typename... Args> inline int32_t 
     Caller(FuncType&&                                      f, 
-           const decx::cpu::ThreadDispatchMethod_e         method, 
            decx::ThreadArg_var<int32_t, LambdaFunc_T>&&    slot_id, 
            Args&&...                                       args)
     {
         int32_t rval = 0;
 
         for (int32_t i = 0; i < this->_fmgr.GetFragNum(); ++i){
-            rval |= this->_tasks.AppendTask(std::forward<FuncType>(f), std::forward<Args>(args).value(i)...);
-            this->_tasks.Back()->_slot_id = slot_id.value(i);
+            rval |= this->_tasks.AppendTask(slot_id.value(i),
+                std::forward<FuncType>(f), std::forward<Args>(args).value(i)...);
         }
         
         rval |= this->_tasks.RunAll();
@@ -119,15 +124,13 @@ public:
     sCaller(FuncType&&                                      f, 
             const decx::utils::frag_manager*                fmgr, 
             decx::utils::ComputeLoadsMgr*                   p_tasks_mgr, 
-            const decx::cpu::ThreadDispatchMethod_e         method, 
             decx::ThreadArg_var<int32_t, LambdaFunc_T>&&    slot_id, 
             Args&&                                          ...args)
     {
         int32_t rval = 0;
 
         for (int32_t i = 0; i < fmgr->GetFragNum(); ++i){
-            rval |= p_tasks_mgr->AppendTask(std::forward<FuncType>(f), std::forward<Args>(args).value(i)...);
-            p_tasks_mgr->Back()->_slot_id = slot_id.value(i);
+            rval |= p_tasks_mgr->AppendTask(slot_id.value(i), std::forward<FuncType>(f), std::forward<Args>(args).value(i)...);
         }
         
         rval |= p_tasks_mgr->RunAll();
@@ -183,19 +186,19 @@ public:
     template <typename FuncType, typename LambdaFunc_T, typename ...Args>
     inline void caller(FuncType&& f, 
                        decx::utils::Thr1D* t1D, 
-                       const decx::cpu::ThreadDispatchMethod_e method,
+                       const decx::core::ThreadDispatchMethod_e method,
                        decx::ThreadArg_var<int32_t, LambdaFunc_T>&& slot_id,
                        Args&& ...args)
     {
-        uint32_t _thr_cnt = 0;
+        // uint32_t _thr_cnt = 0;
 
-        for (int32_t i = 0; i < this->_thread_dist.y; ++i){
-            for (int32_t j = 0; j < this->_thread_dist.x; ++j){
-                t1D->_async_thread[_thr_cnt] = decx::cpu::RegisterTask(f, method, slot_id.value(i), args.value(i, j)...);
-                ++_thr_cnt;
-            }
-        }
-        t1D->__sync_all_threads(make_uint2(0, _thr_cnt));
+        // for (int32_t i = 0; i < this->_thread_dist.y; ++i){
+        //     for (int32_t j = 0; j < this->_thread_dist.x; ++j){
+        //         t1D->_async_thread[_thr_cnt] = decx::cpu::RegisterTask(f, method, slot_id.value(i), args.value(i, j)...);
+        //         ++_thr_cnt;
+        //     }
+        // }
+        // t1D->__sync_all_threads(make_uint2(0, _thr_cnt));
     }
 
 
@@ -203,25 +206,25 @@ public:
     inline void caller_unary(FuncType&& f, const _type_in* src, _type_out* dst, const uint32_t Wsrc, const uint32_t Wdst, 
         decx::utils::Thr1D* t1D, Args&& ...additional)
     {
-        const _type_in* loc_src = src;
-        _type_out* loc_dst = dst;
+        // const _type_in* loc_src = src;
+        // _type_out* loc_dst = dst;
 
-        uint32_t _thr_cnt = 0;
+        // uint32_t _thr_cnt = 0;
 
-        for (int32_t i = 0; i < this->_thread_dist.y; ++i){
-            loc_src = src + Wsrc * i * this->_fmgr_WH[1].frag_len;
-            loc_dst = dst + Wdst * i * this->_fmgr_WH[1].frag_len;
-            for (int32_t j = 0; j < this->_thread_dist.x; ++j)
-            {
-                uint2 proc_dims = this->get_proc_dims_v_by_id(i, j);
-                t1D->_async_thread[_thr_cnt] = decx::cpu::RegisterTaskLoadBalanced(f, loc_src, loc_dst, proc_dims, Wsrc, Wdst, additional...);
+        // for (int32_t i = 0; i < this->_thread_dist.y; ++i){
+        //     loc_src = src + Wsrc * i * this->_fmgr_WH[1].frag_len;
+        //     loc_dst = dst + Wdst * i * this->_fmgr_WH[1].frag_len;
+        //     for (int32_t j = 0; j < this->_thread_dist.x; ++j)
+        //     {
+        //         uint2 proc_dims = this->get_proc_dims_v_by_id(i, j);
+        //         t1D->_async_thread[_thr_cnt] = decx::cpu::RegisterTaskLoadBalanced(f, loc_src, loc_dst, proc_dims, Wsrc, Wdst, additional...);
                 
-                loc_src += this->_fmgr_WH[0].frag_len;
-                loc_dst += this->_fmgr_WH[0].frag_len;
-                ++_thr_cnt;
-            }
-        }
-        t1D->__sync_all_threads(make_uint2(0, _thr_cnt));
+        //         loc_src += this->_fmgr_WH[0].frag_len;
+        //         loc_dst += this->_fmgr_WH[0].frag_len;
+        //         ++_thr_cnt;
+        //     }
+        // }
+        // t1D->__sync_all_threads(make_uint2(0, _thr_cnt));
     }
 
 
@@ -229,28 +232,28 @@ public:
     inline void caller_binary(FuncType&& f, const _type_in* src1, const _type_in* src2, _type_out* dst, const uint32_t Wsrc, const uint32_t Wdst, 
         decx::utils::Thr1D* t1D, Args&& ...additional)
     {
-        uint64_t dex_src = 0, dex_dst = 0;
-        uint32_t _thr_cnt = 0;
+        // uint64_t dex_src = 0, dex_dst = 0;
+        // uint32_t _thr_cnt = 0;
 
-        for (int32_t i = 0; i < this->_thread_dist.y; ++i)
-        {
-            dex_src = Wsrc * i * this->_fmgr_WH[1].frag_len;
-            dex_dst = Wdst * i * this->_fmgr_WH[1].frag_len;
+        // for (int32_t i = 0; i < this->_thread_dist.y; ++i)
+        // {
+        //     dex_src = Wsrc * i * this->_fmgr_WH[1].frag_len;
+        //     dex_dst = Wdst * i * this->_fmgr_WH[1].frag_len;
 
-            for (int32_t j = 0; j < this->_thread_dist.x; ++j){
-                uint2 proc_dims = 
-                    make_uint2(j < this->_thread_dist.x - 1 ? this->_fmgr_WH[0].frag_len : this->_fmgr_WH[0].last_frag_len,
-                            i < this->_thread_dist.y - 1 ? this->_fmgr_WH[1].frag_len : this->_fmgr_WH[1].last_frag_len);
+        //     for (int32_t j = 0; j < this->_thread_dist.x; ++j){
+        //         uint2 proc_dims = 
+        //             make_uint2(j < this->_thread_dist.x - 1 ? this->_fmgr_WH[0].frag_len : this->_fmgr_WH[0].last_frag_len,
+        //                     i < this->_thread_dist.y - 1 ? this->_fmgr_WH[1].frag_len : this->_fmgr_WH[1].last_frag_len);
 
-                t1D->_async_thread[_thr_cnt] = decx::cpu::RegisterTaskLoadBalanced(f, src1 + dex_src, src2 + dex_src, dst + dex_dst, proc_dims, 
-                                    Wsrc, Wdst, additional...);
+        //         t1D->_async_thread[_thr_cnt] = decx::cpu::RegisterTaskLoadBalanced(f, src1 + dex_src, src2 + dex_src, dst + dex_dst, proc_dims, 
+        //                             Wsrc, Wdst, additional...);
                 
-                dex_src += this->_fmgr_WH[0].frag_len;
-                dex_dst += this->_fmgr_WH[0].frag_len;
-                ++_thr_cnt;
-            }
-        }
-        t1D->__sync_all_threads(make_uint2(0, _thr_cnt));
+        //         dex_src += this->_fmgr_WH[0].frag_len;
+        //         dex_dst += this->_fmgr_WH[0].frag_len;
+        //         ++_thr_cnt;
+        //     }
+        // }
+        // t1D->__sync_all_threads(make_uint2(0, _thr_cnt));
     }
 
 };

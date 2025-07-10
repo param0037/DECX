@@ -108,6 +108,8 @@ mat_arithmetic_caller_VO(const decx::_Matrix*  src,
     const uint64_t proc_len_flatten_v1 = static_cast<uint64_t>(src->Pitch()) * static_cast<uint64_t>(src->Height());
     const uint32_t conc = DecxGetPermitConcurrency();
 
+    _planner.SetDispatchMethod(decx::core::ThreadDispatchMethod_e::Dispatch_ByID);
+
     switch (src->Type())
     {
     case de::_DATA_TYPES_FLAGS_::_FP32_:
@@ -117,7 +119,6 @@ mat_arithmetic_caller_VO(const decx::_Matrix*  src,
 
         _planner.Caller(
             (arithmetic_kernels_1D_VO<float, float>*)_kernel_ptr,   
-            decx::cpu::ThreadDispatchMethod_e::Dispatch_ByID,
             EW_SLOT_ID_MONOTONIC(0),
             decx::TArg_var<const float*>([&](const int32_t i){return (const float*)src->Mat + i * _planner.get_fmgr()->GetFragLen();}),
             decx::TArg_var<float*>([&](const int32_t i){return (float*)dst->Mat + i * _planner.get_fmgr()->GetFragLen();}),
@@ -133,7 +134,6 @@ mat_arithmetic_caller_VO(const decx::_Matrix*  src,
         
         _planner.Caller(
             (arithmetic_kernels_1D_VO<double, double>*)_kernel_ptr,
-            decx::cpu::ThreadDispatchMethod_e::Dispatch_ByID,
             EW_SLOT_ID_MONOTONIC(0),
             decx::TArg_var<const double*>([&](const int32_t i){return (const double*)src->Mat + i * _planner.get_fmgr()->GetFragLen();}),
             decx::TArg_var<double*>([&](const int32_t i){return (double*)dst->Mat + i * _planner.get_fmgr()->GetFragLen();}),
@@ -164,6 +164,8 @@ vec_arithmetic_caller_VVO(const decx::_Vector*  A,
     void* _kernel_ptr = NULL;
     const uint32_t conc = DecxGetPermitConcurrency();
 
+    _planner.SetDispatchMethod(decx::core::ThreadDispatchMethod_e::Dispatch_ByID);
+
     switch (A->Type())
     {
     case de::_DATA_TYPES_FLAGS_::_FP32_:
@@ -173,7 +175,6 @@ vec_arithmetic_caller_VVO(const decx::_Vector*  A,
 
         _planner.Caller(
             (arithmetic_kernels_1D_VVO<float, float, float>*)_kernel_ptr,
-            decx::cpu::ThreadDispatchMethod_e::Dispatch_ByID,
             EW_SLOT_ID_MONOTONIC(0),
             decx::TArg_var<const float*>([&](const int32_t i){return A->Vec.GetRawPtrConst<float>() + i * _planner.get_fmgr()->GetFragLen();}),
             decx::TArg_var<const float*>([&](const int32_t i){return B->Vec.GetRawPtrConst<float>() + i * _planner.get_fmgr()->GetFragLen();}),
@@ -191,7 +192,6 @@ vec_arithmetic_caller_VVO(const decx::_Vector*  A,
 
         _planner.Caller(
             (arithmetic_kernels_1D_VVO<double, double, double>*)_kernel_ptr,
-            decx::cpu::ThreadDispatchMethod_e::Dispatch_ByID,
             EW_SLOT_ID_MONOTONIC(0),
             decx::TArg_var<const double*>([&](const int32_t i){return A->Vec.GetRawPtrConst<double>() + i * _planner.get_fmgr()->GetFragLen();}),
             decx::TArg_var<const double*>([&](const int32_t i){return B->Vec.GetRawPtrConst<double>() + i * _planner.get_fmgr()->GetFragLen();}),
@@ -222,6 +222,8 @@ vec_arithmetic_caller_VO(const decx::_Vector*  src,
     void* _kernel_ptr = NULL;
     const uint32_t conc = DecxGetPermitConcurrency();
 
+    _planner.SetDispatchMethod(decx::core::ThreadDispatchMethod_e::Dispatch_ByID);
+
     switch (src->Type())
     {
     case de::_DATA_TYPES_FLAGS_::_FP32_:
@@ -231,7 +233,6 @@ vec_arithmetic_caller_VO(const decx::_Vector*  src,
 
         _planner.Caller(
             (arithmetic_kernels_1D_VO<float, float>*)_kernel_ptr,
-            decx::cpu::ThreadDispatchMethod_e::Dispatch_ByID,
             EW_SLOT_ID_MONOTONIC(0),
             decx::TArg_var<const float*>([&](const int32_t i){return (const float*)src->Vec + i * _planner.get_fmgr()->GetFragLen();}),
             decx::TArg_var<float*>([&](const int32_t i){return (float*)dst->Vec + i * _planner.get_fmgr()->GetFragLen();}),
@@ -248,7 +249,6 @@ vec_arithmetic_caller_VO(const decx::_Vector*  src,
 
         _planner.Caller(
             (arithmetic_kernels_1D_VO<double, double>*)_kernel_ptr,
-            decx::cpu::ThreadDispatchMethod_e::Dispatch_ByID,
             EW_SLOT_ID_MONOTONIC(0),
             decx::TArg_var<const double*>([&](const int32_t i){return (const double*)src->Vec + i * _planner.get_fmgr()->GetFragLen();}),
             decx::TArg_var<double*>([&](const int32_t i){return (double*)dst->Vec + i * _planner.get_fmgr()->GetFragLen();}),
