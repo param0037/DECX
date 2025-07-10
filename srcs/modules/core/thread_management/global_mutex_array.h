@@ -33,12 +33,12 @@
 
 #include <basic.h>
 
-#define DECX_GLOBAL_MUTEX_MAX_NUM 16
-
 typedef enum
 {
     Decx_GMtxId_LogConsole = 0,
     Decx_GMtxId_LastHandle = 1,
+    
+    DECX_GMtx_Max_Num,
 }DecxGlobalMtxIdMap_e;
 
 #ifdef __cplusplus

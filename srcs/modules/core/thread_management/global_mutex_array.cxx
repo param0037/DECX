@@ -33,13 +33,13 @@
 
 namespace decx
 {
-    static std::mutex g_mutex_array[DECX_GLOBAL_MUTEX_MAX_NUM];
+    static std::mutex g_mutex_array[DECX_GMtx_Max_Num];
 }
 
 
 _DECX_API_ void DecxInitGlobalMtxArray()
 {
-    for (int32_t i = 0; i < DECX_GLOBAL_MUTEX_MAX_NUM; ++i){
+    for (int32_t i = 0; i < DECX_GMtx_Max_Num; ++i){
         new(decx::g_mutex_array + i) std::mutex;
     }
 }
@@ -47,7 +47,7 @@ _DECX_API_ void DecxInitGlobalMtxArray()
 
 _DECX_API_ int32_t DecxGlobalMtx_Lock(const uint32_t mtx_id)
 {
-    if (mtx_id > DECX_GLOBAL_MUTEX_MAX_NUM - 1){
+    if (mtx_id > DECX_GMtx_Max_Num - 1){
         return -1;
     }
     decx::g_mutex_array[mtx_id].lock();
@@ -57,7 +57,7 @@ _DECX_API_ int32_t DecxGlobalMtx_Lock(const uint32_t mtx_id)
 
 _DECX_API_ int32_t DecxGlobalMtx_Unlock(const uint32_t mtx_id)
 {
-    if (mtx_id > DECX_GLOBAL_MUTEX_MAX_NUM - 1){
+    if (mtx_id > DECX_GMtx_Max_Num - 1){
         return -1;
     }
     decx::g_mutex_array[mtx_id].unlock();
