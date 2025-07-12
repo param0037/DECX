@@ -73,9 +73,16 @@ void decx::ResMgr::_mgr_task()
         }
 
         this->_last_res_num = this->_res_arr.size();
+
         {
             std::unique_lock<std::mutex> lock{ this->_mtx };
-            this->_cv.wait_for(lock, std::chrono::seconds(this->_shortest_wait_period), this->_wp);
+            while (!this->_wp()) {
+                if (this->_cv.wait_until(lock, 
+                                         std::chrono::_V2::steady_clock::now() + std::chrono::seconds(this->_shortest_wait_period))
+                                          == std::cv_status::no_timeout) {
+                    break;
+                }
+            }
         }
     }
 }
@@ -125,9 +132,7 @@ decx::ResMgr::~ResMgr()
     this->_mtx.unlock();
     this->_cv.notify_one();
 
-    if (this->_mgr_thread->joinable()) {
-        this->_mgr_thread->join();
-    }
+    this->_mgr_thread->detach();
     delete this->_mgr_thread;
 }
 
