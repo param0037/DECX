@@ -128,7 +128,7 @@ namespace CPUK
 		if (_call_times_in_warp < _FFT_call_times_v4 - 1 || _L_v4 == 0) {
 			for (uint32_t i = 0; i < _small_signal_len; ++i) {
 				_reg._vd = _mm256_load_pd((double*)(_frag_ptr + (i << 2)));
-				if constexpr (_conj) { _reg._vf = decx::dsp::CPUK::_cp4_conjugate_fp32(_reg._vf); }
+				if_opt (_conj) { _reg._vf = decx::dsp::CPUK::_cp4_conjugate_fp32(_reg._vf); }
 				_mm256_storeu_pd((double*)(dst + i * _global_kernel_info->_store_pitch + (_call_times_in_warp << 2)), _reg._vd);
 			}
 		}
@@ -136,7 +136,7 @@ namespace CPUK
 			for (uint32_t i = 0; i < _small_signal_len; ++i)
 			{
 				_reg._vd = _mm256_load_pd((double*)(_frag_ptr + (i << 2)));
-				if constexpr (_conj) { _reg._vf = decx::dsp::CPUK::_cp4_conjugate_fp32(_reg._vf); }
+				if_opt (_conj) { _reg._vf = decx::dsp::CPUK::_cp4_conjugate_fp32(_reg._vf); }
 				for (uint8_t j = 0; j < _L_v4; ++j) {
 					((double*)(dst))[i * _global_kernel_info->_store_pitch + (_call_times_in_warp << 2) + j] = _reg._arrd[j];
 				}
@@ -159,7 +159,7 @@ namespace CPUK
 		if (_call_times_in_warp < _FFT_call_times_v4 - 1 || !_L_v2) {
 			for (uint32_t i = 0; i < _small_signal_len; ++i) {
 				_reg._vd = _mm256_load_pd((double*)(_frag_ptr + (i << 1)));
-				if constexpr (_conj) { _reg._vd = decx::dsp::CPUK::_cp2_conjugate_fp64(_reg._vd); }
+				if_opt (_conj) { _reg._vd = decx::dsp::CPUK::_cp2_conjugate_fp64(_reg._vd); }
 				_mm256_storeu_pd((double*)(dst + i * _global_kernel_info->_store_pitch + (_call_times_in_warp << 1)), _reg._vd);
 			}
 		}
@@ -167,7 +167,7 @@ namespace CPUK
 			for (uint32_t i = 0; i < _small_signal_len; ++i)
 			{
 				_reg._vd = _mm256_load_pd((double*)(_frag_ptr + (i << 1)));
-				if constexpr (_conj) { _reg._vd = decx::dsp::CPUK::_cp2_conjugate_fp64(_reg._vd); }
+				if_opt (_conj) { _reg._vd = decx::dsp::CPUK::_cp2_conjugate_fp64(_reg._vd); }
 				_mm_storeu_pd((double*)(dst + i * _global_kernel_info->_store_pitch + (_call_times_in_warp << 1)), _reg._vd2[0]);
 			}
 		}
@@ -307,7 +307,7 @@ namespace CPUK
 		decx::utils::simd::xmm256_reg _reg;
 		for (uint32_t i = 0; i < _FFT_info->get_signal_len(); ++i) {
 			_reg._vd = _mm256_loadu_pd((double*)(src + i * _load_pitch + (_call_times << 2)));
-			if constexpr (_IFFT) { _reg._vf = _mm256_div_ps(_reg._vf, _mm256_set1_ps(_signal_length)); }
+			if_opt (_IFFT) { _reg._vf = _mm256_div_ps(_reg._vf, _mm256_set1_ps(_signal_length)); }
 			_mm256_store_pd((double*)(dst + (i << 2)), _reg._vd);
 		}
 	}
@@ -324,7 +324,7 @@ namespace CPUK
 		decx::utils::simd::xmm256_reg _reg;
 		for (uint32_t i = 0; i < _FFT_info->get_signal_len(); ++i) {
 			_reg._vd = _mm256_loadu_pd((double*)(src + i * _load_pitch + (_call_times << 1)));
-			if constexpr (_IFFT) { _reg._vd = _mm256_div_pd(_reg._vd, _mm256_set1_pd(_signal_length)); }
+			if_opt (_IFFT) { _reg._vd = _mm256_div_pd(_reg._vd, _mm256_set1_pd(_signal_length)); }
 			_mm256_store_pd((double*)(dst + (i << 1)), _reg._vd);
 		}
 	}

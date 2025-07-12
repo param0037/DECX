@@ -146,7 +146,7 @@ decx::dsp::fft::CPUK::_FFT1D_smaller_1st_cplxf32(const _type_in* __restrict					
 
 	for (uint32_t _call_times = 0; _call_times < FFT_call_times_v4; ++_call_times)
 	{
-		if constexpr (std::is_same_v<_type_in, float>){
+		if_opt (std::is_same_v<_type_in, float>){
 		decx::dsp::fft::CPUK::_load_1st_v4_fp32(src, _tiles->get_tile1<float>(), _FFT_info, _call_times, _signal_length);
 
 		decx::dsp::fft::CPUK::_FFT1D_caller_cplxf32_1st_R2C(_tiles->get_tile1<float>(),
@@ -268,7 +268,7 @@ decx::dsp::fft::CPUK::_FFT1D_smaller_mid_cplxf32_C2C(const de::CPf* __restrict		
 				_double_buffer.UpdateStatus();
 			}
 			
-			if constexpr (std::is_same_v<_type_out, de::CPf>){
+			if_opt (std::is_same_v<_type_out, de::CPf>){
 				decx::dsp::fft::CPUK::_store_fragment_to_DRAM_cplxf<_conj>(_double_buffer.GetLeadingBufPtr<de::CPf>(), _dst_start_ptr, 
 																		   _call_times_in_warp,						 FFT_call_times_v4, 
 																		   _L_v4,									 _global_kernel_info, 

@@ -53,7 +53,7 @@ _FFT3D_smaller_2rows_cplxd(const _type_in* __restrict src_head_ptr, de::CPd* __r
     for (uint32_t i = 0; i < _f_mgr_H.frag_num; ++i) 
     {
         _double_buffer.ResetBuf1AsLeading();
-        if constexpr (std::is_same_v<_type_in, double>)
+        if_opt (std::is_same_v<_type_in, double>)
         {
             // Load and transpose data from global memory
             decx::dsp::fft::CPUK::load_entire_row_transpose_fp64_zip(src_head_ptr,  &_double_buffer,
@@ -66,7 +66,7 @@ _FFT3D_smaller_2rows_cplxd(const _type_in* __restrict src_head_ptr, de::CPd* __r
 															    _double_buffer.GetLaggingBufPtr<de::CPd>(),
 															    _FFT_info->_FFT_info.get_kernel_info_ptr(0));
         }
-        else if constexpr (std::is_same_v<_type_in, uint8_t>) {
+        else if_opt (std::is_same_v<_type_in, uint8_t>) {
             // Load and transpose data from global memory
             decx::dsp::fft::CPUK::load_entire_row_transpose_u8_fp64_zip(src_head_ptr,           &_double_buffer,
                                                                         _tiles,                 _pitch_src >> 1, 
@@ -175,14 +175,14 @@ _IFFT3D_smaller_2rows_cplxd(const de::CPd* __restrict src_head_ptr, _type_out* _
 		}
 
         // Store back to global memory
-        if constexpr (std::is_same_v<_type_out, double>){
+        if_opt (std::is_same_v<_type_out, double>){
             decx::dsp::fft::CPUK::
                 store_entire_row_transpose_cplxd_fp64_zip(&_double_buffer,  dst_head_ptr, 
                                                           _tiles,           _pitch_dst >> 1, 
                                                           _pitch_dst,       &_FFT_info->_FFT_zip_info_STG, 
                                                           start_dex_H,      i == (_f_mgr_H.frag_num - 1) ? _f_mgr_H.last_frag_len : 2);
         }
-        else if constexpr (std::is_same_v<_type_out, uint8_t>) {
+        else if_opt (std::is_same_v<_type_out, uint8_t>) {
             decx::dsp::fft::CPUK::
                 store_entire_row_transpose_cplxd_u8_zip(&_double_buffer,  dst_head_ptr, 
                                                         _tiles,           _pitch_dst >> 1, 

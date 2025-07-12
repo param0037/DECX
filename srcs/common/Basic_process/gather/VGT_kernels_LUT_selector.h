@@ -55,13 +55,13 @@ namespace decx
         
 #endif
 #if __cplusplus >= 201703L
-        if constexpr (std::is_same_v<_type_in, float>)          res.x = 0;
-        else if constexpr (std::is_same_v<_type_in, uint8_t>)   res.x = 1;
-        else if constexpr (std::is_same_v<_type_in, uchar4>)    res.x = 2;
+        if_opt (std::is_same_v<_type_in, float>)          res.x = 0;
+        else if_opt (std::is_same_v<_type_in, uint8_t>)   res.x = 1;
+        else if_opt (std::is_same_v<_type_in, uchar4>)    res.x = 2;
 
-        if constexpr (std::is_same_v<_type_out, float>)         res.y = 0;
-        else if constexpr (std::is_same_v<_type_out, uint8_t>)  res.y = 1;
-        else if constexpr (std::is_same_v<_type_out, uchar4>)   res.y = 2;
+        if_opt (std::is_same_v<_type_out, float>)         res.y = 0;
+        else if_opt (std::is_same_v<_type_out, uint8_t>)  res.y = 1;
+        else if_opt (std::is_same_v<_type_out, uchar4>)   res.y = 2;
         
 #endif
 #ifdef _DECX_CPU_PARTS_

@@ -148,7 +148,7 @@ decx::dsp::fft::CPUK::_FFT1D_smaller_1st_cplxd64(const _type_in* __restrict					
 	for (uint32_t _call_times = 0; _call_times < FFT_call_times_v2; ++_call_times)
 	{
 #if __cplusplus >= 201703L
-		if constexpr (std::is_same_v<_type_in, double>){		// R2C
+		if_opt (std::is_same_v<_type_in, double>){		// R2C
 #else
 		if (std::is_same< _type_in, double>::value) {
 #endif
@@ -274,7 +274,7 @@ decx::dsp::fft::CPUK::_FFT1D_smaller_mid_cplxd64_C2C(const de::CPd* __restrict		
 				_double_buffer.UpdateStatus();
 			}
 #if __cplusplus >= 201703L
-			if constexpr (std::is_same_v<_type_out, de::CPd>){
+			if_opt (std::is_same_v<_type_out, de::CPd>){
 #else
 			if (std::is_same<_type_out, de::CPd>::value) {
 #endif

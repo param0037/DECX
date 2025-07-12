@@ -236,7 +236,7 @@ load_entire_row_transpose_cplxf(const de::CPf* __restrict                       
         for (uint32_t j = 0; j < _load_len_v4; ++j) 
         {
             _reg._vd = _mm256_load_pd(_src_row_ptr + (j << 2));
-            if constexpr (_IFFT) { _reg._vf = _mm256_div_ps(_reg._vf, _mm256_set1_ps(_signal_length)); }
+            if_opt (_IFFT) { _reg._vf = _mm256_div_ps(_reg._vf, _mm256_set1_ps(_signal_length)); }
             
             _mm256_store_pd(_dst_row_ptr + (j << 2), _reg._vd);
         }
@@ -271,7 +271,7 @@ load_entire_row_transpose_cplxd(const de::CPd* __restrict                       
         for (uint32_t j = 0; j < _load_len_v2; ++j) 
         {
             _reg._vd = _mm256_load_pd((double*)(_src_row_ptr + (j << 1)));
-            if constexpr (_IFFT) { _reg._vd = _mm256_mul_pd(_reg._vd, _mm256_set1_pd(_1_signal_len)); }
+            if_opt (_IFFT) { _reg._vd = _mm256_mul_pd(_reg._vd, _mm256_set1_pd(_1_signal_len)); }
             
             _mm256_store_pd((double*)(_dst_row_ptr + (j << 1)), _reg._vd);
         }
@@ -307,7 +307,7 @@ store_entire_row_transpose_cplxf(decx::utils::double_buffer_manager* __restrict 
         {
             _reg._vd = _mm256_load_pd(_src_row_ptr + (j << 2));
 
-            if constexpr (_conj) { 
+            if_opt (_conj) { 
                 _reg._vf = decx::dsp::CPUK::_cp4_conjugate_fp32(_reg._vf); 
             }
             //_reg._vf = _mm256_set1_ps(37);
@@ -341,7 +341,7 @@ store_entire_row_transpose_cplxd(decx::utils::double_buffer_manager* __restrict 
         {
             _reg._vd = _mm256_load_pd((double*)(_src_row_ptr + (j << 1)));
 
-            if constexpr (_conj) { 
+            if_opt (_conj) { 
                 _reg._vd = decx::dsp::CPUK::_cp2_conjugate_fp64(_reg._vd); 
             }
 

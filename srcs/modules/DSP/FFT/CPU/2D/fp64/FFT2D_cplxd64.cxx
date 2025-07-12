@@ -109,7 +109,7 @@ void decx::dsp::fft::cpu_FFT2D_planner<double>::Inverse(decx::_Matrix* src,
                                                            t1D, false);
                                                            
     // Transpose
-    if constexpr (std::is_same_v<_type_out, de::CPd>){
+    if_opt (std::is_same_v<_type_out, de::CPd>){
         this->_transpose_config_2nd.
             transpose_16b_caller((de::CPd*)this->get_tmp1_ptr(), 
                                 dst->Mat.GetRawPtr<de::CPd>(),
@@ -117,7 +117,7 @@ void decx::dsp::fft::cpu_FFT2D_planner<double>::Inverse(decx::_Matrix* src,
                                 dst->Pitch(),
                                 t1D);
     }
-    else if constexpr (std::is_same_v<_type_out, uint8_t>) {
+    else if_opt (std::is_same_v<_type_out, uint8_t>) {
         this->_transpose_config_2nd.
             transpose_1b_caller((uint64_t*)this->get_tmp1_ptr(), 
                                 (uint64_t*)dst->Mat,

@@ -140,14 +140,14 @@ void _CRSR_ decx::dsp::fft::cpu_FFT3D_planner<float>::Inverse(decx::_Tensor* src
         &t1D,
         decx::dsp::fft::FFT_directions::_FFT_AlongH);
 
-    if constexpr (std::is_same_v<_type_out, float>) {
+    if_opt (std::is_same_v<_type_out, float>) {
         this->_transp_config_back.
             transpose_4b_caller((float*)this->get_tmp2_ptr(),
                                 (float*)dst->Tens, 
                                 this->_FFT_H._pitchdst, 
                                 dst->get_layout().dp_x_wp, &t1D);
     }
-    else if constexpr (std::is_same_v<_type_out, uint8_t>) {
+    else if_opt (std::is_same_v<_type_out, uint8_t>) {
         this->_transp_config_back.
             transpose_1b_caller((uint64_t*)this->get_tmp2_ptr(),
                                 (uint64_t*)dst->Tens, 

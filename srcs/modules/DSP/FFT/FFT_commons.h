@@ -186,7 +186,7 @@ static bool decx::dsp::fft::_radix_apart(uint64_t __x, std::vector<uint32_t>* re
         for (int i = 0; i < 4; ++i)
         {
 #ifdef _DECX_CPU_PARTS_
-            if constexpr (_smaller_factors) {
+            if_opt (_smaller_factors) {
                 if (i == 1) continue;       // Skip Radix-4
             }
 #endif

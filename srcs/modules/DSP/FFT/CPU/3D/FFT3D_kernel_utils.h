@@ -310,7 +310,7 @@ load_entire_row_transpose_cplxf_zip(const de::CPf* __restrict src_head_ptr,
 
             for (uint32_t j = 0; j < _load_len_v4; ++j) {
                 _reg._vd = _mm256_load_pd(_src_row_ptr + (j << 2));
-                if constexpr (_IFFT) { _reg._vf = _mm256_div_ps(_reg._vf, _mm256_set1_ps(signal_len)); }
+                if_opt (_IFFT) { _reg._vf = _mm256_div_ps(_reg._vf, _mm256_set1_ps(signal_len)); }
                 //_reg._vf = _mm256_setr_ps(j * 4, 0, j * 4 + 1, 0, j * 4 + 2, 0, j * 4 + 3, 0);
                 _mm256_store_pd(_dst_row_ptr + (j << 2), _reg._vd);
             }
@@ -355,7 +355,7 @@ load_entire_row_transpose_cplxd_zip(const de::CPd* __restrict src_head_ptr,
 
             for (uint32_t j = 0; j < _load_len_v2; ++j) {
                 _reg._vd = _mm256_load_pd((double*)(_src_row_ptr + (j << 1)));
-                if constexpr (_IFFT) { _reg._vd = _mm256_div_pd(_reg._vd, _mm256_set1_pd(signal_len)); }
+                if_opt (_IFFT) { _reg._vd = _mm256_div_pd(_reg._vd, _mm256_set1_pd(signal_len)); }
                 //_reg._vf = _mm256_setr_ps(j * 4, 0, j * 4 + 1, 0, j * 4 + 2, 0, j * 4 + 3, 0);
                 _mm256_store_pd((double*)(_dst_row_ptr + (j << 1)), _reg._vd);
             }
@@ -405,7 +405,7 @@ decx::dsp::fft::CPUK::store_entire_row_transpose_cplxf_zip(decx::utils::double_b
             {
                 _reg._vd = _mm256_load_pd(_src_row_ptr + (j << 2));
 
-                if constexpr (_conj) {
+                if_opt (_conj) {
                     _reg._vf = decx::dsp::CPUK::_cp4_conjugate_fp32(_reg._vf);
                 }
                 //_reg._vf = _mm256_set1_ps(37);
@@ -455,7 +455,7 @@ store_entire_row_transpose_cplxd_zip(decx::utils::double_buffer_manager* __restr
             {
                 _reg._vd = _mm256_load_pd((double*)(_src_row_ptr + (j << 1)));
 
-                if constexpr (_conj) {
+                if_opt (_conj) {
                     _reg._vd = decx::dsp::CPUK::_cp2_conjugate_fp64(_reg._vd);
                 }
                 //_reg._vf = _mm256_set1_ps(37);

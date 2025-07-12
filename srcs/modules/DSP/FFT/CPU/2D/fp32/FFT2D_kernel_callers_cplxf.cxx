@@ -53,7 +53,7 @@ decx::dsp::fft::CPUK::_FFT2D_smaller_4rows_cplxf(const _type_in* __restrict     
     for (uint32_t i = 0; i < _f_mgr_H.frag_num; ++i) 
     {
         _double_buffer.ResetBuf1AsLeading();
-        if constexpr (std::is_same_v<_type_in, float>) {
+        if_opt (std::is_same_v<_type_in, float>) {
             // Load and transpose data from global memory
             decx::dsp::fft::CPUK::load_entire_row_transpose_fp32(_src_loc_ptr, &_double_buffer, _tiles, _pitch_src >> 2, _pitch_src,
                 i == (_f_mgr_H.frag_num - 1) ? _f_mgr_H.last_frag_len : 4);
@@ -63,7 +63,7 @@ decx::dsp::fft::CPUK::_FFT2D_smaller_4rows_cplxf(const _type_in* __restrict     
 															    _double_buffer.GetLaggingBufPtr<de::CPf>(),
 															    _FFT_info->get_kernel_info_ptr(0));
         }
-        else if constexpr (std::is_same_v<_type_in, uint8_t>) {
+        else if_opt (std::is_same_v<_type_in, uint8_t>) {
             // Load and transpose data from global memory
             decx::dsp::fft::CPUK::load_entire_row_transpose_u8_fp32((float*)_src_loc_ptr, &_double_buffer, _tiles, _pitch_src >> 2, _pitch_src,
                 i == (_f_mgr_H.frag_num - 1) ? _f_mgr_H.last_frag_len : 4);
@@ -164,11 +164,11 @@ decx::dsp::fft::CPUK::_IFFT2D_smaller_4rows_cplxf(const de::CPf* __restrict     
 		}
 
         // Store back to global memory
-        if constexpr (std::is_same_v<_type_out, de::CPf>) {
+        if_opt (std::is_same_v<_type_out, de::CPf>) {
             decx::dsp::fft::CPUK::store_entire_row_transpose_cplxf<false>(&_double_buffer, _dst_loc_ptr, _tiles, _pitch_dst >> 2, _pitch_dst,
                 i == (_f_mgr_H.frag_num - 1) ? _L : 4);
         }
-        else if constexpr (std::is_same_v<_type_out, uint8_t>) {
+        else if_opt (std::is_same_v<_type_out, uint8_t>) {
             decx::dsp::fft::CPUK::store_entire_row_transpose_cplxf_u8(&_double_buffer,          
                                                                       (int32_t*)_dst_loc_ptr, 
                                                                       _tiles, 
