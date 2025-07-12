@@ -118,4 +118,11 @@
 #endif
 
 
+#if __cplusplus >= 201703L
+#define if_opt constexpr
+#else
+#define if_opt if
+#endif
+
+
 #endif
