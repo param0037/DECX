@@ -94,6 +94,9 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang
     # This is necessary since this project contains lots of common sources,
     # this helps hide the common implementations in the binaries.
     add_compile_options($<$<OR:$<COMPILE_LANGUAGE:C>,$<COMPILE_LANGUAGE:CXX>,$<COMPILE_LANGUAGE:CUDA>>:-fvisibility=hidden>)
+    add_compile_options(-Werror=return-type)
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    add_compile_options(/we4715)
 endif()
 
 # Add compile definition according to each module's attribute
@@ -124,3 +127,5 @@ elseif("${CMAKE_PROJECT_NAME} " STREQUAL "DECX_NN_CUDA ")
 endif()
 
 add_compile_definitions(_MODULE_NAME_=${CMAKE_PROJECT_NAME})
+
+
