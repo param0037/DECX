@@ -64,22 +64,23 @@ public:
     bool                    _internal_sync_enable;
     std::mutex              _mtx;
 
-    uint64_t                _max_thr_num, 
+    uint32_t                _max_thr_num, 
                             current_thread_num;
     bool                    _all_shutdown;
 
-    void FindOptimalTaskQueueID(uint64_t* id);
+    void FindOptimalTaskQueueID(int32_t* id, const TaskQueueUsage_e usage);
 
 
-    void FindOptimalTaskQueueID_Ranged(uint64_t* id, const uint2 _range);
+    void FindOptimalTaskQueueID_Ranged(int32_t* id, const uint2 _range, const TaskQueueUsage_e usage);
+
 
     // main_loop callback function running on each thread
-    _THREAD_FUNCTION_ void ThreadMainLoop(const uint64_t pool_id);
+    _THREAD_FUNCTION_ void __TPMgrTask(const uint32_t pool_id);
 
 
 public:
     // The actual number of concurrent thread this processor supports
-    uint64_t _hardware_concurrent;
+    uint32_t _hardware_concurrent;
 
     uint _sync_label;
     std::mutex _mtx_for_sync;
@@ -89,10 +90,13 @@ public:
     ThreadPool(const int thread_num, const bool start_at_begin);
 
 
-    void AppendThreads(const int add_thread_num);
+    int32_t AppendThread(const TaskQueueInfo_t* p_init_params);
 
 
     void TerminateAllThreads();
+
+
+    int32_t TaskQueueMatchedQuery(const TaskQueueInfo_t* p_match);
 
 
     ~ThreadPool();
@@ -110,24 +114,11 @@ namespace core {
 namespace decx {
 namespace cpu 
 {
-    enum class ThreadDispatchMethod_e
-    {
-        // Always create a new thread in the threadpool for the task unconditionally.
-        Dispatch_NewSlot = 0,
-
-        // Find the task queue that holds the least tasks and push the task to it, load balanced.
-        Dispatch_LoadBalanced = 1,
-
-        // Push the task to the task queue by indicated slot ID.
-        Dispatch_ByID = 2,
-    };
-
-
     template <class FuncType, class ...Args>
     static std::future<void> RegisterTaskLoadBalanced(FuncType&& f, Args&& ...args)
     {
-        // uint64_t id = decx::cpu::GetOptimalThreadID_Ranged(
-        //     make_uint2(0, decx::utils::clamp_max<uint64_t>(DecxGetPermitConcurrency(), decx::cpu::GetCurrentThreadNum())));
+        // uint32_t id = decx::cpu::GetOptimalThreadID_Ranged(
+        //     make_uint2(0, decx::utils::clamp_max<uint32_t>(DecxGetPermitConcurrency(), decx::cpu::GetCurrentThreadNum())));
         
         // decx::core::ThreadTaskQueue* tmp_task_que = decx::cpu::GetTaskQueueByID(id);
         // tmp_task_que->_mtx.lock();
@@ -157,28 +148,28 @@ namespace cpu
     template <class FuncType, class ...Args>
     static std::future<void> RegisterTaskAppened(FuncType&& f, Args&& ...args)
     {
-        // uint64_t tid = decx::cpu::AppendThread();
+        // uint32_t tid = decx::cpu::AppendThread();
         // return decx::cpu::RegisterTaskByID(f, tid, args...);
         return std::future<void>();
     }
 
 
-    template <class FuncType, class ...Args>
-    static std::future<void> RegisterTask(FuncType&& f, const decx::cpu::ThreadDispatchMethod_e method, const uint32_t id, Args&& ...args)
-    {
-        switch (method)
-        {
-        case decx::cpu::ThreadDispatchMethod_e::Dispatch_NewSlot:
-            return RegisterTaskAppened(f, args...);
+    // template <class FuncType, class ...Args>
+    // static std::future<void> RegisterTask(FuncType&& f, const decx::cpu::ThreadDispatchMethod_e method, const uint32_t id, Args&& ...args)
+    // {
+    //     switch (method)
+    //     {
+    //     case decx::cpu::ThreadDispatchMethod_e::Dispatch_NewSlot:
+    //         return RegisterTaskAppened(f, args...);
 
-        case decx::cpu::ThreadDispatchMethod_e::Dispatch_ByID:
-            return RegisterTaskByID(f, id, args...);
+    //     case decx::cpu::ThreadDispatchMethod_e::Dispatch_ByID:
+    //         return RegisterTaskByID(f, id, args...);
         
-        case decx::cpu::ThreadDispatchMethod_e::Dispatch_LoadBalanced:
-        default:
-            return RegisterTaskLoadBalanced(f, args...);
-        }
-    }
+    //     case decx::cpu::ThreadDispatchMethod_e::Dispatch_LoadBalanced:
+    //     default:
+    //         return RegisterTaskLoadBalanced(f, args...);
+    //     }
+    // }
 }
 }
 

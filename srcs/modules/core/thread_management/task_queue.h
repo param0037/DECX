@@ -43,13 +43,6 @@ namespace decx
 namespace core
 {
     class ThreadTaskQueue;
-
-
-    enum class TaskQueueSwitch : uint8_t
-    {
-        TaskQueue_OFF = 0,
-        TaskQueue_ON = 1,
-    };
 }
 }
 
@@ -72,28 +65,49 @@ public:
     ThreadTaskQueue();
 
 
+    ThreadTaskQueue(const TaskQueueInfo_t* p_init_param);
+
+
     void Switch(const TaskQueueSwitch switch_stage);
 
 
-    _THREAD_GENERAL_ void ThreadMainLoop();
+    _THREAD_GENERAL_ void __TQMainLoop();
 
 
-    std::mutex& GetMutex() {
+    std::mutex& GetMutex() 
+    {
         return this->_mtx;
     }
 
 
-    std::condition_variable& GetCondVar() {
+    std::condition_variable& GetCondVar() 
+    {
         return this->_cv;
     }
 
 
-    uint64_t GetCurrentTaskNum();
+    uint8_t IsRunning() const
+    {
+        return this->_shutdown;
+    }
+
+
+    const TaskQueueUsage_e& GetUsage() const
+    {
+        return this->_usage;
+    }
+
+    const TaskQueueBehaviour_e& GetBehaviour() const
+    {
+        return this->_behaviour;
+    }
+
+
+    uint32_t GetCurrentTaskNum() const;
 
 
     int32_t RegisterTask(decx::core::TaskImplHandle_t task_hdlr);
 };
-
 
 
 #endif      // ifndef _TASK_QUEUE_H_

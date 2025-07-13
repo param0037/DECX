@@ -33,71 +33,43 @@
 #define MODULE_TAG "Builtin_Threadpool"
 
 
-void decx::core::ThreadPool::FindOptimalTaskQueueID(uint64_t* id)
+void decx::core::ThreadPool::FindOptimalTaskQueueID_Ranged(int32_t* id, const uint2 _range, const TaskQueueUsage_e usage)
 {
-    uint64_t task_que_len = this->current_thread_num;
-    uint64_t res_id = 0,
-        least_len = (this->_task_schd)->GetCurrentTaskNum();
+    uint32_t task_que_len = this->current_thread_num;
+    uint32_t least_len = 0xFFFFFFFFU;
 
-    if (least_len != 0) {
-        for (uint64_t i = 1; i < task_que_len; ++i)
-        {
-            decx::core::ThreadTaskQueue* tmp_iter = this->_task_schd + i;
-
-            uint64_t current_len = tmp_iter->GetCurrentTaskNum();
-
-            if (current_len != 0) {
-                if (current_len < least_len)
-                    least_len = current_len;
-            }
-            else {
-                least_len = i;
-                break;
-            }
+    for (uint32_t i = _range.x; i < _range.y; ++i)
+    {
+        decx::core::ThreadTaskQueue* tmp_iter = this->_task_schd + i;
+        if (usage != tmp_iter->GetUsage()){
+            continue;
         }
-        *id = least_len;
+        uint32_t current_len = tmp_iter->GetCurrentTaskNum();
+
+        if (current_len != 0) {
+            if (current_len < least_len)
+                least_len = current_len;
+        }
+        else {
+            least_len = i;
+            break;
+        }
     }
-    else {
-        *id = res_id;
-    }
+    *id = least_len;        // If not found, *id = -1
 }
 
 
-void decx::core::ThreadPool::FindOptimalTaskQueueID_Ranged(uint64_t* id, const uint2 _range)
+void decx::core::ThreadPool::FindOptimalTaskQueueID(int32_t* id, const TaskQueueUsage_e usage)
 {
-    uint64_t task_que_len = this->current_thread_num;
-    uint64_t res_id = 0,
-        least_len = (this->_task_schd + _range.x)->GetCurrentTaskNum();
-
-    if (least_len != 0) {
-        for (uint64_t i = _range.x + 1; i < _range.y; ++i)
-        {
-            decx::core::ThreadTaskQueue* tmp_iter = this->_task_schd + i;
-
-            uint64_t current_len = tmp_iter->GetCurrentTaskNum();
-
-            if (current_len != 0) {
-                if (current_len < least_len)
-                    least_len = current_len;
-            }
-            else {
-                least_len = i;
-                break;
-            }
-        }
-        *id = least_len;
-    }
-    else {
-        *id = res_id;
-    }
+    this->FindOptimalTaskQueueID_Ranged(id, make_uint2(0, this->current_thread_num), usage);
 }
 
 
 _THREAD_FUNCTION_
-void decx::core::ThreadPool::ThreadMainLoop(const uint64_t queue_id)
+void decx::core::ThreadPool::__TPMgrTask(const uint32_t queue_id)
 {
     decx::core::ThreadTaskQueue* thread_unit = &(this->_task_schd[queue_id]);
-    thread_unit->ThreadMainLoop();
+    thread_unit->__TQMainLoop();
     return;
 }
 
@@ -109,8 +81,8 @@ void decx::core::ThreadPool::Start()
     for (int i = 0; i < this->current_thread_num; ++i) {
         new(this->_task_schd + i) decx::core::ThreadTaskQueue();
     }
-    for (uint64_t i = 0; i < this->current_thread_num; ++i) {
-        new(this->_thr_list + i) std::thread(&decx::core::ThreadPool::ThreadMainLoop, this, i);
+    for (uint32_t i = 0; i < this->current_thread_num; ++i) {
+        new(this->_thr_list + i) std::thread(&decx::core::ThreadPool::__TPMgrTask, this, i);
     }
 }
 
@@ -135,20 +107,18 @@ decx::core::ThreadPool::ThreadPool(const int thread_num, const bool start_at_beg
 }
 
 
-void decx::core::ThreadPool::AppendThreads(const int add_thread_num)
+int32_t decx::core::ThreadPool::AppendThread(const TaskQueueInfo_t* p_init_params)
 {
-    if (this->current_thread_num + add_thread_num > this->_max_thr_num) {
+    if (this->current_thread_num + 1 > this->_max_thr_num) {
         DECX_LOG_ERR("Thread number is excessive");
-        return;
+        return -1;
     }
     else {
-        for (int32_t i = 0; i < add_thread_num; ++i) {
-            new(this->_task_schd + this->current_thread_num + i) decx::core::ThreadTaskQueue();
-        }
-        for (int32_t i = 0, idx = this->current_thread_num; i < add_thread_num; ++i, ++idx) {
-            new(this->_thr_list + idx) std::thread(&decx::core::ThreadPool::ThreadMainLoop, this, idx);
-        }
-        this->current_thread_num += add_thread_num;
+        new(this->_task_schd + this->current_thread_num) decx::core::ThreadTaskQueue(p_init_params);
+        int32_t slot_id = this->current_thread_num;
+        new(this->_thr_list + slot_id) std::thread(&decx::core::ThreadPool::__TPMgrTask, this, slot_id);
+        this->current_thread_num++;
+        return slot_id;
     }
 }
 
@@ -170,6 +140,28 @@ void decx::core::ThreadPool::TerminateAllThreads()
 }
 
 
+int32_t decx::core::ThreadPool::TaskQueueMatchedQuery(const TaskQueueInfo_t* p_match)
+{
+    this->_mtx.lock();
+    int32_t rval = -1;
+    for (int32_t slot_id = 0; slot_id < this->current_thread_num; ++slot_id)
+    {
+        const auto* p_taskqueue = this->_task_schd + slot_id;
+        if (p_taskqueue->IsRunning() == 0){
+            continue;
+        }
+
+        uint32_t pred = ((uint32_t)p_taskqueue->GetBehaviour() ^ (uint32_t)p_match->_behaviour);
+        pred |= ((uint32_t)p_taskqueue->GetUsage() ^ (uint32_t)p_match->_usage);
+        pred |= (p_taskqueue->GetCurrentTaskNum() ^ p_match->_tsak_num);
+        if (pred == 0){
+            rval = (int32_t)slot_id;
+        }
+    }
+    this->_mtx.unlock();
+    return rval;
+}
+
 
 decx::core::ThreadPool::~ThreadPool() {
     if (!this->_all_shutdown) {
@@ -188,36 +180,35 @@ decx::core::ThreadPool::~ThreadPool() {
 decx::core::ThreadPool* decx::core::thread_pool;
 
 
-_DECX_API_ uint64_t decx::core::GetOptimalThreadID()
+_DECX_API_ int32_t decx::core::GetOptimalThreadID(const TaskQueueUsage_e usage)
 {
-    uint64_t res_id;
-    decx::core::thread_pool->FindOptimalTaskQueueID(&res_id);
+    int32_t res_id;
+    decx::core::thread_pool->FindOptimalTaskQueueID(&res_id, usage);
     return res_id;
 }
 
 
-_DECX_API_ uint64_t decx::core::GetOptimalThreadID_Ranged(const uint2 range)
+_DECX_API_ int32_t decx::core::GetOptimalThreadID_Ranged(const uint2 range, const TaskQueueUsage_e usage)
 {
-    uint64_t res_id;
-    decx::core::thread_pool->FindOptimalTaskQueueID_Ranged(&res_id, range);
+    int32_t res_id;
+    decx::core::thread_pool->FindOptimalTaskQueueID_Ranged(&res_id, range, usage);
     return res_id;
 }
 
 
-_DECX_API_ uint64_t decx::core::GetCurrentThreadNum()
+_DECX_API_ int32_t decx::core::GetCurrentThreadNum()
 {
     return decx::core::thread_pool->current_thread_num;
 }
 
 
-_DECX_API_ uint64_t decx::core::ThreadpoolAddSot(const TaskQueueUsage_e usage, const TaskQueueBehaviour_e behaviour)
+_DECX_API_ int32_t decx::core::ThreadpoolAddSot(const TaskQueueInfo_t* p_init_params)
 {
-    decx::core::thread_pool->AppendThreads(1);
-    return decx::core::GetCurrentThreadNum() - 1;
+    return decx::core::thread_pool->AppendThread(p_init_params);
 }
 
 
-_DECX_API_ int32_t decx::cpu::InsertTaskByID(decx::core::TaskImplHandle_t task, const uint32_t id)
+_DECX_API_ int32_t decx::core::InsertTaskByID(decx::core::TaskImplHandle_t task, const uint32_t id)
 {
     auto* p_task_queue = decx::core::thread_pool->_task_schd + id;
     p_task_queue->GetMutex().lock();
@@ -225,4 +216,10 @@ _DECX_API_ int32_t decx::cpu::InsertTaskByID(decx::core::TaskImplHandle_t task, 
     p_task_queue->GetMutex().unlock();
     p_task_queue->GetCondVar().notify_one();
     return 0;
+}
+
+
+_DECX_API_ int32_t decx::core::TaskQueueQuery(const TaskQueueInfo_t* p_match)
+{
+    return decx::core::thread_pool->TaskQueueMatchedQuery(p_match);
 }

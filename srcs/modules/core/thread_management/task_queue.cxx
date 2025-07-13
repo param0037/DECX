@@ -35,11 +35,21 @@
 decx::core::ThreadTaskQueue::ThreadTaskQueue() 
 {
     this->_shutdown = false;
+    this->_usage = TaskQueueUsage_e::TaskQueue_Generic;
+    this->_behaviour = TaskQueueBehaviour_e::TaskQueue_LIFO;
+}
+
+
+decx::core::ThreadTaskQueue::ThreadTaskQueue(const TaskQueueInfo_t* p_init_param)
+{
+    this->_shutdown = (uint8_t)p_init_param->_switch;
+    this->_behaviour = p_init_param->_behaviour;
+    this->_usage = p_init_param->_usage;
 }
 
 
 _THREAD_GENERAL_
-void decx::core::ThreadTaskQueue::ThreadMainLoop()
+void decx::core::ThreadTaskQueue::__TQMainLoop()
 {
     while (!this->_shutdown)
     {
@@ -64,9 +74,9 @@ void decx::core::ThreadTaskQueue::Switch(const TaskQueueSwitch switch_stage)
 }
 
 
-uint64_t decx::core::ThreadTaskQueue::GetCurrentTaskNum()
+uint32_t decx::core::ThreadTaskQueue::GetCurrentTaskNum() const
 {
-    return this->_task_queue.size();
+    return (uint32_t)this->_task_queue.size();
 }
 
 

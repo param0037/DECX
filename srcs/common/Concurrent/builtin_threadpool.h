@@ -33,38 +33,43 @@
 
 #include <basic.h>
 #include <vector_defines.h>
-
-
-#ifdef _MSC_VER
-#define _THREAD_FUNCTION_  // represents a function that only runs on threads
-#define _THREAD_CALL_      // represents a function that is only called by a thread function
-#define _THREAD_GENERAL_   // represents a function that can be called within threads and called as a thread function
-#endif
-#if defined(__GNUC__) || defined(__clang__)
-#define _THREAD_FUNCTION_   __attribute__((hot)) // represents a function that only runs on threads
-#define _THREAD_CALL_       __attribute__((hot)) // represents a function that is only called by a thread function
-#define _THREAD_GENERAL_    __attribute__((hot)) // represents a function that can be called within threads and called as a thread function
-#endif
-
+#include "task_impl.h"
 
 namespace decx
 {
 namespace core 
 {
-    enum class TaskQueueUsage_e
+    enum class TaskQueueUsage_e : uint8_t
     {
         TaskQueue_Generic = 0,
         TaskQueue_CalcLoad = 1,
-        TaskQueue_Nodes = 2,
-        taskQueue_DispWin = 3,
+        TaskQueue_ResMgr = 2,
+        TaskQueue_Nodes = 3,
+        TaskQueue_DispWin = 4,
     };
 
 
-    enum class TaskQueueBehaviour_e
+    enum class TaskQueueBehaviour_e : uint8_t
     {
-        TaskQueue_FIFO = 0,
-        TaskQueue_LIFO = 1,
+        TaskQueue_LIFO = 0,
+        TaskQueue_FIFO = 1,
         TaskQueue_Priority = 2,
+    };
+
+
+    enum class TaskQueueSwitch : uint8_t
+    {
+        TaskQueue_OFF = 0,
+        TaskQueue_ON = 1,
+    };
+
+
+    struct TaskQueueInfo_t
+    {
+        TaskQueueSwitch         _switch;
+        TaskQueueBehaviour_e    _behaviour;
+        TaskQueueUsage_e        _usage;
+        uint32_t                _tsak_num;
     };
 
 
@@ -81,16 +86,32 @@ namespace core
     };
 
 
-    _DECX_API_ uint64_t GetOptimalThreadID();
+    _DECX_API_ int32_t GetOptimalThreadID(const TaskQueueUsage_e usage);
 
 
-    _DECX_API_ uint64_t GetOptimalThreadID_Ranged(const uint2 range);
+    _DECX_API_ int32_t GetOptimalThreadID_Ranged(const uint2 range, const TaskQueueUsage_e usage);
 
 
-    _DECX_API_ uint64_t GetCurrentThreadNum();
+    _DECX_API_ int32_t GetCurrentThreadNum();
 
 
-    _DECX_API_ uint64_t ThreadpoolAddSot(const TaskQueueUsage_e usage, const TaskQueueBehaviour_e behaviour);
+    /**
+     * @brief Append one task queue to the thread pool
+     * @param p_init_param Initialize parameters for the created task queue
+     * @return Slot id of the created task queue
+     */
+    _DECX_API_ int32_t ThreadpoolAddSot(const TaskQueueInfo_t* p_init_params);
+
+
+    /**
+     * @brief Find the first taskqueue slot id that matches all the requirement described in p_match
+     * @param p_match Match info
+     * @return -1 for not found; otherwise for found slot id
+     */
+    _DECX_API_ int32_t TaskQueueQuery(const TaskQueueInfo_t* p_match);
+
+
+    _DECX_API_ int32_t InsertTaskByID(decx::core::TaskImplHandle_t task, const uint32_t id);
 }
 }
 

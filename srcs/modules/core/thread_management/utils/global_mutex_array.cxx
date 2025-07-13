@@ -28,7 +28,7 @@
 * DEALINGS IN THE SOFTWARE.
 */
 
-#include "global_mutex_array.h"
+#include "../global_mutex_array.h"
 #include <mutex>
 
 namespace decx
