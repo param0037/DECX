@@ -227,17 +227,16 @@ namespace decx
 {
 namespace utils{
 namespace simd{
-    static uint32_t _get_cpu_simd_align_bytes()
-    {
-        uint32_t align_byte = 32;
 #if defined(__x86_64__) || defined(__i386__)
-        align_byte = 32;
+    static constexpr uint32_t GetCPUSimdAlignBytes() {
+        return 32;
+    }
 #endif
 #if defined(__aarch64__) || defined(__arm__)
-        align_byte = 16;
-#endif
-        return align_byte;
+    static constexpr uint32_t GetCPUSimdAlignBytes() {
+        return 16;
     }
+#endif
 }
 }
 }
