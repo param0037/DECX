@@ -42,6 +42,7 @@ namespace core
     struct TaskHandle_t
     {
         uint8_t _task_impl[TASK_PACK_MAX_SIZE];
+        // typename std::aligned_storage<TASK_PACK_MAX_SIZE, alignof(std::max_align_t)>::type _task_impl;
         // void* _p_task_handle;
         int32_t _slot_id;
         ThreadDispatchMethod_e _dispatch_method;
@@ -50,14 +51,9 @@ namespace core
 }
 
 
-namespace decx
-{
-namespace cpu {
 
-    _DECX_API_ int32_t InsertTaskByID(decx::core::TaskImplHandle_t task, const uint32_t id);
-}
-}
-
+#define PACK_CPY(data) (data)
+#define PACK_REF(data) std::ref(data)
 
 
 namespace decx
@@ -65,7 +61,7 @@ namespace decx
 namespace core
 {
 	template <typename FuncType, typename ... ArgTypes> static inline
-	int32_t TaskCreate(const ThreadDispatchMethod_e method, int32_t slot_id, TaskHandle_t* task_hdlr, FuncType&& task_entry, ArgTypes&& ... args)
+	int32_t TaskCreate(const ThreadDispatchMethod_e method, int32_t slot_id, TaskHandle_t* task_hdlr, FuncType task_entry, ArgTypes ... args)
 	{
         if (nullptr == task_hdlr) {
             return -1;
@@ -84,7 +80,7 @@ namespace core
         if (nullptr == task_hdlr) {
             return -1;
         }
-        auto* p_task = (decx::core::TaskImplHandle_t)(task_hdlr->_task_impl);
+        auto* p_task = reinterpret_cast<decx::core::TaskImplHandle_t>(task_hdlr->_task_impl);
         p_task->_sem = decx::core::TaskState_e::TaskState_Pending;
         return 0;
     }
@@ -95,8 +91,8 @@ namespace core
         if (nullptr == task_hdlr) {
             return -1;
         }
-        auto* p_task = (decx::core::TaskImplHandle_t)(task_hdlr->_task_impl);
-        decx::cpu::InsertTaskByID(p_task, task_hdlr->_slot_id);
+        auto* p_task = reinterpret_cast<decx::core::TaskImplHandle_t>(task_hdlr->_task_impl);
+        decx::core::InsertTaskByID(p_task, task_hdlr->_slot_id);
         return 0;
     }
 
@@ -106,7 +102,7 @@ namespace core
         if (nullptr == task_hdlr) {
             return -1;
         }
-        auto* p_task = (decx::core::TaskImplHandle_t)(task_hdlr->_task_impl);
+        auto* p_task = reinterpret_cast<decx::core::TaskImplHandle_t>(task_hdlr->_task_impl);
         p_task->Synchronize();
         return 0;
     }

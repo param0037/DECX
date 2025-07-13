@@ -48,50 +48,28 @@ namespace utils
 }
 
 
-class decx::utils::ComputeLoadsMgr
+class _DECX_API_ decx::utils::ComputeLoadsMgr
 {
-private:
+protected:
     decx::PtrInfo<decx::core::TaskHandle_t> _task_arr;
     uint32_t _max_thread;
     uint32_t _valid_thread_num;
     decx::core::ThreadDispatchMethod_e _dispatch_method;
 
 public:
-    int32_t SetMaxThreadNum(const uint32_t max_thread_num)
-    {
-        int32_t rval = 0;
-        if (this->_task_arr.IsValid()){
-            rval |= this->_task_arr.Free();
-        }
-        rval |= this->_task_arr.Allocate(max_thread_num, PAGABLE);
-        this->_max_thread = max_thread_num;
-        this->_valid_thread_num = 0;
-        return rval;
-    }
+    int32_t SetMaxThreadNum(const uint32_t max_thread_num);
 
 
-    int32_t Resize(const uint32_t max_thread_num)
-    {
-        if (max_thread_num > this->_max_thread){
-            return this->SetMaxThreadNum(max_thread_num);
-        }
-        return 0;
-    }
+    int32_t Resize(const uint32_t max_thread_num);
 
 
     ComputeLoadsMgr() {}
 
 
-    ComputeLoadsMgr(const int32_t max_thread_num)
-    {
-        this->SetMaxThreadNum(max_thread_num);
-    }
+    ComputeLoadsMgr(const int32_t max_thread_num);
 
 
-    void SetDispatchMethod(const decx::core::ThreadDispatchMethod_e method)
-    {
-        this->_dispatch_method = method;
-    }
+    void SetDispatchMethod(const decx::core::ThreadDispatchMethod_e method);
 
 
     template <typename FuncType, typename ... ArgTypes> inline
@@ -104,70 +82,29 @@ public:
     }
 
 
-    int32_t Run(const uint2& range)
-    {
-        if (range.y > this->_valid_thread_num){
-            return -1;
-        }
-        int32_t rval = 0;
-        for (int32_t i = range.x; i < range.y; ++i){
-            rval |= decx::core::TaskRun(&this->_task_arr[i]);
-        }
-        return rval;
-    }
+    int32_t Run(const uint2& range);
 
 
-    int32_t RunAll()
-    {
-        return this->Run(make_uint2(0, this->_valid_thread_num));
-    }
+    virtual int32_t RunAll();
 
 
-    int32_t Synchronize(const uint2& range)
-    {
-        int32_t rval = 0;
-        if (range.y > this->_valid_thread_num){
-            return -1;
-        }
-        for (int32_t i = range.x; i < range.y; ++i){
-            rval |= decx::core::TaskSync(&this->_task_arr[i]);
-        }
-        return rval;
-    }
+    int32_t Synchronize(const uint2& range);
 
 
-    int32_t SynchronizeAll()
-    {
-        return this->Synchronize(make_uint2(0, this->_valid_thread_num));
-    }
+    virtual int32_t SynchronizeAll();
 
 
-    int32_t ClearAll()
-    {
-        int32_t rval = 0;
-        for (int32_t i = 0; i < this->_valid_thread_num; ++i){
-            rval |= decx::core::TaskDestroy(&this->_task_arr[i]);
-        }
-        return rval;
-    }
+    int32_t ClearAll();
 
 
-    decx::core::TaskHandle_t* Back()
-    {
-        return this->_task_arr + this->_valid_thread_num;
-    }
+    decx::core::TaskHandle_t* Back();
 
 
-    ~ComputeLoadsMgr()
-    {
-        this->_task_arr.Free();
-        this->_valid_thread_num = 0;
-        this->_max_thread = 0;
-    }
+    ~ComputeLoadsMgr();
 };
 
 
-class decx::utils::ComputeLoadsMgr2D : public decx::utils::ComputeLoadsMgr
+class _DECX_API_ decx::utils::ComputeLoadsMgr2D : public decx::utils::ComputeLoadsMgr
 {
 private:
     uint2 _thread_dist;
@@ -182,37 +119,28 @@ public:
     }
 
 
-    int32_t Reshape(const uint2& new_dist)
-    {
-        this->_thread_dist = new_dist;
-        return ComputeLoadsMgr::Resize(new_dist.x * new_dist.y);
-    }
+    int32_t Reshape(const uint2& new_dist);
 
 
-    int32_t Run(const uint2& range_x, const uint2& range_y)
-    {
-        int32_t rval = 0;
-        for (int32_t i = range_y.x; i < range_y.y; ++i){
-            rval |= ComputeLoadsMgr::Run(make_uint2(i * this->_thread_dist.x + range_x.x, i * this->_thread_dist.x + range_x.y));
-        }
-        return rval;
-    }
+    int32_t Run(const uint2& range_x, const uint2& range_y);
 
 
-    int32_t Synchronize(const uint2& range_x, const uint2& range_y)
-    {
-        int32_t rval = 0;
-        for (int32_t i = range_y.x; i < range_y.y; ++i){
-            rval |= ComputeLoadsMgr::Synchronize(make_uint2(i * this->_thread_dist.x + range_x.x, i * this->_thread_dist.x + range_x.y));
-        }
-        return rval;
-    }
+    int32_t Synchronize(const uint2& range_x, const uint2& range_y);
+
+
+    virtual int32_t RunAll();
+
+
+    virtual int32_t SynchronizeAll();
 
 
     const uint2& GetDist() const
     {
         return this->_thread_dist;
     }
+
+
+    int32_t AdvisedReshape(const uint32_t total_thr_num, const uint2 proc_dims);
 };
 
 

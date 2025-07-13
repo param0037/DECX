@@ -36,7 +36,19 @@
 #include <condition_variable>
 
 
-#define TASK_PACK_MAX_SIZE 256
+#ifdef _MSC_VER
+#define _THREAD_FUNCTION_  // represents a function that only runs on threads
+#define _THREAD_CALL_      // represents a function that is only called by a thread function
+#define _THREAD_GENERAL_   // represents a function that can be called within threads and called as a thread function
+#endif
+#if defined(__GNUC__) || defined(__clang__)
+#define _THREAD_FUNCTION_   __attribute__((hot)) // represents a function that only runs on threads
+#define _THREAD_CALL_       __attribute__((hot)) // represents a function that is only called by a thread function
+#define _THREAD_GENERAL_    __attribute__((hot)) // represents a function that can be called within threads and called as a thread function
+#endif
+
+
+#define TASK_PACK_MAX_SIZE 1024
 
 #if __cplusplus < 201703L
 namespace decx
@@ -104,7 +116,7 @@ namespace core
 }
 
 
-class decx::core::TaskBase
+class _DECX_API_ decx::core::TaskBase
 {
 public:
 	std::condition_variable _cv;
@@ -113,7 +125,7 @@ public:
 
 public:
 	virtual void Execute() {}
-    virtual void Synchronize() {}
+    void Synchronize();
 	virtual ~TaskBase() {}
 };
 
@@ -126,7 +138,7 @@ private:
 	std::tuple<ArgTypes...> _args;
 
 public:
-	Task(FuncType&& task_entry, ArgTypes&& ... args) : 
+	Task(FuncType task_entry, ArgTypes ... args) : 
 		_task_entry(std::forward<FuncType>(task_entry)),
 		_args(std::forward<ArgTypes>(args)...)
 	{
@@ -134,25 +146,18 @@ public:
 	}
 
 
-	virtual void Execute() override
+	_THREAD_FUNCTION_ virtual void Execute() override
 	{
 		std::unique_lock<std::mutex> lock(this->_mtx);
 		this->_sem = TaskState_e::TaskState_Running;
 #if __cplusplus < 201703L
 		decx::utils::Apply(this->_task_entry, this->_args);
 #else
-		std::apply(_task_entry, _args);
+		std::apply(this->_task_entry, this->_args);
 #endif
 		this->_sem = TaskState_e::TaskState_Idle;
 		this->_cv.notify_one();
 	}
-
-
-    virtual void Synchronize() override
-    {
-        std::unique_lock<std::mutex> lock(this->_mtx);
-        this->_cv.wait(lock, [&] {return decx::core::TaskState_e::TaskState_Idle == this->_sem;});
-    }
 };
 
 
