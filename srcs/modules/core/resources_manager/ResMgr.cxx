@@ -38,51 +38,65 @@ decx::ResMgr::ResMgr()
     this->_last_res_num = 0;
     this->_shortest_wait_period = 0x7fffffffffffffff;
 
-    this->_mgr_thread = new std::thread(&decx::ResMgr::_mgr_task, this);
+    decx::core::TaskQueueInfo_t desired_form = {
+        ._switch    = decx::core::TaskQueueSwitch::TaskQueue_ON,
+        ._behaviour = decx::core::TaskQueueBehaviour_e::TaskQueue_LIFO,
+        ._usage     = decx::core::TaskQueueUsage_e::TaskQueue_ResMgr,
+        ._tsak_num  = 0,
+    };
+
+    int32_t slot_id = decx::core::TaskQueueQuery(&desired_form);
+    if (slot_id == -1){
+        slot_id = decx::core::ThreadpoolAddSot(&desired_form);
+    }
+
+    decx::core::TaskCreate(decx::core::ThreadDispatchMethod_e::Dispatch_ByID, slot_id, &this->_task, decx::ResMgr::__ResMgrTask, this);
+    decx::core::TaskRun(&this->_task);
 
     this->_wp._outer_info = this;
 }
 
 
-void decx::ResMgr::_mgr_task()
+_THREAD_FUNCTION_
+void decx::ResMgr::__ResMgrTask(decx::ResMgr* fake_this)
 {
-    this->_shortest_wait_period = (long long)100;
-    this->_last_res_num = this->_res_arr.size();
+    fake_this->_shortest_wait_period = (long long)100;
+    fake_this->_last_res_num = fake_this->_res_arr.size();
 
-    while (this->_run)
+    while (fake_this->_run)
     {
         time_t _current;
         time(&_current);
 
-        this->_shortest_wait_period = 0x7fffffffffffffff;
-        for (uint32_t i = 0; i < this->_res_arr.size(); ++i) 
+        fake_this->_shortest_wait_period = 0x7fffffffffffffff;
+        for (uint32_t i = 0; i < fake_this->_res_arr.size(); ++i) 
         {
-            decx::Resource* res_ptr = this->_res_arr + i;
+            decx::Resource* res_ptr = fake_this->_res_arr + i;
             
             if (res_ptr->exceeded_lifespan(_current)) {
-                this->_mtx.lock();
+                fake_this->_mtx.lock();
                 if (res_ptr->Delete()) {
-                    this->_res_arr.del(i);
+                    fake_this->_res_arr.del(i);
                 }
-                this->_mtx.unlock();
+                fake_this->_mtx.unlock();
             }
             else{
-                this->_shortest_wait_period = min(this->_shortest_wait_period,
+                fake_this->_shortest_wait_period = min(fake_this->_shortest_wait_period,
                     res_ptr->get_lifespan() - _current + res_ptr->get_last_used_instant());
             }
         }
 
-        this->_last_res_num = this->_res_arr.size();
+        fake_this->_last_res_num = fake_this->_res_arr.size();
 
         {
-            std::unique_lock<std::mutex> lock{ this->_mtx };
-            while (!this->_wp()) {
-                if (this->_cv.wait_until(lock, 
-                                         std::chrono::_V2::steady_clock::now() + std::chrono::seconds(this->_shortest_wait_period))
-                                          == std::cv_status::no_timeout) {
-                    break;
-                }
+        std::unique_lock<std::mutex> lock{ fake_this->_mtx };
+        while (!fake_this->_wp()) {
+            if (fake_this->_cv.wait_until(lock, 
+                                        std::chrono::_V2::steady_clock::now() + std::chrono::seconds(fake_this->_shortest_wait_period))
+                                        == std::cv_status::no_timeout) {
+                break;
             }
+        }
         }
     }
 }
@@ -132,8 +146,7 @@ decx::ResMgr::~ResMgr()
     this->_mtx.unlock();
     this->_cv.notify_one();
 
-    this->_mgr_thread->detach();
-    delete this->_mgr_thread;
+    decx::core::TaskDestroy(&this->_task);
 }
 
 

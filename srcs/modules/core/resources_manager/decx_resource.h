@@ -47,22 +47,20 @@
 #ifndef _DECX_RESOURCE_H_
 #define _DECX_RESOURCE_H_
 
-#include "../../../common/basic.h"
-#include "../../../common/Array/Dynamic_Array.h"
+#include <basic.h>
+#include <Array/Dynamic_Array.h>
+#include <Concurrent/task_handle.h>
 
 namespace decx
 {
-    struct ResourceHandle;
-
     typedef void (*res_release_fn)(void*);
 
-#ifdef _DECX_CORE_CPU_
     class Resource;
 
     class ResMgr;
 
     extern decx::ResMgr* _res_mgr;
-#endif
+    
 
     _DECX_API_ uint64_t ResourceCheckIn(void** exposed_ptr, const time_t lifespan_sec, res_release_fn _decon);
 
@@ -77,27 +75,19 @@ namespace decx
 }
 
 
-#ifdef _DECX_CORE_CPU_
-
-
 class decx::ResMgr
 {
 private:
-    std::condition_variable _cv;
+    std::condition_variable                     _cv;
+    std::mutex                                  _mtx;
+    uint64_t                                    _last_res_num;
+    bool                                        _run;
+    decx::utils::Dynamic_Array<decx::Resource>  _res_arr;
+    decx::core::TaskHandle_t                    _task;
+    time_t                                      _shortest_wait_period;
 
-    std::mutex _mtx;
-
-    uint64_t _last_res_num;
-
-    bool _run;
-
-    decx::utils::Dynamic_Array<decx::Resource> _res_arr;
-
-    std::thread* _mgr_thread;
-
-    time_t _shortest_wait_period;
-
-    void _mgr_task();
+private:
+    _THREAD_FUNCTION_ static void __ResMgrTask(decx::ResMgr*);
 
     struct _wait_pred
     {
@@ -166,64 +156,6 @@ public:
 
     bool Delete();
 };
-
-#endif  // #ifdef _DECX_CORE_CPU_
-
-
-struct decx::ResourceHandle
-{
-    void* _res_ptr;
-    uint64_t _res_id;
-
-    ResourceHandle()
-    {
-        this->_res_id = 0;
-        this->_res_ptr = NULL;
-    }
-
-    /**
-    * @brief :          Register (or checkin) a resource.
-    * @param res_ptr :  The resource raw pointer.
-    * @param lifespan : The lifespan of the resource, in second.
-    * @param destructor_callback :   The callback function when checkout the resource. 
-    *                   Note : This callback function must be in type void func(type*).
-    *                   If the function is a member function of a class, plase define it as static.
-    */
-    template <class _decon_type>
-    void RegisterResource(void* res_ptr, const time_t lifespan, _decon_type* destructor_callback = NULL)
-    {
-        // Prevent duplicate registration to the same resource
-        if (this->_res_ptr == NULL)
-        {
-            this->_res_ptr = res_ptr;
-            this->_res_id = decx::ResourceCheckIn(&this->_res_ptr, lifespan, (res_release_fn)destructor_callback);
-        }
-    }
-
-    /*
-    * @return : The raw pointer of the resource (pointer type conversion included)
-    */
-    template <class ResType>
-    ResType* get_resource_raw_ptr() const
-    {
-        return static_cast<ResType*>(this->_res_ptr);
-    }
-
-    /*
-    * @brief : Lock the resource so that it won't be deleted by the resource manager when using.
-    */
-    void lock() {
-        decx::ResourceLock(this->_res_id);
-    }
-
-    /*
-    * @brief : Unlock the resource to tell the resource manager to delete it when its lifespan is over.
-    */
-    void unlock() {
-        decx::ResourceUnlock(this->_res_id);
-    }
-};
-
 
 
 #endif
