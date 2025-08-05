@@ -80,10 +80,10 @@ function list_configs()
         echo "[DECX]   Cmake toolchain file path : $DECX_CMAKE_TOOLCHAIN_PATH"
     fi
     # Print current module name
-    if [ -z "$DECX_CURRENT_BUILD_MODULE" ]; then
+    if [ -z "$DECX_CURRENT_BUILD_MODULES" ]; then
         echo -e "[DECX]   Current module name build : ${YELLOW}Not Specified${WHITE}"
     else
-        echo "[DECX]   Current module name build : $DECX_CURRENT_BUILD_MODULE"
+        echo "[DECX]   Current module name build : $DECX_CURRENT_BUILD_MODULES"
     fi
 
     if [ $DECX_PARALLEL_BUILD -eq 1 ]; then
@@ -110,7 +110,16 @@ function conf()
     fi
 
     if [ -z $1 ]; then
-        $BUILD_SYSTEM_DIR/Linux/build.sh -i $DECX_CURRENT_BUILD_MODULE
+        IFS_old=$IFS
+        IFS=','
+        read -ra build_modules <<< "$DECX_CURRENT_BUILD_MODULES"
+        for arg in "${build_modules[@]}"; do
+            echo_status "Now config $arg"
+            if [ -n $arg ]; then
+                $BUILD_SYSTEM_DIR/Linux/build.sh -i $arg
+            fi
+        done
+        IFS=$IFS_old
     else
         validate_module_name $1
         if [ $? -eq 0 ]; then
@@ -124,9 +133,18 @@ function conf()
 function mk()
 {
     source_script $BUILD_SYSTEM_DIR/Linux/utils.sh
-
+    
     if [ -z $1 ]; then
-        $BUILD_SYSTEM_DIR/Linux/build.sh -m $DECX_CURRENT_BUILD_MODULE
+        IFS_old=$IFS
+        IFS=','
+        read -ra build_modules <<< "$DECX_CURRENT_BUILD_MODULES"
+        for arg in "${build_modules[@]}"; do
+            echo_status "Now building $arg"
+            if [ -n $arg ]; then
+                $BUILD_SYSTEM_DIR/Linux/build.sh -m $arg
+            fi
+        done
+        IFS=$IFS_old
     else
         validate_module_name $1
         if [ $? -eq 0 ]; then
@@ -142,7 +160,16 @@ function clean()
     source_script $BUILD_SYSTEM_DIR/Linux/utils.sh
 
     if [ -z $1 ]; then
-        $BUILD_SYSTEM_DIR/Linux/build.sh -c $DECX_CURRENT_BUILD_MODULE
+        IFS_old=$IFS
+        IFS=','
+        read -ra build_modules <<< "$DECX_CURRENT_BUILD_MODULES"
+        for arg in "${build_modules[@]}"; do
+            echo_status "Now cleaning $arg"
+            if [ -n $arg ]; then
+                $BUILD_SYSTEM_DIR/Linux/build.sh -c $arg
+            fi
+        done
+        IFS=$IFS_old
     else
         validate_module_name $1
         if [ $? -eq 0 ]; then

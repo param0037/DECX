@@ -45,14 +45,17 @@ function regulize_module_name()
 
 function set_module()
 {
-    DECX_CURRENT_BUILD_MODULE=""
+    DECX_CURRENT_BUILD_MODULES=""
     if [ -n "$1" ]; then
-        validate_module_name $1
-        if [ $? -eq 1 ]; then
-            DECX_CURRENT_BUILD_MODULE=$(regulize_module_name $1)
-        else
-            echo_error "The indicated module does not exist"
-        fi
+        for arg in "$@"; do
+            validate_module_name $arg
+            if [ $? -eq 1 ]; then
+                DECX_CURRENT_BUILD_MODULES+="$(regulize_module_name $arg),"
+            else
+                echo_error "The indicated module does not exist"
+            fi
+        done
+        echo_status "Modules to build: $DECX_CURRENT_BUILD_MODULES"
     else
         echo "[DECX] module options"
         echo "      module          | introduction"
@@ -70,5 +73,5 @@ function set_module()
         echo "      all             | build all modules"
     fi
 
-    stack[0]=$DECX_CURRENT_BUILD_MODULE
+    # stack[0]=$DECX_CURRENT_BUILD_MODULES
 }
