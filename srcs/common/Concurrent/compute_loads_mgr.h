@@ -34,7 +34,7 @@
 #include <basic.h>
 #include "task_handle.h"
 #include <PtrInfo.h>
-
+#include <Concurrent/semaphore.h>
 
 namespace decx
 {
@@ -52,18 +52,26 @@ class _DECX_API_ decx::utils::ComputeLoadsMgr
 {
 protected:
     decx::PtrInfo<decx::core::TaskHandle_t> _task_arr;
-    uint32_t _max_thread;
-    uint32_t _valid_thread_num;
-    decx::core::ThreadDispatchMethod_e _dispatch_method;
+    uint32_t                                _max_thread;
+    uint32_t                                _valid_thread_num;
+    decx::core::ThreadDispatchMethod_e      _dispatch_method;
+    DecxCountingSemaphore_t                 _barrier_sem;
+    decx::core::TaskPostProcHandle_t        _postproc_hdlr;
+
+private:
+    static void PostBarrierCallback(const int32_t argc, void* p_argv_list);
+
+public:
+    int32_t RunAll();
+
+
+    int32_t SynchronizeAll();
 
 public:
     int32_t SetMaxThreadNum(const uint32_t max_thread_num);
 
 
-    int32_t Resize(const uint32_t max_thread_num);
-
-
-    ComputeLoadsMgr() {}
+    ComputeLoadsMgr();
 
 
     ComputeLoadsMgr(const int32_t max_thread_num);
@@ -75,8 +83,10 @@ public:
     template <typename FuncType, typename ... ArgTypes> inline
     int32_t AppendTask(const int32_t slot_id, FuncType&& f, ArgTypes&& ...args)
     {
-        int32_t rval = decx::core::TaskCreate(this->_dispatch_method, slot_id,
+        int32_t rval = decx::core::TaskCreate(this->_dispatch_method, decx::core::TaskQueueUsage_e::TaskQueue_CalcLoad, slot_id,
             this->_task_arr + this->_valid_thread_num, std::forward<FuncType>(f), std::forward<ArgTypes>(args)...);
+        
+        decx::core::TaskPostProcSet(this->_task_arr + this->_valid_thread_num, &this->_postproc_hdlr);
         ++this->_valid_thread_num;
         return rval;
     }
@@ -85,13 +95,7 @@ public:
     int32_t Run(const uint2& range);
 
 
-    virtual int32_t RunAll();
-
-
     int32_t Synchronize(const uint2& range);
-
-
-    virtual int32_t SynchronizeAll();
 
 
     int32_t ClearAll();
@@ -108,6 +112,12 @@ class _DECX_API_ decx::utils::ComputeLoadsMgr2D : public decx::utils::ComputeLoa
 {
 private:
     uint2 _thread_dist;
+
+public:
+    int32_t RunAll();
+
+
+    int32_t SynchronizeAll();
 
 public:
     ComputeLoadsMgr2D() {}
@@ -128,12 +138,6 @@ public:
     int32_t Synchronize(const uint2& range_x, const uint2& range_y);
 
 
-    virtual int32_t RunAll();
-
-
-    virtual int32_t SynchronizeAll();
-
-
     const uint2& GetDist() const
     {
         return this->_thread_dist;
@@ -141,6 +145,9 @@ public:
 
 
     int32_t AdvisedReshape(const uint32_t total_thr_num, const uint2 proc_dims);
+
+
+    ~ComputeLoadsMgr2D();
 };
 
 

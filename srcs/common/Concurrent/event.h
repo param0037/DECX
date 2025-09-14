@@ -28,95 +28,21 @@
 * DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef _LOCK_IMPL_H_
-#define _LOCK_IMPL_H_
+#ifndef _EVENT_H_
+#define _EVENT_H_
 
 #include <basic.h>
-#include <atomic>
-#include <Concurrent/lock.h>
-#include <chrono>
-#include <mutex>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 
-namespace decx
-{
-namespace core
-{
-    class LockBase;
 
-    class SpinLock;
+int32_t DecxCore_EventCreate();
 
-    class TimedMutexLock;
+#ifdef __cplusplus
 }
-}
-
-
-class decx::core::LockBase
-{
-protected:
-    DecxLockType_e _lock_type;
-    uint8_t _init;
-
-public:
-    LockBase() {}
-
-
-    virtual DecxAsync_WaitResult_e Lock() {
-        return DecxAsync_WaitResult_e::Wait_Success;
-    }
-    // virtual DecxAsync_WaitResult_e Lock() = 0;
-
-
-    virtual DecxAsync_WaitResult_e Lock_Timeout(const uint64_t timeout_msec) {
-        return DecxAsync_WaitResult_e::Wait_Success;
-    }
-    // virtual DecxAsync_WaitResult_e Lock_Timeout(const uint64_t timeout_msec) = 0;
-
-
-    virtual int32_t Unlock() {return 0;}
-    // virtual int32_t Unlock() = 0;
-
-
-    virtual ~LockBase() {}
-};
-
-
-class decx::core::SpinLock : public decx::core::LockBase
-{
-private:
-    std::atomic<uint8_t> _occupied;
-
-public:
-    SpinLock();
-
-
-    virtual DecxAsync_WaitResult_e Lock_Timeout(const uint64_t timeout_msec);
-
-
-    virtual DecxAsync_WaitResult_e Lock();
-
-
-    virtual int32_t Unlock();
-};
-
-
-class decx::core::TimedMutexLock : public decx::core::LockBase
-{
-private:
-    std::timed_mutex _mtx;
-
-public:
-    TimedMutexLock();
-
-
-    virtual DecxAsync_WaitResult_e Lock();
-
-
-    virtual DecxAsync_WaitResult_e Lock_Timeout(const uint64_t timeout_msec);
-
-
-    virtual int32_t Unlock();
-};
-
+#endif
 
 #endif

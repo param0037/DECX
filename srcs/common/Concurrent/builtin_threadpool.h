@@ -41,26 +41,27 @@ namespace core
 {
     enum class TaskQueueUsage_e : uint8_t
     {
-        TaskQueue_Generic = 0,
-        TaskQueue_CalcLoad = 1,
-        TaskQueue_ResMgr = 2,
-        TaskQueue_Nodes = 3,
-        TaskQueue_DispWin = 4,
+        TaskQueue_Generic   = 0,
+        TaskQueue_CalcLoad  = 1,
+        TaskQueue_ResMgr    = 2,
+        TaskQueue_Nodes     = 3,
+        TaskQueue_DispWin   = 4,
+        TaskQueue_UsageNum,
     };
 
 
     enum class TaskQueueBehaviour_e : uint8_t
     {
-        TaskQueue_LIFO = 0,
-        TaskQueue_FIFO = 1,
-        TaskQueue_Priority = 2,
+        TaskQueue_LIFO      = 0,
+        TaskQueue_FIFO      = 1,
+        TaskQueue_Priority  = 2,
     };
 
 
     enum class TaskQueueSwitch : uint8_t
     {
-        TaskQueue_OFF = 0,
-        TaskQueue_ON = 1,
+        TaskQueue_OFF   = 0,
+        TaskQueue_ON    = 1,
     };
 
 
@@ -69,11 +70,11 @@ namespace core
         TaskQueueSwitch         _switch;
         TaskQueueBehaviour_e    _behaviour;
         TaskQueueUsage_e        _usage;
-        uint32_t                _tsak_num;
+        uint32_t                _task_num;
     };
 
 
-    enum class ThreadDispatchMethod_e
+    enum class ThreadDispatchMethod_e : uint8_t
     {
         // Always create a new thread in the threadpool for the task unconditionally.
         Dispatch_NewSlot = 0,
@@ -111,7 +112,7 @@ namespace core
     _DECX_API_ int32_t TaskQueueQuery(const TaskQueueInfo_t* p_match);
 
 
-    _DECX_API_ int32_t InsertTaskByID(decx::core::TaskImplHandle_t task, const uint32_t id);
+    _DECX_API_ int32_t InsertTaskByID(decx::core::TaskImplHandle_t task, const decx::core::TaskQueueUsage_e usage, const uint32_t id);
 }
 }
 

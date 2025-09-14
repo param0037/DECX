@@ -33,6 +33,7 @@
 #define __ALIGNED_ALLOCATORS_H_
 
 #include <basic.h>
+#include <error.h>
 
 namespace decx
 {

@@ -88,7 +88,7 @@ public:
     {}
 
 
-    void init(const uint64_t max_intrv_num, de::DH* handle);
+    void init(const uint64_t max_intrv_num);
 
 
     void set_count_num(const uint64_t proc_len);
@@ -141,7 +141,7 @@ public:
     }
 
 
-    void init(const _data_type* p_diag, const _data_type* p_off_diag, const uint32_t N, const _data_type L, const _data_type U, de::DH* handle);
+    void init(const _data_type* p_diag, const _data_type* p_off_diag, const uint32_t N, const _data_type L, const _data_type U);
 
 
     void iter(const _data_type* p_diag, const _data_type* p_off_diag, const uint32_t N);

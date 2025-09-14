@@ -54,9 +54,7 @@ if(_DECX_CUDA_MODULE_)
     set(CMAKE_CXX_STANDARD 11)
 else()
     project(DECX_BLAS_CPU LANGUAGES CXX)
-    set(CUDA_TARGET_ARCH "75")
-    set(CUDA_ARCH_COMPILE_FLAGS "sm_75;compute_75")
-    set(CMAKE_CXX_STANDARD 17)
+    set(CMAKE_CXX_STANDARD 11)
 endif()
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -70,6 +68,9 @@ include("${DECX_WORLD_ABS_DIR}/srcs/compile_defs.cmake")
 if(NOT CMAKE_BUILD_TYPE)
 	set(CMAKE_BUILD_TYPE release CACHE STRING "Build Type" FORCE)
 endif()
+
+# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -fsanitize=address -fno-omit-frame-pointer")
+# set(CMAKE_LINKER_FLAGS "${CMAKE_LINKER_FLAGS} -fsanitize=address")
 
 # Set the link directories
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")

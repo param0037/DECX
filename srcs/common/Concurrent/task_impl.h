@@ -104,7 +104,7 @@ namespace core
 	class Task;
 
 
-    enum class TaskState_e : uint8_t
+    enum class TaskState_e : uint32_t
     {
         TaskState_Idle = 2,
         TaskState_Running = 1,
@@ -112,6 +112,17 @@ namespace core
     };
 
 	typedef TaskBase* TaskImplHandle_t;
+
+
+	typedef void TaskPostCallback_t(int32_t argc, void* argv);
+
+
+    struct TaskPostProcHandle_t 
+    {
+        TaskPostCallback_t* _p_cb_entry;
+        int32_t 			_argc;
+        void* 				_p_args_list;
+    };
 }
 }
 
@@ -119,11 +130,16 @@ namespace core
 class _DECX_API_ decx::core::TaskBase
 {
 public:
-	std::condition_variable _cv;
-	std::mutex _mtx;
-	TaskState_e _sem;
+	TaskPostProcHandle_t _postproc_hdlr;
 
 public:
+	void SetPostProcCb(const TaskPostProcHandle_t* p_callback) 
+	{
+		this->_postproc_hdlr._p_cb_entry = p_callback->_p_cb_entry;
+		this->_postproc_hdlr._argc = p_callback->_argc;
+		this->_postproc_hdlr._p_args_list = p_callback->_p_args_list;
+	}
+
 	virtual void Execute() {}
     void Synchronize();
 	virtual ~TaskBase() {}
@@ -136,27 +152,29 @@ class decx::core::Task : public decx::core::TaskBase
 private:
 	FuncType _task_entry;
 	std::tuple<ArgTypes...> _args;
+	
 
 public:
 	Task(FuncType task_entry, ArgTypes ... args) : 
 		_task_entry(std::forward<FuncType>(task_entry)),
 		_args(std::forward<ArgTypes>(args)...)
 	{
-		this->_sem = decx::core::TaskState_e::TaskState_Pending;
+		this->_postproc_hdlr._p_cb_entry = nullptr;
+		this->_postproc_hdlr._argc = 0;
+		this->_postproc_hdlr._p_args_list = nullptr;
 	}
 
-
+	
 	_THREAD_FUNCTION_ virtual void Execute() override
 	{
-		std::unique_lock<std::mutex> lock(this->_mtx);
-		this->_sem = TaskState_e::TaskState_Running;
 #if __cplusplus < 201703L
 		decx::utils::Apply(this->_task_entry, this->_args);
 #else
 		std::apply(this->_task_entry, this->_args);
 #endif
-		this->_sem = TaskState_e::TaskState_Idle;
-		this->_cv.notify_one();
+		if (this->_postproc_hdlr._p_cb_entry){
+			(*this->_postproc_hdlr._p_cb_entry)(this->_postproc_hdlr._argc, this->_postproc_hdlr._p_args_list);
+		}
 	}
 };
 

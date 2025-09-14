@@ -77,7 +77,6 @@ _DECX_API_ void de::blas::cpu::GEMM(de::Matrix& A, de::Matrix& B, de::Matrix& ds
 }
 
 
-
 _DECX_API_ void de::blas::cpu::GEMM(de::Matrix& A, de::Matrix& B, de::Matrix &C, de::Matrix& dst)
 {
     DecxResetLastHandle();

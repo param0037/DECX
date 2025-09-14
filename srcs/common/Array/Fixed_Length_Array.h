@@ -134,7 +134,7 @@ public:
      *
      * @return The size of the array
      */
-    uint64_t size();
+    uint64_t size() const;
 
     /**
      * @brief Clear all the element and move Array::_begin_ptr to Array::_data - 1
@@ -269,7 +269,7 @@ int32_t decx::utils::Fixed_Length_Array<_Ty>::emplace_back(Args&&... args)
 }
 
 template <typename _Ty>
-uint64_t decx::utils::Fixed_Length_Array<_Ty>::size()
+uint64_t decx::utils::Fixed_Length_Array<_Ty>::size() const
 {
     return this->_current_length;
 }

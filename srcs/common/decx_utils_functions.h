@@ -111,6 +111,29 @@ constexpr static _Ty clamp_max(_Ty __x, _Ty _boundary) noexcept
 }
 
 
+template <typename _Ty>
+constexpr static _Ty Max(_Ty __x, _Ty __y) noexcept 
+{
+    return decx::utils::clamp_min(__x, __y);
+}
+
+
+template <typename _Ty>
+constexpr static _Ty Min(_Ty __x, _Ty __y) noexcept 
+{
+    return decx::utils::clamp_max(__x, __y);
+}
+
+
+template <typename _Ty>
+constexpr static _Ty ClipRange(_Ty __x, _Ty __min, _Ty __max) noexcept
+{
+    __x = decx::utils::clamp_min<_Ty>(__x, __min);
+    __x = decx::utils::clamp_max<_Ty>(__x, __max);
+    return __x;
+}
+
+
 /*
 * @return return (__deno % __numer) != 0 ? __deno / __numer + 1 : __deno / __numer;
 */

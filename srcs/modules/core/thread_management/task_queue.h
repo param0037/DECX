@@ -36,34 +36,55 @@
 #include <basic.h>
 #include <Array/Dynamic_Array.h>
 #include <Concurrent/task_handle.h>
-
+#include <Concurrent/lock.h>
+#include "utils/loockfree_ringbuffer.h"
+#include <Concurrent/lock.h>
+#include <Concurrent/semaphore.h>
 
 namespace decx
 {
 namespace core
 {
     class ThreadTaskQueue;
-}
-}
 
+    struct TaskQueueCtx_t;
+
+
+    enum TQ_TaskShareStatus_e : uint8_t
+    {
+        TQ_TaskShareIdle = 0,
+        TQ_TaskWaiting = 1,
+        TQ_TaskSharing = 2,
+    };
+}
+}
 
 class decx::core::ThreadTaskQueue
 {
 private:
     // private variables for each thread
-    std::mutex _mtx;
-    std::condition_variable _cv;
+    DecxLock_t _lock;
+    decx::utils::Lockfree_RingBuffer<decx::core::TaskImplHandle_t> _task_queue;
 
-    decx::utils::Dynamic_Array<decx::core::TaskImplHandle_t> _task_queue;
+    decx::core::TaskQueueCtx_t*         _external_queue;
+    const uint32_t*                     _external_tq_num;
 
-    uint8_t _shutdown;
+    std::atomic<uint8_t>                _shutdown;
 
-    decx::core::TaskQueueBehaviour_e _behaviour;
-    decx::core::TaskQueueUsage_e     _usage;
+    decx::core::TaskQueueBehaviour_e    _behaviour;
+    decx::core::TaskQueueUsage_e        _usage;
+    uint8_t                             _has_init = 0;
+    uint32_t                            _slot_id;
+
+    // Added: synchronized task count used as wait predicate
+    
+    DecxBinarySemaphore_t _sem;
+
+private:
+    int32_t TaskFinder(decx::core::TaskImplHandle_t** p_task, const decx::core::TaskQueueUsage_e target_usage);
 
 public:
-    ThreadTaskQueue();
-
+    std::atomic<TQ_TaskShareStatus_e> _share_flag;
 
     ThreadTaskQueue(const TaskQueueInfo_t* p_init_param);
 
@@ -74,21 +95,14 @@ public:
     _THREAD_GENERAL_ void __TQMainLoop();
 
 
-    std::mutex& GetMutex() 
-    {
-        return this->_mtx;
-    }
-
-
-    std::condition_variable& GetCondVar() 
-    {
-        return this->_cv;
-    }
-
-
     uint8_t IsRunning() const
     {
-        return this->_shutdown;
+        return this->_shutdown.load();
+    }
+
+
+    void SetSlotID(const uint32_t slot_id) {
+        this->_slot_id = slot_id;
     }
 
 
@@ -106,7 +120,22 @@ public:
     uint32_t GetCurrentTaskNum() const;
 
 
+    uint8_t HasInit() const {return this->_has_init;}
+
+
     int32_t RegisterTask(decx::core::TaskImplHandle_t task_hdlr);
+
+
+    int32_t ExternalTaskQueueHook(decx::core::TaskQueueCtx_t* p_task_arr_ext, const uint32_t* p_tq_cnt);
+
+
+    int32_t TaskFinder(decx::core::TaskImplHandle_t* p_task);
+};
+
+struct decx::core::TaskQueueCtx_t
+{
+    decx::core::ThreadTaskQueue _task_schd;
+    std::thread                 _worker;
 };
 
 

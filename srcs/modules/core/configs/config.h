@@ -32,7 +32,7 @@
 #define _CONFIG_H_
 
 
-#include "../../../common/basic.h"
+#include <basic.h>
 #include "decx_CPUID.h"
 
 
@@ -106,7 +106,7 @@ extern "C" {
     
 #endif
 #ifdef _DECX_CUDA_PARTS_
-    _DECX_API_ uint8_t DecxGetIsCUDAInit();
+    _DECX_API_ uint8_t DecxGetCUDAInitStatus();
 
 
     _DECX_API_ cudaDeviceProp& DecxGetCUDAProp();

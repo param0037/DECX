@@ -125,8 +125,8 @@ void decx::_GPU_Tensor::alloc_data_space()
         DECX_LOG_ERR("Failed to get cuda event from queue");
         return;
     }
-    
-    if (this->Tens.Allocate(this->total_bytes, CUDA_DEVICE, de::GetLastError(), true, S)) {
+
+    if (this->Tens.Allocate(this->total_bytes, CUDA_DEVICE, true, S)) {
         DECX_LOG_ERR("Tensor malloc failed! Please check if there is enough space in your device");
     }
 
@@ -279,7 +279,7 @@ _DECX_API_ de::DH de::cuda::PinMemory(de::Tensor& src)
     cudaError_t _err = cudaHostRegister(_src->Tens.GetRawPtr(), _src->get_total_bytes(), cudaHostRegisterPortable);
     if (_err != cudaSuccess) {
         if (_err == cudaErrorHostMemoryAlreadyRegistered) {
-            DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_HOST_MEM_REGISTERED, HOST_MEM_REGISTERED);
+            DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_HOST_MEM_REGISTERED, HOST_MEM_REGISTERED);
         }
         else {
             checkCudaErrors(_err);
@@ -299,7 +299,7 @@ _DECX_API_ de::DH de::cuda::UnpinMemory(de::Tensor& src)
 
     if (_err != cudaSuccess) {
         if (_err == cudaErrorHostMemoryNotRegistered) {
-            DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_HOST_MEM_UNREGISTERED, HOST_MEM_UNREGISTERED);
+            DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_HOST_MEM_UNREGISTERED, HOST_MEM_UNREGISTERED);
         }
         else {
             checkCudaErrors(_err);

@@ -295,7 +295,7 @@
 //     cudaError_t _err = cudaHostRegister(_src->MatArr.ptr, _src->get_total_bytes(), cudaHostRegisterPortable);
 //     if (_err != cudaSuccess) {
 //         if (_err == cudaErrorHostMemoryAlreadyRegistered) {
-//             DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_HOST_MEM_REGISTERED, HOST_MEM_REGISTERED);
+//             DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_HOST_MEM_REGISTERED, HOST_MEM_REGISTERED);
 //         }
 //         else {
 //             checkCudaErrors(_err);
@@ -315,7 +315,7 @@
 
 //     if (_err != cudaSuccess) {
 //         if (_err == cudaErrorHostMemoryNotRegistered) {
-//             DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_HOST_MEM_UNREGISTERED, HOST_MEM_UNREGISTERED);
+//             DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_HOST_MEM_UNREGISTERED, HOST_MEM_UNREGISTERED);
 //         }
 //         else {
 //             checkCudaErrors(_err);

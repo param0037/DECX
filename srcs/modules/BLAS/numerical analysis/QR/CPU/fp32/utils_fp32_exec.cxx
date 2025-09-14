@@ -90,7 +90,7 @@ CalcIWY_blocked_v8_fp32(const float* __restrict        pV_last,
 
             decx::utils::simd::xmm256_reg IWY_v8;
             IWY_v8._vf = _mm256_setzero_ps();
-            if constexpr (IWY_initial) {
+            if_opt (IWY_initial) {
                 if ((g_coord_WH.y / 8) == (g_coord_WH.x / 8)){
                     IWY_v8._arrf[g_coord_WH.y % 8] = 1.0f;
                 }
@@ -121,7 +121,9 @@ decx::blas::Blocked_GQR_planner<float>::sUpdateW(decx::blas::Blocked_GQR_planner
     const uint32_t alignment = fake_this->_align_bytes / sizeof(float);
     const uint32_t proc_len_v1 = fake_this->_block_dims.y - local_col_id;
 
-    decx::utils::Thr1D t1D(fake_this->_fmgr_updateW.GetFragNum());
+    fake_this->_task_mgr.SetMaxThreadNum(fake_this->_fmgr_updateW.GetFragNum());
+    fake_this->_task_mgr.SetDispatchMethod(decx::core::ThreadDispatchMethod_e::Dispatch_ByID);
+    
     const uint32_t pitchIWY = fake_this->_IWY.GetDims().x;
     
     if (local_col_id == 0) {
@@ -139,8 +141,7 @@ decx::blas::Blocked_GQR_planner<float>::sUpdateW(decx::blas::Blocked_GQR_planner
         float* pIWY = fake_this->GetAlignedBufAddr(BlockedGQR_BufType_e::BGQR_Buffer_IWY, local_col_id - 1, 0);                     // IWY(:, k-1:end)
 
         decx::cpu_ElementWise1D_planner::
-            sCaller(pFunc, &fake_this->_fmgr_updateW, &t1D, 
-                decx::cpu::ThreadDispatchMethod_e::Dispatch_ByID,
+            sCaller(pFunc, &fake_this->_fmgr_updateW, &fake_this->_task_mgr, 
                 EW_SLOT_ID_MONOTONIC(0),
                 decx::TArg_still<const float*>(pV),
                 decx::TArg_var<const float*>([&](const int32_t i){return pW + i * fake_this->_fmgr_updateW.GetFragLenById(0);}),

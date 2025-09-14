@@ -38,28 +38,28 @@
 #ifdef __cplusplus
 namespace de
 {
-typedef struct DECX_Handle
-{
-    // indicates the type index of error
-    DecxErrorTypes_e error_type;
+// typedef struct DECX_Handle
+// {
+//     // indicates the type index of error
+//     DecxErrorTypes_e error_type;
 
-    // describes the error statements
-    char error_string[100];
-
-
-    DECX_Handle() 
-    {
-        decx::utils::decx_strcpy<100>(this->error_string, SUCCESS);
-        this->error_type = DecxErrorTypes_e::DECX_SUCCESS;
-    }
+//     // describes the error statements
+//     char error_string[100];
 
 
-    DECX_Handle(const char* _string, const DecxErrorTypes_e _err_code) 
-    {
-        decx::utils::decx_strcpy<100>(this->error_string, _string);
-        this->error_type = _err_code;
-    }
-}DH;
+//     DECX_Handle() 
+//     {
+//         decx::utils::decx_strcpy<100>(this->error_string, SUCCESS);
+//         this->error_type = DecxErrorTypes_e::DECX_SUCCESS;
+//     }
+
+
+//     DECX_Handle(const char* _string, const DecxErrorTypes_e _err_code) 
+//     {
+//         decx::utils::decx_strcpy<100>(this->error_string, _string);
+//         this->error_type = _err_code;
+//     }
+// }DH;
 }
 
 

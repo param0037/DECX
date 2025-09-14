@@ -36,33 +36,33 @@
 
 void decx::_MatrixArray::alloc_data_space()
 {
-    for (uint32_t i = 0; i < this->_matrix_number; ++i){
-        const auto& layout = this->_layouts[i];
-        this->MatptrArr.emplace_back();
+    // for (uint32_t i = 0; i < this->_matrix_number; ++i){
+    //     const auto& layout = this->_layouts[i];
+    //     this->MatptrArr.emplace_back();
 
-        const uint64_t alloc_bytes = (uint64_t)layout.height * (uint64_t)layout.pitch;
-        if (this->MatptrArr[i].Allocate(alloc_bytes, PAGABLE)) {
-            DECX_LOG_ERR("Fail to allocate memory for MatrixArray on host");
-            return;
-        }
-    }
+    //     const uint64_t alloc_bytes = (uint64_t)layout.height * (uint64_t)layout.pitch;
+    //     if (this->MatptrArr[i].Allocate(alloc_bytes, PAGABLE)) {
+    //         DECX_LOG_ERR("Fail to allocate memory for MatrixArray on host");
+    //         return;
+    //     }
+    // }
 }
 
 
 void decx::_MatrixArray::re_alloc_data_space()
 {
-    this->MatptrArr.clear();
+    // this->MatptrArr.clear();
 
-    for (uint32_t i = 0; i < this->_matrix_number; ++i){
-        const auto& layout = this->_layouts[i];
-        this->MatptrArr.emplace_back();
+    // for (uint32_t i = 0; i < this->_matrix_number; ++i){
+    //     const auto& layout = this->_layouts[i];
+    //     this->MatptrArr.emplace_back();
 
-        const uint64_t alloc_bytes = (uint64_t)layout.height * (uint64_t)layout.pitch;
-        if (this->MatptrArr[i].Reallocate(alloc_bytes)) {
-            DECX_LOG_ERR("Fail to allocate memory for MatrixArray on host");
-            return;
-        }
-    }
+    //     const uint64_t alloc_bytes = (uint64_t)layout.height * (uint64_t)layout.pitch;
+    //     if (this->MatptrArr[i].Reallocate(alloc_bytes)) {
+    //         DECX_LOG_ERR("Fail to allocate memory for MatrixArray on host");
+    //         return;
+    //     }
+    // }
 }
 
 
@@ -181,7 +181,7 @@ de::MatrixArray& decx::_MatrixArray::SoftCopy(de::MatrixArray& src)
 {
     const decx::_MatrixArray& ref_src = dynamic_cast<decx::_MatrixArray&>(src);
 
-    this->_layouts = ref_src._layouts;
+    // this->_layouts = ref_src._layouts;
 
     for (int32_t i = 0; i < _matrix_number; ++i){
         this->MatptrArr[i].AllocateRef();
@@ -242,7 +242,7 @@ extern "C"
         de::DH handle;
 
         if (prop == NULL) {
-            DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_INVALID_PARAM,
+            DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_INVALID_PARAM,
                 INVALID_PARAM);
             return _CAST_HANDLE_(DECX_Handle, handle);
         }

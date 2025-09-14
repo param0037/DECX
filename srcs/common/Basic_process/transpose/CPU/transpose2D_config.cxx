@@ -31,28 +31,29 @@
 
 #include "transpose2D_config.h"
 #include <log_console.h>
+#include <configs/config.h>
 #define MODULE_TAG "TP2D_Config"
 
 namespace decx
 {
-    namespace blas {
-        static decx::blas::_transpose_profiles_bytes _profiles[5] = {
-            {8, 32, 32},    // 1 uint8_t
-            {8, 32, 32},    // 2 uint16_t, __half
-            {4, 32, 32},    // 4 int32_t, float
-            {2, 32, 32},    // 8 double, de::CPf
-            {2, 16, 16},    // 16 de::CPd
-        };
-    }
+namespace blas {
+    static decx::blas::_transpose_profiles_bytes _profiles[5] = {
+        {._alignment = 8, ._block_H = 32, ._block_W = 32},    // 1 uint8_t
+        {._alignment = 8, ._block_H = 32, ._block_W = 32},    // 2 uint16_t, __half
+        {._alignment = 4, ._block_H = 32, ._block_W = 32},    // 4 int32_t, float
+        {._alignment = 2, ._block_H = 32, ._block_W = 32},    // 8 double, de::CPf
+        {._alignment = 2, ._block_H = 16, ._block_W = 16},    // 16 de::CPd
+    };
+}
 }
 
 
 void decx::blas::_cpu_transpose_config::
-_plan_threading(const decx::blas::_transpose_profiles_bytes* _profile, de::DH* handle)
+_plan_threading(const decx::blas::_transpose_profiles_bytes* _profile)
 {
     int32_t rval = 0;
     // Use realloc instead to allow multiple configure calling
-    rval |= this->_blocking_configs.Allocate(this->_concurrency * sizeof(decx::utils::_blocking2D_fmgrs), PAGABLE, handle);
+    rval |= this->_blocking_configs.Allocate(this->_concurrency * sizeof(decx::utils::_blocking2D_fmgrs), PAGABLE);
     
     // Plan the thread distribution
     decx::utils::thread2D_arrangement_advisor(&this->_thread_dist2D, this->_concurrency, this->_src_proc_dims_v1);
@@ -89,7 +90,7 @@ _plan_threading(const decx::blas::_transpose_profiles_bytes* _profile, de::DH* h
 
 
 void decx::blas::_cpu_transpose_config::
-config(const uint8_t _element_byte, const uint32_t concurrency, const uint2 src_dims_v1, de::DH* handle)
+config(const uint8_t _element_byte, const uint32_t concurrency, const uint2 src_dims_v1)
 {
     const decx::blas::_transpose_profiles_bytes _profile = 
         decx::blas::_profiles[decx::utils::i_getMSB_idx_conservative<uint8_t>(_element_byte)];
@@ -98,7 +99,19 @@ config(const uint8_t _element_byte, const uint32_t concurrency, const uint2 src_
 
     this->_src_proc_dims_v1 = src_dims_v1;
 
-    this->_plan_threading(&_profile, handle);
+    this->_plan_threading(&_profile);
+}
+
+
+int32_t decx::blas::_cpu_transpose_config::
+TaskMgrRegister(decx::utils::ComputeLoadsMgr* p_task_mgr)
+{
+    if (nullptr == p_task_mgr) {
+        DECX_LOG_ERR("Invalid task mgr pointer, it is NULL");
+        return -1;
+    }
+    this->_task_mgr = p_task_mgr;
+    return 0;
 }
 
 
@@ -136,8 +149,7 @@ _cpu_transpose_MC_config::config(const uint8_t _element_byte,
                                  const uint2 src_dims_v1, 
                                  const uint32_t ch_num, 
                                  const uint64_t gch_src_v1,
-                                 const uint64_t gch_dst_v1, 
-                                 de::DH* handle)
+                                 const uint64_t gch_dst_v1)
 {
     this->_ch_gap_src = gch_src_v1;
     this->_ch_gap_dst = gch_dst_v1;
@@ -149,7 +161,7 @@ _cpu_transpose_MC_config::config(const uint8_t _element_byte,
     this->_parallel_transp_config._concurrency = concurrency;
     this->_parallel_transp_config._element_byte = _element_byte;
 
-    const uint32_t _L1_size = decx::cpu::DecxGetL1DataCacheSize_PerCore();
+    const uint32_t _L1_size = DecxGetL1DataCacheSize_PerCore();
     // The total size of 2 planes
     const uint64_t size_2planes = decx::utils::ialign_up<uint32_t>(src_dims_v1.x, _profile._alignment) * 
         src_dims_v1.y * 2 * _element_byte;
@@ -169,13 +181,13 @@ _cpu_transpose_MC_config::config(const uint8_t _element_byte,
     }
     else {      // Can't be fitted into L1 cache
         this->_divide_ch = false;
-        this->_parallel_transp_config._plan_threading(&_profile, handle);
+        this->_parallel_transp_config._plan_threading(&_profile);
     }
 #else
     this->_parallel_transp_config._src_proc_dims_v1.x = src_dims_v1.x;
     this->_parallel_transp_config._src_proc_dims_v1.y = src_dims_v1.y;
     
     this->_divide_ch = false;
-    this->_parallel_transp_config._plan_threading(&_profile, handle);
+    this->_parallel_transp_config._plan_threading(&_profile);
 #endif
 }

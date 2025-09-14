@@ -95,7 +95,7 @@ plan(const uint32_t simd_align_byte,        const uint32_t conc,
 
 
 void decx::reduce::cpu_Reduce1D_Planner::
-alloc_shared_mem(const uint64_t size, de::DH* handle)
+alloc_shared_mem(const uint64_t size)
 {
-    this->_shared_memory.Allocate(size, PAGABLE, handle);
+    this->_shared_memory.Allocate(size, PAGABLE);
 }

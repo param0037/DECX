@@ -111,7 +111,7 @@ void decx::_GPU_Vector::alloc_data_space()
         return;
     }
 
-    if (this->Vec.Allocate(this->total_bytes, CUDA_DEVICE, de::GetLastError(), true, S)) {
+    if (this->Vec.Allocate(this->total_bytes, CUDA_DEVICE, true, S)) {
         DECX_LOG_ERR("Vector on GPU malloc failed! Please check if there is enough space in your device");
         return;
     }
@@ -139,7 +139,7 @@ void decx::_GPU_Vector::re_alloc_data_space()
         return;
     }
 
-    if (this->Vec.Reallocate(this->total_bytes, de::GetLastError(), true, S)) {
+    if (this->Vec.Reallocate(this->total_bytes, true, S)) {
         DECX_LOG_ERR("Vector on GPU malloc failed! Please check if there is enough space in your device");
         return;
     }
@@ -245,7 +245,7 @@ _DECX_API_ de::DH de::cuda::PinMemory(de::Vector& src)
     cudaError_t _err = cudaHostRegister(_src->Vec.GetRawPtr(), _src->get_total_bytes(), cudaHostRegisterPortable);
     if (_err != cudaSuccess) {
         if (_err == cudaErrorHostMemoryAlreadyRegistered) {
-            DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_HOST_MEM_REGISTERED, HOST_MEM_REGISTERED);
+            DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_HOST_MEM_REGISTERED, HOST_MEM_REGISTERED);
         }
         else {
             checkCudaErrors(_err);
@@ -265,7 +265,7 @@ _DECX_API_ de::DH de::cuda::UnpinMemory(de::Vector& src)
 
     if (_err != cudaSuccess) {
         if (_err == cudaErrorHostMemoryNotRegistered) {
-            DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_HOST_MEM_UNREGISTERED, HOST_MEM_UNREGISTERED);
+            DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_HOST_MEM_UNREGISTERED, HOST_MEM_UNREGISTERED);
         }
         else {
             checkCudaErrors(_err);

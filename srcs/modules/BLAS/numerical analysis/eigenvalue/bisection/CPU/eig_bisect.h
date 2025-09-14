@@ -71,13 +71,16 @@ private:
 
     decx::blas::cpu_eig_bisect_iter_HPC<_data_type> _iter_scheduler;
 
+    decx::utils::ComputeLoadsMgr _task_mgr;
+
 public:
     cpu_eig_bisection() {
         memset(this, 0, sizeof(decx::blas::cpu_eig_bisection<_data_type>));
+        this->_task_mgr.SetDispatchMethod(decx::core::ThreadDispatchMethod_e::Dispatch_ByID);
     }
 
 
-    void Init(const uint32_t conc, const decx::_matrix_layout* layout, const _data_type max_err, de::DH* handle);
+    void Init(const uint32_t conc, const decx::_matrix_layout* layout, const _data_type max_err);
 
 
     void extract_diagonal(const _data_type* src, decx::utils::ThreadArrange1D* t1D);
@@ -86,7 +89,7 @@ public:
     void calc_Gerschgorin_bound(decx::utils::ThreadArrange1D* t1D);
 
 
-    void plan(const decx::_Matrix* mat, decx::utils::ThreadArrange1D* t1D, de::DH* handle);
+    void plan(const decx::_Matrix* mat, decx::utils::ThreadArrange1D* t1D);
 
 
     _data_type* get_diag() {return this->_diag.template GetRawPtr<_data_type>();}

@@ -85,7 +85,7 @@ int32_t decx::blas::GEMM_fp32_caller(const float* A,                           c
             if_opt (_ABC) { C_loc += f_mgrWH[0].frag_len * _alignment; }
             ++task_id;
         }
-            
+        
         A_loc += f_mgrWH[1].frag_len * layout_A->pitch;
     }
 

@@ -31,6 +31,8 @@
 #ifndef _EIG_BISECT_INTERVAL_
 #define _EIG_BISECT_INTERVAL_
 
+#include <decx_utils_functions.h>
+
 namespace decx
 {
 namespace blas{

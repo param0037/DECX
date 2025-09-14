@@ -74,15 +74,15 @@ __attribute__((constructor)) void InitHost_Core_Resources()
 	// whether it's NULL, if so, new it, otherwise, return it.
 	// So, it's initialized when it's needed by someone else.
 	//decx::mem_pool_Hv = decx::MemPool_Hv::GetInstance();
-	decx::core::thread_pool = new decx::core::ThreadPool(std::thread::hardware_concurrency(), true);
-	decx::_res_mgr = new decx::ResMgr;
+	// decx::core::thread_pool = new decx::core::ThreadPool(std::thread::hardware_concurrency(), true);
+	// decx::_res_mgr = new decx::ResMgr;
 }
 
 
 __attribute__((destructor)) void FreeHost_Core_Resources()
 {
-	delete decx::core::thread_pool;
-	delete decx::_res_mgr;
+	// delete decx::_res_mgr;
+	// delete decx::core::thread_pool;
 }
 
 #endif

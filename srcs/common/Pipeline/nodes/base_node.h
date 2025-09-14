@@ -31,9 +31,15 @@
 #ifndef _BASE_NODE_H_
 #define _BASE_NODE_H_
 
-#define _NODE_NAME_MAX_LENGTH_ 64
+#define _NODE_NAME_MAX_LENGTH_       (64)
+#define _MAX_DOWNSTREAM_NODE_NUM_    (16)
+#define _MAX_UPSTREAM_NODE_NUM_      (16)
+#define _NODE_DATA_MAX_SIZE_         (256)
 
 #include <Concurrent/task_handle.h>
+#include <PtrInfo.h>
+#include <Concurrent/lock.h>
+#include <Concurrent/semaphore.h>
 
 namespace decx
 {
@@ -42,9 +48,18 @@ namespace decx
 
     enum class NodeTaskDriveMode_e
     {
-        NodeDrvMode_Timer = 0,
-        NodeDrvMode_Semaphore = 1,
+        NodeDrvMode_Callback = 0,
+        NodeDrvMode_Node = 1,
     };
+
+
+    typedef struct __align__(_NODE_DATA_MAX_SIZE_) NodeData_t
+    {
+        uint8_t _data[_NODE_DATA_MAX_SIZE_];
+    } NodeData_t;
+
+
+    typedef int32_t NodeTaskFunc_t(NodeData_t* data);
 }
 
 class decx::BaseNode
@@ -54,14 +69,15 @@ private:
     NodeTaskDriveMode_e _drv_mode;
     decx::core::TaskHandle_t _task_info;
 
-    decx::BaseNode* _prev;
-    decx::BaseNode* _next;
+    decx::BaseNode* _prev[_MAX_UPSTREAM_NODE_NUM_];
+    decx::BaseNode* _next[_MAX_DOWNSTREAM_NODE_NUM_];
 
-    // Timer (if used)
-    
+    DecxLock_t _lock;
+    DecxBinarySemaphore_t _sem;
 
 private:
     // DataBuffers
+    decx::PtrInfo<NodeData_t> _data_buffer;
 
 public:
     BaseNode();

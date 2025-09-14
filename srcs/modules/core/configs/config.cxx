@@ -31,7 +31,8 @@
 
 #include "config.h"
 #include <Handle/decx_handle.h>
-
+#include <thread_management/thread_pool.h>
+#include <resources_manager/decx_resource.h>
 
 _DECX_API_ void de::InitCPUInfo()
 {
@@ -39,6 +40,9 @@ _DECX_API_ void de::InitCPUInfo()
     _decx_get_CPU_info(&decx::cpI._hardware_info);
     
     decx::cpI.cpu_concurrency = decx::cpI._hardware_info._hardware_concurrency;
+
+    decx::core::thread_pool = new decx::core::ThreadPool(std::thread::hardware_concurrency(), true);
+	decx::_res_mgr = new decx::ResMgr;
 }
 
 

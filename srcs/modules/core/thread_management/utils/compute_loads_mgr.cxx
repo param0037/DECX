@@ -29,33 +29,56 @@
 */
 
 #include <Concurrent/compute_loads_mgr.h>
+#define MODULE_TAG "TaskMgr"
 
 
 int32_t decx::utils::ComputeLoadsMgr::SetMaxThreadNum(const uint32_t max_thread_num)
 {
     int32_t rval = 0;
-    if (this->_task_arr.IsValid()){
-        rval |= this->_task_arr.Free();
+    if (max_thread_num > this->_max_thread){
+        if (this->_task_arr.IsValid()){
+            rval |= this->_task_arr.Free();
+        }
+        rval |= this->_task_arr.Allocate(max_thread_num * sizeof(decx::core::TaskHandle_t), PAGABLE);
+        this->_max_thread = max_thread_num;
+        this->_valid_thread_num = 0;
     }
-    rval |= this->_task_arr.Allocate(max_thread_num * sizeof(decx::core::TaskHandle_t), PAGABLE);
-    this->_max_thread = max_thread_num;
-    this->_valid_thread_num = 0;
     return rval;
 }
 
-
-int32_t decx::utils::ComputeLoadsMgr::Resize(const uint32_t max_thread_num)
+void decx::utils::ComputeLoadsMgr::PostBarrierCallback(const int32_t argc, void* p_argv_list)
 {
-    if (max_thread_num > this->_max_thread){
-        return this->SetMaxThreadNum(max_thread_num);
+    auto* p_mgr = (decx::utils::ComputeLoadsMgr*)p_argv_list;
+    if (p_mgr) {
+        DecxCore_CountingSemaphorePost(&p_mgr->_barrier_sem, p_mgr->_valid_thread_num);
     }
-    return 0;
 }
 
+decx::utils::ComputeLoadsMgr::ComputeLoadsMgr()
+{
+    this->_max_thread = 0;
+    this->_valid_thread_num = 0;
+    this->_postproc_hdlr = {
+        ._p_cb_entry = PostBarrierCallback,
+        ._argc = 0,
+        ._p_args_list = (void*)this
+    };
+    if (DecxCore_CountingSemaphoreCreate(&this->_barrier_sem)){
+        DECX_LOG_ERR("Semaphore create failed");
+    }
+}
 
 decx::utils::ComputeLoadsMgr::ComputeLoadsMgr(const int32_t max_thread_num)
 {
+    this->_postproc_hdlr = {
+        ._p_cb_entry = PostBarrierCallback,
+        ._argc = 0,
+        ._p_args_list = (void*)this
+    };
     this->SetMaxThreadNum(max_thread_num);
+    this->_valid_thread_num = 0;
+    this->_dispatch_method = decx::core::ThreadDispatchMethod_e::Dispatch_ByID;
+    DecxCore_CountingSemaphoreCreate(&this->_barrier_sem);
 }
 
 
@@ -67,10 +90,15 @@ void decx::utils::ComputeLoadsMgr::SetDispatchMethod(const decx::core::ThreadDis
 
 int32_t decx::utils::ComputeLoadsMgr::Run(const uint2& range)
 {
+    DecxCore_CountingSemaphoreReset(&this->_barrier_sem);
     if (range.y > this->_valid_thread_num){
+        DECX_LOG_ERR("Range out of boundary: range.y=%d, valid thread num=%d", range.y, this->_valid_thread_num);
         return -1;
     }
     int32_t rval = 0;
+    const uint32_t num = range.y - range.x;
+    
+    uint8_t need_reset_notify_cnt = (num == this->_valid_thread_num);
     for (int32_t i = range.x; i < range.y; ++i){
         rval |= decx::core::TaskRun(&this->_task_arr[i]);
     }
@@ -90,9 +118,16 @@ int32_t decx::utils::ComputeLoadsMgr::Synchronize(const uint2& range)
     if (range.y > this->_valid_thread_num){
         return -1;
     }
-    for (int32_t i = range.x; i < range.y; ++i){
-        rval |= decx::core::TaskSync(&this->_task_arr[i]);
-    }
+
+    int32_t num = range.y - range.x;
+    
+    DecxWaitSettings_t wait_settings = {
+        ._option = DecxWaitOpt_Hybrid,
+        ._max_spin_cnt = 1000,
+        ._spin_factor_exp = 4,
+        ._timeout_msec = DECX_WAIT_FOREVER
+    };
+    rval = (int32_t)DecxCore_CountingSemaphoreWait(&this->_barrier_sem, &wait_settings, num);
     return rval;
 }
 
@@ -131,7 +166,7 @@ decx::utils::ComputeLoadsMgr::~ComputeLoadsMgr()
 int32_t decx::utils::ComputeLoadsMgr2D::Reshape(const uint2& new_dist)
 {
     this->_thread_dist = new_dist;
-    return ComputeLoadsMgr::Resize(new_dist.x * new_dist.y);
+    return ComputeLoadsMgr::SetMaxThreadNum(new_dist.x * new_dist.y);
 }
 
 
@@ -148,9 +183,15 @@ int32_t decx::utils::ComputeLoadsMgr2D::Run(const uint2& range_x, const uint2& r
 int32_t decx::utils::ComputeLoadsMgr2D::Synchronize(const uint2& range_x, const uint2& range_y)
 {
     int32_t rval = 0;
-    for (int32_t i = range_y.x; i < range_y.y; ++i){
-        rval |= ComputeLoadsMgr::Synchronize(make_uint2(i * this->_thread_dist.x + range_x.x, i * this->_thread_dist.x + range_x.y));
-    }
+    int32_t num = (range_x.y - range_x.x) * (range_y.y - range_y.x);
+    
+    DecxWaitSettings_t wait_settings = {
+        ._option = DecxWaitOpt_Hybrid,
+        ._max_spin_cnt = 1000,
+        ._spin_factor_exp = 4,
+        ._timeout_msec = DECX_WAIT_FOREVER
+    };
+    rval = (int32_t)DecxCore_CountingSemaphoreWait(&this->_barrier_sem, &wait_settings, num);
     return rval;
 }
 
@@ -168,9 +209,7 @@ int32_t decx::utils::ComputeLoadsMgr2D::RunAll()
 int32_t decx::utils::ComputeLoadsMgr2D::SynchronizeAll()
 {
     int32_t rval = 0;
-    for (int32_t i = 0; i < this->_thread_dist.x * this->_thread_dist.y; ++i){
-        rval |= decx::core::TaskSync(&this->_task_arr[i]);
-    }
+    this->Synchronize(make_uint2(0, this->_thread_dist.x), make_uint2(0, this->_thread_dist.y));
     return rval;
 }
 
@@ -212,4 +251,10 @@ int32_t decx::utils::ComputeLoadsMgr2D::AdvisedReshape(const uint32_t total_thr_
     }
 
     return this->Reshape(advised_dist);
+}
+
+
+decx::utils::ComputeLoadsMgr2D::~ComputeLoadsMgr2D()
+{
+    // ComputeLoadsMgr::~ComputeLoadsMgr();
 }

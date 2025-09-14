@@ -49,6 +49,18 @@ decx::cpu_ElementWise1D_planner::changed(const uint32_t conc,
 }
 
 
+int32_t
+decx::cpu_ElementWise1D_planner::TaskMgrRegister(decx::utils::ComputeLoadsMgr* p_task_mgr) 
+{
+    if (nullptr == p_task_mgr) {
+        DECX_LOG_ERR("Invalid task mgr pointer, it is NULL");
+        return -1;
+    }
+    this->_p_tasks = p_task_mgr;
+    return 0;
+}
+
+
 void 
 decx::cpu_ElementWise1D_planner::plan(const uint32_t simd_align_byte,
                                       const uint32_t conc,
@@ -86,8 +98,6 @@ decx::cpu_ElementWise1D_planner::plan(const uint32_t simd_align_byte,
             const uint32_t real_conc = decx::utils::idiv_ceil<uint64_t>(this->_total, this->_min_thread_proc);
             decx::utils::frag_manager_gen_Nx(&this->_fmgr, this->_total, real_conc, align_x);
         }
-
-        this->_tasks.SetMaxThreadNum(conc);
     }
 }
 

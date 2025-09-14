@@ -32,12 +32,12 @@
 #ifndef _TRANSPOSE2D_CONFIGS_H_
 #define _TRANSPOSE2D_CONFIGS_H_
 
-#include "../../../basic.h"
-#include "../../../../modules/core/thread_management/thread_arrange.h"
-#include "../../../FMGR/fragment_arrangment.h"
-#include "../../../../modules/core/thread_management/thread_pool.h"
-#include "../../../../modules/core/resources_manager/decx_resource.h"
-#include "../../../Classes/classes_util.h"
+#include <basic.h>
+#include <thread_management/thread_arrange.h>
+#include <FMGR/fragment_arrangment.h>
+#include <Concurrent/compute_loads_mgr.h>
+#include <resource_handle.h>
+#include <Classes/classes_util.h>
 
 namespace decx
 {
@@ -74,28 +74,29 @@ private:
     uint2 _thread_dist2D;
     uint2 _src_proc_dims_v1;
     uint32_t _concurrency;
+    decx::utils::ComputeLoadsMgr* _task_mgr;
 
-
-    void _CRSR_ _plan_threading(const decx::blas::_transpose_profiles_bytes* _profile, de::DH* handle);
+private:
+    void _CRSR_ _plan_threading(const decx::blas::_transpose_profiles_bytes* _profile);
 
 
 public:
     _cpu_transpose_config() {}
 
 
-    void _CRSR_ config(const uint8_t _element_byte, const uint32_t concurrency, const uint2 src_dims_v1, de::DH* handle);
+    int32_t TaskMgrRegister(decx::utils::ComputeLoadsMgr* p_task_mgr);
 
 
-    void transpose_4b_caller(const float* src, float* dst, const uint32_t pitchsrc_v1,
-        const uint32_t pitchdst_v1, decx::utils::ThreadArrange1D* t1D) const;
+    void _CRSR_ config(const uint8_t _element_byte, const uint32_t concurrency, const uint2 src_dims_v1);
 
 
-    void transpose_1b_caller(const uint64_t* src, uint64_t* dst, const uint32_t pitchsrc_v8,
-        const uint32_t pitchdst_v8, decx::utils::ThreadArrange1D* t1D) const;
+    void transpose_4b_caller(const float* src, float* dst, const uint32_t pitchsrc_v1, const uint32_t pitchdst_v1) const;
 
 
-    void transpose_8b_caller(const double* src, double* dst, const uint32_t pitchsrc_v1,
-        const uint32_t pitchdst_v1, decx::utils::ThreadArrange1D* t1D) const;
+    void transpose_1b_caller(const uint64_t* src, uint64_t* dst, const uint32_t pitchsrc_v8, const uint32_t pitchdst_v8) const;
+
+
+    void transpose_8b_caller(const double* src, double* dst, const uint32_t pitchsrc_v1, const uint32_t pitchdst_v1) const;
 
 
     void transpose_8b_MC_caller(const double* src, double* dst, const uint32_t pitchsrc_v1,
@@ -104,7 +105,7 @@ public:
 
 
     void transpose_16b_caller(const de::CPd* src, de::CPd* dst, const uint32_t pitchsrc_v1,
-        const uint32_t pitchdst_v1, decx::utils::ThreadArrange1D* t1D) const;
+        const uint32_t pitchdst_v1) const;
 
 
     void transpose_16b_MC_caller(const de::CPd* src, de::CPd* dst, const uint32_t pitchsrc_v1,
@@ -143,7 +144,7 @@ public:
 
     void _CRSR_ config(const uint8_t _element_byte, const uint32_t concurrency, 
         const uint2 src_dims_v1, const uint32_t ch_num, const uint64_t gch_src_v1,
-        const uint64_t gch_dst_v1, de::DH* handle);
+        const uint64_t gch_dst_v1);
 
 
     void transpose_8b_caller(const double* src, double* dst, const uint32_t pitchsrc_v1,

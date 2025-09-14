@@ -82,6 +82,8 @@ private:
 
     decx::PtrInfo<decx::blas::cpu_MVM_planner<_data_type>> _w_update_helpers;
 
+    decx::utils::ComputeLoadsMgr                _task_mgr;
+
 
 private:
     int32_t GetPostMask(const uint32_t L_front, void* p_in) const;
@@ -111,11 +113,12 @@ public:
 
 public:
     Blocked_GQR_planner() {
-        memset(this, 0, sizeof(decx::blas::Blocked_GQR_planner<_data_type>));
+        this->_task_mgr.SetDispatchMethod(decx::core::ThreadDispatchMethod_e::Dispatch_ByID);
+        this->_tp_ldg_config.TaskMgrRegister(&this->_task_mgr);
     }
 
 
-    void _CRSR_ Config(const uint2 block_dims, de::DH* handle);
+    int32_t _CRSR_ Config(const uint2 block_dims);
 
 
     void FlushAllTiles();

@@ -31,7 +31,7 @@
 #include <log_console.h>
 #include <stdarg.h>
 #include <time.h>
-#include <thread_management/global_mutex_array.h>
+#include <thread_management/utils/global_mutex_array.h>
 
 #ifdef Windows
 #include <Windows.h>

@@ -47,7 +47,7 @@ add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/common/Element_wise" "${DECX_SUBBUI
 add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/common/FMGR" "${DECX_SUBBUILD_BIN_DIR}/FMGR_CPU")
 add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/common/BLAS/GEMM/CPU" "${DECX_SUBBUILD_BIN_DIR}/common/BLAS/GEMM/CPU/")
 add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/common/BLAS/MVM/CPU" "${DECX_SUBBUILD_BIN_DIR}/common/BLAS/MVM/CPU/")
-add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/common/Pipeline" "${DECX_SUBBUILD_BIN_DIR}/common/Pipeline/")
+# add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/common/Pipeline" "${DECX_SUBBUILD_BIN_DIR}/common/Pipeline/")
 
 # include common sources
 include("${DECX_WORLD_ABS_DIR}/srcs/common/Basic_process/extension/extension_com.cmake")
@@ -59,10 +59,11 @@ include("${DECX_WORLD_ABS_DIR}/srcs/common/Basic_process/type_cast/typecast_com.
 
 find_package(OpenMP REQUIRED)
 
-add_library(DECX_BLAS_CPU SHARED ${GEMM}                    ${BP} ${EW}
-                                 ${EXT_CPU_COM_SRCS} 
-                                 ${INTRIN_X86_64}
-                                 ${TYPECAST_CPU_COM_SRCS} ${EIG} ${REDUCE_CPU_SRCS})
+add_library(DECX_BLAS_CPU SHARED ${GEMM}   ${EW}           # ${BP} 
+                                #  ${EXT_CPU_COM_SRCS} 
+                                 ${INTRIN_X86_64} ${EIG}
+                                #  ${TYPECAST_CPU_COM_SRCS} ${EIG} 
+                                ${REDUCE_CPU_SRCS})
 
 # target_link_libraries(DECX_BLAS_CPU PRIVATE OpenMP::OpenMP_CXX)
 
@@ -70,7 +71,7 @@ target_link_libraries(DECX_BLAS_CPU PRIVATE GEMM_CPU
                                     PRIVATE TRP_CPU
                                     PRIVATE EW_CPU
                                     PRIVATE FMGR_CPU
-                                    PRIVATE PIPELINE
+                                    # PRIVATE PIPELINE
                                     PRIVATE GEMV_CPU)
 else()
 add_library(DECX_BLAS_CPU SHARED ${GEMM}                ${BP} 

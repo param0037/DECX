@@ -36,9 +36,9 @@
 #include <configs/config.h>
 #include <vector_defines.h>
 #include <Concurrent/builtin_threadpool.h>
+#include <Concurrent/lock.h>
 
-
-#define MAX_THREAD_NUM 1024
+#define MAX_THREAD_NUM 128
 
 
 namespace decx
@@ -51,6 +51,14 @@ namespace core
     * Each thread can be used repeatedly as long as it is sleeping
     */
     class ThreadPool;
+
+
+    struct TP_InitInfo_t
+    {
+        TaskQueueUsage_e _usage;
+        int32_t     _thread_cnt;
+        uint8_t     _start_initially;
+    };
 }
 }
 
@@ -58,11 +66,12 @@ namespace core
 class decx::core::ThreadPool
 {
 public:
-    std::thread*            _thr_list;
+    decx::PtrInfo<TaskQueueCtx_t> _TQ_ctx[(ulong)TaskQueueUsage_e::TaskQueue_UsageNum];
+    uint32_t                      _TQ_valid_nums[(ulong)TaskQueueUsage_e::TaskQueue_UsageNum];
 
-    decx::core::ThreadTaskQueue*  _task_schd;
     bool                    _internal_sync_enable;
     std::mutex              _mtx;
+    std::atomic<uint8_t>    _init_flag;
 
     uint32_t                _max_thr_num, 
                             current_thread_num;
@@ -75,8 +84,10 @@ public:
 
 
     // main_loop callback function running on each thread
-    _THREAD_FUNCTION_ void __TPMgrTask(const uint32_t pool_id);
+    _THREAD_FUNCTION_ void __TPMgrTask(const TaskQueueUsage_e usage, const uint32_t slot_id);
 
+private:
+    static TP_InitInfo_t* sFindTQInitINfo(TP_InitInfo_t* p_info_array, const uint32_t search_depth, const TaskQueueUsage_e usage);
 
 public:
     // The actual number of concurrent thread this processor supports
@@ -86,6 +97,7 @@ public:
     std::mutex _mtx_for_sync;
 
     void Start();
+
 
     ThreadPool(const int thread_num, const bool start_at_begin);
 

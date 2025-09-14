@@ -65,7 +65,7 @@ public:
     }
 
 
-    _CRSR_ void alloc_shared_mem(const uint64_t size, de::DH* handle);
+    _CRSR_ void alloc_shared_mem(const uint64_t size);
 
 
     void plan(const uint32_t simd_align_byte, const uint32_t conc, const uint64_t total, const uint8_t type_size_in, const uint8_t type_size_out,

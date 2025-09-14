@@ -31,6 +31,8 @@
 
 #include "arithmetic_callers_LUT.h"
 #include "arithmetic.h"
+#include <Concurrent/builtin_threadpool.h>
+#include <Concurrent/compute_loads_mgr.h>
 
 
 void decx::blas::
@@ -42,11 +44,13 @@ mat_arithmetic_caller_VVO(const decx::_Matrix*  A,
     using namespace decx::CPUK;
 
     decx::cpu_ElementWise1D_planner _planner;
-
+    decx::utils::ComputeLoadsMgr task_mgr;
     const int32_t _kernel_dex = decx::blas::_find_arith_kernel_id<0>(arith_flag);
     void* _kernel_ptr = NULL;
     const uint64_t proc_len_flatten_v1 = static_cast<uint64_t>(A->Pitch()) * static_cast<uint64_t>(A->Height());
     const uint32_t conc = DecxGetPermitConcurrency();
+
+    _planner.TaskMgrRegister(&task_mgr);
 
     switch (A->Type())
     {
@@ -58,7 +62,6 @@ mat_arithmetic_caller_VVO(const decx::_Matrix*  A,
         // Call the kernel
         _planner.Caller(
             (arithmetic_kernels_1D_VVO<float, float, float>*)_kernel_ptr,
-            decx::cpu::ThreadDispatchMethod_e::Dispatch_ByID,
             EW_SLOT_ID_MONOTONIC(0),
             decx::TArg_var<const float*>([&](const int32_t i){return (const float*)A->Mat + i * _planner.get_fmgr()->GetFragLen();}),
             decx::TArg_var<const float*>([&](const int32_t i){return (const float*)B->Mat + i * _planner.get_fmgr()->GetFragLen();}),
@@ -76,7 +79,6 @@ mat_arithmetic_caller_VVO(const decx::_Matrix*  A,
 
         _planner.Caller(
             (arithmetic_kernels_1D_VVO<double, double, double>*)_kernel_ptr,
-            decx::cpu::ThreadDispatchMethod_e::Dispatch_ByID,
             EW_SLOT_ID_MONOTONIC(0),
             decx::TArg_var<const double*>([&](const int32_t i){return (const double*)A->Mat + i * _planner.get_fmgr()->GetFragLen();}),
             decx::TArg_var<const double*>([&](const int32_t i){return (const double*)B->Mat + i * _planner.get_fmgr()->GetFragLen();}),
@@ -103,12 +105,13 @@ mat_arithmetic_caller_VO(const decx::_Matrix*  src,
     using namespace decx::CPUK;
 
     decx::cpu_ElementWise1D_planner _planner;
+    decx::utils::ComputeLoadsMgr task_mgr;
     const int32_t _kernel_dex = decx::blas::_find_arith_kernel_id<0>(arith_flag);
     void* _kernel_ptr = NULL;
     const uint64_t proc_len_flatten_v1 = static_cast<uint64_t>(src->Pitch()) * static_cast<uint64_t>(src->Height());
     const uint32_t conc = DecxGetPermitConcurrency();
 
-    _planner.SetDispatchMethod(decx::core::ThreadDispatchMethod_e::Dispatch_ByID);
+    _planner.TaskMgrRegister(&task_mgr);
 
     switch (src->Type())
     {
@@ -118,7 +121,7 @@ mat_arithmetic_caller_VO(const decx::_Matrix*  src,
         _planner.plan(32, conc, proc_len_flatten_v1, sizeof(float), sizeof(float));
 
         _planner.Caller(
-            (arithmetic_kernels_1D_VO<float, float>*)_kernel_ptr,   
+            (arithmetic_kernels_1D_VO<float, float>*)_kernel_ptr,
             EW_SLOT_ID_MONOTONIC(0),
             decx::TArg_var<const float*>([&](const int32_t i){return (const float*)src->Mat + i * _planner.get_fmgr()->GetFragLen();}),
             decx::TArg_var<float*>([&](const int32_t i){return (float*)dst->Mat + i * _planner.get_fmgr()->GetFragLen();}),
@@ -159,12 +162,14 @@ vec_arithmetic_caller_VVO(const decx::_Vector*  A,
     using namespace decx::CPUK;
 
     decx::cpu_ElementWise1D_planner _planner;
+    decx::utils::ComputeLoadsMgr task_mgr;
     
     const int32_t _kernel_dex = decx::blas::_find_arith_kernel_id<0>(arith_flag);
     void* _kernel_ptr = NULL;
     const uint32_t conc = DecxGetPermitConcurrency();
 
-    _planner.SetDispatchMethod(decx::core::ThreadDispatchMethod_e::Dispatch_ByID);
+    task_mgr.SetDispatchMethod(decx::core::ThreadDispatchMethod_e::Dispatch_ByID);
+    _planner.TaskMgrRegister(&task_mgr);
 
     switch (A->Type())
     {
@@ -218,11 +223,13 @@ vec_arithmetic_caller_VO(const decx::_Vector*  src,
     using namespace decx::CPUK;
 
     decx::cpu_ElementWise1D_planner _planner;
+    decx::utils::ComputeLoadsMgr task_mgr;
     const int32_t _kernel_dex = decx::blas::_find_arith_kernel_id<0>(arith_flag);
     void* _kernel_ptr = NULL;
     const uint32_t conc = DecxGetPermitConcurrency();
 
-    _planner.SetDispatchMethod(decx::core::ThreadDispatchMethod_e::Dispatch_ByID);
+    task_mgr.SetDispatchMethod(decx::core::ThreadDispatchMethod_e::Dispatch_ByID);
+    _planner.TaskMgrRegister(&task_mgr);
 
     switch (src->Type())
     {

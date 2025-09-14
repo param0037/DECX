@@ -1,0 +1,235 @@
+/**
+*   ----------------------------------------------------------------------------------
+*   Author : Wayne Anderson
+*   Date   : 2021.04.16
+*   ----------------------------------------------------------------------------------
+* 
+* This is a part of the open source project named "DECX", a high-performance scientific
+* computational library. This project follows the MIT License. For more information 
+* please visit https://github.com/param0037/DECX.
+* 
+* Copyright (c) 2021 Wayne Anderson
+* 
+* Permission is hereby granted, free of charge, to any person obtaining a copy of this 
+* software and associated documentation files (the "Software"), to deal in the Software 
+* without restriction, including without limitation the rights to use, copy, modify, 
+* merge, publish, distribute, sublicense, and/or sell copies of the Software, and to 
+* permit persons to whom the Software is furnished to do so, subject to the following 
+* conditions:
+* 
+* The above copyright notice and this permission notice shall be included in all copies 
+* or substantial portions of the Software.
+* 
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
+* INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR 
+* PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE 
+* FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR 
+* OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+* DEALINGS IN THE SOFTWARE.
+*/
+
+
+#include "task_queue.h"
+
+
+// decx::core::ThreadTaskQueue::ThreadTaskQueue() 
+// {
+//     this->_shutdown.store(0);
+//     this->_usage = TaskQueueUsage_e::TaskQueue_Generic;
+//     this->_behaviour = TaskQueueBehaviour_e::TaskQueue_LIFO;
+
+//     DecxLockCreate(&this->_lock, DecxLockType_e::LockType_Spin);
+// #if !_TQ_USE_LOCKQ_
+//     this->_task_queue.Allocate(10);
+// #endif
+//     this->_wait_flag.store(0, std::memory_order_relaxed);
+// }
+
+
+decx::core::ThreadTaskQueue::ThreadTaskQueue(const TaskQueueInfo_t* p_init_param)
+{
+    this->_shutdown.store(TaskQueueSwitch::TaskQueue_OFF == p_init_param->_switch ? 1 : 0);
+    this->_behaviour = p_init_param->_behaviour;
+    this->_usage = p_init_param->_usage;
+
+    DecxLockCreate(&this->_lock, DecxLockType_e::LockType_Spin);
+
+#if !_TQ_USE_LOCKQ_
+    this->_task_queue.Allocate(10);
+#endif
+    this->_wait_flag.store(0, std::memory_order_relaxed);
+    this->_has_init = 1;
+}
+
+
+
+_THREAD_GENERAL_
+void decx::core::ThreadTaskQueue::__TQMainLoop()
+{
+    while (!this->_shutdown.load(std::memory_order_relaxed))
+    {
+#if _TQ_USE_LOCKQ_
+        std::unique_lock<std::mutex> lock{ this->_mtx };
+        // for (int32_t i = 0; i < 1000; ++i){
+        //     if ((this->_task_queue.size() > 0) || (this->_shutdown)) {
+        //         break;
+        //     }
+        //     _mm_pause();
+        // }
+        {
+            
+            while ((this->_task_queue.size() == 0) && (!this->_shutdown)) {
+                this->_cv.wait(lock);
+            }
+        }
+
+        if (this->_task_queue.size() != 0) {
+            decx::core::TaskImplHandle_t *task = nullptr;
+            task = this->_task_queue.back();
+            
+            (*task)->Execute();     // execute the tast
+            this->_task_queue.pop_back();
+        }
+#else
+        decx::core::TaskImplHandle_t task;
+        decx::utils::LFQ_Status_e rval = decx::utils::LFQ_Status_e::LFQ_Success;
+
+        rval = this->_task_queue.PopBack(&task);
+        
+        if (decx::utils::LFQ_Status_e::LFQ_Success != rval) {
+            // No task available, use condition variable (slow path)
+            
+            std::unique_lock<std::mutex> lock(this->_mtx);
+            
+            // Double-check after acquiring mutex
+            rval = this->_task_queue.PopBack(&task);
+            
+            if (decx::utils::LFQ_Status_e::LFQ_Success != rval) {
+                // Still no task, wait
+                // printf("Waiting\n");
+
+                // uint8_t wait_flag_exp = 0;
+                // do {
+                //     wait_flag_exp = 0;
+                // }
+                // while(!this->_wait_flag.compare_exchange_strong(wait_flag_exp, 1, std::memory_order_release, std::memory_order_relaxed));
+
+                this->_cv.wait(lock, [&](){
+                    return (this->_task_queue.Size() != 0) || (this->_shutdown.load(std::memory_order_relaxed) != 0);
+                    // return true;
+                });
+
+                this->_wait_flag.store(0, std::memory_order_release);
+                // printf("Done\n");
+                rval = this->_task_queue.PopBack(&task);
+            }
+            else{
+                lock.unlock();
+            }
+        }
+        
+        if (decx::utils::LFQ_Status_e::LFQ_Success == rval) {
+            // printf("Execute task\n");
+            task->Execute();
+        }
+
+        if (this->_task_queue.Size() == 0){
+            decx::core::TaskImplHandle_t stolen_task;
+            if (0 == TaskFinder(&stolen_task)) {
+                // printf("Task stolen one\n");
+                // stolen_task->Execute();
+            }
+        }
+
+        // for (int i = 0; i < 100; ++i){
+        //     _mm_pause();
+        // }
+
+#endif
+        // std::this_thread::sleep_for(std::chrono::microseconds(1));
+    }
+    return;
+}
+
+
+void decx::core::ThreadTaskQueue::Switch(const TaskQueueSwitch switch_stage)
+{
+    this->_shutdown.store((TaskQueueSwitch::TaskQueue_OFF == switch_stage) ? 1 : 0);
+    this->_cv.notify_one();
+}
+
+
+uint32_t decx::core::ThreadTaskQueue::GetCurrentTaskNum() const
+{
+#if _TQ_USE_LOCKQ_
+    return (uint32_t)this->_task_queue.size();
+#else
+    return (uint32_t)this->_task_queue.Size();
+#endif
+}
+
+
+int32_t decx::core::ThreadTaskQueue::RegisterTask(decx::core::TaskImplHandle_t task_hdlr)
+{
+#if _TQ_USE_LOCKQ_
+    // DecxLockAcquire(&this->_lock, DecxAsync_WaitOption_e::Wait_Forever, 0);
+    this->_mtx.lock();
+    this->_task_queue.emplace_back(task_hdlr);
+    this->_mtx.unlock();
+    // printf("emplace back done\n");
+    // DecxLockRelease(&this->_lock);
+    this->_cv.notify_one();
+#else
+    this->_mtx.lock();
+    this->_task_queue.Enqueue(task_hdlr);
+    this->_mtx.unlock();
+    this->_cv.notify_one();
+    
+#endif
+    return 0;
+}
+
+
+int32_t decx::core::ThreadTaskQueue::
+ExternalTaskQueueHook(decx::core::TaskQueueCtx_t* p_task_arr_ext, const uint32_t* p_tq_cnt)
+{
+    if (nullptr == p_task_arr_ext){
+        return -1;
+    }
+    this->_external_queue = p_task_arr_ext;
+    this->_external_tq_num = p_tq_cnt;
+    return 0;
+}
+
+
+int32_t decx::core::ThreadTaskQueue::
+TaskFinder(decx::core::TaskImplHandle_t* p_task)
+{
+    // uint8_t expected = 0;
+    // while (!this->_wait_flag.compare_exchange_weak(expected, 1, std::memory_order_acquire, std::memory_order_relaxed)) {
+    //     expected = 0;
+    //     // _mm_pause();
+    // }
+
+    // printf("Start finder, *this->_external_tq_num=%d\n", *this->_external_tq_num);
+
+    const uint32_t num = *this->_external_tq_num;
+    decx::core::TaskImplHandle_t task;
+    decx::utils::LFQ_Status_e rval = decx::utils::LFQ_Status_e::LFQ_Success;
+    for (uint32_t i = 0; i < num; ++i){
+        if (i == this->_slot_id){
+            continue;
+        }
+        auto* p_tq = &this->_external_queue[i]._task_schd;
+        if (p_tq->HasInit()) {
+            rval = p_tq->_task_queue.PopBack(&task);
+            // if (decx::utils::LFQ_Status_e::LFQ_Success == rval) {
+            //     *p_task = task;
+            //     // this->_wait_flag.store(0, std::memory_order_release);
+            //     return 0;
+            // }
+        }
+    }
+    // this->_wait_flag.store(0, std::memory_order_release);
+    return 1;
+}

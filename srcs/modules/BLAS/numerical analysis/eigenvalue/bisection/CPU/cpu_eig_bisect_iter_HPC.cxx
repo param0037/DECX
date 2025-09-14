@@ -33,16 +33,16 @@
 
 
 template <typename _data_type>
-void decx::blas::cpu_eig_bisect_count_interval<_data_type>::init(const uint64_t max_intrv_num, de::DH* handle)
+void decx::blas::cpu_eig_bisect_count_interval<_data_type>::init(const uint64_t max_intrv_num)
 {
-    this->_intrv_buf.Allocate(max_intrv_num * 2 * sizeof(T_interval), PAGABLE, handle);
+    this->_intrv_buf.Allocate(max_intrv_num * 2 * sizeof(T_interval), PAGABLE);
 
-    this->_mid_arr_buf.Allocate(max_intrv_num * 2 * sizeof(_data_type), PAGABLE, handle);
+    this->_mid_arr_buf.Allocate(max_intrv_num * 2 * sizeof(_data_type), PAGABLE);
     
-    this->_count_buffer.Allocate(1200 * sizeof(int32_t), PAGABLE, handle);
+    this->_count_buffer.Allocate(1200 * sizeof(int32_t), PAGABLE);
 }
 
-template void decx::blas::cpu_eig_bisect_count_interval<float>::init(const uint64_t, de::DH*);
+template void decx::blas::cpu_eig_bisect_count_interval<float>::init(const uint64_t);
 
 
 template <typename _data_type>
@@ -70,9 +70,7 @@ void decx::blas::cpu_eig_bisect_count_interval<float>::count_intervals(uint32_t*
 {
     const uint32_t frag_len = this->_fmgr.GetFragLen();
 
-    this->caller(update_intrv,
-        t1D,
-        decx::cpu::ThreadDispatchMethod_e::Dispatch_ByID,
+    this->Caller(update_intrv,
         EW_SLOT_ID_MONOTONIC(0),
         decx::TArg_still<decx::blas::cpu_eig_bisect_count_interval<float>*>    (this),
         decx::TArg_var<const T_interval*>  ([&](const int32_t i){return this->_p_interval + i * frag_len;}),
@@ -170,7 +168,7 @@ template <typename _data_type> void
 decx::blas::cpu_eig_bisect_iter_HPC<_data_type>::
 init(const _data_type*  p_diag,         const _data_type* p_off_diag, 
      const uint32_t N,                  const _data_type L, 
-     const _data_type U,                de::DH* handle)
+     const _data_type U)
 {
     int32_t rval = 0;
     this->_current_interval_gap = U - L;
@@ -178,11 +176,11 @@ init(const _data_type*  p_diag,         const _data_type* p_off_diag,
     this->_max_interval_num = (uint32_t)ceilf((float)this->_current_interval_gap / (float)this->_max_err);
 
     // Allocate the interval stack
-    rval |= this->_interval_stack.Allocate(this->_max_interval_num * sizeof(decx::blas::eig_bisect_interval<_data_type>), PAGABLE, handle);
+    rval |= this->_interval_stack.Allocate(this->_max_interval_num * sizeof(decx::blas::eig_bisect_interval<_data_type>), PAGABLE);
     
     // Allocate the count buffer
     const uint32_t max_mid_count_num = decx::utils::ialign_up<uint32_t>(this->_max_interval_num - 1, 8);
-    rval |= this->_mid_points.Reallocate(this->_max_interval_num * sizeof(_data_type), handle, true, true);
+    rval |= this->_mid_points.Reallocate(this->_max_interval_num * sizeof(_data_type), true, true);
 
     auto* p_1st_interval = this->_interval_stack.GetRawPtr();
     p_1st_interval[0].set(L, U);
@@ -194,11 +192,10 @@ init(const _data_type*  p_diag,         const _data_type* p_off_diag,
     this->_count_intervals = decx::blas::cpu_eig_bisect_count_interval<_data_type>(
         p_diag, p_off_diag, this->_mid_points.GetRawPtr(), p_1st_interval, N);
     this->_count_intervals.plan(DecxGetPermitConcurrency(), 1, sizeof(_data_type), sizeof(_data_type), 1);
-    this->_count_intervals.init(1024, handle);
+    this->_count_intervals.init(1024);
 }
 
-template void decx::blas::cpu_eig_bisect_iter_HPC<float>::init(const float*, const float*, const uint32_t, const float, const float, de::DH*);
-
+template void decx::blas::cpu_eig_bisect_iter_HPC<float>::init(const float*, const float*, const uint32_t, const float, const float);
 
 
 template <>

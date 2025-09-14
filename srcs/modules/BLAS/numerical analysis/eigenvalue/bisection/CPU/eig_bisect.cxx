@@ -29,15 +29,14 @@
 */
 
 #include "eig_bisect.h"
-#include <thread_management/thread_pool.h>
+#include <Concurrent/builtin_threadpool.h>
 #include "eig_utils_kernels.h"
 
 
 template <typename _data_type> void 
 decx::blas::cpu_eig_bisection<_data_type>::Init(const uint32_t conc, 
                                                 const decx::_matrix_layout* layout, 
-                                                const _data_type max_err, 
-                                                de::DH* handle)
+                                                const _data_type max_err)
 {
 #if defined(__x86_64__) || defined(__i386__)
     constexpr uint32_t _align_byte = 32;
@@ -59,24 +58,25 @@ decx::blas::cpu_eig_bisection<_data_type>::Init(const uint32_t conc,
     }
 
     this->_aligned_N = decx::utils::ialign_up<uint32_t>(this->_layout.width, this->_alignment);
-    this->_diag.Allocate(this->_aligned_N * sizeof(_data_type), PAGABLE, handle);
+    this->_diag.Allocate(this->_aligned_N * sizeof(_data_type), PAGABLE);
 
     // Puls one to fit the process of finding Gerschgorin boundary.
-    this->_off_diag.Allocate((this->_aligned_N + 1) * sizeof(_data_type), PAGABLE, handle);
+    this->_off_diag.Allocate((this->_aligned_N + 1) * sizeof(_data_type), PAGABLE);
 
     // Allocate the shared memory.
-    this->_shared_mem.Allocate(4 * this->_concurrency * sizeof(_data_type), PAGABLE, handle);
+    this->_shared_mem.Allocate(4 * this->_concurrency * sizeof(_data_type), PAGABLE);
 
     // Initialize the diagonal extractor
+    this->_diag_extractor.TaskMgrRegister(&this->_task_mgr);
     this->_diag_extractor.plan(32, this->_concurrency, this->_layout.width, sizeof(_data_type), sizeof(_data_type));
 
+    this->_Gersch_bound_founder.TaskMgrRegister(&this->_task_mgr);
     this->_Gersch_bound_founder.plan(32, this->_concurrency, this->_layout.width, 
         sizeof(_data_type), sizeof(_data_type), 1);
-    this->_Gersch_bound_founder.alloc_shared_mem((this->_concurrency + 1) * sizeof(_data_type) * 200, handle);
+    this->_Gersch_bound_founder.alloc_shared_mem((this->_concurrency + 1) * sizeof(_data_type) * 200);
 }
 
-template void decx::blas::cpu_eig_bisection<float>::Init(const uint32_t, const decx::_matrix_layout*, const float, de::DH*);
-
+template void decx::blas::cpu_eig_bisection<float>::Init(const uint32_t, const decx::_matrix_layout*, const float);
 
 
 template <typename _data_type>
@@ -91,6 +91,9 @@ void decx::blas::cpu_eig_bisection<_data_type>::extract_diagonal(const _data_typ
     const uint32_t& frag_num = this->_diag_extractor.get_fmgr()->frag_num;
     const uint32_t& frag_len = this->_diag_extractor.get_fmgr()->frag_len;
 
+    this->_task_mgr.SetMaxThreadNum(frag_num);
+    this->_task_mgr.SetDispatchMethod(decx::core::ThreadDispatchMethod_e::Dispatch_ByID);
+
     for (int32_t i = 0; i < frag_num; ++i)
     {
         diag_extractor* f = i < frag_num - 1 ? 
@@ -99,14 +102,18 @@ void decx::blas::cpu_eig_bisection<_data_type>::extract_diagonal(const _data_typ
 
         const uint32_t proc_len = this->_diag_extractor.get_proc_len_by_id(i);
         
-        t1D->_async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(f, loc_ptr, p_diag, p_off_diag, proc_len, this->_layout.pitch);
+        // t1D->_async_thread[i] = decx::cpu::RegisterTaskLoadBalanced(f, loc_ptr, p_diag, p_off_diag, proc_len, this->_layout.pitch);
+        this->_task_mgr.AppendTask(i, f, loc_ptr, p_diag, p_off_diag, proc_len, this->_layout.pitch);
 
         loc_ptr += (this->_layout.pitch + 1) * frag_len;
         p_diag += frag_len;
         p_off_diag += frag_len;
     }
 
-    t1D->__sync_all_threads(make_uint2(0, frag_num));
+    // t1D->__sync_all_threads(make_uint2(0, frag_num));
+    this->_task_mgr.RunAll();
+    this->_task_mgr.SynchronizeAll();
+    this->_task_mgr.ClearAll();
 }
 
 template void decx::blas::cpu_eig_bisection<float>::extract_diagonal(const float*, decx::utils::ThreadArrange1D*);
@@ -122,9 +129,7 @@ void decx::blas::cpu_eig_bisection<_data_type>::calc_Gerschgorin_bound(decx::uti
     _data_type* u_ptr = this->_Gersch_bound_founder.get_shared_mem<_data_type>();
     _data_type* l_ptr = u_ptr + frag_num;
 
-    this->_Gersch_bound_founder.caller(decx::blas::CPUK::Gerschgorin_bound_fp32,
-        t1D,
-        decx::cpu::ThreadDispatchMethod_e::Dispatch_ByID,
+    this->_Gersch_bound_founder.Caller(decx::blas::CPUK::Gerschgorin_bound_fp32,
         EW_SLOT_ID_MONOTONIC(0),
         decx::TArg_var<const float*>([this, p_dist](const int32_t i){return this->_diag + i * p_dist->GetFragLen();}),
         decx::TArg_var<const float*>([this, p_dist](const int32_t i){return this->_off_diag + i * p_dist->GetFragLen();}),
@@ -146,8 +151,7 @@ template void decx::blas::cpu_eig_bisection<float>::calc_Gerschgorin_bound(decx:
 
 
 template <typename _data_type>
-void decx::blas::cpu_eig_bisection<_data_type>::plan(const decx::_Matrix* mat, decx::utils::ThreadArrange1D* t1D,
-    de::DH* handle)
+void decx::blas::cpu_eig_bisection<_data_type>::plan(const decx::_Matrix* mat, decx::utils::ThreadArrange1D* t1D)
 {
     // Extract diagonal and off-diagonal elements
     this->extract_diagonal((_data_type*)mat->Mat, t1D);
@@ -158,12 +162,11 @@ void decx::blas::cpu_eig_bisection<_data_type>::plan(const decx::_Matrix* mat, d
                                (_data_type*)this->_off_diag, 
                                this->_layout.width,
                                this->_Gerschgorin_L, 
-                               this->_Gerschgorin_U, 
-                               handle);
-    Check_Runtime_Error(handle);
+                               this->_Gerschgorin_U);
+    
 }
 
-template void decx::blas::cpu_eig_bisection<float>::plan(const decx::_Matrix*, decx::utils::ThreadArrange1D*, de::DH*);
+template void decx::blas::cpu_eig_bisection<float>::plan(const decx::_Matrix*, decx::utils::ThreadArrange1D*);
 
 
 template <>

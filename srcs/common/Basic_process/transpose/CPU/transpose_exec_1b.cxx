@@ -29,9 +29,10 @@
 */
 
 
-#include "../../../basic.h"
+#include <basic.h>
 #include "transpose2D_config.h"
 #include "transpose_exec.h"
+#define MODULE_TAG "TRP_CPU"
 
 
 decx::ResourceHandle decx::blas::g_cpu_transpose_1b_config;
@@ -210,9 +211,16 @@ void decx::blas::_cpu_transpose_config::
 transpose_1b_caller(const uint64_t* src, 
                     uint64_t* dst, 
                     const uint32_t pitchsrc_v8, 
-                    const uint32_t pitchdst_v8, 
-                    decx::utils::ThreadArrange1D* t1D) const
+                    const uint32_t pitchdst_v8) const
 {
+    if (nullptr == this->_task_mgr){
+        DECX_LOG_ERR("Invalid, task mgr not registered");
+        return;
+    }
+
+    this->_task_mgr->SetMaxThreadNum(this->_concurrency);
+    this->_task_mgr->SetDispatchMethod(decx::core::ThreadDispatchMethod_e::Dispatch_ByID);
+
     const uint64_t* src_loc = src;
     uint64_t* dst_loc = dst;
     
@@ -223,7 +231,7 @@ transpose_1b_caller(const uint64_t* src,
 
         for (uint32_t j = 0; j < this->_thread_dist2D.x; ++j)
         {
-            t1D->_async_thread[i * this->_thread_dist2D.x + j] = decx::cpu::RegisterTaskLoadBalanced(
+            this->_task_mgr->AppendTask(this->_thread_dist2D.x * i + j,
                 decx::blas::CPUK::transpose_1b_kernel, src_loc, dst_loc,
                 &this->_blocking_configs[this->_thread_dist2D.x * i + j], pitchsrc_v8, pitchdst_v8);
 
@@ -231,5 +239,10 @@ transpose_1b_caller(const uint64_t* src,
             dst_loc += this->_fmgr_W.frag_len * pitchdst_v8;
         }
     }
-    t1D->__sync_all_threads();
+    // t1D->__sync_all_threads();
+    this->_task_mgr->RunAll();
+
+    this->_task_mgr->SynchronizeAll();
+
+    this->_task_mgr->ClearAll();
 }

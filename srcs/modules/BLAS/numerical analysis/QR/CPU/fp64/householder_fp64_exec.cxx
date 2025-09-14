@@ -157,14 +157,14 @@ sApplyReflectors(decx::blas::Blocked_GQR_planner<double>* fake_this,
     if (local_col_id < fake_this->_block_dims.x - 1) 
     {
         const decx::utils::frag_manager* fmgr = fake_this->_fmgrs_apply_HH + local_col_id;
-        decx::utils::Thr1D t1D(fmgr->GetFragNum());
+        fake_this->_task_mgr.SetMaxThreadNum(fmgr->GetFragNum());
+        fake_this->_task_mgr.SetDispatchMethod(decx::core::ThreadDispatchMethod_e::Dispatch_ByID);
         
         const double* pV = fake_this->GetAlignedBufAddr(BlockedGQR_BufType_e::BGQR_Buffer_V, local_col_id, local_col_id);
         double* pPanel = fake_this->GetAlignedBufAddr(BlockedGQR_BufType_e::BGQR_Buffer_src, local_col_id, local_col_id + 1);
 
         decx::cpu_ElementWise1D_planner::
-        sCaller(decx::blas::CPUK::Apply_Reflectors_v4_fp64, fmgr, &t1D, 
-            decx::cpu::ThreadDispatchMethod_e::Dispatch_ByID,
+        sCaller(decx::blas::CPUK::Apply_Reflectors_v4_fp64, fmgr, &fake_this->_task_mgr, 
             EW_SLOT_ID_MONOTONIC(0),
             decx::TArg_still<const double*>(pV),
             decx::TArg_var<double*>      ([&](const int32_t i){return pPanel + i * fmgr->GetFragLenById(0) * pitchsrc;}),

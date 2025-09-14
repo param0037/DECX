@@ -50,6 +50,8 @@
 #include <basic.h>
 #include <Array/Dynamic_Array.h>
 #include <Concurrent/task_handle.h>
+#include <Concurrent/semaphore.h>
+#include <Concurrent/lock.h>
 
 namespace decx
 {
@@ -78,8 +80,8 @@ namespace decx
 class decx::ResMgr
 {
 private:
-    std::condition_variable                     _cv;
-    std::mutex                                  _mtx;
+    DecxLock_t                                  _lock;
+    DecxBinarySemaphore_t                       _sem;
     uint64_t                                    _last_res_num;
     bool                                        _run;
     decx::utils::Dynamic_Array<decx::Resource>  _res_arr;

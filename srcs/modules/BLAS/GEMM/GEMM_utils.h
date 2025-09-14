@@ -33,11 +33,10 @@
 #define _GEMM_UTILS_H_
 
 
-#include "../../../common/basic.h"
-#include "../../../common/Classes/Matrix.h"
-#include "../../core/thread_management/thread_arrange.h"
-#include "../../../common/FMGR/fragment_arrangment.h"
-#include "../../core/resources_manager/decx_resource.h"
+#include <basic.h>
+#include <Classes/Matrix.h>
+#include <FMGR/fragment_arrangment.h>
+#include <resource_handle.h>
 
 
 #define GEMM_BlockDim 16

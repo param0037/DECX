@@ -150,12 +150,16 @@ decx::blas::cpu_MVM_planner<double>::Run(const double* __restrict mat,
                                         const double alpha, 
                                         const double c)
 {
-    decx::utils::Thr1D t1D(this->_concurrency);
+    if (nullptr == this->_task_mgr){
+        DECX_LOG_ERR("Task mgr not hooked");
+        return -1;
+    }
+    this->_task_mgr->SetMaxThreadNum(this->_concurrency);
+    this->_task_mgr->SetDispatchMethod(decx::core::ThreadDispatchMethod_e::Dispatch_ByID);
 
     decx::cpu_ElementWise1D_planner::sCaller(
             decx::blas::CPUK::MVM_exec_v4_fp64, 
-            &this->_fmgr_H, &t1D,
-            decx::cpu::ThreadDispatchMethod_e::Dispatch_ByID,
+            &this->_fmgr_H, this->_task_mgr,
             EW_SLOT_ID_MONOTONIC(0),
             decx::TArg_var<const double*>([&](const int32_t i){return mat + mat_pitch * i * this->_fmgr_H.GetFragLen();}),
             decx::TArg_still<const double*>(vec),
@@ -167,6 +171,5 @@ decx::blas::cpu_MVM_planner<double>::Run(const double* __restrict mat,
             decx::TArg_still<double>(c),
             decx::TArg_still<const void*>(this->_L_align_mask));
     
-    // decx::blas::CPUK::MVM_exec_v4_fp64(mat, vec, res_vec, &this->_fmgr_L, &this->_block_confs_H_perthread[0], mat_pitch, alpha ,c, (void*)this->_L_align_mask);
     return 0;
 }

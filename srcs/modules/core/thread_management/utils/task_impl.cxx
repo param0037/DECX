@@ -33,7 +33,14 @@
 
 void decx::core::TaskBase::Synchronize()
 {
-    std::unique_lock<std::mutex> lock(this->_mtx);
-    this->_cv.wait(lock, [&] {return decx::core::TaskState_e::TaskState_Idle == this->_sem;});
+    // std::unique_lock<std::mutex> lock(this->_mtx);
+    // this->_cv.wait(lock, [&] {return decx::core::TaskState_e::TaskState_Idle == this->_sem;});
+    
+    // TaskState_e expected = TaskState_e::TaskState_Running;
+    // syscall(SYS_futex, &this->_sem, FUTEX_WAIT, expected, nullptr, nullptr, 0);
+    
+    // printf("Start sync\n");
+    // g_sem.Wait(DECX_WAIT_FOREVER, DecxWaitOpt_Relaxed, 2);
+    // printf("Sync done\n");
 }
 

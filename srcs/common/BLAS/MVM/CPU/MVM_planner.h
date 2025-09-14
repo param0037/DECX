@@ -63,7 +63,9 @@ private:
     decx::PtrInfo<decx::utils::frag_manager> _block_confs_H_perthread;
     uint8_t _L_align_mask[256];
 
+    decx::utils::ComputeLoadsMgr* _task_mgr;
 
+private:
     void AlignMaskGen(const uint32_t width_leftover, const uint32_t simd_align_byte);
 
 public:
@@ -87,6 +89,9 @@ public:
     const decx::utils::frag_manager* GetFmgrH() const {
         return &this->_fmgr_H;
     }
+
+
+    int32_t TaskMgrSingletonHook(decx::utils::ComputeLoadsMgr* p_task_mgr);
 
 
     static int32_t Release(cpu_MVM_planner<_data_type>* _fake_this);

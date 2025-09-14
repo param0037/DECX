@@ -28,55 +28,64 @@
 * DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef _SPIN_LOCK_H_
-#define _SPIN_LOCK_H_
+#ifndef _DECX_LOCK_H_
+#define _DECX_LOCK_H_
+
 
 #include <basic.h>
-#define _LOCK_IMPL_SIZE_ 64
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
-    enum class DecxLockType_e : uint8_t {
-        LockType_Mutex = 0,
-        LockType_Spin = 1,
-    };
-
-    enum class DecxAsync_WaitOption_e : uint8_t {
-        Wait_Forever = 0,
-        Wait_Timeout = 1,
-    };
 
 
-    enum class DecxAsync_WaitBehaviour_e : uint8_t {
-        Wait_Lowpower = 0,
-        Wait_Spin = 1,
-    };
+#define DecxLockImplSizeMax 64
 
-    enum class DecxAsync_WaitResult_e : uint8_t {
-        Wait_Success = 0,
-        Wait_Timeout = 1,
-        Wait_UnknownErr = 255,
-    };
+typedef enum
+{
+    DecxWaitOpt_Hybrid  = 0,
+    DecxWaitOpt_Spin    = 1,
+    DecxWaitOpt_Relaxed = 2,
+} DecxWaitOption_e;
 
 
-    typedef struct DecxLock_t
-    {
-        uint8_t _impl[_LOCK_IMPL_SIZE_];
-    };
-
-    int32_t _DECX_API_ DecxLockCreate(DecxLock_t* p_lock, const DecxLockType_e lock_type);
-
-
-    DecxAsync_WaitResult_e _DECX_API_ 
-    DecxLockAcquire(DecxLock_t* p_lock, const DecxAsync_WaitOption_e option, const uint64_t timeout_msec);
+typedef enum
+{
+    DecxWait_Success            = 0,        // Successfully waited
+    DecxWait_Timeout            = 1,        // Wait but timeout occurs
+    DecxWait_SpinOver           = 2,        // Spin count exceeds set maximal value
+    DecxWait_RaceFail           = 3,        // 
+    DecxWait_UnexpectedError    = -1,
+} DecxWaitResult_e;
 
 
-    int32_t _DECX_API_ DecxLockRelease(DecxLock_t* p_lock);
+typedef struct
+{
+    DecxWaitOption_e    _option;            // Wait option
+    uint32_t            _max_spin_cnt;      // Maximum spin count
+    uint32_t            _spin_factor_exp;   // Spin count downscale factor (power of 2)
+    uint64_t            _timeout_msec;      // Wait timeout (in millisecond)
+} DecxWaitSettings_t;
 
 
-    int32_t _DECX_API_ DecxLockDestroy(DecxLock_t* p_lock);
+typedef struct __align__(DecxLockImplSizeMax)
+{
+    uint8_t _impl[DecxLockImplSizeMax];
+} DecxLock_t;
+
+#define DECX_WAIT_FOREVER   0xFFFFFFFFFFFFFFFFU
+#define DECX_WAIT_IMMIDIATE 0x0
+#define DECX_WAIT_1MS       1
+#define DECX_WAIT_10MS      10
+
+
+_DECX_API_ int32_t DecxCore_LockCreate(DecxLock_t* p_lock);
+
+_DECX_API_ int32_t DecxCore_LockDestroy(DecxLock_t* p_lock);
+
+_DECX_API_ DecxWaitResult_e DecxCore_LockAcquire(DecxLock_t* p_lock, const DecxWaitSettings_t* p_settings);
+
+_DECX_API_ int32_t DecxCore_LockRelease(DecxLock_t* p_lock);
 
 #ifdef __cplusplus
 }

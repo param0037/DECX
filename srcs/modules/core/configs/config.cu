@@ -34,8 +34,16 @@
 
 _DECX_API_ void de::InitCuda()
 {
+    int device_count = 0;
+    checkCudaErrors(cudaGetDeviceCount(&device_count));
     checkCudaErrors(cudaGetDevice(&decx::cuP.CURRENT_DEVICE));
     checkCudaErrors(cudaGetDeviceProperties(&decx::cuP.prop, decx::cuP.CURRENT_DEVICE));
+    cudaDeviceProp prop;
+    for (int i = 0; i < device_count; i++)
+    {
+        checkCudaErrors(cudaGetDeviceProperties(&prop, i));
+        printf("Device %d: %s\n", i, prop.name);
+    }
     decx::cuP.is_init = true;
 }
 
@@ -47,13 +55,13 @@ _DECX_API_ void de::cuda::DECX_CUDA_exit()
 }
 
 
-_DECX_API_ bool decx::cuda::DecxGetIsCUDAInit()
+_DECX_API_ uint8_t DecxGetCUDAInitStatus()
 {
     return decx::cuP.is_init;
 }
 
 
-_DECX_API_ cudaDeviceProp& decx::cuda::DecxGetCUDAProp()
+_DECX_API_ cudaDeviceProp& DecxGetCUDAProp()
 {
     return decx::cuP.prop;
 }

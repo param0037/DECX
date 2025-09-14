@@ -66,10 +66,13 @@ protected:
     bool changed(const uint32_t conc, const uint64_t total, const uint8_t _type_in_size, const uint8_t _type_out_size,
         const uint64_t min_thread_proc) const;
 
-    decx::utils::ComputeLoadsMgr _tasks;
+    decx::utils::ComputeLoadsMgr* _p_tasks;
 
 public:
     cpu_ElementWise1D_planner() {}
+
+
+    int32_t TaskMgrRegister(decx::utils::ComputeLoadsMgr* p_task_mgr);
 
 
     void plan(const uint32_t simd_align_byte, const uint32_t conc, const uint64_t total, const uint8_t _type_in_size, const uint8_t _type_out_size,
@@ -78,12 +81,6 @@ public:
 
     uint64_t get_proc_len_by_id(const int32_t thread_id) const{
         return this->_fmgr.GetFragLenById(thread_id);
-    }
-
-
-    void SetDispatchMethod(const decx::core::ThreadDispatchMethod_e method)
-    {
-        this->_tasks.SetDispatchMethod(method);
     }
 
 
@@ -103,18 +100,11 @@ public:
            decx::ThreadArg_var<int32_t, LambdaFunc_T>&&    slot_id, 
            Args&&...                                       args)
     {
-        int32_t rval = 0;
-
-        for (int32_t i = 0; i < this->_fmgr.GetFragNum(); ++i){
-            rval |= this->_tasks.AppendTask(slot_id.value(i),
-                std::forward<FuncType>(f), std::forward<Args>(args).value(i)...);
+        if (nullptr == this->_p_tasks) {
+            return -1;
         }
-        
-        rval |= this->_tasks.RunAll();
-        
-        rval |= this->_tasks.SynchronizeAll();
 
-        rval |= this->_tasks.ClearAll();
+        int32_t rval = sCaller(std::forward<FuncType>(f), &this->_fmgr, this->_p_tasks, std::move(slot_id), std::forward<Args>(args)...);
 
         return rval;
     }
@@ -128,9 +118,41 @@ public:
             Args&&                                          ...args)
     {
         int32_t rval = 0;
+        if (nullptr == p_tasks_mgr){
+            return -1;
+        }
+        rval |= p_tasks_mgr->SetMaxThreadNum(fmgr->GetFragNum());
+        p_tasks_mgr->SetDispatchMethod(decx::core::ThreadDispatchMethod_e::Dispatch_ByID);
 
         for (int32_t i = 0; i < fmgr->GetFragNum(); ++i){
             rval |= p_tasks_mgr->AppendTask(slot_id.value(i), std::forward<FuncType>(f), std::forward<Args>(args).value(i)...);
+        }
+        rval |= p_tasks_mgr->RunAll();
+        
+        rval |= p_tasks_mgr->SynchronizeAll();
+
+        rval |= p_tasks_mgr->ClearAll();
+
+        return rval;
+    }
+
+
+    template <typename FuncType, typename LambdaFunc_T, typename... Args> static int32_t 
+    sCaller(decx::ThreadArg_var<FuncType, LambdaFunc_T>&&   f, 
+            const decx::utils::frag_manager*                fmgr, 
+            decx::utils::ComputeLoadsMgr*                   p_tasks_mgr, 
+            decx::ThreadArg_var<int32_t, LambdaFunc_T>&&    slot_id, 
+            Args&&                                          ...args)
+    {
+        int32_t rval = 0;
+        if (nullptr == p_tasks_mgr){
+            return -1;
+        }
+        rval |= p_tasks_mgr->SetMaxThreadNum(fmgr->GetFragNum());
+        p_tasks_mgr->SetDispatchMethod(decx::core::ThreadDispatchMethod_e::Dispatch_ByID);
+        
+        for (int32_t i = 0; i < fmgr->GetFragNum(); ++i){
+            rval |= p_tasks_mgr->AppendTask(slot_id.value(i), std::forward<FuncType>(f.value(i)), std::forward<Args>(args).value(i)...);
         }
         
         rval |= p_tasks_mgr->RunAll();

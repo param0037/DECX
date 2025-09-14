@@ -56,29 +56,29 @@ static decx::utils::simd::xmm256_reg post_mask256_gen_v4(const uint8_t L_front)
 
 
 template <typename _data_type>
-void decx::blas::Blocked_GQR_planner<_data_type>::Config(const uint2 block_dims, de::DH* handle)
+int32_t decx::blas::Blocked_GQR_planner<_data_type>::Config(const uint2 block_dims)
 {
     int32_t rval = 0;
 
     this->_block_dims = block_dims;
-    this->_align_bytes = decx::utils::simd::_get_cpu_simd_align_bytes();
+    this->_align_bytes = decx::utils::simd::GetCPUSimdAlignBytes();
     const uint32_t alignment = this->_align_bytes / sizeof(_data_type);
 
     // Allocate src_tile
     this->_src_tile.SetDims(decx::utils::ialign_up<uint32_t>(block_dims.y, alignment),
                             block_dims.x);
     this->_tile_size = (uint64_t)this->_src_tile.GetDims().x * (uint64_t)this->_src_tile.GetDims().y * sizeof(_data_type);
-    rval |= this->_src_tile.Allocate(PAGABLE, sizeof(_data_type), handle);
+    rval |= this->_src_tile.Allocate(PAGABLE, sizeof(_data_type));
 
     // Allocate V_tile
     this->_V_tile.SetDims(this->_src_tile.GetDims());
-    rval |= this->_V_tile.Allocate(PAGABLE, sizeof(_data_type), handle);
+    rval |= this->_V_tile.Allocate(PAGABLE, sizeof(_data_type));
 
     this->_W_tile.SetDims(this->_src_tile.GetDims());
-    rval |= this->_W_tile.Allocate(PAGABLE, sizeof(_data_type), handle);
+    rval |= this->_W_tile.Allocate(PAGABLE, sizeof(_data_type));
 
     // Allocate array for masks
-    rval |= this->_simd_post_masks.Allocate(alignment * this->_align_bytes, PAGABLE, handle);
+    rval |= this->_simd_post_masks.Allocate(alignment * this->_align_bytes, PAGABLE);
 
     // Generating masks
     uint8_t* post_mask_ptr = this->_simd_post_masks.GetRawPtr<uint8_t>();
@@ -102,24 +102,26 @@ void decx::blas::Blocked_GQR_planner<_data_type>::Config(const uint2 block_dims,
     }
 
     // Plan for the transpose config
-    this->_tp_ldg_config.config(sizeof(_data_type), 1, this->_block_dims, handle);
+    this->_tp_ldg_config.config(sizeof(_data_type), 16, this->_block_dims);
+    this->_tp_ldg_config.TaskMgrRegister(&this->_task_mgr);
 
-    rval |= this->_fmgrs_apply_HH.Allocate((this->_block_dims.x - 1) * sizeof(decx::utils::frag_manager), PAGABLE, handle);
+    rval |= this->_fmgrs_apply_HH.Allocate((this->_block_dims.x - 1) * sizeof(decx::utils::frag_manager), PAGABLE);
     for (int32_t i = 0; i < block_dims.x - 1; ++i){
         decx::utils::frag_manager_gen(this->_fmgrs_apply_HH + i, this->_block_dims.x - i - 1, DecxGetPermitConcurrency());
     }
 
     this->_IWY.SetDims(decx::utils::ialign_up<uint32_t>(this->_block_dims.y, alignment), this->_block_dims.y);
-    rval |= this->_IWY.Allocate(PAGABLE, sizeof(_data_type), handle);
+    rval |= this->_IWY.Allocate(PAGABLE, sizeof(_data_type));
 
     decx::utils::frag_manager_gen(&this->_fmgr_updateW, this->_block_dims.y, DecxGetPermitConcurrency());
 
     rval |= this->Config_W_updator();
-    // return rval;
+
+    return rval;
 }
 
-template void decx::blas::Blocked_GQR_planner<float>::Config(const uint2 block_dims, de::DH* handle);
-template void decx::blas::Blocked_GQR_planner<double>::Config(const uint2 block_dims, de::DH* handle);
+template int32_t decx::blas::Blocked_GQR_planner<float>::Config(const uint2);
+template int32_t decx::blas::Blocked_GQR_planner<double>::Config(const uint2);
 
 
 template <typename _data_type>
@@ -192,6 +194,7 @@ int32_t decx::blas::Blocked_GQR_planner<_data_type>::Config_W_updator()
     this->_w_update_helpers.Allocate(plan_nodes_num * sizeof(decx::blas::cpu_MVM_planner<_data_type>), PAGABLE);
     for (int32_t i = 0; i < plan_nodes_num; ++i){
         rval |= this->_w_update_helpers[i].Config(make_uint2(aligned_vec_len - i * alignment, this->_block_dims.y));
+        rval |= this->_w_update_helpers[i].TaskMgrSingletonHook(&this->_task_mgr);
     }
     return rval;
 }
@@ -227,19 +230,17 @@ void decx::blas::Blocked_GQR_planner<_data_type>::LoadSrcTile(
         const uint32_t pitchsrc_v1,
         decx::utils::Thr1D* t1D)
 {
-    if constexpr (sizeof(_data_type) == 4) {
-        this->_tp_ldg_config.transpose_4b_caller(src + block_id * pitchsrc_v1 + block_id * this->_block_dims.x, 
-            this->_src_tile.template GetRawPtr<_data_type>(), 
+    if_opt (sizeof(_data_type) == 4) {
+        this->_tp_ldg_config.transpose_4b_caller((const float*)(src + block_id * pitchsrc_v1 + block_id * this->_block_dims.x), 
+            this->_src_tile.template GetRawPtr<float>(), 
             pitchsrc_v1, 
-            this->_src_tile.GetDims().x, 
-            t1D);
+            this->_src_tile.GetDims().x);
     }
-    else if constexpr (sizeof(_data_type) == 8) {
-        this->_tp_ldg_config.transpose_8b_caller(src + block_id * pitchsrc_v1 + block_id * this->_block_dims.x, 
-            this->_src_tile.template GetRawPtr<_data_type>(), 
+    else if_opt (sizeof(_data_type) == 8) {
+        this->_tp_ldg_config.transpose_8b_caller((const double*)(src + block_id * pitchsrc_v1 + block_id * this->_block_dims.x), 
+            this->_src_tile.template GetRawPtr<double>(), 
             pitchsrc_v1, 
-            this->_src_tile.GetDims().x, 
-            t1D);
+            this->_src_tile.GetDims().x);
     }
 }
 

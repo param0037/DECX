@@ -28,13 +28,16 @@
 
 include_guard(GLOBAL)
 
-file(GLOB CORE "${DECX_WORLD_ABS_DIR}/srcs/modules/core/*.cxx" "${DECX_WORLD_ABS_DIR}/srcs/modules/core/*.c")
-file(GLOB_RECURSE CLASSES "${DECX_WORLD_ABS_DIR}/srcs/modules/core/classes/*.cxx")
-file(GLOB_RECURSE RESMGR "${DECX_WORLD_ABS_DIR}/srcs/modules/core/resources_manager/*.cxx")
-file(GLOB_RECURSE CONFIGS "${DECX_WORLD_ABS_DIR}/srcs/modules/core/configs/*.cxx")
-file(GLOB_RECURSE THREAD_POOL "${DECX_WORLD_ABS_DIR}/srcs/modules/core/thread_management/*.cxx")
-file(GLOB_RECURSE GEN "${DECX_WORLD_ABS_DIR}/srcs/modules/core/generator/*.cxx")
-file(GLOB_RECURSE HANDLE "${DECX_WORLD_ABS_DIR}/srcs/modules/core/handle/*.cxx")
+file(GLOB CORE                  "${DECX_WORLD_ABS_DIR}/srcs/modules/core/*.cxx" 
+                                "${DECX_WORLD_ABS_DIR}/srcs/modules/core/*.c")
+file(GLOB_RECURSE CLASSES       "${DECX_WORLD_ABS_DIR}/srcs/modules/core/classes/*.cxx")
+file(GLOB_RECURSE RESMGR        "${DECX_WORLD_ABS_DIR}/srcs/modules/core/resources_manager/*.cxx")
+file(GLOB_RECURSE CONFIGS       "${DECX_WORLD_ABS_DIR}/srcs/modules/core/configs/*.cxx")
+file(GLOB_RECURSE THREAD_POOL   "${DECX_WORLD_ABS_DIR}/srcs/modules/core/thread_management/*.cxx")
+file(GLOB_RECURSE GEN           "${DECX_WORLD_ABS_DIR}/srcs/modules/core/generator/*.cxx")
+file(GLOB_RECURSE HANDLE        "${DECX_WORLD_ABS_DIR}/srcs/modules/core/handle/*.cxx")
+file(GLOB_RECURSE UT            "${DECX_WORLD_ABS_DIR}/srcs/modules/core/unittest/*.cxx"
+                                "${DECX_WORLD_ABS_DIR}/srcs/modules/core/unittest/*.cxx")
 
 add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/common/Element_wise" "${DECX_SUBBUILD_BIN_DIR}/EW_CPU")
 add_subdirectory("${DECX_WORLD_ABS_DIR}/srcs/common/FMGR" "${DECX_SUBBUILD_BIN_DIR}/FMGR_CPU")
@@ -51,7 +54,7 @@ else()
 endif()
 
 add_library(${PROJECT_NAME} SHARED 
-    ${CORE} ${CLASSES} ${RESMGR} ${THREAD_POOL} ${CONFIGS} ${GEN} ${HANDLE})
+    ${CORE} ${CLASSES} ${RESMGR} ${THREAD_POOL} ${CONFIGS} ${GEN} ${HANDLE} ${UT})
 
 
 target_link_libraries(DECX_core_CPU PRIVATE EW_CPU

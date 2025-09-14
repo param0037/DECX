@@ -35,21 +35,22 @@
 #include "task_impl.h"
 #include "builtin_threadpool.h"
 
+#define TASK_IMPL_SIZE_CALC \
+    (TASK_PACK_MAX_SIZE - sizeof(int32_t) - sizeof(ThreadDispatchMethod_e) - sizeof(decx::core::TaskQueueUsage_e))
+
 namespace decx
 {
 namespace core
 {
-    struct TaskHandle_t
+    struct __align__(TASK_PACK_MAX_SIZE) TaskHandle_t
     {
-        uint8_t _task_impl[TASK_PACK_MAX_SIZE];
-        // typename std::aligned_storage<TASK_PACK_MAX_SIZE, alignof(std::max_align_t)>::type _task_impl;
-        // void* _p_task_handle;
+        alignas(TASK_PACK_MAX_SIZE) uint8_t _task_impl[TASK_IMPL_SIZE_CALC];
         int32_t _slot_id;
         ThreadDispatchMethod_e _dispatch_method;
+        decx::core::TaskQueueUsage_e _usage;
     };
 }
 }
-
 
 
 #define PACK_CPY(data) (data)
@@ -61,16 +62,18 @@ namespace decx
 namespace core
 {
 	template <typename FuncType, typename ... ArgTypes> static inline
-	int32_t TaskCreate(const ThreadDispatchMethod_e method, int32_t slot_id, TaskHandle_t* task_hdlr, FuncType task_entry, ArgTypes ... args)
+	int32_t TaskCreate(const ThreadDispatchMethod_e method, const decx::core::TaskQueueUsage_e usage, int32_t slot_id, 
+                       TaskHandle_t* task_hdlr, FuncType task_entry, ArgTypes ... args)
 	{
         if (nullptr == task_hdlr) {
             return -1;
         }
 		using TaskType = decx::core::Task<FuncType, ArgTypes...>;
-		static_assert(sizeof(TaskType) <= TASK_PACK_MAX_SIZE, "Task size is too large");
+		static_assert(sizeof(TaskType) <= TASK_IMPL_SIZE_CALC, "Task size is too large");
 		new(task_hdlr->_task_impl) decx::core::Task<FuncType, ArgTypes...>(std::forward<FuncType>(task_entry), std::forward<ArgTypes>(args)...);
         task_hdlr->_dispatch_method = method;
         task_hdlr->_slot_id = slot_id;
+        task_hdlr->_usage = usage;
         return 0;
 	}
 
@@ -81,7 +84,7 @@ namespace core
             return -1;
         }
         auto* p_task = reinterpret_cast<decx::core::TaskImplHandle_t>(task_hdlr->_task_impl);
-        p_task->_sem = decx::core::TaskState_e::TaskState_Pending;
+        p_task->~TaskBase();
         return 0;
     }
 
@@ -92,18 +95,18 @@ namespace core
             return -1;
         }
         auto* p_task = reinterpret_cast<decx::core::TaskImplHandle_t>(task_hdlr->_task_impl);
-        decx::core::InsertTaskByID(p_task, task_hdlr->_slot_id);
+        decx::core::InsertTaskByID(p_task, task_hdlr->_usage, task_hdlr->_slot_id);
         return 0;
     }
 
 
-    static int32_t TaskSync(TaskHandle_t* task_hdlr)
+    static int32_t TaskPostProcSet(TaskHandle_t* task_hdlr, const decx::core::TaskPostProcHandle_t* p_hdlr)
     {
         if (nullptr == task_hdlr) {
             return -1;
         }
         auto* p_task = reinterpret_cast<decx::core::TaskImplHandle_t>(task_hdlr->_task_impl);
-        p_task->Synchronize();
+        p_task->SetPostProcCb(p_hdlr);
         return 0;
     }
 }

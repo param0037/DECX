@@ -42,15 +42,18 @@ decx::ResMgr::ResMgr()
         ._switch    = decx::core::TaskQueueSwitch::TaskQueue_ON,
         ._behaviour = decx::core::TaskQueueBehaviour_e::TaskQueue_LIFO,
         ._usage     = decx::core::TaskQueueUsage_e::TaskQueue_ResMgr,
-        ._tsak_num  = 0,
+        ._task_num  = 0,
     };
+
+    DecxCore_BinarySemaphoreCreate(&this->_sem);
+    DecxCore_LockCreate(&this->_lock);
 
     int32_t slot_id = decx::core::TaskQueueQuery(&desired_form);
     if (slot_id == -1){
         slot_id = decx::core::ThreadpoolAddSot(&desired_form);
     }
 
-    decx::core::TaskCreate(decx::core::ThreadDispatchMethod_e::Dispatch_ByID, slot_id, &this->_task, decx::ResMgr::__ResMgrTask, this);
+    decx::core::TaskCreate(decx::core::ThreadDispatchMethod_e::Dispatch_ByID, desired_form._usage, slot_id, &this->_task, decx::ResMgr::__ResMgrTask, this);
     decx::core::TaskRun(&this->_task);
 
     this->_wp._outer_info = this;
@@ -63,6 +66,20 @@ void decx::ResMgr::__ResMgrTask(decx::ResMgr* fake_this)
     fake_this->_shortest_wait_period = (long long)100;
     fake_this->_last_res_num = fake_this->_res_arr.size();
 
+    DecxWaitSettings_t sem_wst = {
+        ._option = DecxWaitOpt_Relaxed,
+        ._max_spin_cnt = 1000,
+        ._spin_factor_exp = 4,
+        ._timeout_msec = DECX_WAIT_FOREVER,
+    };
+
+    DecxWaitSettings_t lock_wst = {
+        ._option = DecxWaitOpt_Hybrid,
+        ._max_spin_cnt = 1000,
+        ._spin_factor_exp = 4,
+        ._timeout_msec = DECX_WAIT_FOREVER,
+    };
+
     while (fake_this->_run)
     {
         time_t _current;
@@ -74,11 +91,11 @@ void decx::ResMgr::__ResMgrTask(decx::ResMgr* fake_this)
             decx::Resource* res_ptr = fake_this->_res_arr + i;
             
             if (res_ptr->exceeded_lifespan(_current)) {
-                fake_this->_mtx.lock();
+                DecxCore_LockAcquire(&fake_this->_lock, &lock_wst);
                 if (res_ptr->Delete()) {
                     fake_this->_res_arr.del(i);
                 }
-                fake_this->_mtx.unlock();
+                DecxCore_LockRelease(&fake_this->_lock);
             }
             else{
                 fake_this->_shortest_wait_period = min(fake_this->_shortest_wait_period,
@@ -88,16 +105,8 @@ void decx::ResMgr::__ResMgrTask(decx::ResMgr* fake_this)
 
         fake_this->_last_res_num = fake_this->_res_arr.size();
 
-        {
-        std::unique_lock<std::mutex> lock{ fake_this->_mtx };
-        while (!fake_this->_wp()) {
-            if (fake_this->_cv.wait_until(lock, 
-                                        std::chrono::_V2::steady_clock::now() + std::chrono::seconds(fake_this->_shortest_wait_period))
-                                        == std::cv_status::no_timeout) {
-                break;
-            }
-        }
-        }
+        sem_wst._timeout_msec = fake_this->_shortest_wait_period * 1000;
+        DecxCore_BinarySemaphoreWait(&fake_this->_sem, &sem_wst);
     }
 }
 
@@ -105,46 +114,82 @@ void decx::ResMgr::__ResMgrTask(decx::ResMgr* fake_this)
 uint64_t decx::ResMgr::checkin(void** exposed_ptr, const time_t lifespan, 
     res_release_fn _decon)
 {
-    this->_mtx.lock();
+    DecxWaitSettings_t lock_wst = {
+        ._option = DecxWaitOpt_Hybrid,
+        ._max_spin_cnt = 1000,
+        ._spin_factor_exp = 4,
+        ._timeout_msec = DECX_WAIT_FOREVER,
+    };
+
+    DecxCore_LockAcquire(&this->_lock, &lock_wst);
     this->_res_arr.emplace_back(exposed_ptr, lifespan, _decon);
-    this->_mtx.unlock();
-    this->_cv.notify_one();
+    DecxCore_LockRelease(&this->_lock);
+    DecxCore_BinarySemaphorePost(&this->_sem);
     return this->_res_arr.size() - 1;
 }
 
 
 void decx::ResMgr::lock_resource(const uint64_t res_id)
 {
-    this->_mtx.lock();
+    DecxWaitSettings_t lock_wst = {
+        ._option = DecxWaitOpt_Hybrid,
+        ._max_spin_cnt = 1000,
+        ._spin_factor_exp = 4,
+        ._timeout_msec = DECX_WAIT_FOREVER,
+    };
+
+    DecxCore_LockAcquire(&this->_lock, &lock_wst);
     this->_res_arr[res_id].lock();
-    this->_mtx.unlock();
+    DecxCore_LockRelease(&this->_lock);
 }
 
 
 void decx::ResMgr::unlock_resource(const uint64_t res_id)
 {
-    this->_mtx.lock();
+    DecxWaitSettings_t lock_wst = {
+        ._option = DecxWaitOpt_Hybrid,
+        ._max_spin_cnt = 1000,
+        ._spin_factor_exp = 4,
+        ._timeout_msec = DECX_WAIT_FOREVER,
+    };
+
+    DecxCore_LockAcquire(&this->_lock, &lock_wst);
     this->_res_arr[res_id].unlock();
-    this->_mtx.unlock();
+    DecxCore_LockRelease(&this->_lock);
 }
 
 
 
 void decx::ResMgr::checkout(const uint64_t res_id)
 {
-    this->_mtx.lock();
+    DecxWaitSettings_t lock_wst = {
+        ._option = DecxWaitOpt_Hybrid,
+        ._max_spin_cnt = 1000,
+        ._spin_factor_exp = 4,
+        ._timeout_msec = DECX_WAIT_FOREVER,
+    };
+
+    DecxCore_LockAcquire(&this->_lock, &lock_wst);
     this->_res_arr.del(res_id);
-    this->_mtx.unlock();
-    this->_cv.notify_one();
+    DecxCore_LockRelease(&this->_lock);
+    DecxCore_BinarySemaphorePost(&this->_sem);
 }
 
 
 decx::ResMgr::~ResMgr()
 {
-    this->_mtx.lock();
+    DecxWaitSettings_t lock_wst = {
+        ._option = DecxWaitOpt_Hybrid,
+        ._max_spin_cnt = 1000,
+        ._spin_factor_exp = 4,
+        ._timeout_msec = DECX_WAIT_FOREVER,
+    };
+
+    DecxCore_LockAcquire(&this->_lock, &lock_wst);
     this->_run = false;
-    this->_mtx.unlock();
-    this->_cv.notify_one();
+    DecxCore_LockRelease(&this->_lock);
+    
+    DecxCore_BinarySemaphorePost(&this->_sem);
 
     decx::core::TaskDestroy(&this->_task);
 }

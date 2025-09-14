@@ -41,6 +41,7 @@ decx::blas::cpu_MVM_planner<_data_type>::cpu_MVM_planner()
     this->_mat_dims = make_uint2(0, 0);
     this->_alignment = 0;
     this->_concurrency = 0;
+    this->_task_mgr = nullptr;
 }
 
 template decx::blas::cpu_MVM_planner<float>::cpu_MVM_planner();
@@ -66,7 +67,7 @@ int32_t decx::blas::cpu_MVM_planner<_data_type>::Config(const uint2 mat_dims)
     this->_concurrency = DecxGetPermitConcurrency();
 
     // Use only half of L1 cache size in case there is not enough space.
-    uint64_t L1_cache_data_percore = (decx::cpu::DecxGetL1DataCacheSize_PerCore() / 2) / sizeof(_data_type);
+    uint64_t L1_cache_data_percore = (DecxGetL1DataCacheSize_PerCore() / 2) / sizeof(_data_type);
     uint32_t block_h = 0;
 
     // Concurrency is distributed along HEIGHT only
@@ -163,3 +164,18 @@ int32_t decx::blas::cpu_MVM_planner<_data_type>::Release(cpu_MVM_planner<_data_t
 
 template int32_t decx::blas::cpu_MVM_planner<float>::Release(cpu_MVM_planner<float>*);
 template int32_t decx::blas::cpu_MVM_planner<double>::Release(cpu_MVM_planner<double>*);
+
+
+template <typename _data_type>
+int32_t decx::blas::cpu_MVM_planner<_data_type>::TaskMgrSingletonHook(decx::utils::ComputeLoadsMgr* p_task_mgr)
+{
+    if (nullptr == p_task_mgr){
+        DECX_LOG_ERR("Invalid task mgr pointer, it is NULL");
+        return -1;
+    }
+    this->_task_mgr = p_task_mgr;
+    return 0;
+}
+
+template int32_t decx::blas::cpu_MVM_planner<float>::TaskMgrSingletonHook(decx::utils::ComputeLoadsMgr*);
+template int32_t decx::blas::cpu_MVM_planner<double>::TaskMgrSingletonHook(decx::utils::ComputeLoadsMgr*);

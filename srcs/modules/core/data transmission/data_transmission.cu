@@ -39,7 +39,7 @@ decx::bp::Memcpy_Vec(decx::_Vector* _host_vec,      decx::_GPU_Vector* _device_v
                      const uint64_t cpy_len,        const int _memcpy_flag, 
                      de::DH* handle,                const uint32_t _stream_id)
 {
-    if (!decx::cuda::DecxGetIsCUDAInit()) {
+    if (!DecxGetCUDAInitStatus()) {
         DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_CUDA_not_init,
             CUDA_NOT_INIT);
         return;
@@ -107,7 +107,7 @@ decx::bp::Memcpy_Mat(decx::_Matrix* _host_mat,          decx::_GPU_Matrix* _devi
                      const de::Point2D cpy_size,        const int _memcpy_flag, 
                      de::DH* handle,                    const uint32_t _stream_id)
 {
-    if (!decx::cuda::DecxGetIsCUDAInit()) {
+    if (!DecxGetCUDAInitStatus()) {
         DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_CUDA_not_init,
             CUDA_NOT_INIT);
         return;
@@ -187,7 +187,7 @@ decx::bp::Memcpy_Tens(decx::_Tensor* _host_tensor,              decx::_GPU_Tenso
                       const de::Point3D cpy_size,               const int _memcpy_flag, 
                       de::DH* handle,                           const uint32_t _stream_id)
 {
-    if (!decx::cuda::DecxGetIsCUDAInit()) {
+    if (!DecxGetCUDAInitStatus()) {
         DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_CUDA_not_init,
             CUDA_NOT_INIT);
         return;
@@ -302,8 +302,8 @@ de::Memcpy(de::Matrix& __host, de::GPU_Matrix& __device, const de::Point2D start
 {
     de::DH handle;
 
-    if (!decx::cuda::DecxGetIsCUDAInit()) {
-        DecxAssignLastHandle(&handle, DecxErrorTypes_e::DECX_FAIL_CUDA_not_init,
+    if (!DecxGetCUDAInitStatus()) {
+        DecxAssignLastHandle(DecxErrorTypes_e::DECX_FAIL_CUDA_not_init,
             CUDA_NOT_INIT);
         return handle;
     }

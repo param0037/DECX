@@ -73,7 +73,11 @@
 // Linux
 #if defined(__Linux__) || defined(__GNUC__)
 // Linux APIs
-//#include <...>
+#ifdef _DECX_CORE_CPU_
+#include <linux/futex.h>
+#include <sys/syscall.h>
+#include <unistd.h>
+#endif
 #endif
 
 // SIMD instructions (SSE, AVX2, AVX512, NEON)

@@ -43,13 +43,13 @@ namespace cpu{
 
 _DECX_API_ void de::blas::cpu::Eigenvalue(de::InputMatrix src, float** a, float** b)
 {
-    DecxResetLastHandle
+    DecxResetLastHandle();
 
     const decx::_Matrix* _src = dynamic_cast<const decx::_Matrix*>(&src);
 
     decx::blas::cpu_eig_bisection<float> planner;
     const uint32_t conc = DecxGetPermitConcurrency();
-    planner.Init(conc, &_src->get_layout(), 0.001, de::GetLastError());
+    planner.Init(conc, &_src->get_layout(), 0.001);
 
     decx::utils::ThreadArrange1D t1D(conc);
 
@@ -60,7 +60,7 @@ _DECX_API_ void de::blas::cpu::Eigenvalue(de::InputMatrix src, float** a, float*
 
     // planner.calc_Gerschgorin_bound(&t1D);
 
-    planner.plan(_src, &t1D, de::GetLastError());
+    planner.plan(_src, &t1D);
     printf("bound : (%f, %f)\n", planner.get_Gerschgorin_L() , planner.get_Gerschgorin_U());
 
     clock_t s, e;
